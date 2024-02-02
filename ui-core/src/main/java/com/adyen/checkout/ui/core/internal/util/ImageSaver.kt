@@ -26,10 +26,12 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
@@ -144,7 +146,7 @@ class ImageSaver(
             bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
             outputStream.close()
 
-            Logger.d(TAG, "Bitmap successfully saved as an image")
+            adyenLog(AdyenLogLevel.DEBUG) { "Bitmap successfully saved as an image" }
             Result.success(Unit)
         } catch (e: FileNotFoundException) {
             Result.failure(CheckoutException("File not found: ", e))
@@ -188,7 +190,7 @@ class ImageSaver(
             bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
             outputStream.close()
 
-            Logger.d(TAG, "Bitmap successfully saved as an image")
+            adyenLog(AdyenLogLevel.DEBUG) { "Bitmap successfully saved as an image" }
             Result.success(Unit)
         } catch (e: FileNotFoundException) {
             Result.failure(CheckoutException("File not found: ", e))

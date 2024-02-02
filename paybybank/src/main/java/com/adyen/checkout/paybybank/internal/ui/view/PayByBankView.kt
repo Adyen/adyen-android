@@ -15,8 +15,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.R
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
@@ -76,16 +76,16 @@ internal class PayByBankView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutSearchQuery.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_PayByBank_SearchQueryInput,
-            localizedContext
+            localizedContext,
         )
         binding.textViewNoMatchingIssuers.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_PayByBank_NoMatchingIssuers,
-            localizedContext
+            localizedContext,
         )
     }
 
     private fun onItemClicked(issuerModel: IssuerModel) {
-        Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
+        adyenLog(AdyenLogLevel.DEBUG) { "onItemClicked - ${issuerModel.name}" }
         delegate.updateInputData { selectedIssuer = issuerModel }
         delegate.onSubmit()
     }
@@ -99,7 +99,7 @@ internal class PayByBankView @JvmOverloads constructor(
     private fun initIssuersRecyclerView() {
         payByBankRecyclerAdapter = PayByBankRecyclerAdapter(
             paymentMethod = delegate.getPaymentMethodType(),
-            onItemClicked = ::onItemClicked
+            onItemClicked = ::onItemClicked,
         ).apply {
             submitList(delegate.getIssuers())
         }
@@ -111,8 +111,4 @@ internal class PayByBankView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

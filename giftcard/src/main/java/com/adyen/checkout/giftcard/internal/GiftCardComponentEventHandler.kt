@@ -3,9 +3,11 @@ package com.adyen.checkout.giftcard.internal
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -26,7 +28,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
     ) {
         val callback = componentCallback as? GiftCardComponentCallback
             ?: throw CheckoutException(
-                "Callback must be type of ${GiftCardComponentCallback::class.java.canonicalName}"
+                "Callback must be type of ${GiftCardComponentCallback::class.java.canonicalName}",
             )
         Logger.v(TAG, "Event received $event")
         when (event) {
@@ -35,7 +37,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
             is PaymentComponentEvent.StateChanged -> callback.onStateChanged(event.state)
             is PaymentComponentEvent.PermissionRequest -> callback.onPermissionRequest(
                 event.requiredPermission,
-                event.permissionCallback
+                event.permissionCallback,
             )
 
             is PaymentComponentEvent.Submit -> {
@@ -44,7 +46,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
                         event.state.data.paymentMethod?.let {
                             callback.onBalanceCheck(event.state)
                         } ?: throw GiftCardException(
-                            "onBalanceCheck cannot be performed due to payment method being null."
+                            "onBalanceCheck cannot be performed due to payment method being null.",
                         )
                     }
 
@@ -58,7 +60,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
 
                     is GiftCardAction.Idle -> {
                         // no ops
-                        Logger.d(TAG, "No action to be taken.")
+                        adyenLog(AdyenLogLevel.DEBUG) { "No action to be taken." }
                     }
                 }
             }

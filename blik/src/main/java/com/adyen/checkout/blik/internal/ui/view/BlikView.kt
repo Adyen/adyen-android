@@ -18,8 +18,8 @@ import com.adyen.checkout.blik.databinding.BlikViewBinding
 import com.adyen.checkout.blik.internal.ui.BlikDelegate
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
@@ -35,7 +35,7 @@ internal class BlikView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -64,11 +64,11 @@ internal class BlikView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutBlikCode.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Blik_BlikCodeInput,
-            localizedContext
+            localizedContext,
         )
         binding.textViewBlikHeader.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Blik_BlikHeaderTextView,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -93,7 +93,7 @@ internal class BlikView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val blikCodeValidation = blikDelegate.outputData.blikCodeField.validation
         if (!blikCodeValidation.isValid()) {
             binding.textInputLayoutBlikCode.requestFocus()
@@ -103,8 +103,4 @@ internal class BlikView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

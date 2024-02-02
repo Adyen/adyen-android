@@ -23,8 +23,10 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
@@ -84,7 +86,7 @@ internal class PaymentMethodsListViewModel(
 
             when {
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
-                    Logger.d(TAG, "Supported payment method: $type")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Supported payment method: $type" }
                     checkPaymentMethodAvailability(
                         application = application,
                         paymentMethod = paymentMethod,
@@ -101,7 +103,7 @@ internal class PaymentMethodsListViewModel(
                 }
 
                 else -> {
-                    Logger.d(TAG, "No availability check required - $type")
+                    adyenLog(AdyenLogLevel.DEBUG) { "No availability check required - $type" }
                     paymentMethodsAvailabilityMap[paymentMethod] = true
                 }
             }
@@ -110,7 +112,7 @@ internal class PaymentMethodsListViewModel(
     }
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
-        Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type}: $isAvailable")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAvailabilityResult - ${paymentMethod.type}: $isAvailable" }
         paymentMethodsAvailabilityMap[paymentMethod] = isAvailable
         checkIfListReady()
     }

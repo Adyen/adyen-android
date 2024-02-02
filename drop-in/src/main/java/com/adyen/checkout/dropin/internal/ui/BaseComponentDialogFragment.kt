@@ -20,9 +20,11 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 
@@ -89,7 +91,7 @@ internal abstract class BaseComponentDialogFragment :
     ): View?
 
     override fun onBackPressed(): Boolean {
-        Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
+        adyenLog(AdyenLogLevel.DEBUG) { "onBackPressed - $navigatedFromPreselected" }
 
         when {
             navigatedFromPreselected -> protocol.showPreselectedDialog()

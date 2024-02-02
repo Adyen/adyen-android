@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.R
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
@@ -73,7 +73,7 @@ internal class MbWayView @JvmOverloads constructor(
                 binding.textInputLayoutMobileNumber.hideError()
             } else if (mobilePhoneNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutMobileNumber.showError(
-                    localizedContext.getString(mobilePhoneNumberValidation.reason)
+                    localizedContext.getString(mobilePhoneNumberValidation.reason),
                 )
             }
         }
@@ -100,11 +100,11 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation
         if (mobilePhoneNumberValidation is Validation.Invalid) {
             binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(mobilePhoneNumberValidation.reason)
+                localizedContext.getString(mobilePhoneNumberValidation.reason),
             )
         }
     }
@@ -122,11 +122,7 @@ internal class MbWayView @JvmOverloads constructor(
             isoCode = it.isoCode,
             countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
             callingCode = it.callingCode,
-            emoji = it.emoji
+            emoji = it.emoji,
         )
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

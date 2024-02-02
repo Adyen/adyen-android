@@ -23,8 +23,10 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -111,7 +113,7 @@ internal class DefaultBacsDirectDebitDelegate(
             }
 
             else -> {
-                Logger.d(TAG, "Setting mode to $mode")
+                adyenLog(AdyenLogLevel.DEBUG) { "Setting mode to $mode" }
                 updateInputData { this.mode = mode }
                 true
             }
@@ -165,7 +167,7 @@ internal class DefaultBacsDirectDebitDelegate(
             BacsDirectDebitMode.CONFIRMATION -> BacsComponentViewType.CONFIRMATION
         }
         if (_viewFlow.value != viewType) {
-            Logger.d(TAG, "Updating view flow to $viewType")
+            adyenLog(AdyenLogLevel.DEBUG) { "Updating view flow to $viewType" }
             _viewFlow.tryEmit(viewType)
         }
     }
@@ -208,7 +210,7 @@ internal class DefaultBacsDirectDebitDelegate(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
             isReady = true,
-            mode = outputData.mode
+            mode = outputData.mode,
         )
     }
 

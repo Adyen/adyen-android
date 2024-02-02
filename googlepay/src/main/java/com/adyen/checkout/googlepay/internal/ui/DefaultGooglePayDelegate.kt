@@ -20,11 +20,13 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
@@ -132,7 +134,7 @@ internal class DefaultGooglePayDelegate(
     }
 
     override fun startGooglePayScreen(activity: Activity, requestCode: Int) {
-        Logger.d(TAG, "startGooglePayScreen")
+        adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
         val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(componentParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides
@@ -141,7 +143,7 @@ internal class DefaultGooglePayDelegate(
     }
 
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
-        Logger.d(TAG, "handleActivityResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleActivityResult" }
         when (resultCode) {
             Activity.RESULT_OK -> {
                 if (data == null) {

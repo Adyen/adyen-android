@@ -25,10 +25,12 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
@@ -178,14 +180,14 @@ internal class DefaultACHDirectDebitDelegate(
     }
 
     private fun fetchPublicKey(coroutineScope: CoroutineScope) {
-        Logger.d(TAG, "fetchPublicKey")
+        adyenLog(AdyenLogLevel.DEBUG) { "fetchPublicKey" }
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
                 clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
-                    Logger.d(TAG, "Public key fetched")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                     publicKey = key
                     updateComponentState(outputData)
                 },
@@ -201,7 +203,7 @@ internal class DefaultACHDirectDebitDelegate(
         addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
-                Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New countries emitted - countries: ${countries.size}" }
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
@@ -220,7 +222,7 @@ internal class DefaultACHDirectDebitDelegate(
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
-                Logger.d(TAG, "New states emitted - states: ${states.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
                 updateOutputData(stateOptions = AddressFormUtils.initializeStateOptions(states))
             }
             .launchIn(coroutineScope)

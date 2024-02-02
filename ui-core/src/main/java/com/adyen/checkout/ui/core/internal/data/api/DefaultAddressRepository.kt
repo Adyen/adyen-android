@@ -10,8 +10,8 @@ package com.adyen.checkout.ui.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
@@ -115,7 +115,7 @@ class DefaultAddressRepository(
     private suspend fun getCountries(
         shopperLocale: Locale
     ): Result<List<AddressItem>> = runSuspendCatching {
-        Logger.d(TAG, "getting country list")
+        adyenLog(AdyenLogLevel.DEBUG) { "getting country list" }
         return@runSuspendCatching addressService.getCountries(shopperLocale.toLanguageTag())
     }
 
@@ -123,12 +123,11 @@ class DefaultAddressRepository(
         shopperLocale: Locale,
         countryCode: String
     ): Result<List<AddressItem>> = runSuspendCatching {
-        Logger.d(TAG, "getting state list for $countryCode")
+        adyenLog(AdyenLogLevel.DEBUG) { "getting state list for $countryCode" }
         return@runSuspendCatching addressService.getStates(shopperLocale.toLanguageTag(), countryCode)
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         private val COUNTRIES_WITH_STATES = listOf(
             AddressSpecification.BR,

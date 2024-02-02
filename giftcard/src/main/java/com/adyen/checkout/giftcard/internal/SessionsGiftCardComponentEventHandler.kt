@@ -15,10 +15,12 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardException
@@ -71,7 +73,7 @@ class SessionsGiftCardComponentEventHandler(
             is PaymentComponentEvent.PermissionRequest -> onPermissionRequest(
                 event.requiredPermission,
                 event.permissionCallback,
-                sessionComponentCallback
+                sessionComponentCallback,
             )
 
             is PaymentComponentEvent.Submit -> {
@@ -114,7 +116,7 @@ class SessionsGiftCardComponentEventHandler(
 
                 is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(
                     result.result,
-                    sessionComponentCallback
+                    sessionComponentCallback,
                 )
 
                 is SessionCallResult.Payments.TakenOver -> {
@@ -132,7 +134,7 @@ class SessionsGiftCardComponentEventHandler(
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
                 sessionComponentCallback::onAdditionalDetails,
-                sessionComponentCallback::onAdditionalDetails.name
+                sessionComponentCallback::onAdditionalDetails.name,
             )
 
             when (result) {
@@ -176,7 +178,7 @@ class SessionsGiftCardComponentEventHandler(
         coroutineScope.launchWithLoadingState(sessionComponentCallback) {
             val result = sessionInteractor.createOrder(
                 sessionComponentCallback::onOrderRequest,
-                sessionComponentCallback::onOrderRequest.name
+                sessionComponentCallback::onOrderRequest.name,
             )
 
             when (result) {
@@ -231,8 +233,8 @@ class SessionsGiftCardComponentEventHandler(
     ) {
         sessionComponentCallback.onError(
             ComponentError(
-                CheckoutException(throwable.message.orEmpty(), throwable)
-            )
+                CheckoutException(throwable.message.orEmpty(), throwable),
+            ),
         )
     }
 
@@ -240,7 +242,7 @@ class SessionsGiftCardComponentEventHandler(
         result: SessionPaymentResult,
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
-        Logger.d(TAG, "Finished: ${result.resultCode}")
+        adyenLog(AdyenLogLevel.DEBUG) { "Finished: ${result.resultCode}" }
         sessionComponentCallback.onFinished(result)
     }
 
@@ -248,7 +250,7 @@ class SessionsGiftCardComponentEventHandler(
         sessionCallResult: SessionCallResult.Payments.NotFullyPaidOrder,
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
-        Logger.d(TAG, "Partial payment: ${sessionCallResult.result.order}")
+        adyenLog(AdyenLogLevel.DEBUG) { "Partial payment: ${sessionCallResult.result.order}" }
         sessionComponentCallback.onPartialPayment(sessionCallResult.result)
     }
 

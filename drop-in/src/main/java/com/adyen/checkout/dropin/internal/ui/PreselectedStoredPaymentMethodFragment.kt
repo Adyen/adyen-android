@@ -19,10 +19,12 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.DateUtils
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentStoredPaymentMethodBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -64,7 +66,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         initView()
         observeState()

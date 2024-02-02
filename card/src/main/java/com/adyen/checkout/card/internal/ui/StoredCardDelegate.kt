@@ -39,10 +39,12 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -388,7 +390,7 @@ internal class StoredCardDelegate(
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
+        adyenLog(AdyenLogLevel.DEBUG) { "makeCvcUIState: $cvcPolicy" }
         return when (cvcPolicy) {
             Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
             Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL

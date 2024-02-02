@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
@@ -58,12 +58,11 @@ class AwaitComponent internal constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         delegate.onCleared()
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER: ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> =

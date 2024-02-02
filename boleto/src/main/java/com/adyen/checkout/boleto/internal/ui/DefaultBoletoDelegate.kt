@@ -25,8 +25,10 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -114,7 +116,7 @@ internal class DefaultBoletoDelegate(
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
-                Logger.d(TAG, "New states emitted - states: ${states.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
                 updateOutputData(stateOptions = AddressFormUtils.initializeStateOptions(states))
             }
             .launchIn(coroutineScope)

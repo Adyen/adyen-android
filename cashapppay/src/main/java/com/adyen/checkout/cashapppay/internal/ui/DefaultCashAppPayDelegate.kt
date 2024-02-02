@@ -36,10 +36,12 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -128,7 +130,7 @@ constructor(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -185,7 +187,7 @@ constructor(
         return CashAppPayComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -205,8 +207,8 @@ constructor(
             exceptionChannel.trySend(
                 ComponentException(
                     "Cannot launch Cash App Pay, you need to either pass an amount with supported " +
-                        "currency or store the shopper account."
-                )
+                        "currency or store the shopper account.",
+                ),
             )
             return
         }
@@ -259,7 +261,7 @@ constructor(
     }
 
     override fun cashAppPayStateDidChange(newState: CashAppPayState) {
-        Logger.d(TAG, "CashAppPayState state changed: ${newState::class.simpleName}")
+        adyenLog(AdyenLogLevel.DEBUG) { "CashAppPayState state changed: ${newState::class.simpleName}" }
         when (newState) {
             is CashAppPayState.ReadyToAuthorize -> {
                 cashAppPay.authorizeCustomerRequest()
@@ -280,7 +282,7 @@ constructor(
 
             is CashAppPayState.CashAppPayExceptionState -> {
                 exceptionChannel.trySend(
-                    ComponentException("Cash App Pay has encountered an error", newState.exception)
+                    ComponentException("Cash App Pay has encountered an error", newState.exception),
                 )
             }
 
@@ -296,7 +298,7 @@ constructor(
             CashAppPayOnFileData(
                 grantId = it.id,
                 cashTag = customerResponseData.customerProfile?.cashTag?.toString(),
-                customerId = customerResponseData.customerProfile?.id
+                customerId = customerResponseData.customerProfile?.id,
             )
         }
 

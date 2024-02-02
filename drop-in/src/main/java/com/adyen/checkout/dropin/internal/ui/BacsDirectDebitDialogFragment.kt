@@ -16,8 +16,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.FrameLayout
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,9 +29,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private val bacsDirectDebitComponent: BacsDirectDebitComponent by lazy { component as BacsDirectDebitComponent }
 
-    companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
+    companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBacsDirectDebitComponentBinding.inflate(inflater, container, false)
@@ -40,7 +38,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
         binding.header.text = paymentMethod.name
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
@@ -52,7 +50,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Logger.d(TAG, "onCreateDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreateDialog" }
         val dialog = super.onCreateDialog(savedInstanceState)
         setDialogToFullScreen(dialog)
         return dialog

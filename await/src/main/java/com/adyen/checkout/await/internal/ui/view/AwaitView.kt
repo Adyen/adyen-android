@@ -19,8 +19,8 @@ import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
@@ -36,7 +36,7 @@ internal class AwaitView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -66,7 +66,7 @@ internal class AwaitView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewWaitingConfirmation.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Await_WaitingConfirmationTextView,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -77,7 +77,7 @@ internal class AwaitView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: AwaitOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)
@@ -94,7 +94,7 @@ internal class AwaitView @JvmOverloads constructor(
     }
 
     private fun updateLogo(paymentMethodType: String?) {
-        Logger.d(TAG, "updateLogo - $paymentMethodType")
+        adyenLog(AdyenLogLevel.DEBUG) { "updateLogo - $paymentMethodType" }
         paymentMethodType?.let { txVariant ->
             binding.imageViewLogo.loadLogo(
                 environment = delegate.componentParams.environment,
@@ -114,8 +114,4 @@ internal class AwaitView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

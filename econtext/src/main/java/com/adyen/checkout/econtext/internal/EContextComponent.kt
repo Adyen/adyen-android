@@ -23,8 +23,10 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -87,7 +89,7 @@ abstract class EContextComponent<
 
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         eContextDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()

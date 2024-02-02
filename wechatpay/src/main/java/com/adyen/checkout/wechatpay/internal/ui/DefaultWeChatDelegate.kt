@@ -21,10 +21,12 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
 import com.tencent.mm.opensdk.modelbase.BaseReq
@@ -71,7 +73,7 @@ internal class DefaultWeChatDelegate(
             permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -119,7 +121,7 @@ internal class DefaultWeChatDelegate(
         }
 
         val activityName = activity.javaClass.name
-        Logger.d(TAG, "handleAction: activity - $activityName")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleAction: activity - $activityName" }
 
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
@@ -144,7 +146,7 @@ internal class DefaultWeChatDelegate(
     }
 
     private fun initiateWeChatPayRedirect(weChatPaySdkData: WeChatPaySdkData, activityName: String): Boolean {
-        Logger.d(TAG, "initiateWeChatPayRedirect")
+        adyenLog(AdyenLogLevel.DEBUG) { "initiateWeChatPayRedirect" }
         iwxApi.registerApp(weChatPaySdkData.appid)
         val request = payRequestGenerator.generate(weChatPaySdkData, activityName)
         return iwxApi.sendReq(request)

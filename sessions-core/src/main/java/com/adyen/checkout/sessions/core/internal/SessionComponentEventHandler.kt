@@ -15,10 +15,12 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +64,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             is PaymentComponentEvent.PermissionRequest -> onPermissionRequest(
                 event.requiredPermission,
                 event.permissionCallback,
-                sessionComponentCallback
+                sessionComponentCallback,
             )
 
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
@@ -90,7 +92,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(
                     result.result,
-                    sessionComponentCallback
+                    sessionComponentCallback,
                 )
 
                 is SessionCallResult.Payments.TakenOver -> {
@@ -108,7 +110,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
                 sessionComponentCallback::onAdditionalDetails,
-                sessionComponentCallback::onAdditionalDetails.name
+                sessionComponentCallback::onAdditionalDetails.name,
             )
 
             when (result) {
@@ -155,13 +157,13 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
     private fun onSessionError(throwable: Throwable, sessionComponentCallback: SessionComponentCallback<T>) {
         sessionComponentCallback.onError(
             ComponentError(
-                CheckoutException(throwable.message.orEmpty(), throwable)
-            )
+                CheckoutException(throwable.message.orEmpty(), throwable),
+            ),
         )
     }
 
     private fun onFinished(result: SessionPaymentResult, sessionComponentCallback: SessionComponentCallback<T>) {
-        Logger.d(TAG, "Finished: ${result.resultCode}")
+        adyenLog(AdyenLogLevel.DEBUG) { "Finished: ${result.resultCode}" }
         sessionComponentCallback.onFinished(result)
     }
 

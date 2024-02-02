@@ -35,8 +35,10 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
@@ -88,7 +90,7 @@ internal class DropInActivity :
     private val serviceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(className: ComponentName, binder: IBinder) {
-            Logger.d(TAG, "onServiceConnected")
+            adyenLog(AdyenLogLevel.DEBUG) { "onServiceConnected" }
             val dropInBinder = binder as? BaseDropInService.DropInBinder ?: return
             dropInService = dropInBinder.getService()
 
@@ -103,47 +105,47 @@ internal class DropInActivity :
             }
 
             paymentDataQueue?.let {
-                Logger.d(TAG, "Sending queued payment request")
+                adyenLog(AdyenLogLevel.DEBUG) { "Sending queued payment request" }
                 requestPaymentsCall(it)
                 paymentDataQueue = null
             }
 
             actionDataQueue?.let {
-                Logger.d(TAG, "Sending queued action request")
+                adyenLog(AdyenLogLevel.DEBUG) { "Sending queued action request" }
                 requestDetailsCall(it)
                 actionDataQueue = null
             }
             balanceDataQueue?.let {
-                Logger.d(TAG, "Sending queued action request")
+                adyenLog(AdyenLogLevel.DEBUG) { "Sending queued action request" }
                 requestBalanceCall(it)
                 balanceDataQueue = null
             }
             orderDataQueue?.let {
-                Logger.d(TAG, "Sending queued order request")
+                adyenLog(AdyenLogLevel.DEBUG) { "Sending queued order request" }
                 requestOrdersCall()
                 orderDataQueue = null
             }
             orderCancellationQueue?.let {
-                Logger.d(TAG, "Sending queued cancel order request")
+                adyenLog(AdyenLogLevel.DEBUG) { "Sending queued cancel order request" }
                 requestCancelOrderCall(it, true)
                 orderCancellationQueue = null
             }
         }
 
         override fun onServiceDisconnected(className: ComponentName) {
-            Logger.d(TAG, "onServiceDisconnected")
+            adyenLog(AdyenLogLevel.DEBUG) { "onServiceDisconnected" }
             dropInService = null
         }
     }
 
     override fun attachBaseContext(newBase: Context?) {
-        Logger.d(TAG, "attachBaseContext")
+        adyenLog(AdyenLogLevel.DEBUG) { "attachBaseContext" }
         super.attachBaseContext(createLocalizedContext(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Logger.d(TAG, "onCreate - $savedInstanceState")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreate - $savedInstanceState" }
         val binding = ActivityDropInBinding.inflate(layoutInflater)
         setContentView(binding.root)
         overridePendingTransition(0, 0)
@@ -200,7 +202,7 @@ internal class DropInActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        Logger.d(TAG, "onNewIntent")
+        adyenLog(AdyenLogLevel.DEBUG) { "onNewIntent" }
         if (intent != null) {
             handleIntent(intent)
         } else {
@@ -248,7 +250,7 @@ internal class DropInActivity :
     }
 
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
-        Logger.d(TAG, "requestPaymentsCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestPaymentsCall" }
         if (dropInService == null) {
             Logger.e(TAG, "service is disconnected, adding to queue")
             paymentDataQueue = paymentComponentState
@@ -261,7 +263,7 @@ internal class DropInActivity :
     }
 
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
-        Logger.d(TAG, "requestDetailsCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestDetailsCall" }
         if (dropInService == null) {
             Logger.e(TAG, "service is disconnected, adding to queue")
             actionDataQueue = actionComponentData
@@ -273,7 +275,7 @@ internal class DropInActivity :
     }
 
     override fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean) {
-        Logger.d(TAG, "showError - message: $errorMessage")
+        adyenLog(AdyenLogLevel.DEBUG) { "showError - message: $errorMessage" }
         val title = dialogTitle ?: getString(R.string.error_dialog_title)
         showDialog(title, errorMessage) {
             errorDialogDismissed(reason, terminate)
@@ -300,27 +302,27 @@ internal class DropInActivity :
     }
 
     override fun showPreselectedDialog() {
-        Logger.d(TAG, "showPreselectedDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showPreselectedDialog" }
         hideAllScreens()
         PreselectedStoredPaymentMethodFragment.newInstance(dropInViewModel.getPreselectedStoredPaymentMethod())
             .show(supportFragmentManager, PRESELECTED_PAYMENT_METHOD_FRAGMENT_TAG)
     }
 
     override fun showPaymentMethodsDialog() {
-        Logger.d(TAG, "showPaymentMethodsDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showPaymentMethodsDialog" }
         hideAllScreens()
         PaymentMethodListDialogFragment().show(supportFragmentManager, PAYMENT_METHODS_LIST_FRAGMENT_TAG)
     }
 
     override fun showStoredComponentDialog(storedPaymentMethod: StoredPaymentMethod, fromPreselected: Boolean) {
-        Logger.d(TAG, "showStoredComponentDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showStoredComponentDialog" }
         hideAllScreens()
         val dialogFragment = getFragmentForStoredPaymentMethod(storedPaymentMethod, fromPreselected)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
     }
 
     override fun showComponentDialog(paymentMethod: PaymentMethod) {
-        Logger.d(TAG, "showComponentDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showComponentDialog" }
         hideAllScreens()
         val dialogFragment = getFragmentForPaymentMethod(paymentMethod)
         dialogFragment.show(supportFragmentManager, COMPONENT_FRAGMENT_TAG)
@@ -335,12 +337,12 @@ internal class DropInActivity :
     }
 
     override fun terminateDropIn() {
-        Logger.d(TAG, "terminateDropIn")
+        adyenLog(AdyenLogLevel.DEBUG) { "terminateDropIn" }
         dropInViewModel.cancelDropIn()
     }
 
     override fun requestBalanceCall(giftCardComponentState: GiftCardComponentState) {
-        Logger.d(TAG, "requestCheckBalanceCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestCheckBalanceCall" }
         dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
             Logger.e(TAG, "requestBalanceCall - service is disconnected")
@@ -353,7 +355,7 @@ internal class DropInActivity :
     }
 
     private fun requestOrdersCall() {
-        Logger.d(TAG, "requestOrdersCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestOrdersCall" }
         if (dropInService == null) {
             Logger.e(TAG, "requestOrdersCall - service is disconnected")
             orderDataQueue = Unit
@@ -365,7 +367,7 @@ internal class DropInActivity :
     }
 
     private fun requestCancelOrderCall(order: OrderRequest, isDropInCancelledByUser: Boolean) {
-        Logger.d(TAG, "requestCancelOrderCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestCancelOrderCall" }
         if (dropInService == null) {
             Logger.e(TAG, "requestOrdersCall - service is disconnected")
             orderCancellationQueue = order
@@ -377,7 +379,7 @@ internal class DropInActivity :
     }
 
     override fun finishWithAction() {
-        Logger.d(TAG, "finishWithActionCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "finishWithActionCall" }
         sendResult(DropIn.FINISHED_WITH_ACTION)
     }
 
@@ -387,7 +389,7 @@ internal class DropInActivity :
     }
 
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
-        Logger.d(TAG, "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}" }
         dropInViewModel.isWaitingResult = false
         when (dropInServiceResult) {
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
@@ -457,7 +459,7 @@ internal class DropInActivity :
 
     private fun handleErrorDropInServiceResult(dropInServiceResult: DropInServiceResultError) {
         val reason = dropInServiceResult.reason ?: "Unspecified reason"
-        Logger.d(TAG, "handleDropInServiceResult ERROR - reason: $reason")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleDropInServiceResult ERROR - reason: $reason" }
 
         dropInServiceResult.errorDialog?.let { errorDialog ->
             val errorMessage = errorDialog.message ?: getString(R.string.payment_failed)
@@ -480,7 +482,7 @@ internal class DropInActivity :
     }
 
     private fun handleAction(action: Action) {
-        Logger.d(TAG, "showActionDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showActionDialog" }
         setLoading(false)
         hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
@@ -515,30 +517,30 @@ internal class DropInActivity :
     }
 
     private fun terminateSuccessfully() {
-        Logger.d(TAG, "terminateSuccessfully")
+        adyenLog(AdyenLogLevel.DEBUG) { "terminateSuccessfully" }
         terminate()
     }
 
     private fun terminateWithError(reason: String) {
-        Logger.d(TAG, "terminateWithError")
+        adyenLog(AdyenLogLevel.DEBUG) { "terminateWithError" }
         val resultIntent = Intent().putExtra(DropIn.ERROR_REASON_KEY, reason)
         setResult(Activity.RESULT_CANCELED, resultIntent)
         terminate()
     }
 
     private fun terminate() {
-        Logger.d(TAG, "terminate")
+        adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
         stopDropInService()
         finish()
         overridePendingTransition(0, R.anim.fade_out)
     }
 
     private fun handleIntent(intent: Intent) {
-        Logger.d(TAG, "handleIntent: action - ${intent.action}")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleIntent: action - ${intent.action}" }
         dropInViewModel.isWaitingResult = false
 
         if (isWeChatPayIntent(intent)) {
-            Logger.d(TAG, "isResultIntent")
+            adyenLog(AdyenLogLevel.DEBUG) { "isResultIntent" }
             handleActionIntentResponse(intent)
         }
 
@@ -636,7 +638,7 @@ internal class DropInActivity :
     private fun handleBalanceResult(balanceResult: BalanceResult) {
         Logger.v(TAG, "handleBalanceResult")
         val result = dropInViewModel.handleBalanceResult(balanceResult)
-        Logger.d(TAG, "handleBalanceResult: ${result::class.java.simpleName}")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleBalanceResult: ${result::class.java.simpleName}" }
         when (result) {
             is GiftCardBalanceResult.Error -> showError(
                 dialogTitle = null,
@@ -652,13 +654,13 @@ internal class DropInActivity :
     }
 
     private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceResult.FullPayment) {
-        Logger.d(TAG, "handleGiftCardFullPayment")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleGiftCardFullPayment" }
         setLoading(false)
         showGiftCardPaymentConfirmationDialog(fullPayment.data)
     }
 
     private fun showGiftCardPaymentConfirmationDialog(data: GiftCardPaymentConfirmationData) {
-        Logger.d(TAG, "showGiftCardPaymentConfirmationDialog")
+        adyenLog(AdyenLogLevel.DEBUG) { "showGiftCardPaymentConfirmationDialog" }
         hideAllScreens()
         GiftCardPaymentConfirmationDialogFragment.newInstance(data)
             .show(supportFragmentManager, GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG)

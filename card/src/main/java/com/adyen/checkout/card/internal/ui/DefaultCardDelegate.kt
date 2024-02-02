@@ -51,10 +51,12 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -198,14 +200,14 @@ class DefaultCardDelegate(
     }
 
     private fun fetchPublicKey() {
-        Logger.d(TAG, "fetchPublicKey")
+        adyenLog(AdyenLogLevel.DEBUG) { "fetchPublicKey" }
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
                 clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
-                    Logger.d(TAG, "Public key fetched")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                     publicKey = key
                     updateComponentState(outputData)
                 },
@@ -248,11 +250,10 @@ class DefaultCardDelegate(
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
-                Logger.d(
-                    TAG,
+                adyenLog(AdyenLogLevel.DEBUG) {
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
-                        "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}",
-                )
+                        "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
+                }
                 if (detectedCardTypes != outputData.detectedCardTypes) {
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
@@ -268,7 +269,7 @@ class DefaultCardDelegate(
         addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
-                Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New countries emitted - countries: ${countries.size}" }
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
@@ -287,7 +288,7 @@ class DefaultCardDelegate(
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
-                Logger.d(TAG, "New states emitted - states: ${states.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
                 val stateOptions = AddressFormUtils.initializeStateOptions(states)
                 updateOutputData(stateOptions = stateOptions)
             }
@@ -637,7 +638,7 @@ class DefaultCardDelegate(
     }
 
     private fun makeCvcUIState(detectedCardType: DetectedCardType?): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: ${detectedCardType?.cvcPolicy}")
+        adyenLog(AdyenLogLevel.DEBUG) { "makeCvcUIState: ${detectedCardType?.cvcPolicy}" }
 
         return if (detectedCardType?.isReliable == true) {
             when (componentParams.cvcVisibility) {
@@ -821,7 +822,7 @@ class DefaultCardDelegate(
     }
 
     override fun updateAddressLookupOptions(options: List<LookupAddress>) {
-        Logger.d(TAG, "update address lookup options $options")
+        adyenLog(AdyenLogLevel.DEBUG) { "update address lookup options $options" }
         addressLookupDelegate.updateAddressLookupOptions(options)
     }
 

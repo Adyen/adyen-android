@@ -11,8 +11,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
 import com.adyen.checkout.instant.internal.ui.InstantPaymentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -64,14 +64,13 @@ class InstantPaymentComponent internal constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         instantPaymentDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = InstantPaymentComponentProvider()

@@ -28,11 +28,13 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.internal.util.arguments
@@ -62,10 +64,10 @@ internal class ActionComponentDialogFragment :
                 val requestedPermission = result.key
                 val isGranted = result.value
                 if (isGranted) {
-                    Logger.d(TAG, "Permission $requestedPermission granted")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Permission $requestedPermission granted" }
                     permissionCallback?.onPermissionGranted(requestedPermission)
                 } else {
-                    Logger.d(TAG, "Permission $requestedPermission denied")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Permission $requestedPermission denied" }
                     permissionCallback?.onPermissionDenied(requestedPermission)
                 }
                 permissionCallback = null
@@ -74,7 +76,7 @@ internal class ActionComponentDialogFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Logger.d(TAG, "onCreate")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -89,7 +91,7 @@ internal class ActionComponentDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
         initObservers()
         binding.header.isVisible = false
 
@@ -120,18 +122,18 @@ internal class ActionComponentDialogFragment :
     }
 
     override fun onError(componentError: ComponentError) {
-        Logger.d(TAG, "onError")
+        adyenLog(AdyenLogLevel.DEBUG) { "onError" }
         handleError(componentError)
     }
 
     override fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
         this.permissionCallback = permissionCallback
-        Logger.d(TAG, "Permission request information dialog shown")
+        adyenLog(AdyenLogLevel.DEBUG) { "Permission request information dialog shown" }
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.checkout_rationale_title_storage_permission)
             .setMessage(R.string.checkout_rationale_message_storage_permission)
             .setOnDismissListener {
-                Logger.d(TAG, "Permission $requiredPermission requested")
+                adyenLog(AdyenLogLevel.DEBUG) { "Permission $requiredPermission requested" }
                 requestPermissionLauncher.launch(arrayOf(requiredPermission))
             }
             .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
@@ -170,7 +172,7 @@ internal class ActionComponentDialogFragment :
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        Logger.d(TAG, "onCancel")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         if (shouldFinishWithAction()) {
             protocol.finishWithAction()
         } else {
@@ -179,7 +181,7 @@ internal class ActionComponentDialogFragment :
     }
 
     private fun onActionComponentDataChanged(actionComponentData: ActionComponentData?) {
-        Logger.d(TAG, "onActionComponentDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "onActionComponentDataChanged" }
         if (actionComponentData != null) {
             protocol.requestDetailsCall(actionComponentData)
         }
@@ -188,7 +190,7 @@ internal class ActionComponentDialogFragment :
     private fun handleError(componentError: ComponentError) {
         when (componentError.exception) {
             is CancellationException -> {
-                Logger.d(TAG, "Flow was cancelled by user")
+                adyenLog(AdyenLogLevel.DEBUG) { "Flow was cancelled by user" }
                 onBackPressed()
             }
 
@@ -204,7 +206,7 @@ internal class ActionComponentDialogFragment :
     }
 
     fun handleIntent(intent: Intent) {
-        Logger.d(TAG, "handleAction")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleAction" }
         actionComponent.handleIntent(intent)
     }
 

@@ -12,9 +12,11 @@ import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -69,7 +71,7 @@ class ExpiryDateInput @JvmOverloads constructor(
                 // GregorianCalendar is 0 based
                 ExpiryDate(calendar[Calendar.MONTH] + 1, calendar[Calendar.YEAR])
             } catch (e: ParseException) {
-                Logger.d(TAG, "getDate - value does not match expected pattern. " + e.localizedMessage)
+                adyenLog(AdyenLogLevel.DEBUG, e) { "getDate - value does not match expected pattern. " }
                 if (rawValue.isEmpty()) ExpiryDate.EMPTY_DATE else ExpiryDate.INVALID_DATE
             }
         }

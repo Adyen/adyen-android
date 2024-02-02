@@ -21,8 +21,8 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceContract
@@ -61,7 +61,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
     }
 
     override fun onBind(intent: Intent?): IBinder {
-        Logger.d(TAG, "onBind")
+        adyenLog(AdyenLogLevel.DEBUG) { "onBind" }
         if (intent?.hasExtra(INTENT_EXTRA_ADDITIONAL_DATA) == true) {
             additionalData = intent.getBundleExtra(INTENT_EXTRA_ADDITIONAL_DATA)
         }
@@ -69,22 +69,22 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        Logger.d(TAG, "onUnbind")
+        adyenLog(AdyenLogLevel.DEBUG) { "onUnbind" }
         return super.onUnbind(intent)
     }
 
     override fun onRebind(intent: Intent?) {
-        Logger.d(TAG, "onRebind")
+        adyenLog(AdyenLogLevel.DEBUG) { "onRebind" }
         super.onRebind(intent)
     }
 
     override fun onCreate() {
-        Logger.d(TAG, "onCreate")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
         super.onCreate()
     }
 
     override fun onDestroy() {
-        Logger.d(TAG, "onDestroy")
+        adyenLog(AdyenLogLevel.DEBUG) { "onDestroy" }
 
         cancel()
 
@@ -92,27 +92,27 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
     }
 
     final override fun sendResult(result: DropInServiceResult) {
-        Logger.d(TAG, "dispatching DropInServiceResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "dispatching DropInServiceResult" }
         emitResult(result)
     }
 
     final override fun sendBalanceResult(result: BalanceDropInServiceResult) {
-        Logger.d(TAG, "dispatching BalanceDropInServiceResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "dispatching BalanceDropInServiceResult" }
         emitResult(result)
     }
 
     final override fun sendOrderResult(result: OrderDropInServiceResult) {
-        Logger.d(TAG, "dispatching OrderDropInServiceResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "dispatching OrderDropInServiceResult" }
         emitResult(result)
     }
 
     final override fun sendRecurringResult(result: RecurringDropInServiceResult) {
-        Logger.d(TAG, "dispatching RecurringDropInServiceResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "dispatching RecurringDropInServiceResult" }
         emitResult(result)
     }
 
     final override fun sendAddressLookupResult(result: AddressLookupDropInServiceResult) {
-        Logger.d(TAG, "dispatching AddressLookupDropInServiceResult")
+        adyenLog(AdyenLogLevel.DEBUG) { "dispatching AddressLookupDropInServiceResult" }
         emitResult(result)
     }
 
@@ -128,7 +128,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
     }
 
     final override fun requestRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
-        Logger.d(TAG, "requestRemoveStoredPaymentMethod")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestRemoveStoredPaymentMethod" }
         onRemoveStoredPaymentMethod(storedPaymentMethod)
     }
 
@@ -165,8 +165,6 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
 
     companion object {
 
-        private val TAG = LogUtil.getTag()
-
         private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
 
         internal fun startService(
@@ -175,11 +173,11 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
             merchantService: ComponentName,
             additionalData: Bundle?,
         ): Boolean {
-            Logger.d(TAG, "startService - ${context::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "startService - ${context::class.simpleName}" }
             val intent = Intent().apply {
                 component = merchantService
             }
-            Logger.d(TAG, "merchant service: ${merchantService.className}")
+            adyenLog(AdyenLogLevel.DEBUG) { "merchant service: ${merchantService.className}" }
             context.startService(intent)
             return bindService(context, connection, merchantService, additionalData)
         }
@@ -190,7 +188,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
             merchantService: ComponentName,
             additionalData: Bundle?,
         ): Boolean {
-            Logger.d(TAG, "bindService - ${context::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "bindService - ${context::class.simpleName}" }
             val intent = Intent().apply {
                 component = merchantService
                 putExtra(INTENT_EXTRA_ADDITIONAL_DATA, additionalData)
@@ -205,7 +203,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         ) {
             unbindService(context, connection)
 
-            Logger.d(TAG, "stopService - ${context::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "stopService - ${context::class.simpleName}" }
 
             val intent = Intent().apply {
                 component = merchantService
@@ -214,7 +212,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         }
 
         private fun unbindService(context: Context, connection: ServiceConnection) {
-            Logger.d(TAG, "unbindService - ${context::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "unbindService - ${context::class.simpleName}" }
             context.unbindService(connection)
         }
     }

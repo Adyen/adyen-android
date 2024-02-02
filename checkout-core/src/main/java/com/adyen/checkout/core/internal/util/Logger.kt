@@ -60,16 +60,6 @@ object Logger {
     }
 
     @JvmStatic
-    fun d(tag: String, msg: String) {
-        logToLogcat(Log.DEBUG, tag, msg, null)
-    }
-
-    @JvmStatic
-    fun d(tag: String, msg: String, tr: Throwable) {
-        logToLogcat(Log.DEBUG, tag, msg, tr)
-    }
-
-    @JvmStatic
     fun i(tag: String, msg: String) {
         logToLogcat(Log.INFO, tag, msg, null)
     }
@@ -133,31 +123,37 @@ object Logger {
             } else {
                 Log.wtf(tag, msg, tr)
             }
+
             Log.VERBOSE -> if (tr == null) {
                 Log.v(tag, msg)
             } else {
                 Log.v(tag, msg, tr)
             }
+
             Log.DEBUG -> if (tr == null) {
                 Log.d(tag, msg)
             } else {
                 Log.d(tag, msg, tr)
             }
+
             Log.INFO -> if (tr == null) {
                 Log.i(tag, msg)
             } else {
                 Log.i(tag, msg, tr)
             }
+
             Log.WARN -> if (tr == null) {
                 Log.w(tag, msg)
             } else {
                 Log.w(tag, msg, tr)
             }
+
             Log.ERROR -> if (tr == null) {
                 Log.e(tag, msg)
             } else {
                 Log.e(tag, msg, tr)
             }
+
             NONE -> {}
             else -> {}
         }
@@ -169,7 +165,7 @@ object Logger {
             val newMessage: String = if (i != divisions) {
                 msg.substring(
                     i * MAX_LOGCAT_MSG_SIZE,
-                    (i + 1) * MAX_LOGCAT_MSG_SIZE
+                    (i + 1) * MAX_LOGCAT_MSG_SIZE,
                 )
             } else {
                 msg.substring(i * MAX_LOGCAT_MSG_SIZE)
