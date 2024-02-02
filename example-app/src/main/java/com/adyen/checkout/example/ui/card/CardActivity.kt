@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.card
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -56,6 +57,14 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
                 launch { cardViewModel.events.collect(::onCardEvent) }
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home && cardComponent?.handleBackPress() == true) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
