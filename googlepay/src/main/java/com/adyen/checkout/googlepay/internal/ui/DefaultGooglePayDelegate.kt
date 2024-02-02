@@ -32,6 +32,7 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
+import com.adyen.checkout.googlepay.internal.util.awaitTask
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -46,7 +47,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 @Suppress("TooManyFunctions")
 internal class DefaultGooglePayDelegate(
@@ -157,9 +157,7 @@ internal class DefaultGooglePayDelegate(
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)
         coroutineScope.launch {
-            // no need to handle the result of this operation, paymentDataLauncher does that internally
-            runCatching { paymentDataTask.await() }
-            paymentDataLauncher.launch(paymentDataTask)
+            paymentDataLauncher.launch(paymentDataTask.awaitTask())
         }
     }
 
