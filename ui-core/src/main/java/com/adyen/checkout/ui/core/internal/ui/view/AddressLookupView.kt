@@ -26,6 +26,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.util.formatStringWithHyperlink
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -121,18 +122,22 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initAddressLookupQuery() {
-        binding.textInputLayoutAddressLookupQuerySearch.setOnQueryTextListener(
-            object : OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    return true
-                }
+        binding.textInputLayoutAddressLookupQuerySearch.apply {
+            setOnQueryTextListener(
+                object : OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        return true
+                    }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    onQueryChanged(newText)
-                    return true
-                }
-            },
-        )
+                    override fun onQueryTextChange(newText: String): Boolean {
+                        onQueryChanged(newText)
+                        return true
+                    }
+                },
+            )
+            requestFocus()
+            showKeyboard()
+        }
     }
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
