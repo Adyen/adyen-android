@@ -254,7 +254,7 @@ internal class DropInViewModel(
             cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceStatus.ZeroBalance -> {
-                Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
+                adyenLog(AdyenLogLevel.INFO) { "handleBalanceResult - Gift Card has zero balance" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_zero_balance,
                     "Gift Card has zero balance",

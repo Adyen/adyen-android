@@ -31,6 +31,9 @@ inline fun Any.adyenLog(
     }
 }
 
+/**
+ * This is only meant for top level function where we cannot access `this`.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun adyenLog(
     level: AdyenLogLevel,

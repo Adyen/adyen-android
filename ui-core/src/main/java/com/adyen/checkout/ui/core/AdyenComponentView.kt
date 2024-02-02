@@ -20,8 +20,9 @@ import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -91,13 +92,13 @@ class AdyenComponentView @JvmOverloads constructor(
                 binding.frameLayoutComponentContainer.removeAllViews()
 
                 if (componentViewType == null) {
-                    Logger.i(TAG, "Component view type is null, ignoring.")
+                    adyenLog(AdyenLogLevel.INFO) { "Component view type is null, ignoring." }
                     return@onEach
                 }
 
                 val delegate = component.delegate
                 if (delegate !is ViewProvidingDelegate) {
-                    Logger.i(TAG, "View attached to non viewable component, ignoring.")
+                    adyenLog(AdyenLogLevel.INFO) { "View attached to non viewable component, ignoring." }
                     return@onEach
                 }
 

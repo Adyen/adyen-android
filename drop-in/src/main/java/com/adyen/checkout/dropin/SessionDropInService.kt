@@ -16,7 +16,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 import com.adyen.checkout.dropin.internal.service.SessionDropInServiceInterface
@@ -243,7 +242,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
     private fun sendFlowTakenOverUpdatedResult() {
         if (isFlowTakenOver) return
         isFlowTakenOver = true
-        Logger.i(TAG, "Flow was taken over, sending update to drop-in")
+        adyenLog(AdyenLogLevel.INFO) { "Flow was taken over, sending update to drop-in" }
         val result = SessionDropInServiceResult.SessionTakenOverUpdated(true)
         emitResult(result)
     }

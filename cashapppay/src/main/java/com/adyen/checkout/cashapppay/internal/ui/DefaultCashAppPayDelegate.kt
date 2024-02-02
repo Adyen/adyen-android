@@ -268,7 +268,7 @@ constructor(
             }
 
             is CashAppPayState.Approved -> {
-                Logger.i(TAG, "Cash App Pay authorization request approved")
+                adyenLog(AdyenLogLevel.INFO) { "Cash App Pay authorization request approved" }
                 updateInputData {
                     authorizationData = createAuthorizationData(newState.responseData)
                 }
@@ -276,7 +276,7 @@ constructor(
             }
 
             CashAppPayState.Declined -> {
-                Logger.i(TAG, "Cash App Pay authorization request declined")
+                adyenLog(AdyenLogLevel.INFO) { "Cash App Pay authorization request declined" }
                 exceptionChannel.trySend(ComponentException("Cash App Pay authorization request declined"))
             }
 

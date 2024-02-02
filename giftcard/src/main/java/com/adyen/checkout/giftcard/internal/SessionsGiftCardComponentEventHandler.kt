@@ -257,7 +257,7 @@ class SessionsGiftCardComponentEventHandler(
     private fun setFlowTakenOver() {
         if (sessionSavedStateHandleContainer.isFlowTakenOver == true) return
         sessionSavedStateHandleContainer.isFlowTakenOver = true
-        Logger.i(TAG, "Flow was taken over.")
+        adyenLog(AdyenLogLevel.INFO) { "Flow was taken over." }
     }
 
     override fun onCleared() {
