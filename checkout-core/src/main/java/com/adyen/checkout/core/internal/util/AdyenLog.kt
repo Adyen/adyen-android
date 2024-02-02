@@ -30,3 +30,15 @@ inline fun Any.adyenLog(
         AdyenLogger.logger.log(level, tag, log(), throwable)
     }
 }
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+inline fun adyenLog(
+    level: AdyenLogLevel,
+    tag: String,
+    throwable: Throwable? = null,
+    log: () -> String,
+) {
+    if (AdyenLogger.logger.shouldLog(level)) {
+        AdyenLogger.logger.log(level, "CO.$tag", log(), throwable)
+    }
+}

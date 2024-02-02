@@ -23,8 +23,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
@@ -99,7 +97,7 @@ class GooglePayComponent internal constructor(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        Logger.w(TAG, "Interaction with GooglePayComponent can't be blocked")
+        adyenLog(AdyenLogLevel.WARN) { "Interaction with GooglePayComponent can't be blocked" }
     }
 
     override fun onCleared() {
@@ -111,7 +109,6 @@ class GooglePayComponent internal constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = GooglePayComponentProvider()
