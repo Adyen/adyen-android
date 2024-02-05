@@ -14,8 +14,8 @@ import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.BuildUtils
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
@@ -243,6 +243,11 @@ object DropIn {
     }
 
     private fun updateDefaultLogLevel(context: Context) {
-        Logger.updateDefaultLogLevel(BuildUtils.isDebugBuild(context))
+        val logLevel = if (BuildUtils.isDebugBuild(context)) {
+            AdyenLogLevel.DEBUG
+        } else {
+            AdyenLogLevel.NONE
+        }
+        AdyenLogger.setLogLevel(logLevel)
     }
 }
