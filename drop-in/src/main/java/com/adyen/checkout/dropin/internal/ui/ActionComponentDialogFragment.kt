@@ -32,7 +32,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
@@ -215,8 +214,6 @@ internal class ActionComponentDialogFragment :
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         const val ACTION = "ACTION"
         const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
 

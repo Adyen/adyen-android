@@ -18,7 +18,6 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Sha256
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
@@ -211,7 +210,6 @@ class DefaultDetectCardTypeRepository(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 
         private const val REQUIRED_BIN_SIZE = 11

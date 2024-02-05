@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -134,8 +133,6 @@ internal class GooglePayComponentDialogFragment :
     }
 
     companion object {
-
-        private val TAG = LogUtil.getTag()
         private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
         fun newInstance(

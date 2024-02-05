@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
@@ -178,8 +177,6 @@ internal class DefaultMBWayDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
 

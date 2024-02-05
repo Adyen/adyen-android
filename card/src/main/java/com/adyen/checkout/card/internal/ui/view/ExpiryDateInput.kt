@@ -13,7 +13,6 @@ import android.text.Editable
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
@@ -111,7 +110,6 @@ class ExpiryDateInput @JvmOverloads constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         const val SEPARATOR = "/"
         private const val DATE_FORMAT = "MM" + SEPARATOR + "yy"
         private const val MAX_LENGTH = 5

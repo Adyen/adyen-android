@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -93,8 +92,6 @@ class BlikComponent internal constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         @JvmField
         val PROVIDER = BlikComponentProvider()
 

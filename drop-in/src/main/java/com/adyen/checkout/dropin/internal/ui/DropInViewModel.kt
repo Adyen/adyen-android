@@ -30,7 +30,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.mapToParams
@@ -454,9 +453,5 @@ internal class DropInViewModel(
             adyenLog(AdyenLogLevel.DEBUG) { "sendEvent - ${event::class.simpleName}" }
             eventChannel.send(event)
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

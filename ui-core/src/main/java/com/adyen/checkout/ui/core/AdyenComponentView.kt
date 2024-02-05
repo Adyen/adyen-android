@@ -21,7 +21,6 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
@@ -201,9 +200,5 @@ class AdyenComponentView @JvmOverloads constructor(
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         if (isInteractionBlocked) return true
         return super.onInterceptTouchEvent(ev)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

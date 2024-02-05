@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -87,10 +86,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     override fun onCancel(dialog: DialogInterface) {
         adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         protocol.terminateDropIn()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 
     /**

@@ -34,7 +34,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
@@ -343,7 +342,6 @@ internal class DefaultQRCodeDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         private val VIEWABLE_PAYMENT_METHODS = listOf(
             PaymentMethodTypes.DUIT_NOW,

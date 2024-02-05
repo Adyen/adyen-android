@@ -27,7 +27,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -174,9 +173,5 @@ internal class StoredACHDirectDebitDelegate(
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         adyenLog(AdyenLogLevel.ERROR) { "updateAddressInputData should not be called in StoredACHDirectDebitDelegate" }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

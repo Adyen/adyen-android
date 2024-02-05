@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -90,9 +89,5 @@ abstract class OnlineBankingComponent<
         onlineBankingDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

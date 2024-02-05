@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentStoredPaymentMethodBinding
@@ -232,7 +231,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
         @JvmStatic

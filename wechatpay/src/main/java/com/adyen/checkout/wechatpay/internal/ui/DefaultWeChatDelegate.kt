@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
@@ -167,8 +166,6 @@ internal class DefaultWeChatDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val RESULT_CODE = "resultCode"
     }
 }

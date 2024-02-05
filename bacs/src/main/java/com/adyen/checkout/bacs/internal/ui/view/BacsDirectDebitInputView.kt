@@ -25,7 +25,6 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
@@ -305,5 +304,3 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     override fun getView(): View = this
 }
-
-private val TAG = LogUtil.getTag()

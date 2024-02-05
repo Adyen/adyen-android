@@ -28,7 +28,6 @@ import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMet
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
@@ -369,7 +368,6 @@ internal class DefaultACHDirectDebitDelegate(
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER = "bankAccountNumber"
         private const val ENCRYPTION_KEY_FOR_BANK_LOCATION_ID = "bankLocationId"
     }

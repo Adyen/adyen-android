@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
@@ -213,9 +212,5 @@ internal class DefaultEContextDelegate<
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

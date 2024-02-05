@@ -12,7 +12,6 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 
 internal class BlikOutputData(blikCode: String) : OutputData {
@@ -36,7 +35,6 @@ internal class BlikOutputData(blikCode: String) : OutputData {
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val BLIK_CODE_LENGTH = 6
     }
 

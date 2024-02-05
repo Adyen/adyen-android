@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
@@ -119,7 +118,6 @@ class GiftCardComponent internal constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = GiftCardComponentProvider()

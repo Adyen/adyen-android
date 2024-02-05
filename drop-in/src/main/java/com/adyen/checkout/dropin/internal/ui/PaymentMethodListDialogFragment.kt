@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
@@ -37,8 +36,6 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
-private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
 internal class PaymentMethodListDialogFragment :

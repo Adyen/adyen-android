@@ -21,7 +21,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.instant.InstantComponentState
 import kotlinx.coroutines.CoroutineScope
@@ -95,9 +94,5 @@ internal class DefaultInstantPaymentDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

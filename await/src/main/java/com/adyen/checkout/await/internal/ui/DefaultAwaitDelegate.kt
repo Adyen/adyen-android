@@ -28,7 +28,6 @@ import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -191,8 +190,6 @@ internal class DefaultAwaitDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
 
         @VisibleForTesting

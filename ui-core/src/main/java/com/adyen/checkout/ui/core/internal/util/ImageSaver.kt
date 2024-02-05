@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
@@ -208,8 +207,6 @@ class ImageSaver(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val PNG_QUALITY = 100
         private const val REQUIRED_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
     }

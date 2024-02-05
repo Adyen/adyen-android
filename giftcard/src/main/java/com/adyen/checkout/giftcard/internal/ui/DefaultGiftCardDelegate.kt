@@ -28,7 +28,6 @@ import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -350,7 +349,6 @@ internal class DefaultGiftCardDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val LAST_DIGITS_LENGTH = 4
     }
 }

@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -35,10 +34,6 @@ private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 internal abstract class BaseComponentDialogFragment :
     DropInBottomSheetDialogFragment(),
     ComponentCallback<PaymentComponentState<*>> {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()

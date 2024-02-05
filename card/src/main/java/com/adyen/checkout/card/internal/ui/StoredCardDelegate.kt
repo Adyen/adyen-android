@@ -42,7 +42,6 @@ import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
@@ -434,7 +433,6 @@ internal class StoredCardDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val LAST_FOUR_LENGTH = 4
     }
 }

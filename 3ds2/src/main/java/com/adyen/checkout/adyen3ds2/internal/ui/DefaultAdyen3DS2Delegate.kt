@@ -40,8 +40,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -215,7 +213,7 @@ internal class DefaultAdyen3DS2Delegate(
         val configParameters = createAdyenConfigParameters(fingerprintToken)
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            adyenLog(AdyenLogLevel.ERROR, throwable) {  "Unexpected uncaught 3DS2 Exception" }
+            adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
             exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 
@@ -519,8 +517,6 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"

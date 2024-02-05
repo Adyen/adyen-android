@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
@@ -23,7 +22,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -93,7 +91,7 @@ internal class StoredCashAppPayDelegate(
     }
 
     override fun updateInputData(update: CashAppPayInputData.() -> Unit) {
-        Log.w(TAG, "updateInputData should not be called for stored Cash App Pay")
+        adyenLog(AdyenLogLevel.WARN) { "updateInputData should not be called for stored Cash App Pay" }
     }
 
     private fun createComponentState(): CashAppPayComponentState {
@@ -122,9 +120,5 @@ internal class StoredCashAppPayDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

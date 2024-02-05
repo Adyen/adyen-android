@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
@@ -147,7 +146,6 @@ internal class GooglePayComponentParamsMapper(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private val DEFAULT_AMOUNT = Amount(currency = CheckoutCurrency.USD.name, value = 0)
         private const val DEFAULT_TOTAL_PRICE_STATUS = "FINAL"
     }

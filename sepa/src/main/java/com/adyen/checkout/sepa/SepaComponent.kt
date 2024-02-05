@@ -21,7 +21,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sepa.internal.ui.SepaDelegate
@@ -93,7 +92,6 @@ class SepaComponent internal constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = SepaComponentProvider()

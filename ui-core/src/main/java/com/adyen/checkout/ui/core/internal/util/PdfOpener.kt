@@ -17,7 +17,6 @@ import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -98,9 +97,5 @@ class PdfOpener {
             adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in browser" }
             false
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

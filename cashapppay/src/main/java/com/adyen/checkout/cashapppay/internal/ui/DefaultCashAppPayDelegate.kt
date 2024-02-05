@@ -39,7 +39,6 @@ import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -325,9 +324,5 @@ constructor(
         _coroutineScope = null
         removeObserver()
         cashAppPay.unregisterFromStateUpdates()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

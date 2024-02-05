@@ -54,7 +54,6 @@ import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
@@ -838,7 +837,6 @@ class DefaultCardDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val DEBIT_FUNDING_SOURCE = "debit"
 
         @VisibleForTesting

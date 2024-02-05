@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
@@ -155,9 +154,5 @@ internal class DefaultSepaDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

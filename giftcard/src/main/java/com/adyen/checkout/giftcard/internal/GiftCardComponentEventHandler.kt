@@ -5,7 +5,6 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
@@ -64,9 +63,5 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
                 }
             }
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

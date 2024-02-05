@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
@@ -257,8 +256,6 @@ internal class PaymentMethodsListViewModel(
         }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
     }

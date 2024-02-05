@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -203,9 +202,5 @@ internal class CardComponentParamsMapper(
             ),
             amount = sessionParams.amount ?: amount,
         )
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

@@ -26,7 +26,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
@@ -301,9 +300,5 @@ internal class DefaultBoletoDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

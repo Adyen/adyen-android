@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -261,9 +260,5 @@ class SessionsGiftCardComponentEventHandler(
 
     override fun onCleared() {
         _coroutineScope = null
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

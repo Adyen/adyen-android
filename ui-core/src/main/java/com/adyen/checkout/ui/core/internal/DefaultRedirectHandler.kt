@@ -19,7 +19,6 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
@@ -203,8 +202,6 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val PAYLOAD_PARAMETER = "payload"
         private const val REDIRECT_RESULT_PARAMETER = "redirectResult"
         private const val PAYMENT_RESULT_PARAMETER = "PaRes"
