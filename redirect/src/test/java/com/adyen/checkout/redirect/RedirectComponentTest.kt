@@ -16,10 +16,9 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.redirect.internal.ui.RedirectComponentViewType
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -38,7 +37,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class RedirectComponentTest(
     @Mock private val redirectDelegate: RedirectDelegate,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
@@ -48,8 +47,6 @@ internal class RedirectComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(redirectDelegate.viewFlow) doReturn MutableStateFlow(RedirectComponentViewType)
         component = RedirectComponent(redirectDelegate, actionComponentEventHandler)
     }

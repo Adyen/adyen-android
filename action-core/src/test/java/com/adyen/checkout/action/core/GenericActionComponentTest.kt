@@ -16,8 +16,7 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -34,7 +33,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GenericActionComponentTest(
     @Mock private val actionDelegate: ActionDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
@@ -46,8 +45,6 @@ internal class GenericActionComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(genericActionDelegate.delegate) doReturn actionDelegate
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         component = GenericActionComponent(genericActionDelegate, actionHandlingComponent, actionComponentEventHandler)

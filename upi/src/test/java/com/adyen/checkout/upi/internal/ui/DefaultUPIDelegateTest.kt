@@ -18,9 +18,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponentState
@@ -53,7 +52,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultUPIDelegateTest(
     @Mock private val submitHandler: SubmitHandler<UPIComponentState>,
     @Mock private val analyticsRepository: AnalyticsRepository,
@@ -64,7 +63,6 @@ internal class DefaultUPIDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createUPIDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
