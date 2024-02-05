@@ -135,6 +135,9 @@ class AddressLookupView @JvmOverloads constructor(
                     }
                 },
             )
+            setOnQueryTextFocusChangeListener { v, hasFocus ->
+                isSelected = hasFocus
+            }
             requestFocus()
             showKeyboard()
         }

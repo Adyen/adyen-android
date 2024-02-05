@@ -330,6 +330,7 @@
     <style name="AdyenCheckout.AddressLookup.Query">
         <item name="android:layout_height">@dimen/input_height</item>
         <item name="android:background">@drawable/address_lookup_search_border</item>
+        <item name="android:queryBackground">@android:color/transparent</item>
         <item name="android:queryHint">@string/checkout_address_lookup_hint</item>
         <item name="android:iconifiedByDefault">false</item>
     </style>
