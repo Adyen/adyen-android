@@ -19,8 +19,9 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
@@ -67,7 +68,7 @@ internal class DefaultSepaDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -102,7 +103,7 @@ internal class DefaultSepaDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
@@ -125,7 +126,7 @@ internal class DefaultSepaDelegate(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
             ownerName = outputData.ownerNameField.value,
-            iban = outputData.ibanNumberField.value
+            iban = outputData.ibanNumberField.value,
         )
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,

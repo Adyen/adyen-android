@@ -14,7 +14,6 @@ import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
@@ -62,7 +61,7 @@ class ExpiryDateInput @JvmOverloads constructor(
     var date: ExpiryDate
         get() {
             val normalizedExpiryDate = normalize(rawValue)
-            Logger.v(TAG, "getDate - $normalizedExpiryDate")
+            adyenLog(AdyenLogLevel.VERBOSE) { "getDate - $normalizedExpiryDate" }
             return try {
                 val parsedDate = requireNotNull(dateFormat.parse(normalizedExpiryDate))
                 val calendar = GregorianCalendar.getInstance()
@@ -77,7 +76,7 @@ class ExpiryDateInput @JvmOverloads constructor(
         }
         set(expiryDate) {
             if (expiryDate !== ExpiryDate.EMPTY_DATE) {
-                Logger.v(TAG, "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth)
+                adyenLog(AdyenLogLevel.VERBOSE) { "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth }
                 val calendar = GregorianCalendar.getInstance()
                 calendar.clear()
                 // first day of month, GregorianCalendar month is 0 based.

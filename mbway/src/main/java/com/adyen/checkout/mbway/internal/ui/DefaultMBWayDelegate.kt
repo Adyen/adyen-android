@@ -21,8 +21,9 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
@@ -75,7 +76,7 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -92,7 +93,7 @@ internal class DefaultMBWayDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -110,7 +111,7 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
         val outputData = createOutputData()
         outputDataChanged(outputData)
         updateComponentState(outputData)
@@ -137,7 +138,7 @@ internal class DefaultMBWayDelegate(
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
-            telephoneNumber = outputData.mobilePhoneNumberFieldState.value
+            telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -149,7 +150,7 @@ internal class DefaultMBWayDelegate(
         return MBWayComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = true
+            isReady = true,
         )
     }
 

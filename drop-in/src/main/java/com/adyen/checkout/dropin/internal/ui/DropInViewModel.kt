@@ -218,7 +218,7 @@ internal class DropInViewModel(
     }
 
     private fun setupAnalytics() {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }

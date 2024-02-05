@@ -21,8 +21,9 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData
@@ -80,7 +81,7 @@ internal class DefaultPayByBankDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -97,7 +98,7 @@ internal class DefaultPayByBankDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -121,7 +122,7 @@ internal class DefaultPayByBankDelegate(
 
     private fun createOutputData() = PayByBankOutputData(
         selectedIssuer = inputData.selectedIssuer,
-        issuers = filterByQuery()
+        issuers = filterByQuery(),
     )
 
     private fun filterByQuery(): List<IssuerModel> = inputData.query?.let { query ->
@@ -157,7 +158,7 @@ internal class DefaultPayByBankDelegate(
         return PayByBankComponentState(
             data = paymentComponentData,
             isInputValid = outputData?.isValid ?: true,
-            isReady = true
+            isReady = true,
         )
     }
 

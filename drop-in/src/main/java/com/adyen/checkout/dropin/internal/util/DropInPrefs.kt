@@ -12,7 +12,6 @@ import android.content.Context
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LocaleUtil
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import java.util.Locale
 
@@ -23,7 +22,7 @@ internal object DropInPrefs {
     private const val LOCALE_PREF = "drop-in-locale"
 
     fun setShopperLocale(context: Context, shopperLocale: Locale) {
-        Logger.v(TAG, "setShopperLocale: $shopperLocale")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setShopperLocale: $shopperLocale" }
         val localeTag = LocaleUtil.toLanguageTag(shopperLocale)
         adyenLog(AdyenLogLevel.DEBUG) { "Storing shopper locale tag: $localeTag" }
         return context
@@ -34,7 +33,7 @@ internal object DropInPrefs {
     }
 
     fun getShopperLocale(context: Context): Locale {
-        Logger.v(TAG, "getShopperLocale")
+        adyenLog(AdyenLogLevel.VERBOSE) { "getShopperLocale" }
         val localeTag = context
             .getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE)
             .getString(LOCALE_PREF, null)

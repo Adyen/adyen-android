@@ -211,7 +211,7 @@ internal class DropInActivity :
     }
 
     override fun onStart() {
-        Logger.v(TAG, "onStart")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onStart" }
         super.onStart()
     }
 
@@ -234,7 +234,7 @@ internal class DropInActivity :
     }
 
     override fun onStop() {
-        Logger.v(TAG, "onStop")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onStop" }
         super.onStop()
     }
 
@@ -291,13 +291,13 @@ internal class DropInActivity :
     }
 
     override fun onResume() {
-        Logger.v(TAG, "onResume")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onResume" }
         super.onResume()
         setLoading(dropInViewModel.isWaitingResult)
     }
 
     override fun onDestroy() {
-        Logger.v(TAG, "onDestroy")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onDestroy" }
         super.onDestroy()
     }
 
@@ -636,7 +636,7 @@ internal class DropInActivity :
     }
 
     private fun handleBalanceResult(balanceResult: BalanceResult) {
-        Logger.v(TAG, "handleBalanceResult")
+        adyenLog(AdyenLogLevel.VERBOSE) { "handleBalanceResult" }
         val result = dropInViewModel.handleBalanceResult(balanceResult)
         adyenLog(AdyenLogLevel.DEBUG) { "handleBalanceResult: ${result::class.java.simpleName}" }
         when (result) {
@@ -667,7 +667,7 @@ internal class DropInActivity :
     }
 
     private fun handleOrderResult(order: OrderResponse) {
-        Logger.v(TAG, "handleOrderResult")
+        adyenLog(AdyenLogLevel.VERBOSE) { "handleOrderResult" }
         dropInViewModel.handleOrderCreated(order)
     }
 

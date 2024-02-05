@@ -25,10 +25,12 @@ import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -87,7 +89,7 @@ internal class DefaultAwaitDelegate(
             permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
 
         // Immediately request a new status if the user resumes the app
@@ -125,7 +127,7 @@ internal class DefaultAwaitDelegate(
     private fun onStatus(result: Result<StatusResponse>, action: Action) {
         result.fold(
             onSuccess = { response ->
-                Logger.v(TAG, "Status changed - ${response.resultCode}")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
                 createOutputData(response, action)
                 if (StatusResponseUtils.isFinalResult(response)) {
                     onPollingSuccessful(response)
@@ -134,7 +136,7 @@ internal class DefaultAwaitDelegate(
             onFailure = {
                 Logger.e(TAG, "Error while polling status", it)
                 exceptionChannel.trySend(ComponentException("Error while polling status", it))
-            }
+            },
         )
     }
 
@@ -146,7 +148,7 @@ internal class DefaultAwaitDelegate(
 
     private fun createOutputData() = AwaitOutputData(
         isValid = false,
-        paymentMethodType = null
+        paymentMethodType = null,
     )
 
     private fun onPollingSuccessful(statusResponse: StatusResponse) {

@@ -59,9 +59,11 @@ class DefaultDetectCardTypeRepository(
                     _detectedCardTypesFlow.trySend(cachedResult.detectedCardTypes)
                     return
                 }
+
                 is BinLookupResult.Loading -> {
                     adyenLog(AdyenLogLevel.DEBUG) { "BinLookup request is in progress." }
                 }
+
                 is BinLookupResult.Unavailable -> {
                     adyenLog(AdyenLogLevel.DEBUG) { "Fetching from network." }
                     fetchFromNetwork(
@@ -70,7 +72,7 @@ class DefaultDetectCardTypeRepository(
                         supportedCardBrands,
                         clientKey,
                         coroutineScope,
-                        type
+                        type,
                     )
                 }
             }
@@ -97,7 +99,7 @@ class DefaultDetectCardTypeRepository(
                     publicKey,
                     supportedCardBrands,
                     clientKey,
-                    type
+                    type,
                 )?.let {
                     _detectedCardTypesFlow.send(it)
                 }
@@ -177,7 +179,7 @@ class DefaultDetectCardTypeRepository(
 
             binLookupService.makeBinLookup(
                 request = request,
-                clientKey = clientKey
+                clientKey = clientKey,
             )
         }
             .onFailure { e -> Logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
@@ -186,7 +188,7 @@ class DefaultDetectCardTypeRepository(
 
     private fun mapResponse(binLookupResponse: BinLookupResponse): List<DetectedCardType> {
         adyenLog(AdyenLogLevel.DEBUG) { "handleBinLookupResponse" }
-        Logger.v(TAG, "Brands: ${binLookupResponse.brands}")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Brands: ${binLookupResponse.brands}" }
 
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse.brands.orEmpty().mapNotNull { brandResponse ->
@@ -197,10 +199,10 @@ class DefaultDetectCardTypeRepository(
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(
-                    brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value
+                    brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 expiryDatePolicy = Brand.FieldPolicy.parse(
-                    brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value
+                    brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 isSupported = brandResponse.supported != false,
                 panLength = brandResponse.panLength,

@@ -23,8 +23,9 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
@@ -80,7 +81,7 @@ internal class DefaultEContextDelegate<
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -102,7 +103,7 @@ internal class DefaultEContextDelegate<
             firstNameState = validateFirstName(inputData.firstName),
             lastNameState = validateLastName(inputData.lastName),
             phoneNumberState = validatePhoneNumber(inputData.mobileNumber, inputData.countryCode),
-            emailAddressState = validateEmailAddress(inputData.emailAddress)
+            emailAddressState = validateEmailAddress(inputData.emailAddress),
         )
     }
 

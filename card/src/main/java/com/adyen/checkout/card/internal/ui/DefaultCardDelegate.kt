@@ -174,7 +174,7 @@ class DefaultCardDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -235,7 +235,7 @@ class DefaultCardDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
@@ -312,7 +312,7 @@ class DefaultCardDelegate(
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
     ): CardOutputData {
-        Logger.v(TAG, "createOutputData")
+        adyenLog(AdyenLogLevel.VERBOSE) { "createOutputData" }
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
             inputData.address.country,
@@ -396,7 +396,7 @@ class DefaultCardDelegate(
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }

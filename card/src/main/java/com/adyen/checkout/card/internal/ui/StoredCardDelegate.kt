@@ -154,7 +154,7 @@ internal class StoredCardDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -206,7 +206,7 @@ internal class StoredCardDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
@@ -243,7 +243,7 @@ internal class StoredCardDelegate(
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }

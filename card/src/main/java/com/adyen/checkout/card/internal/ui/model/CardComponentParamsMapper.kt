@@ -19,8 +19,9 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
@@ -111,22 +112,22 @@ internal class CardComponentParamsMapper(
     private fun CheckoutConfiguration.getSupportedCardBrands(
         paymentMethod: PaymentMethod?
     ): List<CardBrand> {
-        val test = getCardConfiguration()?.supportedCardBrands
+        val supportedCardBrands = getCardConfiguration()?.supportedCardBrands
         return when {
-            !test.isNullOrEmpty() -> {
-                Logger.v(TAG, "Reading supportedCardTypes from configuration")
-                test
+            !supportedCardBrands.isNullOrEmpty() -> {
+                adyenLog(AdyenLogLevel.VERBOSE) { "Reading supportedCardTypes from configuration" }
+                supportedCardBrands
             }
 
             paymentMethod?.brands.orEmpty().isNotEmpty() -> {
-                Logger.v(TAG, "Reading supportedCardTypes from API brands")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Reading supportedCardTypes from API brands" }
                 paymentMethod?.brands.orEmpty().map {
                     CardBrand(txVariant = it)
                 }
             }
 
             else -> {
-                Logger.v(TAG, "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Falling back to CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST" }
                 CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST
             }
         }.removeRestrictedCards()

@@ -19,7 +19,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -55,7 +54,7 @@ class SessionsGiftCardComponentEventHandler(
     }
 
     private fun updateSessionData(sessionData: String) {
-        Logger.v(TAG, "Updating session data - $sessionData")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
         sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
 
@@ -65,7 +64,7 @@ class SessionsGiftCardComponentEventHandler(
     ) {
         val sessionComponentCallback = componentCallback as? SessionsGiftCardComponentCallback
             ?: throw CheckoutException("Callback must be type of ${SessionComponentCallback::class.java.canonicalName}")
-        Logger.v(TAG, "Event received $event")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Event received $event" }
         when (event) {
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data, sessionComponentCallback)
             is PaymentComponentEvent.Error -> onComponentError(event.error, sessionComponentCallback)

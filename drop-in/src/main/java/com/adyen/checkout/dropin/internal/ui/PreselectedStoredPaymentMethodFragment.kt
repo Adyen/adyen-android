@@ -114,7 +114,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun observeState() {
         storedPaymentViewModel.uiStateFlow.onEach { state ->
-            Logger.v(TAG, "state: $state")
+            adyenLog(AdyenLogLevel.VERBOSE) { "state: $state" }
             updateStoredPaymentMethodItem(state.storedPaymentMethodModel)
             updateButtonState(state.buttonState)
         }.launchIn(viewLifecycleOwner.lifecycleScope)

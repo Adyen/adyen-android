@@ -6,7 +6,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
@@ -30,7 +29,7 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
             ?: throw CheckoutException(
                 "Callback must be type of ${GiftCardComponentCallback::class.java.canonicalName}",
             )
-        Logger.v(TAG, "Event received $event")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Event received $event" }
         when (event) {
             is PaymentComponentEvent.ActionDetails -> callback.onAdditionalDetails(event.data)
             is PaymentComponentEvent.Error -> callback.onError(event.error)

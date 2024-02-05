@@ -200,7 +200,7 @@ internal class DefaultQRCodeDelegate(
     private fun onStatus(result: Result<StatusResponse>, action: QrCodeAction) {
         result.fold(
             onSuccess = { response ->
-                Logger.v(TAG, "Status changed - ${response.resultCode}")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
                 createOutputData(response, action)
                 if (StatusResponseUtils.isFinalResult(response)) {
                     onPollingSuccessful(response)
