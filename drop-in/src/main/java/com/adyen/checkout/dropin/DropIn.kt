@@ -19,11 +19,14 @@ import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
+import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.DropInResultContractParams
 import com.adyen.checkout.dropin.internal.ui.model.SessionDropInResultContractParams
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import java.util.Locale
 
 /**
  * Drop-in is our pre-built checkout UI for accepting payments. You only need to integrate through your backend with the
@@ -135,7 +138,10 @@ object DropIn {
             checkoutSession,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, checkoutConfiguration, sessionDropInResultContractParams)
+        val sessionParams = SessionParamsFactory.create(checkoutSession)
+        val shopperLocale = DropInParamsMapper().getShopperLocale(checkoutConfiguration, sessionParams)
+
+        startPayment(context, dropInLauncher, shopperLocale, sessionDropInResultContractParams)
     }
 
     /**
@@ -228,17 +234,19 @@ object DropIn {
             paymentMethodsApiResponse,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, checkoutConfiguration, dropInResultContractParams)
+        val shopperLocale = DropInParamsMapper().getShopperLocale(checkoutConfiguration, null)
+
+        startPayment(context, dropInLauncher, shopperLocale, dropInResultContractParams)
     }
 
     private fun <T> startPayment(
         context: Context,
         dropInLauncher: ActivityResultLauncher<T>,
-        checkoutConfiguration: CheckoutConfiguration,
+        shopperLocale: Locale?,
         params: T,
     ) {
         updateDefaultLogLevel(context)
-        DropInPrefs.setShopperLocale(context, checkoutConfiguration.shopperLocale)
+        DropInPrefs.setShopperLocale(context, shopperLocale)
         dropInLauncher.launch(params)
     }
 

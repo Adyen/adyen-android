@@ -38,7 +38,7 @@ internal class PreselectedStoredPaymentViewModelTest {
     private val dropInParams = DropInParamsMapper().mapToParams(
         checkoutConfiguration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY, amount = TEST_AMOUNT),
         deviceLocale = Locale.US,
-        sessionDetails = null,
+        sessionParams = null,
     )
 
     private lateinit var viewModel: PreselectedStoredPaymentViewModel
@@ -65,7 +65,7 @@ internal class PreselectedStoredPaymentViewModelTest {
         val dropInParams = DropInParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = Locale.US,
-            sessionDetails = null,
+            sessionParams = null,
         )
 
         viewModel = PreselectedStoredPaymentViewModel(

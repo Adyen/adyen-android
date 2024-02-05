@@ -10,8 +10,8 @@ package com.adyen.checkout.dropin.internal.ui.model
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.dropin.getDropInConfiguration
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import java.util.Locale
 
 internal class DropInParamsMapper {
@@ -19,20 +19,24 @@ internal class DropInParamsMapper {
     fun mapToParams(
         checkoutConfiguration: CheckoutConfiguration,
         deviceLocale: Locale,
-        sessionDetails: SessionDetails?,
+        sessionParams: SessionParams?,
     ): DropInParams {
         val dropInConfiguration = checkoutConfiguration.getDropInConfiguration()
         return DropInParams(
-            shopperLocale = checkoutConfiguration.shopperLocale ?: deviceLocale,
+            shopperLocale = getShopperLocale(checkoutConfiguration, sessionParams) ?: deviceLocale,
             environment = checkoutConfiguration.environment,
             clientKey = checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),
-            amount = sessionDetails?.amount ?: checkoutConfiguration.amount,
+            amount = sessionParams?.amount ?: checkoutConfiguration.amount,
             showPreselectedStoredPaymentMethod = dropInConfiguration?.showPreselectedStoredPaymentMethod ?: true,
             skipListWhenSinglePaymentMethod = dropInConfiguration?.skipListWhenSinglePaymentMethod ?: false,
             isRemovingStoredPaymentMethodsEnabled = dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled ?: false,
             additionalDataForDropInService = dropInConfiguration?.additionalDataForDropInService,
             overriddenPaymentMethodInformation = dropInConfiguration?.overriddenPaymentMethodInformation.orEmpty(),
         )
+    }
+
+    fun getShopperLocale(checkoutConfiguration: CheckoutConfiguration, sessionParams: SessionParams?): Locale? {
+        return checkoutConfiguration.shopperLocale ?: sessionParams?.shopperLocale
     }
 }

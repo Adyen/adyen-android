@@ -15,10 +15,10 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.dropIn
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -115,19 +115,18 @@ internal class DropInParamsMapperTest {
     ) {
         val testConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val sessionDetails = SessionDetails(
-            id = "id",
-            sessionData = "session_data",
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
             amount = sessionsValue,
-            expiresAt = "",
             returnUrl = null,
-            sessionSetupConfiguration = null,
+            shopperLocale = null,
         )
 
         val params = dropInParamsMapper.mapToParams(
             checkoutConfiguration = testConfiguration,
             deviceLocale = DEVICE_LOCALE,
-            sessionDetails = sessionDetails,
+            sessionParams = sessionParams,
         )
 
         val expected = getDropInParams(amount = expectedValue)
