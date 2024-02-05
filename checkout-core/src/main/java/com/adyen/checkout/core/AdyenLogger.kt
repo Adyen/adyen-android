@@ -71,5 +71,12 @@ interface AdyenLogger {
         fun setLogger(logger: AdyenLogger) {
             this.logger = logger
         }
+
+        /**
+         * Reset the logger instance back to the default.
+         */
+        fun resetLogger() {
+            this.logger = LogcatLogger()
+        }
     }
 }
