@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class SessionParams(
@@ -17,4 +18,5 @@ data class SessionParams(
     val installmentConfiguration: SessionInstallmentConfiguration?,
     val amount: Amount?,
     val returnUrl: String?,
+    val shopperLocale: Locale?,
 )
