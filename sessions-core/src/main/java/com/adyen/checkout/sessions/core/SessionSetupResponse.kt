@@ -25,7 +25,8 @@ data class SessionSetupResponse(
     val expiresAt: String,
     val paymentMethodsApiResponse: PaymentMethodsApiResponse?,
     val returnUrl: String?,
-    val configuration: SessionSetupConfiguration?
+    val configuration: SessionSetupConfiguration?,
+    val shopperLocale: String?,
 ) : ModelObject() {
 
     companion object {
@@ -36,6 +37,7 @@ data class SessionSetupResponse(
         private const val PAYMENT_METHODS = "paymentMethods"
         private const val RETURN_URL = "returnUrl"
         private const val CONFIGURATION = "configuration"
+        private const val SHOPPER_LOCALE = "shopperLocale"
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupResponse> = object : Serializer<SessionSetupResponse> {
@@ -58,6 +60,7 @@ data class SessionSetupResponse(
                         CONFIGURATION,
                         ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER)
                     )
+                    jsonObject.putOpt(SHOPPER_LOCALE, modelObject.shopperLocale)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)
                 }
@@ -79,7 +82,8 @@ data class SessionSetupResponse(
                         configuration = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(CONFIGURATION),
                             SessionSetupConfiguration.SERIALIZER
-                        )
+                        ),
+                        shopperLocale = jsonObject.optString(SHOPPER_LOCALE),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)
