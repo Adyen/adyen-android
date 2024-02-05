@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.extensions
 
 internal fun Any.getLogTag(): String {
-    val fullClassName = this::class.java.simpleName
+    val fullClassName = this::class.java.name
     val outerClassName = fullClassName.substringBefore('$').substringAfterLast('.')
     return "EX." + if (outerClassName.isEmpty()) {
         fullClassName

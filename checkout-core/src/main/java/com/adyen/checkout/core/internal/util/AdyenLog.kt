@@ -19,7 +19,7 @@ inline fun Any.adyenLog(
     log: () -> String,
 ) {
     if (AdyenLogger.logger.shouldLog(level)) {
-        val fullClassName = this::class.java.simpleName
+        val fullClassName = this::class.java.name
         val outerClassName = fullClassName.substringBefore('$').substringAfterLast('.')
         val tag = "CO." + if (outerClassName.isEmpty()) {
             fullClassName
