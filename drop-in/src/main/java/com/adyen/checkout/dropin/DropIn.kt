@@ -23,6 +23,8 @@ import com.adyen.checkout.dropin.internal.ui.model.SessionDropInResultContractPa
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import java.util.Locale
 
 /**
  * Drop-in is our pre-built checkout UI for accepting payments. You only need to integrate through your backend with the
@@ -135,7 +137,11 @@ object DropIn {
             checkoutSession,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, checkoutConfiguration, sessionDropInResultContractParams)
+
+        val sessionParams = SessionParamsFactory.create(checkoutSession)
+        val shopperLocale = sessionParams.shopperLocale ?: checkoutConfiguration.shopperLocale
+
+        startPayment(context, dropInLauncher, shopperLocale, sessionDropInResultContractParams)
     }
 
     /**
@@ -228,17 +234,17 @@ object DropIn {
             paymentMethodsApiResponse,
             serviceClass,
         )
-        startPayment(context, dropInLauncher, checkoutConfiguration, dropInResultContractParams)
+        startPayment(context, dropInLauncher, checkoutConfiguration.shopperLocale, dropInResultContractParams)
     }
 
     private fun <T> startPayment(
         context: Context,
         dropInLauncher: ActivityResultLauncher<T>,
-        checkoutConfiguration: CheckoutConfiguration,
+        shopperLocale: Locale,
         params: T,
     ) {
         updateDefaultLogLevel(context)
-        DropInPrefs.setShopperLocale(context, checkoutConfiguration.shopperLocale)
+        DropInPrefs.setShopperLocale(context, shopperLocale)
         dropInLauncher.launch(params)
     }
 
