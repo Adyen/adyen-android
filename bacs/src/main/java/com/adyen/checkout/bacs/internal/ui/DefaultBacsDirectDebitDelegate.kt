@@ -25,7 +25,6 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -103,12 +102,12 @@ internal class DefaultBacsDirectDebitDelegate(
         val currentMode = inputData.mode
         return when {
             mode == currentMode -> {
-                Logger.e(TAG, "Current mode is already $mode")
+                adyenLog(AdyenLogLevel.ERROR) { "Current mode is already $mode" }
                 false
             }
 
             mode == BacsDirectDebitMode.CONFIRMATION && !outputData.isValid -> {
-                Logger.e(TAG, "Cannot set confirmation view when input is not valid")
+                adyenLog(AdyenLogLevel.ERROR) { "Cannot set confirmation view when input is not valid" }
                 false
             }
 

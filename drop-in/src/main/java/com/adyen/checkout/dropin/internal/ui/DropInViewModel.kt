@@ -31,7 +31,6 @@ import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.mapToParams
@@ -232,7 +231,7 @@ internal class DropInViewModel(
     ): PaymentComponentData<GiftCardPaymentMethod>? {
         val paymentMethod = giftCardComponentState.data.paymentMethod
         if (paymentMethod == null) {
-            Logger.e(TAG, "onBalanceCallRequested - paymentMethod is null")
+            adyenLog(AdyenLogLevel.ERROR) { "onBalanceCallRequested - paymentMethod is null" }
             return null
         }
         cachedGiftCardComponentState = giftCardComponentState
@@ -263,7 +262,7 @@ internal class DropInViewModel(
             }
 
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
-                Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
+                adyenLog(AdyenLogLevel.ERROR) { "handleBalanceResult - Gift Card currency mismatch" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_currency,
                     "Gift Card currency mismatch",
@@ -272,11 +271,10 @@ internal class DropInViewModel(
             }
 
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
-                Logger.e(
-                    TAG,
+                adyenLog(AdyenLogLevel.ERROR) {
                     "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift " +
-                        "card payments",
-                )
+                        "card payments"
+                }
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
 
@@ -404,7 +402,7 @@ internal class DropInViewModel(
                     )
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch order details", e)
+                    adyenLog(AdyenLogLevel.ERROR, e) { "Unable to fetch order details" }
                     null
                 },
             )

@@ -19,7 +19,6 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.Sha256
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
@@ -182,7 +181,7 @@ class DefaultDetectCardTypeRepository(
                 clientKey = clientKey,
             )
         }
-            .onFailure { e -> Logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
+            .onFailure { e -> adyenLog(AdyenLogLevel.ERROR, e) { "checkCardType - Failed to do bin lookup" } }
             .getOrNull()
     }
 

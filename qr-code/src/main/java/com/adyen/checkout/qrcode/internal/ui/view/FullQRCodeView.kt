@@ -21,8 +21,6 @@ import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
@@ -165,7 +163,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
 
             is Failure -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_failed))
-                Logger.e(TAG, "download file failed", event.throwable)
+                adyenLog(AdyenLogLevel.ERROR, event.throwable) { "download file failed" }
             }
         }
     }
@@ -173,8 +171,4 @@ internal class FullQRCodeView @JvmOverloads constructor(
     override fun getView(): View = this
 
     override fun highlightValidationErrors() = Unit
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

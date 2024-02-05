@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
@@ -121,7 +120,7 @@ internal class PaymentMethodListDialogFragment :
                     }
 
                     is PaymentMethodListStoredEvent.ShowError -> {
-                        Logger.e(TAG, event.componentError.errorMessage)
+                        adyenLog(AdyenLogLevel.ERROR) { event.componentError.errorMessage }
                         protocol.showError(
                             dialogTitle = null,
                             errorMessage = getString(R.string.component_error),

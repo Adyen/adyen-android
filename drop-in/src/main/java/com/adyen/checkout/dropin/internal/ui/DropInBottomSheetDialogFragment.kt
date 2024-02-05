@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -72,7 +71,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
                 }
                 behavior.state = this.dialogInitViewState
             } else {
-                Logger.e(TAG, "Failed to set BottomSheetBehavior.")
+                adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
             }
         }
 

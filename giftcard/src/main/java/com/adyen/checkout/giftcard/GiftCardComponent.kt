@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.internal.provider.GiftCardComponentProvider
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
@@ -78,12 +77,13 @@ class GiftCardComponent internal constructor(
     override fun isConfirmationRequired(): Boolean = giftCardDelegate.isConfirmationRequired()
 
     override fun submit() {
-        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+        (delegate as? ButtonDelegate)?.onSubmit()
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Component is currently not submittable, ignoring." }
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         (delegate as? GiftCardDelegate)?.setInteractionBlocked(isInteractionBlocked)
-            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not interactable, ignoring." }
     }
 
     /**
@@ -95,7 +95,7 @@ class GiftCardComponent internal constructor(
      */
     fun resolveBalanceResult(balanceResult: BalanceResult) {
         (delegate as? GiftCardDelegate)?.resolveBalanceResult(balanceResult)
-            ?: Logger.e(TAG, "Payment component is not able to resolve balance result, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not able to resolve balance result, ignoring." }
     }
 
     /**
@@ -107,7 +107,7 @@ class GiftCardComponent internal constructor(
      */
     fun resolveOrderResponse(orderResponse: OrderResponse) {
         (delegate as? GiftCardDelegate)?.resolveOrderResponse(orderResponse)
-            ?: Logger.e(TAG, "Payment component is not able to resolve order response, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not able to resolve order response, ignoring." }
     }
 
     override fun onCleared() {

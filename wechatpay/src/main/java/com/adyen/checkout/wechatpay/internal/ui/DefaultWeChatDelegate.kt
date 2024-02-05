@@ -25,7 +25,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
@@ -126,7 +125,7 @@ internal class DefaultWeChatDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
-            Logger.e(TAG, "Payment data is null")
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }

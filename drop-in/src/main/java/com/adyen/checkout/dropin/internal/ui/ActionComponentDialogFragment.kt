@@ -33,7 +33,6 @@ import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
@@ -195,7 +194,7 @@ internal class ActionComponentDialogFragment :
             }
 
             else -> {
-                Logger.e(TAG, componentError.errorMessage)
+                adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
                 protocol.showError(null, getString(R.string.action_failed), componentError.errorMessage, true)
             }
         }

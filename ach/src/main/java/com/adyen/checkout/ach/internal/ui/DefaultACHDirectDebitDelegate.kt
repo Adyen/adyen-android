@@ -29,7 +29,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
@@ -192,7 +191,7 @@ internal class DefaultACHDirectDebitDelegate(
                     updateComponentState(outputData)
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch public key")
+                    adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 },
             )

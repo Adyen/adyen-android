@@ -24,7 +24,6 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -116,7 +115,7 @@ internal class GooglePayComponentDialogFragment :
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         // TODO find a way to show an error dialog unless the payment is cancelled by the user
         //  then move back to the payment methods screen afterwards
         performBackAction()

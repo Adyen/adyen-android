@@ -11,8 +11,9 @@ import com.adyen.checkout.blik.R
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 
 internal class BlikOutputData(blikCode: String) : OutputData {
 
@@ -24,7 +25,7 @@ internal class BlikOutputData(blikCode: String) : OutputData {
         try {
             if (blikCode.isNotEmpty()) blikCode.toInt()
         } catch (e: NumberFormatException) {
-            Logger.e(TAG, "Failed to parse blik code to Integer", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse blik code to Integer" }
             return Validation.Invalid(R.string.checkout_blik_code_not_valid)
         }
         return if (blikCode.length == BLIK_CODE_LENGTH) {

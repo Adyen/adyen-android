@@ -25,7 +25,6 @@ import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
@@ -98,7 +97,7 @@ internal class PaymentMethodsListViewModel(
                 }
 
                 PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) -> {
-                    Logger.e(TAG, "PaymentMethod not yet supported - $type")
+                    adyenLog(AdyenLogLevel.ERROR) { "PaymentMethod not yet supported - $type" }
                     paymentMethodsAvailabilityMap[paymentMethod] = false
                 }
 

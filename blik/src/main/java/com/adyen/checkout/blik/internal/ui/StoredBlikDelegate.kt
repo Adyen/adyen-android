@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -99,7 +98,7 @@ internal class StoredBlikDelegate(
     }
 
     override fun updateInputData(update: BlikInputData.() -> Unit) {
-        Logger.e(TAG, "updateInputData should not be called in StoredBlikDelegate")
+        adyenLog(AdyenLogLevel.ERROR) { "updateInputData should not be called in StoredBlikDelegate" }
     }
 
     override fun onSubmit() {

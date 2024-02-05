@@ -17,8 +17,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -42,7 +42,6 @@ internal class DropInSavedStateHandleContainer(
 }
 
 internal object DropInBundleHandler {
-    private val TAG = LogUtil.getTag()
 
     fun putIntentExtras(
         intent: Intent,
@@ -79,12 +78,12 @@ internal object DropInBundleHandler {
     fun assertBundleExists(bundle: Bundle?): Boolean {
         return when {
             bundle == null -> {
-                Logger.e(TAG, "Failed to initialize - bundle is null")
+                adyenLog(AdyenLogLevel.ERROR) { "Failed to initialize - bundle is null" }
                 false
             }
 
             !bundle.containsKey(DROP_IN_SERVICE_KEY) || !bundle.containsKey(CHECKOUT_CONFIGURATION_KEY) -> {
-                Logger.e(TAG, "Failed to initialize - bundle does not have the required keys")
+                adyenLog(AdyenLogLevel.ERROR) { "Failed to initialize - bundle does not have the required keys" }
                 false
             }
 

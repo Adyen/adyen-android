@@ -29,7 +29,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +108,7 @@ internal class DefaultAwaitDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
-            Logger.e(TAG, "Payment data is null")
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
@@ -134,7 +133,7 @@ internal class DefaultAwaitDelegate(
                 }
             },
             onFailure = {
-                Logger.e(TAG, "Error while polling status", it)
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
                 exceptionChannel.trySend(ComponentException("Error while polling status", it))
             },
         )

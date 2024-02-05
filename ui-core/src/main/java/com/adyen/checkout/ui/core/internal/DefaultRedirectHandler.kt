@@ -20,7 +20,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
@@ -78,7 +77,7 @@ class DefaultRedirectHandler : RedirectHandler {
             return
         }
 
-        Logger.e(TAG, "Could not launch url")
+        adyenLog(AdyenLogLevel.ERROR) { "Could not launch url" }
         throw ComponentException("Launching redirect failed.")
     }
 

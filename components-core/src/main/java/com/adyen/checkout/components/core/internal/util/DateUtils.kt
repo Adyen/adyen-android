@@ -9,8 +9,9 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -52,7 +53,7 @@ object DateUtils {
             dateFormat.parse(date)
             true
         } catch (e: ParseException) {
-            Logger.e(TAG, "Provided date $date does not match the given format $format")
+            adyenLog(AdyenLogLevel.ERROR) { "Provided date $date does not match the given format $format" }
             false
         }
     }
@@ -74,7 +75,7 @@ object DateUtils {
         val parsedDate = inputSimpleFormat.parse(date)
         parsedDate?.let { outputSimpleFormat.format(it) }
     } catch (e: ParseException) {
-        Logger.e(TAG, "Provided date $date does not match the given format $inputFormat")
+        adyenLog(AdyenLogLevel.ERROR) { "Provided date $date does not match the given format $inputFormat" }
         null
     }
 
@@ -91,7 +92,7 @@ object DateUtils {
         val formatter = SimpleDateFormat(pattern, Locale.US)
         formatter.format(calendar.time)
     } catch (e: IllegalArgumentException) {
-        Logger.e(TAG, "Provided pattern $pattern is invalid")
+        adyenLog(AdyenLogLevel.ERROR) { "Provided pattern $pattern is invalid" }
         null
     }
 }

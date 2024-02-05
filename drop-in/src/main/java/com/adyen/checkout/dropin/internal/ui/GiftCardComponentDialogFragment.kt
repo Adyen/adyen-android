@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
@@ -127,7 +126,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 

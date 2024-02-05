@@ -33,11 +33,11 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -296,11 +296,11 @@ constructor(
             callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
         }
         readyToPayTask.addOnCanceledListener {
-            Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
+            adyenLog(AdyenLogLevel.ERROR) { "GooglePay readyToPay task is cancelled." }
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
         readyToPayTask.addOnFailureListener {
-            Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
+            adyenLog(AdyenLogLevel.ERROR, it) { "GooglePay readyToPay task is failed." }
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
     }
@@ -331,9 +331,5 @@ constructor(
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
         return GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

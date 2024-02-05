@@ -37,7 +37,6 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
@@ -194,7 +193,7 @@ internal class DropInActivity :
         if (requestCode != GOOGLE_PAY_REQUEST_CODE) return
         val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? GooglePayComponentDialogFragment
         if (fragment == null) {
-            Logger.e(TAG, "GooglePayComponentDialogFragment is not loaded")
+            adyenLog(AdyenLogLevel.ERROR) { "GooglePayComponentDialogFragment is not loaded" }
             return
         }
         fragment.handleActivityResult(resultCode, data)
@@ -206,7 +205,7 @@ internal class DropInActivity :
         if (intent != null) {
             handleIntent(intent)
         } else {
-            Logger.e(TAG, "Null intent")
+            adyenLog(AdyenLogLevel.ERROR) { "Null intent" }
         }
     }
 
@@ -225,11 +224,10 @@ internal class DropInActivity :
         if (bound) {
             serviceBound = true
         } else {
-            Logger.e(
-                TAG,
+            adyenLog(AdyenLogLevel.ERROR) {
                 "Error binding to ${dropInViewModel.serviceComponentName.className}. " +
-                    "The system couldn't find the service or your client doesn't have permission to bind to it",
-            )
+                    "The system couldn't find the service or your client doesn't have permission to bind to it"
+            }
         }
     }
 
@@ -252,7 +250,7 @@ internal class DropInActivity :
     override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         adyenLog(AdyenLogLevel.DEBUG) { "requestPaymentsCall" }
         if (dropInService == null) {
-            Logger.e(TAG, "service is disconnected, adding to queue")
+            adyenLog(AdyenLogLevel.ERROR) { "service is disconnected, adding to queue" }
             paymentDataQueue = paymentComponentState
             return
         }
@@ -265,7 +263,7 @@ internal class DropInActivity :
     override fun requestDetailsCall(actionComponentData: ActionComponentData) {
         adyenLog(AdyenLogLevel.DEBUG) { "requestDetailsCall" }
         if (dropInService == null) {
-            Logger.e(TAG, "service is disconnected, adding to queue")
+            adyenLog(AdyenLogLevel.ERROR) { "service is disconnected, adding to queue" }
             actionDataQueue = actionComponentData
             return
         }
@@ -345,7 +343,7 @@ internal class DropInActivity :
         adyenLog(AdyenLogLevel.DEBUG) { "requestCheckBalanceCall" }
         dropInViewModel.onBalanceCallRequested(giftCardComponentState) ?: return
         if (dropInService == null) {
-            Logger.e(TAG, "requestBalanceCall - service is disconnected")
+            adyenLog(AdyenLogLevel.ERROR) { "requestBalanceCall - service is disconnected" }
             balanceDataQueue = giftCardComponentState
             return
         }
@@ -357,7 +355,7 @@ internal class DropInActivity :
     private fun requestOrdersCall() {
         adyenLog(AdyenLogLevel.DEBUG) { "requestOrdersCall" }
         if (dropInService == null) {
-            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            adyenLog(AdyenLogLevel.ERROR) { "requestOrdersCall - service is disconnected" }
             orderDataQueue = Unit
             return
         }
@@ -369,7 +367,7 @@ internal class DropInActivity :
     private fun requestCancelOrderCall(order: OrderRequest, isDropInCancelledByUser: Boolean) {
         adyenLog(AdyenLogLevel.DEBUG) { "requestCancelOrderCall" }
         if (dropInService == null) {
-            Logger.e(TAG, "requestOrdersCall - service is disconnected")
+            adyenLog(AdyenLogLevel.ERROR) { "requestOrdersCall - service is disconnected" }
             orderCancellationQueue = order
             return
         }
@@ -551,12 +549,12 @@ internal class DropInActivity :
                 if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
                     handleActionIntentResponse(intent)
                 } else {
-                    Logger.e(TAG, "Unexpected response from ACTION_VIEW - ${intent.data}")
+                    adyenLog(AdyenLogLevel.ERROR) { "Unexpected response from ACTION_VIEW - ${intent.data}" }
                 }
             }
 
             else -> {
-                Logger.e(TAG, "Unable to find action")
+                adyenLog(AdyenLogLevel.ERROR) { "Unable to find action" }
             }
         }
     }
@@ -570,7 +568,7 @@ internal class DropInActivity :
 
     private fun getActionFragment(): ActionComponentDialogFragment? {
         val fragment = getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
-        if (fragment == null) Logger.e(TAG, "ActionComponentDialogFragment is not loaded")
+        if (fragment == null) adyenLog(AdyenLogLevel.ERROR) { "ActionComponentDialogFragment is not loaded" }
         return fragment
     }
 

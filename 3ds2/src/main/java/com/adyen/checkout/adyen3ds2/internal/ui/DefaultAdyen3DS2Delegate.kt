@@ -215,7 +215,7 @@ internal class DefaultAdyen3DS2Delegate(
         val configParameters = createAdyenConfigParameters(fingerprintToken)
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
+            adyenLog(AdyenLogLevel.ERROR, throwable) {  "Unexpected uncaught 3DS2 Exception" }
             exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 

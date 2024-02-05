@@ -43,7 +43,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
@@ -382,7 +381,7 @@ internal class StoredCardDelegate(
             )
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
-            Logger.e(TAG, "Failed to parse stored Date", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
             inputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
 

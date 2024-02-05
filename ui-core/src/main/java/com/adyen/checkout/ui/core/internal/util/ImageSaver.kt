@@ -30,7 +30,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
@@ -203,7 +202,7 @@ class ImageSaver(
         return try {
             URL(this)
         } catch (e: MalformedURLException) {
-            Logger.e(TAG, "Failed to convert String to URL: $e")
+            adyenLog(AdyenLogLevel.ERROR) { "Failed to convert String to URL: $e" }
             null
         }
     }

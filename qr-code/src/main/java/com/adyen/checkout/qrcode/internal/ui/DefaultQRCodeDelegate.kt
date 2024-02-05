@@ -35,7 +35,6 @@ import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
@@ -151,7 +150,7 @@ internal class DefaultQRCodeDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
-            Logger.e(TAG, "Payment data is null")
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
@@ -207,7 +206,7 @@ internal class DefaultQRCodeDelegate(
                 }
             },
             onFailure = {
-                Logger.e(TAG, "Error while polling status", it)
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
                 exceptionChannel.trySend(ComponentException("Error while polling status", it))
             },
         )

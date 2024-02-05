@@ -18,7 +18,6 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -30,7 +29,7 @@ class PdfOpener {
         if (open(context, uri)) return
         if (openInBrowser(context, uri)) return
 
-        Logger.e(TAG, "Couldn't open pdf with url: $uri")
+        adyenLog(AdyenLogLevel.ERROR) { "Couldn't open pdf with url: $uri" }
 
         error("Couldn't open pdf with url: $uri")
     }
