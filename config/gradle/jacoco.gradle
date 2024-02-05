@@ -158,12 +158,13 @@ ext.coverageExclusions = [
     '**/InstallmentFilter.*',
     '**/LazyArguments*.*',
     '**/LifecycleExtensions*.*',
-    '**/LogUtil.*',
+    '**/LogcatLogger.*',
     '**/Logger.*',
     '**/PdfOpener.*',
     '**/ViewExtensions*.*',
     '**/ViewModelExt*.*',
 
-    // Example app is not applicable
-    'com/adyen/checkout/example/**'
+    // Example app and test-core are not applicable
+    'com/adyen/checkout/example/**',
+    'com/adyen/checkout/test/**'
 ]

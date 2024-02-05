@@ -21,13 +21,10 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
-
-private val TAG = LogUtil.getTag()
 
 @Suppress("LongParameterList")
 internal fun checkPaymentMethodAvailability(
