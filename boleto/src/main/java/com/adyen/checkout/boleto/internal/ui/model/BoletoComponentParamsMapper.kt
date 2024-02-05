@@ -65,6 +65,7 @@ internal class BoletoComponentParamsMapper(
         if (sessionParams == null) return this
         return copy(
             amount = sessionParams.amount ?: amount,
+            shopperLocale = sessionParams.shopperLocale ?: shopperLocale,
         )
     }
 

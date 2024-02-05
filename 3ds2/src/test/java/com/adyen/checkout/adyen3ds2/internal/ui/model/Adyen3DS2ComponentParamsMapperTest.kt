@@ -16,10 +16,14 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 internal class Adyen3DS2ComponentParamsMapperTest {
@@ -91,10 +95,67 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
-    private fun getCheckoutConfiguration(config: CheckoutConfiguration.() -> Unit = {}) = CheckoutConfiguration(
+    @ParameterizedTest
+    @MethodSource("amountSource")
+    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+        configurationValue: Amount,
+        dropInValue: Amount?,
+        sessionsValue: Amount?,
+        expectedValue: Amount
+    ) {
+        val configuration = getCheckoutConfiguration(amount = configurationValue)
+
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+
+        val params = Adyen3DS2ComponentParamsMapper(dropInOverrideParams, null).mapToParams(
+            checkoutConfiguration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = null,
+                installmentConfiguration = null,
+                amount = sessionsValue,
+                returnUrl = "",
+                shopperLocale = null,
+            ),
+        )
+
+        val expected = getAdyen3DS2ComponentParams(
+            amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        )
+
+        val params = Adyen3DS2ComponentParamsMapper(null, null).mapToParams(
+            checkoutConfiguration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
+    }
+
+    private fun getCheckoutConfiguration(
+        amount: Amount? = null,
+        config: CheckoutConfiguration.() -> Unit = {}
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
         configurationBlock = config,
     )
 
@@ -123,5 +184,13 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, dropInValue, sessionsValue, expectedValue
+            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
+            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
+            Arguments.arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+        )
     }
 }

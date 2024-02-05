@@ -358,6 +358,7 @@ internal class GooglePayComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
+                shopperLocale = null,
             ),
         )
 
@@ -367,6 +368,25 @@ internal class GooglePayComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = createCheckoutConfiguration()
+
+        val params = GooglePayComponentParamsMapper(null, null).mapToParams(
+            configuration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+            paymentMethod = PaymentMethod(),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     private fun createCheckoutConfiguration(

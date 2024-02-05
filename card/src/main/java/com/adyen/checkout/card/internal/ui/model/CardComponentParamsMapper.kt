@@ -186,6 +186,7 @@ internal class CardComponentParamsMapper(
         sessionParams: SessionParams?
     ): CardComponentParams {
         if (sessionParams == null) return this
+        val shopperLocale = sessionParams.shopperLocale ?: shopperLocale
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
             // we don't fall back to the original value of installmentParams value on purpose
@@ -197,6 +198,7 @@ internal class CardComponentParamsMapper(
                 shopperLocale = shopperLocale,
             ),
             amount = sessionParams.amount ?: amount,
+            shopperLocale = shopperLocale,
         )
     }
 

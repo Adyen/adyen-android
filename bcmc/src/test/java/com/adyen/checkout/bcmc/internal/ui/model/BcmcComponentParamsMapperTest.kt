@@ -130,6 +130,7 @@ internal class BcmcComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = null,
                 returnUrl = "",
+                shopperLocale = null,
             ),
             PaymentMethod(),
         )
@@ -158,6 +159,7 @@ internal class BcmcComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
+                shopperLocale = null,
             ),
             PaymentMethod(),
         )
@@ -168,6 +170,29 @@ internal class BcmcComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        )
+
+        val params = BcmcComponentParamsMapper(null, null).mapToParams(
+            checkoutConfiguration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+            paymentMethod = PaymentMethod(),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     private fun createCheckoutConfiguration(

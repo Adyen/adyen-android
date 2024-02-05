@@ -173,6 +173,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             installmentConfiguration = null,
             amount = null,
             returnUrl = "",
+            shopperLocale = null,
         )
 
         val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
@@ -218,6 +219,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
+                shopperLocale = null,
             ),
         )
 
@@ -227,6 +229,28 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        )
+
+        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
+            checkoutConfiguration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     private fun createCheckoutConfiguration(

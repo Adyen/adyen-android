@@ -138,6 +138,7 @@ internal class IssuerListComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
+                shopperLocale = null,
             ),
         )
 
@@ -147,6 +148,29 @@ internal class IssuerListComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        )
+
+        val params = IssuerListComponentParamsMapper(null, null).mapToParams(
+            checkoutConfiguration = configuration,
+            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     private fun createCheckoutConfiguration(

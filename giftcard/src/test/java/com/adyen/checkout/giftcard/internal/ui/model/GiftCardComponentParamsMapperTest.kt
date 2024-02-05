@@ -97,12 +97,35 @@ internal class GiftCardComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = "",
+                shopperLocale = null,
             ),
         )
 
         val expected = getComponentParams(amount = expectedValue, isCreatedByDropIn = dropInOverrideParams != null)
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        )
+
+        val params = GiftCardComponentParamsMapper(null, null).mapToParams(
+            configuration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = null,
+                shopperLocale = Locale.GERMAN,
+            ),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     private fun createCheckoutConfiguration(

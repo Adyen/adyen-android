@@ -119,6 +119,7 @@ internal class CashAppPayComponentParamsMapper(
             amount = sessionParams.amount ?: amount,
             showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
             returnUrl = sessionParams.returnUrl ?: returnUrl,
+            shopperLocale = sessionParams.shopperLocale ?: shopperLocale,
         )
     }
 }

@@ -152,6 +152,7 @@ internal class CashAppPayComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = null,
                 returnUrl = TEST_RETURN_URL,
+                shopperLocale = null,
             ),
             paymentMethod = getDefaultPaymentMethod(),
             context = Application(),
@@ -183,6 +184,7 @@ internal class CashAppPayComponentParamsMapperTest {
                 installmentConfiguration = null,
                 amount = sessionsValue,
                 returnUrl = TEST_RETURN_URL,
+                shopperLocale = null,
             ),
             paymentMethod = getDefaultPaymentMethod(),
             context = Application(),
@@ -228,7 +230,7 @@ internal class CashAppPayComponentParamsMapperTest {
 
         val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
             configuration = configuration,
-            sessionParams = SessionParams(false, null, null, "sessionReturnUrl"),
+            sessionParams = SessionParams(false, null, null, "sessionReturnUrl", null),
             paymentMethod = getDefaultPaymentMethod(),
             context = Application(),
         )
@@ -319,6 +321,26 @@ internal class CashAppPayComponentParamsMapperTest {
         )
 
         assertEquals(expected, params.returnUrl)
+    }
+
+    @Test
+    fun `when shopper locale is set in sessions then the mapped params should match it`() {
+        val configuration = createCheckoutConfiguration()
+
+        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
+            configuration = configuration,
+            sessionParams = SessionParams(
+                enableStoreDetails = false,
+                installmentConfiguration = null,
+                amount = null,
+                returnUrl = TEST_RETURN_URL,
+                shopperLocale = Locale.GERMAN,
+            ),
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        assertEquals(Locale.GERMAN, params.shopperLocale)
     }
 
     @Suppress("LongParameterList")

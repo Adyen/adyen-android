@@ -81,6 +81,7 @@ internal class BcmcComponentParamsMapper(
         return copy(
             isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
             amount = sessionParams.amount ?: amount,
+            shopperLocale = sessionParams.shopperLocale ?: shopperLocale,
         )
     }
 
