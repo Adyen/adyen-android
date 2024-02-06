@@ -10,14 +10,10 @@ package com.adyen.checkout.example.data.mock
 
 import android.content.res.AssetManager
 
-interface MockDataService {
-    fun readJsonFile(fileName: String): String
-}
-
-class MockDataServiceImpl(
+class MockDataService(
     private val assetManager: AssetManager
-) : MockDataService {
-    override fun readJsonFile(fileName: String): String {
+) {
+    fun readJsonFile(fileName: String): String {
         return assetManager.open(fileName).bufferedReader().use { it.readText() }
     }
 }

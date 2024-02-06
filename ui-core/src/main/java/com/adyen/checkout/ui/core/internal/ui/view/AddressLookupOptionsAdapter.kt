@@ -69,7 +69,7 @@ data class LookupOption(
             lookupAddress.address.city,
             lookupAddress.address.stateOrProvince,
             lookupAddress.address.country,
-        ).filter { it.isNotBlank() }.joinToString(" ")
+        ).filter { !it.isNullOrBlank() }.joinToString(" ")
     }
 
     val title

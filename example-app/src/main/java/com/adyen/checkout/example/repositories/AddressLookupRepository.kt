@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
+import android.content.res.AssetManager
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.example.data.mock.MockDataService
 import com.adyen.checkout.example.data.mock.model.MockAddressLookupResponse
@@ -19,10 +20,11 @@ import javax.inject.Singleton
 
 @Singleton
 class AddressLookupRepository @Inject constructor(
-    private val mockDataService: MockDataService
+    private val assetManager: AssetManager
 ) {
 
     fun getAddressLookupOptions(): List<LookupAddress> {
+        val mockDataService = MockDataService(assetManager)
         val json = mockDataService.readJsonFile("lookup_options.json")
         val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
         val adapter: JsonAdapter<MockAddressLookupResponse> = moshi.adapter(MockAddressLookupResponse::class.java)

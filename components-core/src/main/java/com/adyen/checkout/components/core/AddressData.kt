@@ -15,7 +15,7 @@ data class AddressData(
     val street: String,
     val stateOrProvince: String,
     val houseNumberOrName: String,
-    val apartmentSuite: String,
+    val apartmentSuite: String?,
     val city: String,
     val country: String,
 )
@@ -26,7 +26,7 @@ fun AddressData.mapToAddressInputModel() = AddressInputModel(
     street = street,
     stateOrProvince = stateOrProvince,
     houseNumberOrName = houseNumberOrName,
-    apartmentSuite = apartmentSuite,
+    apartmentSuite = apartmentSuite.orEmpty(),
     city = city,
     country = country,
 )

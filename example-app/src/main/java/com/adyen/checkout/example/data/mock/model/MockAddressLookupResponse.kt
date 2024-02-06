@@ -9,7 +9,8 @@
 package com.adyen.checkout.example.data.mock.model
 
 import com.adyen.checkout.components.core.LookupAddress
+import javax.inject.Inject
 
-data class MockAddressLookupResponse(
+data class MockAddressLookupResponse @Inject constructor(
     val options: List<LookupAddress>
 )
