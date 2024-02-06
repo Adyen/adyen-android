@@ -131,7 +131,7 @@ interface BaseDropInServiceContract {
     fun onAddressLookupQueryChanged(query: String) = Unit
 
     /**
-     * Set a callback that will be called when shopper chooses and address option that requires complete details to be
+     * Set a callback that will be called when shopper chooses an address option that requires complete details to be
      * provided.
      *
      * @param lookupAddress Address option selected by shopper.
