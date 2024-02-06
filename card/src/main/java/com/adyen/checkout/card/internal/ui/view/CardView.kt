@@ -11,6 +11,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.text.Editable
+import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -564,6 +565,10 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initAddressLookup() {
+        binding.autoCompleteTextViewAddressLookup.apply {
+            inputType = InputType.TYPE_NULL
+            isSingleLine = false
+        }
         binding.autoCompleteTextViewAddressLookup.setOnClickListener {
             cardDelegate.startAddressLookup()
         }
@@ -746,7 +751,7 @@ class CardView @JvmOverloads constructor(
             binding.editTextKcpBirthDateOrTaxNumber.setText(outputData.kcpBirthDateOrTaxNumberState.value)
             binding.editTextKcpCardPassword.setText(outputData.kcpCardPasswordState.value)
             binding.autoCompleteTextViewInstallments.setText(
-                InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value)
+                InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value),
             )
         }
     }

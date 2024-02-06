@@ -9,7 +9,6 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-- We added a [UI customization guide](docs/UI_CUSTOMIZATION.md), which explains how to customize the styles and string resources.
 - Address Lookup functionality for Card Component. You can enable this feature by setting your address configuration to lookup while building your card configuration as follows
 ```kotlin
 CheckoutConfiguration(

@@ -163,9 +163,7 @@
             android:id="@+id/autoCompleteTextView_addressLookup"
             style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText"
             android:drawableEnd="@drawable/address_lookup_search_input_arrow"
-            android:dropDownAnchor="@id/textInputLayout_addressLookup"
-            android:editable="false"
-            android:inputType="textMultiLine" />
+            android:dropDownAnchor="@id/textInputLayout_addressLookup" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

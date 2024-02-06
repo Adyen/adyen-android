@@ -104,5 +104,6 @@
         <item name="android:minHeight">@dimen/input_height</item>
         <item name="android:hint">Search Address</item>
         <item name="android:text">@string/checkout_address_lookup_hint</item>
+        <item name="drawableTint">?android:attr/textColor</item>
     </style>
 </resources>
