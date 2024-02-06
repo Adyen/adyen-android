@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
@@ -59,7 +59,7 @@ internal class DropInViewModelFactory(
                 level = dropInParams.analyticsParams.level,
                 packageName = packageName,
                 locale = dropInParams.shopperLocale,
-                source = AnalyticsSource.DropIn(),
+                source = AnalyticsSource.DropIn(paymentMethods),
                 clientKey = dropInParams.clientKey,
                 amount = dropInParams.amount,
                 screenWidth = screenWidth,

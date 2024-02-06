@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.test.LoggingExtension
@@ -192,7 +192,7 @@ internal class DefaultAnalyticsRepositoryTest(
     companion object {
         private const val PACKAGE_NAME = "com.adyen.checkout.test"
         private val LOCALE = Locale.US
-        private val ANALYTICS_SOURCE = AnalyticsSource.DropIn()
+        private val ANALYTICS_SOURCE = AnalyticsSource.DropIn
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_AMOUNT = Amount("USD", 1337)
         private const val SCREEN_WIDTH = 1080
