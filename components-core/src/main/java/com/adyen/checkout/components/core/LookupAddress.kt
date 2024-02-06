@@ -10,5 +10,5 @@ package com.adyen.checkout.components.core
 
 data class LookupAddress(
     val id: String,
-    val address: AddressInputModel
+    val address: AddressData
 )

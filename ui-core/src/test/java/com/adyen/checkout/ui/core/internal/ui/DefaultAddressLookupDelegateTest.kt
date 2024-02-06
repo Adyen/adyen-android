@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.ui.core.internal.ui
 
+import com.adyen.checkout.components.core.AddressData
 import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
@@ -145,7 +147,7 @@ internal class DefaultAddressLookupDelegateTest {
         @Test
         fun `and a result is passed, state should be Loading`() = runTest {
             defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Loading)
-            val lookupOptions = listOf(LookupAddress("id", AddressInputModel("1234AB")))
+            val lookupOptions = listOf(LookupAddress("id", makeAddressData(postalCode = "1234AB")))
             defaultAddressLookupDelegate.updateAddressLookupOptions(lookupOptions)
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.SearchResult)
         }
@@ -213,7 +215,7 @@ internal class DefaultAddressLookupDelegateTest {
             assert(state is AddressLookupState.Form)
             assertEquals(
                 /* expected = */
-                getMockList()[0].lookupAddress.address,
+                getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
                 /* actual = */
                 (state as AddressLookupState.Form).selectedAddress,
             )
@@ -248,7 +250,7 @@ internal class DefaultAddressLookupDelegateTest {
             assert(state is AddressLookupState.Form)
             assertEquals(
                 /* expected = */
-                getMockList()[0].lookupAddress.address,
+                getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
                 /* actual = */
                 (state as AddressLookupState.Form).selectedAddress,
             )
@@ -306,7 +308,7 @@ internal class DefaultAddressLookupDelegateTest {
                 AddressLookupResult.Completed(
                     LookupAddress(
                         "id",
-                        AddressInputModel(),
+                        makeAddressData(),
                     ),
                 ),
             )
@@ -381,7 +383,7 @@ internal class DefaultAddressLookupDelegateTest {
         LookupOption(
             lookupAddress = LookupAddress(
                 id = "id_1",
-                address = AddressInputModel(
+                address = makeAddressData(
                     street = "street_1",
                 ),
             ),
@@ -390,11 +392,30 @@ internal class DefaultAddressLookupDelegateTest {
         LookupOption(
             lookupAddress = LookupAddress(
                 id = "id_2",
-                address = AddressInputModel(
+                address = makeAddressData(
                     street = "street_2",
                 ),
             ),
         ),
+    )
+
+    @Suppress("LongParameterList")
+    private fun makeAddressData(
+        street: String = "street",
+        city: String = "city",
+        country: String = "country",
+        postalCode: String = "postalCode",
+        stateOrProvince: String = "stateOrProvince",
+        houseNumberOrName: String = "houseNumberOrName",
+        apartmentSuite: String = "apartmentSuite"
+    ) = AddressData(
+        postalCode = postalCode,
+        street = street,
+        stateOrProvince = stateOrProvince,
+        houseNumberOrName = houseNumberOrName,
+        apartmentSuite = apartmentSuite,
+        city = city,
+        country = country,
     )
 
     private fun getValidMockAddress() = AddressInputModel(

@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -292,7 +293,7 @@ class DefaultAddressLookupDelegate(
                     },
                 )
             } else {
-                AddressLookupState.Form(event.lookupAddress.address)
+                AddressLookupState.Form(event.lookupAddress.address.mapToAddressInputModel())
             }
         } else {
             currentAddressLookupState
