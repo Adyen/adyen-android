@@ -1,0 +1,55 @@
+apply plugin: 'org.jetbrains.kotlinx.kover'
+
+kover {
+//    useJacoco()
+}
+
+koverReport {
+    filters {
+        excludes {
+            packages(
+                '**.databinding',
+                'com.adyen.checkout.example',
+                'com.adyen.checkout.test',
+                'dagger',
+                'hilt_aggregated_deps',
+            )
+
+            classes(
+                // Android classes
+                'BuildConfig',
+                '*View',
+                '*View$*',
+                '*ViewHolder',
+                '*ViewHolder$*',
+                '*VH',
+                '*VH$*',
+                '*Activity',
+                '*Activity$*',
+                '*Fragment',
+                '*Fragment$*',
+
+                // Custom views not following *View naming
+//                'AddressFormInput',
+//                'AdyenSwipeToRevealLayout',
+//                'AdyenTextInputEditText',
+//                'CardNumberInput',
+//                'DefaultPayButton',
+//                'ExpiryDateInput',
+//                'GiftCardNumberInput',
+//                'IbanInput',
+//                'PayButton',
+//                'SecurityCodeInput',
+//                'SocialSecurityNumberInput',
+
+                // Project specific classes
+                '*ResultContract',
+                '*ComponentProvider',
+                '*ComponentProvider',
+                '*DropInService',
+                '*ViewProvider',
+                '*DropIn',
+            )
+        }
+    }
+}
