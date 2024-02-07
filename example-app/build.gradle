@@ -94,6 +94,8 @@ dependencies {
     implementation libraries.hilt
     kapt libraries.hiltCompiler
 
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
     implementation libraries.googlePay.composeButton
 
     debugImplementation libraries.leakCanary

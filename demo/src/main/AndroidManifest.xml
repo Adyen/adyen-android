@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 7/2/2024.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Demo">
+        <activity
+            android:name=".ui.DemoActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+
+            android:theme="@style/Theme.Demo">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Use a different intent filter then the one used to handle the Drop-In result
+            (if you have both Drop-In and standalone components in your app). If you don't do this
+            the user will have to choose which Activity is used to handle the result, which is a
+            confusing user experience. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/sessions/demoapp"
+                    android:scheme="adyencheckout" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,74 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.adyen.checkout.demo'
+    compileSdkVersion compile_sdk_version
+
+    defaultConfig {
+        applicationId "com.adyen.checkout.demo"
+        namespace "com.adyen.checkout.demo"
+
+        minSdkVersion min_sdk_version
+        targetSdkVersion target_sdk_version
+        versionCode version_code
+        versionName version_name
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = compose_compiler_version
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    implementation "com.adyen.checkout:drop-in:5.2.0"
+
+    // Dependencies
+    implementation libraries.kotlinCoroutines
+
+    implementation libraries.androidx.appcompat
+    implementation libraries.androidx.recyclerview
+    implementation libraries.androidx.constraintlayout
+    implementation libraries.androidx.preference
+
+    implementation platform(libraries.compose.bom)
+    implementation libraries.compose.ui
+    implementation libraries.compose.activity
+    implementation libraries.compose.hilt
+    implementation libraries.compose.material
+    implementation libraries.compose.viewmodel
+
+    implementation libraries.material
+
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
+}

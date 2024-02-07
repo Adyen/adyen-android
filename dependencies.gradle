@@ -66,6 +66,7 @@ ext {
     okhttp_logging_version = "4.12.0"
     preference_version = "1.2.1"
     retrofit2_version = '2.9.0'
+    coil_version = '2.5.0'
 
     // Tests
     arch_core_testing_version = "2.2.0"
@@ -97,6 +98,7 @@ ext {
             recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
         ],
         cashAppPay      : "app.cash.paykit:core:$cash_app_pay_version",
+        coil            : "io.coil-kt:coil-compose:$coil_version",
         compose         : [
             activity : "androidx.activity:activity-compose:$compose_activity_version",
             bom      : "androidx.compose:compose-bom:$compose_bom_version",

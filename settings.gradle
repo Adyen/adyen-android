@@ -67,3 +67,4 @@ include ':3ds2',
         ':voucher',
         ':wechatpay'
 
+include ':demo'
