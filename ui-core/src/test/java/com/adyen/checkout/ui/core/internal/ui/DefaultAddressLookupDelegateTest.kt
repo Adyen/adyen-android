@@ -9,10 +9,10 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import com.adyen.checkout.components.core.AddressData
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger

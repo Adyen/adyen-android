@@ -15,7 +15,6 @@ import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParams
 import com.adyen.checkout.boleto.internal.ui.model.BoletoInputData
 import com.adyen.checkout.boleto.internal.ui.model.BoletoOutputData
 import com.adyen.checkout.boleto.internal.util.BoletoValidationUtils
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -24,6 +23,7 @@ import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger

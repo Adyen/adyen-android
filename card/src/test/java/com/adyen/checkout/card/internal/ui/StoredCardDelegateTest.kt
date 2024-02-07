@@ -29,7 +29,6 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
@@ -39,6 +38,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
@@ -529,7 +529,9 @@ internal class StoredCardDelegateTest(
         socialSecurityNumberState: FieldState<String> = FieldState("", Validation.Valid),
         kcpBirthDateOrTaxNumberState: FieldState<String> = FieldState("", Validation.Valid),
         kcpCardPasswordState: FieldState<String> = FieldState("", Validation.Valid),
-        addressState: AddressOutputData = AddressValidationUtils.makeValidEmptyAddressOutput(AddressInputModel()),
+        addressState: AddressOutputData = AddressValidationUtils.makeValidEmptyAddressOutput(
+            AddressInputModel(),
+        ),
         installmentState: FieldState<InstallmentModel?> = FieldState(null, Validation.Valid),
         shouldStorePaymentMethod: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,

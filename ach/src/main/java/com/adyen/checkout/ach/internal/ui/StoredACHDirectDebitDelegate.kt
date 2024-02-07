@@ -13,7 +13,6 @@ import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParams
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitInputData
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -21,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel

@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 
 data class AddressData(
     val postalCode: String,

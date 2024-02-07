@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R

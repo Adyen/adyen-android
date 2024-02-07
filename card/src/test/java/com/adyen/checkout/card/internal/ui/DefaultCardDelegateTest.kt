@@ -40,7 +40,6 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.core.AddressInputModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
@@ -50,6 +49,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
@@ -1173,15 +1173,16 @@ internal class DefaultCardDelegateTest(
     }
 
     @Test
-    fun `when view type is AddressLookup and handleBackPress() is called DefaultCardView should be emitted`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        delegate.startAddressLookup()
-        assertTrue(delegate.handleBackPress())
-        delegate.viewFlow.test {
-            assertEquals(CardComponentViewType.DefaultCardView, awaitItem())
-            expectNoEvents()
+    fun `when view type is AddressLookup and handleBackPress() is called DefaultCardView should be emitted`() =
+        runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.startAddressLookup()
+            assertTrue(delegate.handleBackPress())
+            delegate.viewFlow.test {
+                assertEquals(CardComponentViewType.DefaultCardView, awaitItem())
+                expectNoEvents()
+            }
         }
-    }
 
     @Test
     fun `when view type is DefaultCardView and handleBackPress() is called it should return false`() = runTest {

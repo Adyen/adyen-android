@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.core
 
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
