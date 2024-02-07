@@ -26,6 +26,8 @@ import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupResponse
+import com.adyen.checkout.sessions.core.TestComponentState
+import com.adyen.checkout.sessions.core.TestPaymentMethod
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderResponse

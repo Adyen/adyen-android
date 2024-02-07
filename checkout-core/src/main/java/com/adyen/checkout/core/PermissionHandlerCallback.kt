@@ -11,4 +11,5 @@ package com.adyen.checkout.core
 interface PermissionHandlerCallback {
     fun onPermissionGranted(requestedPermission: String)
     fun onPermissionDenied(requestedPermission: String)
+    fun onPermissionRequestNotHandled(requestedPermission: String)
 }

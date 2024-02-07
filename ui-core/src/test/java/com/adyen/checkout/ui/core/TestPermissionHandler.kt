@@ -29,3 +29,9 @@ class TestPermissionHandlerWithDifferentPermission : PermissionHandler {
         callback.onPermissionGranted("Different_$requiredPermission")
     }
 }
+
+class TestPermissionHandlerWithNoHandlingForPermissionRequest : PermissionHandler {
+    override fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback) {
+        callback.onPermissionRequestNotHandled(requiredPermission)
+    }
+}

@@ -40,6 +40,10 @@ internal suspend fun PermissionHandler.checkPermission(
             override fun onPermissionDenied(requestedPermission: String) {
                 continuation.resume(PermissionHandlerResult.PERMISSION_DENIED)
             }
+
+            override fun onPermissionRequestNotHandled(requestedPermission: String) {
+                continuation.resume(PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED)
+            }
         },
     )
 }
@@ -47,5 +51,6 @@ internal suspend fun PermissionHandler.checkPermission(
 internal enum class PermissionHandlerResult {
     PERMISSION_GRANTED,
     PERMISSION_DENIED,
+    PERMISSION_REQUEST_NOT_HANDLED,
     WRONG_PERMISSION,
 }

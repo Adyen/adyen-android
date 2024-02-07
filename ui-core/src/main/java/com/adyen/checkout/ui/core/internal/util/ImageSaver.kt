@@ -33,6 +33,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
+import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -157,10 +158,13 @@ class ImageSaver(
         bitmap: Bitmap,
         contentValues: ContentValues,
     ): Result<Unit> = withContext(dispatcher) {
-        if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == PERMISSION_GRANTED) {
-            saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
-        } else {
-            Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
+        when (permissionHandler.checkPermission(context, REQUIRED_PERMISSION)) {
+            PERMISSION_GRANTED -> saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
+            PERMISSION_REQUEST_NOT_HANDLED -> {
+                Logger.e(TAG, "Permission request not handled")
+                Result.failure(PermissionRequestException("Permission request not handled"))
+            }
+            else -> Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
 
