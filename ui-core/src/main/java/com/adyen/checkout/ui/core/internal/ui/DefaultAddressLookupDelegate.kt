@@ -18,7 +18,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -351,9 +350,5 @@ class DefaultAddressLookupDelegate(
 
     override fun clear() {
         this.coroutineScope = null
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

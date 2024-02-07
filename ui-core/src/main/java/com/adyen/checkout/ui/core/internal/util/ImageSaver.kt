@@ -161,9 +161,10 @@ class ImageSaver(
         when (permissionHandler.checkPermission(context, REQUIRED_PERMISSION)) {
             PERMISSION_GRANTED -> saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
             PERMISSION_REQUEST_NOT_HANDLED -> {
-                Logger.e(TAG, "Permission request not handled")
+                adyenLog(AdyenLogLevel.ERROR) { "Permission request not handled" }
                 Result.failure(PermissionRequestException("Permission request not handled"))
             }
+
             else -> Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
