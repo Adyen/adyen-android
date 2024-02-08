@@ -92,11 +92,12 @@ internal fun SessionsGooglePayScreen(
         SessionsGooglePayContent(
             googlePayComponent = googlePayComponent,
             googlePayState = googlePayState,
-            onButtonClicked = viewModel::onButtonClicked,
+            onButtonClicked = {
+                googlePayComponent.startGooglePayScreen(googlePayLauncher)
+            },
             useDarkTheme = useDarkTheme,
             modifier = Modifier.padding(innerPadding),
         )
-            HandleStartGooglePay(startGooglePay, googlePayLauncher, viewModel::onGooglePayStarted)
             HandlePaymentResult(paymentResultToHandle, viewModel::onPaymentResultHandled)
     }
 }

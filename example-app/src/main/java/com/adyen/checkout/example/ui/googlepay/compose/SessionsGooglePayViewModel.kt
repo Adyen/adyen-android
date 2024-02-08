@@ -187,10 +187,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     fun onGooglePayLauncherResult(apiTaskResult: ApiTaskResult<PaymentData>) {
 
-    fun onGooglePayStarted() {
-        updateState { it.copy(startGooglePay = null) }
-    }
-
     fun onActionConsumed() {
         updateState { it.copy(actionToHandle = null) }
     }
