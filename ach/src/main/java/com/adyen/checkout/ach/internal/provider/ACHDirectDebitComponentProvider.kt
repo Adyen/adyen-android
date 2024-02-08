@@ -43,12 +43,14 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepo
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -70,6 +72,7 @@ class ACHDirectDebitComponentProvider
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
         ACHDirectDebitComponent,
@@ -96,8 +99,6 @@ constructor(
         SessionComponentCallback<ACHDirectDebitComponentState>,
         > {
 
-    private val componentParamsMapper = ACHDirectDebitComponentParamsMapper(dropInOverrideParams)
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -112,7 +113,13 @@ constructor(
         assertSupported(paymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+            )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -192,10 +199,13 @@ constructor(
         assertSupported(paymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -311,7 +321,12 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -390,10 +405,13 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val achFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(

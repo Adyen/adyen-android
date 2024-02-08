@@ -55,7 +55,7 @@ internal class CardComponentParamsMapper(
         deviceLocale: Locale,
         dropInOverrideParams: DropInOverrideParams?,
         componentSessionParams: SessionParams?,
-        @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
+        @Suppress("UNUSED_PARAMETER") storedPaymentMethod: StoredPaymentMethod,
     ): CardComponentParams {
         return mapToParamsInternal(
             checkoutConfiguration,

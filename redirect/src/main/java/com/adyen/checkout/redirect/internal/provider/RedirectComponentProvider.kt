@@ -23,10 +23,12 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
@@ -37,10 +39,9 @@ import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -69,7 +70,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): RedirectDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultRedirectDelegate(

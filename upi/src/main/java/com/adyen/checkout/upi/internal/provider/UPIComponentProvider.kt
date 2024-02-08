@@ -29,11 +29,13 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -56,6 +58,7 @@ class UPIComponentProvider
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<UPIComponent, UPIConfiguration, UPIComponentState, ComponentCallback<UPIComponentState>>,
     SessionPaymentComponentProvider<
@@ -64,8 +67,6 @@ constructor(
         UPIComponentState,
         SessionComponentCallback<UPIComponentState>,
         > {
-
-    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -81,10 +82,12 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                configuration = checkoutConfiguration.getUPIConfiguration(),
-                sessionParams = null,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                componentConfiguration = checkoutConfiguration.getUPIConfiguration(),
             )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -169,11 +172,14 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                configuration = checkoutConfiguration.getUPIConfiguration(),
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                componentConfiguration = checkoutConfiguration.getUPIConfiguration(),
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(

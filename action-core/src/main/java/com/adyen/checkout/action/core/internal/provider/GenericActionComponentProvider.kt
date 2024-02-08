@@ -36,18 +36,19 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 
 class GenericActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -77,7 +78,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): GenericActionDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         return DefaultGenericActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,

@@ -31,19 +31,20 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 
 class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)
@@ -74,7 +75,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): AwaitDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)

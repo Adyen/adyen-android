@@ -42,12 +42,14 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler
@@ -66,6 +68,7 @@ class CashAppPayComponentProvider
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
         CashAppPayComponent,
@@ -92,8 +95,6 @@ constructor(
         SessionComponentCallback<CashAppPayComponentState>,
         > {
 
-    private val componentParamsMapper = CashAppPayComponentParamsMapper(dropInOverrideParams)
-
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
@@ -108,9 +109,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
-                sessionParams = null,
+            val componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
                 paymentMethod = paymentMethod,
                 context = application,
             )
@@ -192,12 +195,15 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
-                sessionParams = null,
-                paymentMethod = storedPaymentMethod,
+            val componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                storedPaymentMethod = storedPaymentMethod,
                 context = application,
             )
+
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
@@ -274,9 +280,11 @@ constructor(
         assertSupported(paymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+            val componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
                 paymentMethod = paymentMethod,
                 context = application,
             )
@@ -369,10 +377,12 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
-                configuration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
-                paymentMethod = storedPaymentMethod,
+            val componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                storedPaymentMethod = storedPaymentMethod,
                 context = application,
             )
 

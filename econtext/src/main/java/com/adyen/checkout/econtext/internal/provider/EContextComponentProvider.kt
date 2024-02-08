@@ -33,12 +33,14 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.econtext.internal.EContextComponent
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegate
@@ -66,6 +68,7 @@ constructor(
     private val componentClass: Class<ComponentT>,
     private val dropInOverrideParams: DropInOverrideParams?,
     private val analyticsRepository: AnalyticsRepository?,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<
         ComponentT,
@@ -73,8 +76,6 @@ constructor(
         ComponentStateT,
         SessionComponentCallback<ComponentStateT>,
         > {
-
-    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -91,10 +92,12 @@ constructor(
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(
+                val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                     checkoutConfiguration = checkoutConfiguration,
-                    configuration = getConfiguration(checkoutConfiguration),
-                    sessionParams = null,
+                    deviceLocale = localeProvider.getLocale(application),
+                    dropInOverrideParams = dropInOverrideParams,
+                    componentSessionParams = null,
+                    componentConfiguration = getConfiguration(checkoutConfiguration),
                 )
 
                 val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -179,11 +182,14 @@ constructor(
 
         val genericFactory: ViewModelProvider.Factory =
             viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-                val componentParams = componentParamsMapper.mapToParams(
+                val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                     checkoutConfiguration = checkoutConfiguration,
-                    configuration = getConfiguration(checkoutConfiguration),
-                    sessionParams = SessionParamsFactory.create(checkoutSession),
+                    deviceLocale = localeProvider.getLocale(application),
+                    dropInOverrideParams = dropInOverrideParams,
+                    componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                    componentConfiguration = getConfiguration(checkoutConfiguration),
                 )
+
                 val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
                 val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
