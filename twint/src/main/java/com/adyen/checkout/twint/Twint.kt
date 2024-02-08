@@ -10,7 +10,9 @@ package com.adyen.checkout.twint
 
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import ch.twint.payment.sdk.Twint
 import ch.twint.payment.sdk.TwintPayResult
@@ -35,14 +37,26 @@ object Twint {
      */
     fun initialize(activity: ComponentActivity) {
         twintObject = Twint(activity, ::onTwintResult)
+        observeLifecycle(activity.lifecycle)
+    }
 
+    /**
+     * Initializes the [Twint] object. This method **must** be called in [Fragment.onCreateView] or before, because
+     * the Twint SDK creates an [ActivityResultLauncher] under the hood.
+     */
+    fun initialize(fragment: Fragment) {
+        twintObject = Twint(fragment, ::onTwintResult)
+        observeLifecycle(fragment.lifecycle)
+    }
+
+    private fun observeLifecycle(lifecycle: Lifecycle) {
         val observer = object : DefaultLifecycleObserver {
             override fun onDestroy(owner: LifecycleOwner) {
                 onDestroy()
                 super.onDestroy(owner)
             }
         }
-        activity.lifecycle.addObserver(observer)
+        lifecycle.addObserver(observer)
     }
 
     private fun onTwintResult(result: TwintPayResult) {

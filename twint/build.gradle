@@ -42,7 +42,7 @@ dependencies {
     api project(':ui-core')
 
     // Dependencies
-    implementation project(':twint-sdk')
+    implementation files('libs/TwintSdk-android-8.0.0.jar')
 
     //Tests
     testImplementation project(':test-core')

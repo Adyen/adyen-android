@@ -22,11 +22,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.FragmentInstantBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.twint.Twint
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -61,6 +63,11 @@ class InstantFragment : BottomSheetDialogFragment() {
         arguments = (arguments ?: bundleOf()).apply {
             putString(RETURN_URL_EXTRA, returnUrl)
         }
+
+        if (arguments?.getString(PAYMENT_METHOD_TYPE_EXTRA) == PaymentMethodTypes.TWINT) {
+            Twint.initialize(this)
+        }
+
         _binding = FragmentInstantBinding.inflate(inflater, container, false)
         return binding.root
     }
