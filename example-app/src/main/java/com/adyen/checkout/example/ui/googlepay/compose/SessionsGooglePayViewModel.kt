@@ -187,14 +187,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     fun onGooglePayLauncherResult(apiTaskResult: ApiTaskResult<PaymentData>) {
 
-    fun onPaymentResultHandled() {
-        updateState {
-            it.copy(
-                paymentResultToHandle = null,
-            )
-        }
-    }
-
     fun onGooglePayStarted() {
         updateState { it.copy(startGooglePay = null) }
     }
@@ -204,11 +196,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     fun onNewIntent(intent: Intent) {
-        updateState { it.copy(intentToHandle = SessionsGooglePayIntent(componentData, intent)) }
-    }
 
-    fun onNewIntentHandled() {
-        updateState { it.copy(intentToHandle = null) }
     }
 
     companion object {
