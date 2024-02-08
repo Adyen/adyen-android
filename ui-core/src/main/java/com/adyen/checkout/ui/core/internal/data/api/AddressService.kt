@@ -12,16 +12,18 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.getList
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AddressService(
     private val httpClient: HttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun getCountries(
         shopperLocale: String
-    ): List<AddressItem> = withContext(Dispatchers.IO) {
+    ): List<AddressItem> = withContext(ioDispatcher) {
         httpClient.getList(
             path = "datasets/countries/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,
@@ -31,7 +33,7 @@ class AddressService(
     suspend fun getStates(
         shopperLocale: String,
         countryCode: String
-    ): List<AddressItem> = withContext(Dispatchers.IO) {
+    ): List<AddressItem> = withContext(ioDispatcher) {
         httpClient.getList(
             path = "datasets/states/$countryCode/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,

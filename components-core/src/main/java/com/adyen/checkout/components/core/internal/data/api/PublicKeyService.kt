@@ -12,17 +12,19 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.PublicKeyResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.get
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PublicKeyService(
     private val httpClient: HttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun getPublicKey(
         clientKey: String
-    ): PublicKeyResponse = withContext(Dispatchers.IO) {
+    ): PublicKeyResponse = withContext(ioDispatcher) {
         httpClient.get(
             "v1/clientKeys/$clientKey",
             PublicKeyResponse.SERIALIZER

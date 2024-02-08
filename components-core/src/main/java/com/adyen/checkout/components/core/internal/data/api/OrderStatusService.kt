@@ -13,24 +13,26 @@ import com.adyen.checkout.components.core.internal.data.model.OrderStatusRequest
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OrderStatusService(
     private val httpClient: HttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun getOrderStatus(
         request: OrderStatusRequest,
         clientKey: String
-    ): OrderStatusResponse = withContext(Dispatchers.IO) {
+    ): OrderStatusResponse = withContext(ioDispatcher) {
         httpClient.post(
             path = "v1/order/status",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = OrderStatusRequest.SERIALIZER,
-            responseSerializer = OrderStatusResponse.SERIALIZER
+            responseSerializer = OrderStatusResponse.SERIALIZER,
         )
     }
 }

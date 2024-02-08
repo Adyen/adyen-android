@@ -15,6 +15,7 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -26,6 +27,7 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultAddressRepository(
     private val addressService: AddressService,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AddressRepository {
 
     private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()
@@ -50,7 +52,7 @@ class DefaultAddressRepository(
                 fetchStateList(
                     shopperLocale,
                     countryCode,
-                    coroutineScope
+                    coroutineScope,
                 )
             }
         } else {
@@ -63,10 +65,10 @@ class DefaultAddressRepository(
         countryCode: String,
         coroutineScope: CoroutineScope
     ) {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(ioDispatcher) {
             val states = getStates(
                 shopperLocale = shopperLocale,
-                countryCode = countryCode
+                countryCode = countryCode,
             ).fold(
                 onSuccess = { states ->
                     if (states.isNotEmpty()) {
@@ -74,7 +76,7 @@ class DefaultAddressRepository(
                     }
                     states
                 },
-                onFailure = { emptyList() }
+                onFailure = { emptyList() },
             )
             statesChannel.trySend(states)
         }
@@ -86,15 +88,15 @@ class DefaultAddressRepository(
         } ?: run {
             fetchCountryList(
                 shopperLocale,
-                coroutineScope
+                coroutineScope,
             )
         }
     }
 
     private fun fetchCountryList(shopperLocale: Locale, coroutineScope: CoroutineScope) {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(ioDispatcher) {
             val countries = getCountries(
-                shopperLocale = shopperLocale
+                shopperLocale = shopperLocale,
             ).fold(
                 onSuccess = { countries ->
                     if (countries.isNotEmpty()) {
@@ -104,7 +106,7 @@ class DefaultAddressRepository(
                 },
                 onFailure = {
                     emptyList()
-                }
+                },
             )
             countriesChannel.trySend(countries)
         }
@@ -131,7 +133,7 @@ class DefaultAddressRepository(
         private val COUNTRIES_WITH_STATES = listOf(
             AddressSpecification.BR,
             AddressSpecification.CA,
-            AddressSpecification.US
+            AddressSpecification.US,
         )
         private const val COUNTRIES_CACHE_KEY = "countries"
     }

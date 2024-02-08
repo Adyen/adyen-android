@@ -13,24 +13,26 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequ
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsService(
     private val httpClient: HttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun setupAnalytics(
         request: AnalyticsSetupRequest,
         clientKey: String,
-    ): AnalyticsSetupResponse = withContext(Dispatchers.IO) {
+    ): AnalyticsSetupResponse = withContext(ioDispatcher) {
         httpClient.post(
             path = "v3/analytics",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = AnalyticsSetupRequest.SERIALIZER,
-            responseSerializer = AnalyticsSetupResponse.SERIALIZER
+            responseSerializer = AnalyticsSetupResponse.SERIALIZER,
         )
     }
 }

@@ -12,23 +12,25 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class SubmitFingerprintService(
     private val httpClient: HttpClient,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun submitFingerprint(
         request: SubmitFingerprintRequest,
         clientKey: String
-    ): SubmitFingerprintResponse = withContext(Dispatchers.IO) {
+    ): SubmitFingerprintResponse = withContext(ioDispatcher) {
         httpClient.post(
             path = "v1/submitThreeDS2Fingerprint",
             queryParameters = mapOf("token" to clientKey),
             body = request,
             requestSerializer = SubmitFingerprintRequest.SERIALIZER,
-            responseSerializer = SubmitFingerprintResponse.SERIALIZER
+            responseSerializer = SubmitFingerprintResponse.SERIALIZER,
         )
     }
 }
