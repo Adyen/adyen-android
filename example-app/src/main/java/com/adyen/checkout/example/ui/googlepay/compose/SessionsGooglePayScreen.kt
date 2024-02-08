@@ -11,7 +11,6 @@
 package com.adyen.checkout.example.ui.googlepay.compose
 
 import android.app.Activity
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -30,8 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,7 +36,6 @@ import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import com.google.android.gms.wallet.contract.TaskResultContracts
@@ -50,14 +46,14 @@ import com.google.pay.button.PayButton
 @Composable
 internal fun SessionsGooglePayScreen(
     useDarkTheme: Boolean,
+    googlePayState: SessionsGooglePayState,
+    eventsState: SessionsGooglePayEvents,
+    onGooglePayLauncherResult: (apiTaskResult: ApiTaskResult<PaymentData>) -> Unit,
     onBackPressed: () -> Unit,
-    viewModel: SessionsGooglePayViewModel,
 ) {
-    val googlePayState by viewModel.googlePayState.collectAsState()
-    val events by viewModel.stateEvents.collectAsState()
     val googlePayLauncher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
-        onResult = viewModel::onGooglePayLauncherResult,
+        onResult = onGooglePayLauncherResult,
     )
 
     Scaffold(
