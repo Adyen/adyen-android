@@ -32,7 +32,7 @@ internal interface GooglePayDelegate : PaymentComponentDelegate<GooglePayCompone
 
     fun startGooglePayScreen(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>)
 
-    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?)
+    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>)
 
     fun getGooglePayButtonParameters(): GooglePayButtonParameters
 }
