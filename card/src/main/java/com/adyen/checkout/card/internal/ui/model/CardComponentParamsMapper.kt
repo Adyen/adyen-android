@@ -13,9 +13,11 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.getCardConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
@@ -25,49 +27,48 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 @Suppress("TooManyFunctions")
 internal class CardComponentParamsMapper(
     private val installmentsParamsMapper: InstallmentsParamsMapper,
-    private val overrideComponentParams: ComponentParams?,
+    private val dropInOverrideParams: DropInOverrideParams?,
     private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParamsDefault(
-        cardConfiguration: CardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         paymentMethod: PaymentMethod,
         sessionParams: SessionParams?,
     ): CardComponentParams {
-        val supportedCardBrands = cardConfiguration.getSupportedCardBrands(paymentMethod)
         return mapToParams(
-            cardConfiguration,
-            supportedCardBrands,
+            checkoutConfiguration,
+            paymentMethod,
             sessionParams,
         )
     }
 
     fun mapToParamsStored(
-        cardConfiguration: CardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         sessionParams: SessionParams?,
     ): CardComponentParams {
-        val supportedCardBrands = cardConfiguration.getSupportedCardBrandsStored()
         return mapToParams(
-            cardConfiguration,
-            supportedCardBrands,
+            checkoutConfiguration,
+            null,
             sessionParams,
         )
     }
 
     private fun mapToParams(
-        cardConfiguration: CardConfiguration,
-        supportedCardBrands: List<CardBrand>,
+        checkoutConfiguration: CheckoutConfiguration,
+        paymentMethod: PaymentMethod?,
         sessionParams: SessionParams?,
     ): CardComponentParams {
-        return cardConfiguration
-            .mapToParamsInternal(supportedCardBrands)
-            .override(overrideComponentParams)
+        return checkoutConfiguration
+            .mapToParamsInternal(paymentMethod)
+            .override(dropInOverrideParams)
             .override(sessionParams ?: overrideSessionParams)
     }
 
-    private fun CardConfiguration.mapToParamsInternal(
-        supportedCardBrands: List<CardBrand>,
+    private fun CheckoutConfiguration.mapToParamsInternal(
+        paymentMethod: PaymentMethod?,
     ): CardComponentParams {
+        val cardConfiguration = getCardConfiguration()
         return CardComponentParams(
             shopperLocale = shopperLocale,
             environment = environment,
@@ -75,29 +76,30 @@ internal class CardComponentParamsMapper(
             analyticsParams = AnalyticsParams(analyticsConfiguration),
             isCreatedByDropIn = false,
             amount = amount,
-            isHolderNameRequired = isHolderNameRequired ?: false,
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            supportedCardBrands = supportedCardBrands,
-            shopperReference = shopperReference,
-            isStorePaymentFieldVisible = isStorePaymentFieldVisible ?: true,
-            socialSecurityNumberVisibility = socialSecurityNumberVisibility ?: SocialSecurityNumberVisibility.HIDE,
-            kcpAuthVisibility = kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
+            isHolderNameRequired = cardConfiguration?.isHolderNameRequired ?: false,
+            isSubmitButtonVisible = cardConfiguration?.isSubmitButtonVisible ?: true,
+            supportedCardBrands = getSupportedCardBrands(paymentMethod),
+            shopperReference = cardConfiguration?.shopperReference,
+            isStorePaymentFieldVisible = cardConfiguration?.isStorePaymentFieldVisible ?: true,
+            socialSecurityNumberVisibility = cardConfiguration?.socialSecurityNumberVisibility
+                ?: SocialSecurityNumberVisibility.HIDE,
+            kcpAuthVisibility = cardConfiguration?.kcpAuthVisibility ?: KCPAuthVisibility.HIDE,
             installmentParams = installmentsParamsMapper.mapToInstallmentParams(
-                installmentConfiguration = installmentConfiguration,
+                installmentConfiguration = cardConfiguration?.installmentConfiguration,
                 amount = amount,
-                shopperLocale = shopperLocale
+                shopperLocale = shopperLocale,
             ),
-            addressParams = addressConfiguration?.mapToAddressParam() ?: AddressParams.None,
-            cvcVisibility = if (isHideCvc == true) {
+            addressParams = cardConfiguration?.addressConfiguration?.mapToAddressParam() ?: AddressParams.None,
+            cvcVisibility = if (cardConfiguration?.isHideCvc == true) {
                 CVCVisibility.ALWAYS_HIDE
             } else {
                 CVCVisibility.ALWAYS_SHOW
             },
-            storedCVCVisibility = if (isHideCvcStoredCard == true) {
+            storedCVCVisibility = if (cardConfiguration?.isHideCvcStoredCard == true) {
                 StoredCVCVisibility.HIDE
             } else {
                 StoredCVCVisibility.SHOW
-            }
+            },
         )
     }
 
@@ -106,18 +108,19 @@ internal class CardComponentParamsMapper(
      * Priority is: Custom -> PaymentMethod.brands -> Default
      * remove restricted card type
      */
-    private fun CardConfiguration.getSupportedCardBrands(
-        paymentMethod: PaymentMethod
+    private fun CheckoutConfiguration.getSupportedCardBrands(
+        paymentMethod: PaymentMethod?
     ): List<CardBrand> {
+        val test = getCardConfiguration()?.supportedCardBrands
         return when {
-            !supportedCardBrands.isNullOrEmpty() -> {
+            !test.isNullOrEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from configuration")
-                supportedCardBrands
+                test
             }
 
-            paymentMethod.brands.orEmpty().isNotEmpty() -> {
+            paymentMethod?.brands.orEmpty().isNotEmpty() -> {
                 Logger.v(TAG, "Reading supportedCardTypes from API brands")
-                paymentMethod.brands.orEmpty().map {
+                paymentMethod?.brands.orEmpty().map {
                     CardBrand(txVariant = it)
                 }
             }
@@ -129,26 +132,8 @@ internal class CardComponentParamsMapper(
         }.removeRestrictedCards()
     }
 
-    private fun CardConfiguration.getSupportedCardBrandsStored(): List<CardBrand> {
-        return supportedCardBrands.orEmpty().removeRestrictedCards()
-    }
-
     private fun List<CardBrand>.removeRestrictedCards(): List<CardBrand> {
         return this.filter { !RestrictedCardType.isRestrictedCardType(it.txVariant) }
-    }
-
-    private fun CardComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): CardComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
-        )
     }
 
     private fun AddressConfiguration.mapToAddressParam(): AddressParams {
@@ -157,7 +142,7 @@ internal class CardComponentParamsMapper(
                 AddressParams.FullAddress(
                     defaultCountryCode,
                     supportedCountryCodes,
-                    addressFieldPolicy.mapToAddressParamFieldPolicy()
+                    addressFieldPolicy.mapToAddressParamFieldPolicy(),
                 )
             }
 
@@ -188,7 +173,17 @@ internal class CardComponentParamsMapper(
     }
 
     private fun CardComponentParams.override(
-        sessionParams: SessionParams? = null
+        dropInOverrideParams: DropInOverrideParams?
+    ): CardComponentParams {
+        if (dropInOverrideParams == null) return this
+        return copy(
+            amount = dropInOverrideParams.amount,
+            isCreatedByDropIn = true,
+        )
+    }
+
+    private fun CardComponentParams.override(
+        sessionParams: SessionParams?
     ): CardComponentParams {
         if (sessionParams == null) return this
         return copy(
@@ -199,7 +194,7 @@ internal class CardComponentParamsMapper(
             installmentParams = installmentsParamsMapper.mapToInstallmentParams(
                 installmentConfiguration = sessionParams.installmentConfiguration,
                 amount = sessionParams.amount ?: amount,
-                shopperLocale = shopperLocale
+                shopperLocale = shopperLocale,
             ),
             amount = sessionParams.amount ?: amount,
         )

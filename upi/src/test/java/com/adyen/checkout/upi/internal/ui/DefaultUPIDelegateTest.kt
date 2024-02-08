@@ -10,6 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -23,9 +24,10 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponentState
-import com.adyen.checkout.upi.UPIConfiguration
+import com.adyen.checkout.upi.getUPIConfiguration
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.upi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -172,9 +174,7 @@ internal class DefaultUPIDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultUPIConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createUPIDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -234,24 +234,31 @@ internal class DefaultUPIDelegateTest(
         }
     }
 
-    private fun getDefaultUPIConfigurationBuilder(): UPIConfiguration.Builder {
-        return UPIConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        upi()
     }
 
     private fun createUPIDelegate(
         order: Order? = TEST_ORDER,
-        configuration: UPIConfiguration = getDefaultUPIConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultUPIDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
+            checkoutConfiguration = configuration,
+            configuration = configuration.getUPIConfiguration(),
+            sessionParams = null,
+        ),
     )
 
     companion object {

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.ui.main
 
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 
 internal sealed class MainNavigation {
@@ -36,16 +36,16 @@ internal sealed class MainNavigation {
 
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        val dropInConfiguration: DropInConfiguration
+        val checkoutConfiguration: CheckoutConfiguration
     ) : MainNavigation()
 
     data class DropInWithSession(
         val checkoutSession: CheckoutSession,
-        val dropInConfiguration: DropInConfiguration
+        val checkoutConfiguration: CheckoutConfiguration
     ) : MainNavigation()
 
     data class DropInWithCustomSession(
         val checkoutSession: CheckoutSession,
-        val dropInConfiguration: DropInConfiguration
+        val checkoutConfiguration: CheckoutConfiguration
     ) : MainNavigation()
 }

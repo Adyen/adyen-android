@@ -70,7 +70,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
             giftCardComponent = getComponentFor(
                 fragment = this,
                 paymentMethod = paymentMethod,
-                dropInConfiguration = dropInViewModel.dropInConfiguration,
+                checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 amount = dropInViewModel.amount,
                 componentCallback = this,
                 sessionDetails = dropInViewModel.sessionDetails,

@@ -66,8 +66,9 @@ internal class PaymentMethodListDialogFragment :
                 paymentMethods = dropInViewModel.getPaymentMethods(),
                 storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
                 order = dropInViewModel.currentOrder,
-                dropInConfiguration = dropInViewModel.dropInConfiguration,
-                amount = dropInViewModel.amount,
+                checkoutConfiguration = dropInViewModel.checkoutConfiguration,
+                dropInComponentParams = dropInViewModel.dropInComponentParams,
+                overrideAmount = dropInViewModel.amount,
                 sessionDetails = dropInViewModel.sessionDetails,
             )
         }
@@ -157,7 +158,7 @@ internal class PaymentMethodListDialogFragment :
         component = getComponentFor(
             fragment = this,
             storedPaymentMethod = storedPaymentMethod,
-            dropInConfiguration = dropInViewModel.dropInConfiguration,
+            checkoutConfiguration = dropInViewModel.checkoutConfiguration,
             amount = dropInViewModel.amount,
             componentCallback = paymentMethodsListViewModel,
             sessionDetails = dropInViewModel.sessionDetails,
@@ -172,8 +173,8 @@ internal class PaymentMethodListDialogFragment :
             .setTitle(
                 String.format(
                     resources.getString(R.string.checkout_stored_payment_confirmation_message),
-                    paymentMethodName
-                )
+                    paymentMethodName,
+                ),
             )
             .setNegativeButton(R.string.checkout_stored_payment_confirmation_cancel_button) { dialog, _ ->
                 dialog.dismiss()
@@ -181,9 +182,9 @@ internal class PaymentMethodListDialogFragment :
             .setPositiveButton(
                 PayButtonFormatter.getPayButtonText(
                     amount = dropInViewModel.amount,
-                    locale = dropInViewModel.dropInConfiguration.shopperLocale,
+                    locale = dropInViewModel.dropInComponentParams.shopperLocale,
                     localizedContext = requireContext(),
-                )
+                ),
             ) { dialog, _ ->
                 dialog.dismiss()
                 paymentMethodsListViewModel.onClickConfirmationButton()
@@ -194,8 +195,8 @@ internal class PaymentMethodListDialogFragment :
                 dialog.setMessage(
                     requireActivity().getString(
                         R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour
-                    )
+                        storedPaymentMethodModel.lastFour,
+                    ),
                 )
             }
 
@@ -207,8 +208,8 @@ internal class PaymentMethodListDialogFragment :
                 dialog.setMessage(
                     requireActivity().getString(
                         R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour
-                    )
+                        storedPaymentMethodModel.lastFour,
+                    ),
                 )
             }
         }
@@ -230,7 +231,7 @@ internal class PaymentMethodListDialogFragment :
 
     override fun onStoredPaymentMethodRemoved(storedPaymentMethodModel: StoredPaymentMethodModel) {
         val storedPaymentMethod = StoredPaymentMethod(
-            id = storedPaymentMethodModel.id
+            id = storedPaymentMethodModel.id,
         )
         protocol.removeStoredPaymentMethod(storedPaymentMethod)
     }

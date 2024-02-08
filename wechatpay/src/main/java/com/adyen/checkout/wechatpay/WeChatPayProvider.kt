@@ -9,9 +9,9 @@
 package com.adyen.checkout.wechatpay
 
 import android.app.Application
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.tencent.mm.opensdk.constants.Build
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
@@ -22,18 +22,27 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
  * You can directly call /payments after you receive a callback from [isAvailable].
  * You can use [WeChatPayActionComponent] to handle the returned action.
  */
-class WeChatPayProvider : PaymentMethodAvailabilityCheck<Configuration> {
+class WeChatPayProvider : PaymentMethodAvailabilityCheck<WeChatPayActionConfiguration> {
 
     override fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
-        configuration: Configuration?,
+        configuration: WeChatPayActionConfiguration?,
         callback: ComponentAvailableCallback
     ) {
         callback.onAvailabilityResult(isAvailable(applicationContext), paymentMethod)
     }
 
-    private fun isAvailable(applicationContext: Application?): Boolean {
+    override fun isAvailable(
+        application: Application,
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
+        callback: ComponentAvailableCallback
+    ) {
+        callback.onAvailabilityResult(isAvailable(application), paymentMethod)
+    }
+
+    private fun isAvailable(applicationContext: Application): Boolean {
         val api = WXAPIFactory.createWXAPI(applicationContext, null, true)
         val isAppInstalled = api.isWXAppInstalled
         val isSupported = Build.PAY_SUPPORTED_SDK_INT <= api.wxAppSupportAPI

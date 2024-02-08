@@ -8,53 +8,38 @@
 
 package com.adyen.checkout.dropin.internal
 
-import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.bcmc.bcmc
+import com.adyen.checkout.card.card
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
-import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.dropin.dropIn
+import com.adyen.checkout.googlepay.googlePay
 import java.util.Locale
 
 internal object ConfigurationProvider {
+
     private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-    private val TAG = LogUtil.getTag()
     private val shopperLocale = Locale.US
     private val amount = Amount(currency = "EUR", value = 1337)
     private val environment = Environment.TEST
 
-    internal fun getDropInConfiguration(): DropInConfiguration {
-        val dropInConfigurationBuilder = DropInConfiguration.Builder(
-            shopperLocale,
-            environment,
-            TEST_CLIENT_KEY,
-        )
-            .addCardConfiguration(getCardConfiguration())
-            .addBcmcConfiguration(getBcmcConfiguration())
-            .addGooglePayConfiguration(getGooglePayConfiguration())
-            .setEnableRemovingStoredPaymentMethods(true)
-
-        try {
-            dropInConfigurationBuilder.setAmount(amount)
-        } catch (e: CheckoutException) {
-            Logger.e(TAG, "Amount $amount not valid", e)
+    fun getCheckoutConfiguration() = CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        dropIn {
+            setEnableRemovingStoredPaymentMethods(true)
         }
 
-        return dropInConfigurationBuilder.build()
+        card()
+
+        bcmc()
+
+        googlePay {
+            setCountryCode("NL")
+        }
     }
-
-    private fun getCardConfiguration(): CardConfiguration =
-        CardConfiguration.Builder(shopperLocale, environment, TEST_CLIENT_KEY).build()
-
-    private fun getBcmcConfiguration(): BcmcConfiguration =
-        BcmcConfiguration.Builder(shopperLocale, environment, TEST_CLIENT_KEY).build()
-
-    private fun getGooglePayConfiguration(): GooglePayConfiguration =
-        GooglePayConfiguration.Builder(shopperLocale, environment, TEST_CLIENT_KEY)
-            .setCountryCode("NL")
-            .setAmount(amount)
-            .build()
 }

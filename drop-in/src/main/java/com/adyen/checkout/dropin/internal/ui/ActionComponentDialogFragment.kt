@@ -21,22 +21,22 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.action.core.GenericActionComponent
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.internal.util.toast
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.PermissionException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
-import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.util.arguments
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -51,15 +51,24 @@ internal class ActionComponentDialogFragment :
     private val actionComponentViewModel: ActionComponentViewModel by viewModels()
 
     private val action: Action by arguments(ACTION)
-    private val actionConfiguration: GenericActionConfiguration by arguments(ACTION_CONFIGURATION)
+    private val checkoutConfiguration: CheckoutConfiguration by arguments(CHECKOUT_CONFIGURATION)
     private lateinit var actionComponent: GenericActionComponent
 
+    private var permissionCallback: PermissionHandlerCallback? = null
+
     private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-            if (!isGranted) {
-                requireContext().toast(getString(R.string.checkout_permission_not_granted))
-            } else {
-                // TODO: trigger download image flow when user accept storage permission after checking permission type
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultsMap ->
+            resultsMap.firstNotNullOf { result ->
+                val requestedPermission = result.key
+                val isGranted = result.value
+                if (isGranted) {
+                    Logger.d(TAG, "Permission $requestedPermission granted")
+                    permissionCallback?.onPermissionGranted(requestedPermission)
+                } else {
+                    Logger.d(TAG, "Permission $requestedPermission denied")
+                    permissionCallback?.onPermissionDenied(requestedPermission)
+                }
+                permissionCallback = null
             }
         }
 
@@ -70,6 +79,7 @@ internal class ActionComponentDialogFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGenericActionComponentBinding.inflate(inflater)
+        setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
         return binding.root
     }
 
@@ -84,10 +94,9 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
-            val componentParams = dropInViewModel.dropInConfiguration.mapToParams(dropInViewModel.amount)
-            actionComponent = GenericActionComponentProvider(componentParams).get(
+            actionComponent = GenericActionComponentProvider(DropInOverrideParams(dropInViewModel.amount)).get(
                 fragment = this,
-                configuration = actionConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 callback = this,
             )
 
@@ -113,6 +122,20 @@ internal class ActionComponentDialogFragment :
     override fun onError(componentError: ComponentError) {
         Logger.d(TAG, "onError")
         handleError(componentError)
+    }
+
+    override fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        this.permissionCallback = permissionCallback
+        Logger.d(TAG, "Permission request information dialog shown")
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.checkout_rationale_title_storage_permission)
+            .setMessage(R.string.checkout_rationale_message_storage_permission)
+            .setOnDismissListener {
+                Logger.d(TAG, "Permission $requiredPermission requested")
+                requestPermissionLauncher.launch(arrayOf(requiredPermission))
+            }
+            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun initObservers() {
@@ -163,23 +186,10 @@ internal class ActionComponentDialogFragment :
     }
 
     private fun handleError(componentError: ComponentError) {
-        when (val exception = componentError.exception) {
+        when (componentError.exception) {
             is CancellationException -> {
                 Logger.d(TAG, "Flow was cancelled by user")
                 onBackPressed()
-            }
-
-            is PermissionException -> {
-                val requiredPermission = exception.requiredPermission
-                Logger.e(TAG, exception.message.orEmpty(), exception)
-                // TODO: checkout_rationale_title_storage_permission and checkout_rationale_message_storage_permission
-                // TODO: can be reused based on required permission
-                AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.checkout_rationale_title_storage_permission)
-                    .setMessage(R.string.checkout_rationale_message_storage_permission)
-                    .setOnDismissListener { requestPermissionLauncher.launch(requiredPermission) }
-                    .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
-                    .show()
             }
 
             else -> {
@@ -207,15 +217,15 @@ internal class ActionComponentDialogFragment :
         private val TAG = LogUtil.getTag()
 
         const val ACTION = "ACTION"
-        const val ACTION_CONFIGURATION = "ACTION_CONFIGURATION"
+        const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
 
         fun newInstance(
             action: Action,
-            actionConfiguration: GenericActionConfiguration
+            checkoutConfiguration: CheckoutConfiguration,
         ): ActionComponentDialogFragment {
             val args = Bundle()
             args.putParcelable(ACTION, action)
-            args.putParcelable(ACTION_CONFIGURATION, actionConfiguration)
+            args.putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
 
             val componentDialogFragment = ActionComponentDialogFragment()
             componentDialogFragment.arguments = args

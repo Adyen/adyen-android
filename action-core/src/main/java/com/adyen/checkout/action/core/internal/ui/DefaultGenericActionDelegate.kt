@@ -12,16 +12,18 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.PermissionRequestingDelegate
 import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -46,7 +48,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
-    private val configuration: GenericActionConfiguration,
+    private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
 ) : GenericActionDelegate {
@@ -60,11 +62,14 @@ internal class DefaultGenericActionDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
+    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
+
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
+    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
 
     private var onRedirectListener: (() -> Unit)? = null
 
@@ -81,6 +86,7 @@ internal class DefaultGenericActionDelegate(
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback
@@ -104,7 +110,7 @@ internal class DefaultGenericActionDelegate(
         } else {
             val delegate = actionDelegateProvider.getDelegate(
                 action = action,
-                configuration = configuration,
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = activity.application
             )
@@ -119,6 +125,7 @@ internal class DefaultGenericActionDelegate(
 
             observeDetails(delegate)
             observeExceptions(delegate)
+            observePermissionRequests(delegate)
             observeViewFlow(delegate)
         }
 
@@ -129,6 +136,14 @@ internal class DefaultGenericActionDelegate(
         return runCompileOnly { _delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction } ?: false
     }
 
+    private fun observeDetails(delegate: ActionDelegate) {
+        if (delegate !is DetailsEmittingDelegate) return
+        Logger.d(TAG, "Observing details")
+        delegate.detailsFlow
+            .onEach { detailsChannel.trySend(it) }
+            .launchIn(coroutineScope)
+    }
+
     private fun observeExceptions(delegate: ActionDelegate) {
         Logger.d(TAG, "Observing exceptions")
         delegate.exceptionFlow
@@ -136,11 +151,11 @@ internal class DefaultGenericActionDelegate(
             .launchIn(coroutineScope)
     }
 
-    private fun observeDetails(delegate: ActionDelegate) {
-        if (delegate !is DetailsEmittingDelegate) return
-        Logger.d(TAG, "Observing details")
-        delegate.detailsFlow
-            .onEach { detailsChannel.trySend(it) }
+    private fun observePermissionRequests(delegate: ActionDelegate) {
+        if (delegate !is PermissionRequestingDelegate) return
+        Logger.d(TAG, "Observing permission requests")
+        delegate.permissionFlow
+            .onEach { permissionChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 

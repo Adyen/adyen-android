@@ -22,4 +22,5 @@
     <string name="checkout_qr_code_save_button">Save as image</string>
     <string name="checkout_qr_code_download_image_succeeded">Downloading image succeeded</string>
     <string name="checkout_qr_code_download_image_failed">Downloading image failed</string>
+    <string name="checkout_qr_code_permission_denied">Permission is not granted</string>
 </resources>

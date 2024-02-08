@@ -85,7 +85,7 @@ class GooglePayFragment : BottomSheetDialogFragment() {
             GooglePayComponent.PROVIDER.get(
                 fragment = this@GooglePayFragment,
                 paymentMethod = paymentMethod,
-                configuration = googlePayConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 callback = callback,
             )
         }

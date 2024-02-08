@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">另存为图片</string>
     <string name="checkout_qr_code_download_image_succeeded">下载图片成功</string>
     <string name="checkout_qr_code_download_image_failed">下载图片失败</string>
+    <string name="checkout_qr_code_permission_denied">未授予权限</string>
 </resources>

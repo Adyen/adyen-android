@@ -13,7 +13,6 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
@@ -21,6 +20,7 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
@@ -82,7 +82,7 @@ internal class DefaultAdyen3DS2DelegateTest(
     fun beforeEach(dispatcher: TestDispatcher) {
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        val configuration = Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+        val configuration = CheckoutConfiguration(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
@@ -188,7 +188,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                             "directoryServerId":"id",
                             "directoryServerPublicKey":"key"
                             }
-                        """.trimIndent()
+                        """.trimIndent(),
                     )
                     delegate.identifyShopper(Activity(), encodedJson, false)
 
@@ -446,15 +446,15 @@ internal class DefaultAdyen3DS2DelegateTest(
             val details = JSONObject("{}")
             whenever(
                 adyen3DS2Serializer.createChallengeDetails(
-                    transactionStatus = "transactionStatus"
-                )
+                    transactionStatus = "transactionStatus",
+                ),
             ) doReturn details
 
             delegate.detailsFlow.test {
                 delegate.onCompletion(
                     result = ChallengeResult.Completed(
-                        transactionStatus = "transactionStatus"
-                    )
+                        transactionStatus = "transactionStatus",
+                    ),
                 )
 
                 val expected = ActionComponentData(
@@ -470,15 +470,15 @@ internal class DefaultAdyen3DS2DelegateTest(
             val error = ComponentException("test")
             whenever(
                 adyen3DS2Serializer.createChallengeDetails(
-                    transactionStatus = "transactionStatus"
-                )
+                    transactionStatus = "transactionStatus",
+                ),
             ) doAnswer { throw error }
 
             delegate.exceptionFlow.test {
                 delegate.onCompletion(
                     result = ChallengeResult.Completed(
-                        transactionStatus = "transactionStatus"
-                    )
+                        transactionStatus = "transactionStatus",
+                    ),
                 )
 
                 assertEquals(error, awaitItem())
@@ -491,8 +491,8 @@ internal class DefaultAdyen3DS2DelegateTest(
                 delegate.onCompletion(
                     result = ChallengeResult.Cancelled(
                         transactionStatus = "transactionStatus",
-                        additionalDetails = "additionalDetails"
-                    )
+                        additionalDetails = "additionalDetails",
+                    ),
                 )
 
                 assertTrue(awaitItem() is Cancelled3DS2Exception)
@@ -505,16 +505,16 @@ internal class DefaultAdyen3DS2DelegateTest(
             whenever(
                 adyen3DS2Serializer.createChallengeDetails(
                     transactionStatus = "transactionStatus",
-                    errorDetails = "additionalDetails"
-                )
+                    errorDetails = "additionalDetails",
+                ),
             ) doReturn details
 
             delegate.detailsFlow.test {
                 delegate.onCompletion(
                     result = ChallengeResult.Timeout(
                         transactionStatus = "transactionStatus",
-                        additionalDetails = "additionalDetails"
-                    )
+                        additionalDetails = "additionalDetails",
+                    ),
                 )
 
                 val expected = ActionComponentData(
@@ -531,16 +531,16 @@ internal class DefaultAdyen3DS2DelegateTest(
             whenever(
                 adyen3DS2Serializer.createChallengeDetails(
                     transactionStatus = "transactionStatus",
-                    errorDetails = "additionalDetails"
-                )
+                    errorDetails = "additionalDetails",
+                ),
             ) doReturn details
 
             delegate.detailsFlow.test {
                 delegate.onCompletion(
                     result = ChallengeResult.Error(
                         transactionStatus = "transactionStatus",
-                        additionalDetails = "additionalDetails"
-                    )
+                        additionalDetails = "additionalDetails",
+                    ),
                 )
 
                 val expected = ActionComponentData(
@@ -562,6 +562,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         override fun getAuthenticationRequestParameters(): AuthenticationRequestParameters? = authReqParameters
 
+        @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
         override fun doChallenge(p0: Activity?, p1: ChallengeParameters?, p2: ChallengeStatusReceiver?, p3: Int) {
             timesDoChallengeCalled++
             if (shouldThrowError) {
@@ -579,7 +580,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             if (shouldThrowError) {
                 throw InvalidInputException("test", null)
             }
-            // TODO
         }
 
         override fun getProgressView(p0: Activity?): ProgressDialog {

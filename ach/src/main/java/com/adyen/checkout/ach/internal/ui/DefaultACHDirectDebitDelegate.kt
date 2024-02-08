@@ -29,7 +29,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -66,7 +66,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
-    private val genericEncrypter: BaseGenericEncrypter,
+    private val genericEncryptor: BaseGenericEncryptor,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: Order?
 ) : ACHDirectDebitDelegate, ButtonDelegate, UIStateDelegate {
@@ -277,12 +277,12 @@ internal class DefaultACHDirectDebitDelegate(
         }
 
         try {
-            val encryptedBankAccountNumber = genericEncrypter.encryptField(
+            val encryptedBankAccountNumber = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER,
                 fieldValueToEncrypt = outputData.bankAccountNumber.value,
                 publicKey = publicKey
             )
-            val encryptedBankLocationId = genericEncrypter.encryptField(
+            val encryptedBankLocationId = genericEncryptor.encryptField(
                 fieldKeyToEncrypt = ENCRYPTION_KEY_FOR_BANK_LOCATION_ID,
                 fieldValueToEncrypt = outputData.bankLocationId.value,
                 publicKey = publicKey

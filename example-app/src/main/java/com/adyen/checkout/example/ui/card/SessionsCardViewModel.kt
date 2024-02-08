@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
@@ -49,9 +49,9 @@ internal class SessionsCardViewModel @Inject constructor(
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
-    private val cardConfiguration = checkoutConfigurationProvider.getCardConfiguration()
+    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-    private val _uiState = MutableStateFlow(SessionsCardUiState(cardConfiguration))
+    private val _uiState = MutableStateFlow(SessionsCardUiState(checkoutConfiguration))
     val uiState: StateFlow<SessionsCardUiState> = _uiState.asStateFlow()
 
     init {
@@ -102,14 +102,14 @@ internal class SessionsCardViewModel @Inject constructor(
             ),
         ) ?: return null
 
-        return getCheckoutSession(sessionModel, cardConfiguration)
+        return getCheckoutSession(sessionModel, checkoutConfiguration)
     }
 
     private suspend fun getCheckoutSession(
         sessionModel: SessionModel,
-        cardConfiguration: CardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
-        return when (val result = CheckoutSessionProvider.createSession(sessionModel, cardConfiguration)) {
+        return when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }

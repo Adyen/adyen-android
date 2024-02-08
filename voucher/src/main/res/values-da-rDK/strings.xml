@@ -9,11 +9,17 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Download vejledningen til direkte debitering (fuldmagt til direkte debitering)</string>
-    <string name="checkout_voucher_introduction_boleto">Tak for dit køb. Brug følgende kupon til at gennemføre din betaling.</string>
+    <string name="checkout_voucher_introduction">Tak for dit køb. Brug følgende kupon til at gennemføre din betaling.</string>
     <string name="checkout_voucher_payment_reference">Betalingsreference</string>
+    <string name="checkout_voucher_expiration_entity">Enhed</string>
     <string name="checkout_voucher_expiration_date">Udløbsdato</string>
+    <string name="checkout_voucher_shopper_reference">Købers reference</string>
     <string name="checkout_voucher_copy_code">Kopiér koden</string>
     <string name="checkout_voucher_copied_toast">Koden er kopieret til udklipsholderen</string>
     <string name="checkout_voucher_download_pdf">Download PDF</string>
+    <string name="checkout_voucher_save_image">Gem som billede</string>
+    <string name="checkout_voucher_image_saved"> Billedet er gemt på din enhed</string>
+    <string name="checkout_voucher_image_failed"> Kunne ikke gemme billedet</string>
     <string name="checkout_voucher_finish">Afslut</string>
+    <string name="checkout_voucher_permission_denied">Tilladelse er ikke givet</string>
 </resources>

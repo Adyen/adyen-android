@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import android.app.Application
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -18,6 +20,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.CoroutineScope
@@ -116,9 +119,7 @@ internal class DefaultGooglePayDelegateTest(
         expectedComponentStateValue: Amount?,
     ) = runTest {
         if (configurationValue != null) {
-            val configuration = getGooglePayConfigurationBuilder()
-                .setAmount(configurationValue)
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createGooglePayDelegate(configuration = configuration)
         }
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -151,18 +152,22 @@ internal class DefaultGooglePayDelegateTest(
         }
     }
 
-    private fun getGooglePayConfigurationBuilder(): GooglePayConfiguration.Builder {
-        return GooglePayConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: GooglePayConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
+        amount = amount,
+    ) {
+        googlePay(configuration)
     }
 
     private fun createGooglePayDelegate(
-        configuration: GooglePayConfiguration = getGooglePayConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         paymentMethod: PaymentMethod = PaymentMethod(
-            configuration = Configuration(gatewayMerchantId = "TEST_GATEWAY_MERCHANT_ID")
+            configuration = Configuration(gatewayMerchantId = "TEST_GATEWAY_MERCHANT_ID"),
         ),
     ): DefaultGooglePayDelegate {
         return DefaultGooglePayDelegate(
@@ -172,9 +177,10 @@ internal class DefaultGooglePayDelegateTest(
             componentParams = GooglePayComponentParamsMapper(null, null).mapToParams(
                 configuration,
                 paymentMethod,
-                null
+                null,
             ),
             analyticsRepository = analyticsRepository,
+            application = Application(),
         )
     }
 

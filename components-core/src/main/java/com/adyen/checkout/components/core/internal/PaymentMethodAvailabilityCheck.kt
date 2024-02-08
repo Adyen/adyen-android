@@ -8,6 +8,7 @@
 package com.adyen.checkout.components.core.internal
 
 import android.app.Application
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
@@ -18,10 +19,18 @@ import com.adyen.checkout.components.core.PaymentMethod
  * [Configuration] if not applicable.
  */
 interface PaymentMethodAvailabilityCheck<ConfigurationT : Configuration> {
+
     fun isAvailable(
         applicationContext: Application,
         paymentMethod: PaymentMethod,
         configuration: ConfigurationT?,
+        callback: ComponentAvailableCallback
+    )
+
+    fun isAvailable(
+        application: Application,
+        paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ComponentAvailableCallback
     )
 }

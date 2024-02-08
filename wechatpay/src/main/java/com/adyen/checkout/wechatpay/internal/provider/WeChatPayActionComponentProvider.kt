@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.SdkAction
@@ -23,7 +24,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -33,32 +34,33 @@ import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.internal.ui.DefaultWeChatDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import com.adyen.checkout.wechatpay.internal.util.WeChatPayRequestGenerator
+import com.adyen.checkout.wechatpay.toCheckoutConfiguration
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import com.tencent.mm.opensdk.openapi.WXAPIFactory
 
 class WeChatPayActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: WeChatPayActionConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): WeChatPayActionComponent {
         val weChatFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val weChatDelegate = getDelegate(configuration, savedStateHandle, application)
+            val weChatDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             WeChatPayActionComponent(
                 delegate = weChatDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
 
@@ -69,11 +71,11 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: WeChatPayActionConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): WeChatDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
@@ -82,7 +84,27 @@ constructor(
             componentParams = componentParams,
             iwxApi = iwxApi,
             payRequestGenerator = requestGenerator,
-            paymentDataRepository = paymentDataRepository
+            paymentDataRepository = paymentDataRepository,
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: WeChatPayActionConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): WeChatPayActionComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
         )
     }
 

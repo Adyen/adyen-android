@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
@@ -27,7 +28,6 @@ import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +51,7 @@ internal class GooglePayViewModel @Inject constructor(
     ComponentCallback<GooglePayComponentState>,
     ComponentAvailableCallback {
 
-    private val googlePayConfiguration = checkoutConfigurationProvider.getGooglePayConfiguration()
+    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private val _googleComponentDataFlow = MutableStateFlow<GooglePayComponentData?>(null)
     val googleComponentDataFlow: Flow<GooglePayComponentData> = _googleComponentDataFlow.filterNotNull()
@@ -90,23 +90,23 @@ internal class GooglePayViewModel @Inject constructor(
         _googleComponentDataFlow.emit(
             GooglePayComponentData(
                 paymentMethod,
-                googlePayConfiguration,
+                checkoutConfiguration,
                 this@GooglePayViewModel,
             ),
         )
 
-        checkGooglePayAvailability(paymentMethod, googlePayConfiguration)
+        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
     }
 
     private fun checkGooglePayAvailability(
         paymentMethod: PaymentMethod,
-        googlePayConfiguration: GooglePayConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
     ) {
         GooglePayComponent.PROVIDER.isAvailable(
-            application,
-            paymentMethod,
-            googlePayConfiguration,
-            this,
+            application = application,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = checkoutConfiguration,
+            callback = this,
         )
     }
 

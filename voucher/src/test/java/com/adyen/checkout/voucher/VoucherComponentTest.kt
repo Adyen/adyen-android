@@ -82,7 +82,7 @@ internal class VoucherComponentTest(
     }
 
     @Test
-    fun `when component is initialized for BACS then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for simple voucher then view flow should match delegate view flow`() = runTest {
         component.viewFlow.test {
             assertEquals(VoucherComponentViewType.SIMPLE_VOUCHER, awaitItem())
             expectNoEvents()
@@ -90,7 +90,7 @@ internal class VoucherComponentTest(
     }
 
     @Test
-    fun `when component is initialized for Boleto then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for full voucher then view flow should match delegate view flow`() = runTest {
         whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType.FULL_VOUCHER)
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
         component.viewFlow.test {

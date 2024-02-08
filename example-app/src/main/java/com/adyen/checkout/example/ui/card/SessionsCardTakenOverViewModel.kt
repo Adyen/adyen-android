@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -62,7 +62,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
-    private val cardConfiguration = checkoutConfigurationProvider.getCardConfiguration()
+    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private var isFlowTakenOver: Boolean
         get() = savedStateHandle[IS_SESSIONS_FLOW_TAKEN_OVER_KEY] ?: false
@@ -119,14 +119,14 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
             )
         ) ?: return null
 
-        return getCheckoutSession(sessionModel, cardConfiguration)
+        return getCheckoutSession(sessionModel, checkoutConfiguration)
     }
 
     private suspend fun getCheckoutSession(
         sessionModel: SessionModel,
-        cardConfiguration: CardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
-        return when (val result = CheckoutSessionProvider.createSession(sessionModel, cardConfiguration)) {
+        return when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }

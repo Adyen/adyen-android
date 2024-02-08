@@ -14,6 +14,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethod
@@ -28,7 +29,6 @@ import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
-import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
@@ -59,7 +59,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     SessionComponentCallback<GooglePayComponentState>,
     ComponentAvailableCallback {
 
-    private val googlePayConfiguration = checkoutConfigurationProvider.getGooglePayConfiguration()
+    private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private val _googlePayState = MutableStateFlow(SessionsGooglePayState(SessionsGooglePayUIState.Loading))
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()
@@ -89,12 +89,12 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
         _componentData = SessionsGooglePayComponentData(
             checkoutSession,
-            googlePayConfiguration,
+            checkoutConfiguration,
             paymentMethod,
             this@SessionsGooglePayViewModel,
         )
 
-        checkGooglePayAvailability(paymentMethod, googlePayConfiguration)
+        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
@@ -117,14 +117,14 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             ),
         ) ?: return null
 
-        return getCheckoutSession(sessionModel, googlePayConfiguration)
+        return getCheckoutSession(sessionModel, checkoutConfiguration)
     }
 
     private suspend fun getCheckoutSession(
         sessionModel: SessionModel,
-        googlePayConfiguration: GooglePayConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CheckoutSession? {
-        return when (val result = CheckoutSessionProvider.createSession(sessionModel, googlePayConfiguration)) {
+        return when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }
@@ -132,13 +132,13 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     private fun checkGooglePayAvailability(
         paymentMethod: PaymentMethod,
-        googlePayConfiguration: GooglePayConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
     ) {
         GooglePayComponent.PROVIDER.isAvailable(
-            application,
-            paymentMethod,
-            googlePayConfiguration,
-            this,
+            application = application,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = checkoutConfiguration,
+            callback = this,
         )
     }
 

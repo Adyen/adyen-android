@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
@@ -38,7 +39,6 @@ import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.dropin.DropIn
-import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.DropInServiceResultError
 import com.adyen.checkout.dropin.OrderDropInServiceResult
@@ -46,7 +46,6 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.dropin.SessionDropInServiceResult
 import com.adyen.checkout.dropin.databinding.ActivityDropInBinding
-import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
 import com.adyen.checkout.dropin.internal.provider.getFragmentForPaymentMethod
 import com.adyen.checkout.dropin.internal.provider.getFragmentForStoredPaymentMethod
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
@@ -56,6 +55,7 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
+import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -216,7 +216,7 @@ internal class DropInActivity :
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
-            additionalData = dropInViewModel.dropInConfiguration.additionalDataForDropInService,
+            additionalData = dropInViewModel.dropInComponentParams.additionalDataForDropInService,
         )
         if (bound) {
             serviceBound = true
@@ -224,7 +224,7 @@ internal class DropInActivity :
             Logger.e(
                 TAG,
                 "Error binding to ${dropInViewModel.serviceComponentName.className}. " +
-                    "The system couldn't find the service or your client doesn't have permission to bind to it"
+                    "The system couldn't find the service or your client doesn't have permission to bind to it",
             )
         }
     }
@@ -403,7 +403,7 @@ internal class DropInActivity :
             is DropInServiceResult.Update -> handlePaymentMethodsUpdate(dropInServiceResult)
             is DropInServiceResult.Error -> handleErrorDropInServiceResult(dropInServiceResult)
             is DropInServiceResult.ToPaymentMethodsList -> dropInViewModel.onToPaymentMethodsList(
-                dropInServiceResult.paymentMethodsApiResponse
+                dropInServiceResult.paymentMethodsApiResponse,
             )
         }
     }
@@ -472,15 +472,14 @@ internal class DropInActivity :
         Logger.d(TAG, "showActionDialog")
         setLoading(false)
         hideAllScreens()
-        val actionConfiguration = dropInViewModel.dropInConfiguration.genericActionConfiguration
-        val actionFragment = ActionComponentDialogFragment.newInstance(action, actionConfiguration)
+        val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
     }
 
     private fun handlePaymentMethodsUpdate(dropInServiceResult: DropInServiceResult.Update) {
         dropInViewModel.handlePaymentMethodsUpdate(
             dropInServiceResult.paymentMethodsApiResponse,
-            dropInServiceResult.order
+            dropInServiceResult.order,
         )
     }
 
@@ -624,7 +623,7 @@ internal class DropInActivity :
                 dialogTitle = null,
                 errorMessage = getString(result.errorMessage),
                 reason = result.reason,
-                terminate = result.terminateDropIn
+                terminate = result.terminateDropIn,
             )
 
             is GiftCardBalanceResult.FullPayment -> handleGiftCardFullPayment(result)
@@ -714,14 +713,14 @@ internal class DropInActivity :
 
         fun createIntent(
             context: Context,
-            dropInConfiguration: DropInConfiguration,
+            checkoutConfiguration: CheckoutConfiguration,
             paymentMethodsApiResponse: PaymentMethodsApiResponse,
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             DropInBundleHandler.putIntentExtras(
                 intent = intent,
-                dropInConfiguration = dropInConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
                 service = service,
             )
@@ -730,14 +729,14 @@ internal class DropInActivity :
 
         fun createIntent(
             context: Context,
-            dropInConfiguration: DropInConfiguration,
+            checkoutConfiguration: CheckoutConfiguration,
             checkoutSession: CheckoutSession,
             service: ComponentName,
         ): Intent {
             val intent = Intent(context, DropInActivity::class.java)
             DropInBundleHandler.putIntentExtras(
                 intent = intent,
-                dropInConfiguration = dropInConfiguration,
+                checkoutConfiguration = checkoutConfiguration,
                 checkoutSession = checkoutSession,
                 service = service,
             )

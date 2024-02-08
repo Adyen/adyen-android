@@ -10,8 +10,10 @@ package com.adyen.checkout.redirect
 import android.content.Context
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -43,7 +45,7 @@ class RedirectConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -56,7 +58,7 @@ class RedirectConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         override fun buildInternal(): RedirectConfiguration {
@@ -68,5 +70,35 @@ class RedirectConfiguration private constructor(
                 amount = amount,
             )
         }
+    }
+}
+
+fun CheckoutConfiguration.redirect(
+    configuration: @CheckoutConfigurationMarker RedirectConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = RedirectConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addActionConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getRedirectConfiguration(): RedirectConfiguration? {
+    return getActionConfiguration(RedirectConfiguration::class.java)
+}
+
+internal fun RedirectConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
     }
 }

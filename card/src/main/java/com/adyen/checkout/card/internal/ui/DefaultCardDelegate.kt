@@ -55,8 +55,8 @@ import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
-import com.adyen.checkout.cse.internal.BaseGenericEncrypter
+import com.adyen.checkout.cse.internal.BaseCardEncryptor
+import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -97,8 +97,8 @@ class DefaultCardDelegate(
     private val addressRepository: AddressRepository,
     private val detectCardTypeRepository: DetectCardTypeRepository,
     private val cardValidationMapper: CardValidationMapper,
-    private val cardEncrypter: BaseCardEncrypter,
-    private val genericEncrypter: BaseGenericEncrypter,
+    private val cardEncryptor: BaseCardEncryptor,
+    private val genericEncryptor: BaseGenericEncryptor,
     private val submitHandler: SubmitHandler<CardComponentState>,
 ) : CardDelegate {
 
@@ -435,7 +435,7 @@ class DefaultCardDelegate(
                 )
             }
 
-            cardEncrypter.encryptFields(unencryptedCardBuilder.build(), publicKey)
+            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
             exceptionChannel.trySend(e)
 
@@ -673,7 +673,7 @@ class DefaultCardDelegate(
 
             if (isKCPAuthRequired()) {
                 publicKey?.let { publicKey ->
-                    encryptedPassword = genericEncrypter.encryptField(
+                    encryptedPassword = genericEncryptor.encryptField(
                         ENCRYPTION_KEY_FOR_KCP_PASSWORD,
                         stateOutputData.kcpCardPasswordState.value,
                         publicKey

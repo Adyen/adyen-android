@@ -9,11 +9,17 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Beszedési megbízási utasítás (meghatalmazás) letöltése</string>
-    <string name="checkout_voucher_introduction_boleto">Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő kupont.</string>
+    <string name="checkout_voucher_introduction">Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő kupont.</string>
     <string name="checkout_voucher_payment_reference">Fizetési referencia</string>
+    <string name="checkout_voucher_expiration_entity">Entitás</string>
     <string name="checkout_voucher_expiration_date">Lejárati dátum</string>
+    <string name="checkout_voucher_shopper_reference">Vásárlói referencia</string>
     <string name="checkout_voucher_copy_code">Kód másolása</string>
     <string name="checkout_voucher_copied_toast">Kód a vágólapra másolva</string>
     <string name="checkout_voucher_download_pdf">PDF letöltése</string>
+    <string name="checkout_voucher_save_image">Mentés képként</string>
+    <string name="checkout_voucher_image_saved"> Kép mentve az eszközre</string>
+    <string name="checkout_voucher_image_failed"> Nem sikerült menteni a képet</string>
     <string name="checkout_voucher_finish">Befejezés</string>
+    <string name="checkout_voucher_permission_denied">Engedély nincs megadva</string>
 </resources>

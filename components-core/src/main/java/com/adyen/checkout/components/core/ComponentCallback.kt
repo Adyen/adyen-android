@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.core.PermissionHandlerCallback
 import org.json.JSONObject
 
 /**
@@ -71,4 +72,15 @@ interface ComponentCallback<T : PaymentComponentState<*>> : BaseComponentCallbac
      * @param state The state of the payment component at the current moment.
      */
     fun onStateChanged(state: T) = Unit
+
+    /**
+     * Should be overridden to support runtime permissions for components.
+     * Runtime permission should be requested and communicated back through the callback.
+     *
+     * @param requiredPermission Required runtime permission.
+     * @param permissionCallback Callback to be used when passing permission result.
+     */
+    fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        // Optional
+    }
 }

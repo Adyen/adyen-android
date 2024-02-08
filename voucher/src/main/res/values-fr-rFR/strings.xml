@@ -9,11 +9,17 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Téléchargez votre mandat de prélèvement (DDI)</string>
-    <string name="checkout_voucher_introduction_boleto">Merci pour votre achat, veuillez utiliser le coupon suivant pour finaliser votre paiement.</string>
+    <string name="checkout_voucher_introduction">Merci pour votre achat, veuillez utiliser le coupon suivant pour finaliser votre paiement.</string>
     <string name="checkout_voucher_payment_reference">Référence du paiement</string>
+    <string name="checkout_voucher_expiration_entity">Entité</string>
     <string name="checkout_voucher_expiration_date">Date d\'expiration</string>
+    <string name="checkout_voucher_shopper_reference">Référence client</string>
     <string name="checkout_voucher_copy_code">Copier le code</string>
     <string name="checkout_voucher_copied_toast">Code copié dans le presse-papiers</string>
     <string name="checkout_voucher_download_pdf">Télécharger le PDF</string>
+    <string name="checkout_voucher_save_image">Enregistrer en tant qu\'image</string>
+    <string name="checkout_voucher_image_saved"> Image enregistrée sur votre appareil</string>
+    <string name="checkout_voucher_image_failed"> Échec de l\'enregistrement de l\'image</string>
     <string name="checkout_voucher_finish">Terminer</string>
+    <string name="checkout_voucher_permission_denied">L\'autorisation n\'a pas été accordée</string>
 </resources>

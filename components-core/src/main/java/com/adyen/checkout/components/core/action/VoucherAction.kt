@@ -22,6 +22,7 @@ data class VoucherAction(
     override var type: String? = null,
     override var paymentData: String? = null,
     override var paymentMethodType: String? = null,
+    var entity: String? = null,
     var surcharge: Amount? = null,
     var initialAmount: Amount? = null,
     var totalAmount: Amount? = null,
@@ -30,6 +31,7 @@ data class VoucherAction(
     var reference: String? = null,
     var alternativeReference: String? = null,
     var merchantName: String? = null,
+    var merchantReference: String? = null,
     // TODO: remove url when it's fixed from backend side
     var url: String? = null,
     var downloadUrl: String? = null
@@ -37,6 +39,7 @@ data class VoucherAction(
 
     companion object {
         const val ACTION_TYPE = ActionTypes.VOUCHER
+        private const val ENTITY = "entity"
         private const val SURCHARGE = "surcharge"
         private const val INITIAL_AMOUNT = "initialAmount"
         private const val TOTAL_AMOUNT = "totalAmount"
@@ -45,6 +48,7 @@ data class VoucherAction(
         private const val REFERENCE = "reference"
         private const val ALTERNATIVE_REFERENCE = "alternativeReference"
         private const val MERCHANT_NAME = "merchantName"
+        private const val MERCHANT_REFERENCE = "merchantReference"
         private const val URL = "url"
         private const val DOWNLOAD_URL = "downloadUrl"
 
@@ -56,6 +60,7 @@ data class VoucherAction(
                         putOpt(TYPE, modelObject.type)
                         putOpt(PAYMENT_DATA, modelObject.paymentData)
                         putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(ENTITY, modelObject.entity)
                         putOpt(SURCHARGE, serializeOpt(modelObject.surcharge, Amount.SERIALIZER))
                         putOpt(INITIAL_AMOUNT, serializeOpt(modelObject.initialAmount, Amount.SERIALIZER))
                         putOpt(TOTAL_AMOUNT, serializeOpt(modelObject.totalAmount, Amount.SERIALIZER))
@@ -64,6 +69,7 @@ data class VoucherAction(
                         putOpt(REFERENCE, modelObject.reference)
                         putOpt(ALTERNATIVE_REFERENCE, modelObject.alternativeReference)
                         putOpt(MERCHANT_NAME, modelObject.merchantName)
+                        putOpt(MERCHANT_REFERENCE, modelObject.merchantReference)
                         putOpt(URL, modelObject.url)
                         putOpt(DOWNLOAD_URL, modelObject.downloadUrl)
                     }
@@ -77,6 +83,7 @@ data class VoucherAction(
                     type = jsonObject.getStringOrNull(TYPE),
                     paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    entity = jsonObject.getStringOrNull(ENTITY),
                     surcharge = deserializeOpt(jsonObject.optJSONObject(SURCHARGE), Amount.SERIALIZER),
                     initialAmount = deserializeOpt(jsonObject.optJSONObject(INITIAL_AMOUNT), Amount.SERIALIZER),
                     totalAmount = deserializeOpt(jsonObject.optJSONObject(TOTAL_AMOUNT), Amount.SERIALIZER),
@@ -85,6 +92,7 @@ data class VoucherAction(
                     reference = jsonObject.getStringOrNull(REFERENCE),
                     alternativeReference = jsonObject.getStringOrNull(ALTERNATIVE_REFERENCE),
                     merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
+                    merchantReference = jsonObject.getStringOrNull(MERCHANT_REFERENCE),
                     url = jsonObject.getStringOrNull(URL),
                     downloadUrl = jsonObject.getStringOrNull(DOWNLOAD_URL),
                 )

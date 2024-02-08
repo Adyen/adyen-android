@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Mentés képként</string>
     <string name="checkout_qr_code_download_image_succeeded">A kép letöltése sikerült</string>
     <string name="checkout_qr_code_download_image_failed">Nem sikerült letölteni a képet</string>
+    <string name="checkout_qr_code_permission_denied">Engedély nincs megadva</string>
 </resources>

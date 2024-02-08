@@ -26,11 +26,11 @@ detekt {
 
 tasks.named("detekt").configure {
     reports {
-        xml.required.set(false)
-        html {
+        xml {
             required.set(true)
-            outputLocation.set(file("$project.buildDir/reports/detekt/detekt-results.html"))
+            outputLocation.set(file("${layout.buildDirectory.get().asFile}/reports/detekt/detekt-results.xml"))
         }
+        html.required.set(false)
     }
 }
 

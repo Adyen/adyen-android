@@ -11,10 +11,11 @@ package com.adyen.checkout.seveneleven.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.SevenElevenPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
@@ -22,21 +23,23 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
+import com.adyen.checkout.seveneleven.getSevenElevenConfiguration
+import com.adyen.checkout.seveneleven.toCheckoutConfiguration
 
 class SevenElevenComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : EContextComponentProvider<
     SevenElevenComponent,
     SevenElevenConfiguration,
     SevenElevenPaymentMethod,
-    SevenElevenComponentState
+    SevenElevenComponentState,
     >(
     componentClass = SevenElevenComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    dropInOverrideParams = dropInOverrideParams,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -63,6 +66,14 @@ constructor(
 
     override fun createPaymentMethod(): SevenElevenPaymentMethod {
         return SevenElevenPaymentMethod()
+    }
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): SevenElevenConfiguration? {
+        return checkoutConfiguration.getSevenElevenConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: SevenElevenConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
     }
 
     override fun getSupportedPaymentMethods(): List<String> {

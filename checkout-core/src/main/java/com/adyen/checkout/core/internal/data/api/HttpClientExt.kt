@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.exception.HttpException
+import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.toStringPretty
@@ -27,7 +29,7 @@ suspend fun <T : ModelObject> HttpClient.get(
 ): T {
     Logger.d(TAG, "GET - $path")
 
-    val result = this.get(path, queryParameters)
+    val result = runAndLogHttpException { get(path, queryParameters) }
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
@@ -43,7 +45,7 @@ suspend fun <T : ModelObject> HttpClient.getList(
 ): List<T> {
     Logger.d(TAG, "GET - $path")
 
-    val result = this.get(path, queryParameters)
+    val result = runAndLogHttpException { get(path, queryParameters) }
     val resultJson = JSONArray(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
@@ -65,10 +67,27 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
 
     Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
 
-    val result = this.post(path, requestJson.toString(), queryParameters)
+    val result = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
     Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
 
     return responseSerializer.deserialize(resultJson)
+}
+
+private inline fun <T, R> T.runAndLogHttpException(block: T.() -> R): R {
+    return try {
+        block()
+    } catch (httpException: HttpException) {
+        Logger.e(TAG, "API error - ${httpException.getLogMessage()}")
+        throw httpException
+    }
+}
+
+private fun HttpException.getLogMessage(): String {
+    return if (errorBody != null) {
+        ErrorResponseBody.SERIALIZER.serialize(errorBody).toStringPretty()
+    } else {
+        "[$code] $message"
+    }
 }

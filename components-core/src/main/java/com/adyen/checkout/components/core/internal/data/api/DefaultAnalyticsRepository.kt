@@ -58,8 +58,7 @@ class DefaultAnalyticsRepository(
             Logger.v(TAG, "Analytics setup call successful")
         }.onFailure { e ->
             state = State.Failed
-            // TODO change back to error when all analytic endpoints are live
-            Logger.w(TAG, "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}")
+            Logger.e(TAG, "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}")
         }
     }
 

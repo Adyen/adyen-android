@@ -11,8 +11,10 @@ package com.adyen.checkout.voucher
 import android.content.Context
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -44,7 +46,7 @@ class VoucherConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -57,7 +59,7 @@ class VoucherConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         override fun buildInternal(): VoucherConfiguration {
@@ -69,5 +71,35 @@ class VoucherConfiguration private constructor(
                 amount = amount,
             )
         }
+    }
+}
+
+fun CheckoutConfiguration.voucher(
+    configuration: @CheckoutConfigurationMarker VoucherConfiguration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = VoucherConfiguration.Builder(shopperLocale, environment, clientKey)
+        .apply {
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addActionConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getVoucherConfiguration(): VoucherConfiguration? {
+    return getActionConfiguration(VoucherConfiguration::class.java)
+}
+
+internal fun VoucherConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
     }
 }

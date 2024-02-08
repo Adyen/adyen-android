@@ -80,7 +80,7 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
                 shopperLocale = giftCardPaymentConfirmationData.shopperLocale,
-                environment = dropInViewModel.dropInConfiguration.environment,
+                environment = dropInViewModel.dropInComponentParams.environment,
             )
         }
         val currentPaymentMethod = GiftCardPaymentMethodModel(
@@ -89,7 +89,7 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
             amount = null,
             transactionLimit = null,
             shopperLocale = null,
-            environment = dropInViewModel.dropInConfiguration.environment,
+            environment = dropInViewModel.dropInComponentParams.environment,
         )
 
         val paymentMethods = alreadyPaidMethods + currentPaymentMethod

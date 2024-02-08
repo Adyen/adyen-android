@@ -1,0 +1,16 @@
+name: Check Develop
+
+on:
+  push:
+    branches:
+      - 'develop'
+
+concurrency:
+  group: 'develop'
+  cancel-in-progress: true
+
+jobs:
+  sonar_cloud:
+    name: SonarCloud
+    uses: ./.github/workflows/sonar_cloud.yml
+    secrets: inherit

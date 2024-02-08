@@ -101,7 +101,7 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
             activity = this,
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             componentCallback = sessionsCardComponentData.callback
         )
 

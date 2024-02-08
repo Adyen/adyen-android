@@ -10,16 +10,12 @@ package com.adyen.checkout.action.core
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
-import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -52,8 +48,8 @@ internal class TestActionDelegate :
         QRCodeOutputData(
             isValid = false,
             paymentMethodType = null,
-            qrCodeData = null
-        )
+            qrCodeData = null,
+        ),
     )
 
     override val outputData: QRCodeOutputData get() = outputDataFlow.value
@@ -66,21 +62,13 @@ internal class TestActionDelegate :
 
     override val viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
 
-    private val configuration: Configuration = object : Configuration {
-        override val shopperLocale: Locale = Locale.US
-        override val environment: Environment = Environment.TEST
-        override val clientKey: String = ""
-        override val analyticsConfiguration: AnalyticsConfiguration? = null
-        override val amount: Amount? = null
-
-        override fun describeContents(): Int {
-            throw NotImplementedError("This method shouldn't be used in tests")
-        }
-
-        override fun writeToParcel(dest: Parcel, flags: Int) {
-            throw NotImplementedError("This method shouldn't be used in tests")
-        }
-    }
+    private val configuration = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = "",
+        amount = null,
+        analyticsConfiguration = null,
+    )
     override val componentParams: ComponentParams =
         GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
 
@@ -120,8 +108,11 @@ internal class TestActionDelegate :
 
 internal class Test3DS2Delegate : Adyen3DS2Delegate {
 
-    private val configuration: Adyen3DS2Configuration =
-        Adyen3DS2Configuration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
+    private val configuration: CheckoutConfiguration = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+    )
 
     override val componentParams: ComponentParams =
         GenericComponentParamsMapper(null, null).mapToParams(configuration, null)

@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
@@ -19,8 +20,8 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.internal.util.WeChatRequestGenerator
+import com.adyen.checkout.wechatpay.weChatPayAction
 import com.tencent.mm.opensdk.modelpay.PayResp
 import com.tencent.mm.opensdk.openapi.IWXAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,11 +53,13 @@ internal class DefaultWeChatDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = WeChatPayActionConfiguration.Builder(
+        val configuration = CheckoutConfiguration(
             Locale.US,
             Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
+            TEST_CLIENT_KEY,
+        ) {
+            weChatPayAction()
+        }
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
@@ -84,7 +87,7 @@ internal class DefaultWeChatDelegateTest(
 
         val action = SdkAction(
             sdkData = WeChatPaySdkData(),
-            paymentData = "paymentData"
+            paymentData = "paymentData",
         )
 
         delegate.detailsFlow.test {
@@ -116,7 +119,7 @@ internal class DefaultWeChatDelegateTest(
                 sign = "sign",
                 timestamp = "timestamp",
             ),
-            paymentData = "paymentData"
+            paymentData = "paymentData",
         )
 
         delegate.handleAction(action, Activity())

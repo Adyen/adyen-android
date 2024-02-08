@@ -23,7 +23,9 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2Delegate
 import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParamsMapper
+import com.adyen.checkout.adyen3ds2.toCheckoutConfiguration
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
@@ -32,7 +34,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.checkout.components.core.internal.util.get
@@ -45,27 +47,27 @@ import kotlinx.coroutines.Dispatchers
 class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
 
-    private val componentParamsMapper = Adyen3DS2ComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = Adyen3DS2ComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: Adyen3DS2Configuration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): Adyen3DS2Component {
         val threeDS2Factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val adyen3DS2Delegate = getDelegate(configuration, savedStateHandle, application)
+            val adyen3DS2Delegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
 
             Adyen3DS2Component(
                 delegate = adyen3DS2Delegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback)
+                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory)[key, Adyen3DS2Component::class.java]
@@ -75,12 +77,12 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: Adyen3DS2Configuration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): Adyen3DS2Delegate {
         val componentParams = componentParamsMapper.mapToParams(
-            adyen3DS2Configuration = configuration,
+            checkoutConfiguration = checkoutConfiguration,
             sessionParams = null,
         )
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
@@ -104,11 +106,31 @@ constructor(
         )
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: Adyen3DS2Configuration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): Adyen3DS2Component {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
+        )
+    }
+
     override val supportedActionTypes: List<String>
         get() = listOf(
             Threeds2FingerprintAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,
-            Threeds2Action.ACTION_TYPE
+            Threeds2Action.ACTION_TYPE,
         )
 
     override fun canHandleAction(action: Action): Boolean {

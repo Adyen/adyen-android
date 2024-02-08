@@ -8,11 +8,7 @@
 
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.cse.internal.BaseCardEncrypter
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultCardEncrypter
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.CardEncryptorFactory
 
 /**
  * Allows the encryption of card data to be sent to Adyen's APIs.
@@ -20,7 +16,7 @@ import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
  */
 object CardEncrypter {
 
-    private val encrypter = provideCardEncrypter()
+    private val encryptor = CardEncryptorFactory.provide()
 
     /**
      * Encrypts the available card data from [UnencryptedCard] into individual encrypted blocks.
@@ -35,7 +31,7 @@ object CardEncrypter {
         unencryptedCard: UnencryptedCard,
         publicKey: String
     ): EncryptedCard {
-        return encrypter.encryptFields(
+        return encryptor.encryptFields(
             unencryptedCard = unencryptedCard,
             publicKey = publicKey
         )
@@ -54,7 +50,7 @@ object CardEncrypter {
         unencryptedCard: UnencryptedCard,
         publicKey: String
     ): String {
-        return encrypter.encrypt(
+        return encryptor.encrypt(
             unencryptedCard = unencryptedCard,
             publicKey = publicKey
         )
@@ -70,13 +66,9 @@ object CardEncrypter {
      */
     @Throws(EncryptionException::class)
     fun encryptBin(bin: String, publicKey: String): String {
-        return encrypter.encryptBin(
+        return encryptor.encryptBin(
             bin = bin,
             publicKey = publicKey
         )
-    }
-
-    private fun provideCardEncrypter(): BaseCardEncrypter {
-        return DefaultCardEncrypter(DefaultGenericEncrypter(ClientSideEncrypter(), DateGenerator()))
     }
 }

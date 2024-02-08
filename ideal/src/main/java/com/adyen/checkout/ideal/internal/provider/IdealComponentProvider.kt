@@ -11,27 +11,30 @@ package com.adyen.checkout.ideal.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealComponentState
 import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.ideal.getIdealConfiguration
+import com.adyen.checkout.ideal.toCheckoutConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 class IdealComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<IdealComponent, IdealConfiguration, IdealPaymentMethod, IdealComponentState>(
     componentClass = IdealComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
+    dropInOverrideParams = dropInOverrideParams,
     overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
@@ -57,4 +60,12 @@ constructor(
     override fun createPaymentMethod() = IdealPaymentMethod()
 
     override fun getSupportedPaymentMethods(): List<String> = IdealComponent.PAYMENT_METHOD_TYPES
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): IdealConfiguration? {
+        return checkoutConfiguration.getIdealConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: IdealConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
+    }
 }

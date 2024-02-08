@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
@@ -26,16 +27,13 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.cse.internal.ClientSideEncrypter
-import com.adyen.checkout.cse.internal.DateGenerator
-import com.adyen.checkout.cse.internal.DefaultCardEncrypter
-import com.adyen.checkout.cse.internal.DefaultGenericEncrypter
+import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -46,6 +44,7 @@ import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWra
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
+import com.adyen.checkout.giftcard.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -58,7 +57,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 class GiftCardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
     overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
@@ -66,23 +65,23 @@ constructor(
         GiftCardComponent,
         GiftCardConfiguration,
         GiftCardComponentState,
-        GiftCardComponentCallback
+        GiftCardComponentCallback,
         >,
     SessionPaymentComponentProvider<
         GiftCardComponent,
         GiftCardConfiguration,
         GiftCardComponentState,
-        SessionsGiftCardComponentCallback
+        SessionsGiftCardComponentCallback,
         > {
 
-    private val componentParamsMapper = GiftCardComponentParamsMapper(overrideComponentParams, overrideSessionParams)
+    private val componentParamsMapper = GiftCardComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         paymentMethod: PaymentMethod,
-        configuration: GiftCardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: GiftCardComponentCallback,
         order: Order?,
@@ -90,12 +89,9 @@ constructor(
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val clientSideEncrypter = ClientSideEncrypter()
-        val dateGenerator = DateGenerator()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(configuration, null)
+            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
 
@@ -106,7 +102,7 @@ constructor(
                     paymentMethod = paymentMethod,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -118,12 +114,12 @@ constructor(
                 analyticsRepository = analyticsRepository,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -144,6 +140,30 @@ constructor(
             }
     }
 
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        paymentMethod: PaymentMethod,
+        configuration: GiftCardConfiguration,
+        application: Application,
+        componentCallback: GiftCardComponentCallback,
+        order: Order?,
+        key: String?,
+    ): GiftCardComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            order = order,
+            key = key,
+        )
+    }
+
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -151,21 +171,18 @@ constructor(
         lifecycleOwner: LifecycleOwner,
         checkoutSession: CheckoutSession,
         paymentMethod: PaymentMethod,
-        configuration: GiftCardConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         application: Application,
         componentCallback: SessionsGiftCardComponentCallback,
         key: String?
     ): GiftCardComponent {
         assertSupported(paymentMethod)
 
-        val clientSideEncrypter = ClientSideEncrypter()
-        val dateGenerator = DateGenerator()
-        val genericEncrypter = DefaultGenericEncrypter(clientSideEncrypter, dateGenerator)
-        val cardEncrypter = DefaultCardEncrypter(genericEncrypter)
+        val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
             val componentParams = componentParamsMapper.mapToParams(
-                configuration = configuration,
-                sessionParams = SessionParamsFactory.create(checkoutSession)
+                configuration = checkoutConfiguration,
+                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
@@ -178,7 +195,7 @@ constructor(
                     sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment)
+                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
                 ),
                 analyticsMapper = AnalyticsMapper(),
             )
@@ -190,12 +207,12 @@ constructor(
                 analyticsRepository = analyticsRepository,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
-                cardEncrypter = cardEncrypter,
+                cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(componentParams).getDelegate(
-                configuration = configuration.genericActionConfiguration,
+            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
                 application = application,
             )
@@ -211,7 +228,7 @@ constructor(
                     clientKey = componentParams.clientKey,
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false
+                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             )
 
             val sessionsGiftCardComponentEventHandler = SessionsGiftCardComponentEventHandler(
@@ -231,12 +248,36 @@ constructor(
             .also { component ->
                 val internalComponentCallback = SessionsGiftCardComponentCallbackWrapper(
                     component,
-                    componentCallback
+                    componentCallback,
                 )
                 component.observe(lifecycleOwner) {
                     component.componentEventHandler.onPaymentComponentEvent(it, internalComponentCallback)
                 }
             }
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        checkoutSession: CheckoutSession,
+        paymentMethod: PaymentMethod,
+        configuration: GiftCardConfiguration,
+        application: Application,
+        componentCallback: SessionsGiftCardComponentCallback,
+        key: String?
+    ): GiftCardComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            checkoutSession = checkoutSession,
+            paymentMethod = paymentMethod,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            application = application,
+            componentCallback = componentCallback,
+            key = key,
+        )
     }
 
     private fun assertSupported(paymentMethod: PaymentMethod) {

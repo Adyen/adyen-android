@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Αποθήκευση ως εικόνας</string>
     <string name="checkout_qr_code_download_image_succeeded">Η εικόνα λήφθηκε επιτυχώς</string>
     <string name="checkout_qr_code_download_image_failed">Η λήψη της εικόνας απέτυχε</string>
+    <string name="checkout_qr_code_permission_denied">Δεν εκχωρήθηκε δικαίωμα</string>
 </resources>

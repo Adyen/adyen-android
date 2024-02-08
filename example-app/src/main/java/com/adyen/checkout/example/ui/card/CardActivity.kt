@@ -92,7 +92,7 @@ class CardActivity : AppCompatActivity() {
         val cardComponent = CardComponent.PROVIDER.get(
             activity = this,
             paymentMethod = cardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getCardConfiguration(),
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = cardComponentData.callback,
         )
 

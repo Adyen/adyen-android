@@ -11,8 +11,10 @@ package com.adyen.checkout.boleto.internal.ui
 import app.cash.turbine.test
 import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.BoletoConfiguration
+import com.adyen.checkout.boleto.boleto
 import com.adyen.checkout.boleto.internal.ui.model.BoletoComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -39,7 +41,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -448,9 +450,7 @@ internal class DefaultBoletoDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultBoletoConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createBoletoDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -515,7 +515,7 @@ internal class DefaultBoletoDelegateTest(
         paymentMethod: PaymentMethod = PaymentMethod(),
         addressRepository: TestAddressRepository = this.addressRepository,
         order: Order? = TEST_ORDER,
-        configuration: BoletoConfiguration = getDefaultBoletoConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultBoletoDelegate(
         submitHandler = submitHandler,
         analyticsRepository = analyticsRepository,
@@ -523,7 +523,7 @@ internal class DefaultBoletoDelegateTest(
         paymentMethod = paymentMethod,
         order = order,
         componentParams = BoletoComponentParamsMapper(null, null).mapToParams(configuration, null),
-        addressRepository = addressRepository
+        addressRepository = addressRepository,
     )
 
     @Suppress("LongParameterList")
@@ -542,11 +542,19 @@ internal class DefaultBoletoDelegateTest(
         houseNumberOrName = houseNumberOrName,
         apartmentSuite = apartmentSuite,
         city = city,
-        country = country
+        country = country,
     )
 
-    private fun getDefaultBoletoConfigurationBuilder(): BoletoConfiguration.Builder {
-        return BoletoConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: BoletoConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        boleto(configuration)
     }
 
     companion object {
@@ -558,10 +566,10 @@ internal class DefaultBoletoDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            Arguments.arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            Arguments.arguments(Amount("USD", 0), Amount("USD", 0)),
-            Arguments.arguments(null, null),
-            Arguments.arguments(null, null),
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(null, null),
+            arguments(null, null),
         )
     }
 }
