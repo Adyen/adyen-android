@@ -53,6 +53,8 @@ internal fun SessionsGooglePayScreen(
     onBackPressed: () -> Unit,
     viewModel: SessionsGooglePayViewModel,
 ) {
+    val googlePayState by viewModel.googlePayState.collectAsState()
+    val events by viewModel.stateEvents.collectAsState()
     val googlePayLauncher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
         onResult = viewModel::onGooglePayLauncherResult,
@@ -100,13 +102,12 @@ private fun SessionsGooglePayContent(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        when (val uiState = googlePayState.uiState) {
-            SessionsGooglePayUIState.Loading -> {
+        when (googlePayState) {
+            SessionsGooglePayState.Loading -> {
                 CircularProgressIndicator()
             }
 
-            is SessionsGooglePayUIState.ShowButton -> {
-                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
+            is SessionsGooglePayState.ShowButton -> {
                 PayButton(
                     onClick = onButtonClicked,
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
@@ -115,16 +116,15 @@ private fun SessionsGooglePayContent(
                 )
             }
 
-            is SessionsGooglePayUIState.ShowComponent -> {
-                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
+            is SessionsGooglePayState.ShowComponent -> {
                 AdyenComponent(
                     googlePayComponent,
                     modifier,
                 )
             }
 
-            is SessionsGooglePayUIState.FinalResult -> {
-                ResultContent(uiState.finalResult)
+            is SessionsGooglePayState.FinalResult -> {
+                ResultContent(googlePayState.finalResult)
             }
         }
     }
