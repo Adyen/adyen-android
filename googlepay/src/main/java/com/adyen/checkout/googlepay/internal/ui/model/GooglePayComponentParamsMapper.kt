@@ -12,7 +12,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.AdyenLogLevel
@@ -24,37 +25,45 @@ import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.getGooglePayConfiguration
 import com.google.android.gms.wallet.WalletConstants
+import java.util.Locale
 
 internal class GooglePayComponentParamsMapper(
-    private val dropInOverrideParams: DropInOverrideParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
-        configuration: CheckoutConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
         paymentMethod: PaymentMethod,
-        sessionParams: SessionParams?,
     ): GooglePayComponentParams {
-        return configuration
-            .mapToParamsInternal(paymentMethod)
-            .override(dropInOverrideParams)
-            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val googlePayConfiguration = checkoutConfiguration.getGooglePayConfiguration()
+        return mapToParams(
+            commonComponentParamsMapperData.commonComponentParams,
+            googlePayConfiguration,
+            paymentMethod,
+        )
     }
 
-    private fun CheckoutConfiguration.mapToParamsInternal(
+    private fun mapToParams(
+        commonComponentParams: CommonComponentParams,
+        googlePayConfiguration: GooglePayConfiguration?,
         paymentMethod: PaymentMethod,
     ): GooglePayComponentParams {
-        val googlePayConfiguration = getGooglePayConfiguration()
         return GooglePayComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
+            commonComponentParams = commonComponentParams,
+            amount = commonComponentParams.amount ?: DEFAULT_AMOUNT,
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
-            googlePayEnvironment = getGooglePayEnvironment(googlePayConfiguration),
-            amount = amount ?: DEFAULT_AMOUNT,
+            googlePayEnvironment = getGooglePayEnvironment(commonComponentParams.environment, googlePayConfiguration),
             totalPriceStatus = googlePayConfiguration?.totalPriceStatus ?: DEFAULT_TOTAL_PRICE_STATUS,
             countryCode = googlePayConfiguration?.countryCode,
             merchantInfo = googlePayConfiguration?.merchantInfo,
@@ -117,31 +126,15 @@ internal class GooglePayComponentParamsMapper(
         }
     }
 
-    private fun CheckoutConfiguration.getGooglePayEnvironment(googlePayConfiguration: GooglePayConfiguration?): Int {
+    private fun getGooglePayEnvironment(
+        environment: Environment,
+        googlePayConfiguration: GooglePayConfiguration?
+    ): Int {
         return when {
             googlePayConfiguration?.googlePayEnvironment != null -> googlePayConfiguration.googlePayEnvironment
             environment == Environment.TEST -> WalletConstants.ENVIRONMENT_TEST
             else -> WalletConstants.ENVIRONMENT_PRODUCTION
         }
-    }
-
-    private fun GooglePayComponentParams.override(
-        dropInOverrideParams: DropInOverrideParams?,
-    ): GooglePayComponentParams {
-        if (dropInOverrideParams == null) return this
-        return copy(
-            amount = dropInOverrideParams.amount ?: DEFAULT_AMOUNT,
-            isCreatedByDropIn = true,
-        )
-    }
-
-    private fun GooglePayComponentParams.override(
-        sessionParams: SessionParams?,
-    ): GooglePayComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
-        )
     }
 
     companion object {

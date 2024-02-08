@@ -10,50 +10,29 @@ package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.internal.Configuration
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
-    private val dropInOverrideParams: DropInOverrideParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
-        configuration: CheckoutConfiguration,
-        sessionParams: SessionParams?,
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
     ): GenericComponentParams {
-        return configuration
-            .mapToParamsInternal()
-            .override(dropInOverrideParams)
-            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
-    }
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
 
-    private fun Configuration.mapToParamsInternal(): GenericComponentParams {
         return GenericComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
-        )
-    }
-
-    private fun GenericComponentParams.override(
-        dropInOverrideParams: DropInOverrideParams?
-    ): GenericComponentParams {
-        if (dropInOverrideParams == null) return this
-        return copy(
-            amount = dropInOverrideParams.amount,
-            isCreatedByDropIn = true,
-        )
-    }
-
-    private fun GenericComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): GenericComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
+            commonComponentParams = commonComponentParams,
         )
     }
 }

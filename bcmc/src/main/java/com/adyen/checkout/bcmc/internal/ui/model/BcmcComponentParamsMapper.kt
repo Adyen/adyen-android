@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.bcmc.internal.ui.model
 
+import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.getBcmcConfiguration
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
@@ -18,69 +19,70 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import java.util.Locale
 
 internal class BcmcComponentParamsMapper(
-    private val dropInOverrideParams: DropInOverrideParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
         checkoutConfiguration: CheckoutConfiguration,
-        sessionParams: SessionParams?,
-        paymentMethod: PaymentMethod
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
+        paymentMethod: PaymentMethod,
     ): CardComponentParams {
-        return checkoutConfiguration
-            .mapToParamsInternal(
-                supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) },
-            )
-            .override(dropInOverrideParams)
-            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val bcmcConfiguration = checkoutConfiguration.getBcmcConfiguration()
+        return mapToParams(
+            commonComponentParamsMapperData.commonComponentParams,
+            commonComponentParamsMapperData.sessionParams,
+            bcmcConfiguration,
+            paymentMethod,
+        )
     }
 
-    private fun CheckoutConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {
-        val bcmcConfiguration = getBcmcConfiguration()
+    private fun mapToParams(
+        commonComponentParams: CommonComponentParams,
+        sessionParams: SessionParams?,
+        bcmcConfiguration: BcmcConfiguration?,
+        paymentMethod: PaymentMethod,
+    ): CardComponentParams {
         return CardComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
+            commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = bcmcConfiguration?.isSubmitButtonVisible ?: true,
             isHolderNameRequired = bcmcConfiguration?.isHolderNameRequired ?: false,
             shopperReference = bcmcConfiguration?.shopperReference,
-            isStorePaymentFieldVisible = bcmcConfiguration?.isStorePaymentFieldVisible ?: false,
+            isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, bcmcConfiguration),
             addressParams = AddressParams.None,
             installmentParams = null,
             kcpAuthVisibility = KCPAuthVisibility.HIDE,
             socialSecurityNumberVisibility = SocialSecurityNumberVisibility.HIDE,
             cvcVisibility = CVCVisibility.HIDE_FIRST,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
-            supportedCardBrands = supportedCardBrands ?: DEFAULT_SUPPORTED_CARD_BRANDS,
+            supportedCardBrands = getSupportedCardBrands(paymentMethod),
         )
     }
 
-    private fun CardComponentParams.override(
-        dropInOverrideParams: DropInOverrideParams?,
-    ): CardComponentParams {
-        if (dropInOverrideParams == null) return this
-        return copy(
-            amount = dropInOverrideParams.amount,
-            isCreatedByDropIn = true,
-        )
+    private fun getStorePaymentFieldVisible(
+        sessionParams: SessionParams?,
+        bcmcConfiguration: BcmcConfiguration?,
+    ): Boolean {
+        return sessionParams?.enableStoreDetails ?: bcmcConfiguration?.isStorePaymentFieldVisible ?: false
     }
 
-    private fun CardComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): CardComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
-            amount = sessionParams.amount ?: amount,
-        )
+    private fun getSupportedCardBrands(paymentMethod: PaymentMethod): List<CardBrand> {
+        return paymentMethod.brands?.map { CardBrand(it) } ?: DEFAULT_SUPPORTED_CARD_BRANDS
     }
 
     companion object {

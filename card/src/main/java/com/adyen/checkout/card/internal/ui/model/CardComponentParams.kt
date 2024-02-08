@@ -12,22 +12,14 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardComponentParams(
-    override val shopperLocale: Locale,
-    override val environment: Environment,
-    override val clientKey: String,
-    override val analyticsParams: AnalyticsParams,
-    override val isCreatedByDropIn: Boolean,
-    override val amount: Amount?,
+    private val commonComponentParams: CommonComponentParams,
     override val isSubmitButtonVisible: Boolean,
     val isHolderNameRequired: Boolean,
     val supportedCardBrands: List<CardBrand>,
@@ -39,4 +31,4 @@ data class CardComponentParams(
     val addressParams: AddressParams,
     val cvcVisibility: CVCVisibility,
     val storedCVCVisibility: StoredCVCVisibility
-) : ComponentParams, ButtonParams
+) : ComponentParams by commonComponentParams, ButtonParams

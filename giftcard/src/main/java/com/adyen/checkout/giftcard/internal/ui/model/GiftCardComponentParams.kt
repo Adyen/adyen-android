@@ -8,20 +8,12 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.Environment
-import java.util.Locale
 
 internal data class GiftCardComponentParams(
-    override val shopperLocale: Locale,
-    override val environment: Environment,
-    override val clientKey: String,
-    override val analyticsParams: AnalyticsParams,
-    override val isCreatedByDropIn: Boolean,
-    override val amount: Amount?,
+    private val commonComponentParams: CommonComponentParams,
     override val isSubmitButtonVisible: Boolean,
     val isPinRequired: Boolean,
-) : ComponentParams, ButtonParams
+) : ComponentParams by commonComponentParams, ButtonParams
