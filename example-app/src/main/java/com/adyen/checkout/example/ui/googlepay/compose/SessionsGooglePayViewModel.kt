@@ -55,13 +55,12 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
-) : ViewModel(),
-    SessionComponentCallback<GooglePayComponentState>,
-    ComponentAvailableCallback {
+) : ViewModel(), SessionComponentCallback<GooglePayComponentState>, ComponentAvailableCallback {
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-    private val _googlePayState: MutableStateFlow<SessionsGooglePayState> = MutableStateFlow(SessionsGooglePayState.Loading)
+    private val _googlePayState: MutableStateFlow<SessionsGooglePayState> =
+        MutableStateFlow(SessionsGooglePayState.Loading)
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()
 
     private val _stateEvents: MutableStateFlow<SessionsGooglePayEvents> = MutableStateFlow(SessionsGooglePayEvents.None)
@@ -167,8 +166,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
         "Authorised" -> ResultState.SUCCESS
-        "Pending",
-        "Received" -> ResultState.PENDING
+        "Pending", "Received" -> ResultState.PENDING
 
         else -> ResultState.FAILURE
     }

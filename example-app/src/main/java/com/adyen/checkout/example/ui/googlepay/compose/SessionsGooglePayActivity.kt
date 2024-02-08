@@ -13,14 +13,11 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
-import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -52,7 +49,7 @@ class SessionsGooglePayActivity : AppCompatActivity() {
                     useDarkTheme = isDarkTheme,
                     onBackPressed = { onBackPressedDispatcher.onBackPressed() },
                     googlePayState = googlePayState,
-                    event = eventsState,
+                    eventsState = eventsState,
                     onGooglePayLauncherResult = sessionsGooglePayViewModel::onGooglePayLauncherResult
                 )
             }
