@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.dropin.getDropInConfiguration
+import java.util.Locale
 
 internal class DropInComponentParamsMapper {
 
@@ -21,7 +22,7 @@ internal class DropInComponentParamsMapper {
     ): DropInComponentParams {
         val dropInConfiguration = checkoutConfiguration.getDropInConfiguration()
         return DropInComponentParams(
-            shopperLocale = checkoutConfiguration.shopperLocale,
+            shopperLocale = checkoutConfiguration.shopperLocale ?: Locale.US, // TODO fix
             environment = checkoutConfiguration.environment,
             clientKey = checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),

@@ -28,7 +28,6 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
-import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
@@ -131,7 +130,7 @@ internal class PaymentMethodsListViewModel(
             }
             // payment notes
             order?.remainingAmount?.let { remainingAmount ->
-                val value = CurrencyUtils.formatAmount(remainingAmount, checkoutConfiguration.shopperLocale)
+                val value = CurrencyUtils.formatAmount(remainingAmount, dropInComponentParams.shopperLocale)
                 add(
                     PaymentMethodNote(application.getString(R.string.checkout_giftcard_pay_remaining_amount, value)),
                 )
@@ -217,7 +216,7 @@ internal class PaymentMethodsListViewModel(
             if (storedPaymentMethod.isStoredPaymentSupported()) {
                 storedPaymentMethod.mapStoredModel(
                     dropInComponentParams.isRemovingStoredPaymentMethodsEnabled,
-                    checkoutConfiguration.environment,
+                    dropInComponentParams.environment,
                 )
             } else {
                 null
@@ -238,7 +237,7 @@ internal class PaymentMethodsListViewModel(
             name = name.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
-            environment = checkoutConfiguration.environment,
+            environment = dropInComponentParams.environment,
         )
     }
 
@@ -249,8 +248,8 @@ internal class PaymentMethodsListViewModel(
                 lastFour = it.lastFour,
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
-                shopperLocale = checkoutConfiguration.shopperLocale,
-                environment = checkoutConfiguration.environment,
+                shopperLocale = dropInComponentParams.shopperLocale,
+                environment = dropInComponentParams.environment,
             )
         }
 

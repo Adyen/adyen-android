@@ -24,9 +24,11 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import com.adyen.checkout.dropin.getDropInConfiguration
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
+import java.util.Locale
 
 internal class DropInViewModelFactory(
     activity: ComponentActivity
@@ -34,6 +36,7 @@ internal class DropInViewModelFactory(
 
     private val packageName: String = activity.packageName
     private val screenWidth: Int = activity.screenWidthPixels
+    private val deviceLocale: Locale = LocaleUtil.getLocale(activity)
 
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
@@ -53,7 +56,7 @@ internal class DropInViewModelFactory(
             analyticsRepositoryData = AnalyticsRepositoryData(
                 level = AnalyticsParams(checkoutConfiguration.analyticsConfiguration).level,
                 packageName = packageName,
-                locale = checkoutConfiguration.shopperLocale,
+                locale = checkoutConfiguration.shopperLocale ?: deviceLocale,
                 source = AnalyticsSource.DropIn(),
                 clientKey = checkoutConfiguration.clientKey,
                 amount = amount,
