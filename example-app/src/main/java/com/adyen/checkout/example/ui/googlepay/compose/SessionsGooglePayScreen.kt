@@ -51,6 +51,9 @@ internal fun SessionsGooglePayScreen(
     onGooglePayLauncherResult: (apiTaskResult: ApiTaskResult<PaymentData>) -> Unit,
     onBackPressed: () -> Unit,
 ) {
+    lateinit var googlePayComponent: GooglePayComponent
+
+    val activity = LocalContext.current as Activity
     val googlePayLauncher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
         onResult = onGooglePayLauncherResult,
@@ -70,7 +73,11 @@ internal fun SessionsGooglePayScreen(
         },
     ) { innerPadding ->
         val googlePayState by viewModel.googlePayState.collectAsState()
+            is SessionsGooglePayEvents.ComponentData -> {
+                googlePayComponent = getGooglePayComponent(componentData = eventsState.data)
+            }
         SessionsGooglePayContent(
+            googlePayComponent = googlePayComponent,
             googlePayState = googlePayState,
             onButtonClicked = viewModel::onButtonClicked,
             useDarkTheme = useDarkTheme,
@@ -89,6 +96,7 @@ internal fun SessionsGooglePayScreen(
 @Suppress("LongParameterList")
 @Composable
 private fun SessionsGooglePayContent(
+    googlePayComponent: GooglePayComponent,
     googlePayState: SessionsGooglePayState,
     onButtonClicked: () -> Unit,
     useDarkTheme: Boolean,
