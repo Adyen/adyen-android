@@ -25,7 +25,6 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.redirect.RedirectComponent
@@ -39,10 +38,9 @@ class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

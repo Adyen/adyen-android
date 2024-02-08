@@ -27,7 +27,6 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
@@ -35,6 +34,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
+import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.util.arguments
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
@@ -94,7 +94,11 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
-            actionComponent = GenericActionComponentProvider(DropInOverrideParams(dropInViewModel.amount)).get(
+            val dropInOverrideParams = DropInOverrideParamsFactory.create(
+                amount = dropInViewModel.amount,
+                sessionDetails = dropInViewModel.sessionDetails,
+            )
+            actionComponent = GenericActionComponentProvider(dropInOverrideParams).get(
                 fragment = this,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = this,

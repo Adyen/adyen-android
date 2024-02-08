@@ -15,7 +15,6 @@ import com.adyen.checkout.components.core.internal.Configuration
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class GenericComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -25,7 +24,7 @@ class GenericComponentParamsMapper(
         return configuration
             .mapToParamsInternal()
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun Configuration.mapToParamsInternal(): GenericComponentParams {

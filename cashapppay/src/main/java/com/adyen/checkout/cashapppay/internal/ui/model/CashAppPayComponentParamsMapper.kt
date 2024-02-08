@@ -24,7 +24,6 @@ import com.adyen.checkout.core.exception.ComponentException
 
 internal class CashAppPayComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     @Suppress("ThrowsCount")
@@ -44,7 +43,7 @@ internal class CashAppPayComponentParamsMapper(
                 ),
             )
             .override(dropInOverrideParams, context)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
 
         if (params.returnUrl == null) {
             throw ComponentException(
@@ -64,7 +63,7 @@ internal class CashAppPayComponentParamsMapper(
         // clientId and scopeId are not needed in the stored flow.
         .mapToParamsInternal(null, null)
         .override(dropInOverrideParams, context)
-        .override(sessionParams ?: overrideSessionParams)
+        .override(sessionParams ?: dropInOverrideParams?.sessionParams)
 
     private fun CheckoutConfiguration.mapToParamsInternal(
         clientId: String?,

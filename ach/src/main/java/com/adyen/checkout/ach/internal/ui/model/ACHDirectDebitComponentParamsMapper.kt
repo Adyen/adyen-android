@@ -18,7 +18,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class ACHDirectDebitComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -28,7 +27,7 @@ internal class ACHDirectDebitComponentParamsMapper(
         return checkoutConfiguration
             .mapToParamsInternal()
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {

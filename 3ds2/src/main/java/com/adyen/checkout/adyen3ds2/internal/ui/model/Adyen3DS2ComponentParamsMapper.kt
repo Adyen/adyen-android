@@ -17,7 +17,6 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 
 internal class Adyen3DS2ComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -27,7 +26,7 @@ internal class Adyen3DS2ComponentParamsMapper(
         return checkoutConfiguration
             .mapToParamsInternal()
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(): Adyen3DS2ComponentParams {

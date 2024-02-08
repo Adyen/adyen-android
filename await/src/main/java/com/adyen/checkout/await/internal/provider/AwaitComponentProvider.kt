@@ -33,7 +33,6 @@ import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
@@ -42,10 +41,9 @@ class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override val supportedActionTypes: List<String>
         get() = listOf(AwaitAction.ACTION_TYPE)

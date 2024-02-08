@@ -47,7 +47,7 @@ constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
 
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, null)
+    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -83,7 +83,7 @@ constructor(
             savedStateHandle = savedStateHandle,
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams, null),
+            actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams),
         )
     }
 

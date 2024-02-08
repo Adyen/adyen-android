@@ -16,7 +16,6 @@ import com.adyen.checkout.giftcard.getGiftCardConfiguration
 
 internal class GiftCardComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -26,7 +25,7 @@ internal class GiftCardComponentParamsMapper(
         return configuration
             .mapToParamsInternal()
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(): GiftCardComponentParams {

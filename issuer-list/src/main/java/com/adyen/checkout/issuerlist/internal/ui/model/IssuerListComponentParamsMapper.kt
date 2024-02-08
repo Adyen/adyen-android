@@ -19,7 +19,6 @@ import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class IssuerListComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
 ) {
 
@@ -31,7 +30,7 @@ class IssuerListComponentParamsMapper(
         return checkoutConfiguration
             .mapToParamsInternal(configuration)
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(

@@ -38,7 +38,6 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
@@ -48,6 +47,7 @@ import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
+import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.entercash.EntercashComponent
 import com.adyen.checkout.entercash.EntercashComponentState
@@ -98,7 +98,6 @@ import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
-import com.adyen.checkout.sessions.core.internal.data.model.mapToParams
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
@@ -124,11 +123,10 @@ internal fun getComponentFor(
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInOverrideParams = DropInOverrideParams(amount)
-    val sessionParams = sessionDetails?.mapToParams(amount)
+    val dropInOverrideParams = DropInOverrideParamsFactory.create(amount, sessionDetails)
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            ACHDirectDebitComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            ACHDirectDebitComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -138,7 +136,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CardComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -148,7 +146,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams, sessionParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -158,7 +156,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            BlikComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -193,11 +191,10 @@ internal fun getComponentFor(
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInOverrideParams = DropInOverrideParams(amount)
-    val sessionParams = sessionDetails?.mapToParams(amount)
+    val dropInOverrideParams = DropInOverrideParamsFactory.create(amount, sessionDetails)
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            ACHDirectDebitComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            ACHDirectDebitComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -206,7 +203,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            BacsDirectDebitComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            BacsDirectDebitComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -215,7 +212,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { BcmcComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            BcmcComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            BcmcComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -224,7 +221,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            BlikComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -233,7 +230,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { BoletoComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            BoletoComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            BoletoComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -242,7 +239,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            CardComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -251,7 +248,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams, sessionParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -260,7 +257,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { ConvenienceStoresJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            ConvenienceStoresJPComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            ConvenienceStoresJPComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -269,7 +266,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { DotpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            DotpayComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            DotpayComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -278,7 +275,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { EntercashComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            EntercashComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            EntercashComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -287,7 +284,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { EPSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            EPSComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            EPSComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -296,7 +293,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            GiftCardComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            GiftCardComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -305,7 +302,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { GooglePayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            GooglePayComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            GooglePayComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -314,7 +311,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { IdealComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            IdealComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            IdealComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -323,7 +320,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            InstantPaymentComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            InstantPaymentComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -332,7 +329,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            MBWayComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            MBWayComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -341,7 +338,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { MolpayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            MolpayComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            MolpayComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -350,7 +347,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { OnlineBankingCZComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            OnlineBankingCZComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            OnlineBankingCZComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -359,7 +356,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { OnlineBankingJPComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            OnlineBankingJPComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            OnlineBankingJPComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -368,7 +365,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { OnlineBankingPLComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            OnlineBankingPLComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            OnlineBankingPLComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -377,7 +374,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { OnlineBankingSKComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            OnlineBankingSKComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            OnlineBankingSKComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -386,7 +383,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { OpenBankingComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            OpenBankingComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            OpenBankingComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -395,7 +392,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { PayByBankComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            PayByBankComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            PayByBankComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -404,7 +401,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { PayEasyComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            PayEasyComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            PayEasyComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -413,7 +410,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            SepaComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            SepaComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -422,7 +419,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { SevenElevenComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            SevenElevenComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            SevenElevenComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -431,7 +428,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { UPIComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            UPIComponentProvider(dropInOverrideParams, sessionParams, analyticsRepository).get(
+            UPIComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,

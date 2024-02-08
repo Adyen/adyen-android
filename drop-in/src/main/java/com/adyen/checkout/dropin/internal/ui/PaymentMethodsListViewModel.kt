@@ -28,6 +28,7 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
 import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
@@ -38,7 +39,6 @@ import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
-import com.adyen.checkout.sessions.core.internal.data.model.mapToParams
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +78,6 @@ internal class PaymentMethodsListViewModel(
     }
 
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
-        val sessionParams = sessionDetails?.mapToParams(checkoutConfiguration.amount)
         paymentMethods.forEach { paymentMethod ->
             val type = requireNotNull(paymentMethod.type) { "PaymentMethod type is null" }
 
@@ -90,7 +89,7 @@ internal class PaymentMethodsListViewModel(
                         paymentMethod = paymentMethod,
                         checkoutConfiguration = checkoutConfiguration,
                         overrideAmount = overrideAmount,
-                        sessionParams = sessionParams,
+                        sessionDetails = sessionDetails,
                         callback = this,
                     )
                 }

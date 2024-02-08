@@ -30,7 +30,6 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.AdyenLogLevel
@@ -63,7 +62,6 @@ class GooglePayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
@@ -80,7 +78,7 @@ constructor(
         >,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
+    private val componentParamsMapper = GooglePayComponentParamsMapper(dropInOverrideParams)
 
     @Suppress("LongMethod")
     override fun get(

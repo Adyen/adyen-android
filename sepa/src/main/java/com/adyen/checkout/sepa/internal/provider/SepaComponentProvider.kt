@@ -30,7 +30,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -56,7 +55,6 @@ class SepaComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
@@ -72,7 +70,7 @@ constructor(
         SessionComponentCallback<SepaComponentState>,
         > {
 
-    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
+    private val componentParamsMapper = ButtonComponentParamsMapper(dropInOverrideParams)
 
     @Suppress("LongMethod")
     override fun get(

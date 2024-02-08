@@ -28,7 +28,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 internal class CardComponentParamsMapper(
     private val installmentsParamsMapper: InstallmentsParamsMapper,
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParamsDefault(
@@ -62,7 +61,7 @@ internal class CardComponentParamsMapper(
         return checkoutConfiguration
             .mapToParamsInternal(paymentMethod)
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(

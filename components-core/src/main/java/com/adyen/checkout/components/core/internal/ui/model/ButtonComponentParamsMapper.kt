@@ -8,7 +8,6 @@ import com.adyen.checkout.components.core.internal.Configuration
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ButtonComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -19,7 +18,7 @@ class ButtonComponentParamsMapper(
         return checkoutConfiguration
             .mapToParamsInternal(configuration)
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(configuration: Configuration?): ButtonComponentParams {

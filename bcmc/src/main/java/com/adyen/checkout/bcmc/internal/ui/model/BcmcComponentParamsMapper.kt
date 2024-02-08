@@ -25,7 +25,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 internal class BcmcComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -38,7 +37,7 @@ internal class BcmcComponentParamsMapper(
                 supportedCardBrands = paymentMethod.brands?.map { CardBrand(it) },
             )
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(supportedCardBrands: List<CardBrand>?): CardComponentParams {

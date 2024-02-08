@@ -28,7 +28,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepo
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -58,7 +57,6 @@ class GiftCardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
 ) :
     PaymentComponentProvider<
@@ -74,7 +72,7 @@ constructor(
         SessionsGiftCardComponentCallback,
         > {
 
-    private val componentParamsMapper = GiftCardComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
+    private val componentParamsMapper = GiftCardComponentParamsMapper(dropInOverrideParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,

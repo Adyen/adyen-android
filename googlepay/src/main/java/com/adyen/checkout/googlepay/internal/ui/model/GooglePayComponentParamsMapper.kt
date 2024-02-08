@@ -27,7 +27,6 @@ import com.google.android.gms.wallet.WalletConstants
 
 internal class GooglePayComponentParamsMapper(
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
 ) {
 
     fun mapToParams(
@@ -38,7 +37,7 @@ internal class GooglePayComponentParamsMapper(
         return configuration
             .mapToParamsInternal(paymentMethod)
             .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+            .override(sessionParams ?: dropInOverrideParams?.sessionParams)
     }
 
     private fun CheckoutConfiguration.mapToParamsInternal(
