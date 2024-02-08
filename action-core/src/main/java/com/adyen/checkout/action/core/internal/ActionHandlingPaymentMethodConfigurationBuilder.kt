@@ -32,21 +32,40 @@ abstract class ActionHandlingPaymentMethodConfigurationBuilder<
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
     >
 /**
- * Initialize a configuration builder with the required fields.
+ * Initialize a configuration builder with the required fields and a shopper locale.
  *
  * @param shopperLocale The [Locale] of the shopper.
  * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
  * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
  */
 constructor(
-    shopperLocale: Locale,
+    shopperLocale: Locale?,
     environment: Environment,
     clientKey: String
 ) : BaseConfigurationBuilder<ConfigurationT, BuilderT>(shopperLocale, environment, clientKey),
     ActionHandlingConfigurationBuilder<BuilderT> {
 
     protected val genericActionConfigurationBuilder = GenericActionConfiguration.Builder(
-        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+    ).apply {
+        shopperLocale?.let {
+            setShopperLocale(it)
+        }
+    }
+
+    /**
+     * Initialize a configuration builder with the required fields.
+     * The shopper locale will match the primary user locale on the device.
+     *
+     * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+     * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+     */
+    constructor(
+        environment: Environment,
+        clientKey: String
+    ) : this(
+        shopperLocale = null,
         environment = environment,
         clientKey = clientKey,
     )
@@ -65,7 +84,7 @@ constructor(
     ) : this(
         LocaleUtil.getLocale(context),
         environment,
-        clientKey
+        clientKey,
     )
 
     /**

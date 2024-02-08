@@ -10,9 +10,9 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface Configuration : Parcelable {
 
-    val shopperLocale: Locale
     val environment: Environment
     val clientKey: String
+    val shopperLocale: Locale?
     val analyticsConfiguration: AnalyticsConfiguration?
     val amount: Amount?
 }
