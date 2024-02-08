@@ -30,7 +30,7 @@ import java.util.Locale
 class CashAppPayConfiguration
 @Suppress("LongParameterList")
 private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -52,6 +52,18 @@ private constructor(
         private var returnUrl: String? = null
         private var showStorePaymentField: Boolean? = null
         private var storePaymentMethod: Boolean? = null
+
+        /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -170,8 +182,9 @@ private constructor(
 fun CheckoutConfiguration.cashAppPay(
     configuration: @CheckoutConfigurationMarker CashAppPayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = CashAppPayConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = CashAppPayConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

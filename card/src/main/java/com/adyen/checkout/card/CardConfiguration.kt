@@ -30,7 +30,7 @@ import java.util.Locale
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -67,6 +67,18 @@ class CardConfiguration private constructor(
         private var kcpAuthVisibility: KCPAuthVisibility? = null
         private var installmentConfiguration: InstallmentConfiguration? = null
         private var addressConfiguration: AddressConfiguration? = null
+
+        /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -301,8 +313,9 @@ class CardConfiguration private constructor(
 fun CheckoutConfiguration.card(
     configuration: @CheckoutConfigurationMarker CardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = CardConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = CardConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

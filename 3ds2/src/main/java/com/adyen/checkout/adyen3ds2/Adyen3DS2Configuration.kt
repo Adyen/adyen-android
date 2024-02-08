@@ -27,7 +27,7 @@ import java.util.Locale
 @Suppress("LongParameterList")
 @Parcelize
 class Adyen3DS2Configuration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -46,6 +46,18 @@ class Adyen3DS2Configuration private constructor(
         private var threeDSRequestorAppURL: String? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
@@ -59,7 +71,7 @@ class Adyen3DS2Configuration private constructor(
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -112,8 +124,9 @@ class Adyen3DS2Configuration private constructor(
 fun CheckoutConfiguration.adyen3DS2(
     configuration: @CheckoutConfigurationMarker Adyen3DS2Configuration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = Adyen3DS2Configuration.Builder(shopperLocale, environment, clientKey)
+    val config = Adyen3DS2Configuration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

@@ -28,7 +28,7 @@ import java.util.Locale
 @Parcelize
 @Suppress("LongParameterList")
 class BlikConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -47,6 +47,18 @@ class BlikConfiguration private constructor(
         private var isSubmitButtonVisible: Boolean? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
@@ -60,7 +72,7 @@ class BlikConfiguration private constructor(
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -101,8 +113,9 @@ class BlikConfiguration private constructor(
 fun CheckoutConfiguration.blik(
     configuration: @CheckoutConfigurationMarker BlikConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = BlikConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = BlikConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

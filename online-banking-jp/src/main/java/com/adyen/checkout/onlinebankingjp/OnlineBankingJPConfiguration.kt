@@ -26,7 +26,7 @@ import java.util.Locale
 @Suppress("LongParameterList")
 @Parcelize
 class OnlineBankingJPConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -39,6 +39,18 @@ class OnlineBankingJPConfiguration private constructor(
      * Builder to create an [OnlineBankingJPConfiguration].
      */
     class Builder : EContextConfiguration.Builder<OnlineBankingJPConfiguration, Builder> {
+
+        /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -54,7 +66,7 @@ class OnlineBankingJPConfiguration private constructor(
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -83,8 +95,9 @@ class OnlineBankingJPConfiguration private constructor(
 fun CheckoutConfiguration.onlineBankingJP(
     configuration: @CheckoutConfigurationMarker OnlineBankingJPConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = OnlineBankingJPConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = OnlineBankingJPConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

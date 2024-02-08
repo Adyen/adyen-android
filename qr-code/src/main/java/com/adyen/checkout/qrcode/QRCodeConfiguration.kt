@@ -23,7 +23,7 @@ import java.util.Locale
  */
 @Parcelize
 class QRCodeConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -34,6 +34,18 @@ class QRCodeConfiguration private constructor(
      * Builder to create a [QRCodeConfiguration].
      */
     class Builder : BaseConfigurationBuilder<QRCodeConfiguration, Builder> {
+
+        /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
 
         /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
@@ -49,7 +61,7 @@ class QRCodeConfiguration private constructor(
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -76,8 +88,9 @@ class QRCodeConfiguration private constructor(
 fun CheckoutConfiguration.qrCode(
     configuration: @CheckoutConfigurationMarker QRCodeConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = QRCodeConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = QRCodeConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }
