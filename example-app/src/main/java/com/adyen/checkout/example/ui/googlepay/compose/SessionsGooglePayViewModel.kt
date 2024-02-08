@@ -186,13 +186,11 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     fun onGooglePayLauncherResult(apiTaskResult: ApiTaskResult<PaymentData>) {
-
-    fun onActionConsumed() {
-        updateState { it.copy(actionToHandle = null) }
+        // TODO Call Adyen API
     }
 
     fun onNewIntent(intent: Intent) {
-
+        updateEvent { SessionsGooglePayEvents.WithIntent(intent) }
     }
 
     companion object {

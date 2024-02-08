@@ -98,7 +98,6 @@ internal fun SessionsGooglePayScreen(
             useDarkTheme = useDarkTheme,
             modifier = Modifier.padding(innerPadding),
         )
-            HandlePaymentResult(paymentResultToHandle, viewModel::onPaymentResultHandled)
     }
 }
 
