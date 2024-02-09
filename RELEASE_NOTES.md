@@ -9,6 +9,20 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
+- Address Lookup functionality for Card Component. You can enable this feature by setting your address configuration to lookup while building your card configuration as follows
+```kotlin
+CheckoutConfiguration(
+    shopperLocale = shopperLocale,
+    environment = environment,
+    clientKey = clientKey,
+    amount = amount,
+    analyticsConfiguration = createAnalyticsConfiguration(),
+) {
+    card {
+        setAddressConfiguration(AddressConfiguration.Lookup())
+    }
+}
+```
 - Add support for Multibanco voucher.
 - Permission request is now being delegated to the `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` to handle it and return result through callback.
   - If not handled, a toast will be shown stating that permission is not granted.

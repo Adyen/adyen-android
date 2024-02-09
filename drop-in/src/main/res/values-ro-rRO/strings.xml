@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Metode de plată</string>
-    <string name="error_dialog_title">Eroare</string>
-    <string name="error_dialog_button">Ok</string>
     <string name="payment_failed">Eroare la trimiterea plății. Vă rugăm să încercați din nou.</string>
     <string name="action_failed">S-a produs o eroare la prelucrarea plății. Vă rugăm să încercați din nou mai târziu.</string>
-    <string name="component_error">A apărut o problemă.</string>
     <string name="time_out_error">Solicitarea a expirat. Vă rugăm să încercați din nou.</string>
     <string name="store_payment_methods_header">Metodele dvs. de plată</string>
     <string name="other_payment_methods">Selectați o altă metodă</string>

@@ -223,7 +223,7 @@ enum class AddressSpecification(
 
     companion object {
         fun fromString(countryCode: String?): AddressSpecification {
-            return values().firstOrNull { it.name == countryCode } ?: DEFAULT
+            return entries.firstOrNull { it.name == countryCode } ?: DEFAULT
         }
     }
 

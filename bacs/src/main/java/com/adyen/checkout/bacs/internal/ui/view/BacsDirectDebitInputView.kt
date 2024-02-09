@@ -45,7 +45,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -105,7 +105,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
                     binding.editTextBankAccountNumber.requestFocus()
                 }
                 binding.textInputLayoutBankAccountNumber.showError(
-                    localizedContext.getString(bankAccountNumberValidation.reason)
+                    localizedContext.getString(bankAccountNumberValidation.reason),
                 )
             }
             val sortCodeValidation = it.sortCodeState.validation
@@ -144,23 +144,23 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutHolderName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Bacs_HolderNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutBankAccountNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Bacs_AccountNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutSortCode.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Bacs_SortCodeInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutShopperEmail.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Bacs_ShopperEmailInput,
-            localizedContext
+            localizedContext,
         )
         binding.switchConsentAccount.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Bacs_Switch_Account,
-            localizedContext
+            localizedContext,
         )
         setAmountConsentSwitchText(bacsDelegate.componentParams)
     }
@@ -206,7 +206,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
                 binding.textInputLayoutBankAccountNumber.hideError()
             } else if (bankAccountNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutBankAccountNumber.showError(
-                    localizedContext.getString(bankAccountNumberValidation.reason)
+                    localizedContext.getString(bankAccountNumberValidation.reason),
                 )
             }
         }
@@ -261,14 +261,14 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
         if (amount != null) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 amount,
-                componentParams.shopperLocale
+                componentParams.shopperLocale,
             )
             binding.switchConsentAmount.text =
                 localizedContext.getString(R.string.bacs_consent_amount_specified, formattedAmount)
         } else {
             binding.switchConsentAmount.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_Bacs_Switch_Amount,
-                localizedContext
+                localizedContext,
             )
         }
     }

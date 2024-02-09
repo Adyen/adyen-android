@@ -153,6 +153,10 @@ internal class CardComponentParamsMapper(
             is AddressConfiguration.PostalCode -> {
                 AddressParams.PostalCode(addressFieldPolicy.mapToAddressParamFieldPolicy())
             }
+
+            is AddressConfiguration.Lookup -> {
+                AddressParams.Lookup()
+            }
         }
     }
 

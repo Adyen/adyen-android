@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Metodo di Pagamento</string>
-    <string name="error_dialog_title">Errore</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Errore durante l\'invio del pagamento. Riprova.</string>
     <string name="action_failed">Si è verificato un errore durante l\'elaborazione del pagamento. Riprova più tardi.</string>
-    <string name="component_error">Si è verificato un errore.</string>
     <string name="time_out_error">Il tempo disponibile per la richiesta è scaduto. Riprova.</string>
     <string name="store_payment_methods_header">Metodi di pagamento</string>
     <string name="other_payment_methods">Scegli altro metodo di pagamento</string>

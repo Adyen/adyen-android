@@ -17,7 +17,11 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.AddressLookupComponent
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
@@ -35,6 +39,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
+@Suppress("TooManyFunctions")
 open class CardComponent constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
@@ -45,6 +50,7 @@ open class CardComponent constructor(
     PaymentComponent,
     ViewableComponent,
     ButtonComponent,
+    AddressLookupComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -110,6 +116,22 @@ open class CardComponent constructor(
      */
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) {
         cardDelegate.setOnBinLookupListener(listener)
+    }
+
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+        cardDelegate.setAddressLookupCallback(addressLookupCallback)
+    }
+
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        cardDelegate.updateAddressLookupOptions(options)
+    }
+
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        cardDelegate.setAddressLookupResult(addressLookupResult)
+    }
+
+    fun handleBackPress(): Boolean {
+        return (delegate as? CardDelegate)?.handleBackPress() ?: false
     }
 
     override fun onCleared() {

@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
@@ -36,7 +37,6 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils

@@ -18,10 +18,12 @@ import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceContract
 import com.adyen.checkout.dropin.BaseDropInServiceResult
@@ -109,6 +111,11 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
         emitResult(result)
     }
 
+    final override fun sendAddressLookupResult(result: AddressLookupDropInServiceResult) {
+        Logger.d(TAG, "dispatching AddressLookupDropInServiceResult")
+        emitResult(result)
+    }
+
     protected fun emitResult(result: BaseDropInServiceResult) {
         launch {
             // send response back to activity
@@ -139,6 +146,14 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
 
     final override fun onBinLookupCalled(data: List<BinLookupData>) {
         onBinLookup(data)
+    }
+
+    final override fun onAddressLookupQueryChangedCalled(query: String) {
+        onAddressLookupQueryChanged(query)
+    }
+
+    final override fun onAddressLookupCompletionCalled(lookupAddress: LookupAddress): Boolean {
+        return onAddressLookupCompletion(lookupAddress)
     }
 
     internal class DropInBinder(service: BaseDropInService) : Binder() {

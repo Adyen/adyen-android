@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Pay %s</string>
     <string name="confirm_preauthorization">Confirm preauthorization</string>
 
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Something went wrong.</string>
+
     <string name="paymentInProgressView_title">A payment process is still active</string>
     <string name="paymentInProgressView_loadingText">Awaiting completion…</string>
     <string name="paymentInProgressView_cancelButton">Cancel</string>
@@ -43,6 +47,12 @@
     <string name="checkout_address_form_province_territory_hint_optional">Province or Territory (optional)</string>
     <string name="checkout_address_form_city_town_hint_optional">City / Town (optional)</string>
 
+    <string name="checkout_address_lookup_hint">Search your address</string>
+    <string name="checkout_address_lookup_initial">Can\'t search your address?</string>
+    <string name="checkout_address_lookup_initial_description">You can always #enter your address manually#</string>
+    <string name="checkout_address_lookup_empty">No results found</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' did not match with anything, try again or use #manual address entry#</string>
+    <string name="checkout_address_lookup_enter_manually">Enter address manually</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>

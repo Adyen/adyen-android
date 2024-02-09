@@ -62,6 +62,7 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @Suppress("TooManyFunctions")
@@ -159,6 +160,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = DefaultAddressRepository(AddressService(httpClient)),
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -264,6 +269,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = DefaultAddressRepository(AddressService(httpClient)),
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(

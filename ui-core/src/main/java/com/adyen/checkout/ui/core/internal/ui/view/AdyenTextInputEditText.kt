@@ -35,7 +35,7 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
         this.addTextChangedListener(textWatcher)
     }
 
-    fun setOnChangeListener(listener: Listener) {
+    fun setOnChangeListener(listener: Listener?) {
         this.listener = listener
     }
 

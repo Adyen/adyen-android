@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 19/12/2023.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/standard_half_margin">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_addressHeader"
+        style="@style/AdyenCheckout.AddressLookup.Item.Header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard_half_margin"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        android:layout_marginBottom="@dimen/standard_quarter_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Adyen" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_addressDescription"
+        style="@style/AdyenCheckout.AddressLookup.Item.Description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/standard_half_margin"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        android:layout_marginBottom="@dimen/standard_margin"
+        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressHeader"
+        tools:text="Simon Carmiggeltstraat 6 - 50, 1011 DJ Amsterdam" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:alpha="0.8"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressDescription" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/AdyenCheckout.AddressLookup.Loading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

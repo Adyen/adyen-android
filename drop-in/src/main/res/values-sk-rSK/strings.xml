@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Spôsob platby</string>
-    <string name="error_dialog_title">Chyba</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Pri odosielaní platby došlo k chybe. Skúste to znova.</string>
     <string name="action_failed">Pri spracúvaní vašej platby sa vyskytla chyba. Skúste to neskôr znova.</string>
-    <string name="component_error">Niečo sa pokazilo.</string>
     <string name="time_out_error">Časový limit pre požiadavku uplynul. Skúste to znova.</string>
     <string name="store_payment_methods_header">Vaše spôsoby platby</string>
     <string name="other_payment_methods">Vyberte iný spôsob</string>

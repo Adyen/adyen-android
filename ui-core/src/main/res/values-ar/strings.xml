@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">دفع %s</string>
     <string name="confirm_preauthorization">تأكيد التفويض المسبق</string>
 
+    <string name="error_dialog_title">خطأ</string>
+    <string name="error_dialog_button">موافق</string>
+    <string name="component_error">حدث خطأ ما.</string>
+
     <string name="paymentInProgressView_title">عملية دفع لا تزال نشطة</string>
     <string name="paymentInProgressView_loadingText">في انتظار الاكتمال…</string>
     <string name="paymentInProgressView_cancelButton">إلغاء</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">الرمز البريدي (اختياري)</string>
     <string name="checkout_address_form_province_territory_hint_optional">المقاطعة أو الإقليم (اختياري)</string>
     <string name="checkout_address_form_city_town_hint_optional">المدينة / البلدة (اختياري)</string>
+
+    <string name="checkout_address_lookup_hint">ابحث عن عنوانك</string>
+    <string name="checkout_address_lookup_initial">لا تستطيع البحث عن عنوانك؟</string>
+    <string name="checkout_address_lookup_initial_description">يمكنك دائمًا #إدخال عنوانك يدويًا#</string>
+    <string name="checkout_address_lookup_empty">لم يتم العثور على نتائج</string>
+    <string name="checkout_address_lookup_empty_description">لم يتطابق \'%s\' مع أي شيء، حاول مرة أخرى أو استخدم #إدخال العنوان يدويًا#</string>
+    <string name="checkout_address_lookup_enter_manually">أدخل العنوان يدويًا</string>
+
 </resources>

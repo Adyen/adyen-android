@@ -15,7 +15,8 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 enum class AddressFormUIState {
     NONE,
     POSTAL_CODE,
-    FULL_ADDRESS;
+    FULL_ADDRESS,
+    LOOKUP;
 
     companion object {
         /**
@@ -30,6 +31,7 @@ enum class AddressFormUIState {
                 is AddressParams.FullAddress -> FULL_ADDRESS
                 is AddressParams.PostalCode -> POSTAL_CODE
                 is AddressParams.None -> NONE
+                is AddressParams.Lookup -> LOOKUP
             }
         }
     }

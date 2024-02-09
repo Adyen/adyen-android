@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Fizetendő: %s</string>
     <string name="confirm_preauthorization">Előzetes meghatalmazás jóváhagyása</string>
 
+    <string name="error_dialog_title">Hiba</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Hiba történt.</string>
+
     <string name="paymentInProgressView_title">Még aktív egy fizetési folyamat</string>
     <string name="paymentInProgressView_loadingText">Befejezésre vár…</string>
     <string name="paymentInProgressView_cancelButton">Mégse</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">Irányítószám (nem kötelező)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Tartomány vagy terület (nem kötelező)</string>
     <string name="checkout_address_form_city_town_hint_optional">Város (nem kötelező)</string>
+
+    <string name="checkout_address_lookup_hint">Keresse meg a címét</string>
+    <string name="checkout_address_lookup_initial">Nem tudja megkeresni a címét?</string>
+    <string name="checkout_address_lookup_initial_description">Mindig #beírhatja manuálisan a címét#</string>
+    <string name="checkout_address_lookup_empty">Nincs találat</string>
+    <string name="checkout_address_lookup_empty_description">A keresett „%s„ kifejezésre nincs találat, próbálkozzon újra, vagy #írja be manuálisan a címet#</string>
+    <string name="checkout_address_lookup_enter_manually">Manuálisan írjon be egy címet</string>
+
 </resources>

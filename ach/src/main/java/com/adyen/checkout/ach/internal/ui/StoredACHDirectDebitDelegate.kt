@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -29,7 +30,6 @@ import com.adyen.checkout.core.internal.util.LogUtil
 import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -127,7 +127,7 @@ internal class StoredACHDirectDebitDelegate(
         return ACHDirectDebitComponentState(
             data = paymentComponentData,
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -163,7 +163,7 @@ internal class StoredACHDirectDebitDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 

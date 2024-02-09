@@ -33,4 +33,16 @@ data class AddressOutputData(
             apartmentSuite.validation.isValid() &&
             city.validation.isValid() &&
             country.validation.isValid()
+
+    override fun toString(): String {
+        return listOf(
+            street.value,
+            houseNumberOrName.value,
+            apartmentSuite.value,
+            postalCode.value,
+            city.value,
+            stateOrProvince.value,
+            country.value
+        ).filter { it.isNotBlank() }.joinToString(" ")
+    }
 }

@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getSessionRequest
@@ -36,20 +37,26 @@ import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @Suppress("TooManyFunctions")
 @HiltViewModel
 internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    private val addressLookupRepository: AddressLookupRepository,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(), SessionComponentCallback<CardComponentState> {
 
@@ -62,6 +69,8 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
+    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
+
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private var isFlowTakenOver: Boolean
@@ -72,6 +81,18 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { launchComponent() }
+        addressLookupQueryFlow
+            .filterNotNull()
+            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
+            .onEach { query ->
+                val options = if (query == "empty") {
+                    emptyList()
+                } else {
+                    addressLookupRepository.getAddressLookupOptions()
+                }
+                _events.emit(CardEvent.AddressLookup(options))
+            }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun launchComponent() {
@@ -93,8 +114,8 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
             SessionsCardComponentData(
                 checkoutSession = checkoutSession,
                 paymentMethod = paymentMethod,
-                callback = this
-            )
+                callback = this,
+            ),
         )
         _cardViewState.emit(CardViewState.ShowComponent)
     }
@@ -115,8 +136,8 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown()
-            )
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+            ),
         ) ?: return null
 
         return getCheckoutSession(sessionModel, checkoutConfiguration)
@@ -192,6 +213,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
+
                 else -> _events.emit(CardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(CardEvent.PaymentResult("Failed"))
@@ -219,8 +241,16 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
         _cardViewState.tryEmit(state)
     }
 
+    fun onAddressLookupQueryChanged(query: String) {
+        viewModelScope.launch {
+            addressLookupQueryFlow.emit(query)
+        }
+    }
+
     companion object {
         private val TAG = getLogTag()
         private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
+
+        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
     }
 }

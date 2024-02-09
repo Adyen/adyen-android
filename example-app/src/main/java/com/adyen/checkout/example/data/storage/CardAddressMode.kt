@@ -15,4 +15,5 @@ enum class CardAddressMode {
     NONE,
     POSTAL_CODE,
     FULL_ADDRESS,
+    LOOKUP,
 }

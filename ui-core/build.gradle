@@ -55,4 +55,5 @@ dependencies {
     testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.robolectric
+    testImplementation testLibraries.mockito
 }

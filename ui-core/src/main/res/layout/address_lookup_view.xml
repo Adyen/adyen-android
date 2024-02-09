@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 19/12/2023.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <SearchView
+        android:id="@+id/textInputLayout_addressLookupQuerySearch"
+        style="@style/AdyenCheckout.AddressLookup.Query"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/standard_margin" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/AdyenCheckout.AddressLookup.Loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView_error"
+        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/standard_half_margin"
+        android:gravity="center"
+        android:text="@string/checkout_address_lookup_empty"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView_manualEntryError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/checkout_address_lookup_empty_description"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textView_initialDisclaimer"
+        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/standard_half_margin"
+        android:gravity="center"
+        android:text="@string/checkout_address_lookup_initial" />
+
+    <TextView
+        android:id="@+id/textView_manualEntryInitial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/checkout_address_lookup_initial_description"
+        android:visibility="gone" />
+
+
+    <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
+        android:id="@+id/addressFormInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/button_manualEntry"
+        style="@style/AdyenCheckout.AddressLookup.Button.Manual"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginStart="@dimen/standard_half_margin"
+        android:layout_marginEnd="@dimen/standard_half_margin"
+        android:layout_marginBottom="@dimen/standard_half_margin"
+        android:alpha="0.8"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_addressDescription" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_addressLookupOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/address_lookup_option_item_view"
+        tools:visibility="visible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/submitAddressButton"
+        style="@style/AdyenCheckout.AddressLookup.Button.Submit"
+        android:visibility="gone" />
+</merge>

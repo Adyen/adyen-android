@@ -3,6 +3,7 @@ package com.adyen.checkout.example.ui.card
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
@@ -21,7 +25,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CardActivity : AppCompatActivity() {
+@Suppress("TooManyFunctions")
+class CardActivity : AppCompatActivity(), AddressLookupCallback {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -52,6 +57,14 @@ class CardActivity : AppCompatActivity() {
                 launch { cardViewModel.cardViewState.collect(::onCardViewState) }
                 launch { cardViewModel.events.collect(::onCardEvent) }
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home && cardComponent?.handleBackPress() == true) {
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 
@@ -108,6 +121,8 @@ class CardActivity : AppCompatActivity() {
             Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
         }
 
+        cardComponent.setAddressLookupCallback(this)
+
         this.cardComponent = cardComponent
 
         binding.cardView.attach(cardComponent, this)
@@ -117,6 +132,9 @@ class CardActivity : AppCompatActivity() {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
+            is CardEvent.AddressLookup -> onAddressLookup(event.options)
+            is CardEvent.AddressLookupCompleted -> onAddressLookupCompleted(event.lookupAddress)
+            is CardEvent.AddressLookupError -> onAddressLookupError(event.message)
         }
     }
 
@@ -127,6 +145,34 @@ class CardActivity : AppCompatActivity() {
 
     private fun onAction(action: Action) {
         cardComponent?.handleAction(action, this)
+    }
+
+    private fun onAddressLookup(options: List<LookupAddress>) {
+        cardComponent?.updateAddressLookupOptions(options)
+    }
+
+    private fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Completed(lookupAddress))
+    }
+
+    private fun onAddressLookupError(message: String) {
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Error(message))
+    }
+
+    override fun onQueryChanged(query: String) {
+        Log.d(TAG, "On address lookup query changed: $query")
+        cardViewModel.onAddressLookupQueryChanged(query)
+    }
+
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        Log.d(TAG, "on lookup completed $lookupAddress")
+        cardViewModel.onAddressLookupCompleted(lookupAddress)
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (cardComponent?.handleBackPress() == true) return
+        super.onBackPressed()
     }
 
     override fun onDestroy() {
