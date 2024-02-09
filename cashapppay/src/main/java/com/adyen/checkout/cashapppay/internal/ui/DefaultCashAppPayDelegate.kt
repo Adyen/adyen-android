@@ -64,7 +64,7 @@ constructor(
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
     private val cashAppPayFactory: CashAppPayFactory,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
@@ -213,7 +213,7 @@ constructor(
 
         _viewFlow.tryEmit(PaymentInProgressViewType)
 
-        coroutineScope.launch(ioDispatcher) {
+        coroutineScope.launch(coroutineDispatcher) {
             cashAppPay.createCustomerRequest(actions, componentParams.returnUrl)
         }
     }

@@ -19,11 +19,11 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AddressService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun getCountries(
         shopperLocale: String
-    ): List<AddressItem> = withContext(ioDispatcher) {
+    ): List<AddressItem> = withContext(coroutineDispatcher) {
         httpClient.getList(
             path = "datasets/countries/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,
@@ -33,7 +33,7 @@ class AddressService(
     suspend fun getStates(
         shopperLocale: String,
         countryCode: String
-    ): List<AddressItem> = withContext(ioDispatcher) {
+    ): List<AddressItem> = withContext(coroutineDispatcher) {
         httpClient.getList(
             path = "datasets/states/$countryCode/$shopperLocale.json",
             responseSerializer = AddressItem.SERIALIZER,

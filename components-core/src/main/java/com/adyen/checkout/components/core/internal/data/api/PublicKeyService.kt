@@ -19,12 +19,12 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PublicKeyService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun getPublicKey(
         clientKey: String
-    ): PublicKeyResponse = withContext(ioDispatcher) {
+    ): PublicKeyResponse = withContext(coroutineDispatcher) {
         httpClient.get(
             "v1/clientKeys/$clientKey",
             PublicKeyResponse.SERIALIZER

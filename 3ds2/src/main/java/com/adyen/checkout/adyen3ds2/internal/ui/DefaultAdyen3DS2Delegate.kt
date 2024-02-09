@@ -75,7 +75,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val adyen3DS2Serializer: Adyen3DS2Serializer,
     private val redirectHandler: RedirectHandler,
     private val threeDS2Service: ThreeDS2Service,
-    private val defaultDispatcher: CoroutineDispatcher,
+    private val coroutineDispatcher: CoroutineDispatcher,
     private val base64Encoder: Base64Encoder,
     private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
@@ -215,7 +215,7 @@ internal class DefaultAdyen3DS2Delegate(
             exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 
-        coroutineScope.launch(defaultDispatcher + coroutineExceptionHandler) {
+        coroutineScope.launch(coroutineDispatcher + coroutineExceptionHandler) {
             // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
             closeTransaction()
 

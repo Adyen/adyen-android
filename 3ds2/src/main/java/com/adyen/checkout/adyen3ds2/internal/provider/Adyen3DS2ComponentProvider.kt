@@ -100,7 +100,7 @@ constructor(
             adyen3DS2Serializer = adyen3DS2DetailsParser,
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
-            defaultDispatcher = Dispatchers.Default,
+            coroutineDispatcher = Dispatchers.Default,
             base64Encoder = AndroidBase64Encoder(),
             application = application,
         )

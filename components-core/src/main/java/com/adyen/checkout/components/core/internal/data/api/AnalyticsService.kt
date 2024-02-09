@@ -20,13 +20,13 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun setupAnalytics(
         request: AnalyticsSetupRequest,
         clientKey: String,
-    ): AnalyticsSetupResponse = withContext(ioDispatcher) {
+    ): AnalyticsSetupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v3/analytics",
             queryParameters = mapOf("clientKey" to clientKey),

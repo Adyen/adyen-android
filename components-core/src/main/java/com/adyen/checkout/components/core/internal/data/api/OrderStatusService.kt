@@ -20,13 +20,13 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OrderStatusService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     internal suspend fun getOrderStatus(
         request: OrderStatusRequest,
         clientKey: String
-    ): OrderStatusResponse = withContext(ioDispatcher) {
+    ): OrderStatusResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/order/status",
             queryParameters = mapOf("clientKey" to clientKey),

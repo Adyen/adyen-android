@@ -41,7 +41,7 @@ interface StatusRepository {
 class DefaultStatusRepository(
     private val statusService: StatusService,
     private val clientKey: String,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : StatusRepository {
 
     private var delay: Long = 0
@@ -75,7 +75,7 @@ class DefaultStatusRepository(
         )
     }
 
-    private suspend fun fetchStatus(paymentData: String) = withContext(ioDispatcher) {
+    private suspend fun fetchStatus(paymentData: String) = withContext(coroutineDispatcher) {
         runSuspendCatching {
             statusService.checkStatus(clientKey, StatusRequest(paymentData))
         }

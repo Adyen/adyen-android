@@ -26,7 +26,7 @@ internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
     configuration: Configuration,
     private val order: Order?,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
     private val sessionService = SessionService(httpClient)
@@ -34,7 +34,7 @@ internal class CheckoutSessionInitializer(
 
     // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
     //  override Amount
-    suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(ioDispatcher) {
+    suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(coroutineDispatcher) {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
             order = order,

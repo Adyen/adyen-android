@@ -18,13 +18,13 @@ import kotlinx.coroutines.withContext
 
 internal class SubmitFingerprintService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun submitFingerprint(
         request: SubmitFingerprintRequest,
         clientKey: String
-    ): SubmitFingerprintResponse = withContext(ioDispatcher) {
+    ): SubmitFingerprintResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/submitThreeDS2Fingerprint",
             queryParameters = mapOf("token" to clientKey),

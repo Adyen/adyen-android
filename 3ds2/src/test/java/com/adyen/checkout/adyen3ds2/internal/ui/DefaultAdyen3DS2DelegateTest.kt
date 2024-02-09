@@ -96,7 +96,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             adyen3DS2Serializer = adyen3DS2Serializer,
             redirectHandler = redirectHandler,
             threeDS2Service = threeDS2Service,
-            defaultDispatcher = UnconfinedTestDispatcher(),
+            coroutineDispatcher = UnconfinedTestDispatcher(),
             base64Encoder = base64Encoder,
             application = Application(),
         )

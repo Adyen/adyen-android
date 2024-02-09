@@ -30,14 +30,14 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SessionService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun setupSession(
         request: SessionSetupRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionSetupResponse = withContext(ioDispatcher) {
+    ): SessionSetupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/setup",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -51,7 +51,7 @@ class SessionService(
         request: SessionPaymentsRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionPaymentsResponse = withContext(ioDispatcher) {
+    ): SessionPaymentsResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/payments",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -65,7 +65,7 @@ class SessionService(
         request: SessionDetailsRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionDetailsResponse = withContext(ioDispatcher) {
+    ): SessionDetailsResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/paymentDetails",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -79,7 +79,7 @@ class SessionService(
         request: SessionBalanceRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionBalanceResponse = withContext(ioDispatcher) {
+    ): SessionBalanceResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/paymentMethodBalance",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -93,7 +93,7 @@ class SessionService(
         request: SessionOrderRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionOrderResponse = withContext(ioDispatcher) {
+    ): SessionOrderResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/orders",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -107,7 +107,7 @@ class SessionService(
         request: SessionCancelOrderRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionCancelOrderResponse = withContext(ioDispatcher) {
+    ): SessionCancelOrderResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/orders/cancel",
             queryParameters = mapOf("clientKey" to clientKey),

@@ -20,13 +20,13 @@ import kotlinx.coroutines.withContext
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BinLookupService(
     private val httpClient: HttpClient,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun makeBinLookup(
         request: BinLookupRequest,
         clientKey: String,
-    ): BinLookupResponse = withContext(ioDispatcher) {
+    ): BinLookupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v2/bin/binLookup",
             queryParameters = mapOf("clientKey" to clientKey),

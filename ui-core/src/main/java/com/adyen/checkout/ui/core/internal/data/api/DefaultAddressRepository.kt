@@ -27,7 +27,7 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultAddressRepository(
     private val addressService: AddressService,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AddressRepository {
 
     private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()
@@ -65,7 +65,7 @@ class DefaultAddressRepository(
         countryCode: String,
         coroutineScope: CoroutineScope
     ) {
-        coroutineScope.launch(ioDispatcher) {
+        coroutineScope.launch(coroutineDispatcher) {
             val states = getStates(
                 shopperLocale = shopperLocale,
                 countryCode = countryCode,
@@ -94,7 +94,7 @@ class DefaultAddressRepository(
     }
 
     private fun fetchCountryList(shopperLocale: Locale, coroutineScope: CoroutineScope) {
-        coroutineScope.launch(ioDispatcher) {
+        coroutineScope.launch(coroutineDispatcher) {
             val countries = getCountries(
                 shopperLocale = shopperLocale,
             ).fold(

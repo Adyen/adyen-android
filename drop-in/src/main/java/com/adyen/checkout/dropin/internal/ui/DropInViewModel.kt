@@ -58,7 +58,7 @@ internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     internal val analyticsRepository: AnalyticsRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -311,7 +311,7 @@ internal class DropInViewModel(
     }
 
     fun handleOrderCreated(orderResponse: OrderResponse) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(orderResponse)
             if (currentOrder != null) {
                 partialPaymentRequested()
@@ -366,7 +366,7 @@ internal class DropInViewModel(
     }
 
     fun handlePaymentMethodsUpdate(paymentMethodsApiResponse: PaymentMethodsApiResponse, order: OrderResponse?) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(order)
             this@DropInViewModel.paymentMethodsApiResponse = paymentMethodsApiResponse
             sendEvent(DropInActivityEvent.ShowPaymentMethods)
