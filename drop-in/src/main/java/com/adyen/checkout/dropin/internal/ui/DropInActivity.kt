@@ -172,6 +172,7 @@ internal class DropInActivity :
             getFragmentByTag(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG) == null
     }
 
+    @Suppress("ReturnCount")
     private fun createLocalizedContext(baseContext: Context?): Context? {
         if (baseContext == null) return null
 
@@ -218,7 +219,7 @@ internal class DropInActivity :
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
-            additionalData = dropInViewModel.dropInComponentParams.additionalDataForDropInService,
+            additionalData = dropInViewModel.dropInParams.additionalDataForDropInService,
         )
         if (bound) {
             serviceBound = true

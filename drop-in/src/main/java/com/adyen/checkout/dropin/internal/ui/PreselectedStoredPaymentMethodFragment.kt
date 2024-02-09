@@ -43,8 +43,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
         PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
-            dropInViewModel.amount,
-            dropInViewModel.dropInComponentParams,
+            dropInViewModel.dropInParams,
         )
     }
 
@@ -78,9 +77,8 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 fragment = this,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                amount = dropInViewModel.amount,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = storedPaymentViewModel,
-                sessionDetails = dropInViewModel.sessionDetails,
                 analyticsRepository = dropInViewModel.analyticsRepository,
                 onRedirect = protocol::onRedirect,
             )
@@ -93,7 +91,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         binding.paymentMethodsListHeader.paymentMethodHeaderTitle.setText(R.string.store_payment_methods_header)
 
         val isRemovingStoredPaymentMethodsEnabled =
-            dropInViewModel.dropInComponentParams.isRemovingStoredPaymentMethodsEnabled
+            dropInViewModel.dropInParams.isRemovingStoredPaymentMethodsEnabled
         binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!isRemovingStoredPaymentMethodsEnabled)
         if (isRemovingStoredPaymentMethodsEnabled) {
             binding.storedPaymentMethodItem.paymentMethodItemUnderlayButton.setOnClickListener {
@@ -124,7 +122,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 binding.storedPaymentMethodItem.textViewTitle.text =
                     requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInComponentParams.environment,
+                    environment = dropInViewModel.dropInParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
                 binding.storedPaymentMethodItem.textViewDetail.text =
@@ -139,7 +137,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                         storedPaymentMethodModel.lastFour,
                     )
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInComponentParams.environment,
+                    environment = dropInViewModel.dropInParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
                 binding.storedPaymentMethodItem.textViewDetail.isVisible = false
@@ -151,7 +149,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     !storedPaymentMethodModel.description.isNullOrEmpty()
                 binding.storedPaymentMethodItem.textViewDetail.text = storedPaymentMethodModel.description
                 binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInComponentParams.environment,
+                    environment = dropInViewModel.dropInParams.environment,
                     txVariant = storedPaymentMethodModel.imageId,
                 )
             }

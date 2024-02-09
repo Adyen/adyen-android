@@ -31,7 +31,6 @@ internal class DropInSavedStateHandleContainer(
 
     var checkoutConfiguration: CheckoutConfiguration? by SavedStateHandleProperty(CHECKOUT_CONFIGURATION_KEY)
     var serviceComponentName: ComponentName? by SavedStateHandleProperty(DROP_IN_SERVICE_KEY)
-    var amount: Amount? by SavedStateHandleProperty(AMOUNT)
     var sessionDetails: SessionDetails? by SavedStateHandleProperty(SESSION_KEY)
     var isSessionsFlowTakenOver: Boolean? by SavedStateHandleProperty(IS_SESSIONS_FLOW_TAKEN_OVER_KEY)
     var paymentMethodsApiResponse: PaymentMethodsApiResponse? by SavedStateHandleProperty(PAYMENT_METHODS_RESPONSE_KEY)
@@ -53,7 +52,6 @@ internal object DropInBundleHandler {
             putExtra(PAYMENT_METHODS_RESPONSE_KEY, paymentMethodsApiResponse)
             putExtra(CHECKOUT_CONFIGURATION_KEY, checkoutConfiguration)
             putExtra(DROP_IN_SERVICE_KEY, service)
-            putExtra(AMOUNT, checkoutConfiguration.amount)
         }
     }
 
@@ -71,7 +69,6 @@ internal object DropInBundleHandler {
         )
         intent.apply {
             putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
-            putExtra(AMOUNT, checkoutSession.sessionSetupResponse.amount)
         }
     }
 
@@ -101,4 +98,3 @@ private const val IS_WAITING_FOR_RESULT_KEY = "IS_WAITING_FOR_RESULT_KEY"
 private const val CACHED_GIFT_CARD = "CACHED_GIFT_CARD"
 private const val CURRENT_ORDER = "CURRENT_ORDER"
 private const val PARTIAL_PAYMENT_AMOUNT = "PARTIAL_PAYMENT_AMOUNT"
-private const val AMOUNT = "AMOUNT"

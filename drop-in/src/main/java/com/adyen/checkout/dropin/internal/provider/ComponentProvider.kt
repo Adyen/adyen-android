@@ -30,7 +30,6 @@ import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvider
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
@@ -38,6 +37,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponentState
 import com.adyen.checkout.conveniencestoresjp.internal.provider.ConvenienceStoresJPComponentProvider
@@ -45,9 +45,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dotpay.DotpayComponent
 import com.adyen.checkout.dotpay.DotpayComponentState
 import com.adyen.checkout.dotpay.internal.provider.DotpayComponentProvider
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParamsMapper
-import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.entercash.EntercashComponent
 import com.adyen.checkout.entercash.EntercashComponentState
@@ -97,7 +94,6 @@ import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
@@ -117,13 +113,11 @@ internal fun getComponentFor(
     fragment: Fragment,
     storedPaymentMethod: StoredPaymentMethod,
     checkoutConfiguration: CheckoutConfiguration,
-    amount: Amount?,
+    dropInOverrideParams: DropInOverrideParams,
     componentCallback: ComponentCallback<*>,
-    sessionDetails: SessionDetails?,
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInOverrideParams = DropInOverrideParamsFactory.create(amount, sessionDetails)
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             ACHDirectDebitComponentProvider(dropInOverrideParams, analyticsRepository).get(
@@ -185,13 +179,11 @@ internal fun getComponentFor(
     fragment: Fragment,
     paymentMethod: PaymentMethod,
     checkoutConfiguration: CheckoutConfiguration,
-    amount: Amount?,
+    dropInOverrideParams: DropInOverrideParams,
     componentCallback: ComponentCallback<*>,
-    sessionDetails: SessionDetails?,
     analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
-    val dropInOverrideParams = DropInOverrideParamsFactory.create(amount, sessionDetails)
     return when {
         checkCompileOnly { ACHDirectDebitComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             ACHDirectDebitComponentProvider(dropInOverrideParams, analyticsRepository).get(
@@ -442,8 +434,4 @@ internal fun getComponentFor(
     }.apply {
         setOnRedirectListener(onRedirect)
     }
-}
-
-internal fun CheckoutConfiguration.mapToParams(amount: Amount?): DropInComponentParams {
-    return DropInComponentParamsMapper().mapToParams(this, amount)
 }
