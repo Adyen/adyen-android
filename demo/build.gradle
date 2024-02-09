@@ -27,23 +27,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
     buildFeatures {
         compose true
+        viewBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = compose_compiler_version
-    }
-    packaging {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
     }
 }
 
@@ -63,6 +52,8 @@ dependencies {
     implementation libraries.compose.activity
     implementation libraries.compose.hilt
     implementation libraries.compose.material
+    implementation libraries.compose.material1
+    implementation libraries.compose.navigation
     implementation libraries.compose.viewmodel
 
     implementation libraries.material
