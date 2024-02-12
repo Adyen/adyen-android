@@ -15,20 +15,19 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsParams(
     val level: AnalyticsParamsLevel,
+    val clientKey: String,
 ) {
 
-    constructor(analyticsConfiguration: AnalyticsConfiguration?) :
-        this(level = getLevel(analyticsConfiguration))
+    constructor(
+        analyticsConfiguration: AnalyticsConfiguration?,
+        clientKey: String,
+    ) : this(level = getLevel(analyticsConfiguration), clientKey = clientKey)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class AnalyticsParamsLevel(private val priority: Int) {
-    ALL(1),
-    NONE(2);
-
-    internal fun hasHigherPriorityThan(level: AnalyticsParamsLevel): Boolean {
-        return priority > level.priority
-    }
+enum class AnalyticsParamsLevel(val priority: Int) {
+    NONE(1),
+    ALL(2),
 }
 
 private fun getLevel(analyticsConfiguration: AnalyticsConfiguration?): AnalyticsParamsLevel {

@@ -21,7 +21,6 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 class AnalyticsProvider(
     val application: Application,
     val componentParams: ComponentParams,
-    // drop-in or txVariant
     val source: AnalyticsSource,
     val sessionId: String?,
 ) {
