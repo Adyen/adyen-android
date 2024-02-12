@@ -19,6 +19,33 @@ import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
+/**
+ * A generic configuration class that allows customizing the Checkout library.
+ * You can use the block parameter to add drop-in or payment method specific configurations. For example:
+ *
+ * ```
+ * val checkoutConfiguration = CheckoutConfiguration(
+ *     environment,
+ *     clientKey,
+ *     shopperLocale,
+ *     amount,
+ * ) {
+ *     dropIn {
+ *         setEnableRemovingStoredPaymentMethods(true)
+ *     }
+ *     card {
+ *         setHolderNameRequired(true)
+ *     }
+ * }
+ * ```
+ *
+ * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+ * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+ * @param shopperLocale The [Locale] used to display information to the shopper. Defaults to the primary device locale.
+ * @param amount The amount of the transaction.
+ * @param analyticsConfiguration A configuration for the internal analytics of the library.
+ * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
+ */
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
     override val environment: Environment,
