@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AdyenAnalytics
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -34,7 +34,6 @@ import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
@@ -42,7 +41,7 @@ internal class DefaultMBWayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val adyenAnalytics: AdyenAnalytics,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) : MBWayDelegate {
 
@@ -71,14 +70,12 @@ internal class DefaultMBWayDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        setupAnalytics(coroutineScope)
+        setupAnalytics()
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
+    private fun setupAnalytics() {
         adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+        adyenAnalytics.setup()
     }
 
     override fun observe(
@@ -136,7 +133,7 @@ internal class DefaultMBWayDelegate(
     ): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = adyenAnalytics.checkoutAttemptId,
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
         )
 
