@@ -24,6 +24,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
@@ -39,15 +41,16 @@ import java.util.Locale
 
 internal class CardComponentParamsMapperTest {
 
+    private val cardComponentParamsMapper = CardComponentParamsMapper(
+        CommonComponentParamsMapper(),
+        InstallmentsParamsMapper(),
+    )
+
     @Test
-    fun `when parent configuration is null and custom card configuration fields are null then all fields should match`() {
+    fun `when drop-in override params are null and custom card configuration fields are null then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
 
         val expected = getCardComponentParams()
 
@@ -55,7 +58,7 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is null and custom card configuration fields are set then all fields should match`() {
+    fun `when drop-in override params are null and custom card configuration fields are set then all fields should match`() {
         val shopperReference = "SHOPPER_REFERENCE_1"
         val installmentConfiguration = InstallmentConfiguration(
             InstallmentOptions.DefaultInstallmentOptions(
@@ -97,10 +100,12 @@ internal class CardComponentParamsMapperTest {
             }
         }
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            null,
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
@@ -127,7 +132,7 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override card configuration fields`() {
+    fun `when drop-in override params are set then they should override card configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -144,13 +149,14 @@ internal class CardComponentParamsMapperTest {
             }
         }
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L))
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), dropInOverrideParams, null)
-            .mapToParamsDefault(
-                configuration,
-                PaymentMethod(),
-                null,
-            )
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            paymentMethod = PaymentMethod(),
+        )
 
         val expected = getCardComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -180,11 +186,7 @@ internal class CardComponentParamsMapperTest {
             ),
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            paymentMethod,
-            null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MAESTRO), CardBrand(cardType = CardType.BCMC)),
@@ -203,11 +205,7 @@ internal class CardComponentParamsMapperTest {
             ),
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            paymentMethod,
-            null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(CardBrand(cardType = CardType.MASTERCARD)),
@@ -227,11 +225,7 @@ internal class CardComponentParamsMapperTest {
             ),
         )
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            paymentMethod,
-            null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, paymentMethod)
 
         val expected = getCardComponentParams(
             supportedCardBrands = listOf(
@@ -247,11 +241,7 @@ internal class CardComponentParamsMapperTest {
     fun `when supported card types are not set in the card configuration and payment method brands do not exist then the default card types should be used in the params`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             supportedCardBrands = CardConfiguration.DEFAULT_SUPPORTED_CARDS_LIST,
@@ -272,15 +262,19 @@ internal class CardComponentParamsMapperTest {
             setShowStorePaymentField(configurationValue)
         }
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            sessionParams = SessionParams(
-                enableStoreDetails = sessionsValue,
-                installmentConfiguration = null,
-                amount = null,
-                returnUrl = "",
-            ),
+        val sessionParams = SessionParams(
+            enableStoreDetails = sessionsValue,
+            installmentConfiguration = null,
+            amount = null,
+            returnUrl = "",
+        )
+
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
@@ -303,15 +297,19 @@ internal class CardComponentParamsMapperTest {
             )
         }
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = null,
-                returnUrl = "",
-            ),
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = null,
+            returnUrl = "",
+        )
+
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
@@ -345,24 +343,31 @@ internal class CardComponentParamsMapperTest {
             )
         }
 
-        val mapper = InstallmentsParamsMapper()
+        val installmentsParamsMapper = InstallmentsParamsMapper()
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = installmentConfiguration,
+            amount = null,
+            returnUrl = "",
+        )
+        val cardComponentParamsMapper = CardComponentParamsMapper(
+            CommonComponentParamsMapper(),
+            installmentsParamsMapper,
+        )
 
-        val params = CardComponentParamsMapper(mapper, null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = installmentConfiguration,
-                amount = null,
-                returnUrl = "",
-            ),
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
-            installmentParams = mapper.mapToInstallmentParams(
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(
                 installmentConfiguration = installmentConfiguration,
                 amount = configuration.amount,
-                shopperLocale = configuration.shopperLocale,
+                shopperLocale = configuration.shopperLocale ?: DEVICE_LOCALE,
             ),
         )
 
@@ -381,19 +386,25 @@ internal class CardComponentParamsMapperTest {
             setInstallmentConfigurations(installmentConfiguration)
         }
 
-        val mapper = InstallmentsParamsMapper()
+        val installmentsParamsMapper = InstallmentsParamsMapper()
+        val cardComponentParamsMapper = CardComponentParamsMapper(
+            CommonComponentParamsMapper(),
+            installmentsParamsMapper,
+        )
 
-        val params = CardComponentParamsMapper(mapper, null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            sessionParams = null,
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = PaymentMethod(),
         )
 
         val expected = getCardComponentParams(
-            installmentParams = mapper.mapToInstallmentParams(
+            installmentParams = installmentsParamsMapper.mapToInstallmentParams(
                 installmentConfiguration = installmentConfiguration,
                 amount = configuration.amount,
-                shopperLocale = configuration.shopperLocale,
+                shopperLocale = configuration.shopperLocale ?: DEVICE_LOCALE,
             ),
         )
 
@@ -404,11 +415,7 @@ internal class CardComponentParamsMapperTest {
     fun `installmentParams should be null if not set in configuration and there is no session`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), null, null).mapToParamsDefault(
-            configuration,
-            PaymentMethod(),
-            sessionParams = null,
-        )
+        val params = cardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null, PaymentMethod())
 
         val expected = getCardComponentParams(
             installmentParams = null,
@@ -419,7 +426,7 @@ internal class CardComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
@@ -427,19 +434,22 @@ internal class CardComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
 
-        val params = CardComponentParamsMapper(InstallmentsParamsMapper(), dropInOverrideParams, null)
-            .mapToParamsDefault(
-                configuration,
-                PaymentMethod(),
-                sessionParams = SessionParams(
-                    enableStoreDetails = null,
-                    installmentConfiguration = null,
-                    amount = sessionsValue,
-                    returnUrl = "",
-                ),
-            )
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = sessionsValue,
+            returnUrl = "",
+        )
+
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = sessionParams,
+            paymentMethod = PaymentMethod(),
+        )
 
         val expected = getCardComponentParams(
             amount = expectedValue,
@@ -453,7 +463,7 @@ internal class CardComponentParamsMapperTest {
         amount: Amount? = null,
         configuration: CardConfiguration.Builder.() -> Unit = {},
     ) = CheckoutConfiguration(
-        shopperLocale = Locale.US,
+        shopperLocale = DEVICE_LOCALE,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
@@ -463,7 +473,7 @@ internal class CardComponentParamsMapperTest {
 
     @Suppress("LongParameterList")
     private fun getCardComponentParams(
-        shopperLocale: Locale = Locale.US,
+        shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -481,11 +491,14 @@ internal class CardComponentParamsMapperTest {
         cvcVisibility: CVCVisibility = CVCVisibility.ALWAYS_SHOW,
         storedCVCVisibility: StoredCVCVisibility = StoredCVCVisibility.SHOW
     ) = CardComponentParams(
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        analyticsParams = analyticsParams,
-        isCreatedByDropIn = isCreatedByDropIn,
+        commonComponentParams = CommonComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            analyticsParams = analyticsParams,
+            isCreatedByDropIn = isCreatedByDropIn,
+            amount = amount,
+        ),
         isHolderNameRequired = isHolderNameRequired,
         isSubmitButtonVisible = isSubmitButtonVisible,
         supportedCardBrands = supportedCardBrands,
@@ -495,7 +508,6 @@ internal class CardComponentParamsMapperTest {
         kcpAuthVisibility = kcpAuthVisibility,
         installmentParams = installmentParams,
         addressParams = addressParams,
-        amount = amount,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
     )
@@ -503,6 +515,7 @@ internal class CardComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(

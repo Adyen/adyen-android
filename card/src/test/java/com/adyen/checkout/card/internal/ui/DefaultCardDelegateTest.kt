@@ -50,6 +50,7 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
@@ -1213,10 +1214,15 @@ internal class DefaultCardDelegateTest(
         addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
+            commonComponentParamsMapper = CommonComponentParamsMapper(),
             installmentsParamsMapper = InstallmentsParamsMapper(),
+        ).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
             dropInOverrideParams = null,
-            overrideSessionParams = null,
-        ).mapToParamsDefault(configuration, paymentMethod, null)
+            componentSessionParams = null,
+            paymentMethod = paymentMethod,
+        )
 
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),

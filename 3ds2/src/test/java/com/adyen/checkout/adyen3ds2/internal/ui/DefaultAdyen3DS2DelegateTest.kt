@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.JavaBase64Encoder
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -83,12 +84,12 @@ internal class DefaultAdyen3DS2DelegateTest(
     fun setup() {
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        val configuration = CheckoutConfiguration(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
         delegate = DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = SavedStateHandle(),
-            componentParams = Adyen3DS2ComponentParamsMapper(null, null)
-                .mapToParams(configuration, null)
+            componentParams = Adyen3DS2ComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null)
                 // Set it to null to avoid a crash in 3DS2 library (they use Android APIs)
                 .copy(deviceParameterBlockList = null),
             submitFingerprintRepository = submitFingerprintRepository,

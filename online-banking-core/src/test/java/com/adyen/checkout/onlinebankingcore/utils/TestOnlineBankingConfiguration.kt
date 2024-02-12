@@ -21,7 +21,7 @@ import java.util.Locale
 
 @Parcelize
 internal class TestOnlineBankingConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -37,11 +37,11 @@ internal class TestOnlineBankingConfiguration private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         constructor(
-            shopperLocale: Locale,
+            shopperLocale: Locale?,
             environment: Environment,
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)

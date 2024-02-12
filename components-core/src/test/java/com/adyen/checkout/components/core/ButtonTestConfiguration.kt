@@ -11,7 +11,7 @@ import java.util.Locale
 
 @Parcelize
 class ButtonTestConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -30,7 +30,7 @@ class ButtonTestConfiguration private constructor(
         )
 
         constructor(
-            shopperLocale: Locale,
+            shopperLocale: Locale?,
             environment: Environment,
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)

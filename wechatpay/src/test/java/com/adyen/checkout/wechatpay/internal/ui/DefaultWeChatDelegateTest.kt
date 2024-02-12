@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -54,7 +55,6 @@ internal class DefaultWeChatDelegateTest(
     @BeforeEach
     fun beforeEach() {
         val configuration = CheckoutConfiguration(
-            Locale.US,
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
@@ -63,7 +63,8 @@ internal class DefaultWeChatDelegateTest(
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             iwxApi = iwxApi,
             payRequestGenerator = weChatRequestGenerator,
             paymentDataRepository = paymentDataRepository,

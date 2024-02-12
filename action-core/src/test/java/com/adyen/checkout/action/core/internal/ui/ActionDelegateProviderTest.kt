@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
@@ -27,18 +28,28 @@ import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
-internal class ActionDelegateProviderTest {
+@ExtendWith(MockitoExtension::class)
+internal class ActionDelegateProviderTest(
+    @Mock private val localeProvider: LocaleProvider
+) {
 
     private lateinit var actionDelegateProvider: ActionDelegateProvider
 
     @BeforeEach
     fun setup() {
-        actionDelegateProvider = ActionDelegateProvider(null, null)
+        whenever(localeProvider.getLocale(any())) doReturn Locale.US
+        actionDelegateProvider = ActionDelegateProvider(null, localeProvider)
     }
 
     @ParameterizedTest
@@ -47,7 +58,7 @@ internal class ActionDelegateProviderTest {
         action: Action,
         expectedDelegate: Class<ActionDelegate>,
     ) {
-        val configuration = CheckoutConfiguration(Locale.US, Environment.TEST, "")
+        val configuration = CheckoutConfiguration(Environment.TEST, "")
 
         val delegate = actionDelegateProvider.getDelegate(action, configuration, SavedStateHandle(), Application())
 
@@ -56,7 +67,7 @@ internal class ActionDelegateProviderTest {
 
     @Test
     fun `when unknown action is used, then an error will be thrown`() {
-        val configuration = CheckoutConfiguration(Locale.US, Environment.TEST, "")
+        val configuration = CheckoutConfiguration(Environment.TEST, "")
 
         assertThrows<CheckoutException> {
             actionDelegateProvider.getDelegate(UnknownAction(), configuration, SavedStateHandle(), Application())

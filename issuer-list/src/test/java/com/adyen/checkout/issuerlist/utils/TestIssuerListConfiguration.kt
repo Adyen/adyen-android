@@ -22,7 +22,7 @@ import java.util.Locale
 class TestIssuerListConfiguration
 @Suppress("LongParameterList")
 private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -38,14 +38,16 @@ private constructor(
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         constructor(
-            shopperLocale: Locale,
+            shopperLocale: Locale?,
             environment: Environment,
             clientKey: String
-        ) : super(shopperLocale, environment, clientKey)
+        ) : super(environment, clientKey) {
+            shopperLocale?.let { setShopperLocale(it) }
+        }
 
         public override fun buildInternal(): TestIssuerListConfiguration {
             return TestIssuerListConfiguration(

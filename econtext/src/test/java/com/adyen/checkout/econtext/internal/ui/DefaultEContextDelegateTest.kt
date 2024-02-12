@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
@@ -283,12 +284,12 @@ internal class DefaultEContextDelegateTest(
         order: Order = TEST_ORDER
     ) = DefaultEContextDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(
-                TEST_CONFIGURATION_KEY,
-            ),
-            sessionParams = null,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
         ),
         paymentMethod = PaymentMethod(),
         order = order,

@@ -25,6 +25,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
@@ -586,10 +587,12 @@ internal class DefaultBacsDirectDebitDelegateTest(
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultBacsDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
-            configuration,
-            configuration.getBacsDirectDebitConfiguration(),
-            null,
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getBacsDirectDebitConfiguration(),
         ),
         paymentMethod = PaymentMethod(),
         order = order,

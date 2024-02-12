@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -48,13 +49,13 @@ internal class DefaultAwaitDelegateTest {
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         val configuration = CheckoutConfiguration(
-            Locale.US,
             Environment.TEST,
             TEST_CLIENT_KEY,
         )
         delegate = DefaultAwaitDelegate(
             ActionObserverRepository(),
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             statusRepository,
             paymentDataRepository,
         )

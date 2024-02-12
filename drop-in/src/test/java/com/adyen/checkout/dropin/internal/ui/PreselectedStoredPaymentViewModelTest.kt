@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.dropIn
-import com.adyen.checkout.dropin.internal.provider.mapToParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.test.runTest
@@ -35,8 +35,11 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class PreselectedStoredPaymentViewModelTest {
     private val storedPaymentMethod = StoredPaymentMethod()
-    private val dropInComponentParams =
-        CheckoutConfiguration(Locale.US, Environment.TEST, TEST_CLIENT_KEY).mapToParams(Amount())
+    private val dropInParams = DropInParamsMapper().mapToParams(
+        checkoutConfiguration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY, amount = TEST_AMOUNT),
+        deviceLocale = Locale.US,
+        sessionDetails = null,
+    )
 
     private lateinit var viewModel: PreselectedStoredPaymentViewModel
 
@@ -44,15 +47,13 @@ internal class PreselectedStoredPaymentViewModelTest {
     fun setup() {
         viewModel = PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
-            TEST_AMOUNT,
-            dropInComponentParams,
+            dropInParams,
         )
     }
 
     @Test
     fun `when view model is initialized then uiStateFlow has a matching initial value`() = runTest {
-        val dropInComponentParams = CheckoutConfiguration(
-            Locale.US,
+        val checkoutConfiguration = CheckoutConfiguration(
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
@@ -60,12 +61,16 @@ internal class PreselectedStoredPaymentViewModelTest {
                 setEnableRemovingStoredPaymentMethods(true)
             }
         }
-            .mapToParams(Amount())
+
+        val dropInParams = DropInParamsMapper().mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = Locale.US,
+            sessionDetails = null,
+        )
 
         viewModel = PreselectedStoredPaymentViewModel(
             storedPaymentMethod,
-            TEST_AMOUNT,
-            dropInComponentParams,
+            dropInParams,
         )
 
         viewModel.uiStateFlow.test {

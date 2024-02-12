@@ -14,11 +14,12 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.dropin.internal.ConfigurationProvider
 import com.adyen.checkout.dropin.internal.DataProvider
 import com.adyen.checkout.dropin.internal.Helpers.mapToPaymentMethodModelList
 import com.adyen.checkout.dropin.internal.Helpers.mapToStoredPaymentMethodsModelList
-import com.adyen.checkout.dropin.internal.provider.mapToParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
@@ -40,6 +41,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
+import java.util.Locale
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class PaymentMethodsListViewModelTest(
@@ -192,8 +194,7 @@ internal class PaymentMethodsListViewModelTest(
         storedPaymentMethods = storedPaymentMethods,
         order = order,
         checkoutConfiguration = checkoutConfiguration,
-        dropInComponentParams = checkoutConfiguration.mapToParams(amount),
-        sessionDetails = null,
-        overrideAmount = amount,
+        dropInParams = DropInParamsMapper().mapToParams(checkoutConfiguration, Locale.US, null),
+        dropInOverrideParams = DropInOverrideParams(amount, null),
     )
 }

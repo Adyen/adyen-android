@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
@@ -285,7 +286,8 @@ internal class DefaultPayByBankDelegateTest(
     ): DefaultPayByBankDelegate {
         return DefaultPayByBankDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             paymentMethod = PaymentMethod(
                 issuers = issuers,
             ),

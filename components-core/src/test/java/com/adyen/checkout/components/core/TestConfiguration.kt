@@ -17,7 +17,7 @@ import java.util.Locale
 
 @Parcelize
 class TestConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -33,7 +33,7 @@ class TestConfiguration private constructor(
         )
 
         constructor(
-            shopperLocale: Locale,
+            shopperLocale: Locale?,
             environment: Environment,
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
