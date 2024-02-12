@@ -17,8 +17,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.SdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -39,7 +38,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class WeChatPayActionComponentTest(
     @Mock private val weChatDelegate: WeChatDelegate,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
@@ -49,8 +48,6 @@ internal class WeChatPayActionComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(weChatDelegate.viewFlow) doReturn MutableStateFlow(WeChatComponentViewType)
         component = WeChatPayActionComponent(weChatDelegate, actionComponentEventHandler)
     }

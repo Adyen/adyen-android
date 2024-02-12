@@ -20,9 +20,9 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 
@@ -34,10 +34,6 @@ private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 internal abstract class BaseComponentDialogFragment :
     DropInBottomSheetDialogFragment(),
     ComponentCallback<PaymentComponentState<*>> {
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 
     var paymentMethod: PaymentMethod = PaymentMethod()
     var storedPaymentMethod: StoredPaymentMethod = StoredPaymentMethod()
@@ -89,7 +85,7 @@ internal abstract class BaseComponentDialogFragment :
     ): View?
 
     override fun onBackPressed(): Boolean {
-        Logger.d(TAG, "onBackPressed - $navigatedFromPreselected")
+        adyenLog(AdyenLogLevel.DEBUG) { "onBackPressed - $navigatedFromPreselected" }
 
         when {
             navigatedFromPreselected -> protocol.showPreselectedDialog()
@@ -163,12 +159,12 @@ internal abstract class BaseComponentDialogFragment :
     }
 
     private fun onComponentError(componentError: ComponentError) {
-        Logger.e(TAG, "ComponentError", componentError.exception)
+        adyenLog(AdyenLogLevel.ERROR, componentError.exception) { "ComponentError" }
         handleError(componentError)
     }
 
     fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 }

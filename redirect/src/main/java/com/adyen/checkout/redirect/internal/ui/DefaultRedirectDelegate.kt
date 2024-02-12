@@ -19,10 +19,10 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +62,7 @@ internal class DefaultRedirectDelegate(
             permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -82,7 +82,7 @@ internal class DefaultRedirectDelegate(
 
     private fun makeRedirect(activity: Activity, url: String?) {
         try {
-            Logger.d(TAG, "makeRedirect - $url")
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
             //  status when the app resumes. Currently we have no way of doing that but we can create something like
             //  PaymentComponentState for actions.
@@ -119,9 +119,5 @@ internal class DefaultRedirectDelegate(
     override fun onCleared() {
         removeObserver()
         redirectHandler.removeOnRedirectListener()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

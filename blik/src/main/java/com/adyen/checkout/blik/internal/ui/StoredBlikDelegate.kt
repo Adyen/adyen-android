@@ -21,8 +21,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -67,7 +67,7 @@ internal class StoredBlikDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -84,7 +84,7 @@ internal class StoredBlikDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -97,7 +97,7 @@ internal class StoredBlikDelegate(
     }
 
     override fun updateInputData(update: BlikInputData.() -> Unit) {
-        Logger.e(TAG, "updateInputData should not be called in StoredBlikDelegate")
+        adyenLog(AdyenLogLevel.ERROR) { "updateInputData should not be called in StoredBlikDelegate" }
     }
 
     override fun onSubmit() {
@@ -123,7 +123,7 @@ internal class StoredBlikDelegate(
         return BlikComponentState(
             data = paymentComponentData,
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -137,9 +137,5 @@ internal class StoredBlikDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

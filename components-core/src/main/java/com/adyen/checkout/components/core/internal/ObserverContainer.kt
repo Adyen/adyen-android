@@ -11,8 +11,8 @@ package com.adyen.checkout.components.core.internal
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.internal.util.mapToCallbackWithLifeCycle
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +30,7 @@ class ObserverContainer {
         mapToCallbackWithLifeCycle(
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         ).also {
             observerJobs.add(it)
         }
@@ -38,12 +38,8 @@ class ObserverContainer {
 
     internal fun removeObservers() {
         if (observerJobs.isEmpty()) return
-        Logger.d(TAG, "cleaning up existing observer")
+        adyenLog(AdyenLogLevel.DEBUG) { "cleaning up existing observer" }
         observerJobs.forEach { it.cancel() }
         observerJobs.clear()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

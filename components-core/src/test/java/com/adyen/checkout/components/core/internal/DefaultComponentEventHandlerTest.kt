@@ -14,19 +14,20 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.TestComponentState
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
+@ExtendWith(LoggingExtension::class)
 internal class DefaultComponentEventHandlerTest {
 
     private lateinit var componentEventHandler: DefaultComponentEventHandler<PaymentComponentState<*>>
@@ -34,7 +35,6 @@ internal class DefaultComponentEventHandlerTest {
     @BeforeEach
     fun beforeEach() {
         componentEventHandler = DefaultComponentEventHandler()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -46,7 +46,7 @@ internal class DefaultComponentEventHandlerTest {
             assertThrows<CheckoutException> {
                 componentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    object : BaseComponentCallback {}
+                    object : BaseComponentCallback {},
                 )
             }
         }
@@ -58,7 +58,7 @@ internal class DefaultComponentEventHandlerTest {
 
             componentEventHandler.onPaymentComponentEvent(
                 PaymentComponentEvent.ActionDetails(actionData),
-                callback
+                callback,
             )
 
             verify(callback).onAdditionalDetails(actionData)
@@ -71,7 +71,7 @@ internal class DefaultComponentEventHandlerTest {
 
             componentEventHandler.onPaymentComponentEvent(
                 PaymentComponentEvent.Error(error),
-                callback
+                callback,
             )
 
             verify(callback).onError(error)
@@ -84,7 +84,7 @@ internal class DefaultComponentEventHandlerTest {
 
             componentEventHandler.onPaymentComponentEvent(
                 PaymentComponentEvent.StateChanged(state),
-                callback
+                callback,
             )
 
             verify(callback).onStateChanged(state)
@@ -98,7 +98,7 @@ internal class DefaultComponentEventHandlerTest {
 
             componentEventHandler.onPaymentComponentEvent(
                 PaymentComponentEvent.PermissionRequest(requiredPermission, permissionCallback),
-                callback
+                callback,
             )
 
             verify(callback).onPermissionRequest(eq(requiredPermission), eq(permissionCallback))
@@ -111,7 +111,7 @@ internal class DefaultComponentEventHandlerTest {
 
             componentEventHandler.onPaymentComponentEvent(
                 PaymentComponentEvent.Submit(state),
-                callback
+                callback,
             )
 
             verify(callback).onSubmit(state)

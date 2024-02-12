@@ -21,9 +21,8 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -51,7 +50,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBoletoDelegateTest(
     @Mock private val submitHandler: SubmitHandler<BoletoComponentState>,
     @Mock private val analyticsRepository: AnalyticsRepository,
@@ -65,7 +64,6 @@ internal class DefaultBoletoDelegateTest(
     fun beforeEach() {
         addressRepository = TestAddressRepository()
         delegate = createBoletoDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

@@ -16,8 +16,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.LookupAddress
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
@@ -37,7 +37,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         binding.header.text = if (isStoredPayment) {
             storedPaymentMethod.name
@@ -85,7 +85,5 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         super.onDestroyView()
     }
 
-    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
+    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java)
 }

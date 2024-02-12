@@ -8,9 +8,12 @@
 
 package com.adyen.checkout.example.extensions
 
-import com.adyen.checkout.core.internal.util.LogUtil
-
-@Suppress("RestrictedApi", "NOTHING_TO_INLINE")
-internal inline fun getLogTag(): String {
-    return LogUtil.getTag()
+internal fun Any.getLogTag(): String {
+    val fullClassName = this::class.java.name
+    val outerClassName = fullClassName.substringBefore('$').substringAfterLast('.')
+    return "EX." + if (outerClassName.isEmpty()) {
+        fullClassName
+    } else {
+        outerClassName.removeSuffix("Kt")
+    }
 }

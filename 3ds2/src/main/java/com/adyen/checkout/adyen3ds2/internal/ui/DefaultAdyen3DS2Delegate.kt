@@ -36,11 +36,11 @@ import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.util.Base64Encoder
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.threeds2.AuthenticationRequestParameters
@@ -199,7 +199,9 @@ internal class DefaultAdyen3DS2Delegate(
         encodedFingerprintToken: String,
         submitFingerprintAutomatically: Boolean,
     ) {
-        Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
+        adyenLog(AdyenLogLevel.DEBUG) {
+            "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically"
+        }
 
         val fingerprintToken = try {
             decodeFingerprintToken(encodedFingerprintToken)
@@ -211,7 +213,7 @@ internal class DefaultAdyen3DS2Delegate(
         val configParameters = createAdyenConfigParameters(fingerprintToken)
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-            Logger.e(TAG, "Unexpected uncaught 3DS2 Exception", throwable)
+            adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
             exceptionChannel.trySend(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 
@@ -220,7 +222,7 @@ internal class DefaultAdyen3DS2Delegate(
             closeTransaction()
 
             try {
-                Logger.d(TAG, "initialize 3DS2 SDK")
+                adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
                 threeDS2Service.initialize(activity, configParameters, null, componentParams.uiCustomization)
             } catch (e: SDKRuntimeException) {
                 exceptionChannel.trySend(ComponentException("Failed to initialize 3DS2 SDK", e))
@@ -281,7 +283,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
 
         return try {
-            Logger.d(TAG, "create transaction")
+            adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
             threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)
         } catch (e: SDKNotInitializedException) {
             exceptionChannel.trySend(ComponentException("Failed to create 3DS2 Transaction", e))
@@ -359,7 +361,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun makeRedirect(activity: Activity, action: RedirectAction) {
         val url = action.url
         try {
-            Logger.d(TAG, "makeRedirect - $url")
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             redirectHandler.launchUriRedirect(activity, url)
         } catch (e: CheckoutException) {
             exceptionChannel.trySend(e)
@@ -368,7 +370,7 @@ internal class DefaultAdyen3DS2Delegate(
 
     @VisibleForTesting
     internal fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
-        Logger.d(TAG, "challengeShopper")
+        adyenLog(AdyenLogLevel.DEBUG) { "challengeShopper" }
 
         if (currentTransaction == null) {
             exceptionChannel.trySend(
@@ -418,7 +420,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun onCompleted(transactionStatus: String) {
-        Logger.d(TAG, "challenge completed")
+        adyenLog(AdyenLogLevel.DEBUG) { "challenge completed" }
         try {
             val details = makeDetails(transactionStatus)
             emitDetails(details)
@@ -430,13 +432,13 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun onCancelled() {
-        Logger.d(TAG, "challenge cancelled")
+        adyenLog(AdyenLogLevel.DEBUG) { "challenge cancelled" }
         exceptionChannel.trySend(Cancelled3DS2Exception("Challenge canceled."))
         closeTransaction()
     }
 
     private fun onTimeout(result: ChallengeResult.Timeout) {
-        Logger.d(TAG, "challenge timed out")
+        adyenLog(AdyenLogLevel.DEBUG) { "challenge timed out" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
@@ -448,7 +450,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun onError(result: ChallengeResult.Error) {
-        Logger.d(TAG, "challenge timed out")
+        adyenLog(AdyenLogLevel.DEBUG) { "challenge timed out" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
@@ -515,8 +517,6 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"

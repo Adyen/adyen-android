@@ -15,8 +15,8 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sepa.R
 import com.adyen.checkout.sepa.databinding.SepaViewBinding
 import com.adyen.checkout.sepa.internal.ui.SepaDelegate
@@ -35,7 +35,7 @@ internal class SepaView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -82,16 +82,16 @@ internal class SepaView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutHolderName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Sepa_HolderNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutIbanNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Sepa_AccountNumberInput,
-            localizedContext
+            localizedContext,
         )
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val outputData: SepaOutputData = sepaDelegate.outputData
         var errorFocused = false
         val ownerNameValidation = outputData.ownerNameField.validation
@@ -112,8 +112,4 @@ internal class SepaView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

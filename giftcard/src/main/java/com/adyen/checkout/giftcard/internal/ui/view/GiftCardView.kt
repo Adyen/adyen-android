@@ -16,8 +16,8 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
@@ -36,7 +36,7 @@ internal class GiftCardView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -64,7 +64,7 @@ internal class GiftCardView @JvmOverloads constructor(
     private fun initCardNumberField(localizedContext: Context) {
         binding.textInputLayoutGiftcardNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_GiftCard_GiftCardNumberInput,
-            localizedContext
+            localizedContext,
         )
 
         binding.editTextGiftcardNumber.setOnChangeListener {
@@ -86,7 +86,7 @@ internal class GiftCardView @JvmOverloads constructor(
         if (giftCardDelegate.isPinRequired()) {
             binding.textInputLayoutGiftcardPin.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_GiftCard_GiftCardPinInput,
-                localizedContext
+                localizedContext,
             )
 
             binding.editTextGiftcardPin.setOnChangeListener { editable: Editable ->
@@ -108,7 +108,7 @@ internal class GiftCardView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val outputData = giftCardDelegate.outputData
         var isErrorFocused = false
         val cardNumberValidation = outputData.numberFieldState.validation
@@ -127,8 +127,4 @@ internal class GiftCardView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

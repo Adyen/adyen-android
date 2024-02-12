@@ -10,16 +10,15 @@ package com.adyen.checkout.components.core.internal.util
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutCurrency
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import java.math.BigDecimal
 import java.util.Currency
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AmountFormat {
-    private val TAG = LogUtil.getTag()
 
     /**
      * Convert an [Amount] to its corresponding [BigDecimal] value.
@@ -50,18 +49,16 @@ object AmountFormat {
             val checkoutCurrency = CheckoutCurrency.find(normalizedCurrencyCode)
             return checkoutCurrency.fractionDigits
         } catch (e: CheckoutException) {
-            Logger.e(
-                tag = TAG,
-                msg = "$normalizedCurrencyCode is an unsupported currency. Falling back to information from " +
-                    "java.util.Currency.",
-                tr = e
-            )
+            adyenLog(AdyenLogLevel.ERROR, e) {
+                "$normalizedCurrencyCode is an unsupported currency. Falling back to information from " +
+                    "java.util.Currency."
+            }
         }
         return try {
             val currency = Currency.getInstance(normalizedCurrencyCode)
             currency.defaultFractionDigits.coerceAtLeast(0)
         } catch (e: IllegalArgumentException) {
-            Logger.e(TAG, "Could not determine fraction digits for $normalizedCurrencyCode", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Could not determine fraction digits for $normalizedCurrencyCode" }
             0
         }
     }

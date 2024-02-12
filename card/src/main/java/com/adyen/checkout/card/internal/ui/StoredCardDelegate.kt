@@ -39,10 +39,10 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -152,7 +152,7 @@ internal class StoredCardDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -204,7 +204,7 @@ internal class StoredCardDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
@@ -241,7 +241,7 @@ internal class StoredCardDelegate(
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }
@@ -380,7 +380,7 @@ internal class StoredCardDelegate(
             )
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
-            Logger.e(TAG, "Failed to parse stored Date", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
             inputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
 
@@ -388,7 +388,7 @@ internal class StoredCardDelegate(
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
+        adyenLog(AdyenLogLevel.DEBUG) { "makeCvcUIState: $cvcPolicy" }
         return when (cvcPolicy) {
             Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
             Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
@@ -433,7 +433,6 @@ internal class StoredCardDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val LAST_FOUR_LENGTH = 4
     }
 }

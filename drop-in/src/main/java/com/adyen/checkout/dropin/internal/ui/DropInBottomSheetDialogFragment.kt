@@ -21,8 +21,8 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -70,7 +70,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
                 }
                 behavior.state = this.dialogInitViewState
             } else {
-                Logger.e(TAG, "Failed to set BottomSheetBehavior.")
+                adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
             }
         }
 
@@ -84,12 +84,8 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        Logger.d(TAG, "onCancel")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         protocol.terminateDropIn()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 
     /**

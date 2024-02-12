@@ -14,8 +14,7 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
@@ -42,7 +41,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class UPIComponentTest(
     @Mock private val upiDelegate: UPIDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
@@ -63,8 +62,6 @@ internal class UPIComponentTest(
             actionHandlingComponent = actionHandlingComponent,
             componentEventHandler = componentEventHandler,
         )
-
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

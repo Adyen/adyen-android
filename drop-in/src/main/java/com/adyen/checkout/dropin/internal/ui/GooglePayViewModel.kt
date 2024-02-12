@@ -14,8 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -23,10 +23,6 @@ import kotlinx.coroutines.launch
 internal class GooglePayViewModel(
     override val savedStateHandle: SavedStateHandle
 ) : ViewModel(), SavedStateHandleContainer {
-    companion object {
-        private val TAG = LogUtil.getTag()
-        private const val IS_GOOGLE_PAY_STARTED = "IS_GOOGLE_PAY_STARTED"
-    }
 
     private val eventChannel: Channel<GooglePayFragmentEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
@@ -37,9 +33,13 @@ internal class GooglePayViewModel(
         if (isGooglePayStarted == true) return
         isGooglePayStarted = true
         viewModelScope.launch {
-            Logger.d(TAG, "Sending start GooglePay event")
+            adyenLog(AdyenLogLevel.DEBUG) { "Sending start GooglePay event" }
             eventChannel.send(GooglePayFragmentEvent.StartGooglePay)
         }
+    }
+
+    companion object {
+        private const val IS_GOOGLE_PAY_STARTED = "IS_GOOGLE_PAY_STARTED"
     }
 }
 

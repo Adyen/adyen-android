@@ -25,10 +25,10 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -100,28 +100,28 @@ internal class DefaultGiftCardDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
     }
 
     private fun fetchPublicKey(coroutineScope: CoroutineScope) {
-        Logger.d(TAG, "fetchPublicKey")
+        adyenLog(AdyenLogLevel.DEBUG) { "fetchPublicKey" }
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
-                clientKey = componentParams.clientKey
+                clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
-                    Logger.d(TAG, "Public key fetched")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                     publicKey = key
                     updateComponentState(outputData)
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch public key")
+                    adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
-                }
+                },
             )
         }
     }
@@ -137,7 +137,7 @@ internal class DefaultGiftCardDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -186,7 +186,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = outputData.isValid,
             isReady = false,
             lastFourDigits = null,
-            giftCardAction = GiftCardAction.Idle
+            giftCardAction = GiftCardAction.Idle,
         )
 
         if (!outputData.isValid) {
@@ -195,7 +195,7 @@ internal class DefaultGiftCardDelegate(
                 isInputValid = false,
                 isReady = true,
                 lastFourDigits = null,
-                giftCardAction = GiftCardAction.Idle
+                giftCardAction = GiftCardAction.Idle,
             )
         }
 
@@ -204,7 +204,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = false,
             isReady = true,
             lastFourDigits = null,
-            giftCardAction = GiftCardAction.Idle
+            giftCardAction = GiftCardAction.Idle,
         )
 
         val giftCardPaymentMethod = GiftCardPaymentMethod(
@@ -228,7 +228,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = true,
             isReady = true,
             lastFourDigits = lastDigits,
-            giftCardAction = GiftCardAction.CheckBalance
+            giftCardAction = GiftCardAction.CheckBalance,
         )
     }
 
@@ -271,7 +271,7 @@ internal class DefaultGiftCardDelegate(
         val balanceStatus = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
             transactionLimit = balanceResult.transactionLimit,
-            amountToBePaid = componentParams.amount
+            amountToBePaid = componentParams.amount,
         )
 
         resolveBalanceStatus(balanceStatus)
@@ -283,7 +283,7 @@ internal class DefaultGiftCardDelegate(
         when (balanceStatus) {
             is GiftCardBalanceStatus.FullPayment -> {
                 val updatedState = currentState.copy(
-                    giftCardAction = GiftCardAction.SendPayment
+                    giftCardAction = GiftCardAction.SendPayment,
                 )
                 _componentStateFlow.tryEmit(updatedState)
                 submitHandler.onSubmit(updatedState)
@@ -291,7 +291,7 @@ internal class DefaultGiftCardDelegate(
 
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
                 exceptionChannel.trySend(
-                    GiftCardException("Currency of the gift card does not match the currency of transaction.")
+                    GiftCardException("Currency of the gift card does not match the currency of transaction."),
                 )
             }
 
@@ -302,8 +302,8 @@ internal class DefaultGiftCardDelegate(
                     currentState.copy(
                         giftCardAction = GiftCardAction.SendPayment,
                         data = currentState.data.copy(
-                            amount = balanceStatus.amountPaid
-                        )
+                            amount = balanceStatus.amountPaid,
+                        ),
                     )
                 }
                 cachedAmount = balanceStatus.amountPaid
@@ -313,13 +313,13 @@ internal class DefaultGiftCardDelegate(
 
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
                 exceptionChannel.trySend(
-                    GiftCardException("Amount of the transaction is zero.")
+                    GiftCardException("Amount of the transaction is zero."),
                 )
             }
 
             is GiftCardBalanceStatus.ZeroBalance -> {
                 exceptionChannel.trySend(
-                    GiftCardException("Gift card has no balance.")
+                    GiftCardException("Gift card has no balance."),
                 )
             }
         }
@@ -332,10 +332,10 @@ internal class DefaultGiftCardDelegate(
             data = currentState.data.copy(
                 order = OrderRequest(
                     orderData = orderResponse.orderData,
-                    pspReference = orderResponse.pspReference
+                    pspReference = orderResponse.pspReference,
                 ),
-                amount = cachedAmount
-            )
+                amount = cachedAmount,
+            ),
         )
         cachedAmount = null
         _componentStateFlow.tryEmit(updatedState)
@@ -349,7 +349,6 @@ internal class DefaultGiftCardDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val LAST_DIGITS_LENGTH = 4
     }
 }

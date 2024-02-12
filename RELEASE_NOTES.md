@@ -51,6 +51,7 @@ CheckoutConfiguration(
     }
 }
 ```
+- Set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
 
 ## Deprecated
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.
@@ -61,6 +62,8 @@ CheckoutConfiguration(
   - The `AdyenCheckout.Voucher.ExpirationDate` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
   - The `AdyenCheckout.Voucher.ButtonCopyCode` style will not work anymore. Use `AdyenCheckout.Voucher.Button.CopyCode` instead.
   - The `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.Button.DownloadPdf` instead.
+- `Logger.LogLevel` is deprecated. Use `AdyenLogLevel` instead.
+- `AdyenLogger.setLogLevel(logLevel: Int)` is deprecated. Use `AdyenLogger.setLogLevel(level: AdyenLogLevel)` instead.
 
 ## Changed
 - In drop-in all actions will start in expanded mode

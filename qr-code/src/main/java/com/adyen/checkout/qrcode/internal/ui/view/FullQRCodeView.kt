@@ -20,8 +20,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.toast
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
@@ -91,7 +91,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: QRCodeOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         updateMessageText(outputData.messageTextResource)
         updateLogo(outputData.paymentMethodType)
@@ -104,7 +104,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
         if (amount != null) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 amount,
-                componentParams.shopperLocale
+                componentParams.shopperLocale,
             )
             binding.textviewAmount.isVisible = true
             binding.textviewAmount.text = formattedAmount
@@ -123,7 +123,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
             binding.imageViewLogo.loadLogo(
                 environment = delegate.componentParams.environment,
                 txVariant = paymentMethodType,
-                size = LogoSize.LARGE
+                size = LogoSize.LARGE,
             )
         }
     }
@@ -141,12 +141,12 @@ internal class FullQRCodeView @JvmOverloads constructor(
         val minutesSecondsString = localizedContext.getString(
             R.string.checkout_qr_code_time_left_format,
             minutes,
-            seconds
+            seconds,
         )
 
         binding.textViewTimer.text = localizedContext.getString(
             R.string.checkout_qr_code_pay_now_timer_text,
-            minutesSecondsString
+            minutesSecondsString,
         )
         binding.progressIndicator.progress = timerData.progress
     }
@@ -163,7 +163,7 @@ internal class FullQRCodeView @JvmOverloads constructor(
 
             is Failure -> {
                 context.toast(localizedContext.getString(R.string.checkout_qr_code_download_image_failed))
-                Logger.e(TAG, "download file failed", event.throwable)
+                adyenLog(AdyenLogLevel.ERROR, event.throwable) { "download file failed" }
             }
         }
     }
@@ -171,8 +171,4 @@ internal class FullQRCodeView @JvmOverloads constructor(
     override fun getView(): View = this
 
     override fun highlightValidationErrors() = Unit
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

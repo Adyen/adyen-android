@@ -9,15 +9,16 @@
 package com.adyen.checkout.core.internal.util
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AdyenLogLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 inline fun <R : Any> runCompileOnly(block: () -> R): R? {
     try {
         return block()
     } catch (e: ClassNotFoundException) {
-        Logger.w(LogUtil.getTag(), "Class not found. Are you missing a dependency?", e)
+        adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     } catch (e: NoClassDefFoundError) {
-        Logger.w(LogUtil.getTag(), "Class not found. Are you missing a dependency?", e)
+        adyenLog(AdyenLogLevel.WARN, "runCompileOnly", e) { "Class not found. Are you missing a dependency?" }
     }
 
     return null

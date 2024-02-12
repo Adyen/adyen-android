@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
@@ -22,8 +21,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +59,7 @@ internal class StoredCashAppPayDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -83,7 +82,7 @@ internal class StoredCashAppPayDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -92,7 +91,7 @@ internal class StoredCashAppPayDelegate(
     }
 
     override fun updateInputData(update: CashAppPayInputData.() -> Unit) {
-        Log.w(TAG, "updateInputData should not be called for stored Cash App Pay")
+        adyenLog(AdyenLogLevel.WARN) { "updateInputData should not be called for stored Cash App Pay" }
     }
 
     private fun createComponentState(): CashAppPayComponentState {
@@ -111,7 +110,7 @@ internal class StoredCashAppPayDelegate(
         return CashAppPayComponentState(
             data = paymentComponentData,
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -121,9 +120,5 @@ internal class StoredCashAppPayDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

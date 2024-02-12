@@ -19,13 +19,12 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.econtext.TestEContextComponentState
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +49,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultEContextDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
@@ -61,7 +60,6 @@ internal class DefaultEContextDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createEContextDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested

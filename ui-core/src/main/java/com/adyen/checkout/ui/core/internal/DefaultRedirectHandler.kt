@@ -16,10 +16,10 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
 import org.json.JSONObject
@@ -30,7 +30,7 @@ class DefaultRedirectHandler : RedirectHandler {
     private var onRedirectListener: (() -> Unit)? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
-        Logger.d(TAG, "parseRedirectResult - $data")
+        adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
 
         data ?: throw CheckoutException("Received a null redirect Uri")
 
@@ -76,7 +76,7 @@ class DefaultRedirectHandler : RedirectHandler {
             return
         }
 
-        Logger.e(TAG, "Could not launch url")
+        adyenLog(AdyenLogLevel.ERROR) { "Could not launch url" }
         throw ComponentException("Launching redirect failed.")
     }
 
@@ -113,7 +113,7 @@ class DefaultRedirectHandler : RedirectHandler {
 
         // If the list is empty, no native app handlers were found.
         if (resolvedSpecializedSet.isEmpty()) {
-            Logger.d(TAG, "launchNativeBeforeApi30 - could not find native app to redirect with")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
             return false
         }
 
@@ -123,10 +123,10 @@ class DefaultRedirectHandler : RedirectHandler {
         @Suppress("SwallowedException")
         return try {
             context.startActivity(specializedActivityIntent)
-            Logger.d(TAG, "launchNativeBeforeApi30 - redirect successful with native app")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - redirect successful with native app" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchNativeBeforeApi30 - could not find native app to redirect with")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeBeforeApi30 - could not find native app to redirect with" }
             false
         }
     }
@@ -137,15 +137,15 @@ class DefaultRedirectHandler : RedirectHandler {
             .addCategory(Intent.CATEGORY_BROWSABLE)
             .addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER
+                    Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER,
             )
         @Suppress("SwallowedException")
         return try {
             context.startActivity(nativeAppIntent)
-            Logger.d(TAG, "launchNativeApi30 - redirect successful with native app")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeApi30 - redirect successful with native app" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchNativeApi30 - could not find native app to redirect with")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchNativeApi30 - could not find native app to redirect with" }
             false
         }
     }
@@ -163,10 +163,12 @@ class DefaultRedirectHandler : RedirectHandler {
                 .setDefaultColorSchemeParams(defaultColors)
                 .build()
                 .launchUrl(context, uri)
-            Logger.d(TAG, "launchWithCustomTabs - redirect successful with custom tabs")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchWithCustomTabs - redirect successful with custom tabs" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled")
+            adyenLog(AdyenLogLevel.DEBUG) {
+                "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled"
+            }
             false
         }
     }
@@ -183,10 +185,10 @@ class DefaultRedirectHandler : RedirectHandler {
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .setData(uri)
             context.startActivity(browserActivityIntent)
-            Logger.d(TAG, "launchBrowser - redirect successful with browser")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchBrowser - redirect successful with browser" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "launchBrowser - could not do redirect on browser or there's no browser")
+            adyenLog(AdyenLogLevel.DEBUG) { "launchBrowser - could not do redirect on browser or there's no browser" }
             false
         }
     }
@@ -200,8 +202,6 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val PAYLOAD_PARAMETER = "payload"
         private const val REDIRECT_RESULT_PARAMETER = "redirectResult"
         private const val PAYMENT_RESULT_PARAMETER = "PaRes"

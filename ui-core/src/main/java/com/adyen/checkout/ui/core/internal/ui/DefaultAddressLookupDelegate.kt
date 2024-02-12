@@ -16,9 +16,9 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.mapToAddressInputModel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
@@ -110,7 +110,7 @@ class DefaultAddressLookupDelegate(
     private fun subscribeToCountryList(coroutineScope: CoroutineScope) {
         addressRepository.countriesFlow
             .onEach {
-                Logger.d(TAG, "country flow")
+                adyenLog(AdyenLogLevel.DEBUG) { "country flow" }
                 val countryOptions =
                     AddressFormUtils.initializeCountryOptions(shopperLocale, AddressParams.Lookup(), it)
                 emitOutputData(
@@ -124,14 +124,14 @@ class DefaultAddressLookupDelegate(
     }
 
     private fun requestCountryList(coroutineScope: CoroutineScope) {
-        Logger.d(TAG, "requesting countries")
+        adyenLog(AdyenLogLevel.DEBUG) { "requesting countries" }
         addressRepository.getCountryList(shopperLocale, coroutineScope)
     }
 
     private fun subscribeToStateList(coroutineScope: CoroutineScope) {
         addressRepository.statesFlow
             .onEach {
-                Logger.d(TAG, "state flow $it")
+                adyenLog(AdyenLogLevel.DEBUG) { "state flow $it" }
                 val stateOptions = AddressFormUtils.initializeStateOptions(it)
                 emitOutputData(
                     countryOptions = AddressFormUtils.markAddressListItemSelected(
@@ -148,7 +148,7 @@ class DefaultAddressLookupDelegate(
     }
 
     private fun requestStatesList(countryCode: String) {
-        Logger.d(TAG, "requesting states for $countryCode")
+        adyenLog(AdyenLogLevel.DEBUG) { "requesting states for $countryCode" }
         coroutineScope?.let {
             addressRepository.getStateList(shopperLocale, countryCode, it)
         } ?: throw CheckoutException("Coroutine scope hasn't been initalized.")
@@ -350,9 +350,5 @@ class DefaultAddressLookupDelegate(
 
     override fun clear() {
         this.coroutineScope = null
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

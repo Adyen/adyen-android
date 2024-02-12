@@ -15,10 +15,10 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -103,7 +103,9 @@ internal class GooglePayComponentParamsMapper(
         val brands = paymentMethod.brands ?: return null
         return brands.mapNotNull { brand ->
             val network = mapBrandToGooglePayNetwork(brand)
-            if (network == null) Logger.e(TAG, "skipping brand $brand, as it is not an allowed card network.")
+            if (network == null) {
+                adyenLog(AdyenLogLevel.ERROR) { "skipping brand $brand, as it is not an allowed card network." }
+            }
             return@mapNotNull network
         }
     }
@@ -144,7 +146,6 @@ internal class GooglePayComponentParamsMapper(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private val DEFAULT_AMOUNT = Amount(currency = CheckoutCurrency.USD.name, value = 0)
         private const val DEFAULT_TOTAL_PRICE_STATUS = "FINAL"
     }

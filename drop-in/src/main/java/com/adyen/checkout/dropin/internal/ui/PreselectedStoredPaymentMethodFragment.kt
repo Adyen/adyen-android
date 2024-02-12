@@ -19,10 +19,10 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.DateUtils
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentStoredPaymentMethodBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -64,7 +64,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         initView()
         observeState()
@@ -112,7 +112,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun observeState() {
         storedPaymentViewModel.uiStateFlow.onEach { state ->
-            Logger.v(TAG, "state: $state")
+            adyenLog(AdyenLogLevel.VERBOSE) { "state: $state" }
             updateStoredPaymentMethodItem(state.storedPaymentMethodModel)
             updateButtonState(state.buttonState)
         }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -203,7 +203,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 
@@ -231,7 +231,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val STORED_PAYMENT_KEY = "STORED_PAYMENT"
 
         @JvmStatic

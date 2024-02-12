@@ -17,8 +17,7 @@ import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -37,7 +36,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class AwaitComponentTest(
     @Mock private val awaitDelegate: AwaitDelegate,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
@@ -47,8 +46,6 @@ internal class AwaitComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(awaitDelegate.viewFlow) doReturn MutableStateFlow(AwaitComponentViewType)
         component = AwaitComponent(awaitDelegate, actionComponentEventHandler)
     }

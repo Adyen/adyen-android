@@ -19,14 +19,12 @@ import com.adyen.checkout.components.core.internal.NotAvailablePaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentMethodAvailabilityCheck
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.wechatpay.WeChatPayProvider
-
-private val TAG = LogUtil.getTag()
 
 @Suppress("LongParameterList")
 internal fun checkPaymentMethodAvailability(
@@ -38,7 +36,9 @@ internal fun checkPaymentMethodAvailability(
     callback: ComponentAvailableCallback,
 ) {
     try {
-        Logger.v(TAG, "Checking availability for type - ${paymentMethod.type}")
+        adyenLog(AdyenLogLevel.VERBOSE, "checkPaymentMethodAvailability") {
+            "Checking availability for type - ${paymentMethod.type}"
+        }
 
         val type = paymentMethod.type ?: throw CheckoutException("PaymentMethod type is null")
 
@@ -46,7 +46,9 @@ internal fun checkPaymentMethodAvailability(
 
         availabilityCheck.isAvailable(application, paymentMethod, checkoutConfiguration, callback)
     } catch (e: CheckoutException) {
-        Logger.e(TAG, "Unable to initiate ${paymentMethod.type}", e)
+        adyenLog(AdyenLogLevel.ERROR, "checkPaymentMethodAvailability", e) {
+            "Unable to initiate ${paymentMethod.type}"
+        }
         callback.onAvailabilityResult(false, paymentMethod)
     }
 }

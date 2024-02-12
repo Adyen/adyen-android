@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.hideError
@@ -172,7 +172,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(bacsDirectDebitOutputData: BacsDirectDebitOutputData) {
-        Logger.v(TAG, "bacsDirectDebitOutputData changed")
+        adyenLog(AdyenLogLevel.VERBOSE) { "bacsDirectDebitOutputData changed" }
 
         onBankAccountNumberValidated(bacsDirectDebitOutputData.bankAccountNumberState)
         onSortCodeValidated(bacsDirectDebitOutputData.sortCodeState)
@@ -304,5 +304,3 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     override fun getView(): View = this
 }
-
-private val TAG = LogUtil.getTag()

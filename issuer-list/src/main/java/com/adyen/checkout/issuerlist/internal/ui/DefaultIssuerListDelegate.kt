@@ -19,8 +19,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
@@ -78,7 +78,7 @@ internal class DefaultIssuerListDelegate<
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -95,7 +95,7 @@ internal class DefaultIssuerListDelegate<
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -112,7 +112,7 @@ internal class DefaultIssuerListDelegate<
 
     override fun getIssuers(): List<IssuerModel> =
         paymentMethod.issuers?.mapToModel(componentParams.environment) ?: paymentMethod.details.getLegacyIssuers(
-            componentParams.environment
+            componentParams.environment,
         )
 
     override fun updateInputData(update: IssuerListInputData.() -> Unit) {
@@ -173,9 +173,5 @@ internal class DefaultIssuerListDelegate<
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

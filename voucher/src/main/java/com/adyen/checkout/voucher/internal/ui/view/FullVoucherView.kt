@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.internal.util.toast
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -114,7 +114,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         loadLogo(outputData.paymentMethodType)
         updateIntroductionText(outputData.introductionTextResource)
@@ -228,7 +228,6 @@ internal class FullVoucherView @JvmOverloads constructor(
     override fun getView(): View = this
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val COPY_LABEL = "Voucher code reference"
     }
 }

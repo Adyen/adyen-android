@@ -25,8 +25,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
@@ -76,7 +76,7 @@ class CashAppPayComponent internal constructor(
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         (delegate as? DefaultCashAppPayDelegate)?.setInteractionBlocked(isInteractionBlocked)
-            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not interactable, ignoring." }
     }
 
     override fun isConfirmationRequired(): Boolean =
@@ -84,19 +84,18 @@ class CashAppPayComponent internal constructor(
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit()
-            ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Component is currently not submittable, ignoring." }
     }
 
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         cashAppPayDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = CashAppPayComponentProvider()

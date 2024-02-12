@@ -24,11 +24,10 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,7 +47,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultGenericActionDelegateTest(
     @Mock private val activity: Activity,
     @Mock private val actionDelegateProvider: ActionDelegateProvider,
@@ -74,8 +73,6 @@ internal class DefaultGenericActionDelegateTest(
 
         testDelegate = TestActionDelegate()
         whenever(actionDelegateProvider.getDelegate(any(), any(), any(), any())) doReturn testDelegate
-
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test

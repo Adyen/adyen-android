@@ -12,9 +12,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.HttpException
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -37,7 +36,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class DefaultAnalyticsRepositoryTest(
     @Mock private val analyticsService: AnalyticsService,
 ) {
@@ -48,10 +47,9 @@ internal class DefaultAnalyticsRepositoryTest(
 
     @BeforeEach
     fun before() = runTest {
-        AdyenLogger.setLogLevel(Logger.NONE)
         analyticsRepository = getDefaultAnalyticsRepository()
         whenever(
-            analyticsService.setupAnalytics(any(), any())
+            analyticsService.setupAnalytics(any(), any()),
         ) doReturn AnalyticsSetupResponse(checkoutAttemptId = TEST_CHECKOUT_ATTEMPT_ID)
     }
 
@@ -126,7 +124,7 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and level is set to ALL then call is made`() = runTest {
             analyticsRepository = getDefaultAnalyticsRepository(
-                level = AnalyticsParamsLevel.ALL
+                level = AnalyticsParamsLevel.ALL,
             )
 
             analyticsRepository.setupAnalytics()
@@ -137,7 +135,7 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and level is set to NONE then call is not made`() = runTest {
             analyticsRepository = getDefaultAnalyticsRepository(
-                level = AnalyticsParamsLevel.NONE
+                level = AnalyticsParamsLevel.NONE,
             )
 
             analyticsRepository.setupAnalytics()
@@ -148,14 +146,14 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and level is set to NONE then checkoutAttemptId is not set`() = runTest {
             analyticsRepository = getDefaultAnalyticsRepository(
-                level = AnalyticsParamsLevel.NONE
+                level = AnalyticsParamsLevel.NONE,
             )
 
             analyticsRepository.setupAnalytics()
 
             assertEquals(
                 DefaultAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
-                analyticsRepository.getCheckoutAttemptId()
+                analyticsRepository.getCheckoutAttemptId(),
             )
         }
     }

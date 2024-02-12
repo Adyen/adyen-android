@@ -28,9 +28,9 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
@@ -177,7 +177,7 @@ internal class DropInViewModel(
     fun onDropInServiceConnected() {
         val sessionModel = sessionDetails?.mapToModel()
         if (sessionModel == null) {
-            Logger.d(TAG, "Session is null")
+            adyenLog(AdyenLogLevel.DEBUG) { "Session is null" }
             return
         }
 
@@ -216,7 +216,7 @@ internal class DropInViewModel(
     }
 
     private fun setupAnalytics() {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -230,7 +230,7 @@ internal class DropInViewModel(
     ): PaymentComponentData<GiftCardPaymentMethod>? {
         val paymentMethod = giftCardComponentState.data.paymentMethod
         if (paymentMethod == null) {
-            Logger.e(TAG, "onBalanceCallRequested - paymentMethod is null")
+            adyenLog(AdyenLogLevel.ERROR) { "onBalanceCallRequested - paymentMethod is null" }
             return null
         }
         cachedGiftCardComponentState = giftCardComponentState
@@ -238,11 +238,10 @@ internal class DropInViewModel(
     }
 
     fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
-        Logger.d(
-            TAG,
+        adyenLog(AdyenLogLevel.DEBUG) {
             "handleBalanceResult - balance: ${balanceResult.balance} - " +
-                "transactionLimit: ${balanceResult.transactionLimit}",
-        )
+                "transactionLimit: ${balanceResult.transactionLimit}"
+        }
 
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
@@ -253,7 +252,7 @@ internal class DropInViewModel(
             cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceStatus.ZeroBalance -> {
-                Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
+                adyenLog(AdyenLogLevel.INFO) { "handleBalanceResult - Gift Card has zero balance" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_zero_balance,
                     "Gift Card has zero balance",
@@ -262,7 +261,7 @@ internal class DropInViewModel(
             }
 
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
-                Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
+                adyenLog(AdyenLogLevel.ERROR) { "handleBalanceResult - Gift Card currency mismatch" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_currency,
                     "Gift Card currency mismatch",
@@ -271,11 +270,10 @@ internal class DropInViewModel(
             }
 
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
-                Logger.e(
-                    TAG,
+                adyenLog(AdyenLogLevel.ERROR) {
                     "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift " +
-                        "card payments",
-                )
+                        "card payments"
+                }
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
 
@@ -324,14 +322,14 @@ internal class DropInViewModel(
         if (orderModel == null) {
             currentOrder = null
             amount = getInitialAmount()
-            Logger.d(TAG, "handleOrderResponse - Amount reverted: $amount")
-            Logger.d(TAG, "handleOrderResponse - Order cancelled")
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Amount reverted: $amount" }
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cancelled" }
         } else {
             currentOrder = orderModel
             amount = orderModel.remainingAmount
             sessionDetails = sessionDetails?.copy(amount = orderModel.remainingAmount)
-            Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
-            Logger.d(TAG, "handleOrderResponse - Order cached")
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - New amount set: $amount" }
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cached" }
         }
     }
 
@@ -340,21 +338,21 @@ internal class DropInViewModel(
         val existingAmount = paymentComponentState.data.amount
         when {
             existingAmount != null -> {
-                Logger.d(TAG, "Payment amount already set: $existingAmount")
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount already set: $existingAmount" }
             }
 
             amount != null -> {
                 paymentComponentState.data.amount = amount
-                Logger.d(TAG, "Payment amount set: $amount")
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount set: $amount" }
             }
 
             else -> {
-                Logger.d(TAG, "Payment amount not set")
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount not set" }
             }
         }
         currentOrder?.let {
             paymentComponentState.data.order = createOrder(it)
-            Logger.d(TAG, "Order appended to payment")
+            adyenLog(AdyenLogLevel.DEBUG) { "Order appended to payment" }
         }
     }
 
@@ -403,7 +401,7 @@ internal class DropInViewModel(
                     )
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch order details", e)
+                    adyenLog(AdyenLogLevel.ERROR, e) { "Unable to fetch order details" }
                     null
                 },
             )
@@ -415,7 +413,7 @@ internal class DropInViewModel(
         val partialPaymentAmount = cachedPartialPaymentAmount
             ?: throw CheckoutException("Lost reference to cached partial payment amount")
         paymentComponentState.data.amount = partialPaymentAmount
-        Logger.d(TAG, "Partial payment amount set: $partialPaymentAmount")
+        adyenLog(AdyenLogLevel.DEBUG) { "Partial payment amount set: $partialPaymentAmount" }
         cachedGiftCardComponentState = null
         cachedPartialPaymentAmount = null
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
@@ -428,12 +426,12 @@ internal class DropInViewModel(
     }
 
     fun onAddressLookupOptions(options: List<LookupAddress>) {
-        Logger.d(TAG, "onAddressLookupOptions $options")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAddressLookupOptions $options" }
         viewModelScope.launch { _addressLookupOptionsFlow.send(options) }
     }
 
     fun onAddressLookupComplete(lookupAddress: LookupAddress) {
-        Logger.d(TAG, "onAddressLookupComplete $lookupAddress")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAddressLookupComplete $lookupAddress" }
         viewModelScope.launch { _addressLookupCompleteFlow.send(AddressLookupResult.Completed(lookupAddress)) }
     }
 
@@ -452,12 +450,8 @@ internal class DropInViewModel(
 
     private fun sendEvent(event: DropInActivityEvent) {
         viewModelScope.launch {
-            Logger.d(TAG, "sendEvent - ${event::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "sendEvent - ${event::class.simpleName}" }
             eventChannel.send(event)
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }
