@@ -42,6 +42,7 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
             clientKey,
         )
 
+        @Deprecated("You can omit the context parameter")
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,

@@ -55,6 +55,7 @@ class VoucherConfiguration private constructor(
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.issuerlist.utils
 
-import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
@@ -33,19 +32,10 @@ private constructor(
     override val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
-    class Builder : IssuerListBuilder<TestIssuerListConfiguration, Builder> {
+    class Builder(shopperLocale: Locale?, environment: Environment, clientKey: String) :
+        IssuerListBuilder<TestIssuerListConfiguration, Builder>(environment, clientKey) {
 
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
-            environment,
-            clientKey,
-        )
-
-        constructor(
-            shopperLocale: Locale?,
-            environment: Environment,
-            clientKey: String
-        ) : super(environment, clientKey) {
+        init {
             shopperLocale?.let { setShopperLocale(it) }
         }
 

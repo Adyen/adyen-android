@@ -60,6 +60,7 @@ constructor(
      * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
      * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
      */
+    @Deprecated("You can omit the context parameter")
     constructor(
         @Suppress("unused")
         context: Context,

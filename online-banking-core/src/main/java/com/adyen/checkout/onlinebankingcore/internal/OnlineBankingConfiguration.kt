@@ -34,6 +34,7 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
 
         protected constructor(environment: Environment, clientKey: String) : super(environment, clientKey)
 
+        @Deprecated("You can omit the context parameter")
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
