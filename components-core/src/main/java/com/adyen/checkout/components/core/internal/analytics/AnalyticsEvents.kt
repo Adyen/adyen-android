@@ -22,7 +22,6 @@ sealed interface AnalyticsEvent {
         override val component: String,
         val type: Type? = null,
         val target: String? = null,
-        // TODO: Should this be false or null by default?
         val isStoredPaymentMethod: Boolean? = null,
         val brand: String? = null,
         val issuer: String? = null,
