@@ -40,33 +40,33 @@ class DefaultAnalyticsRepository(
         state = State.InProgress
         adyenLog(AdyenLogLevel.VERBOSE) { "Setting up analytics" }
 
-        runSuspendCatching {
-            val analyticsSetupRequest = with(analyticsRepositoryData) {
-                analyticsMapper.getAnalyticsSetupRequest(
-                    packageName = packageName,
-                    locale = locale,
-                    source = source,
-                    amount = amount,
-                    screenWidth = screenWidth.toLong(),
-                    paymentMethods = paymentMethods,
-                    sessionId = sessionId,
-                )
-            }
-            val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
-            checkoutAttemptId = response.checkoutAttemptId
-            state = State.Ready
-            adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
-        }.onFailure { e ->
-            state = State.Failed
-            adyenLog(AdyenLogLevel.ERROR) {
-                "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}"
-            }
-        }
+//        runSuspendCatching {
+//            val analyticsSetupRequest = with(analyticsRepositoryData) {
+//                analyticsMapper.getAnalyticsSetupRequest(
+//                    packageName = packageName,
+//                    locale = locale,
+//                    source = source,
+//                    amount = amount,
+//                    screenWidth = screenWidth.toLong(),
+//                    paymentMethods = paymentMethods,
+//                    sessionId = sessionId,
+//                )
+//            }
+//            val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
+//            checkoutAttemptId = response.checkoutAttemptId
+//            state = State.Ready
+//            adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
+//        }.onFailure { e ->
+//            state = State.Failed
+//            adyenLog(AdyenLogLevel.ERROR) {
+//                "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}"
+//            }
+//        }
     }
 
     private fun canSendAnalytics(requiredLevel: AnalyticsParamsLevel): Boolean {
         require(requiredLevel != NONE) { "Analytics are not allowed with level NONE" }
-        return !analyticsRepositoryData.level.hasHigherPriorityThan(requiredLevel)
+        return true
     }
 
     companion object {
