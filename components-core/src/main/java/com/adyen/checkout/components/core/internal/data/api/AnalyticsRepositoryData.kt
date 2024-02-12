@@ -40,7 +40,7 @@ data class AnalyticsRepositoryData(
     ) : this(
         application = application,
         componentParams = componentParams,
-        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+        source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
         paymentMethodType = paymentMethod.type,
         sessionId = sessionId,
     )
@@ -53,7 +53,7 @@ data class AnalyticsRepositoryData(
     ) : this(
         application = application,
         componentParams = componentParams,
-        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+        source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
         paymentMethodType = storedPaymentMethod.type,
         sessionId = sessionId,
     )

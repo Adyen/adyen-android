@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 7/2/2024.
+ * Created by oscars on 12/2/2024.
  */
 
-package com.adyen.checkout.core.internal.analytics
+package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
@@ -22,7 +22,7 @@ object GenericEvents {
         brand: String? = null,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.RENDERED,
+        type = AnalyticsEvent.Info.Type.RENDERED,
         isStoredPaymentMethod = isStoredPaymentMethod,
         brand = brand,
     )
@@ -32,7 +32,7 @@ object GenericEvents {
         target: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.DISPLAYED,
+        type = AnalyticsEvent.Info.Type.DISPLAYED,
         target = target,
     )
 
@@ -42,7 +42,7 @@ object GenericEvents {
         issuer: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.SELECTED,
+        type = AnalyticsEvent.Info.Type.SELECTED,
         target = target,
         issuer = issuer,
     )
@@ -52,7 +52,7 @@ object GenericEvents {
         target: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.INPUT,
+        type = AnalyticsEvent.Info.Type.INPUT,
         target = target,
     )
 
@@ -63,7 +63,7 @@ object GenericEvents {
         target: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.FOCUS,
+        type = AnalyticsEvent.Info.Type.FOCUS,
         target = target,
     )
 
@@ -72,7 +72,7 @@ object GenericEvents {
         target: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.UNFOCUS,
+        type = AnalyticsEvent.Info.Type.UNFOCUS,
         target = target,
     )
 
@@ -81,7 +81,7 @@ object GenericEvents {
         target: String,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.DOWNLOAD,
+        type = AnalyticsEvent.Info.Type.DOWNLOAD,
         target = target,
     )
 
@@ -92,7 +92,7 @@ object GenericEvents {
         validationErrorMessage: String?,
     ) = AnalyticsEvent.Info(
         component = component,
-        type = InfoEventType.VALIDATION_ERROR,
+        type = AnalyticsEvent.Info.Type.VALIDATION_ERROR,
         target = target,
         validationErrorCode = validationErrorCode,
         validationErrorMessage = validationErrorMessage,
@@ -103,7 +103,7 @@ object GenericEvents {
         component: String,
     ) = AnalyticsEvent.Log(
         component = component,
-        type = LogEventType.SUBMIT,
+        type = AnalyticsEvent.Log.Type.SUBMIT,
     )
 
     fun threeDS2(
@@ -111,7 +111,7 @@ object GenericEvents {
         message: String,
     ) = AnalyticsEvent.Log(
         component = component,
-        type = LogEventType.THREEDS2,
+        type = AnalyticsEvent.Log.Type.THREEDS2,
         message = message,
     )
 
@@ -121,7 +121,7 @@ object GenericEvents {
         message: String,
     ) = AnalyticsEvent.Log(
         component = component,
-        type = LogEventType.ACTION,
+        type = AnalyticsEvent.Log.Type.ACTION,
         subType = subType,
         message = message,
     )

@@ -6,7 +6,7 @@
  * Created by oscars on 7/2/2024.
  */
 
-package com.adyen.checkout.core.internal.analytics
+package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 import java.util.Date

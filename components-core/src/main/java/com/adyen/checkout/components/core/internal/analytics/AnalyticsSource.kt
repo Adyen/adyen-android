@@ -12,11 +12,12 @@ import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class AnalyticsSource {
-    data class DropIn(val paymentMethods: List<String>) : AnalyticsSource()
+    data class DropIn(val paymentMethodList: List<String>) : AnalyticsSource()
     data class PaymentComponent(val paymentMethodType: String) : AnalyticsSource()
 
+    // TODO: Check if we can rename paymentMethodList and not make it clash with this function
     fun getPaymentMethods(): List<String> = when(this) {
-        is DropIn -> paymentMethods
+        is DropIn -> paymentMethodList
         is PaymentComponent -> listOf(paymentMethodType)
     }
 }
