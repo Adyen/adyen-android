@@ -21,6 +21,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import java.util.LinkedList
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AdyenAnalytics(
@@ -33,12 +36,16 @@ class AdyenAnalytics(
     // TODO: Check if Job or SupervisorJob is better for us
     private val coroutineScope = CoroutineScope(coroutineDispatcher + SupervisorJob())
 
+    private val eventQueue: LinkedList<AnalyticsEvent> = LinkedList<AnalyticsEvent>()
+
     @Volatile
     var checkoutAttemptId: String? = null
         private set
 
     @Volatile
     private var state: State = State.Uninitialized
+
+    val mutex = Mutex()
 
     fun setup() {
         if (cannotSendEvent()) {
@@ -70,8 +77,20 @@ class AdyenAnalytics(
         // TODO: Check if we can send events anyway, because attempt id is anonymous already
         if (cannotSendEvent()) return
 
+        coroutineScope.launch {
+            mutex.withLock {
+                eventQueue.add(event)
+                track(event)
+            }
+        }
+
         // Queue the event
         // Send it
+    }
+
+    // TODO: Discuss if we need to use mappers before we send events to backend
+    private fun sendEvents() {
+
     }
 
     private fun cannotSendEvent(): Boolean {
