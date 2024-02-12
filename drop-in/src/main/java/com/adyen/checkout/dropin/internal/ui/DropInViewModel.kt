@@ -46,6 +46,7 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -57,6 +58,7 @@ internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     internal val analyticsRepository: AnalyticsRepository,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -309,7 +311,7 @@ internal class DropInViewModel(
     }
 
     fun handleOrderCreated(orderResponse: OrderResponse) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(orderResponse)
             if (currentOrder != null) {
                 partialPaymentRequested()
@@ -364,7 +366,7 @@ internal class DropInViewModel(
     }
 
     fun handlePaymentMethodsUpdate(paymentMethodsApiResponse: PaymentMethodsApiResponse, order: OrderResponse?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(order)
             this@DropInViewModel.paymentMethodsApiResponse = paymentMethodsApiResponse
             sendEvent(DropInActivityEvent.ShowPaymentMethods)

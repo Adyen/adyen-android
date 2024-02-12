@@ -484,7 +484,7 @@ internal class DefaultCashAppPayDelegateTest(
             context = Application(),
         ),
         cashAppPayFactory = cashAppPayFactory,
-        ioDispatcher = UnconfinedTestDispatcher(),
+        coroutineDispatcher = UnconfinedTestDispatcher(),
     )
 
     private fun createCheckoutConfiguration(

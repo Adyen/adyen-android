@@ -23,19 +23,21 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionSetupRequest
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SessionService(
     private val httpClient: HttpClient,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun setupSession(
         request: SessionSetupRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionSetupResponse = withContext(Dispatchers.IO) {
+    ): SessionSetupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/setup",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -49,7 +51,7 @@ class SessionService(
         request: SessionPaymentsRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionPaymentsResponse = withContext(Dispatchers.IO) {
+    ): SessionPaymentsResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/payments",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -63,7 +65,7 @@ class SessionService(
         request: SessionDetailsRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionDetailsResponse = withContext(Dispatchers.IO) {
+    ): SessionDetailsResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/paymentDetails",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -77,7 +79,7 @@ class SessionService(
         request: SessionBalanceRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionBalanceResponse = withContext(Dispatchers.IO) {
+    ): SessionBalanceResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/paymentMethodBalance",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -91,7 +93,7 @@ class SessionService(
         request: SessionOrderRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionOrderResponse = withContext(Dispatchers.IO) {
+    ): SessionOrderResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/orders",
             queryParameters = mapOf("clientKey" to clientKey),
@@ -105,7 +107,7 @@ class SessionService(
         request: SessionCancelOrderRequest,
         sessionId: String,
         clientKey: String,
-    ): SessionCancelOrderResponse = withContext(Dispatchers.IO) {
+    ): SessionCancelOrderResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v1/sessions/$sessionId/orders/cancel",
             queryParameters = mapOf("clientKey" to clientKey),

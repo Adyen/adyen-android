@@ -13,24 +13,26 @@ import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class BinLookupService(
     private val httpClient: HttpClient,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
     suspend fun makeBinLookup(
         request: BinLookupRequest,
         clientKey: String,
-    ): BinLookupResponse = withContext(Dispatchers.IO) {
+    ): BinLookupResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v2/bin/binLookup",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
             requestSerializer = BinLookupRequest.SERIALIZER,
-            responseSerializer = BinLookupResponse.SERIALIZER
+            responseSerializer = BinLookupResponse.SERIALIZER,
         )
     }
 }
