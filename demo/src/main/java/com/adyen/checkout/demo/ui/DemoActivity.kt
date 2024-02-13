@@ -11,11 +11,14 @@ package com.adyen.checkout.demo.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,7 +26,9 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -35,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,38 +55,45 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.adyen.checkout.demo.model.StoreItem
+import com.adyen.checkout.demo.ui.MyStoreViewModel.Companion.MOCK_STORE_ITEMS
 import com.adyen.checkout.demo.ui.theme.ExampleTheme
 import com.adyen.checkout.demo.ui.theme.LightColors
-import com.adyen.checkout.demo.model.MOCK_STORE_ITEMS
-import com.adyen.checkout.demo.model.StoreItem
-import com.adyen.checkout.demo.model.formatAmount
-import java.util.Locale
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DemoActivity : ComponentActivity() {
+
+    private val myStoreViewModel: MyStoreViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ExampleTheme {
-                BasicApp(modifier = Modifier.fillMaxSize())
+                BasicApp(modifier = Modifier.fillMaxSize(), myStoreViewModel)
             }
         }
     }
 }
 
 @Composable
-fun BasicApp(modifier: Modifier) {
+fun BasicApp(modifier: Modifier, myStoreViewModel: MyStoreViewModel) {
     val navController = rememberNavController()
     Scaffold(
         modifier,
         bottomBar = { BottomNavigationBar(navController = navController) },
     ) {
-        NavigationHost(modifier = modifier.padding(it), navController = navController)
+        NavigationHost(modifier = modifier.padding(it), navController = navController, myStoreViewModel)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StoreScreen(modifier: Modifier = Modifier, items: List<StoreItem>) {
+fun StoreScreen(
+    modifier: Modifier = Modifier,
+    items: List<StoreItem>,
+    myStoreViewModel: MyStoreViewModel
+) {
     Column {
         Surface {
             TopAppBar(
@@ -100,14 +113,14 @@ fun StoreScreen(modifier: Modifier = Modifier, items: List<StoreItem>) {
             ),
         ) {
             items(items.size) {
-                StoreItem(modifier = modifier, item = items[it])
+                StoreItem(modifier = modifier, item = items[it], myStoreViewModel::addToCart)
             }
         }
     }
 }
 
 @Composable
-fun StoreItem(modifier: Modifier, item: StoreItem) {
+fun StoreItem(modifier: Modifier, item: StoreItem, onClick: (StoreItem) -> Unit) {
     Card(
         modifier
             .padding(4.dp),
@@ -126,21 +139,69 @@ fun StoreItem(modifier: Modifier, item: StoreItem) {
                     .align(Alignment.CenterHorizontally),
             )
             Text(text = item.title, fontWeight = FontWeight.Bold)
-            Text(text = item.price.formatAmount(Locale.US))
-            Button(onClick = {}) {
+            Text(text = item.priceText)
+            Button(
+                onClick = {
+                    onClick(item)
+                },
+            ) {
                 Text(text = "Add to Cart", fontSize = 12.sp)
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(modifier: Modifier) {
-
+fun CartScreen(modifier: Modifier, myStoreViewModel: MyStoreViewModel) {
+    val state by myStoreViewModel.myStoreState.collectAsState()
+    Column {
+        TopAppBar(
+            title = {
+                Text(text = "Shopping Cart", fontWeight = FontWeight.Black)
+            },
+        )
+        val item = state.shoppingCart
+        if (item != null) {
+            CartItem(modifier = modifier, item = item, myStoreViewModel::removeFromCart)
+        }
+    }
 }
 
 @Composable
 fun SettingsScreen(modifier: Modifier) {
+
+}
+
+@Composable
+fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
+    Card(Modifier.padding(8.dp)) {
+        Row(
+            modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+        ) {
+            AsyncImage(
+                model = item.imageUrl,
+                contentDescription = null,
+                modifier = modifier
+                    .size(72.dp)
+                    .align(Alignment.CenterVertically),
+            )
+            Column(
+                Modifier
+                    .weight(1f)
+                    .padding(4.dp)
+                    .align(Alignment.CenterVertically),
+            ) {
+                Text(text = item.title, fontWeight = FontWeight.Bold)
+                Text(text = item.priceText)
+            }
+            IconButton(onClick = { onDeleteClick(item) }, modifier = Modifier.align(Alignment.CenterVertically)) {
+                Icon(Icons.Default.Delete, contentDescription = null)
+            }
+        }
+    }
 
 }
 
@@ -167,7 +228,7 @@ fun BottomNavigationBar(navController: NavController) {
 }
 
 @Composable
-fun NavigationHost(modifier: Modifier, navController: NavHostController) {
+fun NavigationHost(modifier: Modifier, navController: NavHostController, myStoreViewModel: MyStoreViewModel) {
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -175,8 +236,13 @@ fun NavigationHost(modifier: Modifier, navController: NavHostController) {
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
     ) {
-        composable(BottomNavItem.Store.route) { StoreScreen(items = MOCK_STORE_ITEMS) }
-        composable(BottomNavItem.Cart.route) { CartScreen(modifier = Modifier) }
+        composable(BottomNavItem.Store.route) {
+            StoreScreen(
+                items = MOCK_STORE_ITEMS,
+                myStoreViewModel = myStoreViewModel,
+            )
+        }
+        composable(BottomNavItem.Cart.route) { CartScreen(modifier = Modifier, myStoreViewModel) }
         composable(BottomNavItem.Settings.route) { SettingsScreen(modifier = Modifier) }
     }
 }
