@@ -11,6 +11,7 @@ package com.adyen.checkout.components.core.internal.analytics
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsTrackRequestMapper
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -26,10 +27,12 @@ import kotlinx.coroutines.sync.withLock
 import java.util.LinkedList
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AdyenAnalytics(
+// TODO: Create factory
+class AdyenAnalytics internal constructor(
     private val analyticsProvider: AnalyticsProvider,
     private val analyticsParams: AnalyticsParams,
     private val analyticsService: AnalyticsService,
+    private val analyticsTrackRequestMapper: AnalyticsTrackRequestMapper,
     coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) {
 
@@ -38,43 +41,56 @@ class AdyenAnalytics(
 
     private val eventQueue: LinkedList<AnalyticsEvent> = LinkedList<AnalyticsEvent>()
 
-    @Volatile
-    var checkoutAttemptId: String? = null
-        private set
+    val checkoutAttemptId: String? get() = (state as? State.Ready)?.checkoutAttemptId
 
     @Volatile
     private var state: State = State.Uninitialized
 
-    val mutex = Mutex()
+    private val mutex = Mutex()
 
     fun setup() {
-        if (cannotSendEvent()) {
-            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
-            return
-        }
-
-        if (state != State.Uninitialized) return
-        state = State.InProgress
-        adyenLog(AdyenLogLevel.VERBOSE) { "Setting up analytics" }
-
         coroutineScope.launch {
-            runSuspendCatching {
-                val analyticsSetupRequest = analyticsProvider.provide()
-                val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsParams.clientKey)
-                checkoutAttemptId = response.checkoutAttemptId
-                state = State.Ready
-                adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
-            }.onFailure { e ->
-                state = State.Failed
-                adyenLog(AdyenLogLevel.ERROR) {
-                    "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}"
-                }
-            }
+            setupInternal()
         }
     }
 
+    private suspend fun setupInternal() {
+        if (cannotSendEvent()) {
+            state = State.Ready(CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS)
+            return
+        }
+
+        if (!state.canInitialize()) return
+
+        state = State.InProgress
+
+        adyenLog(AdyenLogLevel.VERBOSE) { "Setting up analytics" }
+
+        runSuspendCatching {
+            adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
+            state = fetchCheckoutAttemptId()?.let {
+                adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
+                State.Ready(it)
+            } ?: run {
+                adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId from response is null" }
+                State.Failed
+            }
+        }.onFailure { e ->
+            adyenLog(AdyenLogLevel.ERROR) {
+                "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}"
+            }
+            state = State.Failed
+        }
+    }
+
+    private suspend fun fetchCheckoutAttemptId(): String? {
+        val analyticsSetupRequest = analyticsProvider.provide()
+        val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsParams.clientKey)
+        return response.checkoutAttemptId
+    }
+
+
     fun track(event: AnalyticsEvent) {
-        // TODO: Check if we can send events anyway, because attempt id is anonymous already
         if (cannotSendEvent()) return
 
         coroutineScope.launch {
@@ -83,13 +99,32 @@ class AdyenAnalytics(
                 track(event)
             }
         }
-
-        // Queue the event
-        // Send it
     }
 
     // TODO: Discuss if we need to use mappers before we send events to backend
-    private fun sendEvents() {
+    private suspend fun sendEvents() {
+        if (state.canInitialize()) {
+            setupInternal()
+        }
+
+        val checkoutAttemptId = checkoutAttemptId ?: run {
+            adyenLog(AdyenLogLevel.WARN) { "Not sending events because checkoutAttemptId is null" }
+            return
+        }
+
+        // TODO: Send correct channel
+        val request = analyticsTrackRequestMapper("", eventQueue.takeLast(BATCH_SIZE))
+
+        runSuspendCatching {
+            analyticsService.trackEvents(request, checkoutAttemptId, analyticsParams.clientKey)
+        }.fold(
+            onSuccess = {
+                // TODO: Remove events from the queue
+            },
+            onFailure = {
+                // TODO: Handle error
+            },
+        )
 
     }
 
@@ -99,13 +134,23 @@ class AdyenAnalytics(
 
     companion object {
         private const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+
+        private const val BATCH_SIZE = 20
     }
 
     @VisibleForTesting
     internal sealed class State {
         data object Uninitialized : State()
         data object InProgress : State()
-        data object Ready : State()
+        data class Ready(val checkoutAttemptId: String) : State()
         data object Failed : State()
+
+        fun canInitialize(): Boolean = when (this) {
+            InProgress,
+            is Ready -> false
+
+            Failed,
+            Uninitialized -> true
+        }
     }
 }
