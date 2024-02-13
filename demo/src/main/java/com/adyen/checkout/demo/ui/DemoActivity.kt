@@ -30,7 +30,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -169,11 +168,6 @@ fun CartScreen(modifier: Modifier, myStoreViewModel: MyStoreViewModel) {
 }
 
 @Composable
-fun SettingsScreen(modifier: Modifier) {
-
-}
-
-@Composable
 fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
     Card(Modifier.padding(8.dp)) {
         Row(
@@ -243,36 +237,10 @@ fun NavigationHost(modifier: Modifier, navController: NavHostController, myStore
             )
         }
         composable(BottomNavItem.Cart.route) { CartScreen(modifier = Modifier, myStoreViewModel) }
-        composable(BottomNavItem.Settings.route) { SettingsScreen(modifier = Modifier) }
     }
 }
 
 enum class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
     Store("store", Icons.Default.Home, "Store"),
     Cart("cart", Icons.Default.ShoppingCart, "Cart"),
-    Settings("settings", Icons.Default.Settings, "Settings");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
