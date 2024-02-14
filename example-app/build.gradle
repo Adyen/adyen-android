@@ -83,7 +83,7 @@ dependencies {
     implementation libraries.compose.activity
     implementation libraries.compose.hilt
     implementation libraries.compose.material
-    implementation libraries.compose.material1
+    implementation libraries.compose.material3
     implementation libraries.compose.viewmodel
 
     implementation libraries.material

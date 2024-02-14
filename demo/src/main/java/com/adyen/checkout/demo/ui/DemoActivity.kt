@@ -8,12 +8,16 @@
 
 package com.adyen.checkout.demo.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -33,6 +37,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -43,7 +48,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,6 +65,11 @@ import com.adyen.checkout.demo.model.StoreItem
 import com.adyen.checkout.demo.ui.MyStoreViewModel.Companion.MOCK_STORE_ITEMS
 import com.adyen.checkout.demo.ui.theme.ExampleTheme
 import com.adyen.checkout.demo.ui.theme.LightColors
+import com.adyen.checkout.dropin.DropIn
+import com.adyen.checkout.dropin.SessionDropInCallback
+import com.adyen.checkout.dropin.compose.rememberLauncherForDropInResult
+import com.adyen.checkout.dropin.compose.startPayment
+import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -67,11 +79,16 @@ class DemoActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, RedirectComponent.getReturnUrl(applicationContext))
         setContent {
             ExampleTheme {
                 BasicApp(modifier = Modifier.fillMaxSize(), myStoreViewModel)
             }
         }
+    }
+
+    companion object {
+        internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
 }
 
@@ -154,7 +171,7 @@ fun StoreItem(modifier: Modifier, item: StoreItem, onClick: (StoreItem) -> Unit)
 @Composable
 fun CartScreen(modifier: Modifier, myStoreViewModel: MyStoreViewModel) {
     val state by myStoreViewModel.myStoreState.collectAsState()
-    Column {
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(
             title = {
                 Text(text = "Shopping Cart", fontWeight = FontWeight.Black)
@@ -164,11 +181,53 @@ fun CartScreen(modifier: Modifier, myStoreViewModel: MyStoreViewModel) {
         if (item != null) {
             CartItem(modifier = modifier, item = item, myStoreViewModel::removeFromCart)
         }
+        Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = myStoreViewModel::startDropIn) {
+                Text(text = "Checkout")
+            }
+        }
+    }
+    HandleStartDropIn(state.uiState, myStoreViewModel::onDropInResult)
+}
+
+@Composable
+fun HandleStartDropIn(uiState: MyStoreUiState, callback: SessionDropInCallback) {
+    when (uiState) {
+        MyStoreUiState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Transparent),
+            ) {
+                CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            }
+
+        }
+
+        MyStoreUiState.Shopping -> {
+
+        }
+
+        MyStoreUiState.Error -> {
+            Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_LONG).show()
+        }
+
+        is MyStoreUiState.StartDropIn -> {
+            val launcher = rememberLauncherForDropInResult(
+                callback = callback,
+            )
+            DropIn.startPayment(
+                dropInLauncher = launcher,
+                checkoutSession = uiState.session,
+                checkoutConfiguration = uiState.checkoutConfiguration,
+            )
+        }
     }
 }
 
 @Composable
-fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
+fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: () -> Unit) {
     Card(Modifier.padding(8.dp)) {
         Row(
             modifier
@@ -191,7 +250,7 @@ fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: (StoreItem) -> 
                 Text(text = item.title, fontWeight = FontWeight.Bold)
                 Text(text = item.priceText)
             }
-            IconButton(onClick = { onDeleteClick(item) }, modifier = Modifier.align(Alignment.CenterVertically)) {
+            IconButton(onClick = { onDeleteClick() }, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(Icons.Default.Delete, contentDescription = null)
             }
         }

@@ -50,6 +50,7 @@ ext {
     compose_viewmodel_version = '2.6.2'
     compose_nav_version = '2.7.6'
     compose_material_version = '1.6.0'
+    compose_material3_version = '1.2.0'
 
     // Adyen Dependencies
     adyen3ds2_version = "2.2.15"
@@ -105,8 +106,8 @@ ext {
             activity  : "androidx.activity:activity-compose:$compose_activity_version",
             bom       : "androidx.compose:compose-bom:$compose_bom_version",
             hilt      : "androidx.hilt:hilt-navigation-compose:$compose_hilt_version",
-            material  : 'androidx.compose.material3:material3',
-            material1 : "androidx.compose.material:material:$compose_material_version",
+            material3  : "androidx.compose.material3:material3-android:$compose_material3_version",
+            material : "androidx.compose.material:material:$compose_material_version",
             navigation: "androidx.navigation:navigation-compose:$compose_nav_version",
             ui        : [
                 'androidx.compose.ui:ui',

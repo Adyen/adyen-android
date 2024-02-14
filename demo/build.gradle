@@ -2,7 +2,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
+
+apply from: "local.gradle"
 
 android {
     namespace 'com.adyen.checkout.demo'
@@ -37,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation "com.adyen.checkout:drop-in:5.2.0"
+    implementation project(":drop-in-compose")
 
     // Dependencies
     implementation libraries.kotlinCoroutines
@@ -52,11 +55,18 @@ dependencies {
     implementation libraries.compose.activity
     implementation libraries.compose.hilt
     implementation libraries.compose.material
-    implementation libraries.compose.material1
+    implementation libraries.compose.material3
     implementation libraries.compose.navigation
     implementation libraries.compose.viewmodel
 
+    implementation libraries.hilt
+    kapt libraries.hiltCompiler
+
     implementation libraries.material
+
+    implementation libraries.retrofit
+    implementation libraries.moshi
+    implementation libraries.okhttpLogging
 
     implementation("io.coil-kt:coil-compose:2.5.0")
 
