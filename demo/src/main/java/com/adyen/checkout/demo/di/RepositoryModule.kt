@@ -25,4 +25,3 @@ object RepositoryModule {
         checkoutApiService: CheckoutApiService
     ): SessionsRepository = SessionsRepositoryImpl(checkoutApiService)
 }
-

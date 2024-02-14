@@ -202,12 +202,9 @@ fun HandleStartDropIn(uiState: MyStoreUiState, callback: SessionDropInCallback) 
             ) {
                 CircularProgressIndicator(modifier = Modifier.size(48.dp))
             }
-
         }
 
-        MyStoreUiState.Shopping -> {
-
-        }
+        MyStoreUiState.Shopping -> {}
 
         MyStoreUiState.Error -> {
             Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_LONG).show()
@@ -255,7 +252,6 @@ fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: () -> Unit) {
             }
         }
     }
-
 }
 
 @Composable

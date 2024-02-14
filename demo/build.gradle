@@ -6,6 +6,7 @@ plugins {
 }
 
 apply from: "local.gradle"
+apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 
 android {
     namespace 'com.adyen.checkout.demo'

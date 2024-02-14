@@ -171,4 +171,3 @@ data class CustomColorScheme(
     val success: Color = Color.Unspecified,
     val warning: Color = Color.Unspecified,
 )
-

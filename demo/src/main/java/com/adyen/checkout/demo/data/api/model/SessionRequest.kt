@@ -33,4 +33,3 @@ data class SessionRequest(
     val installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
     val showInstallmentAmount: Boolean
 )
-

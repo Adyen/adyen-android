@@ -123,7 +123,11 @@ class MyStoreViewModel @Inject constructor(
     }
 
     fun onDropInResult(sessionDropInResult: SessionDropInResult?) {
-        val message = when (sessionDropInResult) {
+        // TODO send event to show result on ui
+        _myStoreState.update {
+            it.copy(uiState = MyStoreUiState.Shopping)
+        }
+        when (sessionDropInResult) {
             is SessionDropInResult.CancelledByUser -> "Canceled by user"
             is SessionDropInResult.Error -> sessionDropInResult.reason ?: "DropInResult is error without reason"
             is SessionDropInResult.Finished -> sessionDropInResult.result.resultCode ?: "Result code is null"
@@ -173,7 +177,6 @@ class MyStoreViewModel @Inject constructor(
                 Amount("EUR", PRICE_SUNGLASSES),
             ),
         )
-
     }
 }
 

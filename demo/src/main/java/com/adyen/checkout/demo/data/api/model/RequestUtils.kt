@@ -56,11 +56,9 @@ private fun getReference() = "android-test-components_${System.currentTimeMillis
 
 private fun getAdditionalData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AdditionalData(
     allow3DS2 = isThreeds2Enabled.toString(),
-    executeThreeD = isExecuteThreeD.toString()
+    executeThreeD = isExecuteThreeD.toString(),
 )
 
 private const val SHOPPER_IP = "142.12.31.22"
 private const val CHANNEL = "android"
 private val LINE_ITEMS = listOf(Item())
-private const val DEFAULT_INSTALLMENT_OPTION = "card"
-private const val CARD_BASED_INSTALLMENT_OPTION = "visa"

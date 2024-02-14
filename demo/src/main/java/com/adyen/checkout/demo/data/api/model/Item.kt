@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 13/2/2024.
+ * Created by ozgur on 14/2/2024.
  */
 
 package com.adyen.checkout.demo.data.api.model
@@ -22,4 +22,3 @@ data class Item(
     val amountIncludingTax: Int = 100,
     val taxCategory: String = "Low"
 )
-
