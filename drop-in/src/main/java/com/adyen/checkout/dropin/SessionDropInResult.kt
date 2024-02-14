@@ -36,7 +36,7 @@ sealed class SessionDropInResult {
      * Drop-in has completed.
      * This occurs after the payment is finished.
      *
-     * @param result The result of Drop-in.
+     * @param result The result of the payment.
      */
     class Finished(val result: SessionPaymentResult) : SessionDropInResult()
 }

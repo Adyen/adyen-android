@@ -13,8 +13,14 @@ import com.adyen.checkout.components.core.OrderResponse
 import kotlinx.parcelize.Parcelize
 
 /**
- * The final result of a payment using the sessions flow.
- * You can use the [sessionId] and [sessionResult] to get the result of the payment session on your server.
+ * The result of a payment using the sessions flow.
+ *
+ * @param sessionId A unique identifier of the session.
+ * @param sessionResult You can forward this alongside [sessionId] to your server to fetch the result of the payment.
+ * @param sessionData The payment session data.
+ * @param resultCode The result code of the payment. For more information, see
+ * [Result codes](https://docs.adyen.com/online-payments/build-your-integration/payment-result-codes/).
+ * @param order An order, only applicable in case of an ongoing partial payment flow.
  */
 @Parcelize
 data class SessionPaymentResult(
