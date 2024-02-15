@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">實體</string>
     <string name="checkout_voucher_expiration_date">到期日期</string>
     <string name="checkout_voucher_shopper_reference">購物者參考</string>
+    <string name="checkout_voucher_phone_number">電話號碼</string>
+    <string name="checkout_voucher_collection_institution_number">收款機構編號</string>
+    <string name="checkout_voucher_read_instructions">閱覽說明</string>
     <string name="checkout_voucher_copy_code">複製代碼</string>
     <string name="checkout_voucher_copied_toast">已將代碼複製到剪貼簿</string>
     <string name="checkout_voucher_download_pdf">下載 PDF</string>

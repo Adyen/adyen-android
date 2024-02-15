@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Οντότητα</string>
     <string name="checkout_voucher_expiration_date">Ημερομηνία λήξης</string>
     <string name="checkout_voucher_shopper_reference">Αναφορά αγοραστή</string>
+    <string name="checkout_voucher_phone_number">Αριθμός τηλεφώνου</string>
+    <string name="checkout_voucher_collection_institution_number">Αριθμός πρακτορείου εισπράξεων</string>
+    <string name="checkout_voucher_read_instructions">Διαβάστε τις οδηγίες</string>
     <string name="checkout_voucher_copy_code">Αντιγραφή κωδικού</string>
     <string name="checkout_voucher_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
     <string name="checkout_voucher_download_pdf">Λήψη PDF</string>

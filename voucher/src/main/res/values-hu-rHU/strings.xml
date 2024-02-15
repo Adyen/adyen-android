@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Entitás</string>
     <string name="checkout_voucher_expiration_date">Lejárati dátum</string>
     <string name="checkout_voucher_shopper_reference">Vásárlói referencia</string>
+    <string name="checkout_voucher_phone_number">Telefonszám</string>
+    <string name="checkout_voucher_collection_institution_number">Beszedő cég száma</string>
+    <string name="checkout_voucher_read_instructions">Olvassa el az utasításokat</string>
     <string name="checkout_voucher_copy_code">Kód másolása</string>
     <string name="checkout_voucher_copied_toast">Kód a vágólapra másolva</string>
     <string name="checkout_voucher_download_pdf">PDF letöltése</string>

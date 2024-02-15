@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Entité</string>
     <string name="checkout_voucher_expiration_date">Date d\'expiration</string>
     <string name="checkout_voucher_shopper_reference">Référence client</string>
+    <string name="checkout_voucher_phone_number">Numéro de téléphone</string>
+    <string name="checkout_voucher_collection_institution_number">Numéro du point de paiement</string>
+    <string name="checkout_voucher_read_instructions">Lire les instructions</string>
     <string name="checkout_voucher_copy_code">Copier le code</string>
     <string name="checkout_voucher_copied_toast">Code copié dans le presse-papiers</string>
     <string name="checkout_voucher_download_pdf">Télécharger le PDF</string>

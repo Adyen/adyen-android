@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Entitet</string>
     <string name="checkout_voucher_expiration_date">Datum isteka</string>
     <string name="checkout_voucher_shopper_reference">Referenca kupca</string>
+    <string name="checkout_voucher_phone_number">Broj telefona</string>
+    <string name="checkout_voucher_collection_institution_number">Broj ustanove za prikupljanje</string>
+    <string name="checkout_voucher_read_instructions">Pročitajte upute</string>
     <string name="checkout_voucher_copy_code">Kopiraj kôd</string>
     <string name="checkout_voucher_copied_toast">Kôd je kopiran u međuspremnik</string>
     <string name="checkout_voucher_download_pdf">Preuzmite PDF</string>

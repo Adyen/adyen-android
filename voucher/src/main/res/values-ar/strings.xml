@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">الكيان</string>
     <string name="checkout_voucher_expiration_date">تاريخ الانتهاء</string>
     <string name="checkout_voucher_shopper_reference">مرجع المتسوق</string>
+    <string name="checkout_voucher_phone_number">رقم الهاتف</string>
+    <string name="checkout_voucher_collection_institution_number">رقم المؤسسة المكلفة بالتحصيل</string>
+    <string name="checkout_voucher_read_instructions">قراءة التعليمات</string>
     <string name="checkout_voucher_copy_code">نسخ الرمز</string>
     <string name="checkout_voucher_copied_toast">تم نسخ الرمز إلى الحافظة</string>
     <string name="checkout_voucher_download_pdf">تنزيل ملف PDF</string>

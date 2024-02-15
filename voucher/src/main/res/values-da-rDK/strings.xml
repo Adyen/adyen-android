@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Enhed</string>
     <string name="checkout_voucher_expiration_date">Udløbsdato</string>
     <string name="checkout_voucher_shopper_reference">Købers reference</string>
+    <string name="checkout_voucher_phone_number">Telefonnummer</string>
+    <string name="checkout_voucher_collection_institution_number">Id-nummer til opkrævningsinstitution</string>
+    <string name="checkout_voucher_read_instructions">Læs anvisningerne</string>
     <string name="checkout_voucher_copy_code">Kopiér koden</string>
     <string name="checkout_voucher_copied_toast">Koden er kopieret til udklipsholderen</string>
     <string name="checkout_voucher_download_pdf">Download PDF</string>

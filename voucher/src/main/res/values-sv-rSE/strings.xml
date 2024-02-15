@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Enhet</string>
     <string name="checkout_voucher_expiration_date">Utgångsdatum</string>
     <string name="checkout_voucher_shopper_reference">Köparreferens</string>
+    <string name="checkout_voucher_phone_number">Telefonnummer</string>
+    <string name="checkout_voucher_collection_institution_number">Nummer på upphämtningsplats</string>
+    <string name="checkout_voucher_read_instructions">Läs instruktionerna</string>
     <string name="checkout_voucher_copy_code">Kopiera kod</string>
     <string name="checkout_voucher_copied_toast">Koden kopierades till Urklipp</string>
     <string name="checkout_voucher_download_pdf">Ladda ner PDF</string>

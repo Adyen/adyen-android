@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">발급사</string>
     <string name="checkout_voucher_expiration_date">만료일</string>
     <string name="checkout_voucher_shopper_reference">구매자 참조번호</string>
+    <string name="checkout_voucher_phone_number">전화번호</string>
+    <string name="checkout_voucher_collection_institution_number">수금 기관 번호</string>
+    <string name="checkout_voucher_read_instructions">안내 읽기</string>
     <string name="checkout_voucher_copy_code">코드 복사하기</string>
     <string name="checkout_voucher_copied_toast">코드가 클립보드에 복사되었습니다</string>
     <string name="checkout_voucher_download_pdf">PDF 다운로드</string>

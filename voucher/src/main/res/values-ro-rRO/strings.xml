@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Entitate</string>
     <string name="checkout_voucher_expiration_date">Data de expirare</string>
     <string name="checkout_voucher_shopper_reference">Referință cumpărător</string>
+    <string name="checkout_voucher_phone_number">Număr de telefon</string>
+    <string name="checkout_voucher_collection_institution_number">Număr instituție de colectare</string>
+    <string name="checkout_voucher_read_instructions">Citiți instrucțiunile</string>
     <string name="checkout_voucher_copy_code">Copiați codul</string>
     <string name="checkout_voucher_copied_toast">Cod copiat în clipboard</string>
     <string name="checkout_voucher_download_pdf">Descărcați PDF</string>

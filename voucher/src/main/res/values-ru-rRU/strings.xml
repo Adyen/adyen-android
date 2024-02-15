@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">Объект</string>
     <string name="checkout_voucher_expiration_date">Срок действия</string>
     <string name="checkout_voucher_shopper_reference">Идентификатор покупателя</string>
+    <string name="checkout_voucher_phone_number">Номер телефона</string>
+    <string name="checkout_voucher_collection_institution_number">Номер получателя средств</string>
+    <string name="checkout_voucher_read_instructions">Прочитайте инструкции</string>
     <string name="checkout_voucher_copy_code">Скопировать код</string>
     <string name="checkout_voucher_copied_toast">Код скопирован в буфер обмена</string>
     <string name="checkout_voucher_download_pdf">Загрузить PDF</string>

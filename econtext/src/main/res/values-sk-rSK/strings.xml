@@ -13,8 +13,8 @@
     <string name="checkout_econtext_phone_number_hint">Telefónne číslo</string>
     <string name="checkout_econtext_shopper_email_hint">E-mailová adresa</string>
 
-    <string name="checkout_econtext_first_name_invalid">Meno nie je platné</string>
-    <string name="checkout_econtext_last_name_invalid">Priezvisko nie je platné</string>
+    <string name="checkout_econtext_first_name_invalid">Zadajte svoje meno</string>
+    <string name="checkout_econtext_last_name_invalid">Zadajte svoje priezvisko</string>
     <string name="checkout_econtext_phone_number_invalid">Neplatné telefónne číslo</string>
     <string name="checkout_econtext_shopper_email_invalid">Neplatná emailová adresa</string>
 </resources>

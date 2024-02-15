@@ -14,6 +14,9 @@
     <string name="checkout_voucher_expiration_entity">エンティティ</string>
     <string name="checkout_voucher_expiration_date">有効期限</string>
     <string name="checkout_voucher_shopper_reference">購入者向け参考情報</string>
+    <string name="checkout_voucher_phone_number">電話番号（お客様番号）</string>
+    <string name="checkout_voucher_collection_institution_number">収納機関番号</string>
+    <string name="checkout_voucher_read_instructions">手順を参照してください</string>
     <string name="checkout_voucher_copy_code">コードをコピー</string>
     <string name="checkout_voucher_copied_toast">コードをクリップボードにコピーしました</string>
     <string name="checkout_voucher_download_pdf">PDFをダウンロード</string>
