@@ -77,12 +77,12 @@ internal fun SessionsGooglePayScreen(
             is SessionsGooglePayEvents.ComponentData -> {
                 googlePayComponent = getGooglePayComponent(componentData = eventsState.data)
             }
-            is SessionsGooglePayEvents.WithAction -> {
+            is SessionsGooglePayEvents.Action -> {
                 LaunchedEffect(eventsState.action) {
                     googlePayComponent.handleAction(eventsState.action, activity)
                 }
             }
-            is SessionsGooglePayEvents.WithIntent -> {
+            is SessionsGooglePayEvents.Intent -> {
                 LaunchedEffect(eventsState.intent) {
                     googlePayComponent.handleIntent(eventsState.intent)
                 }

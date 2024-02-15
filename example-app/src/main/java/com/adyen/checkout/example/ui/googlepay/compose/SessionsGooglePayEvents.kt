@@ -8,12 +8,9 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-import android.content.Intent
-import com.adyen.checkout.components.core.action.Action
-
 internal abstract class SessionsGooglePayEvents internal constructor() {
     object None : SessionsGooglePayEvents()
     class ComponentData(val data: SessionsGooglePayComponentData) : SessionsGooglePayEvents()
-    class WithAction(val action: Action) : SessionsGooglePayEvents()
-    class WithIntent(val intent: Intent) : SessionsGooglePayEvents()
+    class Action(val action: com.adyen.checkout.components.core.action.Action) : SessionsGooglePayEvents()
+    class Intent(val intent: android.content.Intent) : SessionsGooglePayEvents()
 }

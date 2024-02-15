@@ -152,7 +152,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     override fun onAction(action: Action) {
-        updateEvent { SessionsGooglePayEvents.WithAction(action) }
+        updateEvent { SessionsGooglePayEvents.Action(action) }
     }
 
     override fun onError(componentError: ComponentError) {
@@ -188,7 +188,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     fun onNewIntent(intent: Intent) {
-        updateEvent { SessionsGooglePayEvents.WithIntent(intent) }
+        updateEvent { SessionsGooglePayEvents.Intent(intent) }
     }
 
     companion object {
