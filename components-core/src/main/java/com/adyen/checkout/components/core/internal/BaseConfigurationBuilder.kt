@@ -61,11 +61,12 @@ constructor(
      * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
      */
     constructor(
+        @Suppress("unused")
         context: Context,
         environment: Environment,
         clientKey: String
     ) : this(
-        LocaleUtil.getLocale(context),
+        null,
         environment,
         clientKey,
     )
