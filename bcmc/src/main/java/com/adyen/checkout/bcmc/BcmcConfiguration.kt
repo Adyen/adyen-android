@@ -95,10 +95,11 @@ class BcmcConfiguration private constructor(
         /**
          * Set if the option to store the card for future payments should be shown as an input field.
          *
-         * Default is false.
+         * Default is true.
          *
-         * When using `sessions` show store payment field will be ignored and replaced with the value
-         * sent to `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param showStorePaymentField [Boolean]
          * @return [BcmcConfiguration.Builder]

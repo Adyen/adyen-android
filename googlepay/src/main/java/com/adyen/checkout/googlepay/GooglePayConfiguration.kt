@@ -350,6 +350,10 @@ class GooglePayConfiguration private constructor(
          * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
          * for more details.
          *
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
          * @param amount Amount of the transaction.
          */
         @Suppress("RedundantOverride")

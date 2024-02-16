@@ -140,8 +140,9 @@ class CardConfiguration private constructor(
          *
          * Default is true.
          *
-         * When using `sessions` show store payment field will be ignored and replaced with the value
-         * sent to `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param showStorePaymentField [Boolean]
          * @return [CardConfiguration.Builder]
@@ -223,8 +224,9 @@ class CardConfiguration private constructor(
         /**
          * Configures the installment options to be provided to the shopper.
          *
-         * When using `sessions` installment configuration will be ignored and replaced with the value
-         * sent to `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param installmentConfiguration The configuration object for installment options.
          * @return [CardConfiguration.Builder]
