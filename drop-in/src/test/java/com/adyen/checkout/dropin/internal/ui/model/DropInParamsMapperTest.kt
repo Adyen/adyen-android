@@ -134,6 +134,37 @@ internal class DropInParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @ParameterizedTest
+    @MethodSource("shopperLocaleSource")
+    fun `shopper locale should match value set in configuration then sessions then device locale`(
+        configurationValue: Locale?,
+        sessionsValue: Locale?,
+        deviceLocaleValue: Locale,
+        expectedValue: Locale,
+    ) {
+        val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
+
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = null,
+            returnUrl = "",
+            shopperLocale = sessionsValue,
+        )
+
+        val params = dropInParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = deviceLocaleValue,
+            sessionParams = sessionParams,
+        )
+
+        val expected = getDropInParams(
+            shopperLocale = expectedValue,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
         shopperLocale: Locale? = null,
@@ -186,6 +217,15 @@ internal class DropInParamsMapperTest {
             arguments(Amount("EUR", 100), null, Amount("EUR", 100)),
             arguments(null, Amount("CAD", 300), Amount("CAD", 300)),
             arguments(null, null, null),
+        )
+
+        @JvmStatic
+        fun shopperLocaleSource() = listOf(
+            // configurationValue, sessionsValue, deviceLocaleValue, expectedValue
+            arguments(null, null, Locale.US, Locale.US),
+            arguments(Locale.GERMAN, null, Locale.US, Locale.GERMAN),
+            arguments(null, Locale.CHINESE, Locale.US, Locale.CHINESE),
+            arguments(Locale.GERMAN, Locale.CHINESE, Locale.US, Locale.GERMAN),
         )
     }
 }

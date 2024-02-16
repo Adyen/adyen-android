@@ -205,7 +205,6 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when merchantAccount is not set in googlePayConfiguration then gatewayMerchantId in the paymentMethod configuration is used`() {
         val configuration = CheckoutConfiguration(
-            shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
@@ -236,7 +235,6 @@ internal class GooglePayComponentParamsMapperTest {
     @Test
     fun `when neither merchantAccount in googlePayConfiguration nor gatewayMerchantId in the paymentMethod configuration is set then exception is thrown`() {
         val configuration = CheckoutConfiguration(
-            shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
         ) {
@@ -360,7 +358,6 @@ internal class GooglePayComponentParamsMapperTest {
         )
 
         val expected = getGooglePayComponentParams(
-            shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -386,7 +383,6 @@ internal class GooglePayComponentParamsMapperTest {
         )
 
         val expected = getGooglePayComponentParams(
-            shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -412,6 +408,7 @@ internal class GooglePayComponentParamsMapperTest {
             installmentConfiguration = null,
             amount = sessionsValue,
             returnUrl = "",
+            shopperLocale = null,
         )
         val params = googlePayComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
@@ -429,11 +426,45 @@ internal class GooglePayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @ParameterizedTest
+    @MethodSource("shopperLocaleSource")
+    fun `shopper locale should match value set in configuration then sessions then device locale`(
+        configurationValue: Locale?,
+        sessionsValue: Locale?,
+        deviceLocaleValue: Locale,
+        expectedValue: Locale,
+    ) {
+        val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
+
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = null,
+            returnUrl = "",
+            shopperLocale = sessionsValue,
+        )
+
+        val params = googlePayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = deviceLocaleValue,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = PaymentMethod(),
+        )
+
+        val expected = getGooglePayComponentParams(
+            shopperLocale = expectedValue,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
+        shopperLocale: Locale? = null,
         configuration: GooglePayConfiguration.Builder.() -> Unit = {}
     ) = CheckoutConfiguration(
-        shopperLocale = Locale.US,
+        shopperLocale = shopperLocale,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
@@ -446,7 +477,7 @@ internal class GooglePayComponentParamsMapperTest {
 
     @Suppress("LongParameterList")
     private fun getGooglePayComponentParams(
-        shopperLocale: Locale = Locale.US,
+        shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -508,6 +539,15 @@ internal class GooglePayComponentParamsMapperTest {
             arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
             arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
             arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+        )
+
+        @JvmStatic
+        fun shopperLocaleSource() = listOf(
+            // configurationValue, sessionsValue, deviceLocaleValue, expectedValue
+            arguments(null, null, Locale.US, Locale.US),
+            arguments(Locale.GERMAN, null, Locale.US, Locale.GERMAN),
+            arguments(null, Locale.CHINESE, Locale.US, Locale.CHINESE),
+            arguments(Locale.GERMAN, Locale.CHINESE, Locale.US, Locale.GERMAN),
         )
     }
 }
