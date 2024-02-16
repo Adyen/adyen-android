@@ -107,6 +107,10 @@ class ACHDirectDebitConfiguration private constructor(
          *
          * Default is true.
          *
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
          * @param showStorePaymentField [Boolean]
          * @return [ACHDirectDebitConfiguration.Builder]
          */

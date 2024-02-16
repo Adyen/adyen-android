@@ -95,6 +95,10 @@ private constructor(
          *
          * Sets the required return URL that Cash App Pay will redirect to at the end of the transaction.
          *
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
          * @param returnUrl The Cash App Pay environment.
          */
         fun setReturnUrl(returnUrl: String): Builder {
@@ -107,8 +111,9 @@ private constructor(
          *
          * Default is true.
          *
-         * When using `sessions` show store payment field will be ignored and replaced with the value sent to
-         * `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param showStorePaymentField [Boolean]
          * @return [CashAppPayConfiguration.Builder]
