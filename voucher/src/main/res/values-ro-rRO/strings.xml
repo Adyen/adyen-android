@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Descărcați instrucțiunile de debitare directă (DDI/mandat)</string>
     <string name="checkout_voucher_introduction">Vă mulțumim pentru cumpărături, vă rugăm să utilizați următorul cupon pentru a vă finaliza plata.</string>
+    <string name="checkout_voucher_introduction_econtext">Vă mulțumim pentru cumpărături, vă rugăm să utilizați următoarele informații pentru a vă finaliza plata.</string>
     <string name="checkout_voucher_payment_reference">Referința plății</string>
     <string name="checkout_voucher_expiration_entity">Entitate</string>
     <string name="checkout_voucher_expiration_date">Data de expirare</string>

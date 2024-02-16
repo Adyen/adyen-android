@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Download vejledningen til direkte debitering (fuldmagt til direkte debitering)</string>
     <string name="checkout_voucher_introduction">Tak for dit køb. Brug følgende kupon til at gennemføre din betaling.</string>
+    <string name="checkout_voucher_introduction_econtext">Tak for dit køb. Brug følgende oplysninger til at gennemføre din betaling.</string>
     <string name="checkout_voucher_payment_reference">Betalingsreference</string>
     <string name="checkout_voucher_expiration_entity">Enhed</string>
     <string name="checkout_voucher_expiration_date">Udløbsdato</string>

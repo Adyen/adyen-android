@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Загрузить распоряжение прямого дебетования (DDI / поручение)</string>
     <string name="checkout_voucher_introduction">Благодарим за покупку. Для завершения оплаты используйте следующий купон.</string>
+    <string name="checkout_voucher_introduction_econtext">Благодарим за покупку. Для завершения оплаты используйте следующие сведения.</string>
     <string name="checkout_voucher_payment_reference">Код оплаты</string>
     <string name="checkout_voucher_expiration_entity">Объект</string>
     <string name="checkout_voucher_expiration_date">Срок действия</string>

@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Stáhněte si pokyny k přímému inkasu (DDI / podpisové právo)</string>
     <string name="checkout_voucher_introduction">Děkujeme za nákup. K dokončení platby použijte prosím následující kupón.</string>
+    <string name="checkout_voucher_introduction_econtext">Děkujeme za nákup. K dokončení platby použijte prosím následující informace.</string>
     <string name="checkout_voucher_payment_reference">Číslo platby</string>
     <string name="checkout_voucher_expiration_entity">Subjekt</string>
     <string name="checkout_voucher_expiration_date">Datum konce platnosti</string>

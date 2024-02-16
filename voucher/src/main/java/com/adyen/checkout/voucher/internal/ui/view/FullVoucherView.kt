@@ -216,9 +216,9 @@ internal class FullVoucherView @JvmOverloads constructor(
                 .build()
                 .launchUrl(context, Uri.parse(url))
 
-            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in custom tab" }
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened instructions in custom tab" }
         } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in custom tab" }
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open instructions in custom tab" }
         }
     }
 

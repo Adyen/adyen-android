@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Descargue su instrucción de débito directo (IDD/mandato)</string>
     <string name="checkout_voucher_introduction">Gracias por su compra. Use el siguiente cupón para completar su pago.</string>
+    <string name="checkout_voucher_introduction_econtext">Gracias por su compra. Use la información siguiente para completar su pago.</string>
     <string name="checkout_voucher_payment_reference">Referencia de pago</string>
     <string name="checkout_voucher_expiration_entity">Entidad</string>
     <string name="checkout_voucher_expiration_date">Fecha de caducidad</string>

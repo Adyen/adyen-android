@@ -31,7 +31,7 @@ internal enum class VoucherPaymentMethodConfig(
     ),
     ECONTEXT(
         viewType = VoucherComponentViewType.FULL_VOUCHER,
-        introductionTextResource = R.string.checkout_voucher_introduction,
+        introductionTextResource = R.string.checkout_voucher_introduction_econtext,
     ),
     MULTIBANCO(
         viewType = VoucherComponentViewType.FULL_VOUCHER,

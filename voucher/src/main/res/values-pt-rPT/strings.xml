@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Descarregue a sua Instrução de Débito Direto (DDI / Mandato)</string>
     <string name="checkout_voucher_introduction">Obrigado pela sua compra, utilize o seguinte cupão para completar o seu pagamento.</string>
+    <string name="checkout_voucher_introduction_econtext">Obrigado pela sua compra, use as seguintes informações para concluir o seu pagamento.</string>
     <string name="checkout_voucher_payment_reference">Referência de pagamento</string>
     <string name="checkout_voucher_expiration_entity">Entidade</string>
     <string name="checkout_voucher_expiration_date">Data de validade</string>

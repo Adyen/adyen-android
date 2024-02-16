@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Beszedési megbízási utasítás (meghatalmazás) letöltése</string>
     <string name="checkout_voucher_introduction">Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő kupont.</string>
+    <string name="checkout_voucher_introduction_econtext">Köszönjük a vásárlást! Kérjük, a fizetéshez használja a következő információt.</string>
     <string name="checkout_voucher_payment_reference">Fizetési referencia</string>
     <string name="checkout_voucher_expiration_entity">Entitás</string>
     <string name="checkout_voucher_expiration_date">Lejárati dátum</string>

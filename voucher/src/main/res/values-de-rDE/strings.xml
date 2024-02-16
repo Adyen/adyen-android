@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Laden Sie Ihre Lastschriftanweisung (DDI/Einzugsermächtigung) herunter</string>
     <string name="checkout_voucher_introduction">Vielen Dank für Ihren Kauf. Bitte schließen Sie Ihre Zahlung unter Verwendung des folgenden Gutscheins ab.</string>
+    <string name="checkout_voucher_introduction_econtext">Vielen Dank für Ihren Kauf. Bitte schließen Sie Ihre Zahlung unter Verwendung der folgenden Informationen ab.</string>
     <string name="checkout_voucher_payment_reference">Zahlungsreferenz</string>
     <string name="checkout_voucher_expiration_entity">Entität</string>
     <string name="checkout_voucher_expiration_date">Gültig bis</string>

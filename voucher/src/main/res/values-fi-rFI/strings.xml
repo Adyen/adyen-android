@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Lataa suoraveloitusohjeet (DDI / Mandate)</string>
     <string name="checkout_voucher_introduction">Kiitos hankinnastasi, käytä seuraavaa kuponkia viedäksesi maksusi päätökseen.</string>
+    <string name="checkout_voucher_introduction_econtext">Kiitos hankinnastasi, käytä seuraavia tietoja päättääksesi maksusi.</string>
     <string name="checkout_voucher_payment_reference">Maksun viite</string>
     <string name="checkout_voucher_expiration_entity">Kokonaisuus</string>
     <string name="checkout_voucher_expiration_date">Vanhenemispäivämäärä</string>
