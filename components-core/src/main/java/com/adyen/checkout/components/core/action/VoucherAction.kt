@@ -36,7 +36,8 @@ data class VoucherAction(
     var merchantReference: String? = null,
     // TODO: remove url when it's fixed from backend side
     var url: String? = null,
-    var downloadUrl: String? = null
+    var downloadUrl: String? = null,
+    var instructionsUrl: String? = null,
 ) : Action() {
 
     companion object {
@@ -55,6 +56,7 @@ data class VoucherAction(
         private const val MERCHANT_REFERENCE = "merchantReference"
         private const val URL = "url"
         private const val DOWNLOAD_URL = "downloadUrl"
+        private const val INSTRUCTIONS_URL = "instructionsUrl"
 
         @JvmField
         val SERIALIZER: Serializer<VoucherAction> = object : Serializer<VoucherAction> {
@@ -78,6 +80,7 @@ data class VoucherAction(
                         putOpt(MERCHANT_REFERENCE, modelObject.merchantReference)
                         putOpt(URL, modelObject.url)
                         putOpt(DOWNLOAD_URL, modelObject.downloadUrl)
+                        putOpt(INSTRUCTIONS_URL, modelObject.instructionsUrl)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(VoucherAction::class.java, e)
@@ -103,6 +106,7 @@ data class VoucherAction(
                     merchantReference = jsonObject.getStringOrNull(MERCHANT_REFERENCE),
                     url = jsonObject.getStringOrNull(URL),
                     downloadUrl = jsonObject.getStringOrNull(DOWNLOAD_URL),
+                    instructionsUrl = jsonObject.getStringOrNull(INSTRUCTIONS_URL),
                 )
             }
         }

@@ -45,13 +45,22 @@
         app:layout_constraintTop_toBottomOf="@id/imageView_logo" />
 
     <TextView
+        android:id="@+id/textView_readInstructions"
+        style="@style/AdyenCheckout.Voucher.Full.ReadInstructions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_introduction" />
+
+    <TextView
         android:id="@+id/textView_amount"
         style="@style/AdyenCheckout.Voucher.Amount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_introduction"
+        app:layout_constraintTop_toBottomOf="@id/textView_readInstructions"
         tools:text="R$ 500" />
 
     <View

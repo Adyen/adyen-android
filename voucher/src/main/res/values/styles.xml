@@ -70,6 +70,14 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
+    <style name="AdyenCheckout.Voucher.Full.ReadInstructions" parent="AdyenCheckout.TextAppearance">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginStart">@dimen/standard_double_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_double_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:text">@string/checkout_voucher_read_instructions</item>
+    </style>
+
     <style name="AdyenCheckout.Voucher.Button" parent="AdyenCheckout.Button.Secondary">
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">16sp</item>
