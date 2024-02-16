@@ -35,7 +35,7 @@ fun getPaymentMethodRequest(
     shopperReference: String,
     amount: Amount?,
     countryCode: String,
-    shopperLocale: String,
+    shopperLocale: String?,
     splitCardFundingSources: Boolean,
     order: OrderRequest? = null,
 ): PaymentMethodsRequest {
@@ -57,7 +57,7 @@ fun getSessionRequest(
     shopperReference: String,
     amount: Amount?,
     countryCode: String,
-    shopperLocale: String,
+    shopperLocale: String?,
     splitCardFundingSources: Boolean,
     redirectUrl: String,
     isThreeds2Enabled: Boolean,

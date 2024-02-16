@@ -80,7 +80,6 @@
     <string name="amount_value_title">Amount (minor units)</string>
 
     <string name="preferences_default_country">NL</string>
-    <string name="preferences_default_shopper_locale">en-US</string>
     <string name="preferences_default_amount_value">1337</string>
     <string name="preferences_default_amount_currency">EUR</string>
     <string name="preferences_default_threeds2_enabled">true</string>

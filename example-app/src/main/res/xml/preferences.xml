@@ -58,7 +58,6 @@
             app:useSimpleSummaryProvider="true" />
 
         <EditTextPreference
-            android:defaultValue="@string/preferences_default_shopper_locale"
             android:key="@string/shopper_locale_key"
             android:title="@string/shopper_locale_title"
             app:useSimpleSummaryProvider="true" />

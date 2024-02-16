@@ -23,7 +23,7 @@ interface KeyValueStorage {
     fun getShopperReference(): String
     fun getAmount(): Amount
     fun getCountry(): String
-    fun getShopperLocale(): String
+    fun getShopperLocale(): String?
     fun isThreeds2Enabled(): Boolean
     fun isExecuteThreeD(): Boolean
     fun getShopperEmail(): String
@@ -63,7 +63,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.amount_value_key,
                 defaultStringRes = R.string.preferences_default_amount_value,
-            ).toLong()
+            ).toLong(),
         )
     }
 
@@ -75,12 +75,8 @@ internal class DefaultKeyValueStorage(
         )
     }
 
-    override fun getShopperLocale(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.shopper_locale_key,
-            defaultStringRes = R.string.preferences_default_shopper_locale,
-        )
+    override fun getShopperLocale(): String? {
+        return sharedPreferences.getString(appContext.getString(R.string.shopper_locale_key), null)
     }
 
     override fun isThreeds2Enabled(): Boolean {
@@ -129,7 +125,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.card_address_form_mode_key,
                 defaultStringRes = R.string.preferences_default_address_form_mode,
-            )
+            ),
         )
     }
 
@@ -147,7 +143,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.card_installment_options_mode_key,
                 defaultStringRes = R.string.preferences_default_installment_options_mode,
-            )
+            ),
         )
     }
 
@@ -177,7 +173,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.analytics_level_key,
                 defaultStringRes = R.string.preferences_default_analytics_level,
-            )
+            ),
         )
     }
 }
