@@ -54,6 +54,11 @@ CheckoutConfiguration(
 - For voucher actions which have no `url` or `downloadUrl`, "Save as image" option will be offered to save the Voucher in `Downloads` folder.
   - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
 - Set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
+- Payment methods:
+  - Pay Easy. Payment method type: **econtext_atm**.
+  - Convenience Stores Japan. Payment method type: **econtext_stores**
+  - Online Banking Japan. Payment method type: **econtext_online**.
+  - Seven-Eleven: Payment method type: **econtext_seven_eleven**
 
 ## Deprecated
 - When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter, the shopper locale will default to the primary device locale.
