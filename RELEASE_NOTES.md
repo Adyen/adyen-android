@@ -75,4 +75,6 @@ CheckoutConfiguration(
 
 ## Changed
 - When creating a configuration, the shopper locale parameter is now optional. If not set, the shopper locale will match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise.
+- With the sessions flow, when starting drop-in (with `DropIn.startPayment`) or creating a component (with `YourComponent.PROVIDER.get`), the configuration parameter is now optional.
+- When `CheckoutSessionProvider.createSession` to create a `CheckoutSession`, you can pass the `environment` and `clientKey` instead of the whole configuration.
 - In drop-in all actions will start in expanded mode
