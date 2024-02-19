@@ -129,12 +129,12 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
+        checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = componentCallback as ComponentCallback<BlikComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -149,12 +149,12 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
+        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as ComponentCallback<BlikComponentState>,
+                callback = componentCallback as ComponentCallback<CardComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
