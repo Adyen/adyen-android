@@ -23,11 +23,13 @@ import java.util.Locale
 
 internal class GenericComponentParamsMapperTest {
 
+    private val genericComponentParamsMapper = GenericComponentParamsMapper(CommonComponentParamsMapper())
+
     @Test
-    fun `when parent configuration is null then params should match the component configuration`() {
+    fun `when drop-in override params are null then params should match the component configuration`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params = genericComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getGenericComponentParams()
 
@@ -35,7 +37,7 @@ internal class GenericComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override component configuration fields`() {
+    fun `when drop-in override params are set then they should override component configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -57,13 +59,10 @@ internal class GenericComponentParamsMapperTest {
             addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
         }
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
-        val params = GenericComponentParamsMapper(dropInOverrideParams, null).mapToParams(
-            configuration,
-            null,
-        )
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = genericComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, dropInOverrideParams, null)
 
-        val expected = GenericComponentParams(
+        val expected = getGenericComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
@@ -80,7 +79,7 @@ internal class GenericComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
@@ -88,20 +87,26 @@ internal class GenericComponentParamsMapperTest {
     ) {
         val testConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
 
-        val params = GenericComponentParamsMapper(dropInOverrideParams, null).mapToParams(
-            testConfiguration,
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = sessionsValue,
-                returnUrl = "",
-            ),
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = sessionsValue,
+            returnUrl = "",
         )
 
-        val expected =
-            getGenericComponentParams().copy(amount = expectedValue, isCreatedByDropIn = dropInOverrideParams != null)
+        val params = genericComponentParamsMapper.mapToParams(
+            testConfiguration,
+            DEVICE_LOCALE,
+            dropInOverrideParams,
+            sessionParams,
+        )
+
+        val expected = getGenericComponentParams(
+            amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
+        )
 
         assertEquals(expected, params)
     }
@@ -119,14 +124,24 @@ internal class GenericComponentParamsMapperTest {
         addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
     }
 
-    private fun getGenericComponentParams(): GenericComponentParams {
+    @Suppress("LongParameterList")
+    private fun getGenericComponentParams(
+        shopperLocale: Locale = Locale.US,
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        isCreatedByDropIn: Boolean = false,
+        amount: Amount? = null,
+    ): GenericComponentParams {
         return GenericComponentParams(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = false,
-            amount = null,
+            commonComponentParams = CommonComponentParams(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                analyticsParams = analyticsParams,
+                isCreatedByDropIn = isCreatedByDropIn,
+                amount = amount,
+            ),
         )
     }
 
@@ -134,6 +149,7 @@ internal class GenericComponentParamsMapperTest {
         private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun amountSource() = listOf(

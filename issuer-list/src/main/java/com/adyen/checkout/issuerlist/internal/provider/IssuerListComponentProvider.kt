@@ -33,13 +33,14 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryD
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.issuerlist.internal.IssuerListComponent
 import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.DefaultIssuerListDelegate
@@ -68,9 +69,9 @@ abstract class IssuerListComponentProvider<
 constructor(
     private val componentClass: Class<ComponentT>,
     private val dropInOverrideParams: DropInOverrideParams?,
-    overrideSessionParams: SessionParams?,
     private val analyticsRepository: AnalyticsRepository?,
-    hideIssuerLogosDefaultValue: Boolean = false,
+    private val hideIssuerLogosDefaultValue: Boolean = false,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallback<ComponentStateT>>,
     SessionPaymentComponentProvider<
@@ -79,12 +80,6 @@ constructor(
         ComponentStateT,
         SessionComponentCallback<ComponentStateT>,
         > {
-
-    private val componentParamsMapper = IssuerListComponentParamsMapper(
-        dropInOverrideParams = dropInOverrideParams,
-        overrideSessionParams = overrideSessionParams,
-        hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue,
-    )
 
     final override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -100,10 +95,13 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                configuration = getConfiguration(checkoutConfiguration),
-                sessionParams = null,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue,
+                componentConfiguration = getConfiguration(checkoutConfiguration),
             )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -186,10 +184,13 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                configuration = getConfiguration(checkoutConfiguration),
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                hideIssuerLogosDefaultValue = hideIssuerLogosDefaultValue,
+                componentConfiguration = getConfiguration(checkoutConfiguration),
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

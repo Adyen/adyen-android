@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
@@ -252,10 +253,12 @@ internal class DefaultUPIDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getUPIConfiguration(),
-            sessionParams = null,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getUPIConfiguration(),
         ),
     )
 

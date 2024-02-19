@@ -48,9 +48,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     val checkoutConfig: CheckoutConfiguration
         get() = CheckoutConfiguration(
-            shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
+            shopperLocale = shopperLocale,
             amount = amount,
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {

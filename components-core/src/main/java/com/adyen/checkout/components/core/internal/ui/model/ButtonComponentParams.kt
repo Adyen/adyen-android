@@ -9,17 +9,9 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.Environment
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class ButtonComponentParams(
-    override val shopperLocale: Locale,
-    override val environment: Environment,
-    override val clientKey: String,
-    override val analyticsParams: AnalyticsParams,
-    override val isCreatedByDropIn: Boolean,
-    override val amount: Amount?,
+    private val commonComponentParams: CommonComponentParams,
     override val isSubmitButtonVisible: Boolean,
-) : ComponentParams, ButtonParams
+) : ComponentParams by commonComponentParams, ButtonParams

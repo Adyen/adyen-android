@@ -19,9 +19,9 @@ internal object DropInPrefs {
     private const val DROP_IN_PREFS = "drop-in-shared-prefs"
     private const val LOCALE_PREF = "drop-in-locale"
 
-    fun setShopperLocale(context: Context, shopperLocale: Locale) {
+    fun setShopperLocale(context: Context, shopperLocale: Locale?) {
         adyenLog(AdyenLogLevel.VERBOSE) { "setShopperLocale: $shopperLocale" }
-        val localeTag = LocaleUtil.toLanguageTag(shopperLocale)
+        val localeTag = shopperLocale?.let { LocaleUtil.toLanguageTag(shopperLocale) }
         adyenLog(AdyenLogLevel.DEBUG) { "Storing shopper locale tag: $localeTag" }
         return context
             .getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE)
@@ -30,13 +30,13 @@ internal object DropInPrefs {
             .apply()
     }
 
-    fun getShopperLocale(context: Context): Locale {
+    fun getShopperLocale(context: Context): Locale? {
         adyenLog(AdyenLogLevel.VERBOSE) { "getShopperLocale" }
         val localeTag = context
             .getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE)
             .getString(LOCALE_PREF, null)
-            .orEmpty()
-        adyenLog(AdyenLogLevel.DEBUG) { "Fetching shopper locale tag: $localeTag" }
+        adyenLog(AdyenLogLevel.DEBUG) { "Fetched shopper locale tag: $localeTag" }
+        if (localeTag == null) return null
         val locale = LocaleUtil.fromLanguageTag(localeTag)
         adyenLog(AdyenLogLevel.DEBUG) { "Parsed locale: $locale" }
         return locale

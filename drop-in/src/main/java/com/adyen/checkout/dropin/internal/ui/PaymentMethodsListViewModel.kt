@@ -11,7 +11,6 @@ package com.adyen.checkout.dropin.internal.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
@@ -21,13 +20,14 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
@@ -37,8 +37,6 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
-import com.adyen.checkout.sessions.core.internal.data.model.mapToParams
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -52,9 +50,8 @@ internal class PaymentMethodsListViewModel(
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val dropInComponentParams: DropInComponentParams,
-    private val overrideAmount: Amount?,
-    private val sessionDetails: SessionDetails?,
+    private val dropInParams: DropInParams,
+    private val dropInOverrideParams: DropInOverrideParams,
 ) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
@@ -78,7 +75,6 @@ internal class PaymentMethodsListViewModel(
     }
 
     private fun setupPaymentMethods(paymentMethods: List<PaymentMethod>) {
-        val sessionParams = sessionDetails?.mapToParams(checkoutConfiguration.amount)
         paymentMethods.forEach { paymentMethod ->
             val type = requireNotNull(paymentMethod.type) { "PaymentMethod type is null" }
 
@@ -89,8 +85,7 @@ internal class PaymentMethodsListViewModel(
                         application = application,
                         paymentMethod = paymentMethod,
                         checkoutConfiguration = checkoutConfiguration,
-                        overrideAmount = overrideAmount,
-                        sessionParams = sessionParams,
+                        dropInOverrideParams = dropInOverrideParams,
                         callback = this,
                     )
                 }
@@ -132,7 +127,7 @@ internal class PaymentMethodsListViewModel(
             }
             // payment notes
             order?.remainingAmount?.let { remainingAmount ->
-                val value = CurrencyUtils.formatAmount(remainingAmount, checkoutConfiguration.shopperLocale)
+                val value = CurrencyUtils.formatAmount(remainingAmount, dropInParams.shopperLocale)
                 add(
                     PaymentMethodNote(application.getString(R.string.checkout_giftcard_pay_remaining_amount, value)),
                 )
@@ -217,8 +212,8 @@ internal class PaymentMethodsListViewModel(
         mapNotNull { storedPaymentMethod ->
             if (storedPaymentMethod.isStoredPaymentSupported()) {
                 storedPaymentMethod.mapStoredModel(
-                    dropInComponentParams.isRemovingStoredPaymentMethodsEnabled,
-                    checkoutConfiguration.environment,
+                    dropInParams.isRemovingStoredPaymentMethodsEnabled,
+                    dropInParams.environment,
                 )
             } else {
                 null
@@ -239,7 +234,7 @@ internal class PaymentMethodsListViewModel(
             name = name.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
-            environment = checkoutConfiguration.environment,
+            environment = dropInParams.environment,
         )
     }
 
@@ -250,8 +245,8 @@ internal class PaymentMethodsListViewModel(
                 lastFour = it.lastFour,
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
-                shopperLocale = checkoutConfiguration.shopperLocale,
-                environment = checkoutConfiguration.environment,
+                shopperLocale = dropInParams.shopperLocale,
+                environment = dropInParams.environment,
             )
         }
 

@@ -28,7 +28,7 @@ import java.util.Locale
 @Parcelize
 @Suppress("LongParameterList")
 class BoletoConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -48,12 +48,25 @@ class BoletoConfiguration private constructor(
         private var isEmailVisible: Boolean? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
@@ -112,8 +125,9 @@ class BoletoConfiguration private constructor(
 fun CheckoutConfiguration.boleto(
     configuration: @CheckoutConfigurationMarker BoletoConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = BoletoConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = BoletoConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
@@ -520,7 +521,8 @@ internal class DefaultBoletoDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = paymentMethod,
         order = order,
-        componentParams = BoletoComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = BoletoComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(configuration, Locale.US, null, null),
         addressRepository = addressRepository,
     )
 

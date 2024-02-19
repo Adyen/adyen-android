@@ -9,44 +9,55 @@
 package com.adyen.checkout.ach.internal.ui.model
 
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
+import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.getACHDirectDebitConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import java.util.Locale
 
 internal class ACHDirectDebitComponentParamsMapper(
-    private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
         checkoutConfiguration: CheckoutConfiguration,
-        sessionParams: SessionParams?,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
     ): ACHDirectDebitComponentParams {
-        return checkoutConfiguration
-            .mapToParamsInternal()
-            .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val achDirectDebitConfiguration = checkoutConfiguration.getACHDirectDebitConfiguration()
+        return mapToParams(
+            commonComponentParamsMapperData.commonComponentParams,
+            commonComponentParamsMapperData.sessionParams,
+            achDirectDebitConfiguration,
+        )
     }
 
-    private fun CheckoutConfiguration.mapToParamsInternal(): ACHDirectDebitComponentParams {
-        val achDirectDebitConfiguration = getACHDirectDebitConfiguration()
+    private fun mapToParams(
+        commonComponentParams: CommonComponentParams,
+        sessionParams: SessionParams?,
+        achDirectDebitConfiguration: ACHDirectDebitConfiguration?,
+    ): ACHDirectDebitComponentParams {
         return ACHDirectDebitComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
+            commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = achDirectDebitConfiguration?.isSubmitButtonVisible ?: true,
             addressParams = achDirectDebitConfiguration?.addressConfiguration?.mapToAddressParam()
                 ?: AddressParams.FullAddress(
                     supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
                     addressFieldPolicy = AddressFieldPolicyParams.Required,
                 ),
-            isStorePaymentFieldVisible = achDirectDebitConfiguration?.isStorePaymentFieldVisible ?: true,
+            isStorePaymentFieldVisible = sessionParams?.enableStoreDetails
+                ?: achDirectDebitConfiguration?.isStorePaymentFieldVisible ?: true,
         )
     }
 
@@ -63,26 +74,6 @@ internal class ACHDirectDebitComponentParamsMapper(
                 )
             }
         }
-    }
-
-    private fun ACHDirectDebitComponentParams.override(
-        dropInOverrideParams: DropInOverrideParams?,
-    ): ACHDirectDebitComponentParams {
-        if (dropInOverrideParams == null) return this
-        return copy(
-            amount = dropInOverrideParams.amount,
-            isCreatedByDropIn = true,
-        )
-    }
-
-    private fun ACHDirectDebitComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): ACHDirectDebitComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            isStorePaymentFieldVisible = sessionParams.enableStoreDetails ?: isStorePaymentFieldVisible,
-            amount = sessionParams.amount ?: amount,
-        )
     }
 
     companion object {

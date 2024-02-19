@@ -24,11 +24,12 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import com.adyen.checkout.wechatpay.internal.ui.DefaultWeChatDelegate
@@ -41,11 +42,9 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 class WeChatPayActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -75,7 +74,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): WeChatDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         val iwxApi: IWXAPI = WXAPIFactory.createWXAPI(application, null, true)
         val requestGenerator = WeChatPayRequestGenerator()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)

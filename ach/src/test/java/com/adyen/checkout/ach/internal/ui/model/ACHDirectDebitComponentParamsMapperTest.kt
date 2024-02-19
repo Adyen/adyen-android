@@ -17,6 +17,8 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
@@ -30,11 +32,13 @@ import java.util.Locale
 
 internal class ACHDirectDebitComponentParamsMapperTest {
 
+    private val achDirectDebitComponentParamsMapper = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
+
     @Test
-    fun `when parent configuration is null and custom ach configuration fields are null then all fields should match`() {
+    fun `when drop-in override params are null and custom ach configuration fields are null then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getAchComponentParams()
 
@@ -42,19 +46,19 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is null and custom ach configuration fields are set then all fields should match`() {
+    fun `when drop-in override params are null and custom ach configuration fields are set then all fields should match`() {
         val addressConfiguration =
             ACHDirectDebitAddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
         val configuration = createCheckoutConfiguration {
             setAddressConfiguration(addressConfiguration)
         }
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
         val expected = getAchComponentParams()
         assertEquals(expected, params)
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override ach configuration fields`() {
+    fun `when drop-in override params are set then they should override ach configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -71,8 +75,13 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             }
         }
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L))
-        val params = ACHDirectDebitComponentParamsMapper(dropInOverrideParams, null).mapToParams(configuration, null)
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params = achDirectDebitComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
 
         val expected = getAchComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -97,7 +106,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
         val expected = getAchComponentParams()
 
         assertEquals(expected, params)
@@ -110,7 +119,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setAddressConfiguration(addressConfiguration)
         }
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params =
+            achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
         val expected = getAchComponentParams(addressParams = AddressParams.None)
 
         assertEquals(expected, params)
@@ -120,7 +130,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when the address configuration is null, default address configuration should be FullAddress with default supported countries`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params =
+            achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expectedAddressParams: AddressParams = AddressParams.FullAddress(
             supportedCountryCodes = SUPPORTED_COUNTRY_LIST,
@@ -136,7 +147,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(false)
         }
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params =
+            achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = false)
 
@@ -149,7 +161,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(true)
         }
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params =
+            achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
 
@@ -175,10 +188,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             returnUrl = "",
         )
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
-            checkoutConfiguration = configuration,
-            sessionParams = sessionParams,
-        )
+        val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, sessionParams)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = expectedValue)
 
@@ -189,10 +199,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     fun `when isStorePaymentFieldVisible is not set, isStorePaymentFieldVisible should be true`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(
-            checkoutConfiguration = configuration,
-            sessionParams = null,
-        )
+        val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getAchComponentParams(isStorePaymentFieldVisible = true)
 
@@ -201,7 +208,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
@@ -209,16 +216,20 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = sessionsValue,
+            returnUrl = "",
+        )
 
-        val params = ACHDirectDebitComponentParamsMapper(dropInOverrideParams, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
+
+        val params = achDirectDebitComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = sessionsValue,
-                returnUrl = "",
-            ),
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = sessionParams,
         )
 
         val expected = getAchComponentParams(
@@ -256,12 +267,14 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         ),
         isStorePaymentFieldVisible: Boolean = true
     ) = ACHDirectDebitComponentParams(
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        analyticsParams = analyticsParams,
-        isCreatedByDropIn = isCreatedByDropIn,
-        amount = amount,
+        commonComponentParams = CommonComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            analyticsParams = analyticsParams,
+            isCreatedByDropIn = isCreatedByDropIn,
+            amount = amount,
+        ),
         isSubmitButtonVisible = isSubmitButtonVisible,
         addressParams = addressParams,
         isStorePaymentFieldVisible = isStorePaymentFieldVisible,
@@ -271,6 +284,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
         private val SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(

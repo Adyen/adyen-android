@@ -34,12 +34,13 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.Dispatchers
@@ -47,11 +48,9 @@ import kotlinx.coroutines.Dispatchers
 class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
-
-    private val componentParamsMapper = Adyen3DS2ComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -81,10 +80,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): Adyen3DS2Delegate {
-        val componentParams = componentParamsMapper.mapToParams(
+        val componentParams = Adyen3DS2ComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
-            sessionParams = null,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
         )
+
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)

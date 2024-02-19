@@ -16,7 +16,6 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSComponentState
@@ -30,12 +29,10 @@ class EPSComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<EPSComponent, EPSConfiguration, EPSPaymentMethod, EPSComponentState>(
     componentClass = EPSComponent::class.java,
     dropInOverrideParams = dropInOverrideParams,
-    overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
     hideIssuerLogosDefaultValue = true,
 ) {

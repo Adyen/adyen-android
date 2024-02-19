@@ -6,6 +6,8 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
@@ -20,14 +22,16 @@ import java.util.Locale
 
 internal class GiftCardComponentParamsMapperTest {
 
+    private val giftCardComponentParamsMapper = GiftCardComponentParamsMapper(CommonComponentParamsMapper())
+
     @Test
-    fun `when parent configuration is null then params should match the component configuration`() {
+    fun `when drop-in override params are null then params should match the component configuration`() {
         val configuration = createCheckoutConfiguration {
             setPinRequired(false)
             setSubmitButtonVisible(false)
         }
 
-        val params = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null)
+        val params = giftCardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getComponentParams(
             isPinRequired = false,
@@ -38,7 +42,7 @@ internal class GiftCardComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override component configuration fields`() {
+    fun `when drop-in override params are set then they should override component configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -55,13 +59,10 @@ internal class GiftCardComponentParamsMapperTest {
             }
         }
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
-        val params = GiftCardComponentParamsMapper(dropInOverrideParams, null).mapToParams(
-            configuration,
-            null,
-        )
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = giftCardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, dropInOverrideParams, null)
 
-        val expected = GiftCardComponentParams(
+        val expected = getComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
@@ -80,7 +81,7 @@ internal class GiftCardComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
@@ -88,16 +89,19 @@ internal class GiftCardComponentParamsMapperTest {
     ) {
         val testConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = sessionsValue,
+            returnUrl = "",
+        )
 
-        val params = GiftCardComponentParamsMapper(dropInOverrideParams, null).mapToParams(
-            testConfiguration,
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = sessionsValue,
-                returnUrl = "",
-            ),
+        val params = giftCardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = testConfiguration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = sessionParams,
         )
 
         val expected = getComponentParams(amount = expectedValue, isCreatedByDropIn = dropInOverrideParams != null)
@@ -117,27 +121,35 @@ internal class GiftCardComponentParamsMapperTest {
         giftCard(configuration)
     }
 
+    @Suppress("LongParameterList")
     private fun getComponentParams(
-        amount: Amount? = null,
+        shopperLocale: Locale = Locale.US,
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
         isCreatedByDropIn: Boolean = false,
-        isPinRequired: Boolean = true,
+        amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,
+        isPinRequired: Boolean = true,
     ): GiftCardComponentParams {
         return GiftCardComponentParams(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = isCreatedByDropIn,
-            amount = amount,
-            isPinRequired = isPinRequired,
+            commonComponentParams = CommonComponentParams(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                analyticsParams = analyticsParams,
+                isCreatedByDropIn = isCreatedByDropIn,
+                amount = amount,
+            ),
             isSubmitButtonVisible = isSubmitButtonVisible,
+            isPinRequired = isPinRequired,
         )
     }
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun amountSource() = listOf(

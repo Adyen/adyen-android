@@ -65,9 +65,8 @@ internal class PaymentMethodListDialogFragment :
                 storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
                 order = dropInViewModel.currentOrder,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                dropInComponentParams = dropInViewModel.dropInComponentParams,
-                overrideAmount = dropInViewModel.amount,
-                sessionDetails = dropInViewModel.sessionDetails,
+                dropInParams = dropInViewModel.dropInParams,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
             )
         }
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
@@ -157,9 +156,8 @@ internal class PaymentMethodListDialogFragment :
             fragment = this,
             storedPaymentMethod = storedPaymentMethod,
             checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-            amount = dropInViewModel.amount,
+            dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
             componentCallback = paymentMethodsListViewModel,
-            sessionDetails = dropInViewModel.sessionDetails,
             analyticsRepository = dropInViewModel.analyticsRepository,
             onRedirect = protocol::onRedirect,
         )
@@ -179,8 +177,8 @@ internal class PaymentMethodListDialogFragment :
             }
             .setPositiveButton(
                 PayButtonFormatter.getPayButtonText(
-                    amount = dropInViewModel.amount,
-                    locale = dropInViewModel.dropInComponentParams.shopperLocale,
+                    amount = dropInViewModel.dropInParams.amount,
+                    locale = dropInViewModel.dropInParams.shopperLocale,
                     localizedContext = requireContext(),
                 ),
             ) { dialog, _ ->

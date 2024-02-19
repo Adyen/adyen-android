@@ -26,16 +26,17 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.internal.provider.mapToParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
+import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
@@ -58,25 +59,28 @@ internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     internal val analyticsRepository: AnalyticsRepository,
+    private val initialDropInParams: DropInParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
+    // this should only be used when initializing components, for drop-in related configurations use dropInParams
     val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
 
-    val dropInComponentParams: DropInComponentParams get() = checkoutConfiguration.mapToParams(amount)
+    val dropInParams: DropInParams
+        get() {
+            if (overrideAmount == null) return initialDropInParams
+            return initialDropInParams.copy(amount = overrideAmount)
+        }
+
+    // this is needed for partial payments, the amount has to be updated manually to override the initial amount
+    private var overrideAmount: Amount? = null
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
-    var amount: Amount?
-        get() = bundleHandler.amount
-        private set(value) {
-            bundleHandler.amount = value
-        }
-
-    internal var sessionDetails: SessionDetails?
+    private var sessionDetails: SessionDetails?
         get() = bundleHandler.sessionDetails
         private set(value) {
             bundleHandler.sessionDetails = value
@@ -134,7 +138,7 @@ internal class DropInViewModel(
 
     fun shouldShowPreselectedStored(): Boolean {
         return getStoredPaymentMethods().any { it.isStoredPaymentSupported() } &&
-            dropInComponentParams.showPreselectedStoredPaymentMethod
+            dropInParams.showPreselectedStoredPaymentMethod
     }
 
     fun getPreselectedStoredPaymentMethod(): StoredPaymentMethod {
@@ -148,7 +152,7 @@ internal class DropInViewModel(
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
-        if (!dropInComponentParams.skipListWhenSinglePaymentMethod) return false
+        if (!dropInParams.skipListWhenSinglePaymentMethod) return false
 
         val noStored = getStoredPaymentMethods().isEmpty()
         val singlePm = getPaymentMethods().size == 1
@@ -165,8 +169,19 @@ internal class DropInViewModel(
         return noStored && singlePm && paymentMethodHasComponent
     }
 
-    private fun getInitialAmount(): Amount? {
-        return sessionDetails?.amount ?: checkoutConfiguration.amount
+    /**
+     * @return A class needed to initialize components inside drop-in.
+     */
+    fun getDropInOverrideParams(): DropInOverrideParams {
+        val amount = dropInParams.amount
+        return DropInOverrideParamsFactory.create(
+            amount = amount,
+            // when creating a component, the sessions amount has priority over the drop-in amount
+            // but after a partial payment is successful the sessions amount is not updated to the remaining amount
+            // this is due to the backend not returning the updated amount value in the sessions setup call
+            // therefore we modify the amount ourselves here before passing it to the components
+            sessionDetails = sessionDetails?.copy(amount = amount),
+        )
     }
 
     fun onCreated() {
@@ -183,8 +198,8 @@ internal class DropInViewModel(
 
         val event = DropInActivityEvent.SessionServiceConnected(
             sessionModel = sessionModel,
-            clientKey = dropInComponentParams.clientKey,
-            environment = dropInComponentParams.environment,
+            clientKey = dropInParams.clientKey,
+            environment = dropInParams.environment,
             isFlowTakenOver = isSessionsFlowTakenOver,
         )
         sendEvent(event)
@@ -246,7 +261,7 @@ internal class DropInViewModel(
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
             transactionLimit = balanceResult.transactionLimit,
-            amountToBePaid = amount,
+            amountToBePaid = dropInParams.amount,
         )
         val cachedGiftCardComponentState =
             cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
@@ -302,7 +317,7 @@ internal class DropInViewModel(
         return GiftCardPaymentConfirmationData(
             amountPaid = giftCardBalanceStatus.amountPaid,
             remainingBalance = giftCardBalanceStatus.remainingBalance,
-            shopperLocale = dropInComponentParams.shopperLocale,
+            shopperLocale = dropInParams.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty(),
         )
@@ -321,14 +336,13 @@ internal class DropInViewModel(
         val orderModel = getOrderDetails(orderResponse)
         if (orderModel == null) {
             currentOrder = null
-            amount = getInitialAmount()
-            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Amount reverted: $amount" }
+            overrideAmount = null
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Amount reverted: ${dropInParams.amount}" }
             adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cancelled" }
         } else {
             currentOrder = orderModel
-            amount = orderModel.remainingAmount
-            sessionDetails = sessionDetails?.copy(amount = orderModel.remainingAmount)
-            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - New amount set: $amount" }
+            overrideAmount = orderModel.remainingAmount
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - New amount set: ${dropInParams.amount}" }
             adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cached" }
         }
     }
@@ -341,9 +355,9 @@ internal class DropInViewModel(
                 adyenLog(AdyenLogLevel.DEBUG) { "Payment amount already set: $existingAmount" }
             }
 
-            amount != null -> {
-                paymentComponentState.data.amount = amount
-                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount set: $amount" }
+            dropInParams.amount != null -> {
+                paymentComponentState.data.amount = dropInParams.amount
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount set: ${dropInParams.amount}" }
             }
 
             else -> {
@@ -390,7 +404,7 @@ internal class DropInViewModel(
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
         if (orderResponse == null) return null
 
-        return orderStatusRepository.getOrderStatus(dropInComponentParams.clientKey, orderResponse.orderData)
+        return orderStatusRepository.getOrderStatus(dropInParams.clientKey, orderResponse.orderData)
             .fold(
                 onSuccess = { statusResponse ->
                     OrderModel(

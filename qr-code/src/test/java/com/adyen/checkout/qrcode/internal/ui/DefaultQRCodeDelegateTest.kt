@@ -25,6 +25,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
@@ -84,7 +85,6 @@ internal class DefaultQRCodeDelegateTest(
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         val configuration = CheckoutConfiguration(
-            Locale.US,
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
@@ -92,7 +92,8 @@ internal class DefaultQRCodeDelegateTest(
         }
         delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
             redirectHandler = redirectHandler,

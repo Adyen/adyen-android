@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
@@ -69,8 +70,8 @@ internal class TestActionDelegate :
         amount = null,
         analyticsConfiguration = null,
     )
-    override val componentParams: ComponentParams =
-        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+        .mapToParams(configuration, Locale.US, null, null)
 
     var initializeCalled = false
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -114,8 +115,8 @@ internal class Test3DS2Delegate : Adyen3DS2Delegate {
         clientKey = TEST_CLIENT_KEY,
     )
 
-    override val componentParams: ComponentParams =
-        GenericComponentParamsMapper(null, null).mapToParams(configuration, null)
+    override val componentParams: ComponentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+        .mapToParams(configuration, Locale.US, null, null)
 
     override val detailsFlow: MutableSharedFlow<ActionComponentData> = MutableSharedFlow(extraBufferCapacity = 1)
 

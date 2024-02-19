@@ -15,14 +15,18 @@ import java.util.Locale
 
 internal class ButtonComponentParamsMapperTest {
 
+    private val buttonComponentParamsMapper = ButtonComponentParamsMapper(CommonComponentParamsMapper())
+
     @Test
-    fun `when parent configuration is null then params should match the component configuration`() {
+    fun `when drop-in override params are null then params should match the component configuration`() {
         val configuration = createCheckoutConfiguration()
 
-        val params = ButtonComponentParamsMapper(null, null).mapToParams(
+        val params = buttonComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-            sessionParams = null,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
         )
 
         val expected = getButtonComponentParams()
@@ -31,7 +35,7 @@ internal class ButtonComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override component configuration fields`() {
+    fun `when drop-in override params are set then they should override component configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -49,14 +53,16 @@ internal class ButtonComponentParamsMapperTest {
             addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
         }
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("USD", 123L))
-        val params = ButtonComponentParamsMapper(dropInOverrideParams, null).mapToParams(
+        val dropInOverrideParams = DropInOverrideParams(Amount("USD", 123L), null)
+        val params = buttonComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-            sessionParams = null,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
         )
 
-        val expected = ButtonComponentParams(
+        val expected = getButtonComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
@@ -74,7 +80,7 @@ internal class ButtonComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
@@ -82,21 +88,25 @@ internal class ButtonComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it) }
-
-        val params = ButtonComponentParamsMapper(dropInOverrideParams, null).mapToParams(
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = sessionsValue,
+            returnUrl = "",
+        )
+        val params = buttonComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = sessionsValue,
-                returnUrl = "",
-            ),
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = sessionParams,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
         )
 
-        val expected =
-            getButtonComponentParams().copy(amount = expectedValue, isCreatedByDropIn = dropInOverrideParams != null)
+        val expected = getButtonComponentParams(
+            amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
+        )
 
         assertEquals(expected, params)
     }
@@ -116,15 +126,26 @@ internal class ButtonComponentParamsMapperTest {
         addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
     }
 
-    private fun getButtonComponentParams(): ButtonComponentParams {
+    @Suppress("LongParameterList")
+    private fun getButtonComponentParams(
+        shopperLocale: Locale = Locale.US,
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        isCreatedByDropIn: Boolean = false,
+        amount: Amount? = null,
+        isSubmitButtonVisible: Boolean = true,
+    ): ButtonComponentParams {
         return ButtonComponentParams(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = false,
-            amount = null,
-            isSubmitButtonVisible = true,
+            commonComponentParams = CommonComponentParams(
+                shopperLocale = shopperLocale,
+                environment = environment,
+                clientKey = clientKey,
+                analyticsParams = analyticsParams,
+                isCreatedByDropIn = isCreatedByDropIn,
+                amount = amount,
+            ),
+            isSubmitButtonVisible = isSubmitButtonVisible,
         )
     }
 
@@ -132,6 +153,7 @@ internal class ButtonComponentParamsMapperTest {
         private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun amountSource() = listOf(

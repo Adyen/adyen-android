@@ -25,12 +25,13 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
@@ -43,11 +44,9 @@ import com.adyen.checkout.ui.core.internal.util.ImageSaver
 class QRCodeComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<QRCodeComponent, QRCodeConfiguration, QRCodeDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -76,7 +75,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): QRCodeDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)

@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.sepa.SepaComponentState
@@ -209,10 +210,12 @@ internal class DefaultSepaDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getSepaConfiguration(),
-            sessionParams = null,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getSepaConfiguration(),
         ),
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,

@@ -107,9 +107,8 @@ internal abstract class BaseComponentDialogFragment :
                     fragment = this,
                     storedPaymentMethod = storedPaymentMethod,
                     checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                    amount = dropInViewModel.amount,
+                    dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                     componentCallback = this,
-                    sessionDetails = dropInViewModel.sessionDetails,
                     analyticsRepository = dropInViewModel.analyticsRepository,
                     onRedirect = protocol::onRedirect,
                 )
@@ -117,9 +116,8 @@ internal abstract class BaseComponentDialogFragment :
                 getComponentFor(
                     fragment = this,
                     paymentMethod = paymentMethod,
-                    sessionDetails = dropInViewModel.sessionDetails,
                     checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                    amount = dropInViewModel.amount,
+                    dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                     componentCallback = this,
                     analyticsRepository = dropInViewModel.analyticsRepository,
                     onRedirect = protocol::onRedirect,

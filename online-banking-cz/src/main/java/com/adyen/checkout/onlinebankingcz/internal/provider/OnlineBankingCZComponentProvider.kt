@@ -16,7 +16,6 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
@@ -30,7 +29,6 @@ class OnlineBankingCZComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingCZComponent,
@@ -40,7 +38,6 @@ constructor(
     >(
     componentClass = OnlineBankingCZComponent::class.java,
     dropInOverrideParams = dropInOverrideParams,
-    overrideSessionParams = overrideSessionParams,
     analyticsRepository = analyticsRepository,
 ) {
 

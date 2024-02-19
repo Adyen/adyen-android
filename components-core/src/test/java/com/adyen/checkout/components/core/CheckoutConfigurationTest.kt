@@ -1,6 +1,7 @@
 package com.adyen.checkout.components.core
 
 import android.os.Parcel
+import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -15,7 +16,7 @@ internal class CheckoutConfigurationTest {
     fun `when parcelized, then it must be correctly deparcelized`() {
         val testConfiguration = TestConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY).build()
         val testActionConfiguration = TestConfiguration.Builder(Locale.CHINA, Environment.APSE, LIVE_CLIENT_KEY).build()
-        val original = CheckoutConfiguration(
+        val checkoutConfiguration = CheckoutConfiguration(
             shopperLocale = Locale.US,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
@@ -26,32 +27,50 @@ internal class CheckoutConfigurationTest {
             addActionConfiguration(testActionConfiguration)
         }
 
+        assertCorrectParcelization(checkoutConfiguration, testConfiguration, testActionConfiguration)
+    }
+
+    @Test
+    fun `when parcelized with required fields only, then it must be correctly deparcelized`() {
+        val testConfiguration = TestConfiguration.Builder(null, Environment.TEST, TEST_CLIENT_KEY).build()
+        val testActionConfiguration = TestConfiguration.Builder(null, Environment.APSE, LIVE_CLIENT_KEY).build()
+        val checkoutConfiguration = CheckoutConfiguration(
+            Environment.TEST,
+            TEST_CLIENT_KEY,
+        ) {
+            addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+            addActionConfiguration(testActionConfiguration)
+        }
+
+        assertCorrectParcelization(checkoutConfiguration, testConfiguration, testActionConfiguration)
+    }
+
+    private fun assertCorrectParcelization(
+        checkoutConfiguration: CheckoutConfiguration,
+        paymentMethodConfiguration: Configuration,
+        actionConfiguration: Configuration
+    ) {
         val parcel = Parcel.obtain()
-        original.writeToParcel(parcel, 0)
+        checkoutConfiguration.writeToParcel(parcel, 0)
         // Reset the parcel for reading
         parcel.setDataPosition(0)
 
         val deparcelized = CheckoutConfiguration.createFromParcel(parcel)
-
-        assertEquals(original.shopperLocale, deparcelized.shopperLocale)
-        assertEquals(original.environment, deparcelized.environment)
-        assertEquals(original.clientKey, deparcelized.clientKey)
-        assertEquals(original.amount, deparcelized.amount)
-        assertEquals(original.analyticsConfiguration, deparcelized.analyticsConfiguration)
+        assertConfigurationEquals(checkoutConfiguration, deparcelized)
 
         val deparcelizedPmConfig = deparcelized.getConfiguration<TestConfiguration>(TEST_CONFIGURATION_KEY)
-        assertEquals(testConfiguration.shopperLocale, deparcelizedPmConfig?.shopperLocale)
-        assertEquals(testConfiguration.environment, deparcelizedPmConfig?.environment)
-        assertEquals(testConfiguration.clientKey, deparcelizedPmConfig?.clientKey)
-        assertEquals(testConfiguration.amount, deparcelizedPmConfig?.amount)
-        assertEquals(testConfiguration.analyticsConfiguration, deparcelizedPmConfig?.analyticsConfiguration)
+        assertConfigurationEquals(paymentMethodConfiguration, requireNotNull(deparcelizedPmConfig))
 
         val deparcelizedActionConfig = deparcelized.getActionConfiguration(TestConfiguration::class.java)
-        assertEquals(testActionConfiguration.shopperLocale, deparcelizedActionConfig?.shopperLocale)
-        assertEquals(testActionConfiguration.environment, deparcelizedActionConfig?.environment)
-        assertEquals(testActionConfiguration.clientKey, deparcelizedActionConfig?.clientKey)
-        assertEquals(testActionConfiguration.amount, deparcelizedActionConfig?.amount)
-        assertEquals(testActionConfiguration.analyticsConfiguration, deparcelizedActionConfig?.analyticsConfiguration)
+        assertConfigurationEquals(actionConfiguration, requireNotNull(deparcelizedActionConfig))
+    }
+
+    private fun assertConfigurationEquals(expected: Configuration, actual: Configuration) {
+        assertEquals(expected.shopperLocale, actual.shopperLocale)
+        assertEquals(expected.environment, actual.environment)
+        assertEquals(expected.clientKey, actual.clientKey)
+        assertEquals(expected.amount, actual.amount)
+        assertEquals(expected.analyticsConfiguration, actual.analyticsConfiguration)
     }
 
     companion object {

@@ -172,12 +172,13 @@ internal class DropInActivity :
             getFragmentByTag(GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG) == null
     }
 
+    @Suppress("ReturnCount")
     private fun createLocalizedContext(baseContext: Context?): Context? {
         if (baseContext == null) return null
 
         // We need to get the Locale from sharedPrefs because attachBaseContext is called before onCreate, so we don't
         // have the Config object yet.
-        val locale = DropInPrefs.getShopperLocale(baseContext)
+        val locale = DropInPrefs.getShopperLocale(baseContext) ?: return baseContext
         return baseContext.createLocalizedContext(locale)
     }
 
@@ -218,7 +219,7 @@ internal class DropInActivity :
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
-            additionalData = dropInViewModel.dropInComponentParams.additionalDataForDropInService,
+            additionalData = dropInViewModel.dropInParams.additionalDataForDropInService,
         )
         if (bound) {
             serviceBound = true

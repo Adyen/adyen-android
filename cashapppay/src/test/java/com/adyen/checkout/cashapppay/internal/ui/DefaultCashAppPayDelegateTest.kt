@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -477,9 +478,11 @@ internal class DefaultCashAppPayDelegateTest(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = getPaymentMethod(),
         order = TEST_ORDER,
-        componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
+        componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
             paymentMethod = getPaymentMethod(),
             context = Application(),
         ),

@@ -74,9 +74,8 @@ internal class GooglePayComponentDialogFragment :
                 fragment = this,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                amount = dropInViewModel.amount,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = this,
-                sessionDetails = dropInViewModel.sessionDetails,
                 analyticsRepository = dropInViewModel.analyticsRepository,
                 onRedirect = protocol::onRedirect,
             ) as GooglePayComponent

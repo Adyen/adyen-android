@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -66,7 +67,8 @@ internal class DefaultGenericActionDelegateTest(
             ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             actionDelegateProvider,
         )
         whenever(activity.application) doReturn Application()
