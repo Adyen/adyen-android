@@ -16,6 +16,8 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
@@ -61,6 +63,15 @@ class CheckoutConfiguration(
 
     init {
         apply(configurationBlock)
+        validateContents()
+    }
+
+    private fun validateContents() {
+        shopperLocale?.let {
+            if (!LocaleUtil.isValidLocale(it)) {
+                throw CheckoutException("Invalid shopper locale: $shopperLocale.")
+            }
+        }
     }
 
     // We need custom parcelization for this class to parcelize availableConfigurations.
