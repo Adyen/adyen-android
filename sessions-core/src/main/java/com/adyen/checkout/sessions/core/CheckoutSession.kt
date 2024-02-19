@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.core.Environment
 
 /**
  * A class holding the data required to launch Drop-in or a component with the sessions flow.
@@ -18,6 +19,8 @@ import com.adyen.checkout.components.core.PaymentMethod
 data class CheckoutSession(
     val sessionSetupResponse: SessionSetupResponse,
     val order: Order?,
+    private val environment: Environment,
+    private val clientKey: String,
 ) {
     fun getPaymentMethod(paymentMethodType: String): PaymentMethod? {
         return sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods.orEmpty().firstOrNull {
