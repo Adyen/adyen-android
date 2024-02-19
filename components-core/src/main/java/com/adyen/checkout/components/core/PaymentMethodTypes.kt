@@ -121,6 +121,7 @@ object PaymentMethodTypes {
         MOLPAY_VIETNAM,
         ONLINE_BANKING_CZ,
         ONLINE_BANKING_PL,
+        ONLINE_BANKING_SK,
         OPEN_BANKING,
         PAY_BY_BANK,
         PAY_NOW,
