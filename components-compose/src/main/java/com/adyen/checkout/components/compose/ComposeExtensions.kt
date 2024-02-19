@@ -6,6 +6,8 @@
  * Created by josephj on 17/5/2023.
  */
 
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.components.compose
 
 import android.app.Application
@@ -162,6 +164,41 @@ fun <
 }
 
 /**
+ * Get a [PaymentComponent] with a checkout session from a [Composable]. You only need to integrate with the /sessions
+ * endpoint to create a session and the component will automatically handle the rest of the payment flow.
+ *
+ * @param checkoutSession         The [CheckoutSession] object to launch this component.
+ * @param paymentMethod           The corresponding  [PaymentMethod] object.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
+@Composable
+fun <
+    ComponentT : PaymentComponent,
+    ConfigurationT : Configuration,
+    ComponentStateT : PaymentComponentState<*>,
+    ComponentCallbackT : SessionComponentCallback<ComponentStateT>
+    > SessionPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallbackT>.get(
+    checkoutSession: CheckoutSession,
+    paymentMethod: PaymentMethod,
+    componentCallback: ComponentCallbackT,
+    key: String,
+): ComponentT {
+    return get(
+        checkoutSession = checkoutSession,
+        paymentMethod = paymentMethod,
+        checkoutConfiguration = checkoutSession.getConfiguration(),
+        componentCallback = componentCallback,
+        key = key,
+    )
+}
+
+/**
  * Get a [PaymentComponent]  with a stored payment method and a checkout session from a [Composable]. You only need to
  * integrate with the /sessions endpoint to create a session and the component will automatically handle the rest of
  * the payment flow.
@@ -199,6 +236,42 @@ fun <
         storedPaymentMethod = storedPaymentMethod,
         checkoutConfiguration = checkoutConfiguration,
         application = LocalContext.current.applicationContext as Application,
+        componentCallback = componentCallback,
+        key = key,
+    )
+}
+
+/**
+ * Get a [PaymentComponent]  with a stored payment method and a checkout session from a [Composable]. You only need to
+ * integrate with the /sessions endpoint to create a session and the component will automatically handle the rest of
+ * the payment flow.
+ *
+ * @param checkoutSession         The [CheckoutSession] object to launch this component.
+ * @param storedPaymentMethod     The corresponding  [StoredPaymentMethod] object.
+ * @param componentCallback       The callback to handle events from the [PaymentComponent].
+ * @param key                     The key to use to identify the [PaymentComponent].
+ *
+ * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+ * instantiate multiple [PaymentComponent]s in the same lifecycle.
+ *
+ * @return The Component
+ */
+@Composable
+fun <
+    ComponentT : PaymentComponent,
+    ConfigurationT : Configuration,
+    ComponentStateT : PaymentComponentState<*>,
+    ComponentCallbackT : SessionComponentCallback<ComponentStateT>
+    > SessionStoredPaymentComponentProvider<ComponentT, ConfigurationT, ComponentStateT, ComponentCallbackT>.get(
+    checkoutSession: CheckoutSession,
+    storedPaymentMethod: StoredPaymentMethod,
+    componentCallback: ComponentCallbackT,
+    key: String?,
+): ComponentT {
+    return get(
+        checkoutSession = checkoutSession,
+        storedPaymentMethod = storedPaymentMethod,
+        checkoutConfiguration = checkoutSession.getConfiguration(),
         componentCallback = componentCallback,
         key = key,
     )
