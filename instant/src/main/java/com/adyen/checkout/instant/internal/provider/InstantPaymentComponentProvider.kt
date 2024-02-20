@@ -275,6 +275,7 @@ constructor(
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
         return when {
+            PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
             PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(paymentMethod.type) -> true
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
             else -> true

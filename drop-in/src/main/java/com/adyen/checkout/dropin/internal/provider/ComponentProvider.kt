@@ -129,12 +129,12 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
+        checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as ComponentCallback<CardComponentState>,
+                callback = componentCallback as ComponentCallback<BlikComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -149,12 +149,12 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { BlikComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            BlikComponentProvider(dropInOverrideParams, analyticsRepository).get(
+        checkCompileOnly { CardComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            CardComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as ComponentCallback<BlikComponentState>,
+                callback = componentCallback as ComponentCallback<CardComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -311,15 +311,6 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            InstantPaymentComponentProvider(dropInOverrideParams, analyticsRepository).get(
-                fragment = fragment,
-                paymentMethod = paymentMethod,
-                checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as ComponentCallback<InstantComponentState>,
-            )
-        }
-
         checkCompileOnly { MBWayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             MBWayComponentProvider(dropInOverrideParams, analyticsRepository).get(
                 fragment = fragment,
@@ -425,6 +416,18 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<UPIComponentState>,
+            )
+        }
+
+        // InstantPaymentComponent has to be checked last, since it's the only component which doesn't explicitly lists
+        // which payment methods it supports. Meaning it could take over a payment method that should be handled by
+        // it's dedicated component.
+        checkCompileOnly { InstantPaymentComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            InstantPaymentComponentProvider(dropInOverrideParams, analyticsRepository).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<InstantComponentState>,
             )
         }
 
