@@ -9,8 +9,8 @@
 package com.adyen.checkout.demo.di
 
 import com.adyen.checkout.demo.data.api.CheckoutApiService
-import com.adyen.checkout.demo.repositories.SessionsRepository
-import com.adyen.checkout.demo.repositories.SessionsRepositoryImpl
+import com.adyen.checkout.demo.data.repositories.SessionsRepository
+import com.adyen.checkout.demo.data.repositories.SessionsRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

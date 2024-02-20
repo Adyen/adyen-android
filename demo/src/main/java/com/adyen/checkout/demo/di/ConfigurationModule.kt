@@ -9,7 +9,7 @@
 package com.adyen.checkout.demo.di
 
 import android.app.Application
-import com.adyen.checkout.demo.ui.configuration.MyStoreConfigurationProvider
+import com.adyen.checkout.demo.ui.configuration.MyStoreDemoConfigurationProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +20,5 @@ import dagger.hilt.components.SingletonComponent
 object ConfigurationModule {
 
     @Provides
-    fun provideConfigurationProvider(appContext: Application) = MyStoreConfigurationProvider(appContext)
+    fun provideConfigurationProvider(appContext: Application) = MyStoreDemoConfigurationProvider(appContext)
 }

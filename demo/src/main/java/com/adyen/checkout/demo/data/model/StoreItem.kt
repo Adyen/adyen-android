@@ -6,7 +6,7 @@
  * Created by ozgur on 6/2/2024.
  */
 
-package com.adyen.checkout.demo.model
+package com.adyen.checkout.demo.data.model
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.demo.ui.formatAmount

@@ -15,9 +15,9 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.demo.data.api.model.getSessionRequest
-import com.adyen.checkout.demo.model.StoreItem
-import com.adyen.checkout.demo.repositories.SessionsRepository
-import com.adyen.checkout.demo.ui.configuration.MyStoreConfigurationProvider
+import com.adyen.checkout.demo.data.model.StoreItem
+import com.adyen.checkout.demo.data.repositories.SessionsRepository
+import com.adyen.checkout.demo.ui.configuration.MyStoreDemoConfigurationProvider
 import com.adyen.checkout.dropin.SessionDropInResult
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
@@ -38,10 +38,10 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class MyStoreViewModel @Inject constructor(
+class MyStoreDemoViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sessionsRepository: SessionsRepository,
-    private val myStoreConfigurationProvider: MyStoreConfigurationProvider,
+    private val myStoreDemoConfigurationProvider: MyStoreDemoConfigurationProvider,
 ) : ViewModel() {
 
     private val _myStoreState = MutableStateFlow(MyStoreState())
@@ -55,12 +55,12 @@ class MyStoreViewModel @Inject constructor(
     }
 
     private suspend fun fetchSession() = withContext(Dispatchers.IO) {
-        val config = myStoreConfigurationProvider.getCheckoutConfiguration(
+        val config = myStoreDemoConfigurationProvider.getCheckoutConfiguration(
             shoppingCart?.price ?: Amount(),
         )
         _myStoreState.update {
             it.copy(
-                uiState = MyStoreUiState.Loading,
+                uiState = MyStoreDemoUiState.Loading,
             )
         }
         val checkoutSession = getSession(
@@ -70,7 +70,7 @@ class MyStoreViewModel @Inject constructor(
             // TODO log error
             _myStoreState.update {
                 it.copy(
-                    uiState = MyStoreUiState.Error,
+                    uiState = MyStoreDemoUiState.Error,
                 )
             }
             return@withContext
@@ -78,7 +78,7 @@ class MyStoreViewModel @Inject constructor(
 
         _myStoreState.update {
             it.copy(
-                uiState = MyStoreUiState.StartDropIn(
+                uiState = MyStoreDemoUiState.StartDropIn(
                     checkoutSession,
                     config,
                 ),
@@ -95,7 +95,7 @@ class MyStoreViewModel @Inject constructor(
                 splitCardFundingSources = false,
                 isExecuteThreeD = true,
                 isThreeds2Enabled = true,
-                redirectUrl = savedStateHandle.get<String>(DemoActivity.RETURN_URL_EXTRA)
+                redirectUrl = savedStateHandle.get<String>(MyStoreDemoActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = "",
                 installmentOptions = null,
@@ -125,7 +125,7 @@ class MyStoreViewModel @Inject constructor(
     fun onDropInResult(sessionDropInResult: SessionDropInResult?) {
         // TODO send event to show result on ui
         _myStoreState.update {
-            it.copy(uiState = MyStoreUiState.Shopping)
+            it.copy(uiState = MyStoreDemoUiState.Shopping)
         }
         when (sessionDropInResult) {
             is SessionDropInResult.CancelledByUser -> "Canceled by user"

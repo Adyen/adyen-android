@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 13/2/2024.
+ * Created by ozgur on 20/2/2024.
  */
 
-package com.adyen.checkout.demo.repositories
+package com.adyen.checkout.demo.data.repositories
 
 import com.adyen.checkout.demo.data.api.CheckoutApiService
 import com.adyen.checkout.demo.data.api.model.SessionRequest
@@ -16,7 +16,8 @@ interface SessionsRepository {
     suspend fun createSession(sessionRequest: SessionRequest): SessionModel?
 }
 
-class SessionsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : SessionsRepository {
+class SessionsRepositoryImpl(private val checkoutApiService: CheckoutApiService) :
+    SessionsRepository {
     override suspend fun createSession(sessionRequest: SessionRequest): SessionModel? = safeApiCall {
         checkoutApiService.sessionsAsync(sessionRequest)
     }

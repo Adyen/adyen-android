@@ -30,7 +30,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 
-class MyStoreConfigurationProvider @Inject constructor(
+class MyStoreDemoConfigurationProvider @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 

@@ -6,7 +6,7 @@
  * Created by ozgur on 13/2/2024.
  */
 
-package com.adyen.checkout.demo.repositories
+package com.adyen.checkout.demo.data.repositories
 
 import android.util.Log
 import kotlinx.coroutines.CancellationException
