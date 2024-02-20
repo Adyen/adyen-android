@@ -116,7 +116,7 @@ class GooglePayComponent internal constructor(
         componentEventHandler.onCleared()
     }
 
-    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?) {
+    fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>) {
         googlePayDelegate.handlePaymentResult(paymentDataTaskResult)
     }
 

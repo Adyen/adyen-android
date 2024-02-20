@@ -13,6 +13,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
@@ -39,12 +41,15 @@ class SessionsGooglePayActivity : AppCompatActivity() {
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
         setContent {
+            val googlePayState by sessionsGooglePayViewModel.googlePayState.collectAsState()
+            val eventsState by sessionsGooglePayViewModel.stateEvents.collectAsState()
             val isDarkTheme = nightThemeRepository.isDarkTheme()
             ExampleTheme(isDarkTheme) {
                 SessionsGooglePayScreen(
                     useDarkTheme = isDarkTheme,
                     onBackPressed = { onBackPressedDispatcher.onBackPressed() },
-                    viewModel = sessionsGooglePayViewModel,
+                    googlePayState = googlePayState,
+                    eventsState = eventsState,
                 )
             }
         }

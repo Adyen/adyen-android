@@ -161,12 +161,7 @@ internal class DefaultGooglePayDelegate(
         }
     }
 
-    override fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>?) {
-        if (paymentDataTaskResult == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay ApiTaskResult is null" }
-            exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
-            return
-        }
+    override fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>) {
         when (val statusCode = paymentDataTaskResult.status.statusCode) {
             CommonStatusCodes.SUCCESS -> {
                 val paymentData = paymentDataTaskResult.result
