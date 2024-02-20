@@ -13,8 +13,8 @@
     <string name="checkout_econtext_phone_number_hint">Telephone number</string>
     <string name="checkout_econtext_shopper_email_hint">Email address</string>
 
-    <string name="checkout_econtext_first_name_invalid">First name is not valid</string>
-    <string name="checkout_econtext_last_name_invalid">Last name is not valid</string>
+    <string name="checkout_econtext_first_name_invalid">Enter your first name</string>
+    <string name="checkout_econtext_last_name_invalid">Enter your last name</string>
     <string name="checkout_econtext_phone_number_invalid">Invalid telephone number</string>
     <string name="checkout_econtext_shopper_email_invalid">Invalid email address</string>
 </resources>

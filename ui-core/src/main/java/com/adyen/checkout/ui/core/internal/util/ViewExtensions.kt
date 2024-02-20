@@ -62,6 +62,13 @@ internal fun String.formatStringWithHyperlink(replacementToken: String = "%#"): 
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun String.formatFullStringWithHyperLink(): CharSequence {
+    return SpannableString(this).apply {
+        setSpan(URLSpan(""), 0, this.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun TextInputLayout.showError(error: String) {
     isErrorEnabled = true
     this.error = error

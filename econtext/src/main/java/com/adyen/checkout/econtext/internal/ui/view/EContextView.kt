@@ -27,6 +27,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 @Suppress("TooManyFunctions")
 internal class EContextView @JvmOverloads constructor(
@@ -175,7 +176,8 @@ internal class EContextView @JvmOverloads constructor(
                 val country = countryAdapter?.getItem(position) ?: return@OnItemClickListener
                 onCountrySelected(country)
             }
-            countries.firstOrNull()?.let {
+            val initialCountry = countries.firstOrNull { it.isoCode == Locale.JAPAN.country } ?: countries.firstOrNull()
+            initialCountry?.let {
                 setText(it.toShortString())
                 onCountrySelected(it)
             }

@@ -127,6 +127,10 @@ constructor(
             PaymentMethodTypes.BOLETOBANCARIO_ITAU,
             PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
             PaymentMethodTypes.BOLETO_PRIMEIRO_PAY,
+            PaymentMethodTypes.ECONTEXT_ATM,
+            PaymentMethodTypes.ECONTEXT_ONLINE,
+            PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
+            PaymentMethodTypes.ECONTEXT_STORES,
             PaymentMethodTypes.MULTIBANCO
         )
     }

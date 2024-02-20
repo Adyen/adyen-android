@@ -13,8 +13,8 @@
     <string name="checkout_econtext_phone_number_hint">电话号码</string>
     <string name="checkout_econtext_shopper_email_hint">电子邮件地址</string>
 
-    <string name="checkout_econtext_first_name_invalid">名字无效</string>
-    <string name="checkout_econtext_last_name_invalid">姓氏无效</string>
+    <string name="checkout_econtext_first_name_invalid">输入您的名字</string>
+    <string name="checkout_econtext_last_name_invalid">输入您的姓氏</string>
     <string name="checkout_econtext_phone_number_invalid">无效的电话号码</string>
     <string name="checkout_econtext_shopper_email_invalid">无效的邮件地址</string>
 </resources>

@@ -29,12 +29,15 @@ data class VoucherAction(
     var issuer: String? = null,
     var expiresAt: String? = null,
     var reference: String? = null,
+    var collectionInstitutionNumber: String? = null,
+    var maskedTelephoneNumber: String? = null,
     var alternativeReference: String? = null,
     var merchantName: String? = null,
     var merchantReference: String? = null,
     // TODO: remove url when it's fixed from backend side
     var url: String? = null,
-    var downloadUrl: String? = null
+    var downloadUrl: String? = null,
+    var instructionsUrl: String? = null,
 ) : Action() {
 
     companion object {
@@ -46,11 +49,14 @@ data class VoucherAction(
         private const val ISSUER = "issuer"
         private const val EXPIRES_AT = "expiresAt"
         private const val REFERENCE = "reference"
+        private const val COLLECTION_INSTITUTION_NUMBER = "collectionInstitutionNumber"
+        private const val MASKED_TELEPHONE_NUMBER = "maskedTelephoneNumber"
         private const val ALTERNATIVE_REFERENCE = "alternativeReference"
         private const val MERCHANT_NAME = "merchantName"
         private const val MERCHANT_REFERENCE = "merchantReference"
         private const val URL = "url"
         private const val DOWNLOAD_URL = "downloadUrl"
+        private const val INSTRUCTIONS_URL = "instructionsUrl"
 
         @JvmField
         val SERIALIZER: Serializer<VoucherAction> = object : Serializer<VoucherAction> {
@@ -67,11 +73,14 @@ data class VoucherAction(
                         putOpt(ISSUER, modelObject.issuer)
                         putOpt(EXPIRES_AT, modelObject.expiresAt)
                         putOpt(REFERENCE, modelObject.reference)
+                        putOpt(COLLECTION_INSTITUTION_NUMBER, modelObject.collectionInstitutionNumber)
+                        putOpt(MASKED_TELEPHONE_NUMBER, modelObject.maskedTelephoneNumber)
                         putOpt(ALTERNATIVE_REFERENCE, modelObject.alternativeReference)
                         putOpt(MERCHANT_NAME, modelObject.merchantName)
                         putOpt(MERCHANT_REFERENCE, modelObject.merchantReference)
                         putOpt(URL, modelObject.url)
                         putOpt(DOWNLOAD_URL, modelObject.downloadUrl)
+                        putOpt(INSTRUCTIONS_URL, modelObject.instructionsUrl)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(VoucherAction::class.java, e)
@@ -90,11 +99,14 @@ data class VoucherAction(
                     issuer = jsonObject.getStringOrNull(ISSUER),
                     expiresAt = jsonObject.getStringOrNull(EXPIRES_AT),
                     reference = jsonObject.getStringOrNull(REFERENCE),
+                    collectionInstitutionNumber = jsonObject.getStringOrNull(COLLECTION_INSTITUTION_NUMBER),
+                    maskedTelephoneNumber = jsonObject.getStringOrNull(MASKED_TELEPHONE_NUMBER),
                     alternativeReference = jsonObject.getStringOrNull(ALTERNATIVE_REFERENCE),
                     merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
                     merchantReference = jsonObject.getStringOrNull(MERCHANT_REFERENCE),
                     url = jsonObject.getStringOrNull(URL),
                     downloadUrl = jsonObject.getStringOrNull(DOWNLOAD_URL),
+                    instructionsUrl = jsonObject.getStringOrNull(INSTRUCTIONS_URL),
                 )
             }
         }
