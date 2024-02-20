@@ -16,7 +16,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.demo.ui.compose.MyStoreDemoApp
-import com.adyen.checkout.demo.ui.theme.ExampleTheme
+import com.adyen.checkout.demo.ui.compose.theme.ExampleTheme
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 

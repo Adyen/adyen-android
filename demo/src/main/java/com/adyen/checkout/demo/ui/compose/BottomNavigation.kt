@@ -19,7 +19,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.adyen.checkout.demo.ui.theme.LightColors
+import com.adyen.checkout.demo.ui.compose.theme.LightColors
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {

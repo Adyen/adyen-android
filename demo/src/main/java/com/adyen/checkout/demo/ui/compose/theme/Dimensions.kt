@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 9/2/2024.
+ * Created by ozgur on 20/2/2024.
  */
 
-package com.adyen.checkout.demo.ui.theme
+package com.adyen.checkout.demo.ui.compose.theme
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.unit.Dp
