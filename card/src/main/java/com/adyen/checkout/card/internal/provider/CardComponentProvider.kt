@@ -42,12 +42,13 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepo
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -62,6 +63,7 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentCo
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 @Suppress("TooManyFunctions")
@@ -69,8 +71,8 @@ class CardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
         CardComponent,
@@ -97,12 +99,6 @@ constructor(
         SessionComponentCallback<CardComponentState>,
         > {
 
-    private val componentParamsMapper = CardComponentParamsMapper(
-        installmentsParamsMapper = InstallmentsParamsMapper(),
-        dropInOverrideParams = dropInOverrideParams,
-        overrideSessionParams = overrideSessionParams,
-    )
-
     @Suppress("LongParameterList", "LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -118,11 +114,17 @@ constructor(
         assertSupported(paymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(
+            val componentParams = CardComponentParamsMapper(
+                CommonComponentParamsMapper(),
+                InstallmentsParamsMapper(),
+            ).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
                 paymentMethod = paymentMethod,
-                sessionParams = null,
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncryptor = GenericEncryptorFactory.provide()
             val cardEncryptor = CardEncryptorFactory.provide()
@@ -159,6 +161,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = DefaultAddressRepository(AddressService(httpClient)),
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -222,11 +228,17 @@ constructor(
         assertSupported(paymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsDefault(
+            val componentParams = CardComponentParamsMapper(
+                CommonComponentParamsMapper(),
+                InstallmentsParamsMapper(),
+            ).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
                 paymentMethod = paymentMethod,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val genericEncryptor = GenericEncryptorFactory.provide()
             val cardEncryptor = CardEncryptorFactory.provide()
@@ -264,6 +276,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = DefaultAddressRepository(AddressService(httpClient)),
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -344,7 +360,17 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(checkoutConfiguration, null)
+            val componentParams = CardComponentParamsMapper(
+                CommonComponentParamsMapper(),
+                InstallmentsParamsMapper(),
+            ).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                storedPaymentMethod = storedPaymentMethod,
+            )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -434,10 +460,17 @@ constructor(
         assertSupported(storedPaymentMethod)
 
         val factory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParamsStored(
+            val componentParams = CardComponentParamsMapper(
+                CommonComponentParamsMapper(),
+                InstallmentsParamsMapper(),
+            ).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                storedPaymentMethod = storedPaymentMethod,
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)

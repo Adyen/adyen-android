@@ -20,8 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -36,8 +36,6 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
-private val TAG = LogUtil.getTag()
 
 @Suppress("TooManyFunctions")
 internal class PaymentMethodListDialogFragment :
@@ -55,11 +53,11 @@ internal class PaymentMethodListDialogFragment :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Logger.d(TAG, "onAttach")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAttach" }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Logger.d(TAG, "onCreateView")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreateView" }
         paymentMethodsListViewModel = getViewModel {
             PaymentMethodsListViewModel(
                 application = requireActivity().application,
@@ -67,9 +65,8 @@ internal class PaymentMethodListDialogFragment :
                 storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
                 order = dropInViewModel.currentOrder,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                dropInComponentParams = dropInViewModel.dropInComponentParams,
-                overrideAmount = dropInViewModel.amount,
-                sessionDetails = dropInViewModel.sessionDetails,
+                dropInParams = dropInViewModel.dropInParams,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
             )
         }
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
@@ -78,7 +75,7 @@ internal class PaymentMethodListDialogFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         initPaymentMethodsRecyclerView()
         initObservers()
@@ -97,7 +94,7 @@ internal class PaymentMethodListDialogFragment :
             .paymentMethodsFlow
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { paymentMethods ->
-                Logger.d(TAG, "paymentMethods changed")
+                adyenLog(AdyenLogLevel.DEBUG) { "paymentMethods changed" }
                 paymentMethodAdapter?.submitList(paymentMethods)
             }.launchIn(lifecycleScope)
 
@@ -119,7 +116,7 @@ internal class PaymentMethodListDialogFragment :
                     }
 
                     is PaymentMethodListStoredEvent.ShowError -> {
-                        Logger.e(TAG, event.componentError.errorMessage)
+                        adyenLog(AdyenLogLevel.ERROR) { event.componentError.errorMessage }
                         protocol.showError(
                             dialogTitle = null,
                             errorMessage = getString(R.string.component_error),
@@ -153,15 +150,14 @@ internal class PaymentMethodListDialogFragment :
     }
 
     override fun onStoredPaymentMethodSelected(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        Logger.d(TAG, "onStoredPaymentMethodSelected")
+        adyenLog(AdyenLogLevel.DEBUG) { "onStoredPaymentMethodSelected" }
         val storedPaymentMethod = dropInViewModel.getStoredPaymentMethod(storedPaymentMethodModel.id)
         component = getComponentFor(
             fragment = this,
             storedPaymentMethod = storedPaymentMethod,
             checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-            amount = dropInViewModel.amount,
+            dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
             componentCallback = paymentMethodsListViewModel,
-            sessionDetails = dropInViewModel.sessionDetails,
             analyticsRepository = dropInViewModel.analyticsRepository,
             onRedirect = protocol::onRedirect,
         )
@@ -181,8 +177,8 @@ internal class PaymentMethodListDialogFragment :
             }
             .setPositiveButton(
                 PayButtonFormatter.getPayButtonText(
-                    amount = dropInViewModel.amount,
-                    locale = dropInViewModel.dropInComponentParams.shopperLocale,
+                    amount = dropInViewModel.dropInParams.amount,
+                    locale = dropInViewModel.dropInParams.shopperLocale,
                     localizedContext = requireContext(),
                 ),
             ) { dialog, _ ->
@@ -218,7 +214,7 @@ internal class PaymentMethodListDialogFragment :
     }
 
     override fun onPaymentMethodSelected(paymentMethod: PaymentMethodModel) {
-        Logger.d(TAG, "onPaymentMethodSelected - ${paymentMethod.type}")
+        adyenLog(AdyenLogLevel.DEBUG) { "onPaymentMethodSelected - ${paymentMethod.type}" }
 
         protocol.showComponentDialog(paymentMethodsListViewModel.getPaymentMethod(paymentMethod))
     }

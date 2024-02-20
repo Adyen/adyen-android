@@ -8,17 +8,75 @@
 
 package com.adyen.checkout.core
 
+import android.util.Log
+import com.adyen.checkout.core.internal.util.LogcatLogger
 import com.adyen.checkout.core.internal.util.Logger
 
 /**
  * Utility class to configure the Adyen logger.
  */
-object AdyenLogger {
+interface AdyenLogger {
 
-    /**
-     * Sets the minimum level to be logged.
-     */
-    fun setLogLevel(@Logger.LogLevel logLevel: Int) {
-        Logger.setLogLevel(logLevel)
+    fun shouldLog(level: AdyenLogLevel): Boolean
+
+    fun setLogLevel(level: AdyenLogLevel)
+
+    fun log(
+        level: AdyenLogLevel,
+        tag: String,
+        message: String,
+        throwable: Throwable?,
+    )
+
+    companion object {
+
+        @PublishedApi
+        @Volatile
+        internal var logger: AdyenLogger = LogcatLogger()
+            private set
+
+        /**
+         * Sets the minimum level to be logged.
+         */
+        @Deprecated(
+            "Logger.LogLevel is deprecated.",
+            ReplaceWith(
+                "AdyenLogger.setLogLevel(AdyenLogLevel.)",
+                "com.adyen.checkout.core.AdyenLogLevel",
+                "com.adyen.checkout.core.AdyenLogger",
+            ),
+        )
+        fun setLogLevel(@Logger.LogLevel logLevel: Int) {
+            val mappedLevel = when (logLevel) {
+                Log.VERBOSE -> AdyenLogLevel.VERBOSE
+                Log.DEBUG -> AdyenLogLevel.DEBUG
+                Log.INFO -> AdyenLogLevel.INFO
+                Log.WARN -> AdyenLogLevel.WARN
+                Log.ERROR -> AdyenLogLevel.ERROR
+                else -> AdyenLogLevel.NONE
+            }
+            logger.setLogLevel(mappedLevel)
+        }
+
+        /**
+         * Sets the minimum level to be logged.
+         */
+        fun setLogLevel(level: AdyenLogLevel) {
+            logger.setLogLevel(level)
+        }
+
+        /**
+         * Set your own custom instance of [AdyenLogger].
+         */
+        fun setLogger(logger: AdyenLogger) {
+            this.logger = logger
+        }
+
+        /**
+         * Reset the logger instance back to the default.
+         */
+        fun resetLogger() {
+            this.logger = LogcatLogger()
+        }
     }
 }

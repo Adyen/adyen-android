@@ -18,6 +18,7 @@ import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -25,6 +26,7 @@ internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
     configuration: Configuration,
     private val order: Order?,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
     private val sessionService = SessionService(httpClient)
@@ -32,7 +34,7 @@ internal class CheckoutSessionInitializer(
 
     // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
     //  override Amount
-    suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(Dispatchers.IO) {
+    suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(coroutineDispatcher) {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
             order = order,
@@ -41,13 +43,13 @@ internal class CheckoutSessionInitializer(
                 return@withContext CheckoutSessionResult.Success(
                     CheckoutSession(
                         sessionSetupResponse.copy(amount = overrideAmount ?: sessionSetupResponse.amount),
-                        order
-                    )
+                        order,
+                    ),
                 )
             },
             onFailure = {
                 return@withContext CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))
-            }
+            },
         )
     }
 }

@@ -9,16 +9,12 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-- Add support for Multibanco voucher.
-- Permission request is now being delegated to the `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` to handle it and return result through callback.
-- For voucher actions which have no `url` or `downloadUrl`, "Save as image" option will be offered to save the Voucher in `Downloads` folder.
-  - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
 - Creating configurations just became easier. Using a DSL you can now create configurations in a more declarative and concise way:
 ```Kotlin
 CheckoutConfiguration(
-    shopperLocale = shopperLocale,
     environment = environment,
     clientKey = clientKey,
+    shopperLocale = shopperLocale,
     amount = amount,
     analyticsConfiguration = createAnalyticsConfiguration(),
 ) {
@@ -36,8 +32,36 @@ CheckoutConfiguration(
     }
 }
 ```
+- Address Lookup functionality for Card Component. 
+  - You can enable this feature by setting your address configuration to lookup while building your card configuration as follows:
+    ```kotlin
+    CheckoutConfiguration(environment = environment, clientKey = clientKey) {
+        card {
+            setAddressConfiguration(AddressConfiguration.Lookup())
+        }
+    }
+    ```
+  - If you're integrating with Drop-in:
+    - Implement the mandatory `onAddressLookupQueryChanged(query: String)` callback and optional `onAddressLookupCompletion(lookupAddress: LookupAddress)` callback.
+    - Pass the result of these actions by using `AddressLookupDropInServiceResult` class.
+  - If you're integrating with standalone `CardComponent`:
+    - Set `AddressLookupCallback` via `CardComponent.setAddressLookupCallback(AddressLookupCallback)` function to receive the related events.
+    - Pass the result of these actions by calling `CardComponent.setAddressLookupResult(addressLookupResult: AddressLookupResult)`.
+    - Delegate back pressed event to `CardComponent` by calling `CardComponent.handleBackPress()` which returns true if the back press is handled by Adyen SDK and false otherwise.
+- Add support for Multibanco voucher.
+- Permission request is now being delegated to the `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` to handle it and return result through callback.
+  - If not handled, a toast will be shown stating that permission is not granted.
+- For voucher actions which have no `url` or `downloadUrl`, "Save as image" option will be offered to save the Voucher in `Downloads` folder.
+  - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
+- Set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
+- Payment methods:
+  - Pay Easy. Payment method type: **econtext_atm**.
+  - Convenience Stores Japan. Payment method type: **econtext_stores**
+  - Online Banking Japan. Payment method type: **econtext_online**.
+  - Seven-Eleven: Payment method type: **econtext_seven_eleven**
 
 ## Deprecated
+- When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter, the shopper locale will default to the primary device locale.
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.
 - The styles for vouchers have been changed:
   - The `AdyenCheckout.Voucher.Description.Bacs` style will not work anymore. Use `AdyenCheckout.Voucher.Simple.Description` instead.
@@ -46,6 +70,9 @@ CheckoutConfiguration(
   - The `AdyenCheckout.Voucher.ExpirationDate` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
   - The `AdyenCheckout.Voucher.ButtonCopyCode` style will not work anymore. Use `AdyenCheckout.Voucher.Button.CopyCode` instead.
   - The `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.Button.DownloadPdf` instead.
+- `Logger.LogLevel` is deprecated. Use `AdyenLogLevel` instead.
+- `AdyenLogger.setLogLevel(logLevel: Int)` is deprecated. Use `AdyenLogger.setLogLevel(level: AdyenLogLevel)` instead.
 
 ## Changed
+- When creating a configuration, the shopper locale parameter is now optional. If not set, the primary device locale will be used.
 - In drop-in all actions will start in expanded mode

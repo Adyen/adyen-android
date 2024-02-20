@@ -15,9 +15,8 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.TestIssuerComponentState
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
@@ -25,6 +24,7 @@ import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +50,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultIssuerListDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
@@ -61,7 +61,6 @@ internal class DefaultIssuerListDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createIssuerListDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -171,10 +170,13 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
+            componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = configuration,
-                configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-                sessionParams = null,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+                hideIssuerLogosDefaultValue = false,
             ),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
@@ -203,10 +205,13 @@ internal class DefaultIssuerListDelegateTest(
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
+            componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = configuration,
-                configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-                sessionParams = null,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+                hideIssuerLogosDefaultValue = false,
             ),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
@@ -310,10 +315,13 @@ internal class DefaultIssuerListDelegateTest(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultIssuerListDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(
+        componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-            sessionParams = null,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            hideIssuerLogosDefaultValue = false,
         ),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,

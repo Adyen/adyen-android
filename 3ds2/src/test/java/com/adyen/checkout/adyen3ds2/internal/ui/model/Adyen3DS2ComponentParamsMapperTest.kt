@@ -15,6 +15,8 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
@@ -24,12 +26,13 @@ import java.util.Locale
 
 internal class Adyen3DS2ComponentParamsMapperTest {
 
+    private val adyen3DS2ComponentParamsMapper = Adyen3DS2ComponentParamsMapper(CommonComponentParamsMapper())
+
     @Test
-    fun `when parent configuration is null and custom 3ds2 configuration fields are null then all fields should match`() {
+    fun `when drop-in override params are null and custom 3ds2 configuration fields are null then all fields should match`() {
         val checkoutConfiguration = getCheckoutConfiguration()
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(checkoutConfiguration, null)
+        val params = adyen3DS2ComponentParamsMapper.mapToParams(checkoutConfiguration, DEVICE_LOCALE, null, null)
 
         val expected = getAdyen3DS2ComponentParams()
 
@@ -37,7 +40,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is null and custom 3ds2 configuration fields are set then all fields should match`() {
+    fun `when drop-in override params are null and custom 3ds2 configuration fields are set then all fields should match`() {
         val uiCustomization = UiCustomization()
 
         val testUrl = "https://adyen.com"
@@ -48,8 +51,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             }
         }
 
-        val params = Adyen3DS2ComponentParamsMapper(null, null)
-            .mapToParams(configuration, null)
+        val params = adyen3DS2ComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
 
         val expected = getAdyen3DS2ComponentParams(
             uiCustomization = uiCustomization,
@@ -60,7 +62,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override 3ds2 configuration fields`() {
+    fun `when drop-in override params are set then they should override 3ds2 configuration fields`() {
         val checkoutConfiguration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -72,9 +74,13 @@ internal class Adyen3DS2ComponentParamsMapperTest {
             ),
         )
 
-        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L))
-        val params = Adyen3DS2ComponentParamsMapper(dropInOverrideParams, null)
-            .mapToParams(checkoutConfiguration, null)
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = adyen3DS2ComponentParamsMapper.mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
 
         val expected = getAdyen3DS2ComponentParams(
             shopperLocale = Locale.GERMAN,
@@ -109,12 +115,14 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         uiCustomization: UiCustomization? = null,
         threeDSRequestorAppURL: String? = null,
     ) = Adyen3DS2ComponentParams(
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        analyticsParams = analyticsParams,
-        isCreatedByDropIn = isCreatedByDropIn,
-        amount = amount,
+        commonComponentParams = CommonComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            analyticsParams = analyticsParams,
+            isCreatedByDropIn = isCreatedByDropIn,
+            amount = amount,
+        ),
         uiCustomization = uiCustomization,
         threeDSRequestorAppURL = threeDSRequestorAppURL,
         deviceParameterBlockList = Adyen3DS2ComponentParamsMapper.DEVICE_PARAMETER_BLOCK_LIST,
@@ -123,5 +131,6 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
     }
 }

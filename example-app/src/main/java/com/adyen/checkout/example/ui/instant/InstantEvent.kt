@@ -15,4 +15,6 @@ internal sealed class InstantEvent {
     data class PaymentResult(val result: String) : InstantEvent()
 
     data class AdditionalAction(val action: Action) : InstantEvent()
+
+    data class PermissionRequest(val requiredPermission: String) : InstantEvent()
 }

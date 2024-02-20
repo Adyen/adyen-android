@@ -25,11 +25,11 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,7 +54,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBacsDirectDebitDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
@@ -65,7 +65,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createBacsDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -588,10 +587,12 @@ internal class DefaultBacsDirectDebitDelegateTest(
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultBacsDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
-            configuration,
-            configuration.getBacsDirectDebitConfiguration(),
-            null,
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getBacsDirectDebitConfiguration(),
         ),
         paymentMethod = PaymentMethod(),
         order = order,

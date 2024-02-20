@@ -8,11 +8,15 @@
 
 package com.adyen.checkout.voucher.internal.ui.view
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
@@ -22,11 +26,13 @@ import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.internal.util.toast
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.ThemeUtil
+import com.adyen.checkout.ui.core.internal.util.formatFullStringWithHyperLink
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.databinding.FullVoucherViewBinding
@@ -114,7 +120,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         loadLogo(outputData.paymentMethodType)
         updateIntroductionText(outputData.introductionTextResource)
@@ -122,6 +128,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         updateCodeReference(outputData.reference)
         updateStoreAction(outputData.storeAction)
         updateInformationFields(outputData.informationFields)
+        updateReadInstructionTextView(outputData.instructionUrl)
     }
 
     private fun loadLogo(paymentMethodType: String?) {
@@ -186,6 +193,35 @@ internal class FullVoucherView @JvmOverloads constructor(
         }
     }
 
+    private fun updateReadInstructionTextView(instructionUrl: String?) {
+        binding.textViewReadInstructions.isVisible = instructionUrl != null
+        instructionUrl?.let {
+            binding.textViewReadInstructions.text =
+                localizedContext.getString(R.string.checkout_voucher_read_instructions).formatFullStringWithHyperLink()
+            binding.textViewReadInstructions.setOnClickListener {
+                onReadInstructionsClicked(instructionUrl)
+            }
+        }
+    }
+
+    private fun onReadInstructionsClicked(url: String) {
+        val defaultColors = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+
+        try {
+            CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setDefaultColorSchemeParams(defaultColors)
+                .build()
+                .launchUrl(context, Uri.parse(url))
+
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened instructions in custom tab" }
+        } catch (e: ActivityNotFoundException) {
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open instructions in custom tab" }
+        }
+    }
+
     private fun hideButtons() = with(binding) {
         buttonCopyCode.isVisible = false
         updateStoreAction(null)
@@ -228,7 +264,6 @@ internal class FullVoucherView @JvmOverloads constructor(
     override fun getView(): View = this
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val COPY_LABEL = "Voucher code reference"
     }
 }

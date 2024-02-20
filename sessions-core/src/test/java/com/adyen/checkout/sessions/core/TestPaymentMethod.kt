@@ -6,7 +6,7 @@
  * Created by josephj on 2/2/2023.
  */
 
-package com.adyen.checkout.sessions.core.internal
+package com.adyen.checkout.sessions.core
 
 import android.os.Parcel
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails

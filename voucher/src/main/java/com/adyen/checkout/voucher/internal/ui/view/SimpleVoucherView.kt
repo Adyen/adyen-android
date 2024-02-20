@@ -15,8 +15,8 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -37,7 +37,7 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -69,7 +69,7 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewDownload.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_DownloadTextAppearance,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -80,7 +80,7 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
         loadLogo(outputData.paymentMethodType)
         updateIntroductionText(outputData.introductionTextResource)
     }
@@ -105,8 +105,4 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

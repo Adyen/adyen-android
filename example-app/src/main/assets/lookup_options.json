@@ -1,0 +1,70 @@
+{
+  "options": [
+    {
+      "id": "0",
+      "address": {
+        "country": "NL",
+        "postalCode": "1234AB",
+        "houseNumberOrName": "1HS",
+        "street": "Simon Carmiggelstraat",
+        "stateOrProvince": "Noord-Holland",
+        "city": "Amsterdam"
+      }
+    },
+    {
+      "id": "1",
+      "address": {
+        "country": "TR",
+        "postalCode": "12345",
+        "houseNumberOrName": "1",
+        "street": "1. Sokak",
+        "stateOrProvince": "Istanbul",
+        "city": "Istanbul"
+      }
+    },
+    {
+      "id": "2",
+      "address": {
+        "country": "DE",
+        "postalCode": "10119",
+        "houseNumberOrName": "1",
+        "street": "1. Strasse",
+        "stateOrProvince": "Berlin",
+        "city": "Berlin"
+      }
+    },
+    {
+      "id": "3",
+      "address": {
+        "country": "US",
+        "postalCode": "91101",
+        "houseNumberOrName": "2222",
+        "street": "1. Avenue",
+        "stateOrProvince": "NY",
+        "city": "New York"
+      }
+    },
+    {
+      "id": "4",
+      "address": {
+        "country": "BR",
+        "postalCode": "26363-260",
+        "houseNumberOrName": "2222",
+        "street": "Rua Mineiros 1594",
+        "stateOrProvince": "RJ",
+        "city": "Queimados"
+      }
+    },
+    {
+      "id": "error",
+      "address": {
+        "country": "",
+        "postalCode": "",
+        "houseNumberOrName": "",
+        "street": "Error Option",
+        "stateOrProvince": "",
+        "city": ""
+      }
+    }
+  ]
+}

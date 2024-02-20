@@ -10,10 +10,14 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">自動引き落としの説明 (DDI/委任状) をダウンロードする</string>
     <string name="checkout_voucher_introduction">お買い上げありがとうございます。以下のクーポンを使用して、お支払いを完了してください。</string>
+    <string name="checkout_voucher_introduction_econtext">お買い上げありがとうございます。以下の情報を使用して、お支払いを完了してください。</string>
     <string name="checkout_voucher_payment_reference">確認番号</string>
     <string name="checkout_voucher_expiration_entity">エンティティ</string>
     <string name="checkout_voucher_expiration_date">有効期限</string>
     <string name="checkout_voucher_shopper_reference">購入者向け参考情報</string>
+    <string name="checkout_voucher_phone_number">電話番号（お客様番号）</string>
+    <string name="checkout_voucher_collection_institution_number">収納機関番号</string>
+    <string name="checkout_voucher_read_instructions">手順を参照してください</string>
     <string name="checkout_voucher_copy_code">コードをコピー</string>
     <string name="checkout_voucher_copied_toast">コードをクリップボードにコピーしました</string>
     <string name="checkout_voucher_download_pdf">PDFをダウンロード</string>

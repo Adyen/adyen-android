@@ -16,6 +16,7 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.internal.ui.view.AddressLookupView
 
 internal object CardViewProvider : ViewProvider {
 
@@ -24,17 +25,24 @@ internal object CardViewProvider : ViewProvider {
         context: Context,
     ): ComponentView {
         return when (viewType) {
-            CardComponentViewType.DefaultCardView -> CardView(context)
-            CardComponentViewType.StoredCardView -> StoredCardView(context)
+            is CardComponentViewType.DefaultCardView -> CardView(context)
+            is CardComponentViewType.StoredCardView -> StoredCardView(context)
+            is CardComponentViewType.AddressLookup -> AddressLookupView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal sealed class CardComponentViewType : AmountButtonComponentViewType {
-    object DefaultCardView : CardComponentViewType()
-    object StoredCardView : CardComponentViewType()
+internal sealed class CardComponentViewType : ComponentViewType {
+    data object DefaultCardView : CardComponentViewType(), AmountButtonComponentViewType {
+        override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    }
+
+    data object StoredCardView : CardComponentViewType(), AmountButtonComponentViewType {
+        override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+    }
+
+    data object AddressLookup : CardComponentViewType()
 
     override val viewProvider: ViewProvider = CardViewProvider
-    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

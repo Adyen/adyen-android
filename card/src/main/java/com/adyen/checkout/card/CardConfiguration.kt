@@ -30,7 +30,7 @@ import java.util.Locale
 @Parcelize
 @Suppress("LongParameterList")
 class CardConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -69,12 +69,25 @@ class CardConfiguration private constructor(
         private var addressConfiguration: AddressConfiguration? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
@@ -140,8 +153,9 @@ class CardConfiguration private constructor(
          *
          * Default is true.
          *
-         * When using `sessions` show store payment field will be ignored and replaced with the value
-         * sent to `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param showStorePaymentField [Boolean]
          * @return [CardConfiguration.Builder]
@@ -223,8 +237,9 @@ class CardConfiguration private constructor(
         /**
          * Configures the installment options to be provided to the shopper.
          *
-         * When using `sessions` installment configuration will be ignored and replaced with the value
-         * sent to `/sessions` call.
+         * Not applicable for the sessions flow. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
          *
          * @param installmentConfiguration The configuration object for installment options.
          * @return [CardConfiguration.Builder]
@@ -299,8 +314,9 @@ class CardConfiguration private constructor(
 fun CheckoutConfiguration.card(
     configuration: @CheckoutConfigurationMarker CardConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = CardConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = CardConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

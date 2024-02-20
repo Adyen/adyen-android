@@ -11,11 +11,9 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupResponse
-import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import kotlinx.parcelize.Parcelize
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -47,10 +45,4 @@ fun SessionDetails.mapToModel(): SessionModel {
         id = id,
         sessionData = sessionData,
     )
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionDetails.mapToParams(amount: Amount?): SessionParams {
-    // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails
-    return SessionParamsFactory.create(this.copy(amount = amount))
 }

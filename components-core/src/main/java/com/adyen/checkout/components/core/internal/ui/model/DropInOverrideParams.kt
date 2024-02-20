@@ -13,5 +13,6 @@ import com.adyen.checkout.components.core.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class DropInOverrideParams(
-    val amount: Amount?
+    val amount: Amount?,
+    val sessionParams: SessionParams?,
 )

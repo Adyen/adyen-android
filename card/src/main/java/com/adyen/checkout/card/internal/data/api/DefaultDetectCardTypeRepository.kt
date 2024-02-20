@@ -17,9 +17,9 @@ import com.adyen.checkout.card.internal.data.model.BinLookupResult
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.Sha256
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
@@ -49,26 +49,28 @@ class DefaultDetectCardTypeRepository(
         coroutineScope: CoroutineScope,
         type: String?
     ) {
-        Logger.d(TAG, "detectCardType")
+        adyenLog(AdyenLogLevel.DEBUG) { "detectCardType" }
         if (shouldFetchReliableTypes(cardNumber)) {
             when (val cachedResult = getFromCache(cardNumber)) {
                 is BinLookupResult.Available -> {
-                    Logger.d(TAG, "Retrieving from cache.")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Retrieving from cache." }
                     _detectedCardTypesFlow.trySend(cachedResult.detectedCardTypes)
                     return
                 }
+
                 is BinLookupResult.Loading -> {
-                    Logger.d(TAG, "BinLookup request is in progress.")
+                    adyenLog(AdyenLogLevel.DEBUG) { "BinLookup request is in progress." }
                 }
+
                 is BinLookupResult.Unavailable -> {
-                    Logger.d(TAG, "Fetching from network.")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Fetching from network." }
                     fetchFromNetwork(
                         cardNumber,
                         publicKey,
                         supportedCardBrands,
                         clientKey,
                         coroutineScope,
-                        type
+                        type,
                     )
                 }
             }
@@ -86,16 +88,16 @@ class DefaultDetectCardTypeRepository(
         type: String?
     ) {
         if (publicKey != null) {
-            Logger.d(TAG, "Launching Bin Lookup")
+            adyenLog(AdyenLogLevel.DEBUG) { "Launching Bin Lookup" }
 
             coroutineScope.launch {
-                Logger.d(TAG, "Emitting new detectedCardTypes")
+                adyenLog(AdyenLogLevel.DEBUG) { "Emitting new detectedCardTypes" }
                 fetch(
                     cardNumber,
                     publicKey,
                     supportedCardBrands,
                     clientKey,
-                    type
+                    type,
                 )?.let {
                     _detectedCardTypesFlow.send(it)
                 }
@@ -104,7 +106,7 @@ class DefaultDetectCardTypeRepository(
     }
 
     private fun detectCardLocally(cardNumber: String, supportedCardBrands: List<CardBrand>): List<DetectedCardType> {
-        Logger.d(TAG, "detectCardLocally")
+        adyenLog(AdyenLogLevel.DEBUG) { "detectCardLocally" }
         if (cardNumber.isEmpty()) {
             return emptyList()
         }
@@ -175,16 +177,16 @@ class DefaultDetectCardTypeRepository(
 
             binLookupService.makeBinLookup(
                 request = request,
-                clientKey = clientKey
+                clientKey = clientKey,
             )
         }
-            .onFailure { e -> Logger.e(TAG, "checkCardType - Failed to do bin lookup", e) }
+            .onFailure { e -> adyenLog(AdyenLogLevel.ERROR, e) { "checkCardType - Failed to do bin lookup" } }
             .getOrNull()
     }
 
     private fun mapResponse(binLookupResponse: BinLookupResponse): List<DetectedCardType> {
-        Logger.d(TAG, "handleBinLookupResponse")
-        Logger.v(TAG, "Brands: ${binLookupResponse.brands}")
+        adyenLog(AdyenLogLevel.DEBUG) { "handleBinLookupResponse" }
+        adyenLog(AdyenLogLevel.VERBOSE) { "Brands: ${binLookupResponse.brands}" }
 
         // Any null or unmapped values are ignored, a null response becomes an empty list
         return binLookupResponse.brands.orEmpty().mapNotNull { brandResponse ->
@@ -195,10 +197,10 @@ class DefaultDetectCardTypeRepository(
                 isReliable = true,
                 enableLuhnCheck = brandResponse.enableLuhnCheck == true,
                 cvcPolicy = Brand.FieldPolicy.parse(
-                    brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value
+                    brandResponse.cvcPolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 expiryDatePolicy = Brand.FieldPolicy.parse(
-                    brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value
+                    brandResponse.expiryDatePolicy ?: Brand.FieldPolicy.REQUIRED.value,
                 ),
                 isSupported = brandResponse.supported != false,
                 panLength = brandResponse.panLength,
@@ -208,7 +210,6 @@ class DefaultDetectCardTypeRepository(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 
         private const val REQUIRED_BIN_SIZE = 11

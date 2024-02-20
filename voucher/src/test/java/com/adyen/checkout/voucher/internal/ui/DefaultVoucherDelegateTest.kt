@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.PermissionHandlerCallback
@@ -66,12 +67,13 @@ internal class DefaultVoucherDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(Locale.getDefault(), Environment.TEST, TEST_CLIENT_KEY) {
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
             voucher()
         }
         delegate = DefaultVoucherDelegate(
             observerRepository,
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             pdfOpener,
             imageSaver,
         )

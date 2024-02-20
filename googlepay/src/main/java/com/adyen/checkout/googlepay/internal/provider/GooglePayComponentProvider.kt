@@ -29,15 +29,16 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryD
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -63,8 +64,8 @@ class GooglePayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
         GooglePayComponent,
@@ -80,8 +81,6 @@ constructor(
         >,
     PaymentMethodAvailabilityCheck<GooglePayConfiguration> {
 
-    private val componentParamsMapper = GooglePayComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
-
     @Suppress("LongMethod")
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -95,9 +94,14 @@ constructor(
         key: String?,
     ): GooglePayComponent {
         assertSupported(paymentMethod)
-
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, paymentMethod, null)
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                paymentMethod = paymentMethod,
+            )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
@@ -180,13 +184,15 @@ constructor(
         key: String?
     ): GooglePayComponent {
         assertSupported(paymentMethod)
-
-        val componentParams = componentParamsMapper.mapToParams(
-            configuration = checkoutConfiguration,
-            paymentMethod = paymentMethod,
-            sessionParams = SessionParamsFactory.create(checkoutSession),
-        )
         val googlePayFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
+            val componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod,
+            )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -290,7 +296,14 @@ constructor(
             return
         }
         val callbackWeakReference = WeakReference(callback)
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, paymentMethod, null)
+        val componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            paymentMethod = paymentMethod,
+        )
+
         val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
         val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
         val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
@@ -298,11 +311,11 @@ constructor(
             callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
         }
         readyToPayTask.addOnCanceledListener {
-            Logger.e(TAG, "GooglePay readyToPay task is cancelled.")
+            adyenLog(AdyenLogLevel.ERROR) { "GooglePay readyToPay task is cancelled." }
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
         readyToPayTask.addOnFailureListener {
-            Logger.e(TAG, "GooglePay readyToPay task is failed.", it)
+            adyenLog(AdyenLogLevel.ERROR, it) { "GooglePay readyToPay task is failed." }
             callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
         }
     }
@@ -333,9 +346,5 @@ constructor(
 
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
         return GooglePayComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

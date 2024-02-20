@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Betalingsmetoder</string>
-    <string name="error_dialog_title">Feil</string>
-    <string name="error_dialog_button">Ok</string>
     <string name="payment_failed">Feil ved sending av betaling. Vennligst prøv igjen.</string>
     <string name="action_failed">Det oppstod en feil under behandlingen av betalingen din. Vennligst prøv igjen senere.</string>
-    <string name="component_error">Noe gikk galt.</string>
     <string name="time_out_error">Forespørselen fikk tidsavbrudd. Vennligst prøv igjen.</string>
     <string name="store_payment_methods_header">Dine betalingsmetoder</string>
     <string name="other_payment_methods">Velg annen metode</string>

@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 
 /**
@@ -27,31 +27,27 @@ import com.adyen.checkout.dropin.internal.service.BaseDropInService
 abstract class DropInService : BaseDropInService(), DropInServiceContract {
 
     final override fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>) {
-        Logger.d(TAG, "requestPaymentsCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestPaymentsCall" }
         onSubmit(paymentComponentState)
     }
 
     final override fun requestDetailsCall(actionComponentData: ActionComponentData) {
-        Logger.d(TAG, "requestDetailsCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestDetailsCall" }
         onAdditionalDetails(actionComponentData)
     }
 
     final override fun requestBalanceCall(paymentComponentState: PaymentComponentState<*>) {
-        Logger.d(TAG, "requestBalanceCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestBalanceCall" }
         onBalanceCheck(paymentComponentState)
     }
 
     final override fun requestOrdersCall() {
-        Logger.d(TAG, "requestOrdersCall")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestOrdersCall" }
         onOrderRequest()
     }
 
     final override fun requestCancelOrder(order: OrderRequest, isDropInCancelledByUser: Boolean) {
-        Logger.d(TAG, "requestCancelOrder")
+        adyenLog(AdyenLogLevel.DEBUG) { "requestCancelOrder" }
         onOrderCancel(order, !isDropInCancelledByUser)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

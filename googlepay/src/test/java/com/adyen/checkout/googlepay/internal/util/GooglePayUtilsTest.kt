@@ -11,6 +11,7 @@ package com.adyen.checkout.googlepay.internal.util
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.MerchantInfo
@@ -238,11 +239,14 @@ internal class GooglePayUtilsTest {
 
     private fun getEmptyGooglePayComponentParams(): GooglePayComponentParams {
         return GooglePayComponentParams(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = "CLIENT_KEY",
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
-            isCreatedByDropIn = false,
+            commonComponentParams = CommonComponentParams(
+                shopperLocale = Locale.US,
+                environment = Environment.TEST,
+                clientKey = "CLIENT_KEY",
+                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+                isCreatedByDropIn = false,
+                amount = null,
+            ),
             amount = Amount("USD", 0),
             gatewayMerchantId = "",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_TEST,
@@ -265,11 +269,14 @@ internal class GooglePayUtilsTest {
 
     private fun getCustomGooglePayComponentParams(): GooglePayComponentParams {
         return GooglePayComponentParams(
-            shopperLocale = Locale.GERMAN,
-            environment = Environment.EUROPE,
-            clientKey = "CLIENT_KEY_CUSTOM",
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
+            commonComponentParams = CommonComponentParams(
+                shopperLocale = Locale.GERMAN,
+                environment = Environment.EUROPE,
+                clientKey = "CLIENT_KEY_CUSTOM",
+                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+                isCreatedByDropIn = true,
+                amount = Amount("EUR", 13_37),
+            ),
             amount = Amount("EUR", 13_37),
             gatewayMerchantId = "GATEWAY_MERCHANT_ID",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,

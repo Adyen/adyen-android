@@ -15,8 +15,8 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
@@ -36,7 +36,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -67,8 +67,9 @@ internal class OnlineBankingView @JvmOverloads constructor(
             inputType = 0
             setAdapter(issuersAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                Logger.d(TAG, "onItemSelected - ${issuersAdapter.getItem(position).name}")
-                onlineBankingDelegate.updateInputData { selectedIssuer = issuersAdapter.getItem(position) }
+                val item = issuersAdapter.getItem(position)
+                adyenLog(AdyenLogLevel.DEBUG) { "onItemSelected - ${item.name}" }
+                onlineBankingDelegate.updateInputData { selectedIssuer = item }
                 binding.textInputLayoutOnlineBanking.hideError()
             }
         }
@@ -78,7 +79,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val output = onlineBankingDelegate.outputData
         val selectedIssuersValidation = output.selectedIssuerField.validation
         if (!selectedIssuersValidation.isValid()) {
@@ -94,12 +95,12 @@ internal class OnlineBankingView @JvmOverloads constructor(
         binding.textInputLayoutOnlineBanking
             .setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_OnlineBanking_TermsAndConditionsInputLayout,
-                localizedContext
+                localizedContext,
             )
         binding.textviewTermsAndConditions.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_OnlineBanking_TermsAndConditionsTextView,
             localizedContext,
-            formatHyperLink = true
+            formatHyperLink = true,
         )
     }
 
@@ -110,8 +111,4 @@ internal class OnlineBankingView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

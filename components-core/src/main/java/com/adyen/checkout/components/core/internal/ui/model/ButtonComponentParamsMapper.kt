@@ -4,52 +4,29 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ButtonComponentParamsMapper(
-    private val dropInOverrideParams: DropInOverrideParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
         checkoutConfiguration: CheckoutConfiguration,
-        configuration: Configuration?,
-        sessionParams: SessionParams?,
-    ): ButtonComponentParams {
-        return checkoutConfiguration
-            .mapToParamsInternal(configuration)
-            .override(dropInOverrideParams)
-            .override(sessionParams ?: overrideSessionParams)
-    }
-
-    private fun CheckoutConfiguration.mapToParamsInternal(configuration: Configuration?): ButtonComponentParams {
-        return ButtonComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
-            isSubmitButtonVisible = (configuration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
-        )
-    }
-
-    private fun ButtonComponentParams.override(
+        deviceLocale: Locale,
         dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
+        componentConfiguration: Configuration?
     ): ButtonComponentParams {
-        if (dropInOverrideParams == null) return this
-        return copy(
-            amount = dropInOverrideParams.amount,
-            isCreatedByDropIn = true,
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
         )
-    }
-
-    private fun ButtonComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): ButtonComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
+        return ButtonComponentParams(
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            isSubmitButtonVisible = (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
         )
     }
 }

@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
@@ -263,11 +264,14 @@ internal class DefaultOnlineBankingDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(
-            checkoutConfiguration = configuration,
-            configuration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
-            sessionParams = null,
-        ),
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            ),
         termsAndConditionsUrl = TEST_URL,
         paymentMethodFactory = { TestOnlineBankingPaymentMethod() },
         submitHandler = submitHandler,

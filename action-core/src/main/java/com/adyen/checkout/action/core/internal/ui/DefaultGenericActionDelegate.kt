@@ -29,10 +29,10 @@ import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
@@ -74,7 +74,7 @@ internal class DefaultGenericActionDelegate(
     private var onRedirectListener: (() -> Unit)? = null
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        Logger.d(TAG, "initialize")
+        adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
         _coroutineScope = coroutineScope
     }
 
@@ -89,7 +89,7 @@ internal class DefaultGenericActionDelegate(
             permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
 
         // Immediately request a new status if the user resumes the app
@@ -106,16 +106,16 @@ internal class DefaultGenericActionDelegate(
         // During this whole flow the same transaction instance should be used for both fingerprint and challenge.
         // Therefore we are making sure the same delegate persists when handleAction is called again.
         if (isOld3DS2Flow(action)) {
-            Logger.d(TAG, "Continuing the handling of 3ds2 challenge with old flow.")
+            adyenLog(AdyenLogLevel.DEBUG) { "Continuing the handling of 3ds2 challenge with old flow." }
         } else {
             val delegate = actionDelegateProvider.getDelegate(
                 action = action,
                 checkoutConfiguration = checkoutConfiguration,
                 savedStateHandle = savedStateHandle,
-                application = activity.application
+                application = activity.application,
             )
             this._delegate = delegate
-            Logger.d(TAG, "Created delegate of type ${delegate::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
 
             if (delegate is RedirectableDelegate) {
                 onRedirectListener?.let { delegate.setOnRedirectListener(it) }
@@ -138,14 +138,14 @@ internal class DefaultGenericActionDelegate(
 
     private fun observeDetails(delegate: ActionDelegate) {
         if (delegate !is DetailsEmittingDelegate) return
-        Logger.d(TAG, "Observing details")
+        adyenLog(AdyenLogLevel.DEBUG) { "Observing details" }
         delegate.detailsFlow
             .onEach { detailsChannel.trySend(it) }
             .launchIn(coroutineScope)
     }
 
     private fun observeExceptions(delegate: ActionDelegate) {
-        Logger.d(TAG, "Observing exceptions")
+        adyenLog(AdyenLogLevel.DEBUG) { "Observing exceptions" }
         delegate.exceptionFlow
             .onEach { exceptionChannel.trySend(it) }
             .launchIn(coroutineScope)
@@ -153,7 +153,7 @@ internal class DefaultGenericActionDelegate(
 
     private fun observePermissionRequests(delegate: ActionDelegate) {
         if (delegate !is PermissionRequestingDelegate) return
-        Logger.d(TAG, "Observing permission requests")
+        adyenLog(AdyenLogLevel.DEBUG) { "Observing permission requests" }
         delegate.permissionFlow
             .onEach { permissionChannel.trySend(it) }
             .launchIn(coroutineScope)
@@ -161,7 +161,7 @@ internal class DefaultGenericActionDelegate(
 
     private fun observeViewFlow(delegate: ActionDelegate) {
         if (delegate !is ViewProvidingDelegate) return
-        Logger.d(TAG, "Observing view flow")
+        adyenLog(AdyenLogLevel.DEBUG) { "Observing view flow" }
         delegate.viewFlow
             .onEach { _viewFlow.tryEmit(it) }
             .launchIn(coroutineScope)
@@ -178,7 +178,7 @@ internal class DefaultGenericActionDelegate(
             }
 
             else -> {
-                Logger.d(TAG, "Handling intent")
+                adyenLog(AdyenLogLevel.DEBUG) { "Handling intent" }
                 delegate.handleIntent(intent)
             }
         }
@@ -187,7 +187,7 @@ internal class DefaultGenericActionDelegate(
     override fun refreshStatus() {
         val delegate = _delegate
         if (delegate !is StatusPollingDelegate) return
-        Logger.d(TAG, "Refreshing status")
+        adyenLog(AdyenLogLevel.DEBUG) { "Refreshing status" }
         delegate.refreshStatus()
     }
 
@@ -200,15 +200,11 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun onCleared() {
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         removeObserver()
         _delegate?.onCleared()
         _delegate = null
         _coroutineScope = null
         onRedirectListener = null
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -38,7 +39,6 @@ internal class DefaultRedirectDelegateTest {
     @BeforeEach
     fun beforeEach() {
         val configuration = CheckoutConfiguration(
-            Locale.US,
             Environment.TEST,
             TEST_CLIENT_KEY,
         ) {
@@ -48,7 +48,8 @@ internal class DefaultRedirectDelegateTest {
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         delegate = DefaultRedirectDelegate(
             ActionObserverRepository(),
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
+            GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
             redirectHandler,
             paymentDataRepository,
         )

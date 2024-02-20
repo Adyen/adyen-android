@@ -23,11 +23,12 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.VoucherComponent
@@ -39,11 +40,9 @@ import com.adyen.checkout.voucher.toCheckoutConfiguration
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -72,7 +71,13 @@ constructor(
         savedStateHandle: SavedStateHandle,
         application: Application
     ): VoucherDelegate {
-        val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
@@ -122,6 +127,10 @@ constructor(
             PaymentMethodTypes.BOLETOBANCARIO_ITAU,
             PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
             PaymentMethodTypes.BOLETO_PRIMEIRO_PAY,
+            PaymentMethodTypes.ECONTEXT_ATM,
+            PaymentMethodTypes.ECONTEXT_ONLINE,
+            PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
+            PaymentMethodTypes.ECONTEXT_STORES,
             PaymentMethodTypes.MULTIBANCO
         )
     }

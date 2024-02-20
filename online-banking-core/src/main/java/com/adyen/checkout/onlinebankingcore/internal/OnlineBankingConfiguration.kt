@@ -32,6 +32,9 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
 
         protected open var isSubmitButtonVisible: Boolean? = null
 
+        protected constructor(environment: Environment, clientKey: String) : super(environment, clientKey)
+
+        @Deprecated("You can omit the context parameter")
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,

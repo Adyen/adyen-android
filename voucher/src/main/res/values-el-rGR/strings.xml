@@ -10,10 +10,14 @@
 <resources>
     <string name="checkout_voucher_introduction_bacs">Κατεβάστε την Εντολή Άμεσης Χρέωσης (DDI/Εντολή)</string>
     <string name="checkout_voucher_introduction">Σας ευχαριστούμε για την αγορά. Χρησιμοποιήστε το παρακάτω κουπόνι για να ολοκληρώσετε την πληρωμή.</string>
+    <string name="checkout_voucher_introduction_econtext">Σας ευχαριστούμε για την αγορά. Χρησιμοποιήστε τις ακόλουθες πληροφορίες για να ολοκληρώσετε την πληρωμή.</string>
     <string name="checkout_voucher_payment_reference">Αναφορά πληρωμής</string>
     <string name="checkout_voucher_expiration_entity">Οντότητα</string>
     <string name="checkout_voucher_expiration_date">Ημερομηνία λήξης</string>
     <string name="checkout_voucher_shopper_reference">Αναφορά αγοραστή</string>
+    <string name="checkout_voucher_phone_number">Αριθμός τηλεφώνου</string>
+    <string name="checkout_voucher_collection_institution_number">Αριθμός πρακτορείου εισπράξεων</string>
+    <string name="checkout_voucher_read_instructions">Διαβάστε τις οδηγίες</string>
     <string name="checkout_voucher_copy_code">Αντιγραφή κωδικού</string>
     <string name="checkout_voucher_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
     <string name="checkout_voucher_download_pdf">Λήψη PDF</string>

@@ -207,10 +207,11 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun updateCountries(countryList: List<AddressListItem>) {
+        val currentSelected = countryAdapter.getItem { it.selected }
         countryAdapter.setItems(countryList)
         val selectedCountry = countryList.firstOrNull { it.selected }
         val selectedSpecification = AddressSpecification.fromString(selectedCountry?.code)
-        if (selectedSpecification != currentSpec) {
+        if (selectedSpecification != currentSpec || currentSelected != selectedCountry) {
             currentSpec = selectedSpecification
             autoCompleteTextViewCountry.setText(selectedCountry?.name)
             populateFormFields(selectedSpecification)
@@ -251,53 +252,54 @@ class AddressFormInput @JvmOverloads constructor(
         initCountryInput(addressSpecification.country.styleResId)
         initStreetInput(
             styleResId = addressSpecification.street.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initHouseNumberInput(
             styleResId = addressSpecification.houseNumber.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initApartmentSuiteInput(
             styleResId = addressSpecification.apartmentSuite.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initPostalCodeInput(
             styleResId = addressSpecification.postalCode.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initCityInput(
             styleResId = addressSpecification.city.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initProvinceTerritoryInput(
             styleResId = addressSpecification.stateProvince.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
         initStatesInput(
             styleResId = addressSpecification.stateProvince.getStyleResId(
-                isOptional = delegate.addressOutputData.isOptional
-            )
+                isOptional = delegate.addressOutputData.isOptional,
+            ),
         )
     }
 
     private fun initHeader() {
         textViewHeader.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_AddressForm_HeaderTextAppearance,
-            localizedContext
+            localizedContext,
         )
     }
 
     private fun initCountryInput(styleResId: Int) {
         textInputLayoutCountry?.setLocalizedHintFromStyle(
             styleResId,
-            localizedContext
+            localizedContext,
         )
+        autoCompleteTextViewCountry.setText(delegate.addressOutputData.countryOptions.firstOrNull { it.selected }?.name)
     }
 
     private fun initStreetInput(styleResId: Int?) {

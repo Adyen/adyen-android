@@ -127,6 +127,7 @@ internal class DefaultVoucherDelegate(
             reference = action.reference,
             totalAmount = action.totalAmount,
             storeAction = storeAction,
+            instructionUrl = action.instructionsUrl,
             informationFields = informationFields,
         )
         _outputDataFlow.tryEmit(outputData)
@@ -139,6 +140,7 @@ internal class DefaultVoucherDelegate(
         reference = null,
         totalAmount = null,
         storeAction = null,
+        instructionUrl = null,
         informationFields = null,
     )
 

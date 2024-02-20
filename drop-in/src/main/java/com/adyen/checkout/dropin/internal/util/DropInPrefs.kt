@@ -9,21 +9,20 @@
 package com.adyen.checkout.dropin.internal.util
 
 import android.content.Context
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.LocaleUtil
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import java.util.Locale
 
 internal object DropInPrefs {
-    private val TAG = LogUtil.getTag()
 
     private const val DROP_IN_PREFS = "drop-in-shared-prefs"
     private const val LOCALE_PREF = "drop-in-locale"
 
-    fun setShopperLocale(context: Context, shopperLocale: Locale) {
-        Logger.v(TAG, "setShopperLocale: $shopperLocale")
-        val localeTag = LocaleUtil.toLanguageTag(shopperLocale)
-        Logger.d(TAG, "Storing shopper locale tag: $localeTag")
+    fun setShopperLocale(context: Context, shopperLocale: Locale?) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "setShopperLocale: $shopperLocale" }
+        val localeTag = shopperLocale?.let { LocaleUtil.toLanguageTag(shopperLocale) }
+        adyenLog(AdyenLogLevel.DEBUG) { "Storing shopper locale tag: $localeTag" }
         return context
             .getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE)
             .edit()
@@ -31,15 +30,15 @@ internal object DropInPrefs {
             .apply()
     }
 
-    fun getShopperLocale(context: Context): Locale {
-        Logger.v(TAG, "getShopperLocale")
+    fun getShopperLocale(context: Context): Locale? {
+        adyenLog(AdyenLogLevel.VERBOSE) { "getShopperLocale" }
         val localeTag = context
             .getSharedPreferences(DROP_IN_PREFS, Context.MODE_PRIVATE)
             .getString(LOCALE_PREF, null)
-            .orEmpty()
-        Logger.d(TAG, "Fetching shopper locale tag: $localeTag")
+        adyenLog(AdyenLogLevel.DEBUG) { "Fetched shopper locale tag: $localeTag" }
+        if (localeTag == null) return null
         val locale = LocaleUtil.fromLanguageTag(localeTag)
-        Logger.d(TAG, "Parsed locale: $locale")
+        adyenLog(AdyenLogLevel.DEBUG) { "Parsed locale: $locale" }
         return locale
     }
 }

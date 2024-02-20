@@ -19,8 +19,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -70,7 +70,7 @@ internal class DefaultUPIDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -101,7 +101,7 @@ internal class DefaultUPIDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
         val outputData = createOutputData()
         outputDataChanged(outputData)
         updateComponentState(outputData)
@@ -134,7 +134,7 @@ internal class DefaultUPIDelegate(
                 outputData.virtualPaymentAddressFieldState.value
             } else {
                 null
-            }
+            },
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -146,7 +146,7 @@ internal class DefaultUPIDelegate(
         return UPIComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -172,9 +172,5 @@ internal class DefaultUPIDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

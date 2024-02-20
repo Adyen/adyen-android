@@ -24,6 +24,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
@@ -36,7 +38,6 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
@@ -216,7 +217,12 @@ internal class DefaultACHDirectDebitDelegateTest(
                     ACHDirectDebitAddressConfiguration.FullAddress(DEFAULT_SUPPORTED_COUNTRY_LIST),
                 )
             }
-            val componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+            )
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = componentParams.shopperLocale,
                 addressParams = componentParams.addressParams,
@@ -692,7 +698,8 @@ internal class DefaultACHDirectDebitDelegateTest(
         addressRepository = addressRepository,
         submitHandler = submitHandler,
         genericEncryptor = genericEncryptor,
-        componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(configuration, DEVICE_LOCALE, null, null),
         order = order,
     )
 
@@ -728,6 +735,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun shouldStorePaymentMethodSource() = listOf(

@@ -25,7 +25,7 @@ import java.util.Locale
 @Parcelize
 @Suppress("LongParameterList")
 class MolpayConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -42,12 +42,25 @@ class MolpayConfiguration private constructor(
     class Builder : IssuerListBuilder<MolpayConfiguration, Builder> {
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
@@ -55,7 +68,7 @@ class MolpayConfiguration private constructor(
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -86,8 +99,9 @@ class MolpayConfiguration private constructor(
 fun CheckoutConfiguration.molpay(
     configuration: @CheckoutConfigurationMarker MolpayConfiguration.Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = MolpayConfiguration.Builder(shopperLocale, environment, clientKey)
+    val config = MolpayConfiguration.Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

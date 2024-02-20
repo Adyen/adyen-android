@@ -12,9 +12,9 @@ import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import com.adyen.checkout.card.internal.ui.model.ExpiryDate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -60,7 +60,7 @@ class ExpiryDateInput @JvmOverloads constructor(
     var date: ExpiryDate
         get() {
             val normalizedExpiryDate = normalize(rawValue)
-            Logger.v(TAG, "getDate - $normalizedExpiryDate")
+            adyenLog(AdyenLogLevel.VERBOSE) { "getDate - $normalizedExpiryDate" }
             return try {
                 val parsedDate = requireNotNull(dateFormat.parse(normalizedExpiryDate))
                 val calendar = GregorianCalendar.getInstance()
@@ -69,13 +69,13 @@ class ExpiryDateInput @JvmOverloads constructor(
                 // GregorianCalendar is 0 based
                 ExpiryDate(calendar[Calendar.MONTH] + 1, calendar[Calendar.YEAR])
             } catch (e: ParseException) {
-                Logger.d(TAG, "getDate - value does not match expected pattern. " + e.localizedMessage)
+                adyenLog(AdyenLogLevel.DEBUG, e) { "getDate - value does not match expected pattern. " }
                 if (rawValue.isEmpty()) ExpiryDate.EMPTY_DATE else ExpiryDate.INVALID_DATE
             }
         }
         set(expiryDate) {
             if (expiryDate !== ExpiryDate.EMPTY_DATE) {
-                Logger.v(TAG, "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth)
+                adyenLog(AdyenLogLevel.VERBOSE) { "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth }
                 val calendar = GregorianCalendar.getInstance()
                 calendar.clear()
                 // first day of month, GregorianCalendar month is 0 based.
@@ -110,7 +110,6 @@ class ExpiryDateInput @JvmOverloads constructor(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         const val SEPARATOR = "/"
         private const val DATE_FORMAT = "MM" + SEPARATOR + "yy"
         private const val MAX_LENGTH = 5

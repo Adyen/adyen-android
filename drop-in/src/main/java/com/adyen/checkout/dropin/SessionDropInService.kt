@@ -12,10 +12,10 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 import com.adyen.checkout.dropin.internal.service.SessionDropInServiceInterface
 import com.adyen.checkout.sessions.core.SessionModel
@@ -71,7 +71,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
     }
 
     private fun sendSessionDataChangedResult(sessionData: String) {
-        Logger.d(TAG, "Sending session data changed result - $sessionData")
+        adyenLog(AdyenLogLevel.DEBUG) { "Sending session data changed result - $sessionData" }
         val result = SessionDropInServiceResult.SessionDataChanged(sessionData)
         emitResult(result)
     }
@@ -241,12 +241,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
     private fun sendFlowTakenOverUpdatedResult() {
         if (isFlowTakenOver) return
         isFlowTakenOver = true
-        Logger.i(TAG, "Flow was taken over, sending update to drop-in")
+        adyenLog(AdyenLogLevel.INFO) { "Flow was taken over, sending update to drop-in" }
         val result = SessionDropInServiceResult.SessionTakenOverUpdated(true)
         emitResult(result)
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

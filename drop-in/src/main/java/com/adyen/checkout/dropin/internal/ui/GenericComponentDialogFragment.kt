@@ -15,9 +15,9 @@ import android.view.ViewGroup
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -34,7 +34,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
         binding.header.text = paymentMethod.name
 
         try {
@@ -60,7 +60,5 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         super.onDestroyView()
     }
 
-    companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
+    companion object : BaseCompanion<GenericComponentDialogFragment>(GenericComponentDialogFragment::class.java)
 }

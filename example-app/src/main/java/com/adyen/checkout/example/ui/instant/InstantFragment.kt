@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -44,6 +45,15 @@ class InstantFragment : BottomSheetDialogFragment() {
     private var instantPaymentComponent: InstantPaymentComponent? = null
 
     private val instantViewModel: InstantViewModel by viewModels()
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultsMap ->
+            resultsMap.firstNotNullOf { result ->
+                val requestedPermission = result.key
+                val isGranted = result.value
+                instantViewModel.onPermissionResult(requestedPermission, isGranted)
+            }
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
@@ -83,21 +93,19 @@ class InstantFragment : BottomSheetDialogFragment() {
         binding.componentView.attach(instantPaymentComponent, viewLifecycleOwner)
     }
 
-    private fun onEvent(event: InstantEvent) {
-        when (event) {
-            is InstantEvent.AdditionalAction -> {
-                onAction(event.action)
-            }
-            is InstantEvent.PaymentResult -> {
-                onPaymentResult(event.result)
-            }
-        }
+    private fun onEvent(event: InstantEvent) = when (event) {
+        is InstantEvent.AdditionalAction -> onAction(event.action)
+        is InstantEvent.PaymentResult -> onPaymentResult(event.result)
+        is InstantEvent.PermissionRequest -> onPermissionRequest(event.requiredPermission)
     }
 
     private fun onPaymentResult(result: String) {
         Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
         dismiss()
     }
+
+    private fun onPermissionRequest(requiredPermission: String) =
+        requestPermissionLauncher.launch(arrayOf(requiredPermission))
 
     private fun onViewState(viewState: InstantViewState) {
         when (viewState) {
@@ -107,11 +115,13 @@ class InstantFragment : BottomSheetDialogFragment() {
                 binding.progressIndicator.isVisible = false
                 binding.componentContainer.isVisible = false
             }
+
             is InstantViewState.Loading -> {
                 binding.progressIndicator.isVisible = true
                 binding.errorView.isVisible = false
                 binding.componentContainer.isVisible = false
             }
+
             is InstantViewState.ShowComponent -> {
                 binding.progressIndicator.isVisible = false
                 binding.errorView.isVisible = false
@@ -140,7 +150,7 @@ class InstantFragment : BottomSheetDialogFragment() {
         fun show(fragmentManager: FragmentManager, paymentMethodType: String) {
             InstantFragment().apply {
                 arguments = bundleOf(
-                    PAYMENT_METHOD_TYPE_EXTRA to paymentMethodType
+                    PAYMENT_METHOD_TYPE_EXTRA to paymentMethodType,
                 )
             }.show(fragmentManager, TAG)
         }

@@ -141,8 +141,9 @@ ext.coverageExclusions = [
     '**/*DropInService.*',
     '**/*Factory.*',
     '**/*ViewProvider.*',
-    '**/AdyenLogger.*',
+    '**/AdyenLogKt*',
     '**/BuildUtils.*',
+    '**/CheckCompileOnlyKt*',
     '**/ComposeExtensions*.*',
     '**/ContextExtensions*.*',
     '**/DropIn$*.*',
@@ -158,12 +159,14 @@ ext.coverageExclusions = [
     '**/InstallmentFilter.*',
     '**/LazyArguments*.*',
     '**/LifecycleExtensions*.*',
-    '**/LogUtil.*',
-    '**/Logger.*',
+    '**/LogcatLogger.*',
     '**/PdfOpener.*',
+    '**/ResultExtKt*',
+    '**/RunCompileOnlyKt*',
     '**/ViewExtensions*.*',
     '**/ViewModelExt*.*',
 
-    // Example app is not applicable
-    'com/adyen/checkout/example/**'
+    // Example app and test-core are not applicable
+    'com/adyen/checkout/example/**',
+    'com/adyen/checkout/test/**'
 ]

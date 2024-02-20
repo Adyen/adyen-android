@@ -39,12 +39,13 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -58,14 +59,15 @@ import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponen
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.ui.core.internal.data.api.AddressService
 import com.adyen.checkout.ui.core.internal.data.api.DefaultAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class BcmcComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    overrideSessionParams: SessionParams? = null,
     private val analyticsRepository: AnalyticsRepository? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
         BcmcComponent,
@@ -79,8 +81,6 @@ constructor(
         BcmcComponentState,
         SessionComponentCallback<BcmcComponentState>,
         > {
-
-    private val componentParamsMapper = BcmcComponentParamsMapper(dropInOverrideParams, overrideSessionParams)
 
     @Suppress("LongMethod")
     override fun get(
@@ -97,7 +97,14 @@ constructor(
         assertSupported(paymentMethod)
 
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(checkoutConfiguration, null, paymentMethod)
+            val componentParams = BcmcComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                paymentMethod = paymentMethod,
+            )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -134,6 +141,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = addressRepository,
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -195,11 +206,14 @@ constructor(
     ): BcmcComponent {
         assertSupported(paymentMethod)
         val bcmcFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = componentParamsMapper.mapToParams(
+            val componentParams = BcmcComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
-                sessionParams = SessionParamsFactory.create(checkoutSession),
+                deviceLocale = localeProvider.getLocale(application),
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
                 paymentMethod = paymentMethod,
             )
+
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
             val publicKeyRepository = DefaultPublicKeyRepository(publicKeyService)
@@ -237,6 +251,10 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 genericEncryptor = genericEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                addressLookupDelegate = DefaultAddressLookupDelegate(
+                    addressRepository = addressRepository,
+                    shopperLocale = componentParams.shopperLocale,
+                ),
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(

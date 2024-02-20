@@ -9,9 +9,9 @@ package com.adyen.checkout.googlepay.internal.util
 
 import com.adyen.checkout.components.core.internal.util.AmountFormat
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel
@@ -34,7 +34,6 @@ import java.util.Locale
 @Suppress("TooManyFunctions")
 internal object GooglePayUtils {
 
-    private val TAG = LogUtil.getTag()
     private val GOOGLE_PAY_DECIMAL_FORMAT = DecimalFormat("0.##", DecimalFormatSymbols(Locale.ROOT))
     private const val GOOGLE_PAY_DECIMAL_SCALE = 2
 
@@ -146,7 +145,7 @@ internal object GooglePayUtils {
                     googlePayCardNetwork = infoJson.getString(CARD_NETWORK)
                 }
             } catch (e: JSONException) {
-                Logger.e(TAG, "Failed to find Google Pay token.", e)
+                adyenLog(AdyenLogLevel.ERROR, e) { "Failed to find Google Pay token." }
             }
         }
     }

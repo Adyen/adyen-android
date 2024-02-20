@@ -23,6 +23,9 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -31,14 +34,15 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -50,7 +54,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
@@ -85,6 +88,7 @@ internal class StoredCardDelegate(
         cvcPolicy = when {
             componentParams.storedCVCVisibility == StoredCVCVisibility.HIDE ||
                 noCvcBrands.contains(cardType) -> Brand.FieldPolicy.HIDDEN
+
             else -> Brand.FieldPolicy.REQUIRED
         },
         expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
@@ -100,6 +104,7 @@ internal class StoredCardDelegate(
 
     override val addressOutputData: AddressOutputData
         get() = _outputDataFlow.value.addressState
+
     override val addressOutputDataFlow: Flow<AddressOutputData>
         get() = MutableStateFlow(_outputDataFlow.value.addressState)
 
@@ -147,7 +152,7 @@ internal class StoredCardDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -164,7 +169,7 @@ internal class StoredCardDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -176,7 +181,7 @@ internal class StoredCardDelegate(
         coroutineScope?.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
-                clientKey = componentParams.clientKey
+                clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
                     publicKey = key
@@ -184,7 +189,7 @@ internal class StoredCardDelegate(
                 },
                 onFailure = { e ->
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
-                }
+                },
             )
         }
     }
@@ -199,7 +204,7 @@ internal class StoredCardDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
 
         val outputData = createOutputData()
         _outputDataFlow.tryEmit(outputData)
@@ -230,13 +235,13 @@ internal class StoredCardDelegate(
             cardBrands = emptyList(),
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
-            isCardListVisible = false
+            isCardListVisible = false,
         )
     }
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }
@@ -259,7 +264,7 @@ internal class StoredCardDelegate(
                 isReady = publicKey != null,
                 cardBrand = firstCardBrand,
                 binValue = "",
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -274,7 +279,7 @@ internal class StoredCardDelegate(
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString()
+                    expiryYear = expiryDateResult.expiryYear.toString(),
                 )
             }
 
@@ -287,7 +292,7 @@ internal class StoredCardDelegate(
                 isReady = true,
                 cardBrand = firstCardBrand,
                 binValue = "",
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -301,6 +306,12 @@ internal class StoredCardDelegate(
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
+    }
+
+    override fun startAddressLookup() = Unit
+
+    override fun handleBackPress(): Boolean {
+        return false
     }
 
     override fun getPaymentMethodType(): String {
@@ -344,7 +355,7 @@ internal class StoredCardDelegate(
             isReady = true,
             cardBrand = firstCardBrand,
             binValue = "",
-            lastFourDigits = lastFour
+            lastFourDigits = lastFour,
         )
     }
 
@@ -365,11 +376,11 @@ internal class StoredCardDelegate(
         try {
             val storedDate = ExpiryDate(
                 storedPaymentMethod.expiryMonth.orEmpty().toInt(),
-                storedPaymentMethod.expiryYear.orEmpty().toInt()
+                storedPaymentMethod.expiryYear.orEmpty().toInt(),
             )
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
-            Logger.e(TAG, "Failed to parse stored Date", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
             inputData.expiryDate = ExpiryDate.EMPTY_DATE
         }
 
@@ -377,7 +388,7 @@ internal class StoredCardDelegate(
     }
 
     private fun makeCvcUIState(cvcPolicy: Brand.FieldPolicy): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: $cvcPolicy")
+        adyenLog(AdyenLogLevel.DEBUG) { "makeCvcUIState: $cvcPolicy" }
         return when (cvcPolicy) {
             Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
             Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
@@ -410,13 +421,18 @@ internal class StoredCardDelegate(
     // Bin lookup is not performed for stored cards
     override fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?) = Unit
 
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) = Unit
+
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) = Unit
+
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) = Unit
+
     override fun onCleared() {
         removeObserver()
         coroutineScope = null
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val LAST_FOUR_LENGTH = 4
     }
 }

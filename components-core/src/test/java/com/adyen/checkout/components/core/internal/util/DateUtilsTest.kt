@@ -8,22 +8,17 @@
 
 package com.adyen.checkout.components.core.internal.util
 
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.Calendar
 import java.util.Locale
 
+@ExtendWith(LoggingExtension::class)
 class DateUtilsTest {
-
-    @BeforeEach
-    fun beforeEach() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-    }
 
     @ParameterizedTest
     @MethodSource("parseDateToView")

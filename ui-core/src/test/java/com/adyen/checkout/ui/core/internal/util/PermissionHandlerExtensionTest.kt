@@ -13,6 +13,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.adyen.checkout.ui.core.TestPermissionHandler
 import com.adyen.checkout.ui.core.TestPermissionHandlerWithDifferentPermission
+import com.adyen.checkout.ui.core.TestPermissionHandlerWithNoHandlingForPermissionRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -67,6 +68,16 @@ internal class PermissionHandlerExtensionTest {
             val result = permissionHandler.checkPermission(context, permission)
 
             assertEquals(PermissionHandlerResult.PERMISSION_DENIED, result)
+        }
+
+    @Test
+    fun `when checkPermission is called and permission request is not handled, then returns not handled result`() =
+        runTestWithPermissionInitiallyDenied {
+            val permissionHandler = TestPermissionHandlerWithNoHandlingForPermissionRequest()
+
+            val result = permissionHandler.checkPermission(context, permission)
+
+            assertEquals(PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED, result)
         }
 
     private fun runTestWithPermissionInitiallyDenied(testBody: suspend TestScope.() -> Unit) = runTest {

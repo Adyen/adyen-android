@@ -23,9 +23,10 @@ import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -33,7 +34,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -104,7 +104,7 @@ internal class DefaultBoletoDelegate(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -114,7 +114,7 @@ internal class DefaultBoletoDelegate(
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
-                Logger.d(TAG, "New states emitted - states: ${states.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
                 updateOutputData(stateOptions = AddressFormUtils.initializeStateOptions(states))
             }
             .launchIn(coroutineScope)
@@ -127,7 +127,7 @@ internal class DefaultBoletoDelegate(
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
-                    countryList = countries
+                    countryList = countries,
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
                     inputData.address.country = it.code
@@ -141,7 +141,7 @@ internal class DefaultBoletoDelegate(
     private fun requestCountryList() {
         addressRepository.getCountryList(
             shopperLocale = componentParams.shopperLocale,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -149,7 +149,7 @@ internal class DefaultBoletoDelegate(
         addressRepository.getStateList(
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -167,7 +167,7 @@ internal class DefaultBoletoDelegate(
     private fun onInputDataChanged() {
         val outputData = createOutputData(
             countryOptions = outputData.addressState.countryOptions,
-            stateOptions = outputData.addressState.stateOptions
+            stateOptions = outputData.addressState.stateOptions,
         )
         _outputDataFlow.tryEmit(outputData)
         updateComponentState(outputData)
@@ -189,11 +189,11 @@ internal class DefaultBoletoDelegate(
     ): BoletoOutputData {
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            inputData.address.country
+            inputData.address.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            inputData.address.stateOrProvince
+            inputData.address.stateOrProvince,
         )
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
@@ -202,28 +202,28 @@ internal class DefaultBoletoDelegate(
             firstNameState = BoletoValidationUtils.validateFirstName(inputData.firstName),
             lastNameState = BoletoValidationUtils.validateLastName(inputData.lastName),
             socialSecurityNumberState = SocialSecurityNumberUtils.validateSocialSecurityNumber(
-                inputData.socialSecurityNumber
+                inputData.socialSecurityNumber,
             ),
             addressState = AddressValidationUtils.validateAddressInput(
                 inputData.address,
                 addressFormUIState,
                 updatedCountryOptions,
                 updatedStateOptions,
-                false
+                false,
             ),
             addressUIState = addressFormUIState,
             isEmailVisible = componentParams.isEmailVisible,
             isSendEmailSelected = inputData.isSendEmailSelected,
             shopperEmailState = BoletoValidationUtils.validateShopperEmail(
                 inputData.isSendEmailSelected,
-                inputData.shopperEmail
-            )
+                inputData.shopperEmail,
+            ),
         )
     }
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: BoletoOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }
@@ -241,8 +241,8 @@ internal class DefaultBoletoDelegate(
             socialSecurityNumber = outputData.socialSecurityNumberState.value,
             shopperName = ShopperName(
                 firstName = outputData.firstNameState.value,
-                lastName = outputData.lastNameState.value
-            )
+                lastName = outputData.lastNameState.value,
+            ),
         )
         if (outputData.isSendEmailSelected) {
             paymentComponentData.shopperEmail = outputData.shopperEmailState.value
@@ -250,7 +250,7 @@ internal class DefaultBoletoDelegate(
         if (AddressFormUtils.isAddressRequired(outputData.addressUIState)) {
             paymentComponentData.billingAddress = AddressFormUtils.makeAddressData(
                 addressOutputData = outputData.addressState,
-                addressFormUIState = outputData.addressUIState
+                addressFormUIState = outputData.addressUIState,
             )
         }
         val countriesList: List<AddressListItem> = outputData.addressState.countryOptions
@@ -259,7 +259,7 @@ internal class DefaultBoletoDelegate(
         return BoletoComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = countriesList.isNotEmpty() && statesList.isNotEmpty()
+            isReady = countriesList.isNotEmpty() && statesList.isNotEmpty(),
         )
     }
 
@@ -282,7 +282,7 @@ internal class DefaultBoletoDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -300,9 +300,5 @@ internal class DefaultBoletoDelegate(
 
     override fun onCleared() {
         removeObserver()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

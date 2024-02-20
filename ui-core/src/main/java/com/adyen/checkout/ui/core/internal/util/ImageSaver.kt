@@ -26,13 +26,14 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
+import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -143,7 +144,7 @@ class ImageSaver(
             bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
             outputStream.close()
 
-            Logger.d(TAG, "Bitmap successfully saved as an image")
+            adyenLog(AdyenLogLevel.DEBUG) { "Bitmap successfully saved as an image" }
             Result.success(Unit)
         } catch (e: FileNotFoundException) {
             Result.failure(CheckoutException("File not found: ", e))
@@ -157,10 +158,14 @@ class ImageSaver(
         bitmap: Bitmap,
         contentValues: ContentValues,
     ): Result<Unit> = withContext(dispatcher) {
-        if (permissionHandler.checkPermission(context, REQUIRED_PERMISSION) == PERMISSION_GRANTED) {
-            saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
-        } else {
-            Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
+        when (permissionHandler.checkPermission(context, REQUIRED_PERMISSION)) {
+            PERMISSION_GRANTED -> saveImageApi28AndBelowWhenPermissionGranted(bitmap, contentValues)
+            PERMISSION_REQUEST_NOT_HANDLED -> {
+                adyenLog(AdyenLogLevel.ERROR) { "Permission request not handled" }
+                Result.failure(PermissionRequestException("Permission request not handled"))
+            }
+
+            else -> Result.failure(PermissionRequestException("The $REQUIRED_PERMISSION permission is denied"))
         }
     }
 
@@ -184,7 +189,7 @@ class ImageSaver(
             bitmap.compress(CompressFormat.PNG, PNG_QUALITY, outputStream)
             outputStream.close()
 
-            Logger.d(TAG, "Bitmap successfully saved as an image")
+            adyenLog(AdyenLogLevel.DEBUG) { "Bitmap successfully saved as an image" }
             Result.success(Unit)
         } catch (e: FileNotFoundException) {
             Result.failure(CheckoutException("File not found: ", e))
@@ -197,14 +202,12 @@ class ImageSaver(
         return try {
             URL(this)
         } catch (e: MalformedURLException) {
-            Logger.e(TAG, "Failed to convert String to URL: $e")
+            adyenLog(AdyenLogLevel.ERROR) { "Failed to convert String to URL: $e" }
             null
         }
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val PNG_QUALITY = 100
         private const val REQUIRED_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
     }

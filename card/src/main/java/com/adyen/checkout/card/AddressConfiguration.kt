@@ -38,6 +38,12 @@ sealed class AddressConfiguration : Parcelable {
     ) : AddressConfiguration()
 
     /**
+     * Address Lookup option will be shown as part of card component.
+     */
+    @Parcelize
+    class Lookup : AddressConfiguration()
+
+    /**
      * Configuration for requirement of the address fields.
      */
     sealed class CardAddressFieldPolicy : Parcelable {

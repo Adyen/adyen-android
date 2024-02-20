@@ -10,9 +10,11 @@ package com.adyen.checkout.dropin
 
 import android.os.Bundle
 import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 
+@Suppress("TooManyFunctions")
 interface BaseDropInServiceContract {
 
     /**
@@ -86,6 +88,17 @@ interface BaseDropInServiceContract {
     fun sendRecurringResult(result: RecurringDropInServiceResult)
 
     /**
+     * Allows sending the result of Address Lookup operations.
+     *
+     * Call this method with a [AddressLookupDropInServiceResult] depending on the performed address lookup action.
+     *
+     * Check the subclasses of [AddressLookupDropInServiceResult] for more information.
+     *
+     * @param result the result of the action.
+     */
+    fun sendAddressLookupResult(result: AddressLookupDropInServiceResult)
+
+    /**
      * Gets the additional data that was set when starting Drop-in using
      * [DropInConfiguration.Builder.setAdditionalDataForDropInService] or null if nothing was set.
      */
@@ -109,4 +122,19 @@ interface BaseDropInServiceContract {
      * @param data A list of [BinLookupData], which contains information about the detected brands.
      */
     fun onBinLookup(data: List<BinLookupData>) = Unit
+
+    /**
+     * Set a callback that will be called when shopper inputs a query to perform address lookup.
+     *
+     * @param query Query inputted by shopper.
+     */
+    fun onAddressLookupQueryChanged(query: String) = Unit
+
+    /**
+     * Set a callback that will be called when shopper chooses an address option that requires complete details to be
+     * provided.
+     *
+     * @param lookupAddress Address option selected by shopper.
+     */
+    fun onAddressLookupCompletion(lookupAddress: LookupAddress) = false
 }

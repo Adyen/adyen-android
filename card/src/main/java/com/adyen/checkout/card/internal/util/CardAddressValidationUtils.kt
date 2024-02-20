@@ -27,6 +27,9 @@ internal object CardAddressValidationUtils {
             AddressParams.None -> {
                 true
             }
+            is AddressParams.Lookup -> {
+                false
+            }
         } ?: true
     }
 

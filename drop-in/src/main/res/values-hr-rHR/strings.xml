@@ -8,11 +8,8 @@
 
 <resources>
     <string name="payment_methods_header">Način plaćanja</string>
-    <string name="error_dialog_title">Greška</string>
-    <string name="error_dialog_button">U redu</string>
     <string name="payment_failed">Greška prilikom slanja plaćanja. Pokušajte ponovno.</string>
     <string name="action_failed">Došlo je do pogreške prilikom obrade plaćanja. Pokušajte ponovno kasnije.</string>
-    <string name="component_error">Pojavio se problem.</string>
     <string name="time_out_error">Isteklo je vrijeme zahtjeva. Pokušajte ponovno.</string>
     <string name="store_payment_methods_header">Vaš način plaćanja</string>
     <string name="other_payment_methods">Odaberite drugi način</string>

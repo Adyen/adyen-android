@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.econtext
 
-import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
@@ -22,7 +21,7 @@ internal class TestEContextConfiguration
 @Suppress("LongParameterList")
 private constructor(
     override val isSubmitButtonVisible: Boolean?,
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -30,19 +29,12 @@ private constructor(
     override val genericActionConfiguration: GenericActionConfiguration
 ) : EContextConfiguration() {
 
-    class Builder : EContextConfiguration.Builder<TestEContextConfiguration, Builder> {
+    class Builder(shopperLocale: Locale?, environment: Environment, clientKey: String) :
+        EContextConfiguration.Builder<TestEContextConfiguration, Builder>(environment, clientKey) {
 
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
-            environment,
-            clientKey
-        )
-
-        constructor(
-            shopperLocale: Locale,
-            environment: Environment,
-            clientKey: String
-        ) : super(shopperLocale, environment, clientKey)
+        init {
+            shopperLocale?.let { setShopperLocale(it) }
+        }
 
         public override fun buildInternal(): TestEContextConfiguration {
             return TestEContextConfiguration(

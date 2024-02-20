@@ -9,9 +9,9 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -23,7 +23,7 @@ class DefaultPublicKeyRepository(
         environment: Environment,
         clientKey: String
     ): Result<String> = runSuspendCatching {
-        Logger.d(TAG, "fetching publicKey from API")
+        adyenLog(AdyenLogLevel.DEBUG) { "fetching publicKey from API" }
 
         retryOnFailure(CONNECTION_RETRIES) {
             publicKeyService.getPublicKey(clientKey).publicKey
@@ -47,7 +47,6 @@ class DefaultPublicKeyRepository(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val CONNECTION_RETRIES = 3
     }
 }

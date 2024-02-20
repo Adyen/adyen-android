@@ -13,8 +13,8 @@
     <string name="checkout_econtext_phone_number_hint">Puhelinnumero</string>
     <string name="checkout_econtext_shopper_email_hint">Sähköpostiosoite</string>
 
-    <string name="checkout_econtext_first_name_invalid">Etunimi ei ole kelvollinen</string>
-    <string name="checkout_econtext_last_name_invalid">Sukunimi ei ole kelvollinen</string>
+    <string name="checkout_econtext_first_name_invalid">Syötä etunimesi</string>
+    <string name="checkout_econtext_last_name_invalid">Syötä sukunimesi</string>
     <string name="checkout_econtext_phone_number_invalid">Ei-kelvollinen puhelinnumero</string>
     <string name="checkout_econtext_shopper_email_invalid">Ei-kelvollinen sähköpostiosoite</string>
 </resources>

@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
@@ -174,11 +175,8 @@ internal class DefaultGooglePayDelegateTest(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
-            componentParams = GooglePayComponentParamsMapper(null, null).mapToParams(
-                configuration,
-                paymentMethod,
-                null,
-            ),
+            componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null, paymentMethod),
             analyticsRepository = analyticsRepository,
             application = Application(),
         )

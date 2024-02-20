@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">支付 %s</string>
     <string name="confirm_preauthorization">確認預先授權</string>
 
+    <string name="error_dialog_title">錯誤</string>
+    <string name="error_dialog_button">確定</string>
+    <string name="component_error">出了些問題。</string>
+
     <string name="paymentInProgressView_title">仍在處理付款程序</string>
     <string name="paymentInProgressView_loadingText">正在等待完成……</string>
     <string name="paymentInProgressView_cancelButton">取消</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">郵遞區號（選用）</string>
     <string name="checkout_address_form_province_territory_hint_optional">省或地區（選用）</string>
     <string name="checkout_address_form_city_town_hint_optional">市／鎮（選用）</string>
+
+    <string name="checkout_address_lookup_hint">搜尋您的地址</string>
+    <string name="checkout_address_lookup_initial">無法搜尋您的地址？</string>
+    <string name="checkout_address_lookup_initial_description">可以隨時#手動輸入您的地址#</string>
+    <string name="checkout_address_lookup_empty">找不到任何結果</string>
+    <string name="checkout_address_lookup_empty_description">「%s」不符合任何搜尋內容，請再試一次或#手動輸入地址#</string>
+    <string name="checkout_address_lookup_enter_manually">手動輸入地址</string>
+
 </resources>

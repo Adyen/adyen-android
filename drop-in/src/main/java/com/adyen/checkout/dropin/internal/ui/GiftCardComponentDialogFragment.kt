@@ -17,9 +17,9 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
@@ -39,7 +39,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     private lateinit var giftCardComponent: GiftCardComponent
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onCreate")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
         super.onCreate(savedInstanceState)
         arguments?.let {
             paymentMethod = it.getParcelable(PAYMENT_METHOD)
@@ -53,7 +53,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
         binding.header.text = paymentMethod.name
 
         try {
@@ -71,9 +71,8 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
                 fragment = this,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                amount = dropInViewModel.amount,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = this,
-                sessionDetails = dropInViewModel.sessionDetails,
                 analyticsRepository = dropInViewModel.analyticsRepository,
                 onRedirect = protocol::onRedirect,
             ) as GiftCardComponent
@@ -97,7 +96,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     }
 
     override fun onRequestOrder() {
-        Logger.d(TAG, "onRequestOrder")
+        adyenLog(AdyenLogLevel.DEBUG) { "onRequestOrder" }
         // no ops
     }
 
@@ -105,27 +104,27 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         if (paymentComponentState !is GiftCardComponentState) {
             throw CheckoutException("paymentComponentState is not an instance of GiftCardComponentState.")
         }
-        Logger.d(TAG, "onBalanceCheck")
+        adyenLog(AdyenLogLevel.DEBUG) { "onBalanceCheck" }
         protocol.requestBalanceCall(paymentComponentState)
     }
 
     override fun onSubmit(state: GiftCardComponentState) {
-        Logger.d(TAG, "onSubmit")
+        adyenLog(AdyenLogLevel.DEBUG) { "onSubmit" }
         // no ops
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        Logger.d(TAG, "onAdditionalDetails")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAdditionalDetails" }
         // no ops
     }
 
     override fun onError(componentError: ComponentError) {
-        Logger.d(TAG, "onError")
+        adyenLog(AdyenLogLevel.DEBUG) { "onError" }
         handleError(componentError)
     }
 
     private fun handleError(componentError: ComponentError) {
-        Logger.e(TAG, componentError.errorMessage)
+        adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
     }
 
@@ -147,8 +146,6 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val PAYMENT_METHOD = "PAYMENT_METHOD"
 
         fun newInstance(

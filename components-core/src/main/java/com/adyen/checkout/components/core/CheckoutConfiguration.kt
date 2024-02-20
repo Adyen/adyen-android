@@ -9,7 +9,6 @@
 package com.adyen.checkout.components.core
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
@@ -17,15 +16,41 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.LocaleUtil
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 
+/**
+ * A generic configuration class that allows customizing the Checkout library.
+ * You can use the block parameter to add drop-in or payment method specific configurations. For example:
+ *
+ * ```
+ * val checkoutConfiguration = CheckoutConfiguration(
+ *     environment,
+ *     clientKey,
+ *     shopperLocale,
+ *     amount,
+ * ) {
+ *     dropIn {
+ *         setEnableRemovingStoredPaymentMethods(true)
+ *     }
+ *     card {
+ *         setHolderNameRequired(true)
+ *     }
+ * }
+ * ```
+ *
+ * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+ * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+ * @param shopperLocale The [Locale] used to display information to the shopper. Defaults to the primary device locale.
+ * @param amount The amount of the transaction.
+ * @param analyticsConfiguration A configuration for the internal analytics of the library.
+ * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
+ */
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
-    override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
+    override val shopperLocale: Locale? = null,
     override val amount: Amount? = null,
     override val analyticsConfiguration: AnalyticsConfiguration? = null,
     @IgnoredOnParcel
@@ -33,22 +58,6 @@ class CheckoutConfiguration(
 ) : Configuration {
 
     private val availableConfigurations = mutableMapOf<String, Configuration>()
-
-    constructor(
-        context: Context,
-        environment: Environment,
-        clientKey: String,
-        amount: Amount? = null,
-        analyticsConfiguration: AnalyticsConfiguration? = null,
-        configurationBlock: CheckoutConfiguration.() -> Unit = {},
-    ) : this(
-        shopperLocale = LocaleUtil.getLocale(context),
-        environment = environment,
-        clientKey = clientKey,
-        amount = amount,
-        analyticsConfiguration = analyticsConfiguration,
-        configurationBlock = configurationBlock,
-    )
 
     init {
         apply(configurationBlock)
@@ -58,7 +67,9 @@ class CheckoutConfiguration(
     @SuppressLint("ParcelClassLoader")
     @Suppress("UNCHECKED_CAST", "DEPRECATION")
     private constructor(parcel: Parcel) : this(
-        shopperLocale = parcel.readSerializable() as Locale,
+        // the order in which these fields are read from Parcel should match the order in which they are written to
+        // Parcel in the `writeToParcel` function
+        shopperLocale = parcel.readSerializable() as? Locale,
         environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
@@ -97,6 +108,8 @@ class CheckoutConfiguration(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
+        // the order in which these fields are written from Parcel should match the order in which they are read from
+        // Parcel in `constructor(parcel: Parcel)`
         dest.writeSerializable(shopperLocale)
         dest.writeParcelable(environment, flags)
         dest.writeString(clientKey)

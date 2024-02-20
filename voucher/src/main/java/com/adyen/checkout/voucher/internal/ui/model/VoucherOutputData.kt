@@ -20,5 +20,6 @@ data class VoucherOutputData(
     val reference: String?,
     val totalAmount: Amount?,
     val storeAction: VoucherStoreAction?,
+    val instructionUrl: String?,
     val informationFields: List<VoucherInformationField>?,
 ) : OutputData

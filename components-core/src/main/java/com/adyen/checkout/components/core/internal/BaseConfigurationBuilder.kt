@@ -16,14 +16,14 @@ abstract class BaseConfigurationBuilder<
     BuilderT : BaseConfigurationBuilder<ConfigurationT, BuilderT>
     >
 /**
- * Initialize a configuration builder with the required fields.
+ * Initialize a configuration builder with the required fields and a shopper locale.
  *
  * @param shopperLocale The [Locale] of the shopper.
  * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
  * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
  */
 constructor(
-    protected var shopperLocale: Locale,
+    protected var shopperLocale: Locale?,
     protected var environment: Environment,
     protected var clientKey: String
 ) {
@@ -38,21 +38,50 @@ constructor(
     }
 
     /**
+     * Initialize a configuration builder with the required fields.
+     * The shopper locale will match the primary user locale on the device.
+     *
+     * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+     * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+     */
+    constructor(
+        environment: Environment,
+        clientKey: String
+    ) : this(
+        shopperLocale = null,
+        environment = environment,
+        clientKey = clientKey,
+    )
+
+    /**
      * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
      *
      * @param context A Context
      * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
      * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
      */
+    @Deprecated("You can omit the context parameter")
     constructor(
+        @Suppress("unused")
         context: Context,
         environment: Environment,
         clientKey: String
     ) : this(
-        LocaleUtil.getLocale(context),
+        null,
         environment,
-        clientKey
+        clientKey,
     )
+
+    /**
+     * Allows setting the preferred locale of the shopper.
+     *
+     * @param shopperLocale The [Locale] of the shopper.
+     */
+    fun setShopperLocale(shopperLocale: Locale): BuilderT {
+        this.shopperLocale = shopperLocale
+        @Suppress("UNCHECKED_CAST")
+        return this as BuilderT
+    }
 
     /**
      * Allows configuring the internal analytics of the library.
@@ -69,6 +98,10 @@ constructor(
      * Sets the amount of the transaction.
      *
      * Default is null.
+     *
+     * Not applicable for the sessions flow. Check out the
+     * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+     * this value.
      *
      * @param amount Amount of the transaction.
      */
@@ -89,8 +122,10 @@ constructor(
             throw CheckoutException("Client key does not match the environment.")
         }
 
-        if (!LocaleUtil.isValidLocale(shopperLocale)) {
-            throw CheckoutException("Invalid shopper locale: $shopperLocale.")
+        shopperLocale?.let {
+            if (!LocaleUtil.isValidLocale(it)) {
+                throw CheckoutException("Invalid shopper locale: $shopperLocale.")
+            }
         }
 
         return buildInternal()

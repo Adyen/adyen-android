@@ -59,7 +59,7 @@ import kotlin.collections.set
 @Parcelize
 @Suppress("LongParameterList")
 class DropInConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -109,6 +109,18 @@ class DropInConfiguration private constructor(
         private var additionalDataForDropInService: Bundle? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         * The shopper locale will match the primary user locale on the device.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Create a [DropInConfiguration]
          *
          * @param shopperLocale The [Locale] of the shopper.
@@ -128,6 +140,7 @@ class DropInConfiguration private constructor(
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
@@ -446,8 +459,9 @@ private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
 fun CheckoutConfiguration.dropIn(
     configuration: @CheckoutConfigurationMarker Builder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = Builder(shopperLocale, environment, clientKey)
+    val config = Builder(environment, clientKey)
         .apply {
+            shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }

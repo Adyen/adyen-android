@@ -36,10 +36,10 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -64,7 +64,7 @@ constructor(
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
     private val cashAppPayFactory: CashAppPayFactory,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
@@ -111,7 +111,7 @@ constructor(
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -128,7 +128,7 @@ constructor(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -155,7 +155,7 @@ constructor(
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CashAppPayOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }
@@ -185,7 +185,7 @@ constructor(
         return CashAppPayComponentState(
             data = paymentComponentData,
             isInputValid = outputData.isValid,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -205,15 +205,15 @@ constructor(
             exceptionChannel.trySend(
                 ComponentException(
                     "Cannot launch Cash App Pay, you need to either pass an amount with supported " +
-                        "currency or store the shopper account."
-                )
+                        "currency or store the shopper account.",
+                ),
             )
             return
         }
 
         _viewFlow.tryEmit(PaymentInProgressViewType)
 
-        coroutineScope.launch(ioDispatcher) {
+        coroutineScope.launch(coroutineDispatcher) {
             cashAppPay.createCustomerRequest(actions, componentParams.returnUrl)
         }
     }
@@ -259,14 +259,14 @@ constructor(
     }
 
     override fun cashAppPayStateDidChange(newState: CashAppPayState) {
-        Logger.d(TAG, "CashAppPayState state changed: ${newState::class.simpleName}")
+        adyenLog(AdyenLogLevel.DEBUG) { "CashAppPayState state changed: ${newState::class.simpleName}" }
         when (newState) {
             is CashAppPayState.ReadyToAuthorize -> {
                 cashAppPay.authorizeCustomerRequest()
             }
 
             is CashAppPayState.Approved -> {
-                Logger.i(TAG, "Cash App Pay authorization request approved")
+                adyenLog(AdyenLogLevel.INFO) { "Cash App Pay authorization request approved" }
                 updateInputData {
                     authorizationData = createAuthorizationData(newState.responseData)
                 }
@@ -274,13 +274,13 @@ constructor(
             }
 
             CashAppPayState.Declined -> {
-                Logger.i(TAG, "Cash App Pay authorization request declined")
+                adyenLog(AdyenLogLevel.INFO) { "Cash App Pay authorization request declined" }
                 exceptionChannel.trySend(ComponentException("Cash App Pay authorization request declined"))
             }
 
             is CashAppPayState.CashAppPayExceptionState -> {
                 exceptionChannel.trySend(
-                    ComponentException("Cash App Pay has encountered an error", newState.exception)
+                    ComponentException("Cash App Pay has encountered an error", newState.exception),
                 )
             }
 
@@ -296,7 +296,7 @@ constructor(
             CashAppPayOnFileData(
                 grantId = it.id,
                 cashTag = customerResponseData.customerProfile?.cashTag?.toString(),
-                customerId = customerResponseData.customerProfile?.id
+                customerId = customerResponseData.customerProfile?.id,
             )
         }
 
@@ -324,9 +324,5 @@ constructor(
         _coroutineScope = null
         removeObserver()
         cashAppPay.unregisterFromStateUpdates()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

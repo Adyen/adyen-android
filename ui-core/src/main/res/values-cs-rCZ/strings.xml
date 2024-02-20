@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Zaplatit %s</string>
     <string name="confirm_preauthorization">Potvrdit předautorizaci</string>
 
+    <string name="error_dialog_title">Chyba</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Něco se pokazilo.</string>
+
     <string name="paymentInProgressView_title">Proces zpracování platby je stále aktivní</string>
     <string name="paymentInProgressView_loadingText">Čeká se na dokončení…</string>
     <string name="paymentInProgressView_cancelButton">Zrušit</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">PSČ (nepovinné)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provincie nebo teritorium</string>
     <string name="checkout_address_form_city_town_hint_optional">Město (nepovinné)</string>
+
+    <string name="checkout_address_lookup_hint">Vyhledat vaši adresu</string>
+    <string name="checkout_address_lookup_initial">Nedaří se vám vyhledat vaši adresu?</string>
+    <string name="checkout_address_lookup_initial_description">Vždy můžete #zadat svou adresu ručně#</string>
+    <string name="checkout_address_lookup_empty">Nebyly nalezeny žádné výsledky</string>
+    <string name="checkout_address_lookup_empty_description">„%s“ se s ničím neshoduje, zkuste to znovu nebo použijte #ruční zadání adresy#</string>
+    <string name="checkout_address_lookup_enter_manually">Zadejte adresu ručně</string>
+
 </resources>

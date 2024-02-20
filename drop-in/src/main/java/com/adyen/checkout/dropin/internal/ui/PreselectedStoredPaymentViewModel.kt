@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.internal.ui.model.DropInComponentParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
 import kotlinx.coroutines.channels.Channel
@@ -29,8 +29,7 @@ import java.util.Locale
 
 internal class PreselectedStoredPaymentViewModel(
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val amount: Amount?,
-    private val dropInComponentParams: DropInComponentParams,
+    private val dropInParams: DropInParams,
 ) : ViewModel(), ComponentCallback<PaymentComponentState<*>> {
 
     private val _uiStateFlow = MutableStateFlow(getInitialUIState())
@@ -43,8 +42,8 @@ internal class PreselectedStoredPaymentViewModel(
 
     private fun getInitialUIState(): PreselectedStoredState {
         val storedPaymentMethodModel = storedPaymentMethod.mapStoredModel(
-            dropInComponentParams.isRemovingStoredPaymentMethodsEnabled,
-            dropInComponentParams.environment,
+            dropInParams.isRemovingStoredPaymentMethodsEnabled,
+            dropInParams.environment,
         )
         return PreselectedStoredState(
             storedPaymentMethodModel = storedPaymentMethodModel,
@@ -77,7 +76,7 @@ internal class PreselectedStoredPaymentViewModel(
             ButtonState.ContinueButton()
         } else {
             // component does not require user input -> treat it as a normal Pay button
-            ButtonState.PayButton(amount, dropInComponentParams.shopperLocale)
+            ButtonState.PayButton(dropInParams.amount, dropInParams.shopperLocale)
         }
     }
 

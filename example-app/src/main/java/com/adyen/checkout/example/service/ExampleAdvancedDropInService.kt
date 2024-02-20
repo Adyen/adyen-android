@@ -14,6 +14,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -22,6 +23,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
@@ -32,10 +34,17 @@ import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -48,6 +57,7 @@ import javax.inject.Inject
  * [onOrderRequest] and [onOrderCancel] and it handles the stored payment method removal flow by
  * implementing [onRemoveStoredPaymentMethod].
  */
+@OptIn(FlowPreview::class)
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ExampleAdvancedDropInService : DropInService() {
@@ -57,6 +67,25 @@ class ExampleAdvancedDropInService : DropInService() {
 
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
+
+    @Inject
+    lateinit var addressLookupRepository: AddressLookupRepository
+
+    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
+
+    init {
+        addressLookupQueryFlow
+            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
+            .filterNotNull()
+            .onEach { query ->
+                val options = if (query == "empty") {
+                    emptyList()
+                } else {
+                    addressLookupRepository.getAddressLookupOptions()
+                }
+                sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
+            }.launchIn(this)
+    }
 
     override fun onSubmit(
         state: PaymentComponentState<*>,
@@ -78,7 +107,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
                 isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
                 isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                shopperEmail = keyValueStorage.getShopperEmail()
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
@@ -187,7 +216,7 @@ class ExampleAdvancedDropInService : DropInService() {
             val order = orderResponse?.let {
                 Order(
                     pspReference = it.pspReference,
-                    orderData = it.orderData
+                    orderData = it.orderData,
                 )
             }
             val paymentMethodRequest = getPaymentMethodRequest(
@@ -222,7 +251,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 val request = createBalanceRequest(
                     paymentMethodJson,
                     amountJson,
-                    keyValueStorage.getMerchantAccount()
+                    keyValueStorage.getMerchantAccount(),
                 )
 
                 val response = paymentsRepository.getBalance(request)
@@ -230,7 +259,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 sendBalanceResult(result)
             } else {
                 val result = BalanceDropInServiceResult.Error(
-                    errorDialog = ErrorDialog(message = "amount or paymentMethod is null.")
+                    errorDialog = ErrorDialog(message = "amount or paymentMethod is null."),
                 )
                 sendBalanceResult(result)
             }
@@ -248,14 +277,14 @@ class ExampleAdvancedDropInService : DropInService() {
                     } catch (e: ModelSerializationException) {
                         BalanceDropInServiceResult.Error(
                             errorDialog = ErrorDialog(message = "Not enough balance"),
-                            dismissDropIn = false
+                            dismissDropIn = false,
                         )
                     }
                 }
 
                 else -> BalanceDropInServiceResult.Error(
                     errorDialog = ErrorDialog(message = resultCode),
-                    dismissDropIn = false
+                    dismissDropIn = false,
                 )
             }
         } else {
@@ -270,7 +299,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
             val paymentRequest = createOrderRequest(
                 keyValueStorage.getAmount(),
-                keyValueStorage.getMerchantAccount()
+                keyValueStorage.getMerchantAccount(),
             )
 
             val response = paymentsRepository.createOrder(paymentRequest)
@@ -286,7 +315,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 "Success" -> OrderDropInServiceResult.OrderCreated(OrderResponse.SERIALIZER.deserialize(jsonResponse))
                 else -> OrderDropInServiceResult.Error(
                     errorDialog = ErrorDialog(message = resultCode),
-                    dismissDropIn = false
+                    dismissDropIn = false,
                 )
             }
         } else {
@@ -301,7 +330,7 @@ class ExampleAdvancedDropInService : DropInService() {
             val orderJson = Order.SERIALIZER.serialize(order)
             val request = createCancelOrderRequest(
                 orderJson,
-                keyValueStorage.getMerchantAccount()
+                keyValueStorage.getMerchantAccount(),
             )
             val response = paymentsRepository.cancelOrder(request)
 
@@ -324,7 +353,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
                 else -> DropInServiceResult.Error(
                     errorDialog = ErrorDialog(message = resultCode),
-                    dismissDropIn = false
+                    dismissDropIn = false,
                 )
             }
         } else {
@@ -373,8 +402,20 @@ class ExampleAdvancedDropInService : DropInService() {
         Log.d(TAG, "On bin lookup: ${data.map { it.brand }}")
     }
 
+    override fun onAddressLookupQueryChanged(query: String) {
+        Log.d(TAG, "On address lookup query: $query")
+        addressLookupQueryFlow.tryEmit(query)
+    }
+
+    override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        Log.d(TAG, "On address lookup query completion: $lookupAddress")
+        return false
+    }
+
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"
+
+        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
     }
 }

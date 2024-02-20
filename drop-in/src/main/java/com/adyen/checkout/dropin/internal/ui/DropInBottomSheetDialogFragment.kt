@@ -17,11 +17,12 @@ import android.widget.FrameLayout
 import androidx.fragment.app.activityViewModels
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -58,7 +59,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
 
         dialog.setOnShowListener {
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(
-                com.google.android.material.R.id.design_bottom_sheet
+                com.google.android.material.R.id.design_bottom_sheet,
             )
 
             if (bottomSheet != null) {
@@ -69,7 +70,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
                 }
                 behavior.state = this.dialogInitViewState
             } else {
-                Logger.e(TAG, "Failed to set BottomSheetBehavior.")
+                adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
             }
         }
 
@@ -83,12 +84,8 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     }
 
     override fun onCancel(dialog: DialogInterface) {
-        Logger.d(TAG, "onCancel")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         protocol.terminateDropIn()
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 
     /**
@@ -112,5 +109,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         fun onRedirect()
         fun onBinValue(binValue: String)
         fun onBinLookup(data: List<BinLookupData>)
+        fun onAddressLookupQuery(query: String)
+        fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean
     }
 }

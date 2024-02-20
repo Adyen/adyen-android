@@ -11,19 +11,18 @@ package com.adyen.checkout.dropin.internal.ui.model
 import android.os.Bundle
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
 import java.util.Locale
 
-internal data class DropInComponentParams(
-    override val shopperLocale: Locale,
-    override val environment: Environment,
-    override val clientKey: String,
-    override val analyticsParams: AnalyticsParams,
-    override val isCreatedByDropIn: Boolean,
-    override val amount: Amount?,
+internal data class DropInParams(
+    val shopperLocale: Locale,
+    val environment: Environment,
+    val clientKey: String,
+    val analyticsParams: AnalyticsParams,
+    val amount: Amount?,
     val showPreselectedStoredPaymentMethod: Boolean,
     val skipListWhenSinglePaymentMethod: Boolean,
     val isRemovingStoredPaymentMethodsEnabled: Boolean,
     val additionalDataForDropInService: Bundle?,
-) : ComponentParams
+    val overriddenPaymentMethodInformation: Map<String, DropInPaymentMethodInformation>,
+)

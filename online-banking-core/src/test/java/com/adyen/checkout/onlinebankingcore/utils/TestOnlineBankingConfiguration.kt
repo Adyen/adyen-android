@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.onlinebankingcore.utils
 
-import android.content.Context
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
@@ -21,7 +20,7 @@ import java.util.Locale
 
 @Parcelize
 internal class TestOnlineBankingConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -30,21 +29,14 @@ internal class TestOnlineBankingConfiguration private constructor(
 ) : Configuration,
     ButtonConfiguration {
 
-    class Builder : BaseConfigurationBuilder<TestOnlineBankingConfiguration, Builder>, ButtonConfigurationBuilder {
+    class Builder(
+        shopperLocale: Locale?,
+        environment: Environment,
+        clientKey: String
+    ) : BaseConfigurationBuilder<TestOnlineBankingConfiguration, Builder>(shopperLocale, environment, clientKey),
+        ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
-
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
-            environment,
-            clientKey
-        )
-
-        constructor(
-            shopperLocale: Locale,
-            environment: Environment,
-            clientKey: String
-        ) : super(shopperLocale, environment, clientKey)
 
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible

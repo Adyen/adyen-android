@@ -13,6 +13,9 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
@@ -22,6 +25,7 @@ import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Suppress("TooManyFunctions")
 interface CardDelegate :
     PaymentComponentDelegate<CardComponentState>,
     ViewProvidingDelegate,
@@ -44,4 +48,14 @@ interface CardDelegate :
     fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?)
 
     fun setOnBinLookupListener(listener: ((data: List<BinLookupData>) -> Unit)?)
+
+    fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback)
+
+    fun updateAddressLookupOptions(options: List<LookupAddress>)
+
+    fun setAddressLookupResult(addressLookupResult: AddressLookupResult)
+
+    fun handleBackPress(): Boolean
+
+    fun startAddressLookup()
 }

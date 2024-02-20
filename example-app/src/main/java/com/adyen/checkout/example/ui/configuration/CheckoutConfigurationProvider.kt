@@ -48,9 +48,9 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     val checkoutConfig: CheckoutConfiguration
         get() = CheckoutConfiguration(
-            shopperLocale = shopperLocale,
             environment = environment,
             clientKey = clientKey,
+            shopperLocale = shopperLocale,
             amount = amount,
             analyticsConfiguration = getAnalyticsConfiguration(),
         ) {
@@ -104,6 +104,8 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 brands = listOf("jcb"),
             ),
         )
+
+        CardAddressMode.LOOKUP -> AddressConfiguration.Lookup()
     }
 
     private fun getInstallmentConfiguration(): InstallmentConfiguration =
