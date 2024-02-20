@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.demo.di
 
+import android.app.Application
+import android.content.res.AssetManager
 import com.adyen.checkout.demo.data.api.CheckoutApiService
 import com.adyen.checkout.demo.data.repositories.SessionsRepository
 import com.adyen.checkout.demo.data.repositories.SessionsRepositoryImpl
@@ -19,6 +21,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
+
+    @Provides
+    fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
 
     @Provides
     fun providePaymentsRepository(

@@ -42,6 +42,10 @@
                     android:scheme="adyencheckout" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.MyStoreDemoDropInService"
+            android:exported="false" />
     </application>
 
 </manifest>

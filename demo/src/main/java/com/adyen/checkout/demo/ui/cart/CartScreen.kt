@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.adyen.checkout.demo.data.model.StoreItem
+import com.adyen.checkout.demo.service.MyStoreDemoDropInService
 import com.adyen.checkout.demo.ui.MyStoreDemoUiState
 import com.adyen.checkout.demo.ui.MyStoreDemoViewModel
 import com.adyen.checkout.dropin.DropIn
@@ -127,6 +128,7 @@ fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallba
                 dropInLauncher = launcher,
                 checkoutSession = uiState.session,
                 checkoutConfiguration = uiState.checkoutConfiguration,
+                serviceClass = MyStoreDemoDropInService::class.java,
             )
         }
     }
