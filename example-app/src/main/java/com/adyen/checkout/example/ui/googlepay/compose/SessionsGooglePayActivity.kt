@@ -50,7 +50,6 @@ class SessionsGooglePayActivity : AppCompatActivity() {
                     onBackPressed = { onBackPressedDispatcher.onBackPressed() },
                     googlePayState = googlePayState,
                     eventsState = eventsState,
-                    onGooglePayLauncherResult = sessionsGooglePayViewModel::onGooglePayLauncherResult
                 )
             }
         }

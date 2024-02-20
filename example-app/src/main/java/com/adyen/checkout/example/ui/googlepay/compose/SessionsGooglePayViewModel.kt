@@ -35,8 +35,6 @@ import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
-import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.contract.ApiTaskResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -181,10 +179,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     private fun updateEvent(block: (SessionsGooglePayEvents) -> SessionsGooglePayEvents) {
         _stateEvents.update(block)
-    }
-
-    fun onGooglePayLauncherResult(apiTaskResult: ApiTaskResult<PaymentData>) {
-        // TODO Call Adyen API
     }
 
     fun onNewIntent(intent: Intent) {

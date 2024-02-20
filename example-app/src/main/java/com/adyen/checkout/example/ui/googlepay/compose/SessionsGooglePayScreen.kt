@@ -36,8 +36,6 @@ import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.google.android.gms.wallet.PaymentData
-import com.google.android.gms.wallet.contract.ApiTaskResult
 import com.google.android.gms.wallet.contract.TaskResultContracts
 import com.google.pay.button.ButtonTheme
 import com.google.pay.button.ButtonType
@@ -48,7 +46,6 @@ internal fun SessionsGooglePayScreen(
     useDarkTheme: Boolean,
     googlePayState: SessionsGooglePayState,
     eventsState: SessionsGooglePayEvents,
-    onGooglePayLauncherResult: (apiTaskResult: ApiTaskResult<PaymentData>) -> Unit,
     onBackPressed: () -> Unit,
 ) {
     lateinit var googlePayComponent: GooglePayComponent
@@ -56,7 +53,7 @@ internal fun SessionsGooglePayScreen(
     val activity = LocalContext.current as Activity
     val googlePayLauncher = rememberLauncherForActivityResult(
         contract = TaskResultContracts.GetPaymentDataResult(),
-        onResult = onGooglePayLauncherResult,
+        onResult = googlePayComponent::handlePaymentResult,
     )
 
     Scaffold(
