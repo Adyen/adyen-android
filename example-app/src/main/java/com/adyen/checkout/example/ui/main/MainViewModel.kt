@@ -182,6 +182,7 @@ internal class MainViewModel @Inject constructor(
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
                 showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
             ),
         ) ?: return null
 
