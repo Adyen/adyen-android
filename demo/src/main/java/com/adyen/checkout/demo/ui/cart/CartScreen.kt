@@ -41,6 +41,7 @@ import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.demo.service.MyStoreDemoDropInService
 import com.adyen.checkout.demo.ui.MyStoreDemoUiState
 import com.adyen.checkout.demo.ui.MyStoreDemoViewModel
+import com.adyen.checkout.demo.ui.PaymentResultState
 import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.SessionDropInCallback
 import com.adyen.checkout.dropin.compose.rememberLauncherForDropInResult
@@ -130,6 +131,20 @@ fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallba
                 checkoutConfiguration = uiState.checkoutConfiguration,
                 serviceClass = MyStoreDemoDropInService::class.java,
             )
+        }
+
+        is MyStoreDemoUiState.Result -> {
+            when (uiState.state) {
+                PaymentResultState.Cancelled -> {
+                    Toast.makeText(LocalContext.current, "Cancelled", Toast.LENGTH_LONG).show()
+                }
+                PaymentResultState.Error -> {
+                    Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_LONG).show()
+                }
+                PaymentResultState.Success -> {
+                    Toast.makeText(LocalContext.current, "Finished", Toast.LENGTH_LONG).show()
+                }
+            }
         }
     }
 }

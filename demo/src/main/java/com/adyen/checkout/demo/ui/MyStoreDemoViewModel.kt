@@ -124,14 +124,19 @@ class MyStoreDemoViewModel @Inject constructor(
 
     fun onDropInResult(sessionDropInResult: SessionDropInResult?) {
         // TODO send event to show result on ui
-        _myStoreState.update {
-            it.copy(uiState = MyStoreDemoUiState.Shopping)
+        val resultState = when (sessionDropInResult) {
+            is SessionDropInResult.CancelledByUser -> PaymentResultState.Cancelled
+            is SessionDropInResult.Error -> PaymentResultState.Error
+            is SessionDropInResult.Finished -> {
+                _myStoreState.update {
+                    it.copy(shoppingCart = null)
+                }
+                PaymentResultState.Success
+            }
+            null -> PaymentResultState.Error
         }
-        when (sessionDropInResult) {
-            is SessionDropInResult.CancelledByUser -> "Canceled by user"
-            is SessionDropInResult.Error -> sessionDropInResult.reason ?: "DropInResult is error without reason"
-            is SessionDropInResult.Finished -> sessionDropInResult.result.resultCode ?: "Result code is null"
-            null -> "DropInResult is null"
+        _myStoreState.update {
+            it.copy(uiState = MyStoreDemoUiState.Result(resultState))
         }
     }
 

@@ -23,4 +23,11 @@ sealed class MyStoreDemoUiState {
     object Error : MyStoreDemoUiState()
     data class StartDropIn(val session: CheckoutSession, val checkoutConfiguration: CheckoutConfiguration) :
         MyStoreDemoUiState()
+    data class Result(val state: PaymentResultState) : MyStoreDemoUiState()
+}
+
+sealed class PaymentResultState {
+    data object Cancelled : PaymentResultState()
+    data object Error : PaymentResultState()
+    data object Success : PaymentResultState()
 }
