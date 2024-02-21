@@ -43,7 +43,7 @@ fun BottomNavigationBar(navController: NavController) {
     }
 }
 
-enum class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    Store("store", Icons.Default.Home, "Store"),
-    Cart("cart", Icons.Default.ShoppingCart, "Cart"),
+enum class BottomNavItem(val route: String, val icon: ImageVector) {
+    Store("store", Icons.Default.Home),
+    Cart("cart", Icons.Default.ShoppingCart),
 }
