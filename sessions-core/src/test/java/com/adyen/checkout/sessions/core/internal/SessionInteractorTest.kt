@@ -756,7 +756,8 @@ internal class SessionInteractorTest(
         expiresAt: String = "",
         returnUrl: String = "",
         paymentMethods: PaymentMethodsApiResponse? = PaymentMethodsApiResponse(),
-        configuration: SessionSetupConfiguration? = null
+        configuration: SessionSetupConfiguration? = null,
+        shopperLocale: String? = null,
     ): SessionSetupResponse {
         return SessionSetupResponse(
             id = id,
@@ -766,6 +767,7 @@ internal class SessionInteractorTest(
             paymentMethodsApiResponse = paymentMethods,
             returnUrl = returnUrl,
             configuration = configuration,
+            shopperLocale = shopperLocale,
         )
     }
 

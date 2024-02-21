@@ -131,6 +131,7 @@ internal class BoletoComponentParamsMapperTest {
             installmentConfiguration = null,
             amount = sessionsValue,
             returnUrl = "",
+            shopperLocale = null,
         )
 
         val params = mapParams(
@@ -147,11 +148,44 @@ internal class BoletoComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @ParameterizedTest
+    @MethodSource("shopperLocaleSource")
+    fun `shopper locale should match value set in configuration then sessions then device locale`(
+        configurationValue: Locale?,
+        sessionsValue: Locale?,
+        deviceLocaleValue: Locale,
+        expectedValue: Locale,
+    ) {
+        val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
+
+        val sessionParams = SessionParams(
+            enableStoreDetails = null,
+            installmentConfiguration = null,
+            amount = null,
+            returnUrl = "",
+            shopperLocale = sessionsValue,
+        )
+
+        val params = boletoComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = deviceLocaleValue,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+        )
+
+        val expected = getBoletoComponentParams(
+            shopperLocale = expectedValue,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
+        shopperLocale: Locale? = null,
         configuration: BoletoConfiguration.Builder.() -> Unit = {}
     ) = CheckoutConfiguration(
-        shopperLocale = Locale.US,
+        shopperLocale = shopperLocale,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
@@ -162,7 +196,7 @@ internal class BoletoComponentParamsMapperTest {
     @Suppress("LongParameterList")
     private fun getBoletoComponentParams(
         isSubmitButtonVisible: Boolean = true,
-        shopperLocale: Locale = Locale.US,
+        shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -215,6 +249,15 @@ internal class BoletoComponentParamsMapperTest {
             arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
             arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
             arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+        )
+
+        @JvmStatic
+        fun shopperLocaleSource() = listOf(
+            // configurationValue, sessionsValue, deviceLocaleValue, expectedValue
+            arguments(null, null, Locale.US, Locale.US),
+            arguments(Locale.GERMAN, null, Locale.US, Locale.GERMAN),
+            arguments(null, Locale.CHINESE, Locale.US, Locale.CHINESE),
+            arguments(Locale.GERMAN, Locale.CHINESE, Locale.US, Locale.GERMAN),
         )
     }
 }

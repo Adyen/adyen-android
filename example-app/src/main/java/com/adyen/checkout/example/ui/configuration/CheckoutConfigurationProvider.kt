@@ -34,10 +34,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 
-    private val shopperLocale: Locale
+    private val shopperLocale: Locale?
         get() {
             val shopperLocaleString = keyValueStorage.getShopperLocale()
-            return Locale.forLanguageTag(shopperLocaleString)
+            return shopperLocaleString?.let { Locale.forLanguageTag(it) }
         }
 
     private val amount: Amount get() = keyValueStorage.getAmount()

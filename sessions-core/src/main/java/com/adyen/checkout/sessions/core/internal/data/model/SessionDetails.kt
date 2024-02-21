@@ -24,7 +24,8 @@ data class SessionDetails(
     val amount: Amount?,
     val expiresAt: String,
     val returnUrl: String?,
-    val sessionSetupConfiguration: SessionSetupConfiguration?
+    val sessionSetupConfiguration: SessionSetupConfiguration?,
+    val shopperLocale: String?,
 ) : Parcelable
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -35,7 +36,8 @@ fun SessionSetupResponse.mapToDetails(): SessionDetails {
         amount = amount,
         expiresAt = expiresAt,
         returnUrl = returnUrl,
-        sessionSetupConfiguration = configuration
+        sessionSetupConfiguration = configuration,
+        shopperLocale = shopperLocale,
     )
 }
 

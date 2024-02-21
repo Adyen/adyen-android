@@ -23,7 +23,7 @@ class CommonComponentParamsMapper {
     ): CommonComponentParamsMapperData {
         val sessionParams: SessionParams? = dropInOverrideParams?.sessionParams ?: componentSessionParams
         val commonComponentParams = CommonComponentParams(
-            shopperLocale = checkoutConfiguration.shopperLocale ?: deviceLocale,
+            shopperLocale = checkoutConfiguration.shopperLocale ?: sessionParams?.shopperLocale ?: deviceLocale,
             environment = checkoutConfiguration.environment,
             clientKey = checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),

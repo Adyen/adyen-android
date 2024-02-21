@@ -9,35 +9,28 @@
 package com.adyen.checkout.sessions.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.internal.util.LocaleUtil
 import com.adyen.checkout.sessions.core.CheckoutSession
-import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
+import com.adyen.checkout.sessions.core.internal.data.model.mapToDetails
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object SessionParamsFactory {
     // Used for components
     fun create(checkoutSession: CheckoutSession): SessionParams {
-        return create(
-            checkoutSession.sessionSetupResponse.configuration,
-            checkoutSession.sessionSetupResponse.amount,
-            checkoutSession.sessionSetupResponse.returnUrl
-        )
+        return checkoutSession.sessionSetupResponse.mapToDetails().mapToParams()
     }
 
     // Used for Drop-in
     fun create(sessionDetails: SessionDetails): SessionParams {
-        return create(sessionDetails.sessionSetupConfiguration, sessionDetails.amount, sessionDetails.returnUrl)
+        return sessionDetails.mapToParams()
     }
 
-    private fun create(
-        sessionSetupConfiguration: SessionSetupConfiguration?,
-        amount: Amount?,
-        returnUrl: String?,
-    ): SessionParams {
+    private fun SessionDetails.mapToParams(): SessionParams {
         return SessionParams(
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
             installmentConfiguration = SessionInstallmentConfiguration(
@@ -48,10 +41,19 @@ object SessionParamsFactory {
                         values = it.value?.values,
                     )
                 }?.toMap(),
-                showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount
+                showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount,
             ),
             amount = amount,
             returnUrl = returnUrl,
+            shopperLocale = getShopperLocale(shopperLocale),
         )
+    }
+
+    private fun getShopperLocale(shopperLocaleString: String?): Locale? {
+        return shopperLocaleString?.let {
+            LocaleUtil.fromLanguageTag(it)
+        }?.takeIf {
+            LocaleUtil.isValidLocale(it)
+        }
     }
 }

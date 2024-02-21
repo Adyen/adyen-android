@@ -28,6 +28,7 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import java.util.Locale
 
 internal class DropInViewModelFactory(
@@ -79,10 +80,11 @@ internal class DropInViewModelFactory(
         checkoutConfiguration: CheckoutConfiguration,
         sessionDetails: SessionDetails?
     ): DropInParams {
+        val sessionParams = sessionDetails?.let { SessionParamsFactory.create(sessionDetails) }
         return DropInParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = deviceLocale,
-            sessionDetails = sessionDetails,
+            sessionParams = sessionParams,
         )
     }
 }

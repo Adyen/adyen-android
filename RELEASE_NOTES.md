@@ -61,7 +61,7 @@ CheckoutConfiguration(
   - Seven-Eleven: Payment method type: **econtext_seven_eleven**
 
 ## Deprecated
-- When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter, the shopper locale will default to the primary device locale.
+- When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter.
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.
 - The styles for vouchers have been changed:
   - The `AdyenCheckout.Voucher.Description.Bacs` style will not work anymore. Use `AdyenCheckout.Voucher.Simple.Description` instead.
@@ -74,5 +74,5 @@ CheckoutConfiguration(
 - `AdyenLogger.setLogLevel(logLevel: Int)` is deprecated. Use `AdyenLogger.setLogLevel(level: AdyenLogLevel)` instead.
 
 ## Changed
-- When creating a configuration, the shopper locale parameter is now optional. If not set, the primary device locale will be used.
+- When creating a configuration, the shopper locale parameter is now optional. If not set, the shopper locale will match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise.
 - In drop-in all actions will start in expanded mode
