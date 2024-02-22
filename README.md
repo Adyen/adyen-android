@@ -65,6 +65,10 @@ If you are upgrading from 4.x.x to a current release, check out our [migration g
 If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
 
+## Development
+
+[See the example app README](example-app/README.md)
+
 ## Support
 
 If you have a feature request, or spotted a bug or a technical problem, [create an issue here][github.newIssue].
