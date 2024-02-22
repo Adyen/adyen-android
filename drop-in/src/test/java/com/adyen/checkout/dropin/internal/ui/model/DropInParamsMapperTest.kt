@@ -121,6 +121,7 @@ internal class DropInParamsMapperTest {
             amount = sessionsValue,
             returnUrl = null,
             shopperLocale = null,
+            showRemovePaymentMethodButton = null,
         )
 
         val params = dropInParamsMapper.mapToParams(
@@ -150,6 +151,7 @@ internal class DropInParamsMapperTest {
             amount = null,
             returnUrl = "",
             shopperLocale = sessionsValue,
+            showRemovePaymentMethodButton = null,
         )
 
         val params = dropInParamsMapper.mapToParams(

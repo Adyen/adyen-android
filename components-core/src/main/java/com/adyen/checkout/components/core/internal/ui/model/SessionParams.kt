@@ -16,6 +16,7 @@ import java.util.Locale
 data class SessionParams(
     val enableStoreDetails: Boolean?,
     val installmentConfiguration: SessionInstallmentConfiguration?,
+    val showRemovePaymentMethodButton: Boolean?,
     val amount: Amount?,
     val returnUrl: String?,
     val shopperLocale: Locale?,

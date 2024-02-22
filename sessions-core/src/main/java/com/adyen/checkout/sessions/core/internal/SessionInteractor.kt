@@ -53,7 +53,7 @@ class SessionInteractor(
             merchantCall = { merchantCall(paymentComponentState) },
             internalCall = { makePaymentsCallInternal(paymentComponentState) },
             merchantMethodName = merchantCallName,
-            takenOverFactory = { SessionCallResult.Payments.TakenOver }
+            takenOverFactory = { SessionCallResult.Payments.TakenOver },
         )
     }
 
@@ -69,6 +69,7 @@ class SessionInteractor(
                     return when {
                         response.isRefusedInPartialPaymentFlow() ->
                             SessionCallResult.Payments.RefusedPartialPayment(response.mapToSessionPaymentResult())
+
                         action != null -> SessionCallResult.Payments.Action(action)
                         response.order.isNonFullyPaid() -> onNonFullyPaidOrder(response)
                         else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
@@ -76,7 +77,7 @@ class SessionInteractor(
                 },
                 onFailure = {
                     return SessionCallResult.Payments.Error(throwable = it)
-                }
+                },
             )
     }
 
@@ -96,7 +97,7 @@ class SessionInteractor(
             merchantCall = { merchantCall(actionComponentData) },
             internalCall = { makeDetailsCallInternal(actionComponentData) },
             merchantMethodName = merchantCallName,
-            takenOverFactory = { SessionCallResult.Details.TakenOver }
+            takenOverFactory = { SessionCallResult.Details.TakenOver },
         )
     }
 
@@ -113,7 +114,7 @@ class SessionInteractor(
                 },
                 onFailure = {
                     return SessionCallResult.Details.Error(throwable = it)
-                }
+                },
             )
     }
 
@@ -146,7 +147,7 @@ class SessionInteractor(
                 },
                 onFailure = {
                     return SessionCallResult.Balance.Error(throwable = it)
-                }
+                },
             )
     }
 
@@ -158,7 +159,7 @@ class SessionInteractor(
             merchantCall = { merchantCall() },
             internalCall = { makeCreateOrderInternal() },
             merchantMethodName = merchantCallName,
-            takenOverFactory = { SessionCallResult.CreateOrder.TakenOver }
+            takenOverFactory = { SessionCallResult.CreateOrder.TakenOver },
         )
     }
 
@@ -178,7 +179,7 @@ class SessionInteractor(
                 },
                 onFailure = {
                     return SessionCallResult.CreateOrder.Error(throwable = it)
-                }
+                },
             )
     }
 
@@ -191,7 +192,7 @@ class SessionInteractor(
             merchantCall = { merchantCall(order) },
             internalCall = { makeCancelOrderCallInternal(order) },
             merchantMethodName = merchantCallName,
-            takenOverFactory = { SessionCallResult.CancelOrder.TakenOver }
+            takenOverFactory = { SessionCallResult.CancelOrder.TakenOver },
         )
     }
 
@@ -207,7 +208,7 @@ class SessionInteractor(
                 },
                 onFailure = {
                     return SessionCallResult.CancelOrder.Error(throwable = it)
-                }
+                },
             )
     }
 
@@ -215,7 +216,7 @@ class SessionInteractor(
         val orderRequest = order?.let {
             OrderRequest(
                 pspReference = order.pspReference,
-                orderData = order.orderData
+                orderData = order.orderData,
             )
         }
 
@@ -230,14 +231,28 @@ class SessionInteractor(
                     } else {
                         SessionCallResult.UpdatePaymentMethods.Error(
                             throwable = CheckoutException(
-                                errorMessage = "Payment methods should not be null"
-                            )
+                                errorMessage = "Payment methods should not be null",
+                            ),
                         )
                     }
                 },
                 onFailure = {
                     return SessionCallResult.UpdatePaymentMethods.Error(throwable = it)
-                }
+                },
+            )
+    }
+
+    suspend fun removeStoredPaymentMethod(storedPaymentMethodId: String): SessionCallResult.RemoveStoredPaymentMethod {
+        sessionRepository.disableToken(sessionModel, storedPaymentMethodId)
+            .fold(
+                onSuccess = {
+                    updateSessionData(it.sessionData)
+
+                    return SessionCallResult.RemoveStoredPaymentMethod.Successful
+                },
+                onFailure = {
+                    return SessionCallResult.RemoveStoredPaymentMethod.Error(throwable = it)
+                },
             )
     }
 
@@ -251,7 +266,7 @@ class SessionInteractor(
         return if (!callWasHandled) {
             if (isFlowTakenOver) {
                 throw MethodNotImplementedException(
-                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented"
+                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented",
                 )
             } else {
                 internalCall()

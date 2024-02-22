@@ -18,6 +18,8 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderRe
 import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsResponse
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenRequest
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsRequest
@@ -114,6 +116,20 @@ class SessionService(
             body = request,
             requestSerializer = SessionCancelOrderRequest.SERIALIZER,
             responseSerializer = SessionCancelOrderResponse.SERIALIZER,
+        )
+    }
+
+    suspend fun disableToken(
+        request: SessionDisableTokenRequest,
+        sessionId: String,
+        clientKey: String,
+    ): SessionDisableTokenResponse = withContext(coroutineDispatcher) {
+        httpClient.post(
+            path = "v1/sessions/$sessionId/disableToken",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = SessionDisableTokenRequest.SERIALIZER,
+            responseSerializer = SessionDisableTokenResponse.SERIALIZER,
         )
     }
 }

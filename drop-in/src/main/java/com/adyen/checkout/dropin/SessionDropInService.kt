@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
@@ -219,6 +220,26 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             }
 
             sendResult(dropInServiceResult)
+        }
+    }
+
+    override fun onRemoveStoredPaymentMethod(storedPaymentMethod: StoredPaymentMethod) {
+        launch {
+            val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
+            val result = sessionInteractor.removeStoredPaymentMethod(storedPaymentMethodId)
+
+            val serviceResult = when (result) {
+                SessionCallResult.RemoveStoredPaymentMethod.Successful -> RecurringDropInServiceResult.PaymentMethodRemoved(
+                    storedPaymentMethodId,
+                )
+
+                is SessionCallResult.RemoveStoredPaymentMethod.Error -> RecurringDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(),
+                    reason = result.throwable.message,
+                )
+            }
+
+            sendRecurringResult(serviceResult)
         }
     }
 
