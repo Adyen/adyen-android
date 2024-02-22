@@ -35,6 +35,7 @@ CheckoutConfiguration(
 - For the Card Component, you can use the new [Address Lookup functionality](docs/ADDRESS_LOOKUP.md). 
 - For voucher actions: when the `url` or `downloadUrl` is not included, the shopper has the option to select **Save as image** and save the voucher to the device's `Downloads` folder.
 - You can now set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
+- [Instructions](example-app/README.md) to use the testing app in the repository. You can follow `How to migrate` section [here](https://github.com/Adyen/adyen-android/pull/1505).
 - Payment methods:
   - Multibanco. Payment method type: **multibanco**.
   - Pay Easy. Payment method type: **econtext_atm**.
@@ -44,7 +45,7 @@ CheckoutConfiguration(
 
 ## Fixed
 - When building `minifyEnabled` without the `kotlin-parcelize` plugin in your project, the build should no longer crash.
-- When handling actions, you no longer get the `IllegalArgumentException: Unsupported delegate type` warning.
+- When handling actions, you no longer get the `IllegalArgumentException: Unsupported delegate type` error that causes a crash.
 
 ## Deprecated
 - When creating a configuration, the `Builder` constructors with a `Context` is deprecated. You can now omit the `context` parameter.
