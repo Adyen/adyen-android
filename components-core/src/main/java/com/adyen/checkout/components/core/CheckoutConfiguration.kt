@@ -29,8 +29,8 @@ import java.util.Locale
  * val checkoutConfiguration = CheckoutConfiguration(
  *     environment,
  *     clientKey,
- *     shopperLocale,
- *     amount,
+ *     shopperLocale, // optional
+ *     amount, // not applicable with the Sessions flow
  * ) {
  *     dropIn {
  *         setEnableRemovingStoredPaymentMethods(true)
@@ -43,8 +43,13 @@ import java.util.Locale
  *
  * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
  * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
- * @param shopperLocale The [Locale] used to display information to the shopper. Defaults to the primary device locale.
- * @param amount The amount of the transaction.
+ * @param shopperLocale The [Locale] used to display information to the shopper. By default the shopper locale will
+ * match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise. Check
+ * out the [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+ * this value.
+ * @param amount The amount of the transaction. Not applicable for the sessions flow. Check out the
+ * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set this
+ * value.
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */

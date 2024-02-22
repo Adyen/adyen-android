@@ -55,7 +55,11 @@ constructor(
 
     /**
      * Initialize a configuration builder with the required fields.
-     * The shopper locale will match the primary user locale on the device.
+     *
+     * The shopper locale will match the value passed to the API with the sessions flow, or the primary user locale
+     * on the device otherwise. Check out the
+     * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+     * this value.
      *
      * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
      * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
