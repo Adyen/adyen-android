@@ -117,7 +117,7 @@ fun DropIn.startPayment(
 fun DropIn.startPayment(
     dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
     checkoutSession: CheckoutSession,
-    checkoutConfiguration: CheckoutConfiguration,
+    checkoutConfiguration: CheckoutConfiguration = checkoutSession.getConfiguration(),
     serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
 ) {
     val currentContext = LocalContext.current

@@ -10,7 +10,7 @@ package com.adyen.checkout.sessions.core.internal
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -24,13 +24,14 @@ import kotlinx.coroutines.withContext
 
 internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
-    configuration: Configuration,
+    private val environment: Environment,
+    private val clientKey: String,
     private val order: Order?,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
-    private val httpClient = HttpClientFactory.getHttpClient(configuration.environment)
+    private val httpClient = HttpClientFactory.getHttpClient(environment)
     private val sessionService = SessionService(httpClient)
-    private val sessionRepository = SessionRepository(sessionService, configuration.clientKey)
+    private val sessionRepository = SessionRepository(sessionService, clientKey)
 
     // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
     //  override Amount
@@ -44,6 +45,8 @@ internal class CheckoutSessionInitializer(
                     CheckoutSession(
                         sessionSetupResponse.copy(amount = overrideAmount ?: sessionSetupResponse.amount),
                         order,
+                        environment,
+                        clientKey,
                     ),
                 )
             },

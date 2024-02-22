@@ -8,6 +8,7 @@
 package com.adyen.checkout.core.internal.util
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.exception.CheckoutException
 import java.util.IllformedLocaleException
 import java.util.Locale
 
@@ -25,6 +26,9 @@ object LocaleUtil {
      */
     @JvmStatic
     fun toLanguageTag(locale: Locale): String {
+        if (!isValidLocale(locale)) {
+            throw CheckoutException("Invalid shopper locale: $locale.")
+        }
         return locale.toLanguageTag()
     }
 

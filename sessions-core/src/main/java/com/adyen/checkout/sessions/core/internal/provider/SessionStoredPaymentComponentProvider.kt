@@ -76,6 +76,39 @@ interface SessionStoredPaymentComponentProvider<
      * the /sessions endpoint to create a session and the component will automatically handle the rest of the payment
      * flow.
      *
+     * @param fragment              The Fragment to associate the lifecycle.
+     * @param checkoutSession       The [CheckoutSession] object to launch this component.
+     * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
+     * @param componentCallback     The callback to handle events from the [PaymentComponent].
+     * @param key                   The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    @Suppress("LongParameterList")
+    fun get(
+        fragment: Fragment,
+        checkoutSession: CheckoutSession,
+        storedPaymentMethod: StoredPaymentMethod,
+        componentCallback: ComponentCallbackT,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            fragment = fragment,
+            checkoutSession = checkoutSession,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = checkoutSession.getConfiguration(),
+            componentCallback = componentCallback,
+        )
+    }
+
+    /**
+     * Get a [PaymentComponent]  with a stored payment method and a checkout session. You only need to integrate with
+     * the /sessions endpoint to create a session and the component will automatically handle the rest of the payment
+     * flow.
+     *
      * @param activity              The Activity to associate the lifecycle.
      * @param checkoutSession       The [CheckoutSession] object to launch this component.
      * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
@@ -107,6 +140,39 @@ interface SessionStoredPaymentComponentProvider<
             application = activity.application,
             componentCallback = componentCallback,
             key = key,
+        )
+    }
+
+    /**
+     * Get a [PaymentComponent]  with a stored payment method and a checkout session. You only need to integrate with
+     * the /sessions endpoint to create a session and the component will automatically handle the rest of the payment
+     * flow.
+     *
+     * @param activity              The Activity to associate the lifecycle.
+     * @param checkoutSession       The [CheckoutSession] object to launch this component.
+     * @param storedPaymentMethod   The corresponding  [StoredPaymentMethod] object.
+     * @param componentCallback     The callback to handle events from the [PaymentComponent].
+     * @param key                   The key to use to identify the [PaymentComponent].
+     *
+     * NOTE: By default only one [PaymentComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [PaymentComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    @Suppress("LongParameterList")
+    fun get(
+        activity: ComponentActivity,
+        checkoutSession: CheckoutSession,
+        storedPaymentMethod: StoredPaymentMethod,
+        componentCallback: ComponentCallbackT,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            activity = activity,
+            checkoutSession = checkoutSession,
+            storedPaymentMethod = storedPaymentMethod,
+            checkoutConfiguration = checkoutSession.getConfiguration(),
+            componentCallback = componentCallback,
         )
     }
 

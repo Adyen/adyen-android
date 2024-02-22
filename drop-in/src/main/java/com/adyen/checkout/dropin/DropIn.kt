@@ -129,7 +129,7 @@ object DropIn {
         context: Context,
         dropInLauncher: ActivityResultLauncher<SessionDropInResultContractParams>,
         checkoutSession: CheckoutSession,
-        checkoutConfiguration: CheckoutConfiguration,
+        checkoutConfiguration: CheckoutConfiguration = checkoutSession.getConfiguration(),
         serviceClass: Class<out SessionDropInService> = SessionDropInService::class.java,
     ) {
         adyenLog(AdyenLogLevel.DEBUG) { "startPayment with sessions" }
