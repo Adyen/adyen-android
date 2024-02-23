@@ -17,9 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -40,13 +38,6 @@ fun StoreScreen(
 ) {
     val state by myStoreDemoViewModel.myStoreState.collectAsState()
     Column {
-        Surface {
-            TopAppBar(
-                title = {
-                    Text(text = "My Store", fontWeight = FontWeight.Black)
-                },
-            )
-        }
         LazyVerticalGrid(
             modifier = modifier,
             columns = GridCells.Fixed(2),

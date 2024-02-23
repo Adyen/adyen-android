@@ -27,7 +27,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -53,11 +52,6 @@ import com.adyen.checkout.dropin.compose.startPayment
 fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
     val state by myStoreDemoViewModel.myStoreState.collectAsState()
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        TopAppBar(
-            title = {
-                Text(text = "Shopping Cart", fontWeight = FontWeight.Black)
-            },
-        )
         LazyColumn {
             this.items(state.shoppingCart.size) {
                 CartItem(item = state.shoppingCart[it], myStoreDemoViewModel::removeFromCart)

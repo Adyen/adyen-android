@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.demo.ui.compose
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -23,6 +24,9 @@ fun MyStoreDemoApp(modifier: Modifier, myStoreDemoViewModel: MyStoreDemoViewMode
         modifier,
         bottomBar = { BottomNavigationBar(navController = navController) },
     ) {
-        NavigationHost(modifier = modifier.padding(it), navController = navController, myStoreDemoViewModel)
+        Column {
+            MyStoreDemoTopBar()
+            NavigationHost(modifier = modifier.padding(it), navController = navController, myStoreDemoViewModel)
+        }
     }
 }
