@@ -183,10 +183,15 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     companion object {
-        private const val PRICE_SHIRT = 30_00L
-        private const val PRICE_TICKET = 50_00L
-        private const val PRICE_BOOTS = 40_00L
-        private const val PRICE_SUNGLASSES = 15_00L
+        private const val PRICE_SHIRT = 24_99L
+        private const val PRICE_TICKET = 39_99L
+        private const val PRICE_BOOTS = 35_99L
+        private const val PRICE_SUNGLASSES = 14_99L
+        private const val PRICE_HEADPHONES = 19_99L
+        private const val PRICE_BACKPACK = 35_99L
+        private const val PRICE_JOYPAD = 23_99L
+        private const val PRICE_FOOD = 18_99L
+        private const val PRICE_HANDBAG = 499_99L
 
         private val MOCK_STORE_ITEMS = listOf(
             StoreItem(
@@ -208,6 +213,31 @@ class MyStoreDemoViewModel @Inject constructor(
                 "Sunglasses",
                 "https://www.mystoredemo.io/ff0e4b0191980be4a839.png",
                 Amount("EUR", PRICE_SUNGLASSES),
+            ),
+            StoreItem(
+                "Headphones",
+                "https://www.mystoredemo.io/a7504eee284c774d0a73.png",
+                Amount("EUR", PRICE_HEADPHONES),
+            ),
+            StoreItem(
+                "Backpack",
+                "https://www.mystoredemo.io/8db885d088ed05f4a2c1.png",
+                Amount("EUR", PRICE_BACKPACK),
+            ),
+            StoreItem(
+                "Joypad",
+                "https://www.mystoredemo.io/6df62995d39927d21ba1.png",
+                Amount("EUR", PRICE_JOYPAD),
+            ),
+            StoreItem(
+                "Food Delivery",
+                "https://www.mystoredemo.io/74a7fcc9408bb3887c31.png",
+                Amount("EUR", PRICE_FOOD),
+            ),
+            StoreItem(
+                "Handbag",
+                "https://www.mystoredemo.io/6ad4988f7468c17c268e.png",
+                Amount("EUR", PRICE_HANDBAG),
             ),
         )
     }
