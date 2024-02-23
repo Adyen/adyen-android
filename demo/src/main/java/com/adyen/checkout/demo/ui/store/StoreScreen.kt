@@ -58,14 +58,19 @@ fun StoreScreen(
             ),
         ) {
             items(state.storeItems.size) {
-                StoreItem(modifier = modifier, item = state.storeItems[it], myStoreDemoViewModel::addToCart)
+                StoreItem(
+                    modifier = modifier,
+                    item = state.storeItems[it],
+                    myStoreDemoViewModel::addToCart,
+                    state.isCartFull,
+                )
             }
         }
     }
 }
 
 @Composable
-fun StoreItem(modifier: Modifier, item: StoreItem, onClick: (StoreItem) -> Unit) {
+fun StoreItem(modifier: Modifier, item: StoreItem, onClick: (StoreItem) -> Unit, isCartFull: Boolean) {
     Card(
         modifier
             .padding(4.dp),
@@ -86,6 +91,7 @@ fun StoreItem(modifier: Modifier, item: StoreItem, onClick: (StoreItem) -> Unit)
             Text(text = item.title, fontWeight = FontWeight.Bold)
             Text(text = item.priceText)
             Button(
+                enabled = !isCartFull,
                 onClick = {
                     onClick(item)
                 },

@@ -46,6 +46,7 @@ class MyStoreDemoViewModel @Inject constructor(
             uiState = MyStoreDemoUiState.Shopping,
             country = Country.NL,
             storeItems = MOCK_STORE_ITEMS,
+            isCartFull = false,
         ),
     )
     val myStoreState: StateFlow<MyStoreState> = _myStoreState.asStateFlow()
@@ -160,14 +161,20 @@ class MyStoreDemoViewModel @Inject constructor(
     fun addToCart(storeItem: StoreItem) {
         if (shoppingCart.size < MAX_ITEMS && !shoppingCart.contains(storeItem)) {
             _myStoreState.update {
-                it.copy(shoppingCart = shoppingCart + storeItem)
+                it.copy(
+                    shoppingCart = shoppingCart + storeItem,
+                    isCartFull = (shoppingCart + storeItem).size == MAX_ITEMS,
+                )
             }
         }
     }
 
     fun removeFromCart(storeItem: StoreItem) {
         _myStoreState.update {
-            it.copy(shoppingCart = shoppingCart - storeItem)
+            it.copy(
+                shoppingCart = shoppingCart - storeItem,
+                isCartFull = false,
+            )
         }
     }
 

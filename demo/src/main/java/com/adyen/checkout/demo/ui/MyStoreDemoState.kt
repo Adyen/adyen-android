@@ -18,14 +18,17 @@ data class MyStoreState(
     val uiState: MyStoreDemoUiState,
     val country: Country,
     val storeItems: List<StoreItem>,
+    val isCartFull: Boolean
 )
 
 sealed class MyStoreDemoUiState {
     object Shopping : MyStoreDemoUiState()
     object Loading : MyStoreDemoUiState()
     object Error : MyStoreDemoUiState()
-    data class StartDropIn(val session: CheckoutSession, val checkoutConfiguration: CheckoutConfiguration) :
-        MyStoreDemoUiState()
+    data class StartDropIn(
+        val session: CheckoutSession,
+        val checkoutConfiguration: CheckoutConfiguration
+    ) : MyStoreDemoUiState()
 
     data class Result(val state: PaymentResultState) : MyStoreDemoUiState()
 }

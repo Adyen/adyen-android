@@ -63,8 +63,17 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
                 CartItem(item = state.shoppingCart[it], myStoreDemoViewModel::removeFromCart)
             }
         }
+        if (state.shoppingCart.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = "Shopping cart is empty.")
+            }
+        }
         Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
-            Button(modifier = Modifier.fillMaxWidth(), onClick = myStoreDemoViewModel::startDropIn) {
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = myStoreDemoViewModel::startDropIn,
+                enabled = state.shoppingCart.isNotEmpty(),
+            ) {
                 Text(text = "Checkout")
             }
         }
