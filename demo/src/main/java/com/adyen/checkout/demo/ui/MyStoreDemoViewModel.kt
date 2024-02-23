@@ -14,6 +14,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutCurrency
+import com.adyen.checkout.demo.data.api.model.Country
 import com.adyen.checkout.demo.data.api.model.getSessionRequest
 import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.demo.data.repositories.SessionsRepository
@@ -44,11 +45,21 @@ class MyStoreDemoViewModel @Inject constructor(
     private val myStoreDemoConfigurationProvider: MyStoreDemoConfigurationProvider,
 ) : ViewModel() {
 
-    private val _myStoreState = MutableStateFlow(MyStoreState())
+    private val _myStoreState = MutableStateFlow(
+        MyStoreState(
+            shoppingCart = null,
+            uiState = MyStoreDemoUiState.Shopping,
+            country = Country.NL,
+            storeItems = MOCK_STORE_ITEMS,
+        ),
+    )
     val myStoreState: StateFlow<MyStoreState> = _myStoreState.asStateFlow()
 
     private val shoppingCart: StoreItem?
         get() = _myStoreState.value.shoppingCart
+
+    private val country: Country
+        get() = _myStoreState.value.country
 
     fun startDropIn() {
         viewModelScope.launch { fetchSession() }
@@ -90,7 +101,7 @@ class MyStoreDemoViewModel @Inject constructor(
         val sessionModel = sessionsRepository.createSession(
             getSessionRequest(
                 amount = shoppingCart?.price,
-                countryCode = "nl",
+                countryCode = country.name,
                 shopperLocale = "en-US",
                 splitCardFundingSources = false,
                 isExecuteThreeD = true,
@@ -133,6 +144,7 @@ class MyStoreDemoViewModel @Inject constructor(
                 }
                 PaymentResultState.Success
             }
+
             null -> PaymentResultState.Error
         }
         _myStoreState.update {
@@ -154,13 +166,34 @@ class MyStoreDemoViewModel @Inject constructor(
         }
     }
 
+    fun updateCountry(country: Country) {
+        _myStoreState.update {
+            it.copy(
+                country = country,
+                storeItems = updatedStoredItems(country.currencyCode),
+                shoppingCart = shoppingCart?.let {
+                    it.copy(
+                        price = Amount(
+                            currency = country.currencyCode,
+                            value = it.price.value,
+                        ),
+                    )
+                },
+            )
+        }
+    }
+
+    private fun updatedStoredItems(currencyCode: String) = MOCK_STORE_ITEMS.map {
+        it.copy(price = Amount(currency = currencyCode, value = it.price.value))
+    }
+
     companion object {
         private const val PRICE_SHIRT = 30_00L
         private const val PRICE_TICKET = 50_00L
         private const val PRICE_BOOTS = 40_00L
         private const val PRICE_SUNGLASSES = 15_00L
 
-        val MOCK_STORE_ITEMS = listOf(
+        private val MOCK_STORE_ITEMS = listOf(
             StoreItem(
                 "Polo shirt",
                 "https://www.mystoredemo.io/1689f3f40b292d1de2c6.png",

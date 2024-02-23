@@ -9,12 +9,15 @@
 package com.adyen.checkout.demo.ui
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.demo.data.api.model.Country
 import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.sessions.core.CheckoutSession
 
 data class MyStoreState(
-    val shoppingCart: StoreItem? = null,
-    val uiState: MyStoreDemoUiState = MyStoreDemoUiState.Shopping
+    val shoppingCart: StoreItem?,
+    val uiState: MyStoreDemoUiState,
+    val country: Country,
+    val storeItems: List<StoreItem>,
 )
 
 sealed class MyStoreDemoUiState {
@@ -23,6 +26,7 @@ sealed class MyStoreDemoUiState {
     object Error : MyStoreDemoUiState()
     data class StartDropIn(val session: CheckoutSession, val checkoutConfiguration: CheckoutConfiguration) :
         MyStoreDemoUiState()
+
     data class Result(val state: PaymentResultState) : MyStoreDemoUiState()
 }
 

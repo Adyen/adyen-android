@@ -21,6 +21,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -34,9 +36,9 @@ import com.adyen.checkout.demo.ui.MyStoreDemoViewModel
 @Composable
 fun StoreScreen(
     modifier: Modifier = Modifier,
-    items: List<StoreItem>,
     myStoreDemoViewModel: MyStoreDemoViewModel
 ) {
+    val state by myStoreDemoViewModel.myStoreState.collectAsState()
     Column {
         Surface {
             TopAppBar(
@@ -55,8 +57,8 @@ fun StoreScreen(
                 bottom = 8.dp,
             ),
         ) {
-            items(items.size) {
-                StoreItem(modifier = modifier, item = items[it], myStoreDemoViewModel::addToCart)
+            items(state.storeItems.size) {
+                StoreItem(modifier = modifier, item = state.storeItems[it], myStoreDemoViewModel::addToCart)
             }
         }
     }

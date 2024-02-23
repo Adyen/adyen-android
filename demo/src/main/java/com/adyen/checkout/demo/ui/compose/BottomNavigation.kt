@@ -13,6 +13,7 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -46,4 +47,5 @@ fun BottomNavigationBar(navController: NavController) {
 enum class BottomNavItem(val route: String, val icon: ImageVector) {
     Store("store", Icons.Default.Home),
     Cart("cart", Icons.Default.ShoppingCart),
+    Settings("settings", Icons.Default.Settings),
 }

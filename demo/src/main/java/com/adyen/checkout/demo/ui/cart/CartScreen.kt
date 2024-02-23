@@ -49,7 +49,7 @@ import com.adyen.checkout.dropin.compose.startPayment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(modifier: Modifier, myStoreDemoViewModel: MyStoreDemoViewModel) {
+fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
     val state by myStoreDemoViewModel.myStoreState.collectAsState()
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         TopAppBar(
@@ -59,7 +59,7 @@ fun CartScreen(modifier: Modifier, myStoreDemoViewModel: MyStoreDemoViewModel) {
         )
         val item = state.shoppingCart
         if (item != null) {
-            CartItem(modifier = modifier, item = item, myStoreDemoViewModel::removeFromCart)
+            CartItem(item = item, myStoreDemoViewModel::removeFromCart)
         }
         Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
             Button(modifier = Modifier.fillMaxWidth(), onClick = myStoreDemoViewModel::startDropIn) {
@@ -71,17 +71,17 @@ fun CartScreen(modifier: Modifier, myStoreDemoViewModel: MyStoreDemoViewModel) {
 }
 
 @Composable
-fun CartItem(modifier: Modifier, item: StoreItem, onDeleteClick: () -> Unit) {
+fun CartItem(item: StoreItem, onDeleteClick: () -> Unit) {
     Card(Modifier.padding(8.dp)) {
         Row(
-            modifier
+            Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
             AsyncImage(
                 model = item.imageUrl,
                 contentDescription = null,
-                modifier = modifier
+                modifier = Modifier
                     .size(72.dp)
                     .align(Alignment.CenterVertically),
             )
@@ -138,9 +138,11 @@ fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallba
                 PaymentResultState.Cancelled -> {
                     Toast.makeText(LocalContext.current, "Cancelled", Toast.LENGTH_LONG).show()
                 }
+
                 PaymentResultState.Error -> {
                     Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_LONG).show()
                 }
+
                 PaymentResultState.Success -> {
                     Toast.makeText(LocalContext.current, "Finished", Toast.LENGTH_LONG).show()
                 }

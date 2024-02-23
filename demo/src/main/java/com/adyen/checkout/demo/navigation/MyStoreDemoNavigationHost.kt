@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import com.adyen.checkout.demo.ui.MyStoreDemoViewModel
 import com.adyen.checkout.demo.ui.cart.CartScreen
 import com.adyen.checkout.demo.ui.compose.BottomNavItem
+import com.adyen.checkout.demo.ui.settings.SettingsScreen
 import com.adyen.checkout.demo.ui.store.StoreScreen
 
 @Composable
@@ -29,12 +30,13 @@ fun NavigationHost(modifier: Modifier, navController: NavHostController, myStore
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
     ) {
-        composable(BottomNavItem.Store.route) {
-            StoreScreen(
-                items = MyStoreDemoViewModel.MOCK_STORE_ITEMS,
+        composable(BottomNavItem.Store.route) { StoreScreen(myStoreDemoViewModel = myStoreDemoViewModel) }
+        composable(BottomNavItem.Cart.route) { CartScreen(myStoreDemoViewModel = myStoreDemoViewModel) }
+        composable(BottomNavItem.Settings.route) {
+            SettingsScreen(
                 myStoreDemoViewModel = myStoreDemoViewModel,
+                myStoreDemoViewModel::updateCountry,
             )
         }
-        composable(BottomNavItem.Cart.route) { CartScreen(modifier = Modifier, myStoreDemoViewModel) }
     }
 }
