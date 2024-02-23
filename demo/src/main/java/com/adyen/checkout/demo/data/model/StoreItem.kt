@@ -9,7 +9,10 @@
 package com.adyen.checkout.demo.data.model
 
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.demo.ui.formatAmount
+import com.adyen.checkout.components.core.CheckoutCurrency
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.util.Currency
 import java.util.Locale
 
 data class StoreItem(
@@ -19,4 +22,16 @@ data class StoreItem(
 ) {
     val priceText
         get() = price.formatAmount(Locale.US)
+}
+
+private fun Amount.formatAmount(locale: Locale): String {
+    val currencyCode = currency
+    val checkoutCurrency = CheckoutCurrency.find(currencyCode.orEmpty())
+    val currency = Currency.getInstance(currencyCode)
+    val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
+    currencyFormat.currency = currency
+    currencyFormat.minimumFractionDigits = checkoutCurrency.fractionDigits
+    currencyFormat.maximumFractionDigits = checkoutCurrency.fractionDigits
+    val value = BigDecimal.valueOf(value, checkoutCurrency.fractionDigits)
+    return currencyFormat.format(value)
 }

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.demo.data.api.model.Country
 import com.adyen.checkout.demo.data.api.model.getSessionRequest
 import com.adyen.checkout.demo.data.model.StoreItem
@@ -32,10 +31,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
-import java.text.DecimalFormat
-import java.util.Currency
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -216,16 +211,4 @@ class MyStoreDemoViewModel @Inject constructor(
             ),
         )
     }
-}
-
-fun Amount.formatAmount(locale: Locale): String {
-    val currencyCode = currency
-    val checkoutCurrency = CheckoutCurrency.find(currencyCode.orEmpty())
-    val currency = Currency.getInstance(currencyCode)
-    val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
-    currencyFormat.currency = currency
-    currencyFormat.minimumFractionDigits = checkoutCurrency.fractionDigits
-    currencyFormat.maximumFractionDigits = checkoutCurrency.fractionDigits
-    val value = BigDecimal.valueOf(value, checkoutCurrency.fractionDigits)
-    return currencyFormat.format(value)
 }
