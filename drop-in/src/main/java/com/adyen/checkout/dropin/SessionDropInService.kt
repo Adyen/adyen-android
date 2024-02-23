@@ -229,9 +229,10 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             val result = sessionInteractor.removeStoredPaymentMethod(storedPaymentMethodId)
 
             val serviceResult = when (result) {
-                SessionCallResult.RemoveStoredPaymentMethod.Successful -> RecurringDropInServiceResult.PaymentMethodRemoved(
-                    storedPaymentMethodId,
-                )
+                SessionCallResult.RemoveStoredPaymentMethod.Successful ->
+                    RecurringDropInServiceResult.PaymentMethodRemoved(
+                        storedPaymentMethodId,
+                    )
 
                 is SessionCallResult.RemoveStoredPaymentMethod.Error -> RecurringDropInServiceResult.Error(
                     errorDialog = ErrorDialog(),

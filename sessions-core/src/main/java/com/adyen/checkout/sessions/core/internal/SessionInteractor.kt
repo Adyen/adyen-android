@@ -266,7 +266,7 @@ class SessionInteractor(
         return if (!callWasHandled) {
             if (isFlowTakenOver) {
                 throw MethodNotImplementedException(
-                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented",
+                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented"
                 )
             } else {
                 internalCall()
