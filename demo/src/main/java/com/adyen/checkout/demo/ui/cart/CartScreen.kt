@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
@@ -57,9 +58,10 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
                 Text(text = "Shopping Cart", fontWeight = FontWeight.Black)
             },
         )
-        val item = state.shoppingCart
-        if (item != null) {
-            CartItem(item = item, myStoreDemoViewModel::removeFromCart)
+        LazyColumn {
+            this.items(state.shoppingCart.size) {
+                CartItem(item = state.shoppingCart[it], myStoreDemoViewModel::removeFromCart)
+            }
         }
         Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
             Button(modifier = Modifier.fillMaxWidth(), onClick = myStoreDemoViewModel::startDropIn) {
@@ -71,8 +73,8 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
 }
 
 @Composable
-fun CartItem(item: StoreItem, onDeleteClick: () -> Unit) {
-    Card(Modifier.padding(8.dp)) {
+fun CartItem(item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
+    Card(Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)) {
         Row(
             Modifier
                 .fillMaxWidth()
@@ -94,7 +96,7 @@ fun CartItem(item: StoreItem, onDeleteClick: () -> Unit) {
                 Text(text = item.title, fontWeight = FontWeight.Bold)
                 Text(text = item.priceText)
             }
-            IconButton(onClick = { onDeleteClick() }, modifier = Modifier.align(Alignment.CenterVertically)) {
+            IconButton(onClick = { onDeleteClick(item) }, modifier = Modifier.align(Alignment.CenterVertically)) {
                 Icon(Icons.Default.Delete, contentDescription = null)
             }
         }

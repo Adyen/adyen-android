@@ -14,7 +14,7 @@ import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.sessions.core.CheckoutSession
 
 data class MyStoreState(
-    val shoppingCart: StoreItem?,
+    val shoppingCart: List<StoreItem>,
     val uiState: MyStoreDemoUiState,
     val country: Country,
     val storeItems: List<StoreItem>,

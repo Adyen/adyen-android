@@ -42,7 +42,7 @@ class MyStoreDemoViewModel @Inject constructor(
 
     private val _myStoreState = MutableStateFlow(
         MyStoreState(
-            shoppingCart = null,
+            shoppingCart = emptyList(),
             uiState = MyStoreDemoUiState.Shopping,
             country = Country.NL,
             storeItems = MOCK_STORE_ITEMS,
@@ -50,8 +50,14 @@ class MyStoreDemoViewModel @Inject constructor(
     )
     val myStoreState: StateFlow<MyStoreState> = _myStoreState.asStateFlow()
 
-    private val shoppingCart: StoreItem?
+    private val shoppingCart: List<StoreItem>
         get() = _myStoreState.value.shoppingCart
+
+    private val amount: Amount
+        get() {
+            val total = shoppingCart.map { it.price.value }.reduce { acc, l -> acc + l }
+            return Amount(currency = country.currencyCode, total)
+        }
 
     private val country: Country
         get() = _myStoreState.value.country
@@ -61,9 +67,7 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     private suspend fun fetchSession() = withContext(Dispatchers.IO) {
-        val config = myStoreDemoConfigurationProvider.getCheckoutConfiguration(
-            shoppingCart?.price ?: Amount(),
-        )
+        val config = myStoreDemoConfigurationProvider.getCheckoutConfiguration(amount)
         _myStoreState.update {
             it.copy(
                 uiState = MyStoreDemoUiState.Loading,
@@ -95,7 +99,7 @@ class MyStoreDemoViewModel @Inject constructor(
     private suspend fun getSession(checkoutConfiguration: CheckoutConfiguration): CheckoutSession? {
         val sessionModel = sessionsRepository.createSession(
             getSessionRequest(
-                amount = shoppingCart?.price,
+                amount = amount,
                 countryCode = country.name,
                 shopperLocale = "en-US",
                 splitCardFundingSources = false,
@@ -135,7 +139,7 @@ class MyStoreDemoViewModel @Inject constructor(
             is SessionDropInResult.Error -> PaymentResultState.Error
             is SessionDropInResult.Finished -> {
                 _myStoreState.update {
-                    it.copy(shoppingCart = null)
+                    it.copy(shoppingCart = emptyList())
                 }
                 PaymentResultState.Success
             }
@@ -154,16 +158,16 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     fun addToCart(storeItem: StoreItem) {
-        if (shoppingCart == null) {
+        if (shoppingCart.size < MAX_ITEMS && !shoppingCart.contains(storeItem)) {
             _myStoreState.update {
-                it.copy(shoppingCart = storeItem)
+                it.copy(shoppingCart = shoppingCart + storeItem)
             }
         }
     }
 
-    fun removeFromCart() {
+    fun removeFromCart(storeItem: StoreItem) {
         _myStoreState.update {
-            it.copy(shoppingCart = null)
+            it.copy(shoppingCart = shoppingCart - storeItem)
         }
     }
 
@@ -172,7 +176,7 @@ class MyStoreDemoViewModel @Inject constructor(
             it.copy(
                 country = country,
                 storeItems = updatedStoredItems(country.currencyCode),
-                shoppingCart = shoppingCart?.let {
+                shoppingCart = shoppingCart.map {
                     it.copy(
                         price = Amount(
                             currency = country.currencyCode,
@@ -189,6 +193,8 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     companion object {
+        private const val MAX_ITEMS = 3
+
         private const val PRICE_SHIRT = 24_99L
         private const val PRICE_TICKET = 39_99L
         private const val PRICE_BOOTS = 35_99L
