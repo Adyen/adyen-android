@@ -67,7 +67,7 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
             }
         }
     }
-    HandleStartDropIn(state.uiState, myStoreDemoViewModel::onDropInResult)
+    HandleStartDropIn(state.uiState, myStoreDemoViewModel::onDropInResult, myStoreDemoViewModel::resultConsumed)
 }
 
 @Composable
@@ -102,7 +102,7 @@ fun CartItem(item: StoreItem, onDeleteClick: () -> Unit) {
 }
 
 @Composable
-fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallback) {
+fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallback, resultConsumed: () -> Unit) {
     when (uiState) {
         MyStoreDemoUiState.Loading -> {
             Box(
@@ -134,6 +134,7 @@ fun HandleStartDropIn(uiState: MyStoreDemoUiState, callback: SessionDropInCallba
         }
 
         is MyStoreDemoUiState.Result -> {
+            resultConsumed()
             when (uiState.state) {
                 PaymentResultState.Cancelled -> {
                     Toast.makeText(LocalContext.current, "Cancelled", Toast.LENGTH_LONG).show()

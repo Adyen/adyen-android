@@ -147,6 +147,12 @@ class MyStoreDemoViewModel @Inject constructor(
         }
     }
 
+    fun resultConsumed() {
+        _myStoreState.update {
+            it.copy(uiState = MyStoreDemoUiState.Shopping)
+        }
+    }
+
     fun addToCart(storeItem: StoreItem) {
         if (shoppingCart == null) {
             _myStoreState.update {
