@@ -12,6 +12,7 @@ package com.adyen.checkout.example.ui.googlepay.compose
 
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,8 @@ import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.googlepay.GooglePayComponent
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.contract.TaskResultContracts
 import com.google.pay.button.ButtonTheme
 import com.google.pay.button.ButtonType
@@ -48,14 +51,6 @@ internal fun SessionsGooglePayScreen(
     eventsState: SessionsGooglePayEvents,
     onBackPressed: () -> Unit,
 ) {
-    lateinit var googlePayComponent: GooglePayComponent
-
-    val activity = LocalContext.current as Activity
-    val googlePayLauncher = rememberLauncherForActivityResult(
-        contract = TaskResultContracts.GetPaymentDataResult(),
-        onResult = googlePayComponent::handlePaymentResult,
-    )
-
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         topBar = {
@@ -69,29 +64,9 @@ internal fun SessionsGooglePayScreen(
             )
         },
     ) { innerPadding ->
-
-        when (eventsState) {
-            is SessionsGooglePayEvents.ComponentData -> {
-                googlePayComponent = getGooglePayComponent(componentData = eventsState.data)
-            }
-            is SessionsGooglePayEvents.Action -> {
-                LaunchedEffect(eventsState.action) {
-                    googlePayComponent.handleAction(eventsState.action, activity)
-                }
-            }
-            is SessionsGooglePayEvents.Intent -> {
-                LaunchedEffect(eventsState.intent) {
-                    googlePayComponent.handleIntent(eventsState.intent)
-                }
-            }
-        }
-
         SessionsGooglePayContent(
-            googlePayComponent = googlePayComponent,
             googlePayState = googlePayState,
-            onButtonClicked = {
-                googlePayComponent.startGooglePayScreen(googlePayLauncher)
-            },
+            googlePayEvents = eventsState,
             useDarkTheme = useDarkTheme,
             modifier = Modifier.padding(innerPadding),
         )
@@ -101,12 +76,36 @@ internal fun SessionsGooglePayScreen(
 @Suppress("LongParameterList")
 @Composable
 private fun SessionsGooglePayContent(
-    googlePayComponent: GooglePayComponent,
     googlePayState: SessionsGooglePayState,
-    onButtonClicked: () -> Unit,
+    googlePayEvents: SessionsGooglePayEvents,
     useDarkTheme: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalContext.current as Activity
+
+    lateinit var googlePayComponent: GooglePayComponent
+    lateinit var googlePayLauncher: ActivityResultLauncher<Task<PaymentData>>
+
+    when (googlePayEvents) {
+        is SessionsGooglePayEvents.ComponentData -> {
+            googlePayComponent = getGooglePayComponent(componentData = googlePayEvents.data)
+            googlePayLauncher = rememberLauncherForActivityResult(
+                contract = TaskResultContracts.GetPaymentDataResult(),
+                onResult = googlePayComponent::handlePaymentResult,
+            )
+        }
+        is SessionsGooglePayEvents.Action -> {
+            LaunchedEffect(googlePayEvents.action) {
+                googlePayComponent.handleAction(googlePayEvents.action, activity)
+            }
+        }
+        is SessionsGooglePayEvents.Intent -> {
+            LaunchedEffect(googlePayEvents.intent) {
+                googlePayComponent.handleIntent(googlePayEvents.intent)
+            }
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
@@ -118,7 +117,9 @@ private fun SessionsGooglePayContent(
 
             is SessionsGooglePayState.ShowButton -> {
                 PayButton(
-                    onClick = onButtonClicked,
+                    onClick = {
+                        googlePayComponent.startGooglePayScreen(googlePayLauncher)
+                    },
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
                     theme = if (useDarkTheme) ButtonTheme.Light else ButtonTheme.Dark,
                     type = ButtonType.Pay,
