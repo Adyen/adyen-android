@@ -9,6 +9,7 @@
 package com.adyen.checkout.demo.ui.settings
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,7 +26,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.adyen.checkout.demo.data.api.model.Country
 import com.adyen.checkout.demo.ui.MyStoreDemoViewModel
 
@@ -37,35 +40,38 @@ fun SettingsScreen(myStoreDemoViewModel: MyStoreDemoViewModel, onCountryChanged:
         mutableStateOf(false)
     }
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-            TextField(
-                value = state.country.title,
-                readOnly = true,
-                onValueChange = {},
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-            )
+    Column {
+        Text(modifier = Modifier.padding(4.dp), text = "Country", fontWeight = FontWeight.Black, fontSize = 16.sp)
+        Box(modifier = Modifier.fillMaxWidth()) {
+            ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+                TextField(
+                    value = state.country.title,
+                    readOnly = true,
+                    onValueChange = {},
+                    modifier = Modifier.fillMaxWidth(),
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                    },
+                )
 
-            ExposedDropdownMenu(modifier = Modifier.fillMaxWidth(), expanded = expanded, onDismissRequest = { }) {
-                Country.entries.forEach {
-                    DropdownMenuItem(
-                        onClick = {
-                            expanded = !expanded
-                            onCountryChanged(it)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Row {
-                            Text(text = it.emoji)
-                            Text(
-                                text = it.title,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(start = 16.dp),
-                            )
+                ExposedDropdownMenu(modifier = Modifier.fillMaxWidth(), expanded = expanded, onDismissRequest = { }) {
+                    Country.entries.forEach {
+                        DropdownMenuItem(
+                            onClick = {
+                                expanded = !expanded
+                                onCountryChanged(it)
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Row {
+                                Text(text = it.emoji)
+                                Text(
+                                    text = it.title,
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(start = 16.dp),
+                                )
+                            }
                         }
                     }
                 }
