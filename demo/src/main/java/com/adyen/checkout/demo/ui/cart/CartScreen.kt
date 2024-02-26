@@ -54,7 +54,7 @@ import com.adyen.checkout.dropin.compose.startPayment
 fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
     val state by myStoreDemoViewModel.myStoreState.collectAsState()
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        LazyColumn {
+        LazyColumn(Modifier.weight(1f)) {
             this.items(state.shoppingCart.size) {
                 CartItem(
                     item = state.shoppingCart[it],
@@ -68,14 +68,14 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
                 Text(text = "Shopping cart is empty.")
             }
         }
-        Box(Modifier.weight(1f), contentAlignment = Alignment.BottomCenter) {
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = myStoreDemoViewModel::startDropIn,
-                enabled = state.shoppingCart.isNotEmpty(),
-            ) {
-                Text(text = "Checkout")
-            }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            onClick = myStoreDemoViewModel::startDropIn,
+            enabled = state.shoppingCart.isNotEmpty(),
+        ) {
+            Text(text = "Checkout")
         }
     }
     HandleStartDropIn(state.uiState, myStoreDemoViewModel::onDropInResult, myStoreDemoViewModel::resultConsumed)
