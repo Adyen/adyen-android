@@ -37,6 +37,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var dateOfBirth: String? = null,
     var socialSecurityNumber: String? = null,
     var installments: Installments? = null,
+    var supportNativeRedirect: Boolean? = true,
 ) : ModelObject() {
 
     companion object {
@@ -53,6 +54,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         private const val SOCIAL_SECURITY_NUMBER = "socialSecurityNumber"
         private const val INSTALLMENTS = "installments"
         private const val ORDER = "order"
+        private const val SUPPORT_NATIVE_REDIRECT = "supportNativeRedirect"
 
         @JvmField
         val SERIALIZER: Serializer<PaymentComponentData<*>> = object : Serializer<PaymentComponentData<*>> {
@@ -60,9 +62,10 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                 return try {
                     JSONObject().apply {
                         putOpt(PAYMENT_METHOD, serializeOpt(modelObject.paymentMethod, PaymentMethodDetails.SERIALIZER))
+                        putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                        putOpt(AMOUNT, serializeOpt(modelObject.amount, Amount.SERIALIZER))
                         putOpt(STORE_PAYMENT_METHOD, modelObject.storePaymentMethod)
                         putOpt(SHOPPER_REFERENCE, modelObject.shopperReference)
-                        putOpt(AMOUNT, serializeOpt(modelObject.amount, Amount.SERIALIZER))
                         putOpt(BILLING_ADDRESS, serializeOpt(modelObject.billingAddress, Address.SERIALIZER))
                         putOpt(DELIVERY_ADDRESS, serializeOpt(modelObject.deliveryAddress, Address.SERIALIZER))
                         putOpt(SHOPPER_NAME, serializeOpt(modelObject.shopperName, ShopperName.SERIALIZER))
@@ -71,7 +74,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         putOpt(DATE_OF_BIRTH, modelObject.dateOfBirth)
                         putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
                         putOpt(INSTALLMENTS, serializeOpt(modelObject.installments, Installments.SERIALIZER))
-                        putOpt(ORDER, serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                        putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentComponentData::class.java, e)
@@ -84,9 +87,10 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         jsonObject.optJSONObject(PAYMENT_METHOD),
                         PaymentMethodDetails.SERIALIZER
                     ),
+                    order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
+                    amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                     storePaymentMethod = jsonObject.optBoolean(STORE_PAYMENT_METHOD),
                     shopperReference = jsonObject.optString(SHOPPER_REFERENCE),
-                    amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                     billingAddress = deserializeOpt(jsonObject.optJSONObject(BILLING_ADDRESS), Address.SERIALIZER),
                     deliveryAddress = deserializeOpt(jsonObject.optJSONObject(DELIVERY_ADDRESS), Address.SERIALIZER),
                     shopperName = deserializeOpt(jsonObject.optJSONObject(SHOPPER_NAME), ShopperName.SERIALIZER),
@@ -95,7 +99,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                     dateOfBirth = jsonObject.optString(DATE_OF_BIRTH),
                     socialSecurityNumber = jsonObject.optString(SOCIAL_SECURITY_NUMBER),
                     installments = deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER),
-                    order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
+                    supportNativeRedirect = jsonObject.optBoolean(SUPPORT_NATIVE_REDIRECT),
                 )
             }
         }

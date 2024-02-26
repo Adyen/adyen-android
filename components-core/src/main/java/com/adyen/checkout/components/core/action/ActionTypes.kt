@@ -5,15 +5,16 @@
  *
  * Created by caiof on 24/8/2020.
  */
-package com.adyen.checkout.components.core.internal
+package com.adyen.checkout.components.core.action
 
 /**
  * Helper class with a list of all the currently supported Actions on Components and Drop-In.
  */
-internal object ActionTypes {
+object ActionTypes {
     const val AWAIT = "await"
     const val QR_CODE = "qrCode"
     const val REDIRECT = "redirect"
+    const val NATIVE_REDIRECT = "nativeRedirect"
     const val SDK = "sdk"
     const val THREEDS2_CHALLENGE = "threeDS2Challenge"
     const val THREEDS2_FINGERPRINT = "threeDS2Fingerprint"

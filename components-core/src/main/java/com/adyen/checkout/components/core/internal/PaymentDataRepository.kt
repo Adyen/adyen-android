@@ -21,7 +21,14 @@ class PaymentDataRepository(
             savedStateHandle[PAYMENT_DATA_KEY] = paymentData
         }
 
+    var nativeRedirectData: String?
+        get() = savedStateHandle[NATIVE_REDIRECT_DATA]
+        set(paymentData) {
+            savedStateHandle[NATIVE_REDIRECT_DATA] = paymentData
+        }
+
     companion object {
         private const val PAYMENT_DATA_KEY = "payment_data"
+        private const val NATIVE_REDIRECT_DATA = "native_redirect_data"
     }
 }
