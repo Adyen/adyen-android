@@ -108,6 +108,7 @@ ext {
             hilt      : "androidx.hilt:hilt-navigation-compose:$compose_hilt_version",
             material3  : "androidx.compose.material3:material3-android:$compose_material3_version",
             material : "androidx.compose.material:material:$compose_material_version",
+            icons     :"androidx.compose.material:material-icons-extended:$compose_material_version",
             navigation: "androidx.navigation:navigation-compose:$compose_nav_version",
             ui        : [
                 'androidx.compose.ui:ui',

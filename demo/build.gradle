@@ -59,6 +59,7 @@ dependencies {
     implementation libraries.compose.material3
     implementation libraries.compose.navigation
     implementation libraries.compose.viewmodel
+    implementation libraries.compose.icons
 
     implementation libraries.hilt
     kapt libraries.hiltCompiler

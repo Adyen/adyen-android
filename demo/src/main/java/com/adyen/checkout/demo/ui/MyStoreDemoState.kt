@@ -10,15 +10,15 @@ package com.adyen.checkout.demo.ui
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.demo.data.api.model.Country
+import com.adyen.checkout.demo.data.model.CartItem
 import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.sessions.core.CheckoutSession
 
 data class MyStoreState(
-    val shoppingCart: List<StoreItem>,
+    val shoppingCart: List<CartItem>,
     val uiState: MyStoreDemoUiState,
     val country: Country,
-    val storeItems: List<StoreItem>,
-    val isCartFull: Boolean
+    val storeItems: List<StoreItem>
 )
 
 sealed class MyStoreDemoUiState {

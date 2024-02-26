@@ -21,7 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.AddCircleOutline
+import androidx.compose.material.icons.outlined.RemoveCircleOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.adyen.checkout.demo.data.model.CartItem
 import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.demo.service.MyStoreDemoDropInService
 import com.adyen.checkout.demo.ui.MyStoreDemoUiState
@@ -54,7 +56,11 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         LazyColumn {
             this.items(state.shoppingCart.size) {
-                CartItem(item = state.shoppingCart[it], myStoreDemoViewModel::removeFromCart)
+                CartItem(
+                    item = state.shoppingCart[it],
+                    myStoreDemoViewModel::addToCart,
+                    myStoreDemoViewModel::removeFromCart,
+                )
             }
         }
         if (state.shoppingCart.isEmpty()) {
@@ -76,7 +82,7 @@ fun CartScreen(myStoreDemoViewModel: MyStoreDemoViewModel) {
 }
 
 @Composable
-fun CartItem(item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
+fun CartItem(item: CartItem, onAddClick: (StoreItem) -> Unit, onRemoveClick: (StoreItem) -> Unit) {
     Card(Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 4.dp)) {
         Row(
             Modifier
@@ -84,7 +90,7 @@ fun CartItem(item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
                 .padding(8.dp),
         ) {
             AsyncImage(
-                model = item.imageUrl,
+                model = item.storeItem.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(72.dp)
@@ -96,11 +102,27 @@ fun CartItem(item: StoreItem, onDeleteClick: (StoreItem) -> Unit) {
                     .padding(4.dp)
                     .align(Alignment.CenterVertically),
             ) {
-                Text(text = item.title, fontWeight = FontWeight.Bold)
-                Text(text = item.priceText)
+                Text(text = item.storeItem.title, fontWeight = FontWeight.Bold)
+                Text(text = item.storeItem.priceText)
             }
-            IconButton(onClick = { onDeleteClick(item) }, modifier = Modifier.align(Alignment.CenterVertically)) {
-                Icon(Icons.Default.Delete, contentDescription = null)
+            Column(horizontalAlignment = Alignment.End) {
+                IconButton(
+                    onClick = { onAddClick(item.storeItem) },
+                    modifier = Modifier
+                        .size(32.dp)
+                        .align(Alignment.CenterHorizontally),
+                ) {
+                    Icon(Icons.Outlined.AddCircleOutline, contentDescription = null)
+                }
+                Text(text = item.count.toString(), modifier = Modifier.align(Alignment.CenterHorizontally))
+                IconButton(
+                    onClick = { onRemoveClick(item.storeItem) },
+                    modifier = Modifier
+                        .size(32.dp)
+                        .align(Alignment.CenterHorizontally),
+                ) {
+                    Icon(Icons.Outlined.RemoveCircleOutline, contentDescription = null)
+                }
             }
         }
     }

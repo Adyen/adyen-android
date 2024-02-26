@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.demo.data.api.model.Country
 import com.adyen.checkout.demo.data.api.model.getSessionRequest
+import com.adyen.checkout.demo.data.model.CartItem
 import com.adyen.checkout.demo.data.model.StoreItem
 import com.adyen.checkout.demo.data.repositories.SessionsRepository
 import com.adyen.checkout.demo.ui.configuration.MyStoreDemoConfigurationProvider
@@ -46,17 +47,18 @@ class MyStoreDemoViewModel @Inject constructor(
             uiState = MyStoreDemoUiState.Shopping,
             country = Country.NL,
             storeItems = MOCK_STORE_ITEMS,
-            isCartFull = false,
         ),
     )
     val myStoreState: StateFlow<MyStoreState> = _myStoreState.asStateFlow()
 
-    private val shoppingCart: List<StoreItem>
+    private val shoppingCart: List<CartItem>
         get() = _myStoreState.value.shoppingCart
 
     private val amount: Amount
         get() {
-            val total = shoppingCart.map { it.price.value }.reduce { acc, l -> acc + l }
+            val total = shoppingCart
+                .map { (item, count) -> item.price.value * count }
+                .reduce { acc, l -> acc + l }
             return Amount(currency = country.currencyCode, total)
         }
 
@@ -159,21 +161,39 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     fun addToCart(storeItem: StoreItem) {
-        if (shoppingCart.size < MAX_ITEMS && !shoppingCart.contains(storeItem)) {
-            _myStoreState.update {
-                it.copy(
-                    shoppingCart = shoppingCart + storeItem,
-                    isCartFull = (shoppingCart + storeItem).size == MAX_ITEMS,
-                )
+        val updatedShoppingCart = if (shoppingCart.map { it.storeItem }.contains(storeItem)) {
+            shoppingCart.map { (item, count) ->
+                if (item == storeItem) {
+                    CartItem(storeItem = item, count = count + 1)
+                } else {
+                    CartItem(storeItem = item, count = count)
+                }
             }
+        } else {
+            shoppingCart + CartItem(storeItem, 1)
+        }
+        _myStoreState.update {
+            it.copy(
+                shoppingCart = updatedShoppingCart,
+            )
         }
     }
 
     fun removeFromCart(storeItem: StoreItem) {
+        val updatedShoppingCart = shoppingCart.mapNotNull { (item, count) ->
+            if (item == storeItem) {
+                if (count > 1) {
+                    CartItem(storeItem = item, count = count - 1)
+                } else {
+                    null
+                }
+            } else {
+                CartItem(storeItem = item, count = count)
+            }
+        }
         _myStoreState.update {
             it.copy(
-                shoppingCart = shoppingCart - storeItem,
-                isCartFull = false,
+                shoppingCart = updatedShoppingCart,
             )
         }
     }
@@ -183,12 +203,15 @@ class MyStoreDemoViewModel @Inject constructor(
             it.copy(
                 country = country,
                 storeItems = updatedStoredItems(country.currencyCode),
-                shoppingCart = shoppingCart.map {
-                    it.copy(
-                        price = Amount(
-                            currency = country.currencyCode,
-                            value = it.price.value,
+                shoppingCart = shoppingCart.map { (item, count) ->
+                    CartItem(
+                        storeItem = item.copy(
+                            price = Amount(
+                                currency = country.currencyCode,
+                                value = item.price.value,
+                            ),
                         ),
+                        count = count,
                     )
                 },
             )
@@ -200,8 +223,6 @@ class MyStoreDemoViewModel @Inject constructor(
     }
 
     companion object {
-        private const val MAX_ITEMS = 3
-
         private const val PRICE_SHIRT = 24_99L
         private const val PRICE_TICKET = 39_99L
         private const val PRICE_BOOTS = 35_99L
