@@ -17,14 +17,17 @@ import com.adyen.checkout.components.core.internal.data.api.AnalyticsPlatform
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class AnalyticsProvider(
+internal interface AnalyticsProvider {
+    fun provide(): AnalyticsSetupRequest
+}
+
+internal class DefaultAnalyticsProvider(
     val application: Application,
     val componentParams: ComponentParams,
     val source: AnalyticsSource,
     val sessionId: String?,
-) {
-    internal fun provide(): AnalyticsSetupRequest {
+) : AnalyticsProvider {
+    override fun provide(): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = actualVersion,
             channel = ANDROID_CHANNEL,
@@ -45,15 +48,13 @@ class AnalyticsProvider(
         )
     }
 
-    @VisibleForTesting
-    internal fun getFlavorQueryParameter(isCreatedByDropIn: Boolean) = if (isCreatedByDropIn) {
+    private fun getFlavorQueryParameter(isCreatedByDropIn: Boolean) = if (isCreatedByDropIn) {
         DROP_IN
     } else {
         COMPONENTS
     }
 
-    @VisibleForTesting
-    internal fun getComponentQueryParameter(source: AnalyticsSource) = when (source) {
+    private fun getComponentQueryParameter(source: AnalyticsSource) = when (source) {
         is AnalyticsSource.DropIn -> DROP_IN
         is AnalyticsSource.PaymentComponent -> source.paymentMethodType
     }
