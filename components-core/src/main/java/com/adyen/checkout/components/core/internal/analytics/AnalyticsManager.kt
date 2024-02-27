@@ -8,16 +8,50 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runSuspendCatching
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class AnalyticsManager internal constructor() {
+class AnalyticsManager internal constructor(
+    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsProvider: AnalyticsProvider,
+    private val analyticsParams: AnalyticsParams,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) {
 
     private var checkoutAttemptId: String? = null
 
     private var isInitialized: Boolean = false
 
+    // TODO: Check if we need to retry in case the request failed
     fun initialize(coroutineScope: CoroutineScope) {
+        if (isInitialized) return
 
+        isInitialized = true
+
+        if (cannotSendEvent()) {
+            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
+            return
+        }
+
+        coroutineScope.launch(coroutineDispatcher) {
+            runSuspendCatching {
+                analyticsRepository.fetchCheckoutAttemptId(analyticsProvider)
+            }.fold(
+                onSuccess = { checkoutAttemptId = it },
+                onFailure = { adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." } },
+            )
+        }
+    }
+
+    private fun cannotSendEvent(): Boolean {
+        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
     }
 
     fun trackEvent(event: AnalyticsEvent) {
@@ -27,4 +61,8 @@ class AnalyticsManager internal constructor() {
     fun getCheckoutAttemptId(): String? = checkoutAttemptId
 
     fun clear() {}
+
+    companion object {
+        private const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+    }
 }
