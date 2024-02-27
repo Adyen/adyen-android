@@ -11,12 +11,13 @@ package com.adyen.checkout.components.core.internal.analytics
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
 
 internal interface AnalyticsRemoteDataStore {
 
     suspend fun fetchCheckoutAttemptId(request: AnalyticsSetupRequest): AnalyticsSetupResponse
 
-    suspend fun sendEvents()
+    suspend fun sendEvents(request: AnalyticsTrackRequest, checkoutAttemptId: String)
 }
 
 internal class DefaultAnalyticsRemoteDataStore(
@@ -28,7 +29,10 @@ internal class DefaultAnalyticsRemoteDataStore(
         return analyticsService.setupAnalytics(request, clientKey)
     }
 
-    override suspend fun sendEvents() {
-        TODO("Not yet implemented")
+    override suspend fun sendEvents(
+        request: AnalyticsTrackRequest,
+        checkoutAttemptId: String,
+    ) {
+        analyticsService.sendEvents(request, checkoutAttemptId, clientKey)
     }
 }

@@ -39,7 +39,7 @@ class AnalyticsService(
     }
 
     // TODO: Add tests
-    internal suspend fun trackEvents(
+    internal suspend fun sendEvents(
         request: AnalyticsTrackRequest,
         checkoutAttemptId: String,
         clientKey: String,

@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class AnalyticsManager internal constructor(
     private val analyticsRepository: AnalyticsRepository,
-    private val analyticsProvider: AnalyticsProvider,
+    private val analyticsSetupProvider: AnalyticsSetupProvider,
     private val analyticsParams: AnalyticsParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -42,7 +42,7 @@ class AnalyticsManager internal constructor(
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
-                analyticsRepository.fetchCheckoutAttemptId(analyticsProvider)
+                analyticsRepository.fetchCheckoutAttemptId(analyticsSetupProvider)
             }.fold(
                 onSuccess = { checkoutAttemptId = it },
                 onFailure = { adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." } },
@@ -60,7 +60,9 @@ class AnalyticsManager internal constructor(
 
     fun getCheckoutAttemptId(): String? = checkoutAttemptId
 
-    fun clear() {}
+    fun clear() {
+        checkoutAttemptId = null
+    }
 
     companion object {
         private const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
