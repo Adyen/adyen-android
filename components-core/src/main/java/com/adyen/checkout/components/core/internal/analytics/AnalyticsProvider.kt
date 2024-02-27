@@ -22,10 +22,10 @@ internal interface AnalyticsProvider {
 }
 
 internal class DefaultAnalyticsProvider(
-    val application: Application,
-    val componentParams: ComponentParams,
-    val source: AnalyticsSource,
-    val sessionId: String?,
+    private val application: Application,
+    private val componentParams: ComponentParams,
+    private val source: AnalyticsSource,
+    private val sessionId: String?,
 ) : AnalyticsProvider {
     override fun provide(): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
