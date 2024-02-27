@@ -38,6 +38,7 @@ dependencies {
     api libraries.androidx.annotation
     api libraries.kotlinCoroutines
     implementation libraries.okhttp
+    api libraries.parcelize
 
     //Tests
     testImplementation testLibraries.json

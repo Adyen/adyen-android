@@ -60,6 +60,9 @@ CheckoutConfiguration(
   - Online Banking Japan. Payment method type: **econtext_online**.
   - Seven-Eleven: Payment method type: **econtext_seven_eleven**
 
+## Fixed
+- When building `minifyEnabled` and without the `kotlin-parcelize` plugin in your project the build should no longer crash.
+
 ## Deprecated
 - When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter.
 - The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.

@@ -127,6 +127,7 @@ ext {
         ],
         okhttp          : "com.squareup.okhttp3:okhttp:$okhttp_version",
         okhttpLogging   : "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version",
+        parcelize       : "org.jetbrains.kotlin:kotlin-parcelize-runtime:$kotlin_version",
         retrofit        : [
             "com.squareup.retrofit2:retrofit:$retrofit2_version",
             "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
