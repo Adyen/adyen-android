@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics
 
 internal interface AnalyticsRepository {
 
-    suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String
+    suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String?
 
     fun storeEvent(event: AnalyticsEvent)
 
@@ -24,8 +24,9 @@ internal class DefaultAnalyticsRepository(
     private val remoteDataStore: AnalyticsRemoteDataStore,
 ) : AnalyticsRepository {
 
-    override suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String {
-        TODO("Not yet implemented")
+    override suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String? {
+        val request = analyticsProvider.provide()
+        return remoteDataStore.fetchCheckoutAttemptId(request).checkoutAttemptId
     }
 
     override fun storeEvent(event: AnalyticsEvent) {
