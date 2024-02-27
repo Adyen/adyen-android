@@ -8,24 +8,27 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsTrackRequestProvider
+
 internal interface AnalyticsRepository {
 
-    suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String?
+    suspend fun fetchCheckoutAttemptId(analyticsSetupProvider: AnalyticsSetupProvider): String?
 
     fun storeEvent(event: AnalyticsEvent)
 
     fun getEvents(): List<AnalyticsEvent>
 
-    fun sendEvents()
+    suspend fun sendEvents(events: List<AnalyticsEvent>, checkoutAttemptId: String)
 }
 
 internal class DefaultAnalyticsRepository(
     private val localDataStore: AnalyticsLocalDataStore,
     private val remoteDataStore: AnalyticsRemoteDataStore,
+    private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
 ) : AnalyticsRepository {
 
-    override suspend fun fetchCheckoutAttemptId(analyticsProvider: AnalyticsProvider): String? {
-        val request = analyticsProvider.provide()
+    override suspend fun fetchCheckoutAttemptId(analyticsSetupProvider: AnalyticsSetupProvider): String? {
+        val request = analyticsSetupProvider.provide()
         return remoteDataStore.fetchCheckoutAttemptId(request).checkoutAttemptId
     }
 
@@ -37,7 +40,11 @@ internal class DefaultAnalyticsRepository(
         TODO("Not yet implemented")
     }
 
-    override fun sendEvents() {
-        TODO("Not yet implemented")
+    override suspend fun sendEvents(
+        events: List<AnalyticsEvent>,
+        checkoutAttemptId: String,
+    ) {
+        val request = analyticsTrackRequestProvider(events)
+        remoteDataStore.sendEvents(request, checkoutAttemptId)
     }
 }

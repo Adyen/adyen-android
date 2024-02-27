@@ -9,14 +9,14 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackInfo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackLog
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
 
-internal class AnalyticsTrackRequestMapper {
+internal class AnalyticsTrackRequestProvider {
 
     operator fun invoke(
-        channel: String,
         events: List<AnalyticsEvent>
     ): AnalyticsTrackRequest {
         val infoList = mutableListOf<AnalyticsTrackInfo>()
@@ -36,7 +36,8 @@ internal class AnalyticsTrackRequestMapper {
         }
 
         return AnalyticsTrackRequest(
-            channel = channel,
+            channel = AnalyticsPlatformParams.channel,
+            platform = AnalyticsPlatformParams.platform,
             info = infoList,
             logs = logList,
         )
