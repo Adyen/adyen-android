@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
@@ -111,12 +112,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     ) {
         val configuration = getCheckoutConfiguration(amount = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
@@ -146,11 +143,7 @@ internal class Adyen3DS2ComponentParamsMapperTest {
     ) {
         val configuration = getCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
         )
 
@@ -178,6 +171,23 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
         configurationBlock = config,
+    )
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
     )
 
     @Suppress("LongParameterList")

@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -155,12 +156,9 @@ internal class CashAppPayComponentParamsMapperTest {
         val configuration = createCheckoutConfiguration {
             setShowStorePaymentField(configurationValue)
         }
-        val sessionParams = SessionParams(
+        val sessionParams = createSessionParams(
             enableStoreDetails = sessionsValue,
-            installmentConfiguration = null,
-            amount = null,
             returnUrl = TEST_RETURN_URL,
-            shopperLocale = null,
         )
         val params = cashAppPayComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
@@ -189,12 +187,9 @@ internal class CashAppPayComponentParamsMapperTest {
         val configuration = createCheckoutConfiguration(configurationValue)
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
             returnUrl = TEST_RETURN_URL,
-            shopperLocale = null,
         )
         val params = cashAppPayComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
@@ -244,7 +239,10 @@ internal class CashAppPayComponentParamsMapperTest {
         ) {
             cashAppPay()
         }
-        val sessionParams = SessionParams(false, null, null, "sessionReturnUrl", null)
+        val sessionParams = createSessionParams(
+            enableStoreDetails = false,
+            returnUrl = "sessionReturnUrl",
+        )
         val params = cashAppPayComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
             deviceLocale = DEVICE_LOCALE,
@@ -361,10 +359,7 @@ internal class CashAppPayComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
+        val sessionParams = createSessionParams(
             returnUrl = TEST_RETURN_URL,
             shopperLocale = sessionsValue,
         )
@@ -433,6 +428,23 @@ internal class CashAppPayComponentParamsMapperTest {
             apply(configuration)
         }
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     private fun getDefaultPaymentMethod() = PaymentMethod(
         configuration = Configuration(clientId = TEST_CLIENT_ID, scopeId = TEST_SCOPE_ID),

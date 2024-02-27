@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.DropInConfiguration
@@ -107,6 +108,32 @@ internal class DropInParamsMapperTest {
     }
 
     @ParameterizedTest
+    @MethodSource("showRemovePaymentMethodButtonSource")
+    fun `showRemovePaymentMethodButton should match value set in sessions then configuration`(
+        configurationValue: Boolean,
+        sessionsValue: Boolean?,
+        expectedValue: Boolean,
+    ) {
+        val testConfiguration = createCheckoutConfiguration {
+            setEnableRemovingStoredPaymentMethods(configurationValue)
+        }
+
+        val sessionParams = createSessionParams(
+            showRemovePaymentMethodButton = sessionsValue,
+        )
+
+        val params = dropInParamsMapper.mapToParams(
+            checkoutConfiguration = testConfiguration,
+            deviceLocale = DEVICE_LOCALE,
+            sessionParams = sessionParams,
+        )
+
+        val expected = getDropInParams(isRemovingStoredPaymentMethodsEnabled = expectedValue)
+
+        assertEquals(expected, params)
+    }
+
+    @ParameterizedTest
     @MethodSource("amountSource")
     fun `amount should match value set in sessions then configuration`(
         configurationValue: Amount?,
@@ -115,13 +142,8 @@ internal class DropInParamsMapperTest {
     ) {
         val testConfiguration = createCheckoutConfiguration(configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = null,
-            shopperLocale = null,
-            showRemovePaymentMethodButton = null,
         )
 
         val params = dropInParamsMapper.mapToParams(
@@ -145,13 +167,8 @@ internal class DropInParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
-            showRemovePaymentMethodButton = null,
         )
 
         val params = dropInParamsMapper.mapToParams(
@@ -179,6 +196,23 @@ internal class DropInParamsMapperTest {
     ) {
         dropIn(configurationBlock)
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     @Suppress("LongParameterList")
     private fun getDropInParams(
@@ -211,6 +245,15 @@ internal class DropInParamsMapperTest {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CLIENT_KEY_2 = "live_qwertyui34566776787zxcvbnmqwerty"
         private val DEVICE_LOCALE = Locale("nl", "NL")
+
+        @JvmStatic
+        fun showRemovePaymentMethodButtonSource() = listOf(
+            // configurationValue, sessionsValue, expectedValue
+            arguments(true, false, false),
+            arguments(true, null, true),
+            arguments(false, true, true),
+            arguments(false, null, false),
+        )
 
         @JvmStatic
         fun amountSource() = listOf(

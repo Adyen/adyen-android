@@ -89,12 +89,8 @@ internal class GenericComponentParamsMapperTest {
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val params = genericComponentParamsMapper.mapToParams(
@@ -122,11 +118,7 @@ internal class GenericComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
         )
 
@@ -157,6 +149,23 @@ internal class GenericComponentParamsMapperTest {
             .build()
         addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     @Suppress("LongParameterList")
     private fun getGenericComponentParams(

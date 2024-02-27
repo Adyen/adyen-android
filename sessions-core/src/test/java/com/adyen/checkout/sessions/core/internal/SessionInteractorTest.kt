@@ -709,11 +709,11 @@ internal class SessionInteractorTest(
     }
 
     @Nested
-    @DisplayName("when an update payment methods call is requested and")
+    @DisplayName("when disable token call is requested and")
     inner class RemoveStoredPaymentMethodCallTest {
 
         @Test
-        fun `payment methods are fetched then Successful is returned and session data is updated`() = runTest {
+        fun `it is successful then session data is updated`() = runTest {
             sessionInteractor.sessionFlow.test {
                 val mockResponse = SessionDisableTokenResponse(sessionData = "session_data_updated")
                 whenever(sessionRepository.disableToken(any(), any())) doReturn Result.success(mockResponse)

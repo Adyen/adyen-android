@@ -47,5 +47,5 @@ internal class DropInParamsMapper {
     private fun getIsRemovingStoredPaymentMethodsEnabled(
         dropInConfiguration: DropInConfiguration?,
         sessionParams: SessionParams?
-    ) = dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled ?: sessionParams?.showRemovePaymentMethodButton
+    ) = sessionParams?.showRemovePaymentMethodButton ?: dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled
 }

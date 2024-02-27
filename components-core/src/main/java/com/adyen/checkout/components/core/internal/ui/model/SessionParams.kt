@@ -12,6 +12,11 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import java.util.Locale
 
+/**
+ * Object that holds values set during sessions setup call.
+ * [SessionParams] values should always have higher priority than values set in client side configurations. Otherwise
+ * it can cause server error, since specific configuration is not enabled, but it is being used.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class SessionParams(
     val enableStoreDetails: Boolean?,
