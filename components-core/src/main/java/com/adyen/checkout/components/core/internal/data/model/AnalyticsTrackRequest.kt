@@ -19,11 +19,13 @@ import org.json.JSONObject
 @Parcelize
 internal data class AnalyticsTrackRequest(
     val channel: String?,
+    val platform: String?,
     val info: List<AnalyticsTrackInfo>?,
     val logs: List<AnalyticsTrackLog>?,
 ) : ModelObject() {
     companion object {
         private const val CHANNEL = "channel"
+        private const val PLATFORM = "platform"
         private const val INFO = "info"
         private const val LOGS = "logs"
 
@@ -33,6 +35,7 @@ internal data class AnalyticsTrackRequest(
                 try {
                     return JSONObject().apply {
                         putOpt(CHANNEL, modelObject.channel)
+                        putOpt(PLATFORM, modelObject.platform)
                         putOpt(INFO, modelObject.info)
                         putOpt(LOGS, modelObject.logs)
                     }
@@ -46,6 +49,7 @@ internal data class AnalyticsTrackRequest(
                     with(jsonObject) {
                         AnalyticsTrackRequest(
                             channel = getStringOrNull(CHANNEL),
+                            platform = getStringOrNull(PLATFORM),
                             info = deserializeOptList(getJSONArray(INFO), AnalyticsTrackInfo.SERIALIZER),
                             logs = deserializeOptList(getJSONArray(LOGS), AnalyticsTrackLog.SERIALIZER),
                         )

@@ -10,28 +10,25 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import android.app.Application
 import android.os.Build
-import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.core.BuildConfig
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsPlatform
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 
-internal interface AnalyticsProvider {
+internal interface AnalyticsSetupProvider {
     fun provide(): AnalyticsSetupRequest
 }
 
-internal class DefaultAnalyticsProvider(
+internal class DefaultAnalyticsSetupProvider(
     private val application: Application,
     private val componentParams: ComponentParams,
     private val source: AnalyticsSource,
     private val sessionId: String?,
-) : AnalyticsProvider {
+) : AnalyticsSetupProvider {
+
     override fun provide(): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
-            version = actualVersion,
-            channel = ANDROID_CHANNEL,
-            platform = actualPlatform,
+            version = AnalyticsPlatformParams.version,
+            channel = AnalyticsPlatformParams.channel,
+            platform = AnalyticsPlatformParams.platform,
             locale = componentParams.shopperLocale.toString(),
             component = getComponentQueryParameter(source),
             flavor = getFlavorQueryParameter(componentParams.isCreatedByDropIn),
@@ -62,26 +59,5 @@ internal class DefaultAnalyticsProvider(
     companion object {
         private const val DROP_IN = "dropin"
         private const val COMPONENTS = "components"
-        private const val ANDROID_CHANNEL = "android"
-
-        // these params are prefixed with actual because cross platform SDKs will override them so they are not
-        // technically constants
-        private var actualPlatform = AnalyticsPlatform.ANDROID.value
-        private var actualVersion = BuildConfig.CHECKOUT_VERSION
-
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        fun overrideForCrossPlatform(
-            platform: AnalyticsPlatform,
-            version: String,
-        ) {
-            this.actualPlatform = platform.value
-            this.actualVersion = version
-        }
-
-        @VisibleForTesting
-        internal fun resetToDefaults() {
-            actualPlatform = AnalyticsPlatform.ANDROID.value
-            actualVersion = BuildConfig.CHECKOUT_VERSION
-        }
     }
 }
