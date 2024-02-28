@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
+import com.adyen.checkout.components.core.internal.analytics.data.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -55,7 +56,7 @@ class AnalyticsManager internal constructor(
     }
 
     fun trackEvent(event: AnalyticsEvent) {
-
+        analyticsRepository.storeEvent(event)
     }
 
     fun getCheckoutAttemptId(): String? = checkoutAttemptId
