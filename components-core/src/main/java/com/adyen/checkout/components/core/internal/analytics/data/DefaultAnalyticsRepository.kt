@@ -3,26 +3,18 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 27/2/2024.
+ * Created by ararat on 28/2/2024.
  */
 
-package com.adyen.checkout.components.core.internal.analytics
+package com.adyen.checkout.components.core.internal.analytics.data
 
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSetupProvider
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsTrackRequestProvider
 
-internal interface AnalyticsRepository {
-
-    suspend fun fetchCheckoutAttemptId(analyticsSetupProvider: AnalyticsSetupProvider): String?
-
-    fun storeEvent(event: AnalyticsEvent)
-
-    fun getEvents(): List<AnalyticsEvent>
-
-    suspend fun sendEvents(events: List<AnalyticsEvent>, checkoutAttemptId: String)
-}
-
 internal class DefaultAnalyticsRepository(
-    private val localDataStore: AnalyticsLocalDataStore,
+    private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
+    private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
     private val remoteDataStore: AnalyticsRemoteDataStore,
     private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
 ) : AnalyticsRepository {
@@ -33,18 +25,21 @@ internal class DefaultAnalyticsRepository(
     }
 
     override fun storeEvent(event: AnalyticsEvent) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getEvents(): List<AnalyticsEvent> {
-        TODO("Not yet implemented")
+        when (event) {
+            is AnalyticsEvent.Info -> localInfoDataStore.storeEvent(event)
+            is AnalyticsEvent.Log -> localLogDataStore.storeEvent(event)
+        }
     }
 
     override suspend fun sendEvents(
-        events: List<AnalyticsEvent>,
         checkoutAttemptId: String,
     ) {
-        val request = analyticsTrackRequestProvider(events)
+        val infoEvents = localInfoDataStore.fetchEvents(remoteDataStore.infoSize)
+        val logEvents = localLogDataStore.fetchEvents(remoteDataStore.logSize)
+        val request = analyticsTrackRequestProvider(
+            infoList = infoEvents,
+            logList = logEvents,
+        )
         remoteDataStore.sendEvents(request, checkoutAttemptId)
     }
 }

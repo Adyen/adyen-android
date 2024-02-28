@@ -17,50 +17,39 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequ
 internal class AnalyticsTrackRequestProvider {
 
     operator fun invoke(
-        events: List<AnalyticsEvent>
+        infoList: List<AnalyticsEvent.Info>,
+        logList: List<AnalyticsEvent.Log>,
     ): AnalyticsTrackRequest {
-        val infoList = mutableListOf<AnalyticsTrackInfo>()
-        val logList = mutableListOf<AnalyticsTrackLog>()
-        events.forEach { analyticsEvent ->
-            when (analyticsEvent) {
-                is AnalyticsEvent.Info -> {
-                    val info = mapInfo(analyticsEvent)
-                    infoList.add(info)
-                }
-
-                is AnalyticsEvent.Log -> {
-                    val log = mapLog(analyticsEvent)
-                    logList.add(log)
-                }
-            }
-        }
-
         return AnalyticsTrackRequest(
             channel = AnalyticsPlatformParams.channel,
             platform = AnalyticsPlatformParams.platform,
-            info = infoList,
-            logs = logList,
+            info = infoList.mapToTrackEvent(),
+            logs = logList.mapToTrackEvent(),
         )
     }
 
-    private fun mapInfo(analyticsEvent: AnalyticsEvent.Info) = AnalyticsTrackInfo(
-        timestamp = analyticsEvent.timestamp,
-        component = analyticsEvent.component,
-        type = analyticsEvent.type?.value,
-        target = analyticsEvent.target,
-        isStoredPaymentMethod = analyticsEvent.isStoredPaymentMethod,
-        brand = analyticsEvent.brand,
-        issuer = analyticsEvent.issuer,
-        validationErrorCode = analyticsEvent.validationErrorCode,
-        validationErrorMessage = analyticsEvent.validationErrorMessage,
-    )
+    private fun List<AnalyticsEvent.Info>.mapToTrackEvent() = map { event ->
+        AnalyticsTrackInfo(
+            timestamp = event.timestamp,
+            component = event.component,
+            type = event.type?.value,
+            target = event.target,
+            isStoredPaymentMethod = event.isStoredPaymentMethod,
+            brand = event.brand,
+            issuer = event.issuer,
+            validationErrorCode = event.validationErrorCode,
+            validationErrorMessage = event.validationErrorMessage,
+        )
+    }
 
-    private fun mapLog(analyticsEvent: AnalyticsEvent.Log) = AnalyticsTrackLog(
-        timestamp = analyticsEvent.timestamp,
-        component = analyticsEvent.component,
-        type = analyticsEvent.type?.value,
-        subType = analyticsEvent.subType,
-        target = analyticsEvent.target,
-        message = analyticsEvent.message,
-    )
+    private fun List<AnalyticsEvent.Log>.mapToTrackEvent() = map { event ->
+        AnalyticsTrackLog(
+            timestamp = event.timestamp,
+            component = event.component,
+            type = event.type?.value,
+            subType = event.subType,
+            target = event.target,
+            message = event.message,
+        )
+    }
 }
