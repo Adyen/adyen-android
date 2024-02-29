@@ -15,7 +15,7 @@ internal interface AnalyticsRepository {
 
     suspend fun fetchCheckoutAttemptId(analyticsSetupProvider: AnalyticsSetupProvider): String?
 
-    fun storeEvent(event: AnalyticsEvent)
+    suspend fun storeEvent(event: AnalyticsEvent)
 
     suspend fun sendEvents(checkoutAttemptId: String)
 }

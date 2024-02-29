@@ -55,7 +55,9 @@ class AnalyticsManager internal constructor(
         return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
     }
 
-    fun trackEvent(event: AnalyticsEvent) {
+    // TODO: Work on coroutineScope. Perhaps implement a new one in this class.
+    // TODO: This function should not be suspend, when coroutineScope is implemented.
+    suspend fun trackEvent(event: AnalyticsEvent) {
         analyticsRepository.storeEvent(event)
     }
 
