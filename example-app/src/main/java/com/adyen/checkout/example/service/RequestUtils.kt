@@ -12,7 +12,7 @@ package com.adyen.checkout.example.service
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.example.data.api.model.AdditionalData
+import com.adyen.checkout.example.data.api.model.AuthenticationData
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
@@ -24,7 +24,7 @@ import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.RecurringProcessingModel
 import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
-import com.adyen.checkout.example.data.api.model.ThreeDS2RequestDataRequest
+import com.adyen.checkout.example.data.api.model.ThreeDSRequestData
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
 import org.json.JSONObject
@@ -81,18 +81,18 @@ fun getSessionRequest(
         shopperIP = SHOPPER_IP,
         reference = getReference(),
         channel = CHANNEL,
-        additionalData = getAdditionalData(isThreeds2Enabled = isThreeds2Enabled, isExecuteThreeD = isExecuteThreeD),
+        authenticationData = getAuthenticationData(
+            isThreeds2Enabled = isThreeds2Enabled,
+            isExecuteThreeD = isExecuteThreeD,
+        ),
         lineItems = LINE_ITEMS,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
-        // TODO check if this should be kept or removed
-        //  previous code: if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null
-        threeDS2RequestData = null,
         shopperEmail = shopperEmail,
         allowedPaymentMethods = allowedPaymentMethods,
         storePaymentMethodMode = storePaymentMethodMode,
         recurringProcessingModel = recurringProcessingModel,
         installmentOptions = installmentOptions,
-        showInstallmentAmount = showInstallmentAmount
+        showInstallmentAmount = showInstallmentAmount,
     )
 }
 
@@ -107,7 +107,6 @@ fun createPaymentRequest(
     isThreeds2Enabled: Boolean,
     isExecuteThreeD: Boolean,
     shopperEmail: String?,
-    force3DS2Challenge: Boolean = true,
     threeDSAuthenticationOnly: Boolean = false,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
 ): PaymentsRequest {
@@ -120,11 +119,13 @@ fun createPaymentRequest(
         shopperIP = SHOPPER_IP,
         reference = getReference(),
         channel = CHANNEL,
-        additionalData = getAdditionalData(isThreeds2Enabled = isThreeds2Enabled, isExecuteThreeD = isExecuteThreeD),
+        authenticationData = getAuthenticationData(
+            isThreeds2Enabled = isThreeds2Enabled,
+            isExecuteThreeD = isExecuteThreeD,
+        ),
         lineItems = LINE_ITEMS,
         shopperEmail = shopperEmail,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
-        threeDS2RequestData = if (force3DS2Challenge) ThreeDS2RequestDataRequest() else null,
         recurringProcessingModel = recurringProcessingModel,
     )
 
@@ -138,24 +139,22 @@ fun createBalanceRequest(
 ) = BalanceRequest(
     paymentMethod = paymentComponentData,
     amount = amount,
-    merchantAccount = merchantAccount
+    merchantAccount = merchantAccount,
 )
 
 fun createOrderRequest(
-    amount: Amount,
-    merchantAccount: String
+    amount: Amount, merchantAccount: String
 ) = CreateOrderRequest(
     amount = amount,
     merchantAccount = merchantAccount,
-    reference = getReference()
+    reference = getReference(),
 )
 
 fun createCancelOrderRequest(
-    orderJson: JSONObject,
-    merchantAccount: String
+    orderJson: JSONObject, merchantAccount: String
 ) = CancelOrderRequest(
     order = orderJson,
-    merchantAccount = merchantAccount
+    merchantAccount = merchantAccount,
 )
 
 private const val SHOPPER_IP = "142.12.31.22"
@@ -163,11 +162,17 @@ private const val CHANNEL = "android"
 private val LINE_ITEMS = listOf(Item())
 private const val DEFAULT_INSTALLMENT_OPTION = "card"
 private const val CARD_BASED_INSTALLMENT_OPTION = "visa"
+private const val ATTEMPT_AUTHENTICATION_TRUE_VALUE = "always"
+private const val ATTEMPT_AUTHENTICATION_FALSE_VALUE = "never"
 
 private fun getReference() = "android-test-components_${System.currentTimeMillis()}"
-private fun getAdditionalData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AdditionalData(
-    allow3DS2 = isThreeds2Enabled.toString(),
-    executeThreeD = isExecuteThreeD.toString()
+private fun getAuthenticationData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AuthenticationData(
+    attemptAuthentication = if (isExecuteThreeD) {
+        ATTEMPT_AUTHENTICATION_TRUE_VALUE
+    } else {
+        ATTEMPT_AUTHENTICATION_FALSE_VALUE
+    },
+    threeDSRequestData = ThreeDSRequestData().takeIf { isThreeds2Enabled },
 )
 
 fun getSettingsInstallmentOptionsMode(settingsInstallmentOptionMode: CardInstallmentOptionsMode) =
@@ -175,15 +180,15 @@ fun getSettingsInstallmentOptionsMode(settingsInstallmentOptionMode: CardInstall
         CardInstallmentOptionsMode.NONE -> null
 
         CardInstallmentOptionsMode.DEFAULT -> mapOf(
-            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption()
+            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption(),
         )
 
         CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> mapOf(
-            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption(plans = listOf(InstallmentPlan.REVOLVING.plan))
+            DEFAULT_INSTALLMENT_OPTION to getSessionInstallmentOption(plans = listOf(InstallmentPlan.REVOLVING.plan)),
         )
 
         CardInstallmentOptionsMode.CARD_BASED_VISA -> mapOf(
-            CARD_BASED_INSTALLMENT_OPTION to getSessionInstallmentOption()
+            CARD_BASED_INSTALLMENT_OPTION to getSessionInstallmentOption(),
         )
     }
 
