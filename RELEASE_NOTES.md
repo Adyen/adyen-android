@@ -81,3 +81,4 @@ CheckoutConfiguration(
 - With the sessions flow, when starting drop-in (with `DropIn.startPayment`) or creating a component (with `YourComponent.PROVIDER.get`), the configuration parameter is now optional.
 - When `CheckoutSessionProvider.createSession` to create a `CheckoutSession`, you can pass the `environment` and `clientKey` instead of the whole configuration.
 - In drop-in all actions will start in expanded mode
+- When using the Google Pay component, it is no longer necessary to manually import the `3ds2` module to handle transactions that require a native 3DS2 challenge. 
