@@ -57,8 +57,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                     countryCode = keyValueStorage.getCountry(),
                     merchantAccount = keyValueStorage.getMerchantAccount(),
                     redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
-                    isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
-                    isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                    threeDSMode = keyValueStorage.getThreeDSMode(),
                     shopperEmail = keyValueStorage.getShopperEmail()
                 )
 

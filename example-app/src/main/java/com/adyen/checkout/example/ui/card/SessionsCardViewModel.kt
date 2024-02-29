@@ -91,8 +91,7 @@ internal class SessionsCardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                threeDSMode = keyValueStorage.getThreeDSMode(),
                 redirectUrl = savedStateHandle.get<String>(SessionsCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),

@@ -131,8 +131,7 @@ internal class InstantViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(InstantFragment.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                threeDSMode = keyValueStorage.getThreeDSMode(),
                 shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
