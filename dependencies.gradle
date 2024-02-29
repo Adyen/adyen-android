@@ -43,6 +43,7 @@ ext {
     material_version = "1.11.0"
     recyclerview_version = "1.3.2"
     constraintlayout_version = '2.1.4'
+    startup_version = '1.1.1'
 
     // Compose Dependencies
     compose_activity_version = '1.9.0'
@@ -96,7 +97,8 @@ ext {
                 "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
             ],
             preference      : "androidx.preference:preference-ktx:$preference_version",
-            recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version"
+            recyclerview    : "androidx.recyclerview:recyclerview:$recyclerview_version",
+            startup         : "androidx.startup:startup-runtime:$startup_version"
         ],
         cashAppPay      : "app.cash.paykit:core:$cash_app_pay_version",
         compose         : [
