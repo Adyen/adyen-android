@@ -26,6 +26,7 @@ import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.adyen.checkout.example.data.api.model.StorePaymentMethodMode
 import com.adyen.checkout.example.data.api.model.ThreeDSRequestData
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
+import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.sessions.core.SessionSetupInstallmentOptions
 import org.json.JSONObject
 
@@ -60,8 +61,7 @@ fun getSessionRequest(
     shopperLocale: String?,
     splitCardFundingSources: Boolean,
     redirectUrl: String,
-    isThreeds2Enabled: Boolean,
-    isExecuteThreeD: Boolean,
+    threeDSMode: ThreeDSMode,
     installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
     showInstallmentAmount: Boolean = false,
     threeDSAuthenticationOnly: Boolean = false,
@@ -81,10 +81,7 @@ fun getSessionRequest(
         shopperIP = SHOPPER_IP,
         reference = getReference(),
         channel = CHANNEL,
-        authenticationData = getAuthenticationData(
-            isThreeds2Enabled = isThreeds2Enabled,
-            isExecuteThreeD = isExecuteThreeD,
-        ),
+        authenticationData = getAuthenticationData(threeDSMode),
         lineItems = LINE_ITEMS,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
         shopperEmail = shopperEmail,
@@ -104,8 +101,7 @@ fun createPaymentRequest(
     countryCode: String,
     merchantAccount: String,
     redirectUrl: String,
-    isThreeds2Enabled: Boolean,
-    isExecuteThreeD: Boolean,
+    threeDSMode: ThreeDSMode,
     shopperEmail: String?,
     threeDSAuthenticationOnly: Boolean = false,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
@@ -119,10 +115,7 @@ fun createPaymentRequest(
         shopperIP = SHOPPER_IP,
         reference = getReference(),
         channel = CHANNEL,
-        authenticationData = getAuthenticationData(
-            isThreeds2Enabled = isThreeds2Enabled,
-            isExecuteThreeD = isExecuteThreeD,
-        ),
+        authenticationData = getAuthenticationData(threeDSMode),
         lineItems = LINE_ITEMS,
         shopperEmail = shopperEmail,
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
@@ -143,7 +136,8 @@ fun createBalanceRequest(
 )
 
 fun createOrderRequest(
-    amount: Amount, merchantAccount: String
+    amount: Amount,
+    merchantAccount: String,
 ) = CreateOrderRequest(
     amount = amount,
     merchantAccount = merchantAccount,
@@ -151,7 +145,8 @@ fun createOrderRequest(
 )
 
 fun createCancelOrderRequest(
-    orderJson: JSONObject, merchantAccount: String
+    orderJson: JSONObject,
+    merchantAccount: String,
 ) = CancelOrderRequest(
     order = orderJson,
     merchantAccount = merchantAccount,
@@ -166,14 +161,24 @@ private const val ATTEMPT_AUTHENTICATION_TRUE_VALUE = "always"
 private const val ATTEMPT_AUTHENTICATION_FALSE_VALUE = "never"
 
 private fun getReference() = "android-test-components_${System.currentTimeMillis()}"
-private fun getAuthenticationData(isThreeds2Enabled: Boolean, isExecuteThreeD: Boolean) = AuthenticationData(
-    attemptAuthentication = if (isExecuteThreeD) {
-        ATTEMPT_AUTHENTICATION_TRUE_VALUE
-    } else {
-        ATTEMPT_AUTHENTICATION_FALSE_VALUE
-    },
-    threeDSRequestData = ThreeDSRequestData().takeIf { isThreeds2Enabled },
-)
+private fun getAuthenticationData(threeDSMode: ThreeDSMode): AuthenticationData {
+    return when (threeDSMode) {
+        ThreeDSMode.PREFER_NATIVE -> AuthenticationData(
+            attemptAuthentication = ATTEMPT_AUTHENTICATION_TRUE_VALUE,
+            threeDSRequestData = ThreeDSRequestData(),
+        )
+
+        ThreeDSMode.REDIRECT -> AuthenticationData(
+            attemptAuthentication = ATTEMPT_AUTHENTICATION_TRUE_VALUE,
+            threeDSRequestData = null,
+        )
+
+        ThreeDSMode.DISABLED -> AuthenticationData(
+            attemptAuthentication = ATTEMPT_AUTHENTICATION_FALSE_VALUE,
+            threeDSRequestData = null,
+        )
+    }
+}
 
 fun getSettingsInstallmentOptionsMode(settingsInstallmentOptionMode: CardInstallmentOptionsMode) =
     when (settingsInstallmentOptionMode) {
