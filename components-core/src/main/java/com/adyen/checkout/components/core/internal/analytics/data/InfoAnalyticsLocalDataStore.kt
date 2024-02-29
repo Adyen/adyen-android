@@ -9,19 +9,29 @@
 package com.adyen.checkout.components.core.internal.analytics.data
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.LinkedList
 
 internal class InfoAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsEvent.Info> {
 
     private val list = LinkedList<AnalyticsEvent.Info>()
 
-    override fun storeEvent(event: AnalyticsEvent.Info) {
-        list.add(event)
+    private val mutex = Mutex()
+
+    override suspend fun storeEvent(event: AnalyticsEvent.Info) {
+        mutex.withLock {
+            list.add(event)
+        }
     }
 
-    override fun fetchEvents(size: Int) = list.takeLast(size)
+    override suspend fun fetchEvents(size: Int) = mutex.withLock {
+        list.takeLast(size)
+    }
 
-    override fun clear() {
-        list.clear()
+    override suspend fun clear() {
+        mutex.withLock {
+            list.clear()
+        }
     }
 }
