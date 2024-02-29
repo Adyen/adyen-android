@@ -24,7 +24,7 @@ internal class DefaultAnalyticsRepository(
         return remoteDataStore.fetchCheckoutAttemptId(request).checkoutAttemptId
     }
 
-    override fun storeEvent(event: AnalyticsEvent) {
+    override suspend fun storeEvent(event: AnalyticsEvent) {
         when (event) {
             is AnalyticsEvent.Info -> localInfoDataStore.storeEvent(event)
             is AnalyticsEvent.Log -> localLogDataStore.storeEvent(event)
