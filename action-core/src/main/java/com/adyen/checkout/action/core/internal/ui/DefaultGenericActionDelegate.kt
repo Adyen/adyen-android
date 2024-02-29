@@ -9,6 +9,7 @@
 package com.adyen.checkout.action.core.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -32,6 +33,7 @@ import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ApplicationContextProvider
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -101,6 +103,8 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
+        savedStateHandle[ACTION_KEY] = action
+
         // This check is to support an older flow where you might need to call handleAction several times with 3DS2.
         // Initially handleAction is called with a fingerprint action then with a challenge action.
         // During this whole flow the same transaction instance should be used for both fingerprint and challenge.
@@ -108,28 +112,32 @@ internal class DefaultGenericActionDelegate(
         if (isOld3DS2Flow(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Continuing the handling of 3ds2 challenge with old flow." }
         } else {
-            val delegate = actionDelegateProvider.getDelegate(
-                action = action,
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = activity.application,
-            )
-            this._delegate = delegate
-            adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
-
-            if (delegate is RedirectableDelegate) {
-                onRedirectListener?.let { delegate.setOnRedirectListener(it) }
-            }
-
-            delegate.initialize(coroutineScope)
-
-            observeDetails(delegate)
-            observeExceptions(delegate)
-            observePermissionRequests(delegate)
-            observeViewFlow(delegate)
+            createDelegateAndObserve(action, activity.application)
         }
 
         delegate.handleAction(action, activity)
+    }
+
+    private fun createDelegateAndObserve(action: Action, application: Application) {
+        val delegate = actionDelegateProvider.getDelegate(
+            action = action,
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+            application = application,
+        )
+        this._delegate = delegate
+        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
+
+        if (delegate is RedirectableDelegate) {
+            onRedirectListener?.let { delegate.setOnRedirectListener(it) }
+        }
+
+        delegate.initialize(coroutineScope)
+
+        observeDetails(delegate)
+        observeExceptions(delegate)
+        observePermissionRequests(delegate)
+        observeViewFlow(delegate)
     }
 
     private fun isOld3DS2Flow(action: Action): Boolean {
@@ -170,7 +178,18 @@ internal class DefaultGenericActionDelegate(
     override fun handleIntent(intent: Intent) {
         when (val delegate = _delegate) {
             null -> {
-                exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
+                val action: Action? = savedStateHandle[ACTION_KEY]
+                if (action == null) {
+                    exceptionChannel.trySend(
+                        ComponentException("handleIntent should not be called before handleAction"),
+                    )
+                    return
+                }
+                adyenLog(AdyenLogLevel.DEBUG) { "Recreating delegate and trying again" }
+                // What is the best way to obtain the Application?
+                createDelegateAndObserve(action, ApplicationContextProvider.context as Application)
+                // Recursive call or calling the delegate directly?
+                handleIntent(intent)
             }
 
             !is IntentHandlingDelegate -> {
@@ -211,5 +230,9 @@ internal class DefaultGenericActionDelegate(
         _delegate = null
         _coroutineScope = null
         onRedirectListener = null
+    }
+
+    companion object {
+        private const val ACTION_KEY = "ACTION_KEY"
     }
 }
