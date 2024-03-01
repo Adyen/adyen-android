@@ -41,5 +41,7 @@ internal class DefaultAnalyticsRepository(
             logList = logEvents,
         )
         remoteDataStore.sendEvents(request, checkoutAttemptId)
+        localInfoDataStore.clear()
+        localLogDataStore.clear()
     }
 }

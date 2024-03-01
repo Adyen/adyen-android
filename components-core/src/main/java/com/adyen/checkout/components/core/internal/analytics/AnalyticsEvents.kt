@@ -15,10 +15,12 @@ import java.util.Date
 sealed interface AnalyticsEvent {
 
     val timestamp: Long
+    val shouldForceSend: Boolean
     val component: String
 
     data class Info @AnalyticsEventApi constructor(
         override val timestamp: Long = Date().time,
+        override val shouldForceSend: Boolean = false,
         override val component: String,
         val type: Type? = null,
         val target: String? = null,
@@ -42,6 +44,7 @@ sealed interface AnalyticsEvent {
 
     data class Log @AnalyticsEventApi constructor(
         override val timestamp: Long = Date().time,
+        override val shouldForceSend: Boolean = true,
         override val component: String,
         val type: Type? = null,
         val subType: String? = null,
