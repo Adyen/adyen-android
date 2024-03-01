@@ -17,7 +17,11 @@ import com.adyen.checkout.core.internal.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class AnalyticsManager internal constructor(
     private val analyticsRepository: AnalyticsRepository,
@@ -30,13 +34,19 @@ class AnalyticsManager internal constructor(
 
     private var isInitialized: Boolean = false
 
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    private var timerJob: Job? = null
+
     // TODO: Check if we need to retry in case the request failed
     fun initialize(coroutineScope: CoroutineScope) {
         if (isInitialized) return
-
         isInitialized = true
 
-        if (cannotSendEvent()) {
+        _coroutineScope = coroutineScope
+
+        if (cannotSendEvents()) {
             checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
             return
         }
@@ -45,29 +55,69 @@ class AnalyticsManager internal constructor(
             runSuspendCatching {
                 analyticsRepository.fetchCheckoutAttemptId(analyticsSetupProvider)
             }.fold(
-                onSuccess = { checkoutAttemptId = it },
+                onSuccess = { attemptId ->
+                    checkoutAttemptId = attemptId?.also { startTimer() }
+                },
                 onFailure = { adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." } },
             )
         }
     }
 
-    private fun cannotSendEvent(): Boolean {
-        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+    fun trackEvent(event: AnalyticsEvent) {
+        if (cannotSendEvents()) return
+        coroutineScope.launch {
+            // TODO: Handle exceptions
+            analyticsRepository.storeEvent(event)
+
+            if (event.shouldForceSend) {
+                stopTimer()
+                sendEvents()
+                startTimer()
+            }
+        }
     }
 
-    // TODO: Work on coroutineScope. Perhaps implement a new one in this class.
-    // TODO: This function should not be suspend, when coroutineScope is implemented.
-    suspend fun trackEvent(event: AnalyticsEvent) {
-        analyticsRepository.storeEvent(event)
+    private fun startTimer() {
+        stopTimer()
+        timerJob = coroutineScope.launch {
+            while (isActive) {
+                delay(DISPATCH_INTERVAL_MILLIS)
+                sendEvents()
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+    }
+
+    private suspend fun sendEvents() {
+        if (cannotSendEvents()) return
+
+        val checkoutAttemptId = checkoutAttemptId
+        if (checkoutAttemptId == null) {
+            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should not be null at this point." }
+            return
+        }
+
+        // TODO: Handle exceptions
+        analyticsRepository.sendEvents(checkoutAttemptId)
     }
 
     fun getCheckoutAttemptId(): String? = checkoutAttemptId
 
+    private fun cannotSendEvents(): Boolean {
+        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+    }
+
     fun clear() {
+        _coroutineScope = null
         checkoutAttemptId = null
+        stopTimer()
     }
 
     companion object {
         private const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+        private val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
     }
 }
