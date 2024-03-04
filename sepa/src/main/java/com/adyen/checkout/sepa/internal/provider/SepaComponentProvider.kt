@@ -22,11 +22,11 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsRepositoryData
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
+import com.adyen.checkout.components.core.internal.analytics.data.old.DefaultOldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -57,7 +57,7 @@ class SepaComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: AnalyticsRepository? = null,
+    private val analyticsRepository: OldAnalyticsRepository? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -96,7 +96,7 @@ constructor(
                 componentConfiguration = checkoutConfiguration.getSepaConfiguration(),
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            val analyticsRepository = analyticsRepository ?: DefaultOldAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
                     componentParams = componentParams,
@@ -188,7 +188,7 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            val analyticsRepository = analyticsRepository ?: DefaultOldAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
                     componentParams = componentParams,

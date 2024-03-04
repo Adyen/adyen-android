@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.analytics.data
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsSetupProvider
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
 
 internal interface AnalyticsRepository {
 

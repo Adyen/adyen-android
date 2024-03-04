@@ -14,10 +14,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsRepositoryData
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
+import com.adyen.checkout.components.core.internal.analytics.data.old.DefaultOldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
@@ -55,7 +55,7 @@ internal class DropInViewModelFactory(
 
         val httpClient = HttpClientFactory.getHttpClient(dropInParams.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
-        val analyticsRepository = DefaultAnalyticsRepository(
+        val analyticsRepository = DefaultOldAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
                 level = dropInParams.analyticsParams.level,
                 packageName = packageName,

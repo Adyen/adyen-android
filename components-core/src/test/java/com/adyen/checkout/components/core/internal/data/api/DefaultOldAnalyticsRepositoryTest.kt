@@ -11,6 +11,10 @@ package com.adyen.checkout.components.core.internal.data.api
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsRepositoryData
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
+import com.adyen.checkout.components.core.internal.analytics.data.old.DefaultOldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.test.LoggingExtension
@@ -37,13 +41,13 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
-internal class DefaultAnalyticsRepositoryTest(
+internal class DefaultOldAnalyticsRepositoryTest(
     @Mock private val analyticsService: AnalyticsService,
 ) {
 
     private val analyticsMapper: AnalyticsMapper = AnalyticsMapper()
 
-    private lateinit var analyticsRepository: DefaultAnalyticsRepository
+    private lateinit var analyticsRepository: DefaultOldAnalyticsRepository
 
     @BeforeEach
     fun before() = runTest {
@@ -55,7 +59,7 @@ internal class DefaultAnalyticsRepositoryTest(
 
     @Test
     fun `when repository is only instantiated then state is set as uninitialized`() = runTest {
-        assertEquals(DefaultAnalyticsRepository.State.Uninitialized, analyticsRepository.state)
+        assertEquals(DefaultOldAnalyticsRepository.State.Uninitialized, analyticsRepository.state)
     }
 
     @Nested
@@ -80,7 +84,7 @@ internal class DefaultAnalyticsRepositoryTest(
         @Test
         fun `and AnalyticsService is successful then state is set as initialized`() = runTest {
             analyticsRepository.setupAnalytics()
-            assertEquals(DefaultAnalyticsRepository.State.Ready, analyticsRepository.state)
+            assertEquals(DefaultOldAnalyticsRepository.State.Ready, analyticsRepository.state)
         }
 
         @Test
@@ -93,7 +97,7 @@ internal class DefaultAnalyticsRepositoryTest(
         fun `and AnalyticsService returns an error then state is set as error`() = runTest {
             whenever(analyticsService.setupAnalytics(any(), any())) doThrow HttpException(1, "error_message", null)
             analyticsRepository.setupAnalytics()
-            assertEquals(DefaultAnalyticsRepository.State.Failed, analyticsRepository.state)
+            assertEquals(DefaultOldAnalyticsRepository.State.Failed, analyticsRepository.state)
         }
 
         @Test
@@ -152,7 +156,7 @@ internal class DefaultAnalyticsRepositoryTest(
             analyticsRepository.setupAnalytics()
 
             assertEquals(
-                DefaultAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
+                DefaultOldAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
                 analyticsRepository.getCheckoutAttemptId(),
             )
         }
@@ -171,8 +175,8 @@ internal class DefaultAnalyticsRepositoryTest(
         screenWidth: Int = SCREEN_WIDTH,
         paymentMethods: List<String> = PAYMENT_METHODS,
         sessionId: String? = TEST_SESSION_ID,
-    ): DefaultAnalyticsRepository {
-        return DefaultAnalyticsRepository(
+    ): DefaultOldAnalyticsRepository {
+        return DefaultOldAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
                 level = level,
                 packageName = packageName,
