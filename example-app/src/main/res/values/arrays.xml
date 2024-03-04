@@ -57,4 +57,16 @@
         <item>"ALL"</item>
         <item>"NONE"</item>
     </array>
+
+    <array name="threeds_mode_entries">
+        <item>"Prefer native"</item>
+        <item>"Redirect"</item>
+        <item>"Disabled"</item>
+    </array>
+
+    <array name="threeds_mode_values">
+        <item>"PREFER_NATIVE"</item>
+        <item>"REDIRECT"</item>
+        <item>"DISABLED"</item>
+    </array>
 </resources>

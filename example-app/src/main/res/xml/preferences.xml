@@ -33,15 +33,13 @@
             android:title="@string/currency_title"
             app:useSimpleSummaryProvider="true" />
 
-        <SwitchPreference
-            android:defaultValue="@string/preferences_default_threeds2_enabled"
-            android:key="@string/threeds2_key"
-            android:title="@string/threeds2_title" />
-
-        <SwitchPreference
-            android:defaultValue="@string/preferences_default_execute_threed"
-            android:key="@string/execute3D_key"
-            android:title="@string/execute3D_key_title" />
+        <DropDownPreference
+            android:defaultValue="@string/preferences_default_threeds_mode"
+            android:entries="@array/threeds_mode_entries"
+            android:entryValues="@array/threeds_mode_values"
+            android:key="@string/threeds_mode_key"
+            android:title="@string/threeds_mode_title"
+            app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/shopper_information">

@@ -42,10 +42,8 @@
     <string name="shopper_information">Shopper Information</string>
     <string name="shopper_reference_key">shopper_reference</string>
     <string name="shopper_reference_title">Shopper Reference</string>
-    <string name="threeds2_key">threeds2</string>
-    <string name="threeds2_title">3DS2</string>
-    <string name="execute3D_key">execute_3d</string>
-    <string name="execute3D_key_title">Execute 3D</string>
+    <string name="threeds_mode_key">threeds_mode</string>
+    <string name="threeds_mode_title">3D Secure</string>
     <string name="shopper_country_key">shopper_country</string>
     <string name="shopper_country_title">Country</string>
     <string name="shopper_locale_key">shopper_locale</string>
@@ -82,8 +80,7 @@
     <string name="preferences_default_country">NL</string>
     <string name="preferences_default_amount_value">1337</string>
     <string name="preferences_default_amount_currency">EUR</string>
-    <string name="preferences_default_threeds2_enabled">true</string>
-    <string name="preferences_default_execute_threed">true</string>
+    <string name="preferences_default_threeds_mode">PREFER_NATIVE</string>
     <string name="preferences_default_split_card_funding_sources">false</string>
     <string name="preferences_default_address_form_mode">NONE</string>
     <string name="preferences_default_installment_options_mode">NONE</string>

@@ -24,8 +24,7 @@ interface KeyValueStorage {
     fun getAmount(): Amount
     fun getCountry(): String
     fun getShopperLocale(): String?
-    fun isThreeds2Enabled(): Boolean
-    fun isExecuteThreeD(): Boolean
+    fun getThreeDSMode(): ThreeDSMode
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
@@ -79,19 +78,13 @@ internal class DefaultKeyValueStorage(
         return sharedPreferences.getString(appContext.getString(R.string.shopper_locale_key), null)
     }
 
-    override fun isThreeds2Enabled(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.threeds2_key,
-            defaultStringRes = R.string.preferences_default_threeds2_enabled,
-        )
-    }
-
-    override fun isExecuteThreeD(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.execute3D_key,
-            defaultStringRes = R.string.preferences_default_execute_threed,
+    override fun getThreeDSMode(): ThreeDSMode {
+        return ThreeDSMode.valueOf(
+            sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.threeds_mode_key,
+                defaultStringRes = R.string.preferences_default_threeds_mode,
+            ),
         )
     }
 

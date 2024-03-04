@@ -30,13 +30,12 @@ data class PaymentsRequestData(
     val countryCode: String,
     val merchantAccount: String,
     val returnUrl: String,
-    val additionalData: AdditionalData,
+    val authenticationData: AuthenticationData,
     val threeDSAuthenticationOnly: Boolean,
     val shopperIP: String,
     val reference: String,
     val channel: String,
     val lineItems: List<Item>,
     val shopperEmail: String? = null,
-    val threeDS2RequestData: ThreeDS2RequestDataRequest?,
     val recurringProcessingModel: String?
 )
