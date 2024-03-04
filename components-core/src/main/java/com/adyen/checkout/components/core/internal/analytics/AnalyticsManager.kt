@@ -65,21 +65,25 @@ class AnalyticsManager internal constructor(
 
     fun trackEvent(event: AnalyticsEvent) {
         if (cannotSendEvents()) return
-        coroutineScope.launch {
-            // TODO: Handle exceptions
-            analyticsRepository.storeEvent(event)
+        coroutineScope.launch(coroutineDispatcher) {
+            runSuspendCatching {
+                analyticsRepository.storeEvent(event)
 
-            if (event.shouldForceSend) {
-                stopTimer()
-                sendEvents()
-                startTimer()
-            }
+                if (event.shouldForceSend) {
+                    stopTimer()
+                    sendEvents()
+                    startTimer()
+                }
+            }.fold(
+                onSuccess = { /* Not necessary */ },
+                onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" } },
+            )
         }
     }
 
     private fun startTimer() {
         stopTimer()
-        timerJob = coroutineScope.launch {
+        timerJob = coroutineScope.launch(coroutineDispatcher) {
             while (isActive) {
                 delay(DISPATCH_INTERVAL_MILLIS)
                 sendEvents()
@@ -100,8 +104,12 @@ class AnalyticsManager internal constructor(
             return
         }
 
-        // TODO: Handle exceptions
-        analyticsRepository.sendEvents(checkoutAttemptId)
+        runSuspendCatching {
+            analyticsRepository.sendEvents(checkoutAttemptId)
+        }.fold(
+            onSuccess = { adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" } },
+            onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" } },
+        )
     }
 
     fun getCheckoutAttemptId(): String? = checkoutAttemptId
