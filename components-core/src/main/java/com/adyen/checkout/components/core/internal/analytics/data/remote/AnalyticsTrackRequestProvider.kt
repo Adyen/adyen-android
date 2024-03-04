@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 13/2/2024.
+ * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.data.api
+package com.adyen.checkout.components.core.internal.analytics.data.remote
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams

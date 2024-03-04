@@ -9,8 +9,10 @@
 package com.adyen.checkout.components.core.internal.analytics.data
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsSetupProvider
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsTrackRequestProvider
+import com.adyen.checkout.components.core.internal.analytics.data.local.AnalyticsLocalDataStore
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsRemoteDataStore
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
 
 internal class DefaultAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
