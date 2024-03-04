@@ -27,11 +27,11 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsMapper
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsRepositoryData
+import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
+import com.adyen.checkout.components.core.internal.analytics.data.old.DefaultOldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -69,7 +69,7 @@ abstract class IssuerListComponentProvider<
 constructor(
     private val componentClass: Class<ComponentT>,
     private val dropInOverrideParams: DropInOverrideParams?,
-    private val analyticsRepository: AnalyticsRepository?,
+    private val analyticsRepository: OldAnalyticsRepository?,
     private val hideIssuerLogosDefaultValue: Boolean = false,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
@@ -104,7 +104,7 @@ constructor(
                 componentConfiguration = getConfiguration(checkoutConfiguration),
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            val analyticsRepository = analyticsRepository ?: DefaultOldAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
                     componentParams = componentParams,
@@ -195,7 +195,7 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
+            val analyticsRepository = analyticsRepository ?: DefaultOldAnalyticsRepository(
                 analyticsRepositoryData = AnalyticsRepositoryData(
                     application = application,
                     componentParams = componentParams,
@@ -284,7 +284,7 @@ constructor(
         paymentMethod: PaymentMethod,
         order: Order?,
         savedStateHandle: SavedStateHandle,
-        analyticsRepository: AnalyticsRepository,
+        analyticsRepository: OldAnalyticsRepository,
     ): DefaultIssuerListDelegate<PaymentMethodT, ComponentStateT> {
         return DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),

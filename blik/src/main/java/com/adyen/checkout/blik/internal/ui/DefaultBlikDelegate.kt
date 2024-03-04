@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -40,7 +40,7 @@ internal class DefaultBlikDelegate(
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: OldAnalyticsRepository,
     private val submitHandler: SubmitHandler<BlikComponentState>,
 ) : BlikDelegate {
 

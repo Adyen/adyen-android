@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/11/2022.
+ * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.data.api
+package com.adyen.checkout.components.core.internal.analytics.data.old
 
 import android.os.Build
 import androidx.annotation.RestrictTo
@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequ
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import java.util.Locale
 
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsMapper {
 //    @Suppress("LongParameterList")

@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 28/2/2024.
+ * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.analytics.data
+package com.adyen.checkout.components.core.internal.analytics.data.local
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
 import kotlinx.coroutines.sync.Mutex

@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -45,7 +45,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredACHDirectDebitDelegateTest(
-    @Mock private val analyticsRepository: AnalyticsRepository
+    @Mock private val analyticsRepository: OldAnalyticsRepository
 ) {
     private lateinit var delegate: ACHDirectDebitDelegate
 
@@ -106,7 +106,7 @@ internal class StoredACHDirectDebitDelegateTest(
 
     private fun createAchDelegate(
         paymentMethod: StoredPaymentMethod = StoredPaymentMethod(id = STORED_ID),
-        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        analyticsRepository: OldAnalyticsRepository = this.analyticsRepository,
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = StoredACHDirectDebitDelegate(

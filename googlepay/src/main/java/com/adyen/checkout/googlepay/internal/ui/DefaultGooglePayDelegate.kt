@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -48,7 +48,7 @@ internal class DefaultGooglePayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: GooglePayComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: OldAnalyticsRepository,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())

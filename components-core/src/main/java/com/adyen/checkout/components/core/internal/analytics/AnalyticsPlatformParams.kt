@@ -11,7 +11,6 @@ package com.adyen.checkout.components.core.internal.analytics
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.BuildConfig
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsPlatform
 
 object AnalyticsPlatformParams {
 

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/7/2023.
+ * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.data.api
+package com.adyen.checkout.components.core.internal.analytics.data.old
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import java.util.Locale
 
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsRepositoryData(
     val level: AnalyticsParamsLevel,

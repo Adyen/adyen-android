@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 @Suppress("TooManyFunctions")
 internal class DefaultUPIDelegate(
     private val submitHandler: SubmitHandler<UPIComponentState>,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: OldAnalyticsRepository,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,

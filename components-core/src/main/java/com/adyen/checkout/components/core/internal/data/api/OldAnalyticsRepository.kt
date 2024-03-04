@@ -10,8 +10,9 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface AnalyticsRepository {
+interface OldAnalyticsRepository {
     suspend fun setupAnalytics()
 
     fun getCheckoutAttemptId(): String?

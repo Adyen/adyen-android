@@ -32,7 +32,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -72,7 +72,7 @@ internal class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CardComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: OldAnalyticsRepository,
     private val cardEncryptor: BaseCardEncryptor,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,

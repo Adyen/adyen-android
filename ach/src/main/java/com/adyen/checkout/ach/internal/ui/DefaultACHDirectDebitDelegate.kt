@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 internal class DefaultACHDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: OldAnalyticsRepository,
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
