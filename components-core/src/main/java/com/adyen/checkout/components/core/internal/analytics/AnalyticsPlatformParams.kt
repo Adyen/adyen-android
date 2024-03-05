@@ -14,7 +14,6 @@ import com.adyen.checkout.components.core.BuildConfig
 
 object AnalyticsPlatformParams {
 
-    @Suppress("ConstPropertyName")
     const val channel = "android"
 
     var platform = AnalyticsPlatform.ANDROID.value
@@ -23,6 +22,7 @@ object AnalyticsPlatformParams {
     var version = BuildConfig.CHECKOUT_VERSION
         private set
 
+    @Suppress("unused")
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun overrideForCrossPlatform(
         platform: AnalyticsPlatform,
@@ -32,6 +32,7 @@ object AnalyticsPlatformParams {
         this.version = version
     }
 
+    @Suppress("unused")
     @VisibleForTesting
     internal fun resetToDefaults() {
         platform = AnalyticsPlatform.ANDROID.value

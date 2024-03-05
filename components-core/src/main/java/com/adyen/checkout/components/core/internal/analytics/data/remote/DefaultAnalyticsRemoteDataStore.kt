@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.components.core.internal.analytics.data.remote
 
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsRemoteDataStore
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest

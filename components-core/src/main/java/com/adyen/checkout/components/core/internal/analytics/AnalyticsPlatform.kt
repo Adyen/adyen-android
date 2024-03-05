@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
+@Suppress("unused")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class AnalyticsPlatform(val value: String) {
     ANDROID("android"),
