@@ -18,10 +18,11 @@ internal class DefaultAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
     private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
     private val remoteDataStore: AnalyticsRemoteDataStore,
+    private val analyticsSetupProvider: AnalyticsSetupProvider,
     private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
 ) : AnalyticsRepository {
 
-    override suspend fun fetchCheckoutAttemptId(analyticsSetupProvider: AnalyticsSetupProvider): String? {
+    override suspend fun fetchCheckoutAttemptId(): String? {
         val request = analyticsSetupProvider.provide()
         return remoteDataStore.fetchCheckoutAttemptId(request).checkoutAttemptId
     }
