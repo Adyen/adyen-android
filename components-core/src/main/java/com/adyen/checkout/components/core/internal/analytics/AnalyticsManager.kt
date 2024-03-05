@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.analytics.data.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -24,9 +24,9 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsManager internal constructor(
     private val analyticsRepository: AnalyticsRepository,
-    private val analyticsSetupProvider: AnalyticsSetupProvider,
     private val analyticsParams: AnalyticsParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
@@ -54,7 +54,7 @@ class AnalyticsManager internal constructor(
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
-                analyticsRepository.fetchCheckoutAttemptId(analyticsSetupProvider)
+                analyticsRepository.fetchCheckoutAttemptId()
             }.fold(
                 onSuccess = { attemptId ->
                     checkoutAttemptId = attemptId?.also { startTimer() }

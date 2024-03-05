@@ -22,10 +22,9 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsProvider
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -56,7 +55,7 @@ class MBWayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: OldAnalyticsRepository? = null,
+    private val analyticsManager: AnalyticsManager? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -99,18 +98,11 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
-                // TODO: Find out how to use analytics source with drop-in
-                adyenAnalytics = AdyenAnalytics(
-                    analyticsProvider = AnalyticsProvider(
-                        application,
-                        componentParams,
-                        AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
-                        null,
-                    ),
-                    analyticsParams = componentParams.analyticsParams,
-                    analyticsService = AnalyticsService(
-                        HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                    ),
+                analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                    componentParams = componentParams,
+                    application = application,
+                    source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                    sessionId = null,
                 ),
                 submitHandler = SubmitHandler(savedStateHandle),
             )
@@ -191,18 +183,11 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
-                // TODO: Find out how to use analytics source with drop-in
-                adyenAnalytics = AdyenAnalytics(
-                    analyticsProvider = AnalyticsProvider(
-                        application,
-                        componentParams,
-                        AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
-                        checkoutSession.sessionSetupResponse.id,
-                    ),
-                    analyticsParams = componentParams.analyticsParams,
-                    analyticsService = AnalyticsService(
-                        HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                    ),
+                analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                    componentParams = componentParams,
+                    application = application,
+                    source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                    sessionId = checkoutSession.sessionSetupResponse.id,
                 ),
                 submitHandler = SubmitHandler(savedStateHandle),
             )

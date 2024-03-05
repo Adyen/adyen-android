@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -40,7 +41,7 @@ internal class DefaultMBWayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
-    private val adyenAnalytics: AdyenAnalytics,
+    private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) : MBWayDelegate {
 
@@ -69,12 +70,12 @@ internal class DefaultMBWayDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        setupAnalytics()
+        initializeAnalytics(coroutineScope)
     }
 
-    private fun setupAnalytics() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        adyenAnalytics.setup()
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(coroutineScope)
     }
 
     override fun observe(
@@ -132,7 +133,7 @@ internal class DefaultMBWayDelegate(
     ): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = adyenAnalytics.checkoutAttemptId,
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
         )
 
