@@ -18,7 +18,7 @@ sealed interface AnalyticsEvent {
     val shouldForceSend: Boolean
     val component: String
 
-    data class Info @AnalyticsEventApi constructor(
+    data class Info @DirectAnalyticsEventCreation constructor(
         override val timestamp: Long = Date().time,
         override val shouldForceSend: Boolean = false,
         override val component: String,
@@ -42,7 +42,7 @@ sealed interface AnalyticsEvent {
         }
     }
 
-    data class Log @AnalyticsEventApi constructor(
+    data class Log @DirectAnalyticsEventCreation constructor(
         override val timestamp: Long = Date().time,
         override val shouldForceSend: Boolean = true,
         override val component: String,
