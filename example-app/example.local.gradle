@@ -10,8 +10,8 @@ android {
             buildConfigField "String", "MERCHANT_SERVER_URL", '"YOUR_SERVER_URL"'
             buildConfigField "String", "CLIENT_KEY", '"YOUR_CLIENT_KEY"'
             buildConfigField "String", "MERCHANT_ACCOUNT", '"YOUR_MERCHANT_ACCOUNT"'
-            buildConfigField "String", "API_KEY_HEADER_NAME", '"API_KEY_HEADER"'
-            buildConfigField "String", "CHECKOUT_API_KEY", '"YOUR_API_KEY"'
+            buildConfigField "String", "AUTHORIZATION_HEADER_NAME", '"YOUR_AUTHORIZATION_HEADER_NAME"'
+            buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", '"YOUR_AUTHORIZATION_HEADER_VALUE"'
             buildConfigField "String", "SHOPPER_REFERENCE", '"SHOPPER_REFERENCE"'
         }
 

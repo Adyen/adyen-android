@@ -42,7 +42,11 @@ object NetworkModule {
 
         builder.addInterceptor { chain ->
             val request = chain.request().newBuilder()
-                .addHeader(BuildConfig.API_KEY_HEADER_NAME, BuildConfig.CHECKOUT_API_KEY)
+                .apply {
+                    if (BuildConfig.AUTHORIZATION_HEADER_NAME.isNotBlank()) {
+                        header(BuildConfig.AUTHORIZATION_HEADER_NAME, BuildConfig.AUTHORIZATION_HEADER_VALUE)
+                    }
+                }
                 .build()
 
             chain.proceed(request)
