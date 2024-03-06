@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.GenericActionComponent
 import com.adyen.checkout.action.core.GenericActionConfiguration
-import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.ActionDelegateProvider
 import com.adyen.checkout.action.core.internal.ui.DefaultGenericActionDelegate
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
@@ -63,7 +62,6 @@ constructor(
             val genericActionDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,
-                actionHandlingComponent = DefaultActionHandlingComponent(genericActionDelegate, null),
                 actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
             )
         }

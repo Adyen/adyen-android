@@ -62,6 +62,7 @@ CheckoutConfiguration(
 
 ## Fixed
 - When building `minifyEnabled` and without the `kotlin-parcelize` plugin in your project the build should no longer crash.
+- When handling actions you should no longer get `IllegalArgumentException: Unsupported delegate type`.
 
 ## Deprecated
 - When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter.

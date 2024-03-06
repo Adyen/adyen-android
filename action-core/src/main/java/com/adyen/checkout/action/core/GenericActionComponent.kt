@@ -7,12 +7,15 @@
  */
 package com.adyen.checkout.action.core
 
+import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
@@ -30,13 +33,12 @@ import kotlinx.coroutines.flow.Flow
  */
 class GenericActionComponent internal constructor(
     private val genericActionDelegate: GenericActionDelegate,
-    private val actionHandlingComponent: ActionHandlingComponent,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
     ViewableComponent,
     IntentHandlingComponent,
-    ActionHandlingComponent by actionHandlingComponent {
+    ActionHandlingComponent {
 
     override val delegate: ActionDelegate
         get() = genericActionDelegate.delegate
@@ -54,6 +56,22 @@ class GenericActionComponent internal constructor(
 
     internal fun removeObserver() {
         genericActionDelegate.removeObserver()
+    }
+
+    override fun canHandleAction(action: Action): Boolean {
+        return PROVIDER.canHandleAction(action)
+    }
+
+    override fun handleAction(action: Action, activity: Activity) {
+        genericActionDelegate.handleAction(action, activity)
+    }
+
+    override fun handleIntent(intent: Intent) {
+        genericActionDelegate.handleIntent(intent)
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        genericActionDelegate.setOnRedirectListener(listener)
     }
 
     override fun onCleared() {
