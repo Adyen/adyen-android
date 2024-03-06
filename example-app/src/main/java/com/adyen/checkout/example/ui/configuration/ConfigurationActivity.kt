@@ -12,8 +12,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.DropDownPreference
+import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivitySettingsBinding
 import com.adyen.checkout.example.ui.theme.NightTheme
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
@@ -40,6 +42,9 @@ class ConfigurationActivity : AppCompatActivity() {
     class ConfigurationFragment : PreferenceFragmentCompat() {
 
         @Inject
+        lateinit var keyValueStorage: KeyValueStorage
+
+        @Inject
         internal lateinit var nightThemeRepository: NightThemeRepository
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -49,12 +54,19 @@ class ConfigurationActivity : AppCompatActivity() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-            preferenceManager.preferenceScreen
+            preferenceManager
                 .findPreference<DropDownPreference>(requireContext().getString(R.string.night_theme_key))
                 ?.setOnPreferenceChangeListener { _, newValue ->
                     nightThemeRepository.theme = NightTheme.findByPreferenceValue(newValue as String?)
                     true
                 }
+
+            /* This workaround is needed to display the default value of Merchant Account. We cannot set this value in
+            `preferences.xml` because it's only available in the code and there is no "clean" way to set the default
+            value programmatically. */
+            preferenceManager
+                .findPreference<EditTextPreference>(requireContext().getString(R.string.merchant_account_key))
+                ?.text = keyValueStorage.getMerchantAccount()
         }
     }
 }
