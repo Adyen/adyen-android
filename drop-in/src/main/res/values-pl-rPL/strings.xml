@@ -11,6 +11,7 @@
     <string name="payment_failed">Wystąpił błąd podczas wysyłania płatności. Spróbuj ponownie.</string>
     <string name="action_failed">Podczas przetwarzania płatności wystąpił błąd. Prosimy spróbować ponownie.</string>
     <string name="time_out_error">Upłynął limit czasu żądania. Spróbuj ponownie.</string>
+    <string name="unknown_error">Wystąpił nieoczekiwany błąd</string>
     <string name="store_payment_methods_header">Twoje metody płatności</string>
     <string name="other_payment_methods">Wybierz inną metodę</string>
     <string name="continue_button">Kontynuuj</string>

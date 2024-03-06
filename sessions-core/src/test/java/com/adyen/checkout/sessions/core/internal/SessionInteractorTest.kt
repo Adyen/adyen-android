@@ -406,32 +406,6 @@ internal class SessionInteractorTest(
             }
 
             @Test
-            fun `balance is zero then Error is returned and session data is updated`() = runTest {
-                sessionInteractor.sessionFlow.test {
-                    val mockResponse = SessionBalanceResponse(
-                        sessionData = "session_data_updated",
-                        balance = Amount("USD", 0),
-                        transactionLimit = null,
-                    )
-
-                    whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
-
-                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
-
-                    assertTrue(result is SessionCallResult.Balance.Error)
-                    require(result is SessionCallResult.Balance.Error)
-
-                    assertTrue(result.throwable is CheckoutException)
-                    require(result.throwable is CheckoutException)
-
-                    assertEquals("Not enough balance", result.throwable.message)
-
-                    val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
-                    assertEquals(expectedSessionModel, expectMostRecentItem())
-                }
-            }
-
-            @Test
             fun `an error is thrown then Error is returned`() = runTest {
                 val exception = Exception("failed for testing")
 

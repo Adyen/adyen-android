@@ -11,6 +11,7 @@
     <string name="payment_failed">%%resultMessages.failed%%</string>
     <string name="action_failed">%%resultMessages.Error%%</string>
     <string name="time_out_error">%%resultMessages.timeout%%</string>
+    <string name="unknown_error">%%error.message.unknown%%</string>
     <string name="store_payment_methods_header">%%paymentMethods.storedMethods%%</string>
     <string name="other_payment_methods">%%paymentMethods.otherMethods%%</string>
     <string name="continue_button">%%continue%%</string>

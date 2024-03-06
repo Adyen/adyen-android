@@ -11,6 +11,7 @@
     <string name="payment_failed">Σφάλμα κατά την αποστολή πληρωμής. Προσπαθήστε ξανά.</string>
     <string name="action_failed">Προέκυψε σφάλμα κατά την επεξεργασία της πληρωμής σας. Προσπαθήστε ξανά αργότερα.</string>
     <string name="time_out_error">Έληξε το χρονικό όριο του αιτήματος. Προσπαθήστε ξανά.</string>
+    <string name="unknown_error">Προέκυψε άγνωστο σφάλμα</string>
     <string name="store_payment_methods_header">Οι τρόποι πληρωμής σας</string>
     <string name="other_payment_methods">Επιλέξτε άλλον τρόπο</string>
     <string name="continue_button">Συνέχεια</string>

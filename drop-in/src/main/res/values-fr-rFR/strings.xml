@@ -11,6 +11,7 @@
     <string name="payment_failed">Erreur lors de l\'envoi du paiement. Veuillez réessayer.</string>
     <string name="action_failed">Une erreur s\'est produite lors du traitement de votre paiement. Veuillez réessayer plus tard.</string>
     <string name="time_out_error">La requête a expiré. Veuillez réessayer.</string>
+    <string name="unknown_error">Une erreur inconnue s\'est produite</string>
     <string name="store_payment_methods_header">Vos modes de paiement</string>
     <string name="other_payment_methods">Autre méthode de paiement</string>
     <string name="continue_button">Continuer</string>

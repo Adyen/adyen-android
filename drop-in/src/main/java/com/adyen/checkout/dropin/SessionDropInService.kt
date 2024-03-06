@@ -89,7 +89,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Payments.Error ->
                     DropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                         reason = result.throwable.message,
                         dismissDropIn = true,
                     )
@@ -98,7 +98,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Payments.NotFullyPaidOrder -> updatePaymentMethods(result.result.order)
                 is SessionCallResult.Payments.RefusedPartialPayment ->
                     DropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                         reason = "Payment was refused while making a partial payment",
                     )
 
@@ -124,7 +124,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                 is SessionCallResult.Details.Action -> DropInServiceResult.Action(result.action)
                 is SessionCallResult.Details.Error ->
                     DropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                         reason = result.throwable.message,
                         dismissDropIn = true,
                     )
@@ -151,7 +151,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             val dropInServiceResult = when (result) {
                 is SessionCallResult.Balance.Error ->
                     BalanceDropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                         reason = result.throwable.message,
                     )
 
@@ -176,7 +176,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             val dropInServiceResult = when (result) {
                 is SessionCallResult.CreateOrder.Error ->
                     OrderDropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                         reason = result.throwable.message,
                         dismissDropIn = true,
                     )
@@ -204,7 +204,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             val dropInServiceResult = when (result) {
                 is SessionCallResult.CancelOrder.Error ->
                     DropInServiceResult.Error(
-                        errorDialog = ErrorDialog(),
+                        errorDialog = ErrorDialog(message = getString(R.string.unknown_error)),
                         reason = result.throwable.message,
                     )
 
@@ -235,7 +235,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
                     )
 
                 is SessionCallResult.RemoveStoredPaymentMethod.Error -> RecurringDropInServiceResult.Error(
-                    errorDialog = ErrorDialog(),
+                    errorDialog = ErrorDialog(message = getString(R.string.unknown_error)),
                     reason = result.throwable.message,
                 )
             }
@@ -253,7 +253,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
 
             is SessionCallResult.UpdatePaymentMethods.Error ->
                 DropInServiceResult.Error(
-                    errorDialog = ErrorDialog(),
+                    errorDialog = ErrorDialog(message = getString(R.string.payment_failed)),
                     reason = result.throwable.message,
                     dismissDropIn = true,
                 )

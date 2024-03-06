@@ -133,23 +133,17 @@ class SessionInteractor(
 
     private suspend fun makeCheckBalanceCallInternal(
         paymentComponentState: PaymentComponentState<*>
-    ): SessionCallResult.Balance {
-        sessionRepository.checkBalance(sessionModel, paymentComponentState)
-            .fold(
-                onSuccess = { response ->
-                    updateSessionData(response.sessionData)
-                    return if (response.balance.value <= 0) {
-                        SessionCallResult.Balance.Error(CheckoutException("Not enough balance"))
-                    } else {
-                        val balanceResult = BalanceResult(response.balance, response.transactionLimit)
-                        SessionCallResult.Balance.Successful(balanceResult)
-                    }
-                },
-                onFailure = {
-                    return SessionCallResult.Balance.Error(throwable = it)
-                },
-            )
-    }
+    ) = sessionRepository.checkBalance(sessionModel, paymentComponentState)
+        .fold(
+            onSuccess = { response ->
+                updateSessionData(response.sessionData)
+                val balanceResult = BalanceResult(response.balance, response.transactionLimit)
+                SessionCallResult.Balance.Successful(balanceResult)
+            },
+            onFailure = {
+                SessionCallResult.Balance.Error(throwable = it)
+            },
+        )
 
     suspend fun createOrder(
         merchantCall: () -> Boolean,

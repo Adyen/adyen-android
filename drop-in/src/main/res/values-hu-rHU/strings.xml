@@ -11,6 +11,7 @@
     <string name="payment_failed">Hiba történt a fizetés elküldése során. Próbálkozzon újra.</string>
     <string name="action_failed">Fizetése feldolgozása során hiba történt. Próbálkozzon újra később.</string>
     <string name="time_out_error">A kérés időkorlátja lejárt. Próbálkozzon újra.</string>
+    <string name="unknown_error">Ismeretlen hiba történt</string>
     <string name="store_payment_methods_header">Fizetési módjai</string>
     <string name="other_payment_methods">Másik mód választása</string>
     <string name="continue_button">Folytatás</string>

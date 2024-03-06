@@ -183,7 +183,6 @@ internal class DropInActivity :
     }
 
     @Deprecated("Deprecated in Java")
-    @Suppress("deprecation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         checkGooglePayActivityResult(requestCode, resultCode, data)
@@ -460,7 +459,7 @@ internal class DropInActivity :
         adyenLog(AdyenLogLevel.DEBUG) { "handleDropInServiceResult ERROR - reason: $reason" }
 
         dropInServiceResult.errorDialog?.let { errorDialog ->
-            val errorMessage = errorDialog.message ?: getString(R.string.payment_failed)
+            val errorMessage = errorDialog.message ?: getString(R.string.unknown_error)
             showError(errorDialog.title, errorMessage, reason, dropInServiceResult.dismissDropIn)
         } ?: if (dropInServiceResult.dismissDropIn) {
             terminateWithError(reason)

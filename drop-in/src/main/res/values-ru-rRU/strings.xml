@@ -11,6 +11,7 @@
     <string name="payment_failed">Ошибка при отправке платежа. Повторите попытку.</string>
     <string name="action_failed">При обработке платежа возникла ошибка. Повторите попытку позже.</string>
     <string name="time_out_error">Время ожидания запроса истекло. Повторите попытку.</string>
+    <string name="unknown_error">Возникла неизвестная ошибка</string>
     <string name="store_payment_methods_header">Ваши способы оплаты</string>
     <string name="other_payment_methods">Выбрать другой способ</string>
     <string name="continue_button">Продолжить</string>

@@ -11,6 +11,7 @@
     <string name="payment_failed">Erro ao enviar pagamento. Tente novamente</string>
     <string name="action_failed">Ocorreu um erro ao processar o seu pagamento. Tente novamente mais tarde.</string>
     <string name="time_out_error">Pedido com tempo limite. Tente novamente</string>
+    <string name="unknown_error">Ocorreu um erro desconhecido</string>
     <string name="store_payment_methods_header">Os seus métodos de pagamento</string>
     <string name="other_payment_methods">Selecione outro método</string>
     <string name="continue_button">Continuar</string>
