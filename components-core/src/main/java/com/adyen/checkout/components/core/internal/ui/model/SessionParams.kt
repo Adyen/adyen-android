@@ -14,8 +14,11 @@ import java.util.Locale
 
 /**
  * Object that holds values set during sessions setup call.
- * [SessionParams] values should always have higher priority than values set in client side configurations. Otherwise
- * it can cause server error, since specific configuration is not enabled, but it is being used.
+ * [SessionParams] values by default should have higher priority than values set in client side configurations.
+ * Otherwise it can cause server error, since specific configuration is not enabled, but it is being used.
+ *
+ * Only for some specific cases, if they do not cause server error, client side configurations can have higher priority
+ * than [SessionParams] values.
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class SessionParams(
