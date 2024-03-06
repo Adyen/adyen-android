@@ -45,6 +45,7 @@
     <PreferenceCategory android:title="@string/shopper_information">
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_shopper_reference"
             android:key="@string/shopper_reference_key"
             android:title="@string/shopper_reference_title"
             app:useSimpleSummaryProvider="true" />

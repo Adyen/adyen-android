@@ -12,7 +12,6 @@ android {
             buildConfigField "String", "MERCHANT_ACCOUNT", '"YOUR_MERCHANT_ACCOUNT"'
             buildConfigField "String", "AUTHORIZATION_HEADER_NAME", '"YOUR_AUTHORIZATION_HEADER_NAME"'
             buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", '"YOUR_AUTHORIZATION_HEADER_VALUE"'
-            buildConfigField "String", "SHOPPER_REFERENCE", '"SHOPPER_REFERENCE"'
         }
 
         release {

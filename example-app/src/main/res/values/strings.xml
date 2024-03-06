@@ -91,5 +91,6 @@
     <string name="preferences_default_instant_payment_method">wechatpaySDK</string>
     <string name="preferences_default_use_sessions">true</string>
     <string name="preferences_default_analytics_level">ALL</string>
+    <string name="preferences_default_shopper_reference">test-android-components</string>
 
 </resources>
