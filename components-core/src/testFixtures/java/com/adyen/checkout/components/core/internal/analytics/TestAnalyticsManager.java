@@ -21,6 +21,8 @@ public class TestAnalyticsManager implements AnalyticsManager {
 
     private boolean isInitialized = false;
 
+    private boolean isCleared = false;
+
     private String checkoutAttemptId = null;
 
     private AnalyticsEvent lastEvent = null;
@@ -61,6 +63,10 @@ public class TestAnalyticsManager implements AnalyticsManager {
 
     @Override
     public void clear(@NonNull Object owner) {
-        // noop
+        isCleared = true;
+    }
+
+    public void assertIsCleared() {
+        assertTrue(isCleared);
     }
 }
