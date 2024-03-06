@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
-@OptIn(AnalyticsEventApi::class)
+@OptIn(DirectAnalyticsEventCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object GenericEvents {
 
