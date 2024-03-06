@@ -50,7 +50,7 @@ class ConfigurationActivity : AppCompatActivity() {
             super.onViewCreated(view, savedInstanceState)
 
             preferenceManager.preferenceScreen
-                .findPreference<DropDownPreference>(requireContext().getString(R.string.night_theme_title))
+                .findPreference<DropDownPreference>(requireContext().getString(R.string.night_theme_key))
                 ?.setOnPreferenceChangeListener { _, newValue ->
                     nightThemeRepository.theme = NightTheme.findByPreferenceValue(newValue as String?)
                     true

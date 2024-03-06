@@ -131,7 +131,7 @@
             android:defaultValue="@string/night_theme_system"
             android:entries="@array/night_theme_entries"
             android:entryValues="@array/night_theme_values"
-            android:key="@string/night_theme_title"
+            android:key="@string/night_theme_key"
             android:title="@string/night_theme_title"
             app:useSimpleSummaryProvider="true" />
 
