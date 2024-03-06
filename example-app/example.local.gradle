@@ -1,0 +1,23 @@
+/**
+ * Duplicate this file into "local.gradle" then replace the placeholder values with the correct
+ * parameters. You might need to escape some characters if you see an error.
+ *
+ * DO NOT commit the new file anywhere public, you might be exposing your secret credentials.
+ */
+android {
+    buildTypes {
+        debug {
+            buildConfigField "String", "MERCHANT_SERVER_URL", '"YOUR_SERVER_URL"'
+            buildConfigField "String", "CLIENT_KEY", '"YOUR_CLIENT_KEY"'
+            buildConfigField "String", "MERCHANT_ACCOUNT", '"YOUR_MERCHANT_ACCOUNT"'
+            buildConfigField "String", "API_KEY_HEADER_NAME", '"API_KEY_HEADER"'
+            buildConfigField "String", "CHECKOUT_API_KEY", '"YOUR_API_KEY"'
+            buildConfigField "String", "SHOPPER_REFERENCE", '"SHOPPER_REFERENCE"'
+        }
+
+        release {
+            initWith debug
+            matchingFallbacks = ['debug']
+        }
+    }
+}

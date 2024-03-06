@@ -29,12 +29,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable()) {
-        BuildConfig.MERCHANT_SERVER_URL
-    } else {
-        "http://myserver.com/my/endpoint/"
-    }
-
     @Singleton
     @Provides
     internal fun provideOkHttpClient(): OkHttpClient {
@@ -63,7 +57,7 @@ object NetworkModule {
         Moshi.Builder()
             .add(JSONObjectAdapter())
             .add(KotlinJsonAdapterFactory())
-            .build()
+            .build(),
     )
 
     @Singleton
@@ -74,7 +68,7 @@ object NetworkModule {
         converterFactory: Converter.Factory,
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()
