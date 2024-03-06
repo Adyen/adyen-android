@@ -10,8 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
-// TODO: Remove if not used
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @RequiresOptIn("Avoid using AnalyticsEvent directly")
 @Target(AnnotationTarget.CONSTRUCTOR)
-annotation class AnalyticsEventApi
+annotation class DirectAnalyticsEventCreation

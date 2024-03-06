@@ -40,7 +40,6 @@ class AnalyticsManager internal constructor(
 
     private var timerJob: Job? = null
 
-    // TODO: Check if we need to retry in case the request failed
     fun initialize(coroutineScope: CoroutineScope) {
         if (isInitialized) return
         isInitialized = true
