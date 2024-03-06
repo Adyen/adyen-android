@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.BuildConfig
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AnalyticsPlatformParams {
 
     const val channel = "android"

@@ -23,33 +23,29 @@ internal class AnalyticsTrackRequestProvider {
         return AnalyticsTrackRequest(
             channel = AnalyticsPlatformParams.channel,
             platform = AnalyticsPlatformParams.platform,
-            info = infoList.mapToTrackEvent(),
-            logs = logList.mapToTrackEvent(),
+            info = infoList.map { event -> event.mapToTrackEvent() },
+            logs = logList.map { event -> event.mapToTrackEvent() },
         )
     }
 
-    private fun List<AnalyticsEvent.Info>.mapToTrackEvent() = map { event ->
-        AnalyticsTrackInfo(
-            timestamp = event.timestamp,
-            component = event.component,
-            type = event.type?.value,
-            target = event.target,
-            isStoredPaymentMethod = event.isStoredPaymentMethod,
-            brand = event.brand,
-            issuer = event.issuer,
-            validationErrorCode = event.validationErrorCode,
-            validationErrorMessage = event.validationErrorMessage,
-        )
-    }
+    private fun AnalyticsEvent.Info.mapToTrackEvent() = AnalyticsTrackInfo(
+        timestamp = timestamp,
+        component = component,
+        type = type?.value,
+        target = target,
+        isStoredPaymentMethod = isStoredPaymentMethod,
+        brand = brand,
+        issuer = issuer,
+        validationErrorCode = validationErrorCode,
+        validationErrorMessage = validationErrorMessage,
+    )
 
-    private fun List<AnalyticsEvent.Log>.mapToTrackEvent() = map { event ->
-        AnalyticsTrackLog(
-            timestamp = event.timestamp,
-            component = event.component,
-            type = event.type?.value,
-            subType = event.subType,
-            target = event.target,
-            message = event.message,
-        )
-    }
+    private fun AnalyticsEvent.Log.mapToTrackEvent() = AnalyticsTrackLog(
+        timestamp = timestamp,
+        component = component,
+        type = type?.value,
+        subType = subType,
+        target = target,
+        message = message,
+    )
 }
