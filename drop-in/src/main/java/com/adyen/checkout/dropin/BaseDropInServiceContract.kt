@@ -128,7 +128,9 @@ interface BaseDropInServiceContract {
      *
      * @param query Query inputted by shopper.
      */
-    fun onAddressLookupQueryChanged(query: String) = Unit
+    fun onAddressLookupQueryChanged(query: String) {
+        throw MethodNotImplementedException("Method onAddressLookupQueryChanged is not implemented")
+    }
 
     /**
      * Set a callback that will be called when shopper chooses an address option that requires complete details to be
