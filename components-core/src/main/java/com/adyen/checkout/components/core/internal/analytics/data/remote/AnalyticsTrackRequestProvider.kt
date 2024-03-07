@@ -29,6 +29,7 @@ internal class AnalyticsTrackRequestProvider {
     }
 
     private fun AnalyticsEvent.Info.mapToTrackEvent() = AnalyticsTrackInfo(
+        id = id,
         timestamp = timestamp,
         component = component,
         type = type?.value,
@@ -41,6 +42,7 @@ internal class AnalyticsTrackRequestProvider {
     )
 
     private fun AnalyticsEvent.Log.mapToTrackEvent() = AnalyticsTrackLog(
+        id = id,
         timestamp = timestamp,
         component = component,
         type = type?.value,
