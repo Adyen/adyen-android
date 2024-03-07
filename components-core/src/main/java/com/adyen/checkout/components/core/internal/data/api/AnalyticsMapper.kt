@@ -14,10 +14,11 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BuildConfig
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatform
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import java.util.Locale
 
+@Suppress("ForbiddenComment")
 // TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsMapper {
@@ -51,6 +52,7 @@ class AnalyticsMapper {
         )
     }
 
+    @Suppress("FunctionOnlyReturningConstant", "UnusedParameter")
     @VisibleForTesting
     internal fun getFlavorQueryParameter(source: AnalyticsSource): String {
         return "stub - this class will be deleted"
@@ -64,6 +66,7 @@ class AnalyticsMapper {
         }
     }
 
+    @Suppress("unused")
     private enum class Flavor(val value: String) {
         DROP_IN("dropin"),
         COMPONENTS("components")

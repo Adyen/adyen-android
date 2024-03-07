@@ -25,7 +25,7 @@ internal class DefaultAnalyticsSetupProvider(
     override fun provide(): AnalyticsSetupRequest {
         return AnalyticsSetupRequest(
             version = AnalyticsPlatformParams.version,
-            channel = AnalyticsPlatformParams.channel,
+            channel = AnalyticsPlatformParams.CHANNEL,
             platform = AnalyticsPlatformParams.platform,
             locale = componentParams.shopperLocale.toString(),
             component = getComponentQueryParameter(source),

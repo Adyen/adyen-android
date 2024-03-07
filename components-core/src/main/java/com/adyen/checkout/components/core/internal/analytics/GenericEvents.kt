@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
+@Suppress("TooManyFunctions")
 @OptIn(DirectAnalyticsEventCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object GenericEvents {
@@ -56,8 +57,9 @@ object GenericEvents {
         target = target,
     )
 
-    // TODO: This might move to the Input fields itself and not be bound to any component. But we should find a way to define targets.
-    // TODO: We could create an enum for target per module
+    // TODO: This might move to the Input fields itself and not be bound to any component. But we should find a way to
+    //  define targets. We could create an enum for target per module
+    @Suppress("ForbiddenComment")
     fun focus(
         component: String,
         target: String,

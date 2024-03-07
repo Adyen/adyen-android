@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import java.util.Locale
 
+@Suppress("ForbiddenComment")
 // TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsRepositoryData(
