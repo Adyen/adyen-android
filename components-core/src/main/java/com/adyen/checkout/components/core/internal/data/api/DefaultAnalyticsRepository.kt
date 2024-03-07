@@ -3,15 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 4/3/2024.
+ * Created by oscars on 6/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.analytics.data.old
+package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
@@ -20,11 +19,11 @@ import com.adyen.checkout.core.internal.util.adyenLog
 
 // TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultOldAnalyticsRepository(
+class DefaultAnalyticsRepository(
     private val analyticsRepositoryData: AnalyticsRepositoryData,
     private val analyticsService: AnalyticsService,
     private val analyticsMapper: AnalyticsMapper,
-) : OldAnalyticsRepository {
+) : AnalyticsRepository {
 
     @VisibleForTesting
     internal var state: State = State.Uninitialized

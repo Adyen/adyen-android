@@ -14,13 +14,13 @@ import com.adyen.checkout.components.core.internal.analytics.data.remote.Analyti
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
 
-internal class DefaultAnalyticsRepository(
+internal class DefaultNewAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
     private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
     private val remoteDataStore: AnalyticsRemoteDataStore,
     private val analyticsSetupProvider: AnalyticsSetupProvider,
     private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
-) : AnalyticsRepository {
+) : NewAnalyticsRepository {
 
     override suspend fun fetchCheckoutAttemptId(): String? {
         val request = analyticsSetupProvider.provide()

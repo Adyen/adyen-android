@@ -6,7 +6,7 @@
  * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.analytics.data.old
+package com.adyen.checkout.components.core.internal.data.api
 
 import android.app.Application
 import androidx.annotation.RestrictTo

@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
@@ -42,7 +42,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 class DefaultInstantPaymentDelegateTest(
-    @Mock private val analyticsRepository: OldAnalyticsRepository,
+    @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
     private lateinit var delegate: DefaultInstantPaymentDelegate

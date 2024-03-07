@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 
 // TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface OldAnalyticsRepository {
+interface AnalyticsRepository {
     suspend fun setupAnalytics()
 
     fun getCheckoutAttemptId(): String?
