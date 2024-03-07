@@ -120,6 +120,7 @@ internal abstract class BaseComponentDialogFragment :
                     dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                     componentCallback = this,
                     analyticsRepository = dropInViewModel.analyticsRepository,
+                    analyticsManager = dropInViewModel.analyticsManager,
                     onRedirect = protocol::onRedirect,
                 )
             }

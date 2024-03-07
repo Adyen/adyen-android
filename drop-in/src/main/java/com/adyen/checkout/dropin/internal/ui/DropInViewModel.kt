@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -59,6 +60,7 @@ internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     internal val analyticsRepository: AnalyticsRepository,
+    internal val analyticsManager: AnalyticsManager,
     private val initialDropInParams: DropInParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -186,7 +188,7 @@ internal class DropInViewModel(
 
     fun onCreated() {
         navigateToInitialDestination()
-        setupAnalytics()
+        initializeAnalytics()
     }
 
     fun onDropInServiceConnected() {
@@ -230,11 +232,12 @@ internal class DropInViewModel(
         sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
-    private fun setupAnalytics() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
+    private fun initializeAnalytics() {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }
+        analyticsManager.initialize(viewModelScope)
     }
 
     /**
