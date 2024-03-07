@@ -112,6 +112,7 @@ internal class CardComponentParamsMapperTest {
             shopperLocale = Locale.FRANCE,
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
             isHolderNameRequired = true,
             supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.DINERS),
@@ -162,7 +163,7 @@ internal class CardComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
@@ -560,7 +561,7 @@ internal class CardComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isHolderNameRequired: Boolean = false,
