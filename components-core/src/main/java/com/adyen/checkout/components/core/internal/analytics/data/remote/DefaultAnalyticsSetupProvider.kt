@@ -10,14 +10,17 @@ package com.adyen.checkout.components.core.internal.analytics.data.remote
 
 import android.app.Application
 import android.os.Build
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import java.util.Locale
 
 internal class DefaultAnalyticsSetupProvider(
     private val application: Application,
-    private val componentParams: ComponentParams,
+    private val shopperLocale: Locale,
+    private val isCreatedByDropIn: Boolean,
+    private val amount: Amount?,
     private val source: AnalyticsSource,
     private val sessionId: String?,
 ) : AnalyticsSetupProvider {
@@ -27,16 +30,16 @@ internal class DefaultAnalyticsSetupProvider(
             version = AnalyticsPlatformParams.version,
             channel = AnalyticsPlatformParams.CHANNEL,
             platform = AnalyticsPlatformParams.platform,
-            locale = componentParams.shopperLocale.toString(),
+            locale = shopperLocale.toString(),
             component = getComponentQueryParameter(source),
-            flavor = getFlavorQueryParameter(componentParams.isCreatedByDropIn),
+            flavor = getFlavorQueryParameter(isCreatedByDropIn),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
             referrer = application.packageName,
             systemVersion = Build.VERSION.SDK_INT.toString(),
             screenWidth = application.resources.displayMetrics.widthPixels,
             paymentMethods = source.getPaymentMethods(),
-            amount = componentParams.amount,
+            amount = amount,
             // unused for Android
             containerWidth = null,
             sessionId = sessionId,
