@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -54,7 +54,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingDelegateTest(
-    @Mock private val analyticsRepository: OldAnalyticsRepository,
+    @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val context: Context,
     @Mock private val pdfOpener: PdfOpener,
     @Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,

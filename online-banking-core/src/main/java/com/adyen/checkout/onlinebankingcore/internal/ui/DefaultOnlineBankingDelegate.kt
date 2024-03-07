@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
@@ -53,7 +53,7 @@ internal class DefaultOnlineBankingDelegate<
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     override val componentParams: ButtonComponentParams,
-    private val analyticsRepository: OldAnalyticsRepository,
+    private val analyticsRepository: AnalyticsRepository,
     private val termsAndConditionsUrl: String,
     private val submitHandler: SubmitHandler<ComponentStateT>,
     private val paymentMethodFactory: () -> IssuerListPaymentMethodT,

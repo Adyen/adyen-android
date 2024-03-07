@@ -35,7 +35,7 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPComponent
@@ -115,7 +115,7 @@ internal fun getComponentFor(
     checkoutConfiguration: CheckoutConfiguration,
     dropInOverrideParams: DropInOverrideParams,
     componentCallback: ComponentCallback<*>,
-    analyticsRepository: OldAnalyticsRepository,
+    analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
     return when {
@@ -181,7 +181,7 @@ internal fun getComponentFor(
     checkoutConfiguration: CheckoutConfiguration,
     dropInOverrideParams: DropInOverrideParams,
     componentCallback: ComponentCallback<*>,
-    analyticsRepository: OldAnalyticsRepository,
+    analyticsRepository: AnalyticsRepository,
     onRedirect: () -> Unit,
 ): PaymentComponent {
     return when {

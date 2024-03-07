@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -52,7 +52,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultPayByBankDelegateTest(
-    @Mock private val analyticsRepository: OldAnalyticsRepository,
+    @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<PayByBankComponentState>,
 ) {
 

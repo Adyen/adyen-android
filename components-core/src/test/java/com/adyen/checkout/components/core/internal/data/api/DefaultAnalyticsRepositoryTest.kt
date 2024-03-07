@@ -9,12 +9,9 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
-import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.analytics.data.old.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
-import com.adyen.checkout.components.core.internal.analytics.data.old.DefaultOldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.test.LoggingExtension
@@ -41,13 +38,13 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
-internal class DefaultOldAnalyticsRepositoryTest(
+internal class DefaultAnalyticsRepositoryTest(
     @Mock private val analyticsService: AnalyticsService,
 ) {
 
     private val analyticsMapper: AnalyticsMapper = AnalyticsMapper()
 
-    private lateinit var analyticsRepository: DefaultOldAnalyticsRepository
+    private lateinit var analyticsRepository: DefaultAnalyticsRepository
 
     @BeforeEach
     fun before() = runTest {
@@ -59,7 +56,7 @@ internal class DefaultOldAnalyticsRepositoryTest(
 
     @Test
     fun `when repository is only instantiated then state is set as uninitialized`() = runTest {
-        assertEquals(DefaultOldAnalyticsRepository.State.Uninitialized, analyticsRepository.state)
+        assertEquals(DefaultAnalyticsRepository.State.Uninitialized, analyticsRepository.state)
     }
 
     @Nested
@@ -84,7 +81,7 @@ internal class DefaultOldAnalyticsRepositoryTest(
         @Test
         fun `and AnalyticsService is successful then state is set as initialized`() = runTest {
             analyticsRepository.setupAnalytics()
-            assertEquals(DefaultOldAnalyticsRepository.State.Ready, analyticsRepository.state)
+            assertEquals(DefaultAnalyticsRepository.State.Ready, analyticsRepository.state)
         }
 
         @Test
@@ -97,7 +94,7 @@ internal class DefaultOldAnalyticsRepositoryTest(
         fun `and AnalyticsService returns an error then state is set as error`() = runTest {
             whenever(analyticsService.setupAnalytics(any(), any())) doThrow HttpException(1, "error_message", null)
             analyticsRepository.setupAnalytics()
-            assertEquals(DefaultOldAnalyticsRepository.State.Failed, analyticsRepository.state)
+            assertEquals(DefaultAnalyticsRepository.State.Failed, analyticsRepository.state)
         }
 
         @Test
@@ -156,7 +153,7 @@ internal class DefaultOldAnalyticsRepositoryTest(
             analyticsRepository.setupAnalytics()
 
             assertEquals(
-                DefaultOldAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
+                DefaultAnalyticsRepository.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
                 analyticsRepository.getCheckoutAttemptId(),
             )
         }
@@ -175,8 +172,8 @@ internal class DefaultOldAnalyticsRepositoryTest(
         screenWidth: Int = SCREEN_WIDTH,
         paymentMethods: List<String> = PAYMENT_METHODS,
         sessionId: String? = TEST_SESSION_ID,
-    ): DefaultOldAnalyticsRepository {
-        return DefaultOldAnalyticsRepository(
+    ): DefaultAnalyticsRepository {
+        return DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
                 level = level,
                 packageName = packageName,
@@ -196,7 +193,7 @@ internal class DefaultOldAnalyticsRepositoryTest(
     companion object {
         private const val PACKAGE_NAME = "com.adyen.checkout.test"
         private val LOCALE = Locale.US
-        private val ANALYTICS_SOURCE = AnalyticsSource.DropIn
+        private val ANALYTICS_SOURCE = AnalyticsSource.DropIn(emptyList())
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_AMOUNT = Amount("USD", 1337)
         private const val SCREEN_WIDTH = 1080

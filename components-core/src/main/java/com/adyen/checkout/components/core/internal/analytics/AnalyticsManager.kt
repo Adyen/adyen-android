@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.analytics.data.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.NewAnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsManager internal constructor(
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsRepository: NewAnalyticsRepository,
     private val analyticsParams: AnalyticsParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
