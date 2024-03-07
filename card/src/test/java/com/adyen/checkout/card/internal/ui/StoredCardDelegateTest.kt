@@ -35,7 +35,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.OldAnalyticsRepository
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -78,7 +78,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
-    @Mock private val analyticsRepository: OldAnalyticsRepository,
+    @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
@@ -451,7 +451,7 @@ internal class StoredCardDelegateTest(
         cardEncryptor: BaseCardEncryptor = this.cardEncryptor,
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
-        analyticsRepository: OldAnalyticsRepository = this.analyticsRepository,
+        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
     ): StoredCardDelegate {
