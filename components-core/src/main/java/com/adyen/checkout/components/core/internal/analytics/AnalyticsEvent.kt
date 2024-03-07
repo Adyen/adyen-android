@@ -10,15 +10,18 @@ package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 import java.util.Date
+import java.util.UUID
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed interface AnalyticsEvent {
 
+    val id: String
     val timestamp: Long
     val shouldForceSend: Boolean
     val component: String
 
     data class Info @DirectAnalyticsEventCreation constructor(
+        override val id: String = UUID.randomUUID().toString(),
         override val timestamp: Long = Date().time,
         override val shouldForceSend: Boolean = false,
         override val component: String,
@@ -43,6 +46,7 @@ sealed interface AnalyticsEvent {
     }
 
     data class Log @DirectAnalyticsEventCreation constructor(
+        override val id: String = UUID.randomUUID().toString(),
         override val timestamp: Long = Date().time,
         override val shouldForceSend: Boolean = true,
         override val component: String,
