@@ -161,6 +161,30 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `environment and client key should match value set in sessions`() {
+        val configuration = getCheckoutConfiguration()
+
+        val sessionParams = createSessionParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        val params = adyen3DS2ComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+        )
+
+        val expected = getAdyen3DS2ComponentParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun getCheckoutConfiguration(
         amount: Amount? = null,
         shopperLocale: Locale? = null,
@@ -175,6 +199,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
 
     @Suppress("LongParameterList")
     private fun createSessionParams(
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
         enableStoreDetails: Boolean? = null,
         installmentConfiguration: SessionInstallmentConfiguration? = null,
         showRemovePaymentMethodButton: Boolean? = null,
@@ -182,6 +208,8 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         returnUrl: String? = "",
         shopperLocale: Locale? = null,
     ) = SessionParams(
+        environment = environment,
+        clientKey = clientKey,
         enableStoreDetails = enableStoreDetails,
         installmentConfiguration = installmentConfiguration,
         showRemovePaymentMethodButton = showRemovePaymentMethodButton,

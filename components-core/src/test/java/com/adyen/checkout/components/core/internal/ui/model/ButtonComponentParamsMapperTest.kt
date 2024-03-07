@@ -137,6 +137,31 @@ internal class ButtonComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `environment and client key should match value set in sessions`() {
+        val configuration = createCheckoutConfiguration()
+
+        val sessionParams = createSessionParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        val params = buttonComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+        )
+
+        val expected = getButtonComponentParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        assertEquals(expected, params)
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
         shopperLocale: Locale? = null,
@@ -155,6 +180,8 @@ internal class ButtonComponentParamsMapperTest {
 
     @Suppress("LongParameterList")
     private fun createSessionParams(
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
         enableStoreDetails: Boolean? = null,
         installmentConfiguration: SessionInstallmentConfiguration? = null,
         showRemovePaymentMethodButton: Boolean? = null,
@@ -162,6 +189,8 @@ internal class ButtonComponentParamsMapperTest {
         returnUrl: String? = "",
         shopperLocale: Locale? = null,
     ) = SessionParams(
+        environment = environment,
+        clientKey = clientKey,
         enableStoreDetails = enableStoreDetails,
         installmentConfiguration = installmentConfiguration,
         showRemovePaymentMethodButton = showRemovePaymentMethodButton,

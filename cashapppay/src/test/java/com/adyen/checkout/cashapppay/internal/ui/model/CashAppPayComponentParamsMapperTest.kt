@@ -380,6 +380,34 @@ internal class CashAppPayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `environment and client key should match value set in sessions`() {
+        val configuration = createCheckoutConfiguration()
+
+        val sessionParams = createSessionParams(
+            returnUrl = TEST_RETURN_URL,
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        val expected = getComponentParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+            cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
+        )
+
+        assertEquals(expected, params)
+    }
+
     @Suppress("LongParameterList")
     private fun getComponentParams(
         shopperLocale: Locale = DEVICE_LOCALE,
@@ -431,6 +459,8 @@ internal class CashAppPayComponentParamsMapperTest {
 
     @Suppress("LongParameterList")
     private fun createSessionParams(
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
         enableStoreDetails: Boolean? = null,
         installmentConfiguration: SessionInstallmentConfiguration? = null,
         showRemovePaymentMethodButton: Boolean? = null,
@@ -438,6 +468,8 @@ internal class CashAppPayComponentParamsMapperTest {
         returnUrl: String? = "",
         shopperLocale: Locale? = null,
     ) = SessionParams(
+        environment = environment,
+        clientKey = clientKey,
         enableStoreDetails = enableStoreDetails,
         installmentConfiguration = installmentConfiguration,
         showRemovePaymentMethodButton = showRemovePaymentMethodButton,
