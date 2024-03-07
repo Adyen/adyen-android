@@ -66,7 +66,7 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     adyenLog(AdyenLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
 
     val result = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
-    val resultJson = JSONObject(String(result, Charsets.UTF_8))
+    val resultJson = JSONObject(String(result, Charsets.UTF_8).ifBlank { "{}" })
 
     adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
