@@ -14,10 +14,10 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.analytics.data.DefaultNewAnalyticsRepository
 import com.adyen.checkout.components.core.internal.analytics.data.local.InfoAnalyticsLocalDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.local.LogAnalyticsLocalDataStore
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
 import com.adyen.checkout.components.core.internal.analytics.data.remote.DefaultAnalyticsRemoteDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.remote.DefaultAnalyticsSetupProvider
+import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.Environment
