@@ -18,6 +18,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 
 // TODO: Remove this file
+@Suppress("unused", "ForbiddenComment")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultAnalyticsRepository(
     private val analyticsRepositoryData: AnalyticsRepositoryData,

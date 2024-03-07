@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.BuildConfig
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AnalyticsPlatformParams {
 
-    const val channel = "android"
+    const val CHANNEL = "android"
 
     var platform = AnalyticsPlatform.ANDROID.value
         private set
