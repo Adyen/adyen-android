@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui.model
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.getDropInConfiguration
 import java.util.Locale
 
@@ -30,7 +31,10 @@ internal class DropInParamsMapper {
             amount = sessionParams?.amount ?: checkoutConfiguration.amount,
             showPreselectedStoredPaymentMethod = dropInConfiguration?.showPreselectedStoredPaymentMethod ?: true,
             skipListWhenSinglePaymentMethod = dropInConfiguration?.skipListWhenSinglePaymentMethod ?: false,
-            isRemovingStoredPaymentMethodsEnabled = dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled ?: false,
+            isRemovingStoredPaymentMethodsEnabled = getIsRemovingStoredPaymentMethodsEnabled(
+                dropInConfiguration,
+                sessionParams,
+            ) ?: false,
             additionalDataForDropInService = dropInConfiguration?.additionalDataForDropInService,
             overriddenPaymentMethodInformation = dropInConfiguration?.overriddenPaymentMethodInformation.orEmpty(),
         )
@@ -39,4 +43,9 @@ internal class DropInParamsMapper {
     fun getShopperLocale(checkoutConfiguration: CheckoutConfiguration, sessionParams: SessionParams?): Locale? {
         return checkoutConfiguration.shopperLocale ?: sessionParams?.shopperLocale
     }
+
+    private fun getIsRemovingStoredPaymentMethodsEnabled(
+        dropInConfiguration: DropInConfiguration?,
+        sessionParams: SessionParams?
+    ) = sessionParams?.showRemovePaymentMethodButton ?: dropInConfiguration?.isRemovingStoredPaymentMethodsEnabled
 }

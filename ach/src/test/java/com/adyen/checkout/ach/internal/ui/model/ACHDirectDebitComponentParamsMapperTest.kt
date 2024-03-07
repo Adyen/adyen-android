@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -181,12 +182,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             setShowStorePaymentField(configurationValue)
         }
 
-        val sessionParams = SessionParams(
+        val sessionParams = createSessionParams(
             enableStoreDetails = sessionsValue,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val params = achDirectDebitComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, sessionParams)
@@ -217,12 +214,8 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
@@ -252,11 +245,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
         )
 
@@ -286,6 +275,23 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     ) {
         achDirectDebit(configuration)
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     @Suppress("LongParameterList")
     private fun getAchComponentParams(

@@ -32,5 +32,6 @@ data class SessionRequest(
     val storePaymentMethodMode: String?,
     val recurringProcessingModel: String?,
     val installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
-    val showInstallmentAmount: Boolean
+    val showInstallmentAmount: Boolean,
+    val showRemovePaymentMethodButton: Boolean,
 )

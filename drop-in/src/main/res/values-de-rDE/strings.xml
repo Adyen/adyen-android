@@ -11,6 +11,7 @@
     <string name="payment_failed">Fehler beim Senden der Zahlung. Bitte versuchen Sie es erneut.</string>
     <string name="action_failed">Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten. Bitte versuchen Sie es später erneut.</string>
     <string name="time_out_error">Zeitüberschreitung bei Anfrage. Bitte versuchen Sie es erneut.</string>
+    <string name="unknown_error">Es ist ein unbekannter Fehler aufgetreten.</string>
     <string name="store_payment_methods_header">Ihre Zahlungsmethoden</string>
     <string name="other_payment_methods">Andere Zahlungsmethoden</string>
     <string name="continue_button">Weiter</string>

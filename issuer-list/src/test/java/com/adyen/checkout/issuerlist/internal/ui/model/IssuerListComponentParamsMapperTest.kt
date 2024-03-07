@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -142,12 +143,8 @@ internal class IssuerListComponentParamsMapperTest {
         val configuration = createCheckoutConfiguration(configurationValue)
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = "",
-            shopperLocale = null,
         )
         val params = issuerListComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
@@ -176,11 +173,7 @@ internal class IssuerListComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
         )
 
@@ -215,6 +208,23 @@ internal class IssuerListComponentParamsMapperTest {
             .build()
         addConfiguration(TEST_CONFIGURATION_KEY, issuerListConfiguration)
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     @Suppress("LongParameterList")
     private fun getIssuerListComponentParams(

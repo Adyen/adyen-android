@@ -45,6 +45,7 @@ object SessionParamsFactory {
                 }?.toMap(),
                 showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount,
             ),
+            showRemovePaymentMethodButton = sessionSetupConfiguration?.showRemovePaymentMethodButton,
             amount = amount,
             returnUrl = returnUrl,
             shopperLocale = getShopperLocale(shopperLocale),

@@ -11,6 +11,7 @@
     <string name="payment_failed">Error sending payment. Please try again.</string>
     <string name="action_failed">There was an error while processing your payment. Please try again later.</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
+    <string name="unknown_error">An unknown error occurred</string>
     <string name="store_payment_methods_header">Your payment methods</string>
     <string name="other_payment_methods">Select other method</string>
     <string name="continue_button">Continue</string>

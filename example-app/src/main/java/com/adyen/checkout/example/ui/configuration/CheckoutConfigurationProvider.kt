@@ -56,7 +56,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         ) {
             // Drop-in
             dropIn {
-                setEnableRemovingStoredPaymentMethods(true)
+                setEnableRemovingStoredPaymentMethods(keyValueStorage.isRemoveStoredPaymentMethodEnabled())
             }
 
             // Payment methods

@@ -100,6 +100,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
             ),
         ) ?: return null
 

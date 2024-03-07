@@ -262,12 +262,8 @@ internal class CardComponentParamsMapperTest {
             setShowStorePaymentField(configurationValue)
         }
 
-        val sessionParams = SessionParams(
+        val sessionParams = createSessionParams(
             enableStoreDetails = sessionsValue,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val params = cardComponentParamsMapper.mapToParams(
@@ -298,13 +294,7 @@ internal class CardComponentParamsMapperTest {
             )
         }
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
-            shopperLocale = null,
-        )
+        val sessionParams = createSessionParams()
 
         val params = cardComponentParamsMapper.mapToParams(
             checkoutConfiguration = configuration,
@@ -346,12 +336,8 @@ internal class CardComponentParamsMapperTest {
         }
 
         val installmentsParamsMapper = InstallmentsParamsMapper()
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
+        val sessionParams = createSessionParams(
             installmentConfiguration = installmentConfiguration,
-            amount = null,
-            returnUrl = "",
-            shopperLocale = null,
         )
         val cardComponentParamsMapper = CardComponentParamsMapper(
             CommonComponentParamsMapper(),
@@ -439,12 +425,8 @@ internal class CardComponentParamsMapperTest {
 
         val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
+        val sessionParams = createSessionParams(
             amount = sessionsValue,
-            returnUrl = "",
-            shopperLocale = null,
         )
 
         val params = cardComponentParamsMapper.mapToParams(
@@ -473,11 +455,7 @@ internal class CardComponentParamsMapperTest {
     ) {
         val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
 
-        val sessionParams = SessionParams(
-            enableStoreDetails = null,
-            installmentConfiguration = null,
-            amount = null,
-            returnUrl = "",
+        val sessionParams = createSessionParams(
             shopperLocale = sessionsValue,
         )
 
@@ -508,6 +486,23 @@ internal class CardComponentParamsMapperTest {
     ) {
         card(configuration)
     }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
+    )
 
     @Suppress("LongParameterList")
     private fun getCardComponentParams(

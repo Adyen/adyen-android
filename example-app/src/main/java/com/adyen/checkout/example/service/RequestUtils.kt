@@ -64,6 +64,7 @@ fun getSessionRequest(
     threeDSMode: ThreeDSMode,
     installmentOptions: Map<String, SessionSetupInstallmentOptions>?,
     showInstallmentAmount: Boolean = false,
+    showRemovePaymentMethodButton: Boolean = false,
     threeDSAuthenticationOnly: Boolean = false,
     shopperEmail: String? = null,
     allowedPaymentMethods: List<String>? = null,
@@ -90,6 +91,7 @@ fun getSessionRequest(
         recurringProcessingModel = recurringProcessingModel,
         installmentOptions = installmentOptions,
         showInstallmentAmount = showInstallmentAmount,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
     )
 }
 

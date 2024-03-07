@@ -19,13 +19,15 @@ import org.json.JSONObject
 data class SessionSetupConfiguration(
     val enableStoreDetails: Boolean? = null,
     val showInstallmentAmount: Boolean = false,
-    val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null
+    val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null,
+    val showRemovePaymentMethodButton: Boolean = false,
 ) : ModelObject() {
 
     companion object {
         private const val ENABLE_STORE_DETAILS = "enableStoreDetails"
         private const val SHOW_INSTALLMENT_AMOUNT = "showInstallmentAmount"
         private const val INSTALLMENT_OPTIONS = "installmentOptions"
+        private const val SHOW_REMOVE_PAYMENT_METHOD_BUTTON = "showRemovePaymentMethodButton"
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupConfiguration> = object : Serializer<SessionSetupConfiguration> {
@@ -36,8 +38,9 @@ data class SessionSetupConfiguration(
                         putOpt(SHOW_INSTALLMENT_AMOUNT, modelObject.showInstallmentAmount)
                         putOpt(
                             INSTALLMENT_OPTIONS,
-                            modelObject.installmentOptions?.let { JSONObject(it) }
+                            modelObject.installmentOptions?.let { JSONObject(it) },
                         )
+                        putOpt(SHOW_REMOVE_PAYMENT_METHOD_BUTTON, modelObject.showRemovePaymentMethodButton)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)
@@ -50,7 +53,8 @@ data class SessionSetupConfiguration(
                         enableStoreDetails = jsonObject.optBoolean(ENABLE_STORE_DETAILS),
                         showInstallmentAmount = jsonObject.optBoolean(SHOW_INSTALLMENT_AMOUNT),
                         installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
-                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER)
+                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
+                        showRemovePaymentMethodButton = jsonObject.optBoolean(SHOW_REMOVE_PAYMENT_METHOD_BUTTON),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)

@@ -11,6 +11,7 @@
     <string name="payment_failed">付款时出错。请重试。</string>
     <string name="action_failed">处理您的付款时发生错误。请稍候重试。</string>
     <string name="time_out_error">请求超时。请重试。</string>
+    <string name="unknown_error">发生未知错误</string>
     <string name="store_payment_methods_header">您的支付方式</string>
     <string name="other_payment_methods">选择其他方式</string>
     <string name="continue_button">继续</string>

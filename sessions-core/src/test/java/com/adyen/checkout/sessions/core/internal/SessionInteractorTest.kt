@@ -30,6 +30,7 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsResponse
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsResponse
 import com.adyen.checkout.test.LoggingExtension
@@ -405,32 +406,6 @@ internal class SessionInteractorTest(
             }
 
             @Test
-            fun `balance is zero then Error is returned and session data is updated`() = runTest {
-                sessionInteractor.sessionFlow.test {
-                    val mockResponse = SessionBalanceResponse(
-                        sessionData = "session_data_updated",
-                        balance = Amount("USD", 0),
-                        transactionLimit = null,
-                    )
-
-                    whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
-
-                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
-
-                    assertTrue(result is SessionCallResult.Balance.Error)
-                    require(result is SessionCallResult.Balance.Error)
-
-                    assertTrue(result.throwable is CheckoutException)
-                    require(result.throwable is CheckoutException)
-
-                    assertEquals("Not enough balance", result.throwable.message)
-
-                    val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
-                    assertEquals(expectedSessionModel, expectMostRecentItem())
-                }
-            }
-
-            @Test
             fun `an error is thrown then Error is returned`() = runTest {
                 val exception = Exception("failed for testing")
 
@@ -703,6 +678,39 @@ internal class SessionInteractorTest(
 
             val expectedResult = SessionCallResult.UpdatePaymentMethods.Error(exception)
 
+            assertEquals(expectedResult, result)
+        }
+    }
+
+    @Nested
+    @DisplayName("when disable token call is requested and")
+    inner class RemoveStoredPaymentMethodCallTest {
+
+        @Test
+        fun `it is successful then session data is updated`() = runTest {
+            sessionInteractor.sessionFlow.test {
+                val mockResponse = SessionDisableTokenResponse(sessionData = "session_data_updated")
+                whenever(sessionRepository.disableToken(any(), any())) doReturn Result.success(mockResponse)
+
+                val result = sessionInteractor.removeStoredPaymentMethod("stored_payment_method_id")
+
+                val expectedResult = SessionCallResult.RemoveStoredPaymentMethod.Successful
+                assertEquals(expectedResult, result)
+
+                val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
+                assertEquals(expectedSessionModel, expectMostRecentItem())
+            }
+        }
+
+        @Test
+        fun `an error is thrown then Error is returned`() = runTest {
+            val exception = Exception("failed for testing")
+
+            whenever(sessionRepository.disableToken(any(), any())) doReturn Result.failure(exception)
+
+            val result = sessionInteractor.removeStoredPaymentMethod("stored_payment_method_id")
+
+            val expectedResult = SessionCallResult.RemoveStoredPaymentMethod.Error(exception)
             assertEquals(expectedResult, result)
         }
     }

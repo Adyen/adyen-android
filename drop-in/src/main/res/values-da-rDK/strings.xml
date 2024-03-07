@@ -11,6 +11,7 @@
     <string name="payment_failed">Fejl ved gennemførelse af betaling. Prøv igen.</string>
     <string name="action_failed">Der opstod en fejl ved behandlingen af betalingen. Prøv igen senere.</string>
     <string name="time_out_error">Anmodning udløbet. Prøv igen.</string>
+    <string name="unknown_error">Der opstod en ukendt fejl</string>
     <string name="store_payment_methods_header">Dine betalingsmåder</string>
     <string name="other_payment_methods">Vælg anden måde</string>
     <string name="continue_button">Fortsæt</string>

@@ -52,6 +52,11 @@ interface SessionCallResult {
         object TakenOver : CancelOrder()
     }
 
+    sealed class RemoveStoredPaymentMethod : SessionCallResult {
+        data object Successful : RemoveStoredPaymentMethod()
+        data class Error(val throwable: Throwable) : RemoveStoredPaymentMethod()
+    }
+
     sealed class UpdatePaymentMethods : SessionCallResult {
         data class Successful(
             val paymentMethods: PaymentMethodsApiResponse,

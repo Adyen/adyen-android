@@ -98,6 +98,7 @@ internal class SessionsCardViewModel @Inject constructor(
                 allowedPaymentMethods = listOf(paymentMethodType),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
                 showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
             ),
         ) ?: return null
 

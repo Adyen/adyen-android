@@ -86,7 +86,7 @@
             app:useSimpleSummaryProvider="true" />
 
         <SwitchPreference
-            android:defaultValue="@string/preferences_default_split_card_funding_sources"
+            android:defaultValue="@string/preferences_default_installment_amount_shown"
             android:key="@string/card_installment_show_amount_key"
             android:title="@string/card_installment_show_amount_title" />
 
@@ -98,6 +98,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/other_payment_methods_settings_title">
+
+        <SwitchPreference
+            android:defaultValue="@string/preferences_default_remove_stored_payment_method"
+            android:key="@string/remove_stored_payment_method_key"
+            android:title="@string/remove_stored_payment_method_title" />
 
         <EditTextPreference
             android:defaultValue="@string/preferences_default_instant_payment_method"

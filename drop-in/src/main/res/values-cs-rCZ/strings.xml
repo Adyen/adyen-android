@@ -11,6 +11,7 @@
     <string name="payment_failed">Chyba při odesílání platby. Zkuste to znovu.</string>
     <string name="action_failed">Při zpracování platby došlo k chybě. Zkuste to znovu později.</string>
     <string name="time_out_error">Vypršení doby požadavku. Zkuste to znovu.</string>
+    <string name="unknown_error">Došlo k neznámé chybě</string>
     <string name="store_payment_methods_header">Vaše způsoby platby</string>
     <string name="other_payment_methods">Vyberte jiný způsob platby</string>
     <string name="continue_button">Pokračovat</string>

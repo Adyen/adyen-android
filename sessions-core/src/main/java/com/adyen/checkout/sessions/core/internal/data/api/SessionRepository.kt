@@ -23,6 +23,8 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderRe
 import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsResponse
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenRequest
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsRequest
@@ -43,7 +45,7 @@ class SessionRepository(
         sessionService.setupSession(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
         )
     }
 
@@ -55,7 +57,7 @@ class SessionRepository(
         sessionService.submitPayment(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
         )
     }
 
@@ -66,12 +68,12 @@ class SessionRepository(
         val request = SessionDetailsRequest(
             sessionData = sessionModel.sessionData.orEmpty(),
             paymentData = actionComponentData.paymentData,
-            details = actionComponentData.details
+            details = actionComponentData.details,
         )
         sessionService.submitDetails(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
         )
     }
 
@@ -82,12 +84,12 @@ class SessionRepository(
         val request = SessionBalanceRequest(
             sessionModel.sessionData.orEmpty(),
             paymentComponentState.data.paymentMethod,
-            paymentComponentState.data.amount
+            paymentComponentState.data.amount,
         )
         sessionService.checkBalance(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
         )
     }
 
@@ -96,7 +98,7 @@ class SessionRepository(
         sessionService.createOrder(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
         )
     }
 
@@ -108,7 +110,19 @@ class SessionRepository(
         sessionService.cancelOrder(
             request = request,
             sessionId = sessionModel.id,
-            clientKey = clientKey
+            clientKey = clientKey,
+        )
+    }
+
+    suspend fun disableToken(
+        sessionModel: SessionModel,
+        storedPaymentMethodId: String,
+    ): Result<SessionDisableTokenResponse> = runSuspendCatching {
+        val request = SessionDisableTokenRequest(sessionModel.sessionData.orEmpty(), storedPaymentMethodId)
+        sessionService.disableToken(
+            request = request,
+            sessionId = sessionModel.id,
+            clientKey = clientKey,
         )
     }
 }

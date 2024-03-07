@@ -29,6 +29,7 @@ interface KeyValueStorage {
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
     fun getCardAddressMode(): CardAddressMode
+    fun isRemoveStoredPaymentMethodEnabled(): Boolean
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
     fun isInstallmentAmountShown(): Boolean
@@ -121,6 +122,12 @@ internal class DefaultKeyValueStorage(
             ),
         )
     }
+
+    override fun isRemoveStoredPaymentMethodEnabled() = sharedPreferences.getBoolean(
+        appContext = appContext,
+        stringRes = R.string.remove_stored_payment_method_key,
+        defaultStringRes = R.string.preferences_default_remove_stored_payment_method,
+    )
 
     override fun getInstantPaymentMethodType(): String {
         return sharedPreferences.getString(
