@@ -10,7 +10,6 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsService
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
