@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
@@ -36,8 +37,8 @@ internal data class AnalyticsTrackRequest(
                     return JSONObject().apply {
                         putOpt(CHANNEL, modelObject.channel)
                         putOpt(PLATFORM, modelObject.platform)
-                        putOpt(INFO, modelObject.info)
-                        putOpt(LOGS, modelObject.logs)
+                        putOpt(INFO, ModelUtils.serializeOptList(modelObject.info, AnalyticsTrackInfo.SERIALIZER))
+                        putOpt(LOGS, ModelUtils.serializeOptList(modelObject.logs, AnalyticsTrackLog.SERIALIZER))
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsTrackRequest::class.java, e)
