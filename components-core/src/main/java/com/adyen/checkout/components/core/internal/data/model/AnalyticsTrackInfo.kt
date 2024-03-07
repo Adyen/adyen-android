@@ -19,6 +19,7 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class AnalyticsTrackInfo(
+    val id: String,
     val timestamp: Long?,
     val component: String?,
     val type: String?,
@@ -31,6 +32,7 @@ internal data class AnalyticsTrackInfo(
 ) : ModelObject() {
 
     companion object {
+        private const val ID = "id"
         private const val TIMESTAMP = "timestamp"
         private const val COMPONENT = "component"
         private const val TYPE = "type"
@@ -46,6 +48,7 @@ internal data class AnalyticsTrackInfo(
             override fun serialize(modelObject: AnalyticsTrackInfo): JSONObject {
                 try {
                     return JSONObject().apply {
+                        put(ID, modelObject.id)
                         putOpt(TIMESTAMP, modelObject.timestamp)
                         putOpt(COMPONENT, modelObject.component)
                         putOpt(TYPE, modelObject.type)
@@ -65,6 +68,7 @@ internal data class AnalyticsTrackInfo(
                 return try {
                     with(jsonObject) {
                         AnalyticsTrackInfo(
+                            id = getString(ID),
                             timestamp = getLongOrNull(TIMESTAMP),
                             component = getStringOrNull(COMPONENT),
                             type = getStringOrNull(TYPE),
