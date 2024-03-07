@@ -68,7 +68,7 @@ internal object DropInBundleHandler {
             service,
         )
         intent.apply {
-            putExtra(SESSION_KEY, checkoutSession.sessionSetupResponse.mapToDetails())
+            putExtra(SESSION_KEY, checkoutSession.mapToDetails())
         }
     }
 
