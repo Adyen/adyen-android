@@ -34,22 +34,25 @@ object NetworkModule {
     internal fun provideOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
+        val authorizationHeader = (BuildConfig.AUTHORIZATION_HEADER_NAME to BuildConfig.AUTHORIZATION_HEADER_VALUE)
+            .takeIf { it.first.isNotBlank() }
+
         if (BuildConfig.DEBUG) {
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
+            val interceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+                if (authorizationHeader != null) redactHeader(authorizationHeader.first)
+            }
             builder.addNetworkInterceptor(interceptor)
         }
 
-        builder.addInterceptor { chain ->
-            val request = chain.request().newBuilder()
-                .apply {
-                    if (BuildConfig.AUTHORIZATION_HEADER_NAME.isNotBlank()) {
-                        header(BuildConfig.AUTHORIZATION_HEADER_NAME, BuildConfig.AUTHORIZATION_HEADER_VALUE)
-                    }
-                }
-                .build()
+        if (authorizationHeader != null) {
+            builder.addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .header(authorizationHeader.first, authorizationHeader.second)
+                    .build()
 
-            chain.proceed(request)
+                chain.proceed(request)
+            }
         }
 
         return builder.build()
