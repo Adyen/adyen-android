@@ -55,7 +55,7 @@ class AnalyticsManagerFactory {
         application: Application,
         source: AnalyticsSource,
         sessionId: String?
-    ): AnalyticsManager = AnalyticsManager(
+    ): AnalyticsManager = DefaultAnalyticsManager(
         analyticsRepository = DefaultNewAnalyticsRepository(
             localInfoDataStore = InfoAnalyticsLocalDataStore(),
             localLogDataStore = LogAnalyticsLocalDataStore(),
