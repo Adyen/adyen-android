@@ -201,7 +201,7 @@ internal class DefaultMBWayDelegateTest(
     @Test
     fun `when delegate is initialized then analytics manager is initialized`() = runTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsManager).initialize(any())
+        verify(analyticsManager).initialize(any(), any())
     }
 
     @Nested
