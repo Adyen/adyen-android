@@ -237,7 +237,7 @@ internal class DropInViewModel(
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }
-        analyticsManager.initialize(viewModelScope)
+        analyticsManager.initialize(this, viewModelScope)
     }
 
     /**
@@ -470,5 +470,10 @@ internal class DropInViewModel(
             adyenLog(AdyenLogLevel.DEBUG) { "sendEvent - ${event::class.simpleName}" }
             eventChannel.send(event)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        analyticsManager.clear(this)
     }
 }

@@ -75,7 +75,7 @@ internal class DefaultMBWayDelegate(
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
-        analyticsManager.initialize(coroutineScope)
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     override fun observe(
@@ -177,6 +177,7 @@ internal class DefaultMBWayDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 
     companion object {
