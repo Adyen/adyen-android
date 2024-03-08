@@ -39,6 +39,9 @@ internal class DefaultNewAnalyticsRepository(
     ) {
         val infoEvents = localInfoDataStore.fetchEvents(remoteDataStore.infoSize)
         val logEvents = localLogDataStore.fetchEvents(remoteDataStore.logSize)
+
+        if (infoEvents.isEmpty() && logEvents.isEmpty()) return
+
         val request = analyticsTrackRequestProvider(
             infoList = infoEvents,
             logList = logEvents,
