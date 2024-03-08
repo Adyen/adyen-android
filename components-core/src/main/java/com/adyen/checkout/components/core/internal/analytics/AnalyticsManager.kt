@@ -40,9 +40,13 @@ class AnalyticsManager internal constructor(
 
     private var timerJob: Job? = null
 
-    fun initialize(coroutineScope: CoroutineScope) {
+    private var ownerReference: String? = null
+
+    fun initialize(owner: Any, coroutineScope: CoroutineScope) {
         if (isInitialized) return
         isInitialized = true
+
+        ownerReference = owner::class.qualifiedName
 
         _coroutineScope = coroutineScope
 
@@ -118,10 +122,14 @@ class AnalyticsManager internal constructor(
         return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
     }
 
-    fun clear() {
+    fun clear(owner: Any) {
+        if (ownerReference != owner::class.qualifiedName) return
         _coroutineScope = null
         checkoutAttemptId = null
         stopTimer()
+        timerJob = null
+        ownerReference = null
+        isInitialized = false
     }
 
     companion object {
