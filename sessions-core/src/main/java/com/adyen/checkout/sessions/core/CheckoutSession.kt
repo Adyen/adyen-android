@@ -21,8 +21,8 @@ import com.adyen.checkout.core.Environment
 data class CheckoutSession(
     val sessionSetupResponse: SessionSetupResponse,
     val order: Order?,
-    private val environment: Environment,
-    private val clientKey: String,
+    val environment: Environment,
+    val clientKey: String,
 ) {
     fun getPaymentMethod(paymentMethodType: String): PaymentMethod? {
         return sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods.orEmpty().firstOrNull {

@@ -25,8 +25,8 @@ internal class DropInParamsMapper {
         val dropInConfiguration = checkoutConfiguration.getDropInConfiguration()
         return DropInParams(
             shopperLocale = getShopperLocale(checkoutConfiguration, sessionParams) ?: deviceLocale,
-            environment = checkoutConfiguration.environment,
-            clientKey = checkoutConfiguration.clientKey,
+            environment = sessionParams?.environment ?: checkoutConfiguration.environment,
+            clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
             analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),
             amount = sessionParams?.amount ?: checkoutConfiguration.amount,
             showPreselectedStoredPaymentMethod = dropInConfiguration?.showPreselectedStoredPaymentMethod ?: true,

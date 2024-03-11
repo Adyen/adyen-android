@@ -29,7 +29,7 @@ class SessionSavedStateHandleContainer(
 
     init {
         if (sessionDetails == null) {
-            sessionDetails = checkoutSession.sessionSetupResponse.mapToDetails()
+            sessionDetails = checkoutSession.mapToDetails()
         }
         if (isFlowTakenOver == null) {
             isFlowTakenOver = false

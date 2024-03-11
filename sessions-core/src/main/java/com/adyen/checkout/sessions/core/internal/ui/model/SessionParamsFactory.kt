@@ -24,7 +24,7 @@ import java.util.Locale
 object SessionParamsFactory {
     // Used for components
     fun create(checkoutSession: CheckoutSession): SessionParams {
-        return checkoutSession.sessionSetupResponse.mapToDetails().mapToParams()
+        return checkoutSession.mapToDetails().mapToParams()
     }
 
     // Used for Drop-in
@@ -34,6 +34,8 @@ object SessionParamsFactory {
 
     private fun SessionDetails.mapToParams(): SessionParams {
         return SessionParams(
+            environment = environment,
+            clientKey = clientKey,
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
             installmentConfiguration = SessionInstallmentConfiguration(
                 installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
