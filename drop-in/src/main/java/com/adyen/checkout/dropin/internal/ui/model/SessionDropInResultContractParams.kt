@@ -8,13 +8,11 @@
 
 package com.adyen.checkout.dropin.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.dropin.SessionDropInService
 import com.adyen.checkout.sessions.core.CheckoutSession
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class SessionDropInResultContractParams(
+data class SessionDropInResultContractParams internal constructor(
     val checkoutConfiguration: CheckoutConfiguration,
     val checkoutSession: CheckoutSession,
     val serviceClass: Class<out SessionDropInService>,
