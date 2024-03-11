@@ -18,9 +18,11 @@ apply from: "${rootDir}/config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
+} else if (System.getenv('CI')) {
+    // if building from CI use example file as it is to ensure the build passes
+    apply from: "example.local.gradle"
 } else {
-    logger.lifecycle("File example-app/local.gradle not found. Falling back to default file with no values.")
-    apply from: "default.local.gradle"
+    throw new GradleException("File example-app/local.gradle not found. Check example-app/README.md for more instructions.")
 }
 
 // This runConnectedAndroidTest.gradle script is applied,

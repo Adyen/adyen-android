@@ -45,6 +45,7 @@
     <PreferenceCategory android:title="@string/shopper_information">
 
         <EditTextPreference
+            android:defaultValue="@string/preferences_default_shopper_reference"
             android:key="@string/shopper_reference_key"
             android:title="@string/shopper_reference_title"
             app:useSimpleSummaryProvider="true" />
@@ -130,7 +131,7 @@
             android:defaultValue="@string/night_theme_system"
             android:entries="@array/night_theme_entries"
             android:entryValues="@array/night_theme_values"
-            android:key="@string/night_theme_title"
+            android:key="@string/night_theme_key"
             android:title="@string/night_theme_title"
             app:useSimpleSummaryProvider="true" />
 

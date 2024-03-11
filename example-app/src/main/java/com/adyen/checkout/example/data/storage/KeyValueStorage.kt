@@ -48,7 +48,7 @@ internal class DefaultKeyValueStorage(
         return sharedPreferences.getString(
             appContext = appContext,
             stringRes = R.string.shopper_reference_key,
-            defaultValue = BuildConfig.SHOPPER_REFERENCE,
+            defaultStringRes = R.string.preferences_default_shopper_reference,
         )
     }
 
