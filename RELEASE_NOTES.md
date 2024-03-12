@@ -9,14 +9,13 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-- Creating configurations just became easier. Using a DSL you can now create configurations in a more declarative and concise way:
+- A new way to create a configuration using DSL to be more declarative and concise:
 ```Kotlin
 CheckoutConfiguration(
     environment = environment,
     clientKey = clientKey,
     shopperLocale = shopperLocale,
     amount = amount,
-    analyticsConfiguration = createAnalyticsConfiguration(),
 ) {
     dropIn {
         setEnableRemovingStoredPaymentMethods(true)
@@ -32,56 +31,48 @@ CheckoutConfiguration(
     }
 }
 ```
-- Address Lookup functionality for Card Component. 
-  - You can enable this feature by setting your address configuration to lookup while building your card configuration as follows:
-    ```kotlin
-    CheckoutConfiguration(environment = environment, clientKey = clientKey) {
-        card {
-            setAddressConfiguration(AddressConfiguration.Lookup())
-        }
-    }
-    ```
-  - If you're integrating with Drop-in:
-    - Implement the mandatory `onAddressLookupQueryChanged(query: String)` callback and optional `onAddressLookupCompletion(lookupAddress: LookupAddress)` callback.
-    - Pass the result of these actions by using `AddressLookupDropInServiceResult` class.
-  - If you're integrating with standalone `CardComponent`:
-    - Set `AddressLookupCallback` via `CardComponent.setAddressLookupCallback(AddressLookupCallback)` function to receive the related events.
-    - Pass the result of these actions by calling `CardComponent.setAddressLookupResult(addressLookupResult: AddressLookupResult)`.
-    - Delegate back pressed event to `CardComponent` by calling `CardComponent.handleBackPress()` which returns true if the back press is handled by Adyen SDK and false otherwise.
-- Add support for Multibanco voucher.
-- Permission request is now being delegated to the `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` to handle it and return result through callback.
-  - If not handled, a toast will be shown stating that permission is not granted.
-- For voucher actions which have no `url` or `downloadUrl`, "Save as image" option will be offered to save the Voucher in `Downloads` folder.
-  - Vouchers will save an image to user's phone with the following name format "Payment method type" + "Formatted data and time" (e.g. multibanco-2024-01-09T16_41_10).
-- Set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
+
+- For the Card Component, you can use the new [Address Lookup functionality](docs/ADDRESS_LOOKUP.md). 
+- For voucher actions: when the `url` or `downloadUrl` is not included, the shopper has the option to select **Save as image** and save the voucher to the device's `Downloads` folder.
+- You can now set your own `AdyenLogger` instance with `AdyenLogger.setLogger`. This gives the ability to intercept logs and handle them in your own way.
+- [Instructions](example-app/README.md) to use the testing app in the repository. You can follow `How to migrate` section [here](https://github.com/Adyen/adyen-android/pull/1505).
 - Payment methods:
+  - Multibanco. Payment method type: **multibanco**.
   - Pay Easy. Payment method type: **econtext_atm**.
   - Convenience Stores Japan. Payment method type: **econtext_stores**
   - Online Banking Japan. Payment method type: **econtext_online**.
   - Seven-Eleven: Payment method type: **econtext_seven_eleven**
 
 ## Fixed
-- When building `minifyEnabled` and without the `kotlin-parcelize` plugin in your project the build should no longer crash.
-- When handling actions you should no longer get `IllegalArgumentException: Unsupported delegate type`.
+- When building `minifyEnabled` without the `kotlin-parcelize` plugin in your project, the build should no longer crash.
+- When handling actions, you no longer get the `IllegalArgumentException: Unsupported delegate type` error that causes a crash.
 
 ## Deprecated
-- When creating a configuration, the `Builder` constructors with a `Context` are now deprecated. You can omit the `context` parameter.
-- The `PermissionException` is deprecated. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback` or `ComponentCallback` callbacks.
+- When creating a configuration, the `Builder` constructors with a `Context` is deprecated. You can now omit the `context` parameter.
+- `PermissionException`. Handle permissions through `ActionComponentCallback`, `SessionComponentCallback`, or `ComponentCallback` callbacks instead.
 - The styles for vouchers have been changed:
-  - The `AdyenCheckout.Voucher.Description.Bacs` style will not work anymore. Use `AdyenCheckout.Voucher.Simple.Description` instead.
-  - The `AdyenCheckout.Voucher.Description.Boleto` style will not work anymore. Use `AdyenCheckout.Voucher.Full.Description` instead.
-  - The `AdyenCheckout.Voucher.ExpirationDateLabel` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldLabel` instead.
-  - The `AdyenCheckout.Voucher.ExpirationDate` style will not work anymore. Use `AdyenCheckout.Voucher.InformationFieldValue` instead.
-  - The `AdyenCheckout.Voucher.ButtonCopyCode` style will not work anymore. Use `AdyenCheckout.Voucher.Button.CopyCode` instead.
-  - The `AdyenCheckout.Voucher.ButtonDownloadPdf` styles will not work anymore. Use `AdyenCheckout.Voucher.Button.DownloadPdf` instead.
-- `Logger.LogLevel` is deprecated. Use `AdyenLogLevel` instead.
-- `AdyenLogger.setLogLevel(logLevel: Int)` is deprecated. Use `AdyenLogger.setLogLevel(level: AdyenLogLevel)` instead.
+    - | Previous (v5.2.0 or earlier)                | Now (v5.3.0)                                  |
+      |---------------------------------------------|-----------------------------------------------|
+      | `AdyenCheckout.Voucher.Description.Bacs`    | `AdyenCheckout.Voucher.Simple.Description`    |
+      | `AdyenCheckout.Voucher.Description.Boleto`  | `AdyenCheckout.Voucher.Full.Description`      |
+      | `AdyenCheckout.Voucher.ExpirationDateLabel` | `AdyenCheckout.Voucher.InformationFieldLabel` |
+      | `AdyenCheckout.Voucher.ExpirationDate`      | `AdyenCheckout.Voucher.InformationFieldValue` |
+      | `AdyenCheckout.Voucher.ButtonCopyCode`      | `AdyenCheckout.Voucher.Button.CopyCode`       |
+      | `AdyenCheckout.Voucher.ButtonDownloadPdf`   | `AdyenCheckout.Voucher.Button.DownloadPdf`    |
+- Logger.LogLevel has been deprecated.
+    - | Previous (v5.2.0 or earlier)             | Now (v5.3.0)                                    |
+      |------------------------------------------|-------------------------------------------------|
+      | `Logger.LogLevel`                        | `AdyenLogLevel`                                 |
+      | `AdyenLogger.setLogLevel(logLevel: Int)` | `AdyenLogger.setLogLevel(level: AdyenLogLevel)` |
 
 ## Changed
-- When creating a configuration, the shopper locale parameter is now optional. If not set, the shopper locale will match the value passed to the API with the sessions flow, or the primary user locale on the device otherwise.
-- With the sessions flow, when starting drop-in (with `DropIn.startPayment`) or creating a component (with `YourComponent.PROVIDER.get`), the configuration parameter is now optional.
-- When `CheckoutSessionProvider.createSession` to create a `CheckoutSession`, you can pass the `environment` and `clientKey` instead of the whole configuration.
-- In drop-in all actions will start in expanded mode
-- When using the Google Pay component, it is no longer necessary to manually import the `3ds2` module to handle transactions that require a native 3DS2 challenge. 
-- Removing stored payment methods are being handled internally if you are using Sessions integration. You do not need to override `onRemoveStoredPaymentMethod` function anymore.
-- If you are using `DropInServiceResult.Error` without specifying an error message, the default has changed from `Error sending payment. Please try again.` to `An unknown error occurred`.
+- When creating a configuration, the `shopperLocale` parameter is now optional.
+    - Sessions flow: when you don't set it, the shopper locale is set to the value included in the `/sessions` request.
+    - Advanced flow: when you don't set it, the shopper local is set to the primary user locale on the device.
+- For Drop-in, all actions now start in expanded mode.
+- For the Google Pay Component, you no longer need to manually import the `3ds2` module to handle transactions that require Native 3D Secure 2 challenge.
+- If you use `DropInServiceResult.Error` without specifying an error message, the default has changed from `Error sending payment. Please try again.` to `An unknown error occurred`.
+- For the Sessions flow:
+    - When starting Drop-in (with `DropIn.startPayment`) or creating a Component (with `YourComponent.PROVIDER.get`), the `configuration` parameter is now optional.
+    - When using `CheckoutSessionProvider.createSession` to create a `CheckoutSession`, you can pass only `environment` and `clientKey` instead of the whole configuration.
+    - Removing stored payment methods is now handled internally. You no longer need to override the `onRemoveStoredPaymentMethod` function.
