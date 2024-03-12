@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +26,7 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.google.android.gms.wallet.button.ButtonConstants.ButtonType
 import com.google.android.gms.wallet.button.ButtonOptions
+import com.google.android.gms.wallet.contract.TaskResultContracts
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -45,6 +45,10 @@ class GooglePayFragment : BottomSheetDialogFragment() {
     private val viewModel: GooglePayViewModel by viewModels()
 
     private var googlePayComponent: GooglePayComponent? = null
+
+    private val googlePayLauncher = registerForActivityResult(TaskResultContracts.GetPaymentDataResult()) {
+        googlePayComponent?.handlePaymentResult(it)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Insert return url in extras, so we can access it in the ViewModel through SavedStateHandle
@@ -148,16 +152,7 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         binding.googlePayButton.initialize(buttonOptions)
 
         binding.googlePayButton.setOnClickListener {
-            googlePayComponent?.startGooglePayScreen(requireActivity(), ACTIVITY_RESULT_CODE)
-        }
-    }
-
-    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ACTIVITY_RESULT_CODE) {
-            googlePayComponent?.handleActivityResult(resultCode, data)
+            googlePayComponent?.startGooglePayScreen(googlePayLauncher)
         }
     }
 
@@ -172,7 +167,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         internal val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
-        internal const val ACTIVITY_RESULT_CODE = 1
 
         fun show(fragmentManager: FragmentManager) {
             GooglePayFragment().show(fragmentManager, TAG)

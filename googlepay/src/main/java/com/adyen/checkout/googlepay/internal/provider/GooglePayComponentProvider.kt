@@ -121,6 +121,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
+                application = application,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
@@ -213,6 +214,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsRepository = analyticsRepository,
+                application = application,
             )
 
             val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
