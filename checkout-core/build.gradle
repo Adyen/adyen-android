@@ -34,7 +34,6 @@ android {
 dependencies {
     // Dependencies
     api libraries.androidx.annotation
-    implementation libraries.androidx.startup
     api libraries.kotlinCoroutines
     implementation libraries.okhttp
     api libraries.parcelize
