@@ -33,7 +33,6 @@ import com.adyen.checkout.components.core.internal.util.repeatOnResume
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ApplicationContextProvider
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -53,6 +52,7 @@ internal class DefaultGenericActionDelegate(
     private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
+    private val application: Application,
 ) : GenericActionDelegate {
 
     private var _delegate: ActionDelegate? = null
@@ -112,13 +112,13 @@ internal class DefaultGenericActionDelegate(
         if (isOld3DS2Flow(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Continuing the handling of 3ds2 challenge with old flow." }
         } else {
-            createDelegateAndObserve(action, activity.application)
+            createDelegateAndObserve(action)
         }
 
         delegate.handleAction(action, activity)
     }
 
-    private fun createDelegateAndObserve(action: Action, application: Application) {
+    private fun createDelegateAndObserve(action: Action) {
         val delegate = actionDelegateProvider.getDelegate(
             action = action,
             checkoutConfiguration = checkoutConfiguration,
@@ -186,9 +186,7 @@ internal class DefaultGenericActionDelegate(
                     return
                 }
                 adyenLog(AdyenLogLevel.DEBUG) { "Recreating delegate and trying again" }
-                // What is the best way to obtain the Application?
-                createDelegateAndObserve(action, ApplicationContextProvider.context as Application)
-                // Recursive call or calling the delegate directly?
+                createDelegateAndObserve(action)
                 handleIntent(intent)
             }
 
