@@ -134,6 +134,10 @@ internal class DefaultGenericActionDelegate(
 
         delegate.initialize(coroutineScope)
 
+        observeDelegate(delegate)
+    }
+
+    private fun observeDelegate(delegate: ActionDelegate) {
         observeDetails(delegate)
         observeExceptions(delegate)
         observePermissionRequests(delegate)
