@@ -12,12 +12,14 @@
         <item>"None"</item>
         <item>"Postal code"</item>
         <item>"Full address"</item>
+        <item>"Lookup"</item>
     </array>
 
     <array name="card_address_form_values">
         <item>"NONE"</item>
         <item>"POSTAL_CODE"</item>
         <item>"FULL_ADDRESS"</item>
+        <item>"LOOKUP"</item>
     </array>
 
     <array name="card_installment_options_mode_entries" >
@@ -54,5 +56,17 @@
     <array name="analytics_level_values">
         <item>"ALL"</item>
         <item>"NONE"</item>
+    </array>
+
+    <array name="threeds_mode_entries">
+        <item>"Prefer native"</item>
+        <item>"Redirect"</item>
+        <item>"Disabled"</item>
+    </array>
+
+    <array name="threeds_mode_values">
+        <item>"PREFER_NATIVE"</item>
+        <item>"REDIRECT"</item>
+        <item>"DISABLED"</item>
     </array>
 </resources>

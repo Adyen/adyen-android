@@ -13,8 +13,8 @@
     <string name="checkout_econtext_phone_number_hint">Telefonszám</string>
     <string name="checkout_econtext_shopper_email_hint">E-mail-cím</string>
 
-    <string name="checkout_econtext_first_name_invalid">A keresztnév nem érvényes</string>
-    <string name="checkout_econtext_last_name_invalid">A vezetéknév nem érvényes</string>
+    <string name="checkout_econtext_first_name_invalid">Adja meg a keresztnevét</string>
+    <string name="checkout_econtext_last_name_invalid">Adja meg a vezetéknevét</string>
     <string name="checkout_econtext_phone_number_invalid">Érvénytelen telefonszám</string>
     <string name="checkout_econtext_shopper_email_invalid">Érvénytelen e-mail-cím</string>
 </resources>

@@ -8,20 +8,20 @@
 
 package com.adyen.checkout.action.core
 
+import android.app.Activity
+import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
-import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -35,12 +35,10 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GenericActionComponentTest(
     @Mock private val actionDelegate: ActionDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
-    @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
 ) {
 
@@ -48,11 +46,9 @@ internal class GenericActionComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(genericActionDelegate.delegate) doReturn actionDelegate
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
-        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent, actionComponentEventHandler)
+        component = GenericActionComponent(genericActionDelegate, actionComponentEventHandler)
     }
 
     @Test
@@ -101,7 +97,7 @@ internal class GenericActionComponentTest(
     fun `when delegate view flow emits a value then component view flow should match that value`() = runTest {
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn delegateViewFlow
-        component = GenericActionComponent(genericActionDelegate, actionHandlingComponent, actionComponentEventHandler)
+        component = GenericActionComponent(genericActionDelegate, actionComponentEventHandler)
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -111,5 +107,33 @@ internal class GenericActionComponentTest(
 
             expectNoEvents()
         }
+    }
+
+    @Test
+    fun `when handleAction is called then handleAction in delegate is called`() {
+        val action = AwaitAction()
+        val activity = Activity()
+
+        component.handleAction(action, activity)
+
+        verify(genericActionDelegate).handleAction(action, activity)
+    }
+
+    @Test
+    fun `when handleIntent is called then handleIntent in delegate is called`() {
+        val intent = Intent()
+
+        component.handleIntent(intent)
+
+        verify(genericActionDelegate).handleIntent(intent)
+    }
+
+    @Test
+    fun `when setOnRedirectListener is called then setOnRedirectListener in delegate is called`() {
+        val listener = { }
+
+        component.setOnRedirectListener(listener)
+
+        verify(genericActionDelegate).setOnRedirectListener(listener)
     }
 }

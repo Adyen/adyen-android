@@ -10,6 +10,7 @@ package com.adyen.checkout.example.di
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -29,4 +30,7 @@ object StorageModule {
     @Provides
     fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =
         DefaultKeyValueStorage(appContext, sharedPreferences)
+
+    @Provides
+    fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
 }

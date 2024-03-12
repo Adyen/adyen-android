@@ -8,65 +8,42 @@
 
 package com.adyen.checkout.boleto.internal.ui.model
 
-import com.adyen.checkout.boleto.BoletoConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.boleto.getBoletoConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import java.util.Locale
 
 internal class BoletoComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
-        configuration: BoletoConfiguration,
-        sessionParams: SessionParams?
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
     ): BoletoComponentParams {
-        return configuration
-            .mapToParamsInternal()
-            .override(overrideComponentParams)
-            .override(sessionParams ?: overrideSessionParams)
-    }
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val boletoConfiguration = checkoutConfiguration.getBoletoConfiguration()
+        val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
 
-    private fun BoletoConfiguration.mapToParamsInternal(): BoletoComponentParams {
         return BoletoComponentParams(
-            isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
+            commonComponentParams = commonComponentParams,
+            isSubmitButtonVisible = boletoConfiguration?.isSubmitButtonVisible ?: true,
             addressParams = AddressParams.FullAddress(
                 defaultCountryCode = BRAZIL_COUNTRY_CODE,
                 supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
-                addressFieldPolicy = AddressFieldPolicyParams.Required
+                addressFieldPolicy = AddressFieldPolicyParams.Required,
             ),
-            isEmailVisible = isEmailVisible ?: false
-        )
-    }
-
-    private fun BoletoComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): BoletoComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
-        )
-    }
-
-    private fun BoletoComponentParams.override(
-        sessionParams: SessionParams?
-    ): BoletoComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
+            isEmailVisible = boletoConfiguration?.isEmailVisible ?: false,
         )
     }
 

@@ -74,6 +74,11 @@ object AddressFormUtils {
                 )
                 markAddressListItemSelected(mapToListItem(filteredCountryList), defaultCountryCode)
             }
+
+            is AddressParams.Lookup -> {
+                mapToListItem(countryList)
+            }
+
             else -> emptyList()
         }
     }
@@ -136,6 +141,7 @@ object AddressFormUtils {
                 city = addressOutputData.city.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 country = addressOutputData.country.value,
             )
+
             AddressFormUIState.POSTAL_CODE -> Address(
                 postalCode = addressOutputData.postalCode.value,
                 street = Address.ADDRESS_NULL_PLACEHOLDER,
@@ -144,6 +150,7 @@ object AddressFormUtils {
                 city = Address.ADDRESS_NULL_PLACEHOLDER,
                 country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
             )
+
             else -> null
         }
     }

@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 /**
  * A [Component] is a class that helps to retrieve or format data related to a part of the Checkout API payment.
  */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface Component {
     /**
      * The delegate from this component.

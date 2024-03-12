@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Paga %s</string>
     <string name="confirm_preauthorization">Conferma preautorizzazione</string>
 
+    <string name="error_dialog_title">Errore</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Si è verificato un errore.</string>
+
     <string name="paymentInProgressView_title">Una procedura di pagamento è ancora in corso</string>
     <string name="paymentInProgressView_loadingText">In attesa di completamento…</string>
     <string name="paymentInProgressView_cancelButton">Cancella</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">CAP (facoltativo)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provincia o territorio (facoltativo)</string>
     <string name="checkout_address_form_city_town_hint_optional">Città (facoltativo)</string>
+
+    <string name="checkout_address_lookup_hint">Cerca il tuo indirizzo</string>
+    <string name="checkout_address_lookup_initial">Non riesci a cercare il tuo indirizzo?</string>
+    <string name="checkout_address_lookup_initial_description">Puoi sempre #immettere il tuo indirizzo #manualmente</string>
+    <string name="checkout_address_lookup_empty">Nessun risultato trovato</string>
+    <string name="checkout_address_lookup_empty_description">%s non corrisponde a nulla, riprova o usa #inserimento indirizzo manuale#</string>
+    <string name="checkout_address_lookup_enter_manually">Inserisci l\'indirizzo manualmente</string>
+
 </resources>

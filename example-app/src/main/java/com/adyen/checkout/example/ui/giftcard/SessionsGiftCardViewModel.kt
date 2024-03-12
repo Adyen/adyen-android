@@ -79,7 +79,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                     checkoutSession = checkoutSession,
                     paymentMethod = giftCardPaymentMethod,
                     callback = this@SessionsGiftCardViewModel,
-                )
+                ),
             )
             _giftCardViewStateFlow.emit(GiftCardViewState.ShowComponent)
         }
@@ -94,14 +94,15 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                threeDSMode = keyValueStorage.getThreeDSMode(),
                 redirectUrl = savedStateHandle.get<String>(SessionsGiftCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 allowedPaymentMethods = listOf(paymentMethodType),
-                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode())
-            )
+                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
+            ),
         ) ?: return null
 
         return getCheckoutSession(sessionModel)
@@ -114,8 +115,8 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionModel = sessionModel,
-                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
-                order = order
+                configuration = checkoutConfigurationProvider.checkoutConfig,
+                order = order,
             )
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
@@ -129,7 +130,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
         return when (
             val result = CheckoutSessionProvider.createSession(
                 sessionPaymentResult = sessionPaymentResult,
-                configuration = checkoutConfigurationProvider.getGiftCardConfiguration(),
+                configuration = checkoutConfigurationProvider.checkoutConfig,
             )
         ) {
             is CheckoutSessionResult.Success -> result.checkoutSession
@@ -169,9 +170,9 @@ internal class SessionsGiftCardViewModel @Inject constructor(
                 _events.emit(
                     GiftCardEvent.ReloadComponentSessions(
                         giftCardComponentData.copy(
-                            checkoutSession = currentSession
-                        )
-                    )
+                            checkoutSession = currentSession,
+                        ),
+                    ),
                 )
             }
         }

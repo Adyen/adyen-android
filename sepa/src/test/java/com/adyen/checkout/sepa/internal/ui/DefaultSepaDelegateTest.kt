@@ -10,17 +10,21 @@ package com.adyen.checkout.sepa.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration
+import com.adyen.checkout.sepa.getSepaConfiguration
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
+import com.adyen.checkout.sepa.sepa
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -107,9 +111,7 @@ internal class DefaultSepaDelegateTest(
         expectedComponentStateValue: Amount?,
     ) = runTest {
         if (configurationValue != null) {
-            val configuration = getDefaultSepaConfigurationBuilder()
-                .setAmount(configurationValue)
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createSepaDelegate(configuration = configuration)
         }
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -134,9 +136,9 @@ internal class DefaultSepaDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createSepaDelegate(
-                configuration = getDefaultSepaConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             Assertions.assertFalse(delegate.shouldShowSubmitButton())
@@ -145,9 +147,9 @@ internal class DefaultSepaDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createSepaDelegate(
-                configuration = getDefaultSepaConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -202,22 +204,34 @@ internal class DefaultSepaDelegateTest(
     }
 
     private fun createSepaDelegate(
-        configuration: SepaConfiguration = getDefaultSepaConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: Order? = TEST_ORDER,
     ) = DefaultSepaDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getSepaConfiguration(),
+        ),
         analyticsRepository = analyticsRepository,
-        submitHandler = submitHandler
+        submitHandler = submitHandler,
     )
 
-    private fun getDefaultSepaConfigurationBuilder() = SepaConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: SepaConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        sepa(configuration)
+    }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"

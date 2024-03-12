@@ -9,7 +9,6 @@
 package com.adyen.checkout.example.data.api
 
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
@@ -26,14 +25,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 internal interface CheckoutApiService {
-
-    companion object {
-        private const val DEFAULT_GRADLE_SERVER_URL = "<YOUR_SERVER_URL>"
-
-        fun isRealUrlAvailable(): Boolean {
-            return BuildConfig.MERCHANT_SERVER_URL != DEFAULT_GRADLE_SERVER_URL
-        }
-    }
 
     @POST("sessions")
     suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): SessionModel

@@ -16,8 +16,8 @@ import android.os.Build
 import androidx.annotation.RestrictTo
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class PdfOpener {
@@ -28,7 +28,7 @@ class PdfOpener {
         if (open(context, uri)) return
         if (openInBrowser(context, uri)) return
 
-        Logger.e(TAG, "Couldn't open pdf with url: $uri")
+        adyenLog(AdyenLogLevel.ERROR) { "Couldn't open pdf with url: $uri" }
 
         error("Couldn't open pdf with url: $uri")
     }
@@ -53,10 +53,10 @@ class PdfOpener {
 
         return try {
             context.startActivity(nativeAppIntent)
-            Logger.d(TAG, "Successfully opened pdf in external app")
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in external app" }
             true
-        } catch (ex: ActivityNotFoundException) {
-            Logger.d(TAG, "Couldn't open pdf in external app", ex)
+        } catch (e: ActivityNotFoundException) {
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in external app" }
             false
         }
     }
@@ -74,10 +74,10 @@ class PdfOpener {
                 .build()
                 .launchUrl(context, uri)
 
-            Logger.d(TAG, "Successfully opened pdf in custom tab")
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in custom tab" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "Couldn't open pdf in custom tab", e)
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in custom tab" }
             false
         }
     }
@@ -91,15 +91,11 @@ class PdfOpener {
                 .setData(uri)
 
             context.startActivity(browserActivityIntent)
-            Logger.d(TAG, "Successfully opened pdf in browser")
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in browser" }
             true
         } catch (e: ActivityNotFoundException) {
-            Logger.d(TAG, "Couldn't open pdf in browser", e)
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in browser" }
             false
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

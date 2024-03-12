@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.components.core
 
-import android.content.Context
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
@@ -17,26 +16,15 @@ import java.util.Locale
 
 @Parcelize
 class TestConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?
 ) : Configuration {
 
-    class Builder : BaseConfigurationBuilder<TestConfiguration, Builder> {
-
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
-            environment,
-            clientKey
-        )
-
-        constructor(
-            shopperLocale: Locale,
-            environment: Environment,
-            clientKey: String
-        ) : super(shopperLocale, environment, clientKey)
+    class Builder(shopperLocale: Locale?, environment: Environment, clientKey: String) :
+        BaseConfigurationBuilder<TestConfiguration, Builder>(shopperLocale, environment, clientKey) {
 
         override fun buildInternal(): TestConfiguration {
             return TestConfiguration(
@@ -44,7 +32,7 @@ class TestConfiguration private constructor(
                 environment = environment,
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
-                amount = amount
+                amount = amount,
             )
         }
     }

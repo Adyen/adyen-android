@@ -17,15 +17,19 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.card.internal.provider.CardComponentProvider
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.AddressLookupComponent
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
@@ -35,6 +39,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
+@Suppress("TooManyFunctions")
 open class CardComponent constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
@@ -45,6 +50,7 @@ open class CardComponent constructor(
     PaymentComponent,
     ViewableComponent,
     ButtonComponent,
+    AddressLookupComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
@@ -84,12 +90,13 @@ open class CardComponent constructor(
     override fun isConfirmationRequired(): Boolean = cardDelegate.isConfirmationRequired()
 
     override fun submit() {
-        (delegate as? ButtonDelegate)?.onSubmit() ?: Logger.e(TAG, "Component is currently not submittable, ignoring.")
+        (delegate as? ButtonDelegate)?.onSubmit()
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Component is currently not submittable, ignoring." }
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         (delegate as? CardDelegate)?.setInteractionBlocked(isInteractionBlocked)
-            ?: Logger.e(TAG, "Payment component is not interactable, ignoring.")
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not interactable, ignoring." }
     }
 
     /**
@@ -112,16 +119,31 @@ open class CardComponent constructor(
         cardDelegate.setOnBinLookupListener(listener)
     }
 
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+        cardDelegate.setAddressLookupCallback(addressLookupCallback)
+    }
+
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        cardDelegate.updateAddressLookupOptions(options)
+    }
+
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        cardDelegate.setAddressLookupResult(addressLookupResult)
+    }
+
+    fun handleBackPress(): Boolean {
+        return (delegate as? CardDelegate)?.handleBackPress() ?: false
+    }
+
     override fun onCleared() {
         super.onCleared()
-        Logger.d(TAG, "onCleared")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCleared" }
         cardDelegate.onCleared()
         genericActionDelegate.onCleared()
         componentEventHandler.onCleared()
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @JvmField
         val PROVIDER = CardComponentProvider()

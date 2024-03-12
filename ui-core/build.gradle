@@ -52,6 +52,8 @@ dependencies {
     //Tests
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.robolectric
+    testImplementation testLibraries.mockito
 }

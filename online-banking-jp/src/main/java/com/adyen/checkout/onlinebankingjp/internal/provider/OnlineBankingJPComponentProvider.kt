@@ -11,33 +11,33 @@ package com.adyen.checkout.onlinebankingjp.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingJPPaymentMethod
 import com.adyen.checkout.econtext.internal.provider.EContextComponentProvider
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponent
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPComponentState
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
+import com.adyen.checkout.onlinebankingjp.getOnlineBankingJPConfiguration
+import com.adyen.checkout.onlinebankingjp.toCheckoutConfiguration
 
 class OnlineBankingJPComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : EContextComponentProvider<
     OnlineBankingJPComponent,
     OnlineBankingJPConfiguration,
     OnlineBankingJPPaymentMethod,
-    OnlineBankingJPComponentState
+    OnlineBankingJPComponentState,
     >(
     componentClass = OnlineBankingJPComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
-    overrideSessionParams = overrideSessionParams,
+    dropInOverrideParams = dropInOverrideParams,
     analyticsRepository = analyticsRepository,
 ) {
 
@@ -63,6 +63,14 @@ constructor(
 
     override fun createPaymentMethod(): OnlineBankingJPPaymentMethod {
         return OnlineBankingJPPaymentMethod()
+    }
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): OnlineBankingJPConfiguration? {
+        return checkoutConfiguration.getOnlineBankingJPConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: OnlineBankingJPConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
     }
 
     override fun getSupportedPaymentMethods(): List<String> {

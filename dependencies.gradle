@@ -16,15 +16,15 @@ ext {
     // just for example app, don't need to increment
     version_code = 1
     // The version_name format is "major.minor.patch(-(alpha|beta|rc)[0-9]{2}){0,1}" (e.g. 3.0.0, 3.1.1-alpha04 or 3.1.4-rc01 etc).
-    version_name = "5.2.0"
+    version_name = "5.3.0"
 
     // Build Script
     android_gradle_plugin_version = '8.2.0'
-    kotlin_version = '1.9.21'
+    kotlin_version = '1.9.22'
     detekt_gradle_plugin_version = "1.23.4"
     dokka_version = "1.9.10"
-    hilt_version = "2.49"
-    compose_compiler_version = '1.5.7'
+    hilt_version = "2.50"
+    compose_compiler_version = '1.5.8'
 
     // Code quality
     detekt_version = "1.23.4"
@@ -33,18 +33,18 @@ ext {
     sonarqube_version = '4.4.1.3373'
 
     // Android Dependencies
-    annotation_version = "1.7.0"
+    annotation_version = "1.7.1"
     appcompat_version = "1.6.1"
     browser_version = "1.7.0"
     coroutines_version = "1.6.4"
     fragment_version = "1.6.2"
     lifecycle_version = "2.5.1"
-    material_version = "1.10.0"
+    material_version = "1.11.0"
     recyclerview_version = "1.3.2"
     constraintlayout_version = '2.1.4'
 
     // Compose Dependencies
-    compose_activity_version = '1.8.1'
+    compose_activity_version = '1.8.2'
     compose_bom_version = '2023.10.01'
     compose_hilt_version = '1.1.0'
     compose_viewmodel_version = '2.6.2'
@@ -60,7 +60,7 @@ ext {
     wechat_pay_version = "6.8.0"
 
     // Example app
-    leak_canary_version = '2.12'
+    leak_canary_version = '2.13'
     moshi_adapters_version = '1.14.0'
     moshi_kotlin_adapter_version = '1.14.0'
     okhttp_logging_version = "4.12.0"
@@ -127,6 +127,7 @@ ext {
         ],
         okhttp          : "com.squareup.okhttp3:okhttp:$okhttp_version",
         okhttpLogging   : "com.squareup.okhttp3:logging-interceptor:$okhttp_logging_version",
+        parcelize       : "org.jetbrains.kotlin:kotlin-parcelize-runtime:$kotlin_version",
         retrofit        : [
             "com.squareup.retrofit2:retrofit:$retrofit2_version",
             "com.squareup.retrofit2:converter-moshi:$retrofit2_version"

@@ -12,9 +12,10 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.StatusRequest
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.currentCoroutineContext
@@ -37,9 +38,10 @@ interface StatusRepository {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultStatusRepository constructor(
+class DefaultStatusRepository(
     private val statusService: StatusService,
     private val clientKey: String,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : StatusRepository {
 
     private var delay: Long = 0
@@ -73,7 +75,7 @@ class DefaultStatusRepository constructor(
         )
     }
 
-    private suspend fun fetchStatus(paymentData: String) = withContext(Dispatchers.IO) {
+    private suspend fun fetchStatus(paymentData: String) = withContext(coroutineDispatcher) {
         runSuspendCatching {
             statusService.checkStatus(clientKey, StatusRequest(paymentData))
         }
@@ -89,22 +91,22 @@ class DefaultStatusRepository constructor(
                 delay = POLLING_DELAY_FAST
                 true
             }
+
             elapsedTime <= maxPollingDuration -> {
                 delay = POLLING_DELAY_SLOW
                 true
             }
+
             else -> false
         }
     }
 
     override fun refreshStatus(paymentData: String) {
-        Logger.v(TAG, "refreshStatus")
+        adyenLog(AdyenLogLevel.VERBOSE) { "refreshStatus" }
         refreshFlow.tryEmit(paymentData)
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private val POLLING_DELAY_FAST = TimeUnit.SECONDS.toMillis(2)
         private val POLLING_DELAY_SLOW = TimeUnit.SECONDS.toMillis(10)
         private val POLLING_THRESHOLD = TimeUnit.SECONDS.toMillis(60)

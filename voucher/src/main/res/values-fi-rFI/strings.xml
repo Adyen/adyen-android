@@ -9,11 +9,21 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Lataa suoraveloitusohjeet (DDI / Mandate)</string>
-    <string name="checkout_voucher_introduction_boleto">Kiitos hankinnastasi, käytä seuraavaa kuponkia viedäksesi maksusi päätökseen.</string>
+    <string name="checkout_voucher_introduction">Kiitos hankinnastasi, käytä seuraavaa kuponkia viedäksesi maksusi päätökseen.</string>
+    <string name="checkout_voucher_introduction_econtext">Kiitos hankinnastasi, käytä seuraavia tietoja päättääksesi maksusi.</string>
     <string name="checkout_voucher_payment_reference">Maksun viite</string>
+    <string name="checkout_voucher_expiration_entity">Kokonaisuus</string>
     <string name="checkout_voucher_expiration_date">Vanhenemispäivämäärä</string>
+    <string name="checkout_voucher_shopper_reference">Ostajan viite</string>
+    <string name="checkout_voucher_phone_number">Puhelinnumero</string>
+    <string name="checkout_voucher_collection_institution_number">Keräävän laitoksen numero</string>
+    <string name="checkout_voucher_read_instructions">Lue ohjeet</string>
     <string name="checkout_voucher_copy_code">Kopioi koodi</string>
     <string name="checkout_voucher_copied_toast">Koodi kopioitu leikepöydälle</string>
     <string name="checkout_voucher_download_pdf">Lataa PDF</string>
+    <string name="checkout_voucher_save_image">Tallenna kuvana</string>
+    <string name="checkout_voucher_image_saved"> Laitteeseen tallennettu kuva</string>
+    <string name="checkout_voucher_image_failed"> Kuvan tallentaminen epäonnistui</string>
     <string name="checkout_voucher_finish">Lopeta</string>
+    <string name="checkout_voucher_permission_denied">Lupaa ei myönnetty</string>
 </resources>

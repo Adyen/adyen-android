@@ -16,11 +16,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.ui.DefaultImageLoader
 import com.adyen.checkout.core.internal.ui.ImageLoader
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import kotlinx.coroutines.launch
 
@@ -33,8 +33,6 @@ private val Context.imageLoader: ImageLoader
         localImageLoader = newImageLoader
         return newImageLoader
     }
-
-private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun ImageView.load(
@@ -60,9 +58,9 @@ fun ImageView.load(
             url,
             onSuccess = { setImageBitmap(it) },
             onError = { e ->
-                Logger.w(TAG, "Failed loading image for $url - ${e::class.simpleName}: ${e.message}")
+                adyenLog(AdyenLogLevel.WARN) { "Failed loading image for $url - ${e::class.simpleName}: ${e.message}" }
                 setImageResource(errorFallback)
-            }
+            },
         )
     }
 }

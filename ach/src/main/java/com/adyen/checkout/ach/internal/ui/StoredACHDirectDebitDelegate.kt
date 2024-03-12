@@ -20,16 +20,16 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -101,11 +101,11 @@ internal class StoredACHDirectDebitDelegate(
     }
 
     override fun updateInputData(update: ACHDirectDebitInputData.() -> Unit) {
-        Logger.e(TAG, "updateInputData should not be called in StoredACHDirectDebitDelegate")
+        adyenLog(AdyenLogLevel.ERROR) { "updateInputData should not be called in StoredACHDirectDebitDelegate" }
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -127,7 +127,7 @@ internal class StoredACHDirectDebitDelegate(
         return ACHDirectDebitComponentState(
             data = paymentComponentData,
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
     }
 
@@ -163,7 +163,7 @@ internal class StoredACHDirectDebitDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -172,10 +172,6 @@ internal class StoredACHDirectDebitDelegate(
     }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
-        Logger.e(TAG, "updateAddressInputData should not be called in StoredACHDirectDebitDelegate")
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
+        adyenLog(AdyenLogLevel.ERROR) { "updateAddressInputData should not be called in StoredACHDirectDebitDelegate" }
     }
 }

@@ -21,6 +21,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
@@ -40,6 +41,7 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -47,6 +49,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
@@ -58,14 +62,15 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -92,7 +97,8 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCardDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
-    @Mock private val submitHandler: SubmitHandler<CardComponentState>
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>,
+    @Mock private val addressLookupDelegate: AddressLookupDelegate,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -109,6 +115,9 @@ internal class DefaultCardDelegateTest(
         publicKeyRepository = TestPublicKeyRepository()
         addressRepository = TestAddressRepository()
         detectCardTypeRepository = TestDetectCardTypeRepository()
+
+        whenever(addressLookupDelegate.addressLookupSubmitFlow).thenReturn(MutableStateFlow(AddressInputModel()))
+
         delegate = createCardDelegate()
     }
 
@@ -149,9 +158,9 @@ internal class DefaultCardDelegateTest(
             val countriesFlow = addressRepository.countriesFlow.testIn(this)
             val statesFlow = addressRepository.statesFlow.testIn(this)
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(AddressConfiguration.PostalCode())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setAddressConfiguration(AddressConfiguration.PostalCode())
+                },
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -170,9 +179,9 @@ internal class DefaultCardDelegateTest(
 
             addressRepository.shouldReturnError = true
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(AddressConfiguration.FullAddress())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setAddressConfiguration(AddressConfiguration.FullAddress())
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -190,9 +199,9 @@ internal class DefaultCardDelegateTest(
                 val statesFlow = addressRepository.statesFlow.testIn(this)
 
                 delegate = createCardDelegate(
-                    configuration = getDefaultCardConfigurationBuilder()
-                        .setAddressConfiguration(AddressConfiguration.FullAddress(defaultCountryCode = "NL"))
-                        .build()
+                    configuration = createCheckoutConfiguration {
+                        setAddressConfiguration(AddressConfiguration.FullAddress(defaultCountryCode = "NL"))
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -210,9 +219,9 @@ internal class DefaultCardDelegateTest(
                 val statesFlow = addressRepository.statesFlow.testIn(this)
 
                 delegate = createCardDelegate(
-                    configuration = getDefaultCardConfigurationBuilder(shopperLocale = Locale.CANADA)
-                        .setAddressConfiguration(AddressConfiguration.FullAddress())
-                        .build()
+                    configuration = createCheckoutConfiguration(shopperLocale = Locale.CANADA) {
+                        setAddressConfiguration(AddressConfiguration.FullAddress())
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -230,7 +239,7 @@ internal class DefaultCardDelegateTest(
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = delegate.componentParams.shopperLocale,
                 addressParams = addressParams,
-                countryList = TestAddressRepository.COUNTRIES
+                countryList = TestAddressRepository.COUNTRIES,
             )
 
             val expectedCountries = AddressFormUtils.markAddressListItemSelected(
@@ -239,9 +248,9 @@ internal class DefaultCardDelegateTest(
             )
 
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setAddressConfiguration(addressConfiguration)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setAddressConfiguration(addressConfiguration)
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -253,7 +262,7 @@ internal class DefaultCardDelegateTest(
                     houseNumberOrName = "44",
                     apartmentSuite = "aparment",
                     city = "Istanbul",
-                    country = "Turkey"
+                    country = "Turkey",
                 )
 
             delegate.addressOutputDataFlow.test {
@@ -271,7 +280,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals(expectedCountries, countryOptions)
                     assertEquals(
                         stateOptions,
-                        AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
+                        AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                     )
                 }
             }
@@ -295,9 +304,9 @@ internal class DefaultCardDelegateTest(
         fun `When a card brand is detected, isCardListVisible should be false`() = runTest {
             val supportedCardBrands = listOf(CardBrand(cardType = CardType.VISA))
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -314,9 +323,9 @@ internal class DefaultCardDelegateTest(
         fun `When a card brand is not detected, isCardListVisible should be true`() = runTest {
             val supportedCardBrands = listOf(CardBrand(cardType = CardType.VISA))
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             detectCardTypeRepository.detectionResult = TestDetectedCardType.EMPTY
@@ -334,9 +343,9 @@ internal class DefaultCardDelegateTest(
         fun `When the supported card list is empty, isCardListVisible should be true`() = runTest {
             val supportedCardBrands = emptyList<CardBrand>()
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             detectCardTypeRepository.detectionResult = TestDetectedCardType.EMPTY
@@ -355,12 +364,12 @@ internal class DefaultCardDelegateTest(
             val supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.VISA),
                 CardBrand(cardType = CardType.MASTERCARD),
-                CardBrand(cardType = CardType.AMERICAN_EXPRESS)
+                CardBrand(cardType = CardType.AMERICAN_EXPRESS),
             )
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                },
             )
             detectCardTypeRepository.detectionResult = TestDetectedCardType.DETECTED_LOCALLY
 
@@ -382,12 +391,12 @@ internal class DefaultCardDelegateTest(
         fun `detect card type repository returns unsupported cards, then output data should filter them`() = runTest {
             val supportedCardTypes = listOf(
                 CardBrand(cardType = CardType.VISA),
-                CardBrand(cardType = CardType.AMERICAN_EXPRESS)
+                CardBrand(cardType = CardType.AMERICAN_EXPRESS),
             )
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardTypes.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardTypes.toTypedArray())
+                },
             )
             detectCardTypeRepository.detectionResult = TestDetectedCardType.FETCHED_FROM_NETWORK
 
@@ -410,12 +419,12 @@ internal class DefaultCardDelegateTest(
         fun `detect card type repository returns dual branded cards, then output data should be good`() = runTest {
             val supportedCardBrands = listOf(
                 CardBrand(cardType = CardType.BCMC),
-                CardBrand(cardType = CardType.MAESTRO)
+                CardBrand(cardType = CardType.MAESTRO),
             )
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                },
             )
             detectCardTypeRepository.detectionResult = TestDetectedCardType.DUAL_BRANDED
 
@@ -482,7 +491,7 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `input is empty with custom config, then output data should be invalid`() = runTest {
             delegate = createCardDelegate(
-                configuration = getCustomCardConfigurationBuilder().build()
+                configuration = getCustomCardConfiguration(),
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -528,38 +537,38 @@ internal class DefaultCardDelegateTest(
             val cardBrands = listOf(
                 CardListItem(CardBrand(cardType = CardType.VISA), true, Environment.TEST),
                 CardListItem(CardBrand(cardType = CardType.MASTERCARD), false, Environment.TEST),
-                CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST)
+                CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST),
             )
             val supportedCardBrands = cardBrands.map { it.cardBrand }
             val installmentConfiguration = InstallmentConfiguration(
                 InstallmentOptions.DefaultInstallmentOptions(
                     maxInstallments = 3,
-                    includeRevolving = true
-                )
+                    includeRevolving = true,
+                ),
             )
             val expectedInstallmentParams = InstallmentParams(
                 InstallmentOptionParams.DefaultInstallmentOptions(
                     values = listOf(2, 3),
-                    includeRevolving = true
+                    includeRevolving = true,
                 ),
-                shopperLocale = Locale.US
+                shopperLocale = Locale.US,
             )
 
             val addressConfiguration = AddressConfiguration.FullAddress()
             val addressParams = AddressParams.FullAddress(addressFieldPolicy = AddressFieldPolicyParams.Required)
 
             delegate = createCardDelegate(
-                configuration = CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-                    .setHideCvc(true)
-                    .setHideCvcStoredCard(true)
-                    .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
-                    .setInstallmentConfigurations(installmentConfiguration)
-                    .setHolderNameRequired(true)
-                    .setAddressConfiguration(addressConfiguration)
-                    .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-                    .setSupportedCardTypes(*supportedCardBrands.toTypedArray())
-                    .setShowStorePaymentField(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setHideCvc(true)
+                    setHideCvcStoredCard(true)
+                    setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
+                    setInstallmentConfigurations(installmentConfiguration)
+                    setHolderNameRequired(true)
+                    setAddressConfiguration(addressConfiguration)
+                    setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+                    setSupportedCardTypes(*supportedCardBrands.toTypedArray())
+                    setShowStorePaymentField(false)
+                },
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -570,7 +579,7 @@ internal class DefaultCardDelegateTest(
                     option = InstallmentOption.REVOLVING,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
+                    showAmount = false,
                 )
 
                 delegate.updateInputData {
@@ -598,7 +607,7 @@ internal class DefaultCardDelegateTest(
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = delegate.componentParams.shopperLocale,
                     addressParams = addressParams,
-                    countryList = TestAddressRepository.COUNTRIES
+                    countryList = TestAddressRepository.COUNTRIES,
                 )
 
                 val expectedCountries = AddressFormUtils.markAddressListItemSelected(
@@ -616,7 +625,7 @@ internal class DefaultCardDelegateTest(
                     country = FieldState("Netherlands", Validation.Valid),
                     isOptional = false,
                     countryOptions = expectedCountries,
-                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
+                    stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                 )
 
                 val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
@@ -624,7 +633,7 @@ internal class DefaultCardDelegateTest(
                 val expectedInstallmentOptions = InstallmentUtils.makeInstallmentOptions(
                     expectedInstallmentParams,
                     expectedDetectedCardTypes.first().cardBrand,
-                    true
+                    true,
                 )
 
                 val expectedOutputData = createOutputData(
@@ -649,7 +658,7 @@ internal class DefaultCardDelegateTest(
                     installmentOptions = expectedInstallmentOptions,
                     kcpBirthDateOrTaxNumberHint = R.string.checkout_kcp_tax_number_hint,
                     cardBrands = cardBrands,
-                    isCardListVisible = false
+                    isCardListVisible = false,
                 )
 
                 with(expectMostRecentItem()) {
@@ -702,9 +711,9 @@ internal class DefaultCardDelegateTest(
                     createOutputData(
                         cardNumberState = FieldState(
                             "12345678",
-                            Validation.Invalid(R.string.checkout_card_number_not_valid)
-                        )
-                    )
+                            Validation.Invalid(R.string.checkout_card_number_not_valid),
+                        ),
+                    ),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -724,9 +733,9 @@ internal class DefaultCardDelegateTest(
                     createOutputData(
                         expiryDateState = FieldState(
                             ExpiryDate(10, 2020),
-                            Validation.Invalid(R.string.checkout_expiry_date_not_valid)
-                        )
-                    )
+                            Validation.Invalid(R.string.checkout_expiry_date_not_valid),
+                        ),
+                    ),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -789,7 +798,7 @@ internal class DefaultCardDelegateTest(
         fun `output data with custom config is valid, then component state should be good`() = runTest {
             delegate = createCardDelegate(
                 paymentMethod = PaymentMethod(fundingSource = "funding_source_1"),
-                configuration = getCustomCardConfigurationBuilder().build(),
+                configuration = getCustomCardConfiguration(),
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -803,7 +812,7 @@ internal class DefaultCardDelegateTest(
                     apartmentSuite = FieldState("apt", Validation.Valid),
                     city = FieldState("Amsterdam", Validation.Valid),
                     country = FieldState("Netherlands", Validation.Valid),
-                    isOptional = false
+                    isOptional = false,
                 )
 
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
@@ -812,15 +821,15 @@ internal class DefaultCardDelegateTest(
                     option = InstallmentOption.REVOLVING,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
+                    showAmount = false,
                 )
 
                 val detectedCardTypes = listOf(
                     createDetectedCardType(),
                     createDetectedCardType(
                         isSelected = true,
-                        cardBrand = CardBrand(cardType = CardType.VISA)
-                    )
+                        cardBrand = CardBrand(cardType = CardType.VISA),
+                    ),
                 )
 
                 delegate.updateComponentState(
@@ -842,9 +851,9 @@ internal class DefaultCardDelegateTest(
                         cardBrands = listOf(
                             CardListItem(CardBrand(cardType = CardType.VISA), false, Environment.TEST),
                             CardListItem(CardBrand(cardType = CardType.MASTERCARD), false, Environment.TEST),
-                            CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST)
+                            CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST),
                         ),
-                    )
+                    ),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -895,7 +904,7 @@ internal class DefaultCardDelegateTest(
 
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(
-                    createOutputData(cardNumberState = FieldState("12345678901234", Validation.Valid))
+                    createOutputData(cardNumberState = FieldState("12345678901234", Validation.Valid)),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -910,7 +919,7 @@ internal class DefaultCardDelegateTest(
 
             delegate.componentStateFlow.test {
                 delegate.updateComponentState(
-                    createOutputData(cardNumberState = FieldState("1234567890123456", Validation.Valid))
+                    createOutputData(cardNumberState = FieldState("1234567890123456", Validation.Valid)),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -926,9 +935,9 @@ internal class DefaultCardDelegateTest(
             isStorePaymentMethodSwitchChecked: Boolean,
             expectedStorePaymentMethod: Boolean?,
         ) = runTest {
-            val configuration = getDefaultCardConfigurationBuilder()
-                .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
-                .build()
+            val configuration = createCheckoutConfiguration {
+                setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
+            }
             delegate = createCardDelegate(configuration = configuration)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -952,9 +961,7 @@ internal class DefaultCardDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultCardConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(amount = configurationValue)
                 delegate = createCardDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -981,9 +988,9 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -992,9 +999,9 @@ internal class DefaultCardDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -1156,6 +1163,41 @@ internal class DefaultCardDelegateTest(
         }
     }
 
+    @Test
+    fun `when startAddressLookup is called view flow should emit AddressLookup`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.startAddressLookup()
+        delegate.viewFlow.test {
+            assertEquals(CardComponentViewType.AddressLookup, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when view type is AddressLookup and handleBackPress() is called DefaultCardView should be emitted`() =
+        runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.startAddressLookup()
+            assertTrue(delegate.handleBackPress())
+            delegate.viewFlow.test {
+                assertEquals(CardComponentViewType.DefaultCardView, awaitItem())
+                expectNoEvents()
+            }
+        }
+
+    @Test
+    fun `when view type is DefaultCardView and handleBackPress() is called it should return false`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        assertFalse(delegate.handleBackPress())
+    }
+
+    @Test
+    fun `when delegate is cleared then address lookup delegate is cleared`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.onCleared()
+        verify(addressLookupDelegate).clear()
+    }
+
     @Suppress("LongParameterList")
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
@@ -1164,17 +1206,23 @@ internal class DefaultCardDelegateTest(
         cardValidationMapper: CardValidationMapper = CardValidationMapper(),
         cardEncryptor: BaseCardEncryptor = this.cardEncryptor,
         genericEncryptor: BaseGenericEncryptor = this.genericEncryptor,
-        configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         paymentMethod: PaymentMethod = PaymentMethod(type = PaymentMethodTypes.SCHEME),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
+        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
+            commonComponentParamsMapper = CommonComponentParamsMapper(),
             installmentsParamsMapper = InstallmentsParamsMapper(),
-            overrideComponentParams = null,
-            overrideSessionParams = null
-        ).mapToParamsDefault(configuration, paymentMethod, null)
+        ).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = paymentMethod,
+        )
 
         return DefaultCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -1189,32 +1237,43 @@ internal class DefaultCardDelegateTest(
             genericEncryptor = genericEncryptor,
             analyticsRepository = analyticsRepository,
             submitHandler = submitHandler,
+            addressLookupDelegate = addressLookupDelegate,
         )
     }
 
-    private fun getDefaultCardConfigurationBuilder(shopperLocale: Locale = Locale.US): CardConfiguration.Builder {
-        return CardConfiguration.Builder(shopperLocale, Environment.TEST, TEST_CLIENT_KEY)
-            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD)
+    private fun createCheckoutConfiguration(
+        shopperLocale: Locale = Locale.US,
+        amount: Amount? = null,
+        configuration: CardConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        card {
+            setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD)
+            apply(configuration)
+        }
     }
 
-    private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
-        return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setHideCvc(true)
-            .setShopperReference("shopper_android")
-            .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
-            .setInstallmentConfigurations(
-                InstallmentConfiguration(
-                    InstallmentOptions.DefaultInstallmentOptions(
-                        maxInstallments = 3,
-                        includeRevolving = true
-                    )
-                )
-            )
-            .setHolderNameRequired(true)
-            .setAddressConfiguration(AddressConfiguration.FullAddress())
-            .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-            .setShowStorePaymentField(false)
-            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+    private fun getCustomCardConfiguration() = createCheckoutConfiguration {
+        setHideCvc(true)
+        setShopperReference("shopper_android")
+        setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
+        setInstallmentConfigurations(
+            InstallmentConfiguration(
+                InstallmentOptions.DefaultInstallmentOptions(
+                    maxInstallments = 3,
+                    includeRevolving = true,
+                ),
+            ),
+        )
+        setHolderNameRequired(true)
+        setAddressConfiguration(AddressConfiguration.FullAddress())
+        setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+        setShowStorePaymentField(false)
+        setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
     @Suppress("LongParameterList")
@@ -1245,13 +1304,13 @@ internal class DefaultCardDelegateTest(
             CardListItem(
                 CardBrand(cardType = CardType.VISA),
                 true,
-                Environment.TEST
+                Environment.TEST,
             ),
             CardListItem(
                 CardBrand(cardType = CardType.MASTERCARD),
                 false,
-                Environment.TEST
-            )
+                Environment.TEST,
+            ),
         ),
         isCardListVisible: Boolean = true
     ): CardOutputData {
@@ -1278,7 +1337,7 @@ internal class DefaultCardDelegateTest(
             cardBrands = cardBrands,
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
-            isCardListVisible = isCardListVisible
+            isCardListVisible = isCardListVisible,
         )
     }
 
@@ -1330,7 +1389,7 @@ internal class DefaultCardDelegateTest(
             country = country,
             isOptional = isOptional,
             countryOptions = countryOptions,
-            stateOptions = stateOptions
+            stateOptions = stateOptions,
         )
     }
 
@@ -1356,7 +1415,6 @@ internal class DefaultCardDelegateTest(
             // configurationValue, expectedComponentStateValue
             arguments(Amount("EUR", 100), Amount("EUR", 100)),
             arguments(Amount("USD", 0), Amount("USD", 0)),
-            arguments(null, null),
             arguments(null, null),
         )
     }

@@ -16,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.Configuration
@@ -27,6 +28,106 @@ interface ActionComponentProvider<
     ConfigurationT : Configuration,
     DelegateT : ActionDelegate
     > : ComponentProvider<ComponentT> {
+
+    //region CheckoutConfiguration
+
+    /**
+     * Get an [ActionComponent].
+     *
+     * @param fragment              The Fragment to associate the lifecycle.
+     * @param checkoutConfiguration The [CheckoutConfiguration].
+     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param key                   The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    fun get(
+        fragment: Fragment,
+        checkoutConfiguration: CheckoutConfiguration,
+        callback: ActionComponentCallback,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = fragment,
+            viewModelStoreOwner = fragment,
+            lifecycleOwner = fragment.viewLifecycleOwner,
+            application = fragment.requireApplication(),
+            checkoutConfiguration = checkoutConfiguration,
+            callback = callback,
+            key = key,
+        )
+    }
+
+    /**
+     * Get an [ActionComponent].
+     *
+     * @param activity              The Activity to associate the lifecycle.
+     * @param checkoutConfiguration The [CheckoutConfiguration].
+     * @param callback              The callback to handle events from the [ActionComponent].
+     * @param key                   The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    fun get(
+        activity: ComponentActivity,
+        checkoutConfiguration: CheckoutConfiguration,
+        callback: ActionComponentCallback,
+        key: String? = null,
+    ): ComponentT {
+        return get(
+            savedStateRegistryOwner = activity,
+            viewModelStoreOwner = activity,
+            lifecycleOwner = activity,
+            application = activity.application,
+            checkoutConfiguration = checkoutConfiguration,
+            callback = callback,
+            key = key,
+        )
+    }
+
+    /**
+     * Get an [ActionComponent].
+     *
+     * @param savedStateRegistryOwner The owner of the SavedStateRegistry, normally an Activity or Fragment.
+     * @param viewModelStoreOwner     A scope that owns ViewModelStore, normally an Activity or Fragment.
+     * @param lifecycleOwner          The lifecycle owner, normally an Activity or Fragment.
+     * @param application             Your main application class.
+     * @param checkoutConfiguration   The [CheckoutConfiguration].
+     * @param callback                The callback to handle events from the [ActionComponent].
+     * @param key                     The key to use to identify the [ActionComponent].
+     *
+     * NOTE: By default only one [ActionComponent] will be created per lifecycle. Use [key] in case you need to
+     * instantiate multiple [ActionComponent]s in the same lifecycle.
+     *
+     * @return The Component
+     */
+    @Suppress("LongParameterList")
+    fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        checkoutConfiguration: CheckoutConfiguration,
+        callback: ActionComponentCallback,
+        key: String? = null,
+    ): ComponentT
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getDelegate(
+        checkoutConfiguration: CheckoutConfiguration,
+        savedStateHandle: SavedStateHandle,
+        application: Application
+    ): DelegateT
+
+    //endregion
+
+    //region Component specific configuration
 
     /**
      * Get an [ActionComponent].
@@ -54,7 +155,7 @@ interface ActionComponentProvider<
             application = fragment.requireApplication(),
             configuration = configuration,
             callback = callback,
-            key = key
+            key = key,
         )
     }
 
@@ -84,7 +185,7 @@ interface ActionComponentProvider<
             application = activity.application,
             configuration = configuration,
             callback = callback,
-            key = key
+            key = key,
         )
     }
 
@@ -115,12 +216,7 @@ interface ActionComponentProvider<
         key: String? = null,
     ): ComponentT
 
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun getDelegate(
-        configuration: ConfigurationT,
-        savedStateHandle: SavedStateHandle,
-        application: Application,
-    ): DelegateT
+    //endregion
 
     /**
      * Checks if the provided component can handle a given action.

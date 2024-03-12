@@ -15,9 +15,10 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,7 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
     }
 
     private fun updateSessionData(sessionData: String) {
-        Logger.v(TAG, "Updating session data - $sessionData")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
         sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
 
@@ -53,11 +54,17 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
         @Suppress("UNCHECKED_CAST")
         val sessionComponentCallback = componentCallback as? SessionComponentCallback<T>
             ?: throw CheckoutException("Callback must be type of ${SessionComponentCallback::class.java.canonicalName}")
-        Logger.v(TAG, "Event received $event")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Event received $event" }
         when (event) {
             is PaymentComponentEvent.ActionDetails -> onDetailsCallRequested(event.data, sessionComponentCallback)
             is PaymentComponentEvent.Error -> onComponentError(event.error, sessionComponentCallback)
             is PaymentComponentEvent.StateChanged -> onState(event.state, sessionComponentCallback)
+            is PaymentComponentEvent.PermissionRequest -> onPermissionRequest(
+                event.requiredPermission,
+                event.permissionCallback,
+                sessionComponentCallback,
+            )
+
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
         }
     }
@@ -77,13 +84,15 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 is SessionCallResult.Payments.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Payments.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Payments.Finished -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.NotFullyPaidOrder -> onFinished(result.result, sessionComponentCallback)
                 is SessionCallResult.Payments.RefusedPartialPayment -> onFinished(
                     result.result,
-                    sessionComponentCallback
+                    sessionComponentCallback,
                 )
+
                 is SessionCallResult.Payments.TakenOver -> {
                     setFlowTakenOver()
                 }
@@ -99,13 +108,14 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
             val result = sessionInteractor.onDetailsCallRequested(
                 actionComponentData,
                 sessionComponentCallback::onAdditionalDetails,
-                sessionComponentCallback::onAdditionalDetails.name
+                sessionComponentCallback::onAdditionalDetails.name,
             )
 
             when (result) {
                 is SessionCallResult.Details.Action -> {
                     sessionComponentCallback.onAction(result.action)
                 }
+
                 is SessionCallResult.Details.Error -> onSessionError(result.throwable, sessionComponentCallback)
                 is SessionCallResult.Details.Finished -> onFinished(result.result, sessionComponentCallback)
                 SessionCallResult.Details.TakenOver -> {
@@ -130,6 +140,14 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
         sessionComponentCallback.onStateChanged(state)
     }
 
+    private fun onPermissionRequest(
+        requiredPermission: String,
+        permissionCallback: PermissionHandlerCallback,
+        sessionComponentCallback: SessionComponentCallback<T>
+    ) {
+        sessionComponentCallback.onPermissionRequest(requiredPermission, permissionCallback)
+    }
+
     private fun onComponentError(error: ComponentError, sessionComponentCallback: SessionComponentCallback<T>) {
         sessionComponentCallback.onError(error)
     }
@@ -137,27 +155,23 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
     private fun onSessionError(throwable: Throwable, sessionComponentCallback: SessionComponentCallback<T>) {
         sessionComponentCallback.onError(
             ComponentError(
-                CheckoutException(throwable.message.orEmpty(), throwable)
-            )
+                CheckoutException(throwable.message.orEmpty(), throwable),
+            ),
         )
     }
 
     private fun onFinished(result: SessionPaymentResult, sessionComponentCallback: SessionComponentCallback<T>) {
-        Logger.d(TAG, "Finished: ${result.resultCode}")
+        adyenLog(AdyenLogLevel.DEBUG) { "Finished: ${result.resultCode}" }
         sessionComponentCallback.onFinished(result)
     }
 
     private fun setFlowTakenOver() {
         if (sessionSavedStateHandleContainer.isFlowTakenOver == true) return
         sessionSavedStateHandleContainer.isFlowTakenOver = true
-        Logger.i(TAG, "Flow was taken over.")
+        adyenLog(AdyenLogLevel.INFO) { "Flow was taken over." }
     }
 
     override fun onCleared() {
         _coroutineScope = null
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

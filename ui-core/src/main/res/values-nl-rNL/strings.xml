@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">%s betalen</string>
     <string name="confirm_preauthorization">Preautorisatie bevestigen</string>
 
+    <string name="error_dialog_title">Fout</string>
+    <string name="error_dialog_button">Oké</string>
+    <string name="component_error">Er is iets misgegaan.</string>
+
     <string name="paymentInProgressView_title">Er is nog een lopend betalingsproces</string>
     <string name="paymentInProgressView_loadingText">In afwachting van voltooiing…</string>
     <string name="paymentInProgressView_cancelButton">Annuleren</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postcode (optioneel)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provincie of territorium (optioneel)</string>
     <string name="checkout_address_form_city_town_hint_optional">Stad (optioneel)</string>
+
+    <string name="checkout_address_lookup_hint">Zoek uw adres</string>
+    <string name="checkout_address_lookup_initial">Werd uw adres niet gevonden?</string>
+    <string name="checkout_address_lookup_initial_description">U kunt #uw adres handmatig invoeren#</string>
+    <string name="checkout_address_lookup_empty">Geen resultaten gevonden</string>
+    <string name="checkout_address_lookup_empty_description">Geen resulaten gevonden voor \'%s\', probeer het opnieuw of gebruik #adres handmatig invoeren#</string>
+    <string name="checkout_address_lookup_enter_manually">Voer het adres handmatig in</string>
+
 </resources>

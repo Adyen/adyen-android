@@ -16,43 +16,45 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.components.core.ActionComponentCallback
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.internal.util.PdfOpener
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.voucher.internal.ui.DefaultVoucherDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
+import com.adyen.checkout.voucher.toCheckoutConfiguration
 
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    private val dropInOverrideParams: DropInOverrideParams? = null,
+    private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
-
-    private val componentParamsMapper = GenericComponentParamsMapper(overrideComponentParams, overrideSessionParams)
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
         viewModelStoreOwner: ViewModelStoreOwner,
         lifecycleOwner: LifecycleOwner,
         application: Application,
-        configuration: VoucherConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         callback: ActionComponentCallback,
-        key: String?,
+        key: String?
     ): VoucherComponent {
         val voucherFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val voucherDelegate = getDelegate(configuration, savedStateHandle, application)
+            val voucherDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             VoucherComponent(
                 delegate = voucherDelegate,
                 actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
@@ -65,15 +67,42 @@ constructor(
     }
 
     override fun getDelegate(
-        configuration: VoucherConfiguration,
+        checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application,
+        application: Application
     ): VoucherDelegate {
-        val componentParams = componentParamsMapper.mapToParams(configuration, null)
+        val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = localeProvider.getLocale(application),
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
-            pdfOpener = PdfOpener()
+            pdfOpener = PdfOpener(),
+            imageSaver = ImageSaver(),
+        )
+    }
+
+    override fun get(
+        savedStateRegistryOwner: SavedStateRegistryOwner,
+        viewModelStoreOwner: ViewModelStoreOwner,
+        lifecycleOwner: LifecycleOwner,
+        application: Application,
+        configuration: VoucherConfiguration,
+        callback: ActionComponentCallback,
+        key: String?,
+    ): VoucherComponent {
+        return get(
+            savedStateRegistryOwner = savedStateRegistryOwner,
+            viewModelStoreOwner = viewModelStoreOwner,
+            lifecycleOwner = lifecycleOwner,
+            application = application,
+            checkoutConfiguration = configuration.toCheckoutConfiguration(),
+            callback = callback,
+            key = key,
         )
     }
 
@@ -97,7 +126,12 @@ constructor(
             PaymentMethodTypes.BOLETOBANCARIO_HSBC,
             PaymentMethodTypes.BOLETOBANCARIO_ITAU,
             PaymentMethodTypes.BOLETOBANCARIO_SANTANDER,
-            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY
+            PaymentMethodTypes.BOLETO_PRIMEIRO_PAY,
+            PaymentMethodTypes.ECONTEXT_ATM,
+            PaymentMethodTypes.ECONTEXT_ONLINE,
+            PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
+            PaymentMethodTypes.ECONTEXT_STORES,
+            PaymentMethodTypes.MULTIBANCO
         )
     }
 }

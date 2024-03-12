@@ -7,9 +7,8 @@
  */
 package com.adyen.checkout.core.internal.util
 
-import android.content.Context
-import android.os.Build
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.exception.CheckoutException
 import java.util.IllformedLocaleException
 import java.util.Locale
 
@@ -20,21 +19,6 @@ import java.util.Locale
 object LocaleUtil {
 
     /**
-     * Get the current user Locale.
-     * @param context The context
-     * @return The user Locale
-     */
-    @JvmStatic
-    fun getLocale(context: Context): Locale {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            context.resources.configuration.locales[0]
-        } else {
-            @Suppress("DEPRECATION")
-            context.resources.configuration.locale
-        }
-    }
-
-    /**
      * Gets the language tag from a Locale.
      *
      * @param locale The locale.
@@ -42,6 +26,9 @@ object LocaleUtil {
      */
     @JvmStatic
     fun toLanguageTag(locale: Locale): String {
+        if (!isValidLocale(locale)) {
+            throw CheckoutException("Invalid shopper locale: $locale.")
+        }
         return locale.toLanguageTag()
     }
 

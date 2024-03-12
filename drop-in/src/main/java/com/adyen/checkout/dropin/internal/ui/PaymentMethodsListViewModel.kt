@@ -11,7 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
@@ -20,13 +20,14 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.checkPaymentMethodAvailability
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
@@ -36,7 +37,6 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
-import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,9 +49,9 @@ internal class PaymentMethodsListViewModel(
     private val paymentMethods: List<PaymentMethod>,
     storedPaymentMethods: List<StoredPaymentMethod>,
     private val order: OrderModel?,
-    private val dropInConfiguration: DropInConfiguration,
-    private val amount: Amount?,
-    private val sessionDetails: SessionDetails?,
+    private val checkoutConfiguration: CheckoutConfiguration,
+    private val dropInParams: DropInParams,
+    private val dropInOverrideParams: DropInOverrideParams,
 ) : ViewModel(), ComponentAvailableCallback, ComponentCallback<PaymentComponentState<*>> {
 
     private val _paymentMethodsFlow = MutableStateFlow<List<PaymentMethodListItem>>(emptyList())
@@ -80,22 +80,23 @@ internal class PaymentMethodsListViewModel(
 
             when {
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(type) -> {
-                    Logger.d(TAG, "Supported payment method: $type")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Supported payment method: $type" }
                     checkPaymentMethodAvailability(
                         application = application,
                         paymentMethod = paymentMethod,
-                        dropInConfiguration = dropInConfiguration,
-                        amount = amount,
-                        sessionDetails = sessionDetails,
-                        callback = this
+                        checkoutConfiguration = checkoutConfiguration,
+                        dropInOverrideParams = dropInOverrideParams,
+                        callback = this,
                     )
                 }
+
                 PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(type) -> {
-                    Logger.e(TAG, "PaymentMethod not yet supported - $type")
+                    adyenLog(AdyenLogLevel.ERROR) { "PaymentMethod not yet supported - $type" }
                     paymentMethodsAvailabilityMap[paymentMethod] = false
                 }
+
                 else -> {
-                    Logger.d(TAG, "No availability check required - $type")
+                    adyenLog(AdyenLogLevel.DEBUG) { "No availability check required - $type" }
                     paymentMethodsAvailabilityMap[paymentMethod] = true
                 }
             }
@@ -104,7 +105,7 @@ internal class PaymentMethodsListViewModel(
     }
 
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
-        Logger.d(TAG, "onAvailabilityResult - ${paymentMethod.type}: $isAvailable")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAvailabilityResult - ${paymentMethod.type}: $isAvailable" }
         paymentMethodsAvailabilityMap[paymentMethod] = isAvailable
         checkIfListReady()
     }
@@ -126,9 +127,9 @@ internal class PaymentMethodsListViewModel(
             }
             // payment notes
             order?.remainingAmount?.let { remainingAmount ->
-                val value = CurrencyUtils.formatAmount(remainingAmount, dropInConfiguration.shopperLocale)
+                val value = CurrencyUtils.formatAmount(remainingAmount, dropInParams.shopperLocale)
                 add(
-                    PaymentMethodNote(application.getString(R.string.checkout_giftcard_pay_remaining_amount, value))
+                    PaymentMethodNote(application.getString(R.string.checkout_giftcard_pay_remaining_amount, value)),
                 )
             }
             // stored payment methods
@@ -184,8 +185,8 @@ internal class PaymentMethodsListViewModel(
             eventsChannel.trySend(
                 PaymentMethodListStoredEvent.ShowConfirmationPopup(
                     storedPaymentMethod.name ?: "",
-                    storedPaymentMethodModel
-                )
+                    storedPaymentMethodModel,
+                ),
             )
         } else {
             eventsChannel.trySend(PaymentMethodListStoredEvent.ShowStoredComponentDialog(storedPaymentMethod))
@@ -211,8 +212,8 @@ internal class PaymentMethodsListViewModel(
         mapNotNull { storedPaymentMethod ->
             if (storedPaymentMethod.isStoredPaymentSupported()) {
                 storedPaymentMethod.mapStoredModel(
-                    dropInConfiguration.isRemovingStoredPaymentMethodsEnabled,
-                    dropInConfiguration.environment,
+                    dropInParams.isRemovingStoredPaymentMethodsEnabled,
+                    dropInParams.environment,
                 )
             } else {
                 null
@@ -233,7 +234,7 @@ internal class PaymentMethodsListViewModel(
             name = name.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
-            environment = dropInConfiguration.environment,
+            environment = dropInParams.environment,
         )
     }
 
@@ -244,14 +245,12 @@ internal class PaymentMethodsListViewModel(
                 lastFour = it.lastFour,
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
-                shopperLocale = dropInConfiguration.shopperLocale,
-                environment = dropInConfiguration.environment,
+                shopperLocale = dropInParams.shopperLocale,
+                environment = dropInParams.environment,
             )
         }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
     }

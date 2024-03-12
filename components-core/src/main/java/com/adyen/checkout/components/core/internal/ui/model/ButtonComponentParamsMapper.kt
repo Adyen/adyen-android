@@ -1,57 +1,32 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.Configuration
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ButtonComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
-        configuration: Configuration,
-        sessionParams: SessionParams?,
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
+        componentConfiguration: Configuration?
     ): ButtonComponentParams {
-        return configuration
-            .mapToParamsInternal()
-            .override(overrideComponentParams)
-            .override(sessionParams ?: overrideSessionParams)
-    }
-
-    private fun Configuration.mapToParamsInternal(): ButtonComponentParams {
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
         return ButtonComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
-            isSubmitButtonVisible = (this as? ButtonConfiguration)?.isSubmitButtonVisible ?: true
-        )
-    }
-
-    private fun ButtonComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): ButtonComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount
-        )
-    }
-
-    private fun ButtonComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): ButtonComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            isSubmitButtonVisible = (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
         )
     }
 }

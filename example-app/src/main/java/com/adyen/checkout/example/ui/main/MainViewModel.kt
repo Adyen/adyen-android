@@ -12,7 +12,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.SessionDropInResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -125,8 +125,8 @@ internal class MainViewModel @Inject constructor(
             showLoading(false)
 
             if (paymentMethods != null) {
-                val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
-                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropIn(paymentMethods, dropInConfiguration)))
+                val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.DropIn(paymentMethods, checkoutConfiguration)))
             } else {
                 onError("Something went wrong while fetching payment methods")
             }
@@ -137,17 +137,17 @@ internal class MainViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading(true)
 
-            val dropInConfiguration = checkoutConfigurationProvider.getDropInConfiguration()
+            val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-            val session = getSession(dropInConfiguration)
+            val session = getSession(checkoutConfiguration)
 
             showLoading(false)
 
             if (session != null) {
                 val navigation = if (takeOverSession) {
-                    MainNavigation.DropInWithCustomSession(session, dropInConfiguration)
+                    MainNavigation.DropInWithCustomSession(session, checkoutConfiguration)
                 } else {
-                    MainNavigation.DropInWithSession(session, dropInConfiguration)
+                    MainNavigation.DropInWithSession(session, checkoutConfiguration)
                 }
                 _eventFlow.tryEmit(MainEvent.NavigateTo(navigation))
             } else {
@@ -167,7 +167,7 @@ internal class MainViewModel @Inject constructor(
         ),
     )
 
-    private suspend fun getSession(dropInConfiguration: DropInConfiguration): CheckoutSession? {
+    private suspend fun getSession(checkoutConfiguration: CheckoutConfiguration): CheckoutSession? {
         val sessionModel = paymentsRepository.createSession(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -176,24 +176,24 @@ internal class MainViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
+                threeDSMode = keyValueStorage.getThreeDSMode(),
                 redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
                 showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
             ),
         ) ?: return null
 
-        return getCheckoutSession(sessionModel, dropInConfiguration)
+        return getCheckoutSession(sessionModel, checkoutConfiguration)
     }
 
     private suspend fun getCheckoutSession(
         sessionModel: SessionModel,
-        dropInConfiguration: DropInConfiguration
+        checkoutConfiguration: CheckoutConfiguration
     ): CheckoutSession? {
-        return when (val result = CheckoutSessionProvider.createSession(sessionModel, dropInConfiguration)) {
+        return when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> {
                 onError("Something went wrong while starting session")

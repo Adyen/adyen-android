@@ -19,19 +19,21 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
 import com.adyen.checkout.sessions.core.SessionSetupResponse
+import com.adyen.checkout.sessions.core.TestComponentState
+import com.adyen.checkout.sessions.core.TestPaymentMethod
 import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionCancelOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetailsResponse
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDisableTokenResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsResponse
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -50,7 +52,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class SessionInteractorTest(
     @Mock private val sessionRepository: SessionRepository,
 ) {
@@ -60,7 +62,6 @@ internal class SessionInteractorTest(
     @BeforeEach
     fun before() {
         sessionInteractor = createSessionInteractor()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -87,7 +88,7 @@ internal class SessionInteractorTest(
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
                             order = mockResponse.order,
-                        )
+                        ),
                     )
 
                     assertEquals(expectedResult, result)
@@ -101,7 +102,7 @@ internal class SessionInteractorTest(
             fun `action is required then Action is returned and session data is updated`() = runTest {
                 sessionInteractor.sessionFlow.test {
                     val mockResponse = createSessionPaymentsResponse(
-                        action = RedirectAction()
+                        action = RedirectAction(),
                     )
 
                     whenever(sessionRepository.submitPayment(any(), any())) doReturn Result.success(mockResponse)
@@ -109,7 +110,7 @@ internal class SessionInteractorTest(
                     val result = sessionInteractor.onPaymentsCallRequested(TEST_COMPONENT_STATE, { false }, "")
 
                     val expectedResult = SessionCallResult.Payments.Action(
-                        requireNotNull(mockResponse.action)
+                        requireNotNull(mockResponse.action),
                     )
 
                     assertEquals(expectedResult, result)
@@ -124,7 +125,7 @@ internal class SessionInteractorTest(
                 runTest {
                     sessionInteractor.sessionFlow.test {
                         val mockResponse = createSessionPaymentsResponse(
-                            order = TEST_ORDER_RESPONSE
+                            order = TEST_ORDER_RESPONSE,
                         )
 
                         whenever(sessionRepository.submitPayment(any(), any())) doReturn Result.success(mockResponse)
@@ -139,7 +140,7 @@ internal class SessionInteractorTest(
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
                                 order = mockResponse.order,
-                            )
+                            ),
                         )
 
                         assertEquals(expectedResult, result)
@@ -151,7 +152,7 @@ internal class SessionInteractorTest(
             fun `a partial payment is fully paid then Finished is returned and session data is updated`() = runTest {
                 sessionInteractor.sessionFlow.test {
                     val mockResponse = createSessionPaymentsResponse(
-                        order = TEST_ORDER_RESPONSE.copy(remainingAmount = Amount("USD", 0))
+                        order = TEST_ORDER_RESPONSE.copy(remainingAmount = Amount("USD", 0)),
                     )
 
                     whenever(sessionRepository.submitPayment(any(), any())) doReturn Result.success(mockResponse)
@@ -165,7 +166,7 @@ internal class SessionInteractorTest(
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
                             order = mockResponse.order,
-                        )
+                        ),
                     )
 
                     assertEquals(expectedResult, result)
@@ -195,7 +196,7 @@ internal class SessionInteractorTest(
                                 sessionData = mockResponse.sessionData,
                                 resultCode = mockResponse.resultCode,
                                 order = mockResponse.order,
-                            )
+                            ),
                         )
 
                         assertEquals(expectedResult, result)
@@ -249,7 +250,7 @@ internal class SessionInteractorTest(
             @Test
             fun `merchant doesn't handle call then an exception is thrown and isFlowTakenOver stays true`() = runTest {
                 assertThrows<CheckoutException>(
-                    "Sessions flow was already taken over in a previous call, makePayment should be implemented"
+                    "Sessions flow was already taken over in a previous call, makePayment should be implemented",
                 ) {
                     sessionInteractor.onPaymentsCallRequested(TEST_COMPONENT_STATE, { false }, "makePayment")
                 }
@@ -283,7 +284,7 @@ internal class SessionInteractorTest(
                             sessionData = mockResponse.sessionData,
                             resultCode = mockResponse.resultCode,
                             order = mockResponse.order,
-                        )
+                        ),
                     )
 
                     assertEquals(expectedResult, result)
@@ -297,7 +298,7 @@ internal class SessionInteractorTest(
             fun `action is required then Action is returned and session data is updated`() = runTest {
                 sessionInteractor.sessionFlow.test {
                     val mockResponse = createSessionDetailsResponse(
-                        action = RedirectAction()
+                        action = RedirectAction(),
                     )
 
                     whenever(sessionRepository.submitDetails(any(), any())) doReturn Result.success(mockResponse)
@@ -305,7 +306,7 @@ internal class SessionInteractorTest(
                     val result = sessionInteractor.onDetailsCallRequested(ActionComponentData(), { false }, "")
 
                     val expectedResult = SessionCallResult.Details.Action(
-                        requireNotNull(mockResponse.action)
+                        requireNotNull(mockResponse.action),
                     )
 
                     assertEquals(expectedResult, result)
@@ -359,7 +360,7 @@ internal class SessionInteractorTest(
             @Test
             fun `merchant doesn't handle call then an exception is thrown and isFlowTakenOver stays true`() = runTest {
                 assertThrows<CheckoutException>(
-                    "Sessions flow was already taken over in a previous call, makeDetails should be implemented"
+                    "Sessions flow was already taken over in a previous call, makeDetails should be implemented",
                 ) {
                     sessionInteractor.onDetailsCallRequested(ActionComponentData(), { false }, "makeDetails")
                 }
@@ -394,36 +395,10 @@ internal class SessionInteractorTest(
                         BalanceResult(
                             balance = mockResponse.balance,
                             transactionLimit = mockResponse.transactionLimit,
-                        )
+                        ),
                     )
 
                     assertEquals(expectedResult, result)
-
-                    val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
-                    assertEquals(expectedSessionModel, expectMostRecentItem())
-                }
-            }
-
-            @Test
-            fun `balance is zero then Error is returned and session data is updated`() = runTest {
-                sessionInteractor.sessionFlow.test {
-                    val mockResponse = SessionBalanceResponse(
-                        sessionData = "session_data_updated",
-                        balance = Amount("USD", 0),
-                        transactionLimit = null,
-                    )
-
-                    whenever(sessionRepository.checkBalance(any(), any())) doReturn Result.success(mockResponse)
-
-                    val result = sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "")
-
-                    assertTrue(result is SessionCallResult.Balance.Error)
-                    require(result is SessionCallResult.Balance.Error)
-
-                    assertTrue(result.throwable is CheckoutException)
-                    require(result.throwable is CheckoutException)
-
-                    assertEquals("Not enough balance", result.throwable.message)
 
                     val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
                     assertEquals(expectedSessionModel, expectMostRecentItem())
@@ -474,7 +449,7 @@ internal class SessionInteractorTest(
             @Test
             fun `merchant doesn't handle call then an exception is thrown and isFlowTakenOver stays true`() = runTest {
                 assertThrows<CheckoutException>(
-                    "Sessions flow was already taken over in a previous call, makeBalance should be implemented"
+                    "Sessions flow was already taken over in a previous call, makeBalance should be implemented",
                 ) {
                     sessionInteractor.checkBalance(TEST_COMPONENT_STATE, { false }, "makeBalance")
                 }
@@ -511,7 +486,7 @@ internal class SessionInteractorTest(
                             orderData = mockResponse.orderData,
                             amount = null,
                             remainingAmount = null,
-                        )
+                        ),
                     )
 
                     assertEquals(expectedResult, result)
@@ -565,7 +540,7 @@ internal class SessionInteractorTest(
             @Test
             fun `merchant doesn't handle call then an exception is thrown and isFlowTakenOver stays true`() = runTest {
                 assertThrows<CheckoutException>(
-                    "Sessions flow was already taken over in a previous call, createOrder should be implemented"
+                    "Sessions flow was already taken over in a previous call, createOrder should be implemented",
                 ) {
                     sessionInteractor.createOrder({ false }, "createOrder")
                 }
@@ -647,7 +622,7 @@ internal class SessionInteractorTest(
             @Test
             fun `merchant doesn't handle call then an exception is thrown and isFlowTakenOver stays true`() = runTest {
                 assertThrows<CheckoutException>(
-                    "Sessions flow was already taken over in a previous call, cancelOrder should be implemented"
+                    "Sessions flow was already taken over in a previous call, cancelOrder should be implemented",
                 ) {
                     sessionInteractor.cancelOrder(TEST_ORDER_REQUEST, { false }, "cancelOrder")
                 }
@@ -707,6 +682,39 @@ internal class SessionInteractorTest(
         }
     }
 
+    @Nested
+    @DisplayName("when disable token call is requested and")
+    inner class RemoveStoredPaymentMethodCallTest {
+
+        @Test
+        fun `it is successful then session data is updated`() = runTest {
+            sessionInteractor.sessionFlow.test {
+                val mockResponse = SessionDisableTokenResponse(sessionData = "session_data_updated")
+                whenever(sessionRepository.disableToken(any(), any())) doReturn Result.success(mockResponse)
+
+                val result = sessionInteractor.removeStoredPaymentMethod("stored_payment_method_id")
+
+                val expectedResult = SessionCallResult.RemoveStoredPaymentMethod.Successful
+                assertEquals(expectedResult, result)
+
+                val expectedSessionModel = TEST_SESSION_MODEL.copy(sessionData = mockResponse.sessionData)
+                assertEquals(expectedSessionModel, expectMostRecentItem())
+            }
+        }
+
+        @Test
+        fun `an error is thrown then Error is returned`() = runTest {
+            val exception = Exception("failed for testing")
+
+            whenever(sessionRepository.disableToken(any(), any())) doReturn Result.failure(exception)
+
+            val result = sessionInteractor.removeStoredPaymentMethod("stored_payment_method_id")
+
+            val expectedResult = SessionCallResult.RemoveStoredPaymentMethod.Error(exception)
+            assertEquals(expectedResult, result)
+        }
+    }
+
     private fun createSessionInteractor(
         sessionModel: SessionModel = TEST_SESSION_MODEL,
         isFlowTakenOver: Boolean = false
@@ -756,7 +764,8 @@ internal class SessionInteractorTest(
         expiresAt: String = "",
         returnUrl: String = "",
         paymentMethods: PaymentMethodsApiResponse? = PaymentMethodsApiResponse(),
-        configuration: SessionSetupConfiguration? = null
+        configuration: SessionSetupConfiguration? = null,
+        shopperLocale: String? = null,
     ): SessionSetupResponse {
         return SessionSetupResponse(
             id = id,
@@ -765,7 +774,8 @@ internal class SessionInteractorTest(
             expiresAt = expiresAt,
             paymentMethodsApiResponse = paymentMethods,
             returnUrl = returnUrl,
-            configuration = configuration
+            configuration = configuration,
+            shopperLocale = shopperLocale,
         )
     }
 
@@ -774,7 +784,7 @@ internal class SessionInteractorTest(
 
         private val TEST_SESSION_MODEL = SessionModel(
             id = "session_id",
-            sessionData = "session_data_initial"
+            sessionData = "session_data_initial",
         )
 
         private val TEST_ORDER_REQUEST = OrderRequest(

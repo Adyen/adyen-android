@@ -10,21 +10,21 @@ package com.adyen.checkout.issuerlist.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.issuerlist.IssuerListViewType
 import com.adyen.checkout.issuerlist.TestIssuerComponentState
-import com.adyen.checkout.issuerlist.internal.IssuerListConfiguration
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParamsMapper
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.issuerlist.utils.TestIssuerListConfiguration
 import com.adyen.checkout.issuerlist.utils.TestIssuerPaymentMethod
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -50,7 +50,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultIssuerListDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
@@ -61,7 +61,6 @@ internal class DefaultIssuerListDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createIssuerListDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -130,9 +129,9 @@ internal class DefaultIssuerListDelegateTest(
                         IssuerModel(
                             id = "issuer-id",
                             name = "issuer-name",
-                            environment = Environment.TEST
-                        )
-                    )
+                            environment = Environment.TEST,
+                        ),
+                    ),
                 )
                 with(expectMostRecentItem()) {
                     assertEquals("issuer-id", data.paymentMethod?.issuer)
@@ -150,9 +149,7 @@ internal class DefaultIssuerListDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultTestIssuerListConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createIssuerListDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -167,17 +164,20 @@ internal class DefaultIssuerListDelegateTest(
 
     @Test
     fun `when configuration viewType is RECYCLER_VIEW then viewFlow should emit RECYCLER_VIEW`() = runTest {
-        val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1
-        )
-            .setViewType(IssuerListViewType.RECYCLER_VIEW)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setViewType(IssuerListViewType.RECYCLER_VIEW)
+        }
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+                hideIssuerLogosDefaultValue = false,
+            ),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
@@ -187,9 +187,9 @@ internal class DefaultIssuerListDelegateTest(
                 TestIssuerComponentState(
                     data = data,
                     isInputValid = isInputValid,
-                    isReady = isReady
+                    isReady = isReady,
                 )
-            }
+            },
         )
 
         delegate.viewFlow.test {
@@ -199,17 +199,20 @@ internal class DefaultIssuerListDelegateTest(
 
     @Test
     fun `when configuration viewType is SPINNER_VIEW then viewFlow should emit SPINNER_VIEW`() = runTest {
-        val configuration: IssuerListConfiguration = TestIssuerListConfiguration.Builder(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY_1
-        )
-            .setViewType(IssuerListViewType.SPINNER_VIEW)
-            .build()
+        val configuration = createCheckoutConfiguration {
+            setViewType(IssuerListViewType.SPINNER_VIEW)
+        }
 
         delegate = DefaultIssuerListDelegate(
             observerRepository = PaymentObserverRepository(),
-            componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
+            componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+                hideIssuerLogosDefaultValue = false,
+            ),
             paymentMethod = PaymentMethod(),
             order = TEST_ORDER,
             analyticsRepository = analyticsRepository,
@@ -219,9 +222,9 @@ internal class DefaultIssuerListDelegateTest(
                 TestIssuerComponentState(
                     data = data,
                     isInputValid = isInputValid,
-                    isReady = isReady
+                    isReady = isReady,
                 )
-            }
+            },
         )
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
@@ -240,10 +243,10 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createIssuerListDelegate(
-                configuration = getDefaultTestIssuerListConfigurationBuilder()
-                    .setViewType(IssuerListViewType.SPINNER_VIEW)
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setViewType(IssuerListViewType.SPINNER_VIEW)
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -252,10 +255,10 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createIssuerListDelegate(
-                configuration = getDefaultTestIssuerListConfigurationBuilder()
-                    .setViewType(IssuerListViewType.SPINNER_VIEW)
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setViewType(IssuerListViewType.SPINNER_VIEW)
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -309,25 +312,48 @@ internal class DefaultIssuerListDelegateTest(
     }
 
     private fun createIssuerListDelegate(
-        configuration: TestIssuerListConfiguration = getDefaultTestIssuerListConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultIssuerListDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = IssuerListComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = IssuerListComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            hideIssuerLogosDefaultValue = false,
+        ),
         paymentMethod = PaymentMethod(),
         order = TEST_ORDER,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
         typedPaymentMethodFactory = { TestIssuerPaymentMethod() },
-        componentStateFactory = { data, isInputValid, isReady -> TestIssuerComponentState(data, isInputValid, isReady) }
+        componentStateFactory = { data, isInputValid, isReady ->
+            TestIssuerComponentState(
+                data,
+                isInputValid,
+                isReady,
+            )
+        },
     )
 
-    private fun getDefaultTestIssuerListConfigurationBuilder() = TestIssuerListConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY_1
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: TestIssuerListConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
+    ) {
+        val issuerListConfiguration = TestIssuerListConfiguration.Builder(shopperLocale, environment, clientKey)
+            .apply(configuration)
+            .build()
+        addConfiguration(TEST_CONFIGURATION_KEY, issuerListConfiguration)
+    }
 
     companion object {
+        private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"

@@ -21,8 +21,10 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
@@ -57,26 +59,38 @@ import kotlin.collections.set
 @Parcelize
 @Suppress("LongParameterList")
 class DropInConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
     private val availablePaymentConfigs: HashMap<String, Configuration>,
     internal val genericActionConfiguration: GenericActionConfiguration,
-    val showPreselectedStoredPaymentMethod: Boolean,
-    val skipListWhenSinglePaymentMethod: Boolean,
-    val isRemovingStoredPaymentMethodsEnabled: Boolean,
+    val showPreselectedStoredPaymentMethod: Boolean?,
+    val skipListWhenSinglePaymentMethod: Boolean?,
+    val isRemovingStoredPaymentMethodsEnabled: Boolean?,
     val additionalDataForDropInService: Bundle?,
     internal val overriddenPaymentMethodInformation: HashMap<String, DropInPaymentMethodInformation>,
 ) : Configuration {
 
-    internal fun <T : Configuration> getConfigurationForPaymentMethod(paymentMethod: String): T? {
-        if (availablePaymentConfigs.containsKey(paymentMethod)) {
-            @Suppress("UNCHECKED_CAST")
-            return availablePaymentConfigs[paymentMethod] as T
+    internal fun toCheckoutConfiguration(): CheckoutConfiguration {
+        return CheckoutConfiguration(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            amount = amount,
+            analyticsConfiguration = analyticsConfiguration,
+        ) {
+            addConfiguration(DROP_IN_CONFIG_KEY, this@DropInConfiguration)
+
+            availablePaymentConfigs.forEach { (key, paymentConfig) ->
+                addConfiguration(key, paymentConfig)
+            }
+
+            genericActionConfiguration.getAllConfigurations().forEach { config ->
+                addActionConfiguration(config)
+            }
         }
-        return null
     }
 
     /**
@@ -89,10 +103,26 @@ class DropInConfiguration private constructor(
         private val availablePaymentConfigs = HashMap<String, Configuration>()
         private val overriddenPaymentMethodInformation = HashMap<String, DropInPaymentMethodInformation>()
 
-        private var showPreselectedStoredPaymentMethod: Boolean = true
-        private var skipListWhenSinglePaymentMethod: Boolean = false
-        private var isRemovingStoredPaymentMethodsEnabled: Boolean = false
+        private var showPreselectedStoredPaymentMethod: Boolean? = null
+        private var skipListWhenSinglePaymentMethod: Boolean? = null
+        private var isRemovingStoredPaymentMethodsEnabled: Boolean? = null
         private var additionalDataForDropInService: Bundle? = null
+
+        /**
+         * Initialize a configuration builder with the required fields.
+         *
+         * The shopper locale will match the value passed to the API with the sessions flow, or the primary user locale
+         * on the device otherwise. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
 
         /**
          * Create a [DropInConfiguration]
@@ -104,7 +134,7 @@ class DropInConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -114,14 +144,17 @@ class DropInConfiguration private constructor(
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
          * When set to false, Drop-in will skip the preselected screen and go straight to the payment methods list.
+         *
+         * Default is true.
          */
         fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
             this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
@@ -135,6 +168,8 @@ class DropInConfiguration private constructor(
          * This only applies to payment methods that require a component (user input). Which means redirect payment
          * methods, SDK payment methods, etc will not be skipped even if this flag is set to true and a single payment
          * method is present.
+         *
+         * Default is false.
          */
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
@@ -146,6 +181,8 @@ class DropInConfiguration private constructor(
          * the payment methods screen.
          *
          * You need to implement [DropInService.onRemoveStoredPaymentMethod] to handle the removal.
+         *
+         * Default is false.
          */
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
@@ -419,4 +456,25 @@ class DropInConfiguration private constructor(
             )
         }
     }
+}
+
+private const val DROP_IN_CONFIG_KEY = "DROP_IN_CONFIG_KEY"
+
+fun CheckoutConfiguration.dropIn(
+    configuration: @CheckoutConfigurationMarker Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = Builder(environment, clientKey)
+        .apply {
+            shopperLocale?.let { setShopperLocale(it) }
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addConfiguration(DROP_IN_CONFIG_KEY, config)
+    return this
+}
+
+fun CheckoutConfiguration.getDropInConfiguration(): DropInConfiguration? {
+    return getConfiguration(DROP_IN_CONFIG_KEY)
 }

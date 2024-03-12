@@ -35,6 +35,9 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -43,14 +46,15 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
@@ -59,12 +63,12 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
@@ -100,7 +104,8 @@ class DefaultCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val genericEncryptor: BaseGenericEncryptor,
     private val submitHandler: SubmitHandler<CardComponentState>,
-) : CardDelegate {
+    private val addressLookupDelegate: AddressLookupDelegate
+) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
     private val inputData: CardInputData = CardInputData()
 
@@ -150,15 +155,24 @@ class DefaultCardDelegate(
         fetchPublicKey()
         subscribeToDetectedCardTypes()
 
-        if (componentParams.addressParams is AddressParams.FullAddress) {
+        if (componentParams.addressParams is AddressParams.FullAddress ||
+            componentParams.addressParams is AddressParams.Lookup
+        ) {
             subscribeToStatesList()
             subscribeToCountryList()
             requestCountryList()
         }
+        addressLookupDelegate.addressLookupSubmitFlow
+            .onEach {
+                _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
+                inputData.address = it
+                updateOutputData()
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         coroutineScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -175,7 +189,7 @@ class DefaultCardDelegate(
             submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
     }
 
@@ -184,21 +198,21 @@ class DefaultCardDelegate(
     }
 
     private fun fetchPublicKey() {
-        Logger.d(TAG, "fetchPublicKey")
+        adyenLog(AdyenLogLevel.DEBUG) { "fetchPublicKey" }
         coroutineScope.launch {
             publicKeyRepository.fetchPublicKey(
                 environment = componentParams.environment,
-                clientKey = componentParams.clientKey
+                clientKey = componentParams.clientKey,
             ).fold(
                 onSuccess = { key ->
-                    Logger.d(TAG, "Public key fetched")
+                    adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                     publicKey = key
                     updateComponentState(outputData)
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch public key")
+                    adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
-                }
+                },
             )
         }
     }
@@ -219,14 +233,14 @@ class DefaultCardDelegate(
     }
 
     private fun onInputDataChanged() {
-        Logger.v(TAG, "onInputDataChanged")
+        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
         detectCardTypeRepository.detectCardType(
             cardNumber = inputData.cardNumber,
             publicKey = publicKey,
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope,
-            type = paymentMethod.type
+            type = paymentMethod.type,
         )
         requestStateList(inputData.address.country)
     }
@@ -234,11 +248,10 @@ class DefaultCardDelegate(
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
-                Logger.d(
-                    TAG,
+                adyenLog(AdyenLogLevel.DEBUG) {
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
-                )
+                }
                 if (detectedCardTypes != outputData.detectedCardTypes) {
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
@@ -254,11 +267,11 @@ class DefaultCardDelegate(
         addressRepository.countriesFlow
             .distinctUntilChanged()
             .onEach { countries ->
-                Logger.d(TAG, "New countries emitted - countries: ${countries.size}")
+                adyenLog(AdyenLogLevel.DEBUG) { "New countries emitted - countries: ${countries.size}" }
                 val countryOptions = AddressFormUtils.initializeCountryOptions(
                     shopperLocale = componentParams.shopperLocale,
                     addressParams = componentParams.addressParams,
-                    countryList = countries
+                    countryList = countries,
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
                     inputData.address.country = it.code
@@ -273,8 +286,9 @@ class DefaultCardDelegate(
         addressRepository.statesFlow
             .distinctUntilChanged()
             .onEach { states ->
-                Logger.d(TAG, "New states emitted - states: ${states.size}")
-                updateOutputData(stateOptions = AddressFormUtils.initializeStateOptions(states))
+                adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
+                val stateOptions = AddressFormUtils.initializeStateOptions(states)
+                updateOutputData(stateOptions = stateOptions)
             }
             .launchIn(coroutineScope)
     }
@@ -284,7 +298,8 @@ class DefaultCardDelegate(
         countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
         stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
     ) {
-        val newOutputData = createOutputData(detectedCardTypes, countryOptions, stateOptions)
+        val newOutputData =
+            createOutputData(detectedCardTypes, countryOptions, stateOptions)
         _outputDataFlow.tryEmit(newOutputData)
         updateComponentState(newOutputData)
     }
@@ -295,24 +310,24 @@ class DefaultCardDelegate(
         countryOptions: List<AddressListItem> = emptyList(),
         stateOptions: List<AddressListItem> = emptyList(),
     ): CardOutputData {
-        Logger.v(TAG, "createOutputData")
+        adyenLog(AdyenLogLevel.VERBOSE) { "createOutputData" }
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            inputData.address.country
+            inputData.address.country,
         )
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            inputData.address.stateOrProvince
+            inputData.address.stateOrProvince,
         )
 
         val isReliable = detectedCardTypes.any { it.isReliable }
 
         val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
             detectedCardTypes,
-            inputData.selectedCardIndex
+            inputData.selectedCardIndex,
         )
         val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = filteredDetectedCardTypes
+            detectedCardTypes = filteredDetectedCardTypes,
         )
 
         // perform a Luhn Check if no brands are detected
@@ -323,11 +338,19 @@ class DefaultCardDelegate(
 
         val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
 
+        val addressState = validateAddress(
+            inputData.address,
+            addressFormUIState,
+            selectedOrFirstCardType,
+            updatedCountryOptions,
+            updatedStateOptions,
+        )
+
         return CardOutputData(
             cardNumberState = validateCardNumber(
                 cardNumber = inputData.cardNumber,
                 enableLuhnCheck = enableLuhnCheck,
-                isBrandSupported = !shouldFailWithUnsupportedBrand
+                isBrandSupported = !shouldFailWithUnsupportedBrand,
             ),
             expiryDateState = validateExpiryDate(inputData.expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
             securityCodeState = validateSecurityCode(inputData.securityCode, selectedOrFirstCardType),
@@ -335,13 +358,7 @@ class DefaultCardDelegate(
             socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = validateAddress(
-                inputData.address,
-                addressFormUIState,
-                selectedOrFirstCardType,
-                updatedCountryOptions,
-                updatedStateOptions
-            ),
+            addressState = addressState,
             installmentState = makeInstallmentFieldState(inputData.installmentOption),
             shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
             cvcUIState = makeCvcUIState(selectedOrFirstCardType),
@@ -355,12 +372,12 @@ class DefaultCardDelegate(
             installmentOptions = getInstallmentOptions(
                 installmentParams = componentParams.installmentParams,
                 cardBrand = selectedOrFirstCardType?.cardBrand,
-                isCardTypeReliable = isReliable
+                isCardTypeReliable = isReliable,
             ),
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
-            isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes)
+            isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
         )
     }
 
@@ -377,7 +394,7 @@ class DefaultCardDelegate(
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: CardOutputData) {
-        Logger.v(TAG, "updateComponentState")
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
         _componentStateFlow.tryEmit(componentState)
     }
@@ -389,7 +406,7 @@ class DefaultCardDelegate(
         val cardNumber = outputData.cardNumberState.value
 
         val firstCardBrand = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = outputData.detectedCardTypes
+            detectedCardTypes = outputData.detectedCardTypes,
         )?.cardBrand
 
         val binValue =
@@ -415,7 +432,7 @@ class DefaultCardDelegate(
                 isReady = publicKey != null,
                 cardBrand = firstCardBrand,
                 binValue = binValue,
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -431,7 +448,7 @@ class DefaultCardDelegate(
             if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString()
+                    expiryYear = expiryDateResult.expiryYear.toString(),
                 )
             }
 
@@ -445,7 +462,7 @@ class DefaultCardDelegate(
                 isReady = true,
                 cardBrand = firstCardBrand,
                 binValue = binValue,
-                lastFourDigits = null
+                lastFourDigits = null,
             )
         }
 
@@ -454,13 +471,27 @@ class DefaultCardDelegate(
             outputData,
             cardNumber,
             firstCardBrand,
-            binValue
+            binValue,
         )
     }
 
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state = state)
+    }
+
+    override fun startAddressLookup() {
+        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
+        addressLookupDelegate.initialize(coroutineScope, inputData.address)
+    }
+
+    override fun handleBackPress(): Boolean {
+        return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
+            _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
+            true
+        } else {
+            false
+        }
     }
 
     // Validation
@@ -492,12 +523,12 @@ class DefaultCardDelegate(
         return if (componentParams.isHolderNameRequired && holderName.isBlank()) {
             FieldState(
                 holderName,
-                Validation.Invalid(R.string.checkout_holder_name_not_valid)
+                Validation.Invalid(R.string.checkout_holder_name_not_valid),
             )
         } else {
             FieldState(
                 holderName,
-                Validation.Valid
+                Validation.Valid,
             )
         }
     }
@@ -536,7 +567,7 @@ class DefaultCardDelegate(
         val isOptional =
             CardAddressValidationUtils.isAddressOptional(
                 addressParams = componentParams.addressParams,
-                cardType = detectedCardType?.cardBrand?.txVariant
+                cardType = detectedCardType?.cardBrand?.txVariant,
             )
 
         return AddressValidationUtils.validateAddressInput(
@@ -544,7 +575,7 @@ class DefaultCardDelegate(
             addressFormUIState,
             countryOptions,
             stateOptions,
-            isOptional
+            isOptional,
         )
     }
 
@@ -592,7 +623,7 @@ class DefaultCardDelegate(
     private fun requestCountryList() {
         addressRepository.getCountryList(
             shopperLocale = componentParams.shopperLocale,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
@@ -600,12 +631,12 @@ class DefaultCardDelegate(
         addressRepository.getStateList(
             shopperLocale = componentParams.shopperLocale,
             countryCode = countryCode,
-            coroutineScope = coroutineScope
+            coroutineScope = coroutineScope,
         )
     }
 
     private fun makeCvcUIState(detectedCardType: DetectedCardType?): InputFieldUIState {
-        Logger.d(TAG, "makeCvcUIState: ${detectedCardType?.cvcPolicy}")
+        adyenLog(AdyenLogLevel.DEBUG) { "makeCvcUIState: ${detectedCardType?.cvcPolicy}" }
 
         return if (detectedCardType?.isReliable == true) {
             when (componentParams.cvcVisibility) {
@@ -676,7 +707,7 @@ class DefaultCardDelegate(
                     encryptedPassword = genericEncryptor.encryptField(
                         ENCRYPTION_KEY_FOR_KCP_PASSWORD,
                         stateOutputData.kcpCardPasswordState.value,
-                        publicKey
+                        publicKey,
                     )
                 } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
@@ -699,7 +730,7 @@ class DefaultCardDelegate(
             isReady = true,
             cardBrand = firstCardBrand,
             binValue = binValue,
-            lastFourDigits = lastFour
+            lastFourDigits = lastFour,
         )
     }
 
@@ -736,7 +767,7 @@ class DefaultCardDelegate(
             if (isAddressRequired(stateOutputData.addressUIState)) {
                 billingAddress = AddressFormUtils.makeAddressData(
                     addressOutputData = stateOutputData.addressState,
-                    addressFormUIState = stateOutputData.addressUIState
+                    addressFormUIState = stateOutputData.addressUIState,
                 )
             }
             if (isInstallmentsRequired(stateOutputData)) {
@@ -763,7 +794,7 @@ class DefaultCardDelegate(
     private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
         return if (isDualBrandedFlow(detectedCardTypes)) {
             DetectedCardTypesUtils.getSelectedCardType(
-                detectedCardTypes = detectedCardTypes
+                detectedCardTypes = detectedCardTypes,
             )
         } else {
             val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
@@ -784,15 +815,28 @@ class DefaultCardDelegate(
         onBinLookupListener = listener
     }
 
+    override fun setAddressLookupCallback(addressLookupCallback: AddressLookupCallback) {
+        addressLookupDelegate.setAddressLookupCallback(addressLookupCallback)
+    }
+
+    override fun updateAddressLookupOptions(options: List<LookupAddress>) {
+        adyenLog(AdyenLogLevel.DEBUG) { "update address lookup options $options" }
+        addressLookupDelegate.updateAddressLookupOptions(options)
+    }
+
+    override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
+        addressLookupDelegate.setAddressLookupResult(addressLookupResult)
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
         onBinValueListener = null
         onBinLookupListener = null
+        addressLookupDelegate.clear()
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val DEBIT_FUNDING_SOURCE = "debit"
 
         @VisibleForTesting

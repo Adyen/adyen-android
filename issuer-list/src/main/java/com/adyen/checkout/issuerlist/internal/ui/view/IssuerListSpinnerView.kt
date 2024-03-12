@@ -14,8 +14,8 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -29,7 +29,7 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView,
     AdapterView.OnItemSelectedListener {
@@ -72,8 +72,9 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        Logger.d(TAG, "onItemSelected - " + issuersAdapter.getItem(position).name)
-        issuerListDelegate.updateInputData { selectedIssuer = issuersAdapter.getItem(position) }
+        val item = issuersAdapter.getItem(position)
+        adyenLog(AdyenLogLevel.DEBUG) { "onItemSelected - " + item.name }
+        issuerListDelegate.updateInputData { selectedIssuer = item }
     }
 
     override fun setEnabled(enabled: Boolean) {
@@ -86,8 +87,4 @@ internal class IssuerListSpinnerView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

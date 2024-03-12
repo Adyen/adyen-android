@@ -17,8 +17,8 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.hideKeyboard
@@ -66,23 +66,23 @@ internal class UPIView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewModeSelection.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_ModeSelectionTextView,
-            localizedContext
+            localizedContext,
         )
         binding.buttonVpa.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_VPAButton,
-            localizedContext
+            localizedContext,
         )
         binding.buttonQrCode.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_QRButton,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutVpa.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_UPI_VPAEditText,
-            localizedContext
+            localizedContext,
         )
         binding.textViewQrCodeDescription.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_QRGenerationTextView,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -101,6 +101,7 @@ internal class UPIView @JvmOverloads constructor(
                         delegate.updateInputData { mode = UPIMode.VPA }
                     }
                 }
+
                 R.id.button_qrCode -> {
                     binding.textInputLayoutVpa.isVisible = !isChecked
                     binding.textViewQrCodeDescription.isVisible = isChecked
@@ -135,7 +136,7 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        Logger.d(TAG, "highlightValidationErrors")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val vpaValidation = delegate.outputData.virtualPaymentAddressFieldState.validation
         if (vpaValidation is Validation.Invalid) {
             binding.textInputLayoutVpa.showError(localizedContext.getString(vpaValidation.reason))
@@ -143,8 +144,4 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

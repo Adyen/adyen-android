@@ -11,9 +11,9 @@ package com.adyen.checkout.components.core.internal
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -29,16 +29,16 @@ class DefaultComponentEventHandler<T : PaymentComponentState<*>> : ComponentEven
         @Suppress("UNCHECKED_CAST")
         val callback = componentCallback as? ComponentCallback<T>
             ?: throw CheckoutException("Callback must be type of ${ComponentCallback::class.java.canonicalName}")
-        Logger.v(TAG, "Event received $event")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Event received $event" }
         when (event) {
             is PaymentComponentEvent.ActionDetails -> callback.onAdditionalDetails(event.data)
             is PaymentComponentEvent.Error -> callback.onError(event.error)
             is PaymentComponentEvent.StateChanged -> callback.onStateChanged(event.state)
             is PaymentComponentEvent.Submit -> callback.onSubmit(event.state)
+            is PaymentComponentEvent.PermissionRequest -> callback.onPermissionRequest(
+                event.requiredPermission,
+                event.permissionCallback,
+            )
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

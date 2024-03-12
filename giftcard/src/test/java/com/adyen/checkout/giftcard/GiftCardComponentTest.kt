@@ -17,10 +17,9 @@ import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
@@ -42,7 +41,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GiftCardComponentTest(
     @Mock private val giftCardDelegate: GiftCardDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
@@ -61,9 +60,8 @@ internal class GiftCardComponentTest(
             giftCardDelegate = giftCardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -117,7 +115,7 @@ internal class GiftCardComponentTest(
             giftCardDelegate = giftCardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
 
         component.viewFlow.test {
@@ -138,7 +136,7 @@ internal class GiftCardComponentTest(
             giftCardDelegate = giftCardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
 
         component.viewFlow.test {
@@ -204,14 +202,14 @@ internal class GiftCardComponentTest(
     companion object {
         private val BALANCE_RESULT = BalanceResult(
             balance = null,
-            transactionLimit = null
+            transactionLimit = null,
         )
 
         private val ORDER_RESPONSE = OrderResponse(
             pspReference = "psp",
             orderData = "orderData",
             amount = null,
-            remainingAmount = null
+            remainingAmount = null,
         )
     }
 }

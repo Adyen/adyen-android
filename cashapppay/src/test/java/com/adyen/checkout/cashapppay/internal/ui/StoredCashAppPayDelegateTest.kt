@@ -8,15 +8,18 @@
 
 package com.adyen.checkout.cashapppay.internal.ui
 
+import android.app.Application
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
-import com.adyen.checkout.cashapppay.CashAppPayConfiguration
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.extensions.test
@@ -74,9 +77,7 @@ internal class StoredCashAppPayDelegateTest(
         expectedComponentStateValue: Amount?,
     ) = runTest {
         if (configurationValue != null) {
-            val configuration = getConfigurationBuilder()
-                .setAmount(configurationValue)
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createStoredCashAppPayDelegate(configuration = configuration)
         }
         val testFlow = delegate.componentStateFlow.test(testScheduler)
@@ -112,13 +113,13 @@ internal class StoredCashAppPayDelegateTest(
                 amount = null,
             ),
             isInputValid = true,
-            isReady = true
+            isReady = true,
         )
         assertEquals(expected, testFlow.latestValue)
     }
 
     private fun createStoredCashAppPayDelegate(
-        configuration: CashAppPayConfiguration = getConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration()
     ) = StoredCashAppPayDelegate(
         analyticsRepository = analyticsRepository,
         observerRepository = PaymentObserverRepository(),
@@ -127,21 +128,31 @@ internal class StoredCashAppPayDelegateTest(
             type = TEST_PAYMENT_METHOD_TYPE,
         ),
         order = TEST_ORDER,
-        componentParams = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
-            paymentMethod = StoredPaymentMethod(),
+        componentParams = CashAppPayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            storedPaymentMethod = StoredPaymentMethod(),
+            context = Application(),
         ),
     )
 
-    private fun getConfigurationBuilder() = CashAppPayConfiguration.Builder(
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
-    )
-        .setReturnUrl("test")
+        amount = amount,
+    ) {
+        cashAppPay {
+            setReturnUrl(TEST_RETURN_URL)
+        }
+    }
 
     companion object {
+        private const val TEST_RETURN_URL = "testReturnUrl"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_PAYMENT_METHOD_ID = "TEST_PAYMENT_METHOD_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"

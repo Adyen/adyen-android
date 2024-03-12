@@ -12,7 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
@@ -20,52 +20,72 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
+import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation
 import com.adyen.checkout.dropin.internal.ui.model.overrideInformation
+import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
+import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import java.util.Locale
 
 internal class DropInViewModelFactory(
-    activity: ComponentActivity
+    activity: ComponentActivity,
+    localeProvider: LocaleProvider = LocaleProvider(),
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
 
     private val packageName: String = activity.packageName
     private val screenWidth: Int = activity.screenWidthPixels
+    private val deviceLocale: Locale = localeProvider.getLocale(activity)
 
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
 
-        val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
-        bundleHandler.overridePaymentMethodInformation(dropInConfiguration.overriddenPaymentMethodInformation)
+        val dropInParams = getDropInParams(
+            checkoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration),
+            sessionDetails = bundleHandler.sessionDetails,
+        )
 
-        val amount: Amount? = bundleHandler.amount
+        bundleHandler.overridePaymentMethodInformation(dropInParams.overriddenPaymentMethodInformation)
+
         val paymentMethods = bundleHandler.paymentMethodsApiResponse?.paymentMethods?.mapNotNull { it.type }.orEmpty()
-        val session = bundleHandler.sessionDetails
 
-        val httpClient = HttpClientFactory.getHttpClient(dropInConfiguration.environment)
+        val httpClient = HttpClientFactory.getHttpClient(dropInParams.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
         val analyticsRepository = DefaultAnalyticsRepository(
             analyticsRepositoryData = AnalyticsRepositoryData(
-                level = AnalyticsParams(dropInConfiguration.analyticsConfiguration).level,
+                level = dropInParams.analyticsParams.level,
                 packageName = packageName,
-                locale = dropInConfiguration.shopperLocale,
+                locale = dropInParams.shopperLocale,
                 source = AnalyticsSource.DropIn(),
-                clientKey = dropInConfiguration.clientKey,
-                amount = amount,
+                clientKey = dropInParams.clientKey,
+                amount = dropInParams.amount,
                 screenWidth = screenWidth,
                 paymentMethods = paymentMethods,
-                sessionId = session?.id,
+                sessionId = bundleHandler.sessionDetails?.id,
             ),
             analyticsService = AnalyticsService(
-                HttpClientFactory.getAnalyticsHttpClient(dropInConfiguration.environment)
+                httpClient = HttpClientFactory.getAnalyticsHttpClient(dropInParams.environment),
             ),
             analyticsMapper = AnalyticsMapper(),
         )
 
         @Suppress("UNCHECKED_CAST")
-        return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository) as T
+        return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository, dropInParams) as T
+    }
+
+    private fun getDropInParams(
+        checkoutConfiguration: CheckoutConfiguration,
+        sessionDetails: SessionDetails?
+    ): DropInParams {
+        val sessionParams = sessionDetails?.let { SessionParamsFactory.create(sessionDetails) }
+        return DropInParamsMapper().mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = deviceLocale,
+            sessionParams = sessionParams,
+        )
     }
 }
 

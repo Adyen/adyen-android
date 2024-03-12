@@ -117,10 +117,12 @@ It is possible to change text in the SDK by overriding string resources. To over
 Payment method names in the payment method list can be overridden with a configuration object:
 
 ```kotlin
-DropInConfiguration.Builder(shopperLocale, environment, clientKey)
-    .overridePaymentMethodName(PaymentMethodTypes.SCHEME, "Credit cards")
-    .overridePaymentMethodName(PaymentMethodTypes.GIFTCARD, "Specific gift card")
-    .build()
+CheckoutConfiguration(shopperLocale, environment, clientKey) {
+    dropIn {
+        overridePaymentMethodName(PaymentMethodTypes.SCHEME, "Credit cards")
+        overridePaymentMethodName(PaymentMethodTypes.GIFTCARD, "Specific gift card")
+    }
+}
 ```
 
 If you cannot find a certain string in the code base, then check whether it is coming from the Checkout API. Make sure you localize these strings by sending the correct [shopperLocale](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-shopperLocale). 

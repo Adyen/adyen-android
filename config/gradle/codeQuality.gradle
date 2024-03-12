@@ -9,5 +9,3 @@
 apply from: "${rootDir}/config/gradle/jacoco.gradle"
 apply from: "${rootDir}/config/gradle/ktlint.gradle"
 apply from: "${rootDir}/config/gradle/detekt.gradle"
-
-check.dependsOn "ktlint", "detekt"

@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.MethodNotImplementedException
 import org.json.JSONObject
 
@@ -118,4 +119,18 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponent
      * UI.
      */
     fun onLoading(isLoading: Boolean) = Unit
+
+    /**
+     * Should be overridden to support runtime permissions for components.
+     * Runtime permission should be requested and communicated back through the callback.
+     * If not overridden, [PermissionHandlerCallback.onPermissionRequestNotHandled] will be invoked, which will show an
+     * error message.
+     *
+     * @param requiredPermission Required runtime permission.
+     * @param permissionCallback Callback to be used when passing permission result.
+     */
+    fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        // To be optionally overridden
+        permissionCallback.onPermissionRequestNotHandled(requiredPermission)
+    }
 }

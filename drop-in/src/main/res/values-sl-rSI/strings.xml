@@ -8,12 +8,10 @@
 
 <resources>
     <string name="payment_methods_header">Načini plačila</string>
-    <string name="error_dialog_title">Napaka</string>
-    <string name="error_dialog_button">OK</string>
     <string name="payment_failed">Napaka pri pošiljanju plačila. Poskusite znova.</string>
     <string name="action_failed">Pri obdelavi vašega plačila je prišlo do napake. Poskusite znova pozneje.</string>
-    <string name="component_error">Nekaj je šlo narobe.</string>
     <string name="time_out_error">Zahteva je potekla. Poskusite znova.</string>
+    <string name="unknown_error">Prišlo je do neznane napake</string>
     <string name="store_payment_methods_header">Vaši načini plačila</string>
     <string name="other_payment_methods">Izberite drug način</string>
     <string name="continue_button">Nadaljuj</string>

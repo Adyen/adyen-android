@@ -10,18 +10,21 @@ package com.adyen.checkout.giftcard.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.giftcard.GiftCardException
+import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
@@ -162,9 +165,7 @@ internal class DefaultGiftCardDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultGiftCardConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createGiftCardDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -190,9 +191,9 @@ internal class DefaultGiftCardDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createGiftCardDelegate(
-                configuration = getDefaultGiftCardConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -201,9 +202,9 @@ internal class DefaultGiftCardDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createGiftCardDelegate(
-                configuration = getDefaultGiftCardConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -253,7 +254,7 @@ internal class DefaultGiftCardDelegateTest(
         fun `when balance result is FullPayment then giftCardAction should be SendPayment`() = runTest {
             val fullPaymentBalanceStatus = GiftCardBalanceStatus.FullPayment(
                 amountPaid = Amount(value = 50_00, currency = "EUR"),
-                remainingBalance = Amount(value = 0L, currency = "EUR")
+                remainingBalance = Amount(value = 0L, currency = "EUR"),
             )
             delegate.resolveBalanceStatus(fullPaymentBalanceStatus)
 
@@ -271,7 +272,7 @@ internal class DefaultGiftCardDelegateTest(
                 delegate = createGiftCardDelegate(order = null)
                 val partialPaymentBalanceStatus = GiftCardBalanceStatus.PartialPayment(
                     amountPaid = Amount(value = 50_00, currency = "EUR"),
-                    remainingBalance = Amount(value = 0L, currency = "EUR")
+                    remainingBalance = Amount(value = 0L, currency = "EUR"),
                 )
                 delegate.resolveBalanceStatus(partialPaymentBalanceStatus)
 
@@ -288,7 +289,7 @@ internal class DefaultGiftCardDelegateTest(
             runTest {
                 val partialPaymentBalanceStatus = GiftCardBalanceStatus.PartialPayment(
                     amountPaid = Amount(value = 50_00, currency = "EUR"),
-                    remainingBalance = Amount(value = 0L, currency = "EUR")
+                    remainingBalance = Amount(value = 0L, currency = "EUR"),
                 )
                 delegate.resolveBalanceStatus(partialPaymentBalanceStatus)
 
@@ -340,7 +341,7 @@ internal class DefaultGiftCardDelegateTest(
             pspReference = "test_psp",
             orderData = "test_order_data",
             amount = null,
-            remainingAmount = null
+            remainingAmount = null,
         )
         delegate.resolveOrderResponse(orderResponse)
         delegate.componentStateFlow.test {
@@ -348,7 +349,7 @@ internal class DefaultGiftCardDelegateTest(
 
             val expectedOrderRequest = OrderRequest(
                 orderData = "test_order_data",
-                pspReference = "test_psp"
+                pspReference = "test_psp",
             )
             assertEquals(expectedOrderRequest, state.data.order)
             assertEquals(GiftCardAction.SendPayment, state.giftCardAction)
@@ -379,7 +380,9 @@ internal class DefaultGiftCardDelegateTest(
     @Test
     fun `when pin is not required, then does not matter for validation`() = runTest {
         delegate = createGiftCardDelegate(
-            configuration = getDefaultGiftCardConfigurationBuilder().setPinRequired(false).build()
+            configuration = createCheckoutConfiguration {
+                setPinRequired(false)
+            },
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
@@ -395,26 +398,36 @@ internal class DefaultGiftCardDelegateTest(
     }
 
     private fun createGiftCardDelegate(
-        configuration: GiftCardConfiguration = getDefaultGiftCardConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER
     ) = DefaultGiftCardDelegate(
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,
         publicKeyRepository = publicKeyRepository,
-        componentParams = GiftCardComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = GiftCardComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(configuration, Locale.US, null, null),
         cardEncryptor = cardEncryptor,
         analyticsRepository = analyticsRepository,
         submitHandler = submitHandler,
     )
 
-    private fun getDefaultGiftCardConfigurationBuilder() = GiftCardConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: GiftCardConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        giftCard(configuration)
+    }
 
-    private fun giftCardOutputDataWith(number: String, pin: String) = GiftCardOutputData(
+    private fun giftCardOutputDataWith(
+        number: String,
+        @Suppress("SameParameterValue") pin: String,
+    ) = GiftCardOutputData(
         numberFieldState = GiftCardNumberUtils.validateInputField(number),
         pinFieldState = GiftCardPinUtils.validateInputField(pin),
     )

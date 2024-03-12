@@ -10,15 +10,15 @@ package com.adyen.checkout.instant.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.instant.InstantPaymentConfiguration
+import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -40,7 +40,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 class DefaultInstantPaymentDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
@@ -50,7 +50,6 @@ class DefaultInstantPaymentDelegateTest(
     @BeforeEach
     fun before() {
         delegate = createInstantPaymentDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -74,9 +73,7 @@ class DefaultInstantPaymentDelegateTest(
         expectedComponentStateValue: Amount?,
     ) = runTest {
         if (configurationValue != null) {
-            val configuration = getInstantPaymentConfigurationBuilder()
-                .setAmount(configurationValue)
-                .build()
+            val configuration = createCheckoutConfiguration(configurationValue)
             delegate = createInstantPaymentDelegate(configuration = configuration)
         }
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -106,23 +103,25 @@ class DefaultInstantPaymentDelegateTest(
         }
     }
 
-    private fun getInstantPaymentConfigurationBuilder(): InstantPaymentConfiguration.Builder {
-        return InstantPaymentConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        )
-    }
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    )
 
     private fun createInstantPaymentDelegate(
-        configuration: InstantPaymentConfiguration = getInstantPaymentConfigurationBuilder().build()
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ): DefaultInstantPaymentDelegate {
         return DefaultInstantPaymentDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TYPE),
             order = TEST_ORDER,
-            componentParams = GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
-            analyticsRepository = analyticsRepository
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            analyticsRepository = analyticsRepository,
         )
     }
 

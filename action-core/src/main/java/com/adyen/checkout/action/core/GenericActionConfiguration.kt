@@ -16,6 +16,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
@@ -37,7 +38,7 @@ import kotlin.collections.set
  */
 @Parcelize
 class GenericActionConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -45,13 +46,8 @@ class GenericActionConfiguration private constructor(
     private val availableActionConfigs: HashMap<Class<*>, Configuration>,
 ) : Configuration {
 
-    internal inline fun <reified T : Configuration> getConfigurationForAction(): T? {
-        val actionClass = T::class.java
-        if (availableActionConfigs.containsKey(actionClass)) {
-            return availableActionConfigs[actionClass] as T
-        }
-        return null
-    }
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getAllConfigurations(): List<Configuration> = availableActionConfigs.values.toList()
 
     /**
      * Builder for creating a [GenericActionConfiguration] where you can set specific Configurations for each action
@@ -66,20 +62,37 @@ class GenericActionConfiguration private constructor(
         val availableActionConfigs = HashMap<Class<*>, Configuration>()
 
         /**
+         * Initialize a configuration builder with the required fields.
+         *
+         * The shopper locale will match the value passed to the API with the sessions flow, or the primary user locale
+         * on the device otherwise. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -88,7 +101,7 @@ class GenericActionConfiguration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -148,6 +161,20 @@ class GenericActionConfiguration private constructor(
                 amount = amount,
                 availableActionConfigs = availableActionConfigs,
             )
+        }
+    }
+}
+
+internal fun GenericActionConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        this@toCheckoutConfiguration.getAllConfigurations().forEach {
+            addActionConfiguration(it)
         }
     }
 }

@@ -21,6 +21,12 @@ project(":example-app") {
     }
 }
 
+project(":test-core") {
+    sonar {
+        skipProject = true
+    }
+}
+
 subprojects {
     apply plugin: 'org.sonarqube'
 

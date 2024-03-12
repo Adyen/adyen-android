@@ -12,13 +12,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
+internal class CardComponentDialogFragment : BaseComponentDialogFragment(), AddressLookupCallback {
 
     private var _binding: FragmentCardComponentBinding? = null
     private val binding: FragmentCardComponentBinding get() = requireNotNull(_binding)
@@ -32,7 +37,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Logger.d(TAG, "onViewCreated")
+        adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         binding.header.text = if (isStoredPayment) {
             storedPaymentMethod.name
@@ -42,6 +47,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
+        cardComponent.setAddressLookupCallback(this)
 
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
@@ -49,6 +55,29 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
             setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         }
+
+        dropInViewModel.addressLookupOptionsFlow.onEach {
+            cardComponent.updateAddressLookupOptions(it)
+        }.launchIn(dropInViewModel.viewModelScope)
+
+        dropInViewModel.addressLookupCompleteFlow.onEach {
+            cardComponent.setAddressLookupResult(it)
+        }.launchIn(dropInViewModel.viewModelScope)
+    }
+
+    override fun onQueryChanged(query: String) {
+        protocol.onAddressLookupQuery(query)
+    }
+
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        return protocol.onAddressLookupCompletion(lookupAddress)
+    }
+
+    override fun onBackPressed(): Boolean {
+        if (cardComponent.handleBackPress()) {
+            return true
+        }
+        return super.onBackPressed()
     }
 
     override fun onDestroyView() {
@@ -56,7 +85,5 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment() {
         super.onDestroyView()
     }
 
-    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java) {
-        private val TAG = LogUtil.getTag()
-    }
+    companion object : BaseCompanion<CardComponentDialogFragment>(CardComponentDialogFragment::class.java)
 }

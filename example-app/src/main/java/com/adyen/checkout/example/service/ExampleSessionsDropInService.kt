@@ -57,9 +57,8 @@ class ExampleSessionsDropInService : SessionDropInService() {
                     countryCode = keyValueStorage.getCountry(),
                     merchantAccount = keyValueStorage.getMerchantAccount(),
                     redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
-                    isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
-                    isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
-                    shopperEmail = keyValueStorage.getShopperEmail()
+                    threeDSMode = keyValueStorage.getThreeDSMode(),
+                    shopperEmail = keyValueStorage.getShopperEmail(),
                 )
 
                 Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
@@ -82,7 +81,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
                 Log.d(TAG, "onDetailsCallRequested")
 
                 val response = paymentsRepository.makeDetailsRequest(
-                    ActionComponentData.SERIALIZER.serialize(actionComponentData)
+                    ActionComponentData.SERIALIZER.serialize(actionComponentData),
                 )
 
                 val result = handleResponse(response)

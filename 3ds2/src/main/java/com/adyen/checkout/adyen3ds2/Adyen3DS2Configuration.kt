@@ -11,8 +11,10 @@ import android.content.Context
 import android.content.IntentFilter
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.internal.ui.activity.ChallengeActivity
@@ -25,7 +27,7 @@ import java.util.Locale
 @Suppress("LongParameterList")
 @Parcelize
 class Adyen3DS2Configuration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -44,20 +46,37 @@ class Adyen3DS2Configuration private constructor(
         private var threeDSRequestorAppURL: String? = null
 
         /**
+         * Initialize a configuration builder with the required fields.
+         *
+         * The shopper locale will match the value passed to the API with the sessions flow, or the primary user locale
+         * on the device otherwise. Check out the
+         * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set
+         * this value.
+         *
+         * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
+         * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
+         */
+        constructor(environment: Environment, clientKey: String) : super(
+            environment,
+            clientKey,
+        )
+
+        /**
          * Alternative constructor that uses the [context] to fetch the user locale and use it as a shopper locale.
          *
          * @param context A Context
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
          * @param clientKey Your Client Key used for internal network calls from the SDK to Adyen.
          */
+        @Deprecated("You can omit the context parameter")
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
-         * Initialize a configuration builder with the required fields.
+         * Initialize a configuration builder with the required fields and a shopper locale.
          *
          * @param shopperLocale The [Locale] of the shopper.
          * @param environment The [Environment] to be used for internal network calls from the SDK to Adyen.
@@ -66,7 +85,7 @@ class Adyen3DS2Configuration private constructor(
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -104,5 +123,36 @@ class Adyen3DS2Configuration private constructor(
                 threeDSRequestorAppURL = threeDSRequestorAppURL,
             )
         }
+    }
+}
+
+fun CheckoutConfiguration.adyen3DS2(
+    configuration: @CheckoutConfigurationMarker Adyen3DS2Configuration.Builder.() -> Unit = {}
+): CheckoutConfiguration {
+    val config = Adyen3DS2Configuration.Builder(environment, clientKey)
+        .apply {
+            shopperLocale?.let { setShopperLocale(it) }
+            amount?.let { setAmount(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+        }
+        .apply(configuration)
+        .build()
+    addActionConfiguration(config)
+    return this
+}
+
+fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
+    return getActionConfiguration(Adyen3DS2Configuration::class.java)
+}
+
+internal fun Adyen3DS2Configuration.toCheckoutConfiguration(): CheckoutConfiguration {
+    return CheckoutConfiguration(
+        shopperLocale = shopperLocale,
+        environment = environment,
+        clientKey = clientKey,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+    ) {
+        addActionConfiguration(this@toCheckoutConfiguration)
     }
 }

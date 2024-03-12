@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.ActionComponent
+import com.adyen.checkout.core.PermissionHandlerCallback
 import org.json.JSONObject
 
 /**
@@ -38,4 +39,18 @@ interface ActionComponentCallback {
      * @param componentError The error encountered.
      */
     fun onError(componentError: ComponentError)
+
+    /**
+     * Should be overridden to support runtime permissions for components.
+     * Runtime permission should be requested and communicated back through the callback.
+     * If not overridden, [PermissionHandlerCallback.onPermissionRequestNotHandled] will be invoked, which will show an
+     * error message.
+     *
+     * @param requiredPermission Required runtime permission.
+     * @param permissionCallback Callback to be used when passing permission result.
+     */
+    fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        // To be optionally overridden
+        permissionCallback.onPermissionRequestNotHandled(requiredPermission)
+    }
 }

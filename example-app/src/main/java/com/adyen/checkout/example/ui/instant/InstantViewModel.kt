@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -48,6 +49,8 @@ internal class InstantViewModel @Inject constructor(
     private val _events = MutableSharedFlow<InstantEvent>()
     val events: Flow<InstantEvent> = _events
 
+    private var permissionCallback: PermissionHandlerCallback? = null
+
     init {
         viewModelScope.launch { fetchPaymentMethods() }
     }
@@ -61,7 +64,7 @@ internal class InstantViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val paymentMethod = paymentMethodResponse
@@ -71,15 +74,15 @@ internal class InstantViewModel @Inject constructor(
         if (paymentMethod == null) {
             _instantViewState.emit(
                 InstantViewState.Error(
-                    "Payment method unavailable, make sure you set the correct country code and currency."
-                )
+                    "Payment method unavailable, make sure you set the correct country code and currency.",
+                ),
             )
         } else {
             _instantComponentDataFlow.emit(
                 InstantComponentData(
                     paymentMethod = paymentMethod,
                     callback = this@InstantViewModel,
-                )
+                ),
             )
         }
     }
@@ -97,6 +100,24 @@ internal class InstantViewModel @Inject constructor(
         onComponentError(componentError)
     }
 
+    override fun onPermissionRequest(requiredPermission: String, permissionCallback: PermissionHandlerCallback) {
+        this.permissionCallback = permissionCallback
+
+        viewModelScope.launch {
+            _events.emit(InstantEvent.PermissionRequest(requiredPermission))
+        }
+    }
+
+    fun onPermissionResult(requestedPermission: String, isGranted: Boolean) {
+        if (isGranted) {
+            permissionCallback?.onPermissionGranted(requestedPermission)
+        } else {
+            permissionCallback?.onPermissionDenied(requestedPermission)
+        }
+
+        permissionCallback = null
+    }
+
     private fun makePayment(data: PaymentComponentData<*>) {
         _instantViewState.tryEmit(InstantViewState.Loading)
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
@@ -110,8 +131,7 @@ internal class InstantViewModel @Inject constructor(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = savedStateHandle.get<String>(InstantFragment.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
-                isThreeds2Enabled = keyValueStorage.isThreeds2Enabled(),
-                isExecuteThreeD = keyValueStorage.isExecuteThreeD(),
+                threeDSMode = keyValueStorage.getThreeDSMode(),
                 shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
@@ -127,6 +147,7 @@ internal class InstantViewModel @Inject constructor(
                     _instantViewState.tryEmit(InstantViewState.ShowComponent)
                     _events.emit(InstantEvent.AdditionalAction(action))
                 }
+
                 else -> _events.emit(InstantEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(InstantEvent.PaymentResult("Failed"))

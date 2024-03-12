@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin.internal.service
 
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -17,6 +18,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.sessions.core.SessionModel
 
+@Suppress("TooManyFunctions")
 internal interface BaseDropInServiceInterface {
     suspend fun observeResult(callback: (BaseDropInServiceResult) -> Unit)
     fun requestPaymentsCall(paymentComponentState: PaymentComponentState<*>)
@@ -28,6 +30,8 @@ internal interface BaseDropInServiceInterface {
     fun onRedirectCalled()
     fun onBinValueCalled(binValue: String)
     fun onBinLookupCalled(data: List<BinLookupData>)
+    fun onAddressLookupQueryChangedCalled(query: String)
+    fun onAddressLookupCompletionCalled(lookupAddress: LookupAddress): Boolean
 }
 
 internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {

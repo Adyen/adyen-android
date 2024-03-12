@@ -11,33 +11,33 @@ package com.adyen.checkout.openbanking.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.OpenBankingPaymentMethod
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.openbanking.OpenBankingComponent
 import com.adyen.checkout.openbanking.OpenBankingComponentState
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
+import com.adyen.checkout.openbanking.getOpenBankingConfiguration
+import com.adyen.checkout.openbanking.toCheckoutConfiguration
 
 class OpenBankingComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<
     OpenBankingComponent,
     OpenBankingConfiguration,
     OpenBankingPaymentMethod,
-    OpenBankingComponentState
+    OpenBankingComponentState,
     >(
     componentClass = OpenBankingComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
-    overrideSessionParams = overrideSessionParams,
+    dropInOverrideParams = dropInOverrideParams,
     analyticsRepository = analyticsRepository,
 ) {
 
@@ -62,4 +62,12 @@ constructor(
     override fun createPaymentMethod() = OpenBankingPaymentMethod()
 
     override fun getSupportedPaymentMethods(): List<String> = OpenBankingComponent.PAYMENT_METHOD_TYPES
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): OpenBankingConfiguration? {
+        return checkoutConfiguration.getOpenBankingConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: OpenBankingConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
+    }
 }

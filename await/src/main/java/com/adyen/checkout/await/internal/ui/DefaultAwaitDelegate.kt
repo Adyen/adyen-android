@@ -25,10 +25,10 @@ import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -84,9 +84,10 @@ internal class DefaultAwaitDelegate(
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = null,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
 
         // Immediately request a new status if the user resumes the app
@@ -106,7 +107,7 @@ internal class DefaultAwaitDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
-            Logger.e(TAG, "Payment data is null")
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
@@ -124,16 +125,16 @@ internal class DefaultAwaitDelegate(
     private fun onStatus(result: Result<StatusResponse>, action: Action) {
         result.fold(
             onSuccess = { response ->
-                Logger.v(TAG, "Status changed - ${response.resultCode}")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
                 createOutputData(response, action)
                 if (StatusResponseUtils.isFinalResult(response)) {
                     onPollingSuccessful(response)
                 }
             },
             onFailure = {
-                Logger.e(TAG, "Error while polling status", it)
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
                 exceptionChannel.trySend(ComponentException("Error while polling status", it))
-            }
+            },
         )
     }
 
@@ -145,7 +146,7 @@ internal class DefaultAwaitDelegate(
 
     private fun createOutputData() = AwaitOutputData(
         isValid = false,
-        paymentMethodType = null
+        paymentMethodType = null,
     )
 
     private fun onPollingSuccessful(statusResponse: StatusResponse) {
@@ -189,8 +190,6 @@ internal class DefaultAwaitDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
-
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
 
         @VisibleForTesting

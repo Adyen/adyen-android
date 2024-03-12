@@ -11,11 +11,13 @@ package com.adyen.checkout.onlinebankingcore.internal.ui
 import android.content.Context
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
@@ -60,7 +62,7 @@ internal class DefaultOnlineBankingDelegateTest(
 
     private lateinit var delegate: DefaultOnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
-        TestOnlineBankingComponentState
+        TestOnlineBankingComponentState,
         >
 
     @BeforeEach
@@ -139,9 +141,7 @@ internal class DefaultOnlineBankingDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultTestOnlineBankingConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createOnlineBankingDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -189,9 +189,9 @@ internal class DefaultOnlineBankingDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createOnlineBankingDelegate(
-                configuration = getDefaultTestOnlineBankingConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -200,9 +200,9 @@ internal class DefaultOnlineBankingDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createOnlineBankingDelegate(
-                configuration = getDefaultTestOnlineBankingConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -256,7 +256,7 @@ internal class DefaultOnlineBankingDelegateTest(
     }
 
     private fun createOnlineBankingDelegate(
-        configuration: TestOnlineBankingConfiguration = getDefaultTestOnlineBankingConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultOnlineBankingDelegate(
         observerRepository = PaymentObserverRepository(),
@@ -264,7 +264,14 @@ internal class DefaultOnlineBankingDelegateTest(
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            ),
         termsAndConditionsUrl = TEST_URL,
         paymentMethodFactory = { TestOnlineBankingPaymentMethod() },
         submitHandler = submitHandler,
@@ -272,18 +279,28 @@ internal class DefaultOnlineBankingDelegateTest(
             TestOnlineBankingComponentState(
                 data = data,
                 isInputValid = isInputValid,
-                isReady = isReady
+                isReady = isReady,
             )
-        }
+        },
     )
 
-    private fun getDefaultTestOnlineBankingConfigurationBuilder() = TestOnlineBankingConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: TestOnlineBankingConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        val testConfiguration = TestOnlineBankingConfiguration.Builder(shopperLocale, environment, clientKey)
+            .apply(configuration)
+            .build()
+        addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+    }
 
     companion object {
+        private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
         private const val TEST_URL = "any-url"
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")

@@ -9,11 +9,21 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Stiahnite si pokyny k inkasu (DDI/Mandát)</string>
-    <string name="checkout_voucher_introduction_boleto">Ďakujeme vám za nákup; na dokončenie platby použite nasledujúci kupón.</string>
+    <string name="checkout_voucher_introduction">Ďakujeme vám za nákup; na dokončenie platby použite nasledujúci kupón.</string>
+    <string name="checkout_voucher_introduction_econtext">Ďakujeme vám za nákup. Na dokončenie platby použite nasledujúce informácie.</string>
     <string name="checkout_voucher_payment_reference">Platobná referencia</string>
+    <string name="checkout_voucher_expiration_entity">Subjekt</string>
     <string name="checkout_voucher_expiration_date">Dátum vypršania platnosti</string>
+    <string name="checkout_voucher_shopper_reference">Referencia kupujúceho</string>
+    <string name="checkout_voucher_phone_number">Telefónne číslo</string>
+    <string name="checkout_voucher_collection_institution_number">Číslo inkasnej inštitúcie</string>
+    <string name="checkout_voucher_read_instructions">Prečítajte si pokyny</string>
     <string name="checkout_voucher_copy_code">Skopírovať kód</string>
     <string name="checkout_voucher_copied_toast">Kód bol skopírovaný do schránky</string>
     <string name="checkout_voucher_download_pdf">Stiahnuť vo formáte PDF</string>
+    <string name="checkout_voucher_save_image">Uložiť ako obrázok</string>
+    <string name="checkout_voucher_image_saved"> Obrázok uložený vo vašom zariadení</string>
+    <string name="checkout_voucher_image_failed"> Nepodarilo sa uložiť obrázok</string>
     <string name="checkout_voucher_finish">Dokončiť</string>
+    <string name="checkout_voucher_permission_denied">Povolenie nebolo udelené</string>
 </resources>

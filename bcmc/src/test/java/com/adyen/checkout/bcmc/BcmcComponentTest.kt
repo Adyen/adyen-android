@@ -18,12 +18,10 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,8 +38,7 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class BcmcComponentTest(
     @Mock private val cardDelegate: CardDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
@@ -62,7 +59,6 @@ internal class BcmcComponentTest(
             actionHandlingComponent,
             componentEventHandler,
         )
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -116,7 +112,7 @@ internal class BcmcComponentTest(
             cardDelegate = cardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
 
         component.viewFlow.test {
@@ -137,7 +133,7 @@ internal class BcmcComponentTest(
             cardDelegate = cardDelegate,
             genericActionDelegate = genericActionDelegate,
             actionHandlingComponent = actionHandlingComponent,
-            componentEventHandler = componentEventHandler
+            componentEventHandler = componentEventHandler,
         )
 
         component.viewFlow.test {

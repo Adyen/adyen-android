@@ -9,11 +9,21 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Download uw machtiging automatische incasso</string>
-    <string name="checkout_voucher_introduction_boleto">Bedankt voor uw aankoop. Gebruik deze coupon om uw betaling te voltooien.</string>
+    <string name="checkout_voucher_introduction">Bedankt voor uw aankoop. Gebruik deze coupon om uw betaling te voltooien.</string>
+    <string name="checkout_voucher_introduction_econtext">Bedankt voor uw aankoop. Gebruik de volgende informatie om uw betaling te voltooien.</string>
     <string name="checkout_voucher_payment_reference">Betalingsreferentie</string>
+    <string name="checkout_voucher_expiration_entity">Entiteit</string>
     <string name="checkout_voucher_expiration_date">Vervaldatum</string>
+    <string name="checkout_voucher_shopper_reference">Klant referentie</string>
+    <string name="checkout_voucher_phone_number">Telefoonnummer</string>
+    <string name="checkout_voucher_collection_institution_number">Nummer ophaallocatie</string>
+    <string name="checkout_voucher_read_instructions">Instructies lezen</string>
     <string name="checkout_voucher_copy_code">Code kopiëren</string>
     <string name="checkout_voucher_copied_toast">De code is naar het klembord gekopieerd</string>
     <string name="checkout_voucher_download_pdf">PDF downloaden</string>
+    <string name="checkout_voucher_save_image">Opslaan als afbeelding</string>
+    <string name="checkout_voucher_image_saved"> Afbeelding opgeslagen op uw apparaat</string>
+    <string name="checkout_voucher_image_failed"> Kan afbeelding niet opslaan</string>
     <string name="checkout_voucher_finish">Voltooien</string>
+    <string name="checkout_voucher_permission_denied">Geen toestemming verleend</string>
 </resources>

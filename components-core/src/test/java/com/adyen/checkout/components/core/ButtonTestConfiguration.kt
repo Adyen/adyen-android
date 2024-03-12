@@ -1,6 +1,5 @@
 package com.adyen.checkout.components.core
 
-import android.content.Context
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.ButtonConfiguration
 import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
@@ -11,7 +10,7 @@ import java.util.Locale
 
 @Parcelize
 class ButtonTestConfiguration private constructor(
-    override val shopperLocale: Locale,
+    override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
@@ -19,21 +18,14 @@ class ButtonTestConfiguration private constructor(
     override val isSubmitButtonVisible: Boolean?,
 ) : Configuration, ButtonConfiguration {
 
-    class Builder : BaseConfigurationBuilder<ButtonTestConfiguration, Builder>, ButtonConfigurationBuilder {
+    class Builder(
+        shopperLocale: Locale?,
+        environment: Environment,
+        clientKey: String
+    ) : BaseConfigurationBuilder<ButtonTestConfiguration, Builder>(shopperLocale, environment, clientKey),
+        ButtonConfigurationBuilder {
 
         private var isSubmitButtonVisible: Boolean? = null
-
-        constructor(context: Context, environment: Environment, clientKey: String) : super(
-            context,
-            environment,
-            clientKey
-        )
-
-        constructor(
-            shopperLocale: Locale,
-            environment: Environment,
-            clientKey: String
-        ) : super(shopperLocale, environment, clientKey)
 
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): ButtonConfigurationBuilder {
             this.isSubmitButtonVisible = isSubmitButtonVisible

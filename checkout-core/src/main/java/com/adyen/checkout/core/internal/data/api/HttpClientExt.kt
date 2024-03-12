@@ -9,17 +9,15 @@
 package com.adyen.checkout.core.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.toStringPretty
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import org.json.JSONArray
 import org.json.JSONObject
-
-private val TAG = LogUtil.getTag()
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 suspend fun <T : ModelObject> HttpClient.get(
@@ -27,12 +25,12 @@ suspend fun <T : ModelObject> HttpClient.get(
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
 ): T {
-    Logger.d(TAG, "GET - $path")
+    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
 
     val result = runAndLogHttpException { get(path, queryParameters) }
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
-    Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
+    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
     return responseSerializer.deserialize(resultJson)
 }
@@ -43,12 +41,12 @@ suspend fun <T : ModelObject> HttpClient.getList(
     responseSerializer: ModelObject.Serializer<T>,
     queryParameters: Map<String, String> = emptyMap(),
 ): List<T> {
-    Logger.d(TAG, "GET - $path")
+    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
 
     val result = runAndLogHttpException { get(path, queryParameters) }
     val resultJson = JSONArray(String(result, Charsets.UTF_8))
 
-    Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
+    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
     return ModelUtils.deserializeOptList(resultJson, responseSerializer).orEmpty()
 }
@@ -61,25 +59,25 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     responseSerializer: ModelObject.Serializer<R>,
     queryParameters: Map<String, String> = emptyMap(),
 ): R {
-    Logger.d(TAG, "POST - $path")
+    adyenLog(AdyenLogLevel.DEBUG) { "POST - $path" }
 
     val requestJson = requestSerializer.serialize(body)
 
-    Logger.v(TAG, "request - ${requestJson.toStringPretty()}")
+    adyenLog(AdyenLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
 
     val result = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
     val resultJson = JSONObject(String(result, Charsets.UTF_8))
 
-    Logger.v(TAG, "response - ${resultJson.toStringPretty()}")
+    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
     return responseSerializer.deserialize(resultJson)
 }
 
-private inline fun <T, R> T.runAndLogHttpException(block: T.() -> R): R {
+private inline fun <T : Any, R> T.runAndLogHttpException(block: T.() -> R): R {
     return try {
         block()
     } catch (httpException: HttpException) {
-        Logger.e(TAG, "API error - ${httpException.getLogMessage()}")
+        adyenLog(AdyenLogLevel.ERROR) { "API error - ${httpException.getLogMessage()}" }
         throw httpException
     }
 }

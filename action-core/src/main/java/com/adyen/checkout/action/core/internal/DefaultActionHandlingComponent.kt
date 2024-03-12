@@ -20,22 +20,25 @@ import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultActionHandlingComponent(
     private val genericActionDelegate: GenericActionDelegate,
-    paymentDelegate: PaymentComponentDelegate<*>?,
+    private val paymentDelegate: PaymentComponentDelegate<*>,
 ) : ActionHandlingComponent {
 
-    var activeDelegate: ComponentDelegate = paymentDelegate ?: genericActionDelegate
-        private set
+    private var isHandlingAction: Boolean = false
+
+    val activeDelegate: ComponentDelegate
+        get() = if (isHandlingAction) {
+            genericActionDelegate.delegate
+        } else {
+            paymentDelegate
+        }
 
     override fun canHandleAction(action: Action): Boolean {
         return GenericActionComponent.PROVIDER.canHandleAction(action)
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        activeDelegate = genericActionDelegate
+        isHandlingAction = true
         genericActionDelegate.handleAction(action, activity)
-        // genericActionDelegate.delegate is set when calling genericActionDelegate.handleAction, so we set the more
-        // specific delegate here as soon as we can.
-        activeDelegate = genericActionDelegate.delegate
     }
 
     override fun handleIntent(intent: Intent) {

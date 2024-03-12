@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Opslaan als afbeelding</string>
     <string name="checkout_qr_code_download_image_succeeded">Afbeelding downloaden gelukt</string>
     <string name="checkout_qr_code_download_image_failed">Afbeelding downloaden mislukt</string>
+    <string name="checkout_qr_code_permission_denied">Geen toestemming verleend</string>
 </resources>

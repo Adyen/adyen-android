@@ -8,21 +8,13 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
-import java.util.Locale
 
 internal data class Adyen3DS2ComponentParams(
-    override val shopperLocale: Locale,
-    override val environment: Environment,
-    override val clientKey: String,
-    override val analyticsParams: AnalyticsParams,
-    override val isCreatedByDropIn: Boolean,
-    override val amount: Amount?,
+    private val commonComponentParams: CommonComponentParams,
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
     val deviceParameterBlockList: Set<String>?,
-) : ComponentParams
+) : ComponentParams by commonComponentParams

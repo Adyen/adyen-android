@@ -15,8 +15,7 @@ import app.cash.turbine.test
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.voucher.internal.ui.VoucherComponentViewType
@@ -36,7 +35,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class VoucherComponentTest(
     @Mock private val voucherDelegate: VoucherDelegate,
     @Mock private val actionComponentEventHandler: ActionComponentEventHandler,
@@ -46,8 +45,6 @@ internal class VoucherComponentTest(
 
     @BeforeEach
     fun before() {
-        AdyenLogger.setLogLevel(Logger.NONE)
-
         whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType.SIMPLE_VOUCHER)
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
     }
@@ -82,7 +79,7 @@ internal class VoucherComponentTest(
     }
 
     @Test
-    fun `when component is initialized for BACS then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for simple voucher then view flow should match delegate view flow`() = runTest {
         component.viewFlow.test {
             assertEquals(VoucherComponentViewType.SIMPLE_VOUCHER, awaitItem())
             expectNoEvents()
@@ -90,7 +87,7 @@ internal class VoucherComponentTest(
     }
 
     @Test
-    fun `when component is initialized for Boleto then view flow should match delegate view flow`() = runTest {
+    fun `when component is initialized for full voucher then view flow should match delegate view flow`() = runTest {
         whenever(voucherDelegate.viewFlow) doReturn MutableStateFlow(VoucherComponentViewType.FULL_VOUCHER)
         component = VoucherComponent(voucherDelegate, actionComponentEventHandler)
         component.viewFlow.test {

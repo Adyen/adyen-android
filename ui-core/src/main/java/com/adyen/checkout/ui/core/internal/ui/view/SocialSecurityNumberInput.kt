@@ -31,10 +31,14 @@ class SocialSecurityNumberInput constructor(
 
     init {
         enforceMaxInputLength(
-            SocialSecurityNumberUtils.CNPJ_DIGIT_LIMIT + SocialSecurityNumberUtils.CNPJ_MASK_SEPARATORS.size
+            SocialSecurityNumberUtils.CNPJ_DIGIT_LIMIT + SocialSecurityNumberUtils.CNPJ_MASK_SEPARATORS.size,
         )
         inputType = InputType.TYPE_CLASS_NUMBER
         keyListener = DigitsKeyListener.getInstance(SUPPORTED_CHARS)
+    }
+
+    fun setSocialSecurityNumber(socialSecurityNumber: String) {
+        setText(SocialSecurityNumberUtils.formatInput(socialSecurityNumber))
     }
 
     override fun afterTextChanged(editable: Editable) {

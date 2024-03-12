@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Enregistrer en tant qu\'image</string>
     <string name="checkout_qr_code_download_image_succeeded">Téléchargement de l\'image réussi</string>
     <string name="checkout_qr_code_download_image_failed">Échec du téléchargement de l\'image</string>
+    <string name="checkout_qr_code_permission_denied">L\'autorisation n\'a pas été accordée</string>
 </resources>

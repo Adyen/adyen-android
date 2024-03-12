@@ -8,15 +8,23 @@
 
 package com.adyen.checkout.cashapppay.internal.ui.model
 
+import android.app.Application
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
+import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
@@ -26,20 +34,26 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 internal class CashAppPayComponentParamsMapperTest {
 
-    @Test
-    fun `when parent configuration is null and custom configuration fields are null then all fields should match`() {
-        val configuration = getConfigurationBuilder()
-            .setReturnUrl(TEST_RETURN_URL)
-            .build()
+    private val cashAppPayComponentParamsMapper = CashAppPayComponentParamsMapper(CommonComponentParamsMapper())
 
-        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
+    @Test
+    fun `when drop-in override params are null and custom configuration fields are null then all fields should match`() {
+        val configuration = createCheckoutConfiguration()
+
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
             paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
         )
 
         val expected = getComponentParams()
@@ -48,23 +62,28 @@ internal class CashAppPayComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is null and custom configuration fields are set then all fields should match`() {
-        val configuration = CashAppPayConfiguration.Builder(
+    fun `when drop-in override params are null and custom configuration fields are set then all fields should match`() {
+        val configuration = CheckoutConfiguration(
             shopperLocale = Locale.FRANCE,
             environment = Environment.APSE,
-            clientKey = TEST_CLIENT_KEY_2
-        )
-            .setCashAppPayEnvironment(CashAppPayEnvironment.PRODUCTION)
-            .setReturnUrl("https://google.com")
-            .setShowStorePaymentField(false)
-            .setStorePaymentMethod(true)
-            .setSubmitButtonVisible(false)
-            .build()
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            cashAppPay {
+                setCashAppPayEnvironment(CashAppPayEnvironment.PRODUCTION)
+                setReturnUrl("https://google.com")
+                setShowStorePaymentField(false)
+                setStorePaymentMethod(true)
+                setSubmitButtonVisible(false)
+            }
+        }
 
-        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
             paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
         )
 
         val expected = getComponentParams(
@@ -82,41 +101,46 @@ internal class CashAppPayComponentParamsMapperTest {
     }
 
     @Test
-    fun `when parent configuration is set then parent configuration fields should override custom configuration fields`() {
-        val configuration = getConfigurationBuilder()
-            .setReturnUrl(TEST_RETURN_URL)
-            .build()
-
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = GenericComponentParams(
+    fun `when drop-in override params are set then they should override custom configuration fields`() {
+        val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
-            isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
-                value = 1235_00L
-            )
-        )
+                value = 1235_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            cashAppPay {
+                setReturnUrl(TEST_RETURN_URL)
+                setAmount(Amount("USD", 1L))
+                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+            }
+        }
 
-        val params = CashAppPayComponentParamsMapper(overrideParams, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
-            paymentMethod = getDefaultPaymentMethod(),
-        )
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params =
+            cashAppPayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                paymentMethod = getDefaultPaymentMethod(),
+                context = Application(),
+            )
 
         val expected = getComponentParams(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
+            cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
             clientKey = TEST_CLIENT_KEY_2,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
             isCreatedByDropIn = true,
             amount = Amount(
-                currency = "CAD",
-                value = 1235_00L
-            )
+                currency = "EUR",
+                value = 123L,
+            ),
         )
 
         assertEquals(expected, params)
@@ -129,24 +153,24 @@ internal class CashAppPayComponentParamsMapperTest {
         sessionsValue: Boolean?,
         expectedValue: Boolean
     ) {
-        val cardConfiguration = getConfigurationBuilder()
-            .setReturnUrl(TEST_RETURN_URL)
-            .setShowStorePaymentField(configurationValue)
-            .build()
-
-        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = cardConfiguration,
-            sessionParams = SessionParams(
-                enableStoreDetails = sessionsValue,
-                installmentConfiguration = null,
-                amount = null,
-                returnUrl = TEST_RETURN_URL,
-            ),
+        val configuration = createCheckoutConfiguration {
+            setShowStorePaymentField(configurationValue)
+        }
+        val sessionParams = createSessionParams(
+            enableStoreDetails = sessionsValue,
+            returnUrl = TEST_RETURN_URL,
+        )
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
             paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
         )
 
         val expected = getComponentParams(
-            showStorePaymentField = expectedValue
+            showStorePaymentField = expectedValue,
         )
 
         assertEquals(expected, params)
@@ -154,34 +178,31 @@ internal class CashAppPayComponentParamsMapperTest {
 
     @ParameterizedTest
     @MethodSource("amountSource")
-    fun `amount should match value set in sessions if it exists, then should match drop in value, then configuration`(
+    fun `amount should match value set in sessions then drop in then component configuration`(
         configurationValue: Amount,
         dropInValue: Amount?,
         sessionsValue: Amount?,
         expectedValue: Amount
     ) {
-        val cardConfiguration = getConfigurationBuilder()
-            .setReturnUrl(TEST_RETURN_URL)
-            .setAmount(configurationValue)
-            .build()
+        val configuration = createCheckoutConfiguration(configurationValue)
 
-        // this is in practice DropInComponentParams, but we don't have access to it in this module and any
-        // ComponentParams class can work
-        val overrideParams = dropInValue?.let { getComponentParams(amount = it) }
-
-        val params = CashAppPayComponentParamsMapper(overrideParams, null).mapToParams(
-            cardConfiguration,
-            sessionParams = SessionParams(
-                enableStoreDetails = null,
-                installmentConfiguration = null,
-                amount = sessionsValue,
-                returnUrl = TEST_RETURN_URL,
-            ),
-            getDefaultPaymentMethod(),
+        val dropInOverrideParams = dropInValue?.let { DropInOverrideParams(it, null) }
+        val sessionParams = createSessionParams(
+            amount = sessionsValue,
+            returnUrl = TEST_RETURN_URL,
+        )
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = sessionParams,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
         )
 
         val expected = getComponentParams(
-            amount = expectedValue
+            amount = expectedValue,
+            isCreatedByDropIn = dropInOverrideParams != null,
         )
 
         assertEquals(expected, params)
@@ -190,26 +211,45 @@ internal class CashAppPayComponentParamsMapperTest {
     @Test
     fun `when returnUrl is not set, then an exception is thrown`() {
         assertThrows<ComponentException> {
-            val configuration = getConfigurationBuilder()
-                .build()
+            val configuration = CheckoutConfiguration(
+                environment = Environment.TEST,
+                shopperLocale = Locale.US,
+                clientKey = TEST_CLIENT_KEY_1,
+            ) {
+                cashAppPay()
+            }
 
-            CashAppPayComponentParamsMapper(null, null).mapToParams(
-                configuration = configuration,
-                sessionParams = null,
+            cashAppPayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
                 paymentMethod = getDefaultPaymentMethod(),
+                context = Application(),
             )
         }
     }
 
     @Test
     fun `when returnUrl is not set and session params are provided, then the return url from sessions should be used`() {
-        val configuration = getConfigurationBuilder()
-            .build()
-
-        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = SessionParams(false, null, null, "sessionReturnUrl"),
+        val configuration = CheckoutConfiguration(
+            environment = Environment.TEST,
+            shopperLocale = Locale.US,
+            clientKey = TEST_CLIENT_KEY_1,
+        ) {
+            cashAppPay()
+        }
+        val sessionParams = createSessionParams(
+            enableStoreDetails = false,
+            returnUrl = "sessionReturnUrl",
+        )
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
             paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
         )
 
         assertEquals("sessionReturnUrl", params.returnUrl)
@@ -218,16 +258,17 @@ internal class CashAppPayComponentParamsMapperTest {
     @Test
     fun `when clientId is not available, then an exception is thrown`() {
         assertThrows<ComponentException> {
-            val configuration = getConfigurationBuilder()
-                .setReturnUrl(TEST_RETURN_URL)
-                .build()
+            val configuration = createCheckoutConfiguration()
 
-            CashAppPayComponentParamsMapper(null, null).mapToParams(
-                configuration = configuration,
-                sessionParams = null,
+            cashAppPayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
                 paymentMethod = PaymentMethod(
-                    configuration = Configuration(clientId = null, scopeId = TEST_SCOPE_ID)
+                    configuration = Configuration(clientId = null, scopeId = TEST_SCOPE_ID),
                 ),
+                context = Application(),
             )
         }
     }
@@ -235,30 +276,32 @@ internal class CashAppPayComponentParamsMapperTest {
     @Test
     fun `when scopeId is not available, then an exception is thrown`() {
         assertThrows<ComponentException> {
-            val configuration = getConfigurationBuilder()
-                .setReturnUrl(TEST_RETURN_URL)
-                .build()
+            val configuration = createCheckoutConfiguration()
 
-            CashAppPayComponentParamsMapper(null, null).mapToParams(
-                configuration = configuration,
-                sessionParams = null,
+            cashAppPayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
                 paymentMethod = PaymentMethod(
-                    configuration = Configuration(clientId = TEST_CLIENT_ID, scopeId = null)
+                    configuration = Configuration(clientId = TEST_CLIENT_ID, scopeId = null),
                 ),
+                context = Application(),
             )
         }
     }
 
     @Test
     fun `when StoredPaymentMethod is used, then clientId and scopeId should be null`() {
-        val configuration = getConfigurationBuilder()
-            .setReturnUrl(TEST_RETURN_URL)
-            .build()
+        val configuration = createCheckoutConfiguration()
 
-        val params = CashAppPayComponentParamsMapper(null, null).mapToParams(
-            configuration = configuration,
-            sessionParams = null,
-            paymentMethod = StoredPaymentMethod(),
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            storedPaymentMethod = StoredPaymentMethod(),
+            context = Application(),
         )
 
         val expected = getComponentParams(
@@ -269,9 +312,105 @@ internal class CashAppPayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @ParameterizedTest
+    @MethodSource("returnUrlSource")
+    fun `when returnUrl and is created by drop-in, then expect`(
+        returnUrl: String?,
+        isCreatedByDropIn: Boolean,
+        expected: String?,
+    ) {
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY_1,
+        ) {
+            cashAppPay {
+                returnUrl?.let { setReturnUrl(it) }
+            }
+        }
+
+        val mockContext = mock<Application>()
+        whenever(mockContext.packageName) doReturn "com.test.test"
+        val dropInOverrideParams = if (isCreatedByDropIn) {
+            DropInOverrideParams(Amount("CAD", 123L), null)
+        } else {
+            null
+        }
+        val params =
+            cashAppPayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = dropInOverrideParams,
+                componentSessionParams = null,
+                storedPaymentMethod = StoredPaymentMethod(),
+                context = mockContext,
+            )
+
+        assertEquals(expected, params.returnUrl)
+    }
+
+    @ParameterizedTest
+    @MethodSource("shopperLocaleSource")
+    fun `shopper locale should match value set in configuration then sessions then device locale`(
+        configurationValue: Locale?,
+        sessionsValue: Locale?,
+        deviceLocaleValue: Locale,
+        expectedValue: Locale,
+    ) {
+        val configuration = createCheckoutConfiguration(shopperLocale = configurationValue)
+
+        val sessionParams = createSessionParams(
+            returnUrl = TEST_RETURN_URL,
+            shopperLocale = sessionsValue,
+        )
+
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = deviceLocaleValue,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        val expected = getComponentParams(
+            shopperLocale = expectedValue,
+        )
+
+        assertEquals(expected, params)
+    }
+
+    @Test
+    fun `environment and client key should match value set in sessions`() {
+        val configuration = createCheckoutConfiguration()
+
+        val sessionParams = createSessionParams(
+            returnUrl = TEST_RETURN_URL,
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+        )
+
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = sessionParams,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        val expected = getComponentParams(
+            environment = Environment.INDIA,
+            clientKey = TEST_CLIENT_KEY_2,
+            cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
+        )
+
+        assertEquals(expected, params)
+    }
+
     @Suppress("LongParameterList")
     private fun getComponentParams(
-        shopperLocale: Locale = Locale.US,
+        shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
@@ -285,13 +424,15 @@ internal class CashAppPayComponentParamsMapperTest {
         clientId: String? = TEST_CLIENT_ID,
         scopeId: String? = TEST_SCOPE_ID,
     ) = CashAppPayComponentParams(
+        commonComponentParams = CommonComponentParams(
+            shopperLocale = shopperLocale,
+            environment = environment,
+            clientKey = clientKey,
+            analyticsParams = analyticsParams,
+            isCreatedByDropIn = isCreatedByDropIn,
+            amount = amount,
+        ),
         isSubmitButtonVisible = isSubmitButtonVisible,
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        analyticsParams = analyticsParams,
-        isCreatedByDropIn = isCreatedByDropIn,
-        amount = amount,
         cashAppPayEnvironment = cashAppPayEnvironment,
         returnUrl = returnUrl,
         showStorePaymentField = showStorePaymentField,
@@ -300,14 +441,45 @@ internal class CashAppPayComponentParamsMapperTest {
         scopeId = scopeId,
     )
 
-    private fun getConfigurationBuilder() = CashAppPayConfiguration.Builder(
-        shopperLocale = Locale.US,
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        shopperLocale: Locale? = null,
+        configuration: CashAppPayConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = shopperLocale,
         environment = Environment.TEST,
-        clientKey = TEST_CLIENT_KEY_1
+        clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
+    ) {
+        cashAppPay {
+            setReturnUrl(TEST_RETURN_URL)
+            apply(configuration)
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private fun createSessionParams(
+        environment: Environment = Environment.TEST,
+        clientKey: String = TEST_CLIENT_KEY_1,
+        enableStoreDetails: Boolean? = null,
+        installmentConfiguration: SessionInstallmentConfiguration? = null,
+        showRemovePaymentMethodButton: Boolean? = null,
+        amount: Amount? = null,
+        returnUrl: String? = "",
+        shopperLocale: Locale? = null,
+    ) = SessionParams(
+        environment = environment,
+        clientKey = clientKey,
+        enableStoreDetails = enableStoreDetails,
+        installmentConfiguration = installmentConfiguration,
+        showRemovePaymentMethodButton = showRemovePaymentMethodButton,
+        amount = amount,
+        returnUrl = returnUrl,
+        shopperLocale = shopperLocale,
     )
 
     private fun getDefaultPaymentMethod() = PaymentMethod(
-        configuration = Configuration(clientId = TEST_CLIENT_ID, scopeId = TEST_SCOPE_ID)
+        configuration = Configuration(clientId = TEST_CLIENT_ID, scopeId = TEST_SCOPE_ID),
     )
 
     companion object {
@@ -316,6 +488,7 @@ internal class CashAppPayComponentParamsMapperTest {
         private const val TEST_CLIENT_ID = "test_client_id"
         private const val TEST_SCOPE_ID = "test_scope_id"
         private const val TEST_RETURN_URL = "test_return_url"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun enableStoreDetailsSource() = listOf(
@@ -334,6 +507,23 @@ internal class CashAppPayComponentParamsMapperTest {
             arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
             arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
             arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+        )
+
+        @JvmStatic
+        fun returnUrlSource() = listOf(
+            // Configured URL, isCreatedByDropIn, Expected
+            arguments(TEST_RETURN_URL, false, TEST_RETURN_URL),
+            arguments(null, false, null),
+            arguments(null, true, "adyencheckout://com.test.test"),
+        )
+
+        @JvmStatic
+        fun shopperLocaleSource() = listOf(
+            // configurationValue, sessionsValue, deviceLocaleValue, expectedValue
+            arguments(null, null, Locale.US, Locale.US),
+            arguments(Locale.GERMAN, null, Locale.US, Locale.GERMAN),
+            arguments(null, Locale.CHINESE, Locale.US, Locale.CHINESE),
+            arguments(Locale.GERMAN, Locale.CHINESE, Locale.US, Locale.GERMAN),
         )
     }
 }

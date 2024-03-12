@@ -151,6 +151,23 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_addressLookup"
+        style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="false">
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/autoCompleteTextView_addressLookup"
+            style="@style/AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText"
+            android:drawableEnd="@drawable/address_lookup_search_input_arrow"
+            android:dropDownAnchor="@id/textInputLayout_addressLookup" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_socialSecurityNumber"
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"

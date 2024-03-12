@@ -11,30 +11,30 @@ package com.adyen.checkout.eps.internal.provider
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSComponentState
 import com.adyen.checkout.eps.EPSConfiguration
+import com.adyen.checkout.eps.getEPSConfiguration
+import com.adyen.checkout.eps.toCheckoutConfiguration
 import com.adyen.checkout.issuerlist.internal.provider.IssuerListComponentProvider
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 
 class EPSComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
-    overrideComponentParams: ComponentParams? = null,
-    overrideSessionParams: SessionParams? = null,
+    dropInOverrideParams: DropInOverrideParams? = null,
     analyticsRepository: AnalyticsRepository? = null,
 ) : IssuerListComponentProvider<EPSComponent, EPSConfiguration, EPSPaymentMethod, EPSComponentState>(
     componentClass = EPSComponent::class.java,
-    overrideComponentParams = overrideComponentParams,
-    overrideSessionParams = overrideSessionParams,
+    dropInOverrideParams = dropInOverrideParams,
     analyticsRepository = analyticsRepository,
-    hideIssuerLogosDefaultValue = true
+    hideIssuerLogosDefaultValue = true,
 ) {
 
     override fun createComponent(
@@ -58,4 +58,12 @@ constructor(
     override fun createPaymentMethod() = EPSPaymentMethod()
 
     override fun getSupportedPaymentMethods(): List<String> = EPSComponent.PAYMENT_METHOD_TYPES
+
+    override fun getConfiguration(checkoutConfiguration: CheckoutConfiguration): EPSConfiguration? {
+        return checkoutConfiguration.getEPSConfiguration()
+    }
+
+    override fun getCheckoutConfiguration(configuration: EPSConfiguration): CheckoutConfiguration {
+        return configuration.toCheckoutConfiguration()
+    }
 }

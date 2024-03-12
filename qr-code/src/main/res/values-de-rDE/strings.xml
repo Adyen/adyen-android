@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Als Bild speichern</string>
     <string name="checkout_qr_code_download_image_succeeded">Herunterladen des Bildes erfolgreich</string>
     <string name="checkout_qr_code_download_image_failed">Herunterladen des Bildes fehlgeschlagen</string>
+    <string name="checkout_qr_code_permission_denied">Berechtigung nicht erteilt</string>
 </resources>

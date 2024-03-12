@@ -13,8 +13,8 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.ALL
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel.NONE
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -38,7 +38,7 @@ class DefaultAnalyticsRepository(
         }
         if (state != State.Uninitialized) return
         state = State.InProgress
-        Logger.v(TAG, "Setting up analytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "Setting up analytics" }
 
         runSuspendCatching {
             val analyticsSetupRequest = with(analyticsRepositoryData) {
@@ -55,10 +55,12 @@ class DefaultAnalyticsRepository(
             val response = analyticsService.setupAnalytics(analyticsSetupRequest, analyticsRepositoryData.clientKey)
             checkoutAttemptId = response.checkoutAttemptId
             state = State.Ready
-            Logger.v(TAG, "Analytics setup call successful")
+            adyenLog(AdyenLogLevel.VERBOSE) { "Analytics setup call successful" }
         }.onFailure { e ->
             state = State.Failed
-            Logger.e(TAG, "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}")
+            adyenLog(AdyenLogLevel.ERROR) {
+                "Failed to send analytics setup call - ${e::class.simpleName}: ${e.message}"
+            }
         }
     }
 
@@ -68,7 +70,6 @@ class DefaultAnalyticsRepository(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         @VisibleForTesting
         internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"

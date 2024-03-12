@@ -11,11 +11,10 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionSetupConfiguration
-import com.adyen.checkout.sessions.core.SessionSetupResponse
-import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 import kotlinx.parcelize.Parcelize
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -26,18 +25,24 @@ data class SessionDetails(
     val amount: Amount?,
     val expiresAt: String,
     val returnUrl: String?,
-    val sessionSetupConfiguration: SessionSetupConfiguration?
+    val sessionSetupConfiguration: SessionSetupConfiguration?,
+    val shopperLocale: String?,
+    val environment: Environment,
+    val clientKey: String,
 ) : Parcelable
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionSetupResponse.mapToDetails(): SessionDetails {
+fun CheckoutSession.mapToDetails(): SessionDetails {
     return SessionDetails(
-        id = id,
-        sessionData = sessionData,
-        amount = amount,
-        expiresAt = expiresAt,
-        returnUrl = returnUrl,
-        sessionSetupConfiguration = configuration
+        environment = environment,
+        clientKey = clientKey,
+        id = sessionSetupResponse.id,
+        sessionData = sessionSetupResponse.sessionData,
+        amount = sessionSetupResponse.amount,
+        expiresAt = sessionSetupResponse.expiresAt,
+        returnUrl = sessionSetupResponse.returnUrl,
+        sessionSetupConfiguration = sessionSetupResponse.configuration,
+        shopperLocale = sessionSetupResponse.shopperLocale,
     )
 }
 
@@ -47,10 +52,4 @@ fun SessionDetails.mapToModel(): SessionModel {
         id = id,
         sessionData = sessionData,
     )
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun SessionDetails.mapToParams(amount: Amount?): SessionParams {
-    // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails
-    return SessionParamsFactory.create(this.copy(amount = amount))
 }

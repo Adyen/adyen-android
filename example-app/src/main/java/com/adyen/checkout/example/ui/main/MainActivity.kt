@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     dropInLauncher,
                     navigation.paymentMethodsApiResponse,
-                    navigation.dropInConfiguration,
+                    navigation.checkoutConfiguration,
                     ExampleAdvancedDropInService::class.java,
                 )
             }
@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     sessionDropInLauncher,
                     navigation.checkoutSession,
-                    navigation.dropInConfiguration,
+                    navigation.checkoutConfiguration,
                 )
             }
 
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
                     this,
                     sessionDropInLauncher,
                     navigation.checkoutSession,
-                    navigation.dropInConfiguration,
+                    navigation.checkoutConfiguration,
                     ExampleSessionsDropInService::class.java,
                 )
             }

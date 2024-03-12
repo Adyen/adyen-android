@@ -54,7 +54,7 @@ internal enum class QRCodePaymentMethodConfig(
 
     companion object {
         fun getByPaymentMethodType(paymentMethodType: String): QRCodePaymentMethodConfig {
-            return values().firstOrNull { it.paymentMethodType == paymentMethodType } ?: DEFAULT
+            return entries.firstOrNull { it.paymentMethodType == paymentMethodType } ?: DEFAULT
         }
     }
 }

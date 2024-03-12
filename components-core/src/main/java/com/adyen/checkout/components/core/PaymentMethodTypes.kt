@@ -56,6 +56,7 @@ object PaymentMethodTypes {
     const val PIX = "pix"
     const val PROMPT_PAY = "promptpay"
     const val WECHAT_PAY_SDK = "wechatpaySDK"
+    const val MULTIBANCO = "multibanco"
 
     // Voucher payment methods that are not yet supported
     const val DOKU = "doku"
@@ -79,7 +80,6 @@ object PaymentMethodTypes {
     const val ECONTEXT_ONLINE = "econtext_online"
     const val ECONTEXT_SEVEN_ELEVEN = "econtext_seven_eleven"
     const val ECONTEXT_STORES = "econtext_stores"
-    const val MULTIBANCO = "multibanco"
     const val OXXO = "oxxo"
 
     // Payment methods that might be interpreted as redirect, but are actually not supported
@@ -105,6 +105,10 @@ object PaymentMethodTypes {
         CASH_APP_PAY,
         DOTPAY,
         DUIT_NOW,
+        ECONTEXT_ATM,
+        ECONTEXT_ONLINE,
+        ECONTEXT_SEVEN_ELEVEN,
+        ECONTEXT_STORES,
         ENTERCASH,
         EPS,
         GIFTCARD,
@@ -117,6 +121,7 @@ object PaymentMethodTypes {
         MOLPAY_VIETNAM,
         ONLINE_BANKING_CZ,
         ONLINE_BANKING_PL,
+        ONLINE_BANKING_SK,
         OPEN_BANKING,
         PAY_BY_BANK,
         PAY_NOW,
@@ -137,6 +142,7 @@ object PaymentMethodTypes {
         PIX,
         PROMPT_PAY,
         WECHAT_PAY_SDK,
+        MULTIBANCO,
     )
 
     // Payment methods that are explicitly unsupported
@@ -160,11 +166,6 @@ object PaymentMethodTypes {
         DRAGONPAY_OTC_BANKING,
         DRAGONPAY_OTC_NON_BANKING,
         DRAGONPAY_OTC_PHILIPPINES,
-        ECONTEXT_ATM,
-        ECONTEXT_ONLINE,
-        ECONTEXT_SEVEN_ELEVEN,
-        ECONTEXT_STORES,
-        MULTIBANCO,
         OXXO,
         WECHAT_PAY_MINI_PROGRAM,
         WECHAT_PAY_QR,

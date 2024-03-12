@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
@@ -41,7 +41,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -85,7 +85,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
     }
 
     private fun outputDataChanged(outputData: QRCodeOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)
@@ -100,7 +100,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
     }
 
     private fun updateLogo(paymentMethodType: String?) {
-        Logger.d(TAG, "updateLogo - $paymentMethodType")
+        adyenLog(AdyenLogLevel.DEBUG) { "updateLogo - $paymentMethodType" }
         if (!paymentMethodType.isNullOrEmpty()) {
             binding.imageViewLogo.loadLogo(
                 environment = delegate.componentParams.environment,
@@ -121,12 +121,12 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         val minutesSecondsString = localizedContext.getString(
             R.string.checkout_qr_code_time_left_format,
             minutes,
-            seconds
+            seconds,
         )
 
         binding.textViewTimer.text = localizedContext.getString(
             R.string.checkout_qr_code_timer_text,
-            minutesSecondsString
+            minutesSecondsString,
         )
         binding.progressIndicator.progress = timerData.progress
     }
@@ -136,15 +136,11 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         context.copyTextToClipboard(
             "Pix Code",
             qrCodeData,
-            localizedContext.getString(R.string.checkout_qr_code_copied_toast)
+            localizedContext.getString(R.string.checkout_qr_code_copied_toast),
         )
     }
 
     override fun getView(): View = this
 
     override fun highlightValidationErrors() = Unit
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

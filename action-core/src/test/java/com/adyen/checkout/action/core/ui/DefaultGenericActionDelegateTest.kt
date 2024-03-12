@@ -13,22 +13,22 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.Test3DS2Delegate
 import com.adyen.checkout.action.core.TestActionDelegate
 import com.adyen.checkout.action.core.internal.ui.ActionDelegateProvider
 import com.adyen.checkout.action.core.internal.ui.DefaultGenericActionDelegate
 import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -48,7 +48,7 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultGenericActionDelegateTest(
     @Mock private val activity: Activity,
     @Mock private val actionDelegateProvider: ActionDelegateProvider,
@@ -58,24 +58,23 @@ internal class DefaultGenericActionDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = GenericActionConfiguration.Builder(
-            Locale.US,
-            Environment.TEST,
-            TEST_CLIENT_KEY
-        ).build()
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        )
         genericActionDelegate = DefaultGenericActionDelegate(
             ActionObserverRepository(),
             SavedStateHandle(),
             configuration,
-            GenericComponentParamsMapper(null, null).mapToParams(configuration, null),
-            actionDelegateProvider
+            GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            actionDelegateProvider,
         )
         whenever(activity.application) doReturn Application()
 
         testDelegate = TestActionDelegate()
         whenever(actionDelegateProvider.getDelegate(any(), any(), any(), any())) doReturn testDelegate
-
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -214,7 +213,7 @@ internal class DefaultGenericActionDelegateTest(
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
         whenever(
-            actionDelegateProvider.getDelegate(any(), any(), any(), any())
+            actionDelegateProvider.getDelegate(any(), any(), any(), any()),
         ) doReturn adyen3DS2Delegate
 
         genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))

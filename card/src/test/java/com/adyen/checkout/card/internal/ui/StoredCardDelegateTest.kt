@@ -19,6 +19,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.card
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
@@ -29,6 +30,7 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
@@ -36,6 +38,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
@@ -45,7 +49,6 @@ import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
@@ -107,9 +110,9 @@ internal class StoredCardDelegateTest(
     @Test
     fun `when component is initialized with cvc shown, then view flow emits StoredCardView`() = runTest {
         delegate = createCardDelegate(
-            configuration = getDefaultCardConfigurationBuilder()
-                .setHideCvcStoredCard(false)
-                .build()
+            configuration = createCheckoutConfiguration {
+                setHideCvcStoredCard(false)
+            },
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.viewFlow.test {
@@ -120,9 +123,9 @@ internal class StoredCardDelegateTest(
     @Test
     fun `when component is initialized with cvc hidden, then view flow emits null`() = runTest {
         delegate = createCardDelegate(
-            configuration = getDefaultCardConfigurationBuilder()
-                .setHideCvcStoredCard(true)
-                .build()
+            configuration = createCheckoutConfiguration {
+                setHideCvcStoredCard(true)
+            },
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.viewFlow.test {
@@ -158,7 +161,7 @@ internal class StoredCardDelegateTest(
         @Test
         fun `input is empty with custom config, then output data should be invalid`() = runTest {
             delegate = createCardDelegate(
-                configuration = getCustomCardConfigurationBuilder().build()
+                configuration = getCustomCardConfiguration(),
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -201,9 +204,9 @@ internal class StoredCardDelegateTest(
         @Test
         fun `security code is empty with hide cvc stored config, then output data should be valid`() = runTest {
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setHideCvcStoredCard(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setHideCvcStoredCard(true)
+                },
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -222,7 +225,7 @@ internal class StoredCardDelegateTest(
             delegate = createCardDelegate(
                 storedPaymentMethod = getStoredPaymentMethod(
                     brand = CardType.BCMC.txVariant,
-                )
+                ),
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -279,9 +282,9 @@ internal class StoredCardDelegateTest(
                     createOutputData(
                         securityCodeState = FieldState(
                             "12",
-                            Validation.Invalid(R.string.checkout_security_code_not_valid)
-                        )
-                    )
+                            Validation.Invalid(R.string.checkout_security_code_not_valid),
+                        ),
+                    ),
                 )
 
                 val componentState = expectMostRecentItem()
@@ -348,9 +351,7 @@ internal class StoredCardDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultCardConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createCardDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -375,9 +376,9 @@ internal class StoredCardDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -387,9 +388,9 @@ internal class StoredCardDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createCardDelegate(
-                configuration = getDefaultCardConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -447,17 +448,22 @@ internal class StoredCardDelegateTest(
     private fun createCardDelegate(
         publicKeyRepository: PublicKeyRepository = this.publicKeyRepository,
         cardEncryptor: BaseCardEncryptor = this.cardEncryptor,
-        configuration: CardConfiguration = getDefaultCardConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         storedPaymentMethod: StoredPaymentMethod = getStoredPaymentMethod(),
         analyticsRepository: AnalyticsRepository = this.analyticsRepository,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
     ): StoredCardDelegate {
         val componentParams = CardComponentParamsMapper(
+            commonComponentParamsMapper = CommonComponentParamsMapper(),
             installmentsParamsMapper = InstallmentsParamsMapper(),
-            overrideComponentParams = null,
-            overrideSessionParams = null
-        ).mapToParamsStored(configuration, null)
+        ).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            StoredPaymentMethod(),
+        )
 
         return StoredCardDelegate(
             observerRepository = PaymentObserverRepository(),
@@ -490,27 +496,34 @@ internal class StoredCardDelegateTest(
         )
     }
 
-    private fun getDefaultCardConfigurationBuilder(): CardConfiguration.Builder {
-        return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: CardConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY,
+        amount = amount,
+    ) {
+        card(configuration)
     }
 
-    private fun getCustomCardConfigurationBuilder(): CardConfiguration.Builder {
-        return CardConfiguration.Builder(Locale.US, Environment.TEST, TEST_CLIENT_KEY)
-            .setHideCvc(true)
-            .setShopperReference("shopper_android")
-            .setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
-            .setInstallmentConfigurations(
-                InstallmentConfiguration(
-                    InstallmentOptions.DefaultInstallmentOptions(
-                        maxInstallments = 3,
-                        includeRevolving = true
-                    )
-                )
-            )
-            .setHolderNameRequired(true)
-            .setAddressConfiguration(AddressConfiguration.FullAddress())
-            .setKcpAuthVisibility(KCPAuthVisibility.SHOW)
-            .setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
+    private fun getCustomCardConfiguration() = createCheckoutConfiguration {
+        setHideCvc(true)
+        setShopperReference("shopper_android")
+        setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
+        setInstallmentConfigurations(
+            InstallmentConfiguration(
+                InstallmentOptions.DefaultInstallmentOptions(
+                    maxInstallments = 3,
+                    includeRevolving = true,
+                ),
+            ),
+        )
+        setHolderNameRequired(true)
+        setAddressConfiguration(AddressConfiguration.FullAddress())
+        setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+        setSupportedCardTypes(CardType.VISA, CardType.MASTERCARD, CardType.AMERICAN_EXPRESS)
     }
 
     @Suppress("LongParameterList")
@@ -522,7 +535,9 @@ internal class StoredCardDelegateTest(
         socialSecurityNumberState: FieldState<String> = FieldState("", Validation.Valid),
         kcpBirthDateOrTaxNumberState: FieldState<String> = FieldState("", Validation.Valid),
         kcpCardPasswordState: FieldState<String> = FieldState("", Validation.Valid),
-        addressState: AddressOutputData = AddressValidationUtils.makeValidEmptyAddressOutput(AddressInputModel()),
+        addressState: AddressOutputData = AddressValidationUtils.makeValidEmptyAddressOutput(
+            AddressInputModel(),
+        ),
         installmentState: FieldState<InstallmentModel?> = FieldState(null, Validation.Valid),
         shouldStorePaymentMethod: Boolean = false,
         cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
@@ -560,7 +575,7 @@ internal class StoredCardDelegateTest(
             cardBrands = cardBrands,
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
-            isCardListVisible = isCardListVisible
+            isCardListVisible = isCardListVisible,
         )
     }
 

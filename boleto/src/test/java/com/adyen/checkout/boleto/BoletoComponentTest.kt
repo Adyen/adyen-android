@@ -16,8 +16,7 @@ import com.adyen.checkout.boleto.internal.ui.BoletoComponentViewType
 import com.adyen.checkout.boleto.internal.ui.BoletoDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
@@ -42,7 +41,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class BoletoComponentTest(
     @Mock private val boletoDelegate: BoletoDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
@@ -62,8 +61,6 @@ internal class BoletoComponentTest(
             actionHandlingComponent = actionHandlingComponent,
             componentEventHandler = componentEventHandler,
         )
-
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -115,7 +112,7 @@ internal class BoletoComponentTest(
             boletoDelegate,
             genericActionDelegate,
             actionHandlingComponent,
-            componentEventHandler
+            componentEventHandler,
         )
 
         val viewTestFlow = component.viewFlow.test(testScheduler)
@@ -135,7 +132,7 @@ internal class BoletoComponentTest(
             boletoDelegate,
             genericActionDelegate,
             actionHandlingComponent,
-            componentEventHandler
+            componentEventHandler,
         )
 
         val viewTestFlow = component.viewFlow.test(testScheduler)

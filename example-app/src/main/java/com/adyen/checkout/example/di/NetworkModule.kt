@@ -29,29 +29,30 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private val BASE_URL = if (CheckoutApiService.isRealUrlAvailable()) {
-        BuildConfig.MERCHANT_SERVER_URL
-    } else {
-        "http://myserver.com/my/endpoint/"
-    }
-
     @Singleton
     @Provides
     internal fun provideOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
+        val authorizationHeader = (BuildConfig.AUTHORIZATION_HEADER_NAME to BuildConfig.AUTHORIZATION_HEADER_VALUE)
+            .takeIf { it.first.isNotBlank() }
+
         if (BuildConfig.DEBUG) {
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.level = HttpLoggingInterceptor.Level.BODY
+            val interceptor = HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+                if (authorizationHeader != null) redactHeader(authorizationHeader.first)
+            }
             builder.addNetworkInterceptor(interceptor)
         }
 
-        builder.addInterceptor { chain ->
-            val request = chain.request().newBuilder()
-                .addHeader(BuildConfig.API_KEY_HEADER_NAME, BuildConfig.CHECKOUT_API_KEY)
-                .build()
+        if (authorizationHeader != null) {
+            builder.addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .header(authorizationHeader.first, authorizationHeader.second)
+                    .build()
 
-            chain.proceed(request)
+                chain.proceed(request)
+            }
         }
 
         return builder.build()
@@ -63,7 +64,7 @@ object NetworkModule {
         Moshi.Builder()
             .add(JSONObjectAdapter())
             .add(KotlinJsonAdapterFactory())
-            .build()
+            .build(),
     )
 
     @Singleton
@@ -74,7 +75,7 @@ object NetworkModule {
         converterFactory: Converter.Factory,
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()

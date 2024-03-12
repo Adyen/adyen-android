@@ -20,4 +20,5 @@
     <string name="checkout_qr_code_save_button">Spara som bild</string>
     <string name="checkout_qr_code_download_image_succeeded">Nedladdning av bild lyckades</string>
     <string name="checkout_qr_code_download_image_failed">Nedladdning av bild misslyckades</string>
+    <string name="checkout_qr_code_permission_denied">Behörighet beviljas inte</string>
 </resources>

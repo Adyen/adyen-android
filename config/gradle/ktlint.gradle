@@ -20,20 +20,25 @@ dependencies {
     ktlint "com.pinterest.ktlint:ktlint-cli:$ktlint_version"
 }
 
-task ktlint(type: JavaExec) {
+tasks.register("ktlint", JavaExec) {
     description = "Check Kotlin code style."
     group = "verification"
 
     classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "src/**/main/**/*.kt", "--reporter=plain", "--reporter=checkstyle,output=${project.buildDir}/reports/klint/klint-results.xml"
+    mainClass = "com.pinterest.ktlint.Main"
+    args "src/**/main/**/*.kt", "**.kts", "!**/build/**"
 }
 
-task ktlintFormat(type: JavaExec) {
+tasks.named("check") {
+    dependsOn tasks.named("ktlint")
+}
+
+tasks.register("ktlintFormat", JavaExec) {
     description = "Fix Kotlin code style deviations."
     group = "formatting"
 
     classpath = configurations.ktlint
-    main = "com.pinterest.ktlint.Main"
-    args "-F", "src/**/*.kt"
+    mainClass = "com.pinterest.ktlint.Main"
+    jvmArgs "--add-opens=java.base/java.lang=ALL-UNNAMED"
+    args "-F", "src/**/*.kt", "**.kts", "!**/build/**"
 }

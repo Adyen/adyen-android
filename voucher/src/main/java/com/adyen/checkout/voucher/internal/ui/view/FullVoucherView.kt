@@ -8,34 +8,48 @@
 
 package com.adyen.checkout.voucher.internal.ui.view
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabColorSchemeParams
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.components.core.internal.util.isEmpty
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.components.core.internal.util.toast
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.internal.util.ThemeUtil
+import com.adyen.checkout.ui.core.internal.util.formatFullStringWithHyperLink
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.databinding.FullVoucherViewBinding
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
+import com.adyen.checkout.voucher.internal.ui.model.VoucherInformationField
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
+import com.adyen.checkout.voucher.internal.ui.model.VoucherStoreAction
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Failure
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.PermissionDenied
+import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Success
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
-class FullVoucherView @JvmOverloads constructor(
+internal class FullVoucherView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -43,19 +57,21 @@ class FullVoucherView @JvmOverloads constructor(
     ConstraintLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
     private val binding: FullVoucherViewBinding = FullVoucherViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
-
     private lateinit var delegate: VoucherDelegate
+
+    private var informationFieldsAdapter: VoucherInformationFieldsAdapter? = null
+    private var coroutineScope: CoroutineScope? = null
 
     init {
         val padding = resources.getDimension(R.dimen.standard_margin).toInt()
-        setPadding(padding, padding, padding, padding)
+        this.setPadding(padding, padding, padding, padding)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -67,31 +83,29 @@ class FullVoucherView @JvmOverloads constructor(
         initLocalizedStrings(localizedContext)
 
         observeDelegate(delegate, coroutineScope)
+        this.coroutineScope = coroutineScope
 
         binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
-        binding.buttonDownloadPdf.setOnClickListener { delegate.downloadVoucher(context) }
+        binding.buttonDownloadPdf.setOnClickListener { onDownloadPdfClicked() }
+        binding.buttonSaveImage.setOnClickListener { onSaveAsImageClicked() }
     }
 
-    private fun initLocalizedStrings(localizedContext: Context) {
-        binding.textViewIntroduction.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_Description_Boleto,
-            localizedContext
-        )
-        binding.textViewPaymentReference.setLocalizedTextFromStyle(
+    private fun initLocalizedStrings(localizedContext: Context) = with(binding) {
+        textViewPaymentReference.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Voucher_PaymentReference,
-            localizedContext
+            localizedContext,
         )
-        binding.buttonCopyCode.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ButtonCopyCode,
-            localizedContext
+        buttonCopyCode.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_CopyCode,
+            localizedContext,
         )
-        binding.buttonDownloadPdf.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ButtonDownloadPdf,
-            localizedContext
+        buttonDownloadPdf.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_DownloadPdf,
+            localizedContext,
         )
-        binding.textViewExpirationLabel.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_Voucher_ExpirationDateLabel,
-            localizedContext
+        buttonSaveImage.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_Voucher_Button_SaveImage,
+            localizedContext,
         )
     }
 
@@ -99,15 +113,22 @@ class FullVoucherView @JvmOverloads constructor(
         delegate.outputDataFlow
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
+
+        delegate.eventFlow
+            .onEach { handleEventFlow(it) }
+            .launchIn(coroutineScope)
     }
 
     private fun outputDataChanged(outputData: VoucherOutputData) {
-        Logger.d(TAG, "outputDataChanged")
+        adyenLog(AdyenLogLevel.DEBUG) { "outputDataChanged" }
 
         loadLogo(outputData.paymentMethodType)
+        updateIntroductionText(outputData.introductionTextResource)
         updateAmount(outputData.totalAmount)
         updateCodeReference(outputData.reference)
-        updateExpirationDate(outputData.expiresAt)
+        updateStoreAction(outputData.storeAction)
+        updateInformationFields(outputData.informationFields)
+        updateReadInstructionTextView(outputData.instructionUrl)
     }
 
     private fun loadLogo(paymentMethodType: String?) {
@@ -120,39 +141,95 @@ class FullVoucherView @JvmOverloads constructor(
         }
     }
 
-    private fun updateAmount(amount: Amount?) {
+    private fun updateIntroductionText(@StringRes introductionTextResource: Int?) {
+        if (introductionTextResource == null) return
+        binding.textViewIntroduction.text = localizedContext.getString(introductionTextResource)
+    }
+
+    private fun updateAmount(amount: Amount?) = with(binding) {
         if (amount != null && !amount.isEmpty) {
             val formattedAmount = CurrencyUtils.formatAmount(
                 amount,
-                delegate.componentParams.shopperLocale
+                delegate.componentParams.shopperLocale,
             )
-            binding.textViewAmount.isVisible = true
-            binding.textViewAmount.text = formattedAmount
+            textViewAmount.isVisible = true
+            textViewAmount.text = formattedAmount
         } else {
-            binding.textViewAmount.isVisible = false
+            textViewAmount.isVisible = false
         }
     }
 
-    private fun updateCodeReference(codeReference: String?) {
-        binding.textViewReferenceCode.text = codeReference
+    private fun updateCodeReference(codeReference: String?) = with(binding) {
+        textViewReferenceCode.text = codeReference
 
         val isVisible = !codeReference.isNullOrEmpty()
-        binding.textViewReferenceCode.isVisible = isVisible
-        binding.buttonCopyCode.isVisible = isVisible
+        textViewReferenceCode.isVisible = isVisible
+        buttonCopyCode.isVisible = isVisible
     }
 
-    private fun updateExpirationDate(expiresAt: String?) {
-        binding.textViewExpirationDate.text = expiresAt?.let {
-            DateUtils.formatStringDate(
-                expiresAt,
-                delegate.componentParams.shopperLocale
-            )
-        }
+    private fun updateStoreAction(storeAction: VoucherStoreAction?) = with(binding) {
+        buttonDownloadPdf.isVisible = storeAction is VoucherStoreAction.DownloadPdf
+        buttonSaveImage.isVisible = storeAction is VoucherStoreAction.SaveAsImage
+    }
 
-        val isVisible = !expiresAt.isNullOrEmpty()
-        binding.textViewExpirationLabel.isVisible = isVisible
-        binding.textViewExpirationDate.isVisible = isVisible
-        binding.expiryDateSeparator.isVisible = isVisible
+    private fun updateInformationFields(informationFields: List<VoucherInformationField>?) {
+        if (informationFields.isNullOrEmpty()) return
+        if (informationFieldsAdapter == null) {
+            informationFieldsAdapter = VoucherInformationFieldsAdapter(context, localizedContext)
+            binding.recyclerViewInformationFields.adapter = informationFieldsAdapter
+        }
+        informationFieldsAdapter?.submitList(informationFields)
+    }
+
+    private fun onDownloadPdfClicked() {
+        delegate.downloadVoucher(context)
+    }
+
+    private fun onSaveAsImageClicked() {
+        hideButtons()
+        doOnNextLayout {
+            delegate.saveVoucherAsImage(context, this)
+            showButtons()
+        }
+    }
+
+    private fun updateReadInstructionTextView(instructionUrl: String?) {
+        binding.textViewReadInstructions.isVisible = instructionUrl != null
+        instructionUrl?.let {
+            binding.textViewReadInstructions.text =
+                localizedContext.getString(R.string.checkout_voucher_read_instructions).formatFullStringWithHyperLink()
+            binding.textViewReadInstructions.setOnClickListener {
+                onReadInstructionsClicked(instructionUrl)
+            }
+        }
+    }
+
+    private fun onReadInstructionsClicked(url: String) {
+        val defaultColors = CustomTabColorSchemeParams.Builder()
+            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
+            .build()
+
+        try {
+            CustomTabsIntent.Builder()
+                .setShowTitle(true)
+                .setDefaultColorSchemeParams(defaultColors)
+                .build()
+                .launchUrl(context, Uri.parse(url))
+
+            adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened instructions in custom tab" }
+        } catch (e: ActivityNotFoundException) {
+            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open instructions in custom tab" }
+        }
+    }
+
+    private fun hideButtons() = with(binding) {
+        buttonCopyCode.isVisible = false
+        updateStoreAction(null)
+    }
+
+    private fun showButtons() = with(binding) {
+        buttonCopyCode.isVisible = true
+        updateStoreAction(delegate.outputData.storeAction)
     }
 
     private fun copyCode(codeReference: String?) {
@@ -160,8 +237,24 @@ class FullVoucherView @JvmOverloads constructor(
         context.copyTextToClipboard(
             COPY_LABEL,
             codeReference,
-            localizedContext.getString(R.string.checkout_voucher_copied_toast)
+            localizedContext.getString(R.string.checkout_voucher_copied_toast),
         )
+    }
+
+    private fun handleEventFlow(event: VoucherUIEvent) {
+        when (event) {
+            Success -> {
+                context.toast(localizedContext.getString(R.string.checkout_voucher_image_saved))
+            }
+
+            PermissionDenied -> {
+                context.toast(localizedContext.getString(R.string.checkout_voucher_permission_denied))
+            }
+
+            is Failure -> {
+                context.toast(localizedContext.getString(R.string.checkout_voucher_image_failed))
+            }
+        }
     }
 
     override fun highlightValidationErrors() {
@@ -171,7 +264,6 @@ class FullVoucherView @JvmOverloads constructor(
     override fun getView(): View = this
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val COPY_LABEL = "Voucher code reference"
     }
 }

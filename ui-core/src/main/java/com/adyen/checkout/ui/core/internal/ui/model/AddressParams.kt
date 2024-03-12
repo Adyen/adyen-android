@@ -41,6 +41,11 @@ sealed class AddressParams {
         val supportedCountryCodes: List<String> = emptyList(),
         val addressFieldPolicy: AddressFieldPolicy
     ) : AddressParams()
+
+    /**
+     * Address Lookup option will be shown as part of card component.
+     */
+    class Lookup : AddressParams()
 }
 
 /**

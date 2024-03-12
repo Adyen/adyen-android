@@ -13,8 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.databinding.IssuerListRecyclerViewBinding
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
@@ -29,7 +29,7 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -71,14 +71,10 @@ internal class IssuerListRecyclerView @JvmOverloads constructor(
     }
 
     private fun onItemClicked(issuerModel: IssuerModel) {
-        Logger.d(TAG, "onItemClicked - ${issuerModel.name}")
+        adyenLog(AdyenLogLevel.DEBUG) { "onItemClicked - ${issuerModel.name}" }
         issuerListDelegate.updateInputData { selectedIssuer = issuerModel }
         issuerListDelegate.onSubmit()
     }
 
     override fun getView(): View = this
-
-    companion object {
-        private val TAG = LogUtil.getTag()
-    }
 }

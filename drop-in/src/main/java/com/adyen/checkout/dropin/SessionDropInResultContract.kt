@@ -22,7 +22,7 @@ class SessionDropInResultContract :
     override fun createIntent(context: Context, input: SessionDropInResultContractParams): Intent {
         return DropInActivity.createIntent(
             context = context,
-            dropInConfiguration = input.dropInConfiguration,
+            checkoutConfiguration = input.checkoutConfiguration,
             checkoutSession = input.checkoutSession,
             service = ComponentName(context, input.serviceClass),
         )
@@ -43,9 +43,11 @@ class SessionDropInResultContract :
                     SessionDropInResult.Error(reason)
                 }
             }
+
             resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.SESSION_RESULT_KEY) -> {
                 SessionDropInResult.Finished(requireNotNull(data.getParcelableExtra(DropIn.SESSION_RESULT_KEY)))
             }
+
             resultCode == Activity.RESULT_OK && data.hasExtra(DropIn.RESULT_KEY) -> {
                 val result = data.getStringExtra(DropIn.RESULT_KEY)
                 SessionDropInResult.Finished(
@@ -55,9 +57,10 @@ class SessionDropInResultContract :
                         sessionData = null,
                         resultCode = result,
                         order = null,
-                    )
+                    ),
                 )
             }
+
             else -> null
         }
     }

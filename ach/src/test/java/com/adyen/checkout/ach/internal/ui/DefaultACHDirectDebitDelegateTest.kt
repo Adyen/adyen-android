@@ -13,8 +13,10 @@ import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitComponentState
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.R
+import com.adyen.checkout.ach.achDirectDebit
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitComponentParamsMapper
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -22,6 +24,8 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
@@ -34,7 +38,6 @@ import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
@@ -111,9 +114,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         fun `when isStorePaymentFieldVisible in configuration  is false, isStorePaymentFieldVisible in outputdata should be false`() =
             runTest {
                 delegate = createAchDelegate(
-                    configuration = getAchConfigurationBuilder()
-                        .setShowStorePaymentField(false)
-                        .build()
+                    configuration = createCheckoutConfiguration {
+                        setShowStorePaymentField(false)
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -128,9 +131,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         fun `when isStorePaymentFieldVisible in configuration  is true , isStorePaymentFieldVisible in outputdata should be true`() =
             runTest {
                 delegate = createAchDelegate(
-                    configuration = getAchConfigurationBuilder()
-                        .setShowStorePaymentField(true)
-                        .build()
+                    configuration = createCheckoutConfiguration {
+                        setShowStorePaymentField(true)
+                    },
                 )
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -144,9 +147,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `address configuration is none, then countries and states should not be fetched`() = runTest {
             delegate = createAchDelegate(
-                configuration = getAchConfigurationBuilder()
-                    .setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+                },
             )
 
             val countriesTestFlow = addressRepository.countriesFlow.test(testScheduler)
@@ -179,8 +182,9 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when address configuration is NONE, addressUIState in outputdata must be NONE`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(ACHDirectDebitAddressConfiguration.None).build()
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+            }
             delegate = createAchDelegate(configuration = configuration)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -191,12 +195,13 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when address configuration is FullAddress, addressUIState in outputdata must be FullAddress`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(
                     ACHDirectDebitAddressConfiguration.FullAddress(
-                        supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST
-                    )
-                ).build()
+                        supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,
+                    ),
+                )
+            }
             delegate = createAchDelegate(configuration = configuration)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -207,17 +212,21 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when the address is changed, addressOutputDataFlow should be notified with the same data`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(
-                    ACHDirectDebitAddressConfiguration.FullAddress(
-                        DEFAULT_SUPPORTED_COUNTRY_LIST
-                    )
-                ).build()
-            val componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null)
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(
+                    ACHDirectDebitAddressConfiguration.FullAddress(DEFAULT_SUPPORTED_COUNTRY_LIST),
+                )
+            }
+            val componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+            )
             val countryOptions = AddressFormUtils.initializeCountryOptions(
                 shopperLocale = componentParams.shopperLocale,
                 addressParams = componentParams.addressParams,
-                countryList = TestAddressRepository.COUNTRIES
+                countryList = TestAddressRepository.COUNTRIES,
             )
 
             val expectedCountries = AddressFormUtils.markAddressListItemSelected(
@@ -232,7 +241,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                     houseNumberOrName = "44",
                     apartmentSuite = "aparment",
                     city = "Istanbul",
-                    country = "Turkey"
+                    country = "Turkey",
                 )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -251,7 +260,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                 assertEquals(expectedCountries, countryOptions)
                 assertEquals(
                     stateOptions,
-                    AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES)
+                    AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
                 )
             }
         }
@@ -271,7 +280,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
                 Validation.Invalid(reason = R.string.checkout_ach_bank_account_number_invalid),
-                outputData.bankAccountNumber.validation
+                outputData.bankAccountNumber.validation,
             )
         }
 
@@ -290,7 +299,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
                 Validation.Invalid(reason = R.string.checkout_ach_bank_account_location_invalid),
-                outputData.bankLocationId.validation
+                outputData.bankLocationId.validation,
             )
         }
 
@@ -309,7 +318,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             val outputData = delegate.outputDataFlow.first()
             assertEquals(
                 Validation.Invalid(reason = R.string.checkout_ach_bank_account_holder_name_invalid),
-                outputData.ownerName.validation
+                outputData.ownerName.validation,
             )
         }
     }
@@ -340,7 +349,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                     houseNumberOrName = "44",
                     apartmentSuite = "aparment",
                     city = "Istanbul",
-                    country = "Turkey"
+                    country = "Turkey",
                 )
             }
 
@@ -351,8 +360,9 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when bankLocationId is invalid, then component state should be invalid`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(ACHDirectDebitAddressConfiguration.None).build()
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+            }
             delegate = createAchDelegate(configuration = configuration)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -372,8 +382,9 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when bankAccountNumber is invalid, then component state should be invalid`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(ACHDirectDebitAddressConfiguration.None).build()
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+            }
             delegate = createAchDelegate(configuration = configuration)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -393,8 +404,9 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @Test
         fun `when ownerName is invalid, then component state should be invalid`() = runTest {
-            val configuration =
-                getAchConfigurationBuilder().setAddressConfiguration(ACHDirectDebitAddressConfiguration.None).build()
+            val configuration = createCheckoutConfiguration {
+                setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+            }
             delegate = createAchDelegate(configuration = configuration)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -432,9 +444,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when all fields in outputdata are valid and address is empty and not required, then component state should be valid`() =
             runTest {
-                val configuration = getAchConfigurationBuilder()
-                    .setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
-                    .build()
+                val configuration = createCheckoutConfiguration {
+                    setAddressConfiguration(ACHDirectDebitAddressConfiguration.None)
+                }
                 delegate = createAchDelegate(configuration = configuration)
 
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -464,7 +476,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                     apartmentSuite = FieldState(adddressInputModel.apartmentSuite, Validation.Valid),
                     city = FieldState(adddressInputModel.city, Validation.Valid),
                     country = FieldState(adddressInputModel.country, Validation.Valid),
-                    isOptional = false
+                    isOptional = false,
                 )
 
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
@@ -507,16 +519,16 @@ internal class DefaultACHDirectDebitDelegateTest(
 
         @ParameterizedTest
         @MethodSource(
-            "com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegateTest#shouldStorePaymentMethodSource"
+            "com.adyen.checkout.ach.internal.ui.DefaultACHDirectDebitDelegateTest#shouldStorePaymentMethodSource",
         )
         fun `storePaymentMethod in component state should match store switch visibility and state`(
             isStorePaymentMethodSwitchVisible: Boolean,
             isStorePaymentMethodSwitchChecked: Boolean,
             expectedStorePaymentMethod: Boolean?,
         ) = runTest {
-            val configuration = getAchConfigurationBuilder()
-                .setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
-                .build()
+            val configuration = createCheckoutConfiguration {
+                setShowStorePaymentField(isStorePaymentMethodSwitchVisible)
+            }
             delegate = createAchDelegate(configuration = configuration)
 
             val adddressInputModel = AddressInputModel(
@@ -526,7 +538,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                 houseNumberOrName = "44",
                 apartmentSuite = "aparment",
                 city = "Istanbul",
-                country = "Turkey"
+                country = "Turkey",
             )
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -551,9 +563,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getAchConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createAchDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -574,9 +584,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createAchDelegate(
-                configuration = getAchConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -585,9 +595,9 @@ internal class DefaultACHDirectDebitDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createAchDelegate(
-                configuration = getAchConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -666,7 +676,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             country = country,
             isOptional = isOptional,
             countryOptions = countryOptions,
-            stateOptions = stateOptions
+            stateOptions = stateOptions,
         )
     }
 
@@ -678,7 +688,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         addressRepository: AddressRepository = this.addressRepository,
         genericEncryptor: BaseGenericEncryptor = this.genericEncryptor,
         submitHandler: SubmitHandler<ACHDirectDebitComponentState> = this.submitHandler,
-        configuration: ACHDirectDebitConfiguration = getAchConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = DefaultACHDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
@@ -688,15 +698,22 @@ internal class DefaultACHDirectDebitDelegateTest(
         addressRepository = addressRepository,
         submitHandler = submitHandler,
         genericEncryptor = genericEncryptor,
-        componentParams = ACHDirectDebitComponentParamsMapper(null, null).mapToParams(configuration, null),
-        order = order
+        componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
+            .mapToParams(configuration, DEVICE_LOCALE, null, null),
+        order = order,
     )
 
-    private fun getAchConfigurationBuilder() = ACHDirectDebitConfiguration.Builder(
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: ACHDirectDebitConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
-    )
+        amount = amount,
+    ) {
+        achDirectDebit(configuration)
+    }
 
     private fun getValidAddressInputData(): AddressInputModel {
         return AddressInputModel(
@@ -704,9 +721,9 @@ internal class DefaultACHDirectDebitDelegateTest(
             street = "Street Name",
             stateOrProvince = "province",
             houseNumberOrName = "44",
-            apartmentSuite = "aparment",
+            apartmentSuite = "apartment",
             city = "Istanbul",
-            country = "Turkey"
+            country = "Turkey",
         )
     }
 
@@ -718,6 +735,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private val DEFAULT_SUPPORTED_COUNTRY_LIST = listOf("US", "PR")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private val DEVICE_LOCALE = Locale("nl", "NL")
 
         @JvmStatic
         fun shouldStorePaymentMethodSource() = listOf(

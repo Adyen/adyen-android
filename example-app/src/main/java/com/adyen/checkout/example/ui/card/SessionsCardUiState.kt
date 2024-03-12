@@ -9,13 +9,13 @@
 package com.adyen.checkout.example.ui.card
 
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.compose.ResultState
 
 @Immutable
 internal data class SessionsCardUiState(
-    val cardConfiguration: CardConfiguration,
+    val checkoutConfiguration: CheckoutConfiguration,
     val isLoading: Boolean = false,
     val oneTimeMessage: String? = null,
     val componentData: SessionsCardComponentData? = null,

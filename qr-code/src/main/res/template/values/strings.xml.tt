@@ -22,4 +22,5 @@
     <string name="checkout_qr_code_save_button">%%voucher.saveImage%%</string>
     <string name="checkout_qr_code_download_image_succeeded">%%payNow.downloadImageSuccess%%</string>
     <string name="checkout_qr_code_download_image_failed">%%payNow.downloadImageFailed%%</string>
+    <string name="checkout_qr_code_permission_denied">%%runtimePermission.permissionDeniedMessage%%</string>
 </resources>

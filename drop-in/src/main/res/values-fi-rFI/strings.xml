@@ -8,12 +8,10 @@
 
 <resources>
     <string name="payment_methods_header">Maksutavat</string>
-    <string name="error_dialog_title">Virhe</string>
-    <string name="error_dialog_button">Ok</string>
     <string name="payment_failed">Virhe maksun lähettämisessä. Yritä uudelleen.</string>
     <string name="action_failed">Maksua käsitellessä tapahtui virhe. Yritä myöhemmin uudelleen.</string>
-    <string name="component_error">Jotain meni pieleen.</string>
     <string name="time_out_error">Pyydä aikakatkaisu. Yritä uudelleen.</string>
+    <string name="unknown_error">Tapahtui tuntematon virhe</string>
     <string name="store_payment_methods_header">Maksutapasi</string>
     <string name="other_payment_methods">Valitse muu maksutapa</string>
     <string name="continue_button">Jatka</string>

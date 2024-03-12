@@ -8,13 +8,16 @@
 
 package com.adyen.checkout.qrcode.internal.ui
 
+import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
+import com.adyen.checkout.components.core.internal.ui.PermissionRequestingDelegate
 import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
+import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
@@ -28,9 +31,11 @@ interface QRCodeDelegate :
     IntentHandlingDelegate,
     StatusPollingDelegate,
     ViewProvidingDelegate,
-    RedirectableDelegate {
+    RedirectableDelegate,
+    PermissionRequestingDelegate,
+    PermissionHandler {
 
     val eventFlow: Flow<QrCodeUIEvent>
 
-    fun downloadQRImage()
+    fun downloadQRImage(context: Context)
 }

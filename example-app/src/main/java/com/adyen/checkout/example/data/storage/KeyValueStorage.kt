@@ -23,13 +23,13 @@ interface KeyValueStorage {
     fun getShopperReference(): String
     fun getAmount(): Amount
     fun getCountry(): String
-    fun getShopperLocale(): String
-    fun isThreeds2Enabled(): Boolean
-    fun isExecuteThreeD(): Boolean
+    fun getShopperLocale(): String?
+    fun getThreeDSMode(): ThreeDSMode
     fun getShopperEmail(): String
     fun getMerchantAccount(): String
     fun isSplitCardFundingSources(): Boolean
     fun getCardAddressMode(): CardAddressMode
+    fun isRemoveStoredPaymentMethodEnabled(): Boolean
     fun getInstantPaymentMethodType(): String
     fun getInstallmentOptionsMode(): CardInstallmentOptionsMode
     fun isInstallmentAmountShown(): Boolean
@@ -48,7 +48,7 @@ internal class DefaultKeyValueStorage(
         return sharedPreferences.getString(
             appContext = appContext,
             stringRes = R.string.shopper_reference_key,
-            defaultValue = BuildConfig.SHOPPER_REFERENCE,
+            defaultStringRes = R.string.preferences_default_shopper_reference,
         )
     }
 
@@ -63,7 +63,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.amount_value_key,
                 defaultStringRes = R.string.preferences_default_amount_value,
-            ).toLong()
+            ).toLong(),
         )
     }
 
@@ -75,27 +75,17 @@ internal class DefaultKeyValueStorage(
         )
     }
 
-    override fun getShopperLocale(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.shopper_locale_key,
-            defaultStringRes = R.string.preferences_default_shopper_locale,
-        )
+    override fun getShopperLocale(): String? {
+        return sharedPreferences.getString(appContext.getString(R.string.shopper_locale_key), null)
     }
 
-    override fun isThreeds2Enabled(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.threeds2_key,
-            defaultStringRes = R.string.preferences_default_threeds2_enabled,
-        )
-    }
-
-    override fun isExecuteThreeD(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.execute3D_key,
-            defaultStringRes = R.string.preferences_default_execute_threed,
+    override fun getThreeDSMode(): ThreeDSMode {
+        return ThreeDSMode.valueOf(
+            sharedPreferences.getString(
+                appContext = appContext,
+                stringRes = R.string.threeds_mode_key,
+                defaultStringRes = R.string.preferences_default_threeds_mode,
+            ),
         )
     }
 
@@ -129,9 +119,15 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.card_address_form_mode_key,
                 defaultStringRes = R.string.preferences_default_address_form_mode,
-            )
+            ),
         )
     }
+
+    override fun isRemoveStoredPaymentMethodEnabled() = sharedPreferences.getBoolean(
+        appContext = appContext,
+        stringRes = R.string.remove_stored_payment_method_key,
+        defaultStringRes = R.string.preferences_default_remove_stored_payment_method,
+    )
 
     override fun getInstantPaymentMethodType(): String {
         return sharedPreferences.getString(
@@ -147,7 +143,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.card_installment_options_mode_key,
                 defaultStringRes = R.string.preferences_default_installment_options_mode,
-            )
+            ),
         )
     }
 
@@ -177,7 +173,7 @@ internal class DefaultKeyValueStorage(
                 appContext = appContext,
                 stringRes = R.string.analytics_level_key,
                 defaultStringRes = R.string.preferences_default_analytics_level,
-            )
+            ),
         )
     }
 }

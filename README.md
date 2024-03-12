@@ -31,23 +31,23 @@ Import the corresponding module in your `build.gradle` file.
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in-compose:5.2.0"
+implementation "com.adyen.checkout:drop-in-compose:5.3.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.2.0"
-implementation "com.adyen.checkout:components-compose:5.2.0"
+implementation "com.adyen.checkout:card:5.3.0"
+implementation "com.adyen.checkout:components-compose:5.3.0"
 ```
 
 ### Without Jetpack Compose
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in:5.2.0"
+implementation "com.adyen.checkout:drop-in:5.3.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.2.0"
+implementation "com.adyen.checkout:card:5.3.0"
 ```
 
 The library is available on [Maven Central][mavenRepo].
@@ -64,6 +64,10 @@ If you are upgrading from 4.x.x to a current release, check out our [migration g
 
 If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
+
+## Development
+
+For development and testing purposes the project is accompanied by a test app. See [here](example-app/README.md) how to set it up and run it.
 
 ## Support
 

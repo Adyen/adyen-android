@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin
 
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionPaymentResult
@@ -183,6 +184,48 @@ sealed class RecurringDropInServiceResult : BaseDropInServiceResult() {
         override val reason: String? = null,
         override val dismissDropIn: Boolean = false,
     ) : RecurringDropInServiceResult(), DropInServiceResultError
+}
+
+sealed class AddressLookupDropInServiceResult : BaseDropInServiceResult() {
+
+    /**
+     * Only applicable to address lookup flow.
+     *
+     * Send this to display the options received for the query shopper has inputted.
+     *
+     * @param options Address options to be displayed to the shopper.
+     */
+    class LookupResult(
+        val options: List<LookupAddress>
+    ) : AddressLookupDropInServiceResult()
+
+    /**
+     * Only applicable to address lookup flow.
+     *
+     * Send this to prefill the address after making an api call to fetch the complete address details.
+     *
+     * @param lookupAddress Complete address details.
+     */
+    class LookupComplete(
+        val lookupAddress: LookupAddress
+    ) : AddressLookupDropInServiceResult()
+
+    /**
+     * * Only applicable to address lookup flow.
+     *
+     * Send this to display an error dialog and optionally dismiss Drop-in.
+     *
+     * @param errorDialog If set, a dialog will be shown with the data passed in [ErrorDialog]. If null, no
+     * dialog will be displayed.
+     * @param reason the reason of the error. You will receive this value back in your [DropInCallback] class. This
+     * value is not used internally by Drop-in.
+     * @param dismissDropIn whether Drop-in should be dismissed after presenting the Alert Dialog.
+     */
+    class Error(
+        override val errorDialog: ErrorDialog?,
+        override val reason: String? = null,
+        override val dismissDropIn: Boolean = false,
+    ) : AddressLookupDropInServiceResult(), DropInServiceResultError
 }
 
 internal sealed class SessionDropInServiceResult : BaseDropInServiceResult() {

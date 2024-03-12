@@ -9,11 +9,21 @@
 
 <resources>
     <string name="checkout_voucher_introduction_bacs">Download your Direct Debit Instruction (DDI / Mandate)</string>
-    <string name="checkout_voucher_introduction_boleto">Thank you for your purchase, please use the following coupon to complete your payment.</string>
+    <string name="checkout_voucher_introduction">Thank you for your purchase, please use the following coupon to complete your payment.</string>
+    <string name="checkout_voucher_introduction_econtext">Thank you for your purchase, please use the following information to complete your payment.</string>
     <string name="checkout_voucher_payment_reference">Payment Reference</string>
+    <string name="checkout_voucher_expiration_entity">Entity</string>
     <string name="checkout_voucher_expiration_date">Expiration Date</string>
+    <string name="checkout_voucher_shopper_reference">Shopper Reference</string>
+    <string name="checkout_voucher_phone_number">Phone Number</string>
+    <string name="checkout_voucher_collection_institution_number">Collection Institution Number</string>
+    <string name="checkout_voucher_read_instructions">Read instructions</string>
     <string name="checkout_voucher_copy_code">Copy code</string>
     <string name="checkout_voucher_copied_toast">Code copied to clipboard</string>
     <string name="checkout_voucher_download_pdf">Download PDF</string>
+    <string name="checkout_voucher_save_image">Save as image</string>
+    <string name="checkout_voucher_image_saved"> Image saved in your device</string>
+    <string name="checkout_voucher_image_failed"> Failed to save image</string>
     <string name="checkout_voucher_finish">Finish</string>
+    <string name="checkout_voucher_permission_denied">Permission is not granted</string>
 </resources>

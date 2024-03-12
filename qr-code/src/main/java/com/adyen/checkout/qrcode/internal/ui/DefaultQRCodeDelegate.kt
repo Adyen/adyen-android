@@ -8,11 +8,10 @@
 
 package com.adyen.checkout.qrcode.internal.ui
 
-import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.ActionComponentData
@@ -22,24 +21,28 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.FileDownloader
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.RedirectHandler
+import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -51,6 +54,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import java.util.Calendar
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -62,16 +66,19 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
-    private val fileDownloader: FileDownloader
+    private val imageSaver: ImageSaver
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<QRCodeOutputData> = _outputDataFlow
 
-    override val outputData: QRCodeOutputData get() = _outputDataFlow.value
-
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+
+    private val permissionChannel: Channel<PermissionRequestData> = bufferedChannel()
+    override val permissionFlow: Flow<PermissionRequestData> = permissionChannel.receiveAsFlow()
+
+    override val outputData: QRCodeOutputData get() = _outputDataFlow.value
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -95,7 +102,7 @@ internal class DefaultQRCodeDelegate(
     private fun attachStatusTimer() {
         statusCountDownTimer.attach(
             millisInFuture = maxPollingDurationMillis,
-            countDownInterval = STATUS_POLLING_INTERVAL_MILLIS
+            countDownInterval = STATUS_POLLING_INTERVAL_MILLIS,
         ) { millisUntilFinished -> onTimerTick(millisUntilFinished) }
     }
 
@@ -118,9 +125,10 @@ internal class DefaultQRCodeDelegate(
         observerRepository.addObservers(
             detailsFlow = detailsFlow,
             exceptionFlow = exceptionFlow,
+            permissionFlow = permissionFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
-            callback = callback
+            callback = callback,
         )
 
         // Immediately request a new status if the user resumes the app
@@ -141,13 +149,13 @@ internal class DefaultQRCodeDelegate(
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
-            Logger.e(TAG, "Payment data is null")
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
         if (shouldLaunchRedirect(action)) {
-            Logger.d(TAG, "Action does not require a view, redirecting.")
+            adyenLog(AdyenLogLevel.DEBUG) { "Action does not require a view, redirecting." }
             _viewFlow.tryEmit(QrCodeComponentViewType.REDIRECT)
             makeRedirect(activity, action)
             return
@@ -173,7 +181,7 @@ internal class DefaultQRCodeDelegate(
     private fun makeRedirect(activity: Activity, action: QrCodeAction) {
         val url = action.url
         try {
-            Logger.d(TAG, "makeRedirect - $url")
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
             exceptionChannel.trySend(ex)
@@ -190,16 +198,16 @@ internal class DefaultQRCodeDelegate(
     private fun onStatus(result: Result<StatusResponse>, action: QrCodeAction) {
         result.fold(
             onSuccess = { response ->
-                Logger.v(TAG, "Status changed - ${response.resultCode}")
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
                 createOutputData(response, action)
                 if (StatusResponseUtils.isFinalResult(response)) {
                     onPollingSuccessful(response)
                 }
             },
             onFailure = {
-                Logger.e(TAG, "Error while polling status", it)
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
                 exceptionChannel.trySend(ComponentException("Error while polling status", it))
-            }
+            },
         )
     }
 
@@ -212,7 +220,7 @@ internal class DefaultQRCodeDelegate(
             qrImageUrl = String.format(
                 QR_IMAGE_BASE_PATH,
                 componentParams.environment.checkoutShopperBaseUrl.toString(),
-                encodedQrCodeData
+                encodedQrCodeData,
             )
         }
 
@@ -227,7 +235,7 @@ internal class DefaultQRCodeDelegate(
             paymentMethodType = action.paymentMethodType,
             qrCodeData = action.qrCodeData,
             qrImageUrl = qrImageUrl,
-            messageTextResource = messageTextResource
+            messageTextResource = messageTextResource,
         )
         _outputDataFlow.tryEmit(outputData)
     }
@@ -285,25 +293,39 @@ internal class DefaultQRCodeDelegate(
     private fun createOutputData() = QRCodeOutputData(
         isValid = false,
         paymentMethodType = null,
-        qrCodeData = null
+        qrCodeData = null,
     )
 
-    @RequiresPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    override fun downloadQRImage() {
-        val date: Long = System.currentTimeMillis()
-        val imageName = String.format(IMAGE_NAME_FORMAT, date)
-        val imageDirectory = android.os.Environment.DIRECTORY_DOWNLOADS.orEmpty()
+    override fun downloadQRImage(context: Context) {
+        val paymentMethodType = outputData.paymentMethodType ?: ""
+        val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
+        val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
+
         coroutineScope.launch {
-            fileDownloader.download(
-                outputData.qrImageUrl.orEmpty(),
-                imageName,
-                imageDirectory,
-                MIME_TYPE
+            imageSaver.saveImageFromUrl(
+                context = context,
+                permissionHandler = this@DefaultQRCodeDelegate,
+                imageUrl = outputData.qrImageUrl.orEmpty(),
+                fileName = imageName,
             ).fold(
-                onSuccess = { eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success) },
-                onFailure = { e -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(e)) }
+                onSuccess = {
+                    eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Success)
+                },
+                onFailure = { throwable ->
+                    when (throwable) {
+                        is PermissionRequestException ->
+                            eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.PermissionDenied)
+
+                        else -> eventChannel.trySend(QrCodeUIEvent.QrImageDownloadResult.Failure(throwable))
+                    }
+                },
             )
         }
+    }
+
+    override fun requestPermission(context: Context, requiredPermission: String, callback: PermissionHandlerCallback) {
+        val requestData = PermissionRequestData(requiredPermission, callback)
+        permissionChannel.trySend(requestData)
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
@@ -320,7 +342,6 @@ internal class DefaultQRCodeDelegate(
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
 
         private val VIEWABLE_PAYMENT_METHODS = listOf(
             PaymentMethodTypes.DUIT_NOW,
@@ -336,8 +357,7 @@ internal class DefaultQRCodeDelegate(
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
 
-        private const val IMAGE_NAME_FORMAT = "QR-code-%s.png"
+        private const val IMAGE_NAME_FORMAT = "%s-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
-        private const val MIME_TYPE = "image/png"
     }
 }

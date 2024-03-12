@@ -8,107 +8,154 @@
 
 package com.adyen.checkout.cashapppay.internal.ui.model
 
+import android.content.Context
+import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
+import com.adyen.checkout.cashapppay.getCashAppPayConfiguration
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import java.util.Locale
 
 internal class CashAppPayComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
-    @Suppress("ThrowsCount")
+    @Suppress("ThrowsCount", "LongParameterList")
     fun mapToParams(
-        configuration: CashAppPayConfiguration,
-        sessionParams: SessionParams?,
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
         paymentMethod: PaymentMethod,
+        context: Context,
     ): CashAppPayComponentParams {
-        val params = configuration
-            .mapToParamsInternal(
-                clientId = paymentMethod.configuration?.clientId ?: throw ComponentException(
-                    "Cannot launch Cash App Pay, clientId is missing in the payment method object."
-                ),
-                scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
-                    "Cannot launch Cash App Pay, scopeId is missing in the payment method object."
-                ),
-            )
-            .override(overrideComponentParams)
-            .override(sessionParams ?: overrideSessionParams)
+        val clientId = paymentMethod.configuration?.clientId ?: throw ComponentException(
+            "Cannot launch Cash App Pay, clientId is missing in the payment method object.",
+        )
+
+        val scopeId = paymentMethod.configuration?.scopeId ?: throw ComponentException(
+            "Cannot launch Cash App Pay, scopeId is missing in the payment method object.",
+        )
+
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+
+        val cashAppPayConfiguration = checkoutConfiguration.getCashAppPayConfiguration()
+
+        val params = mapToParamsInternal(
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            sessionParams = commonComponentParamsMapperData.sessionParams,
+            cashAppPayConfiguration = cashAppPayConfiguration,
+            clientId = clientId,
+            scopeId = scopeId,
+            context = context,
+        )
 
         if (params.returnUrl == null) {
             throw ComponentException(
-                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder"
+                "Cannot launch Cash App Pay, set the returnUrl in your CashAppPayConfiguration.Builder",
             )
         }
 
         return params
     }
 
+    @Suppress("LongParameterList")
     fun mapToParams(
-        configuration: CashAppPayConfiguration,
-        sessionParams: SessionParams?,
-        @Suppress("UNUSED_PARAMETER") paymentMethod: StoredPaymentMethod,
-    ): CashAppPayComponentParams = configuration
-        // clientId and scopeId are not needed in the stored flow.
-        .mapToParamsInternal(null, null)
-        .override(overrideComponentParams)
-        .override(sessionParams ?: overrideSessionParams)
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
+        @Suppress("UNUSED_PARAMETER") storedPaymentMethod: StoredPaymentMethod,
+        context: Context,
+    ): CashAppPayComponentParams {
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
 
-    private fun CashAppPayConfiguration.mapToParamsInternal(
+        val cashAppPayConfiguration = checkoutConfiguration.getCashAppPayConfiguration()
+
+        return mapToParamsInternal(
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            sessionParams = commonComponentParamsMapperData.sessionParams,
+            cashAppPayConfiguration = cashAppPayConfiguration,
+            clientId = null,
+            scopeId = null,
+            context = context,
+        )
+    }
+
+    @Suppress("LongParameterList")
+    private fun mapToParamsInternal(
+        commonComponentParams: CommonComponentParams,
+        sessionParams: SessionParams?,
+        cashAppPayConfiguration: CashAppPayConfiguration?,
         clientId: String?,
         scopeId: String?,
-    ) = CashAppPayComponentParams(
-        isSubmitButtonVisible = isSubmitButtonVisible ?: true,
-        shopperLocale = shopperLocale,
-        environment = environment,
-        clientKey = clientKey,
-        analyticsParams = AnalyticsParams(analyticsConfiguration),
-        isCreatedByDropIn = false,
-        amount = amount,
-        cashAppPayEnvironment = getCashAppPayEnvironment(),
-        returnUrl = returnUrl,
-        showStorePaymentField = showStorePaymentField ?: true,
-        storePaymentMethod = storePaymentMethod ?: false,
-        clientId = clientId,
-        scopeId = scopeId,
-    )
+        context: Context,
+    ): CashAppPayComponentParams {
+        return CashAppPayComponentParams(
+            commonComponentParams = commonComponentParams,
+            isSubmitButtonVisible = cashAppPayConfiguration?.isSubmitButtonVisible ?: true,
+            cashAppPayEnvironment = getCashAppPayEnvironment(
+                commonComponentParams.environment,
+                cashAppPayConfiguration,
+            ),
+            returnUrl = getReturnUrl(
+                sessionParams,
+                commonComponentParams.isCreatedByDropIn,
+                cashAppPayConfiguration,
+                context,
+            ),
+            showStorePaymentField = getShowStorePaymentField(sessionParams, cashAppPayConfiguration),
+            storePaymentMethod = cashAppPayConfiguration?.storePaymentMethod ?: false,
+            clientId = clientId,
+            scopeId = scopeId,
+        )
+    }
 
-    private fun CashAppPayConfiguration.getCashAppPayEnvironment(): CashAppPayEnvironment {
+    private fun getCashAppPayEnvironment(
+        environment: Environment,
+        cashAppPayConfiguration: CashAppPayConfiguration?
+    ): CashAppPayEnvironment {
         return when {
-            cashAppPayEnvironment != null -> cashAppPayEnvironment
+            cashAppPayConfiguration?.cashAppPayEnvironment != null -> cashAppPayConfiguration.cashAppPayEnvironment
             environment == Environment.TEST -> CashAppPayEnvironment.SANDBOX
             else -> CashAppPayEnvironment.PRODUCTION
         }
     }
 
-    private fun CashAppPayComponentParams.override(
-        overrideComponentParams: ComponentParams?,
-    ): CashAppPayComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
-        )
+    private fun getReturnUrl(
+        sessionParams: SessionParams?,
+        isCreatedByDropIn: Boolean,
+        cashAppPayConfiguration: CashAppPayConfiguration?,
+        context: Context,
+    ): String? {
+        return sessionParams?.returnUrl
+            ?: cashAppPayConfiguration?.returnUrl
+            // if using drop-in and return url is not set use the return url default value
+            ?: CashAppPayComponent.getReturnUrl(context).takeIf { isCreatedByDropIn }
     }
 
-    private fun CashAppPayComponentParams.override(
+    private fun getShowStorePaymentField(
         sessionParams: SessionParams?,
-    ): CashAppPayComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
-            showStorePaymentField = sessionParams.enableStoreDetails ?: showStorePaymentField,
-            returnUrl = sessionParams.returnUrl ?: returnUrl
-        )
+        cashAppPayConfiguration: CashAppPayConfiguration?,
+    ): Boolean {
+        return sessionParams?.enableStoreDetails ?: cashAppPayConfiguration?.showStorePaymentField ?: true
     }
 }

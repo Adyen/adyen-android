@@ -11,8 +11,11 @@ package com.adyen.checkout.dropin.internal.ui
 import android.content.ComponentName
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult
+import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -23,19 +26,20 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.dropin.DropInConfiguration
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
-import com.adyen.checkout.dropin.internal.provider.checkCompileOnly
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
+import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
+import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
+import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
@@ -43,8 +47,10 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -53,22 +59,28 @@ internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
     internal val analyticsRepository: AnalyticsRepository,
+    private val initialDropInParams: DropInParams,
+    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
     internal val eventsFlow = eventChannel.receiveAsFlow()
 
-    val dropInConfiguration: DropInConfiguration = requireNotNull(bundleHandler.dropInConfiguration)
+    // this should only be used when initializing components, for drop-in related configurations use dropInParams
+    val checkoutConfiguration: CheckoutConfiguration = requireNotNull(bundleHandler.checkoutConfiguration)
+
+    val dropInParams: DropInParams
+        get() {
+            if (overrideAmount == null) return initialDropInParams
+            return initialDropInParams.copy(amount = overrideAmount)
+        }
+
+    // this is needed for partial payments, the amount has to be updated manually to override the initial amount
+    private var overrideAmount: Amount? = null
 
     val serviceComponentName: ComponentName = requireNotNull(bundleHandler.serviceComponentName)
 
-    var amount: Amount?
-        get() = bundleHandler.amount
-        private set(value) {
-            bundleHandler.amount = value
-        }
-
-    internal var sessionDetails: SessionDetails?
+    private var sessionDetails: SessionDetails?
         get() = bundleHandler.sessionDetails
         private set(value) {
             bundleHandler.sessionDetails = value
@@ -110,6 +122,12 @@ internal class DropInViewModel(
             bundleHandler.currentOrder = value
         }
 
+    private val _addressLookupOptionsFlow = bufferedChannel<List<LookupAddress>>()
+    val addressLookupOptionsFlow: Flow<List<LookupAddress>> = _addressLookupOptionsFlow.receiveAsFlow()
+
+    private val _addressLookupCompleteFlow = bufferedChannel<AddressLookupResult>()
+    val addressLookupCompleteFlow: Flow<AddressLookupResult> = _addressLookupCompleteFlow.receiveAsFlow()
+
     fun getPaymentMethods(): List<PaymentMethod> {
         return paymentMethodsApiResponse.paymentMethods.orEmpty()
     }
@@ -120,7 +138,7 @@ internal class DropInViewModel(
 
     fun shouldShowPreselectedStored(): Boolean {
         return getStoredPaymentMethods().any { it.isStoredPaymentSupported() } &&
-            dropInConfiguration.showPreselectedStoredPaymentMethod
+            dropInParams.showPreselectedStoredPaymentMethod
     }
 
     fun getPreselectedStoredPaymentMethod(): StoredPaymentMethod {
@@ -134,7 +152,7 @@ internal class DropInViewModel(
     }
 
     fun shouldSkipToSinglePaymentMethod(): Boolean {
-        if (!dropInConfiguration.skipListWhenSinglePaymentMethod) return false
+        if (!dropInParams.skipListWhenSinglePaymentMethod) return false
 
         val noStored = getStoredPaymentMethods().isEmpty()
         val singlePm = getPaymentMethods().size == 1
@@ -151,8 +169,19 @@ internal class DropInViewModel(
         return noStored && singlePm && paymentMethodHasComponent
     }
 
-    private fun getInitialAmount(): Amount? {
-        return sessionDetails?.amount ?: dropInConfiguration.amount
+    /**
+     * @return A class needed to initialize components inside drop-in.
+     */
+    fun getDropInOverrideParams(): DropInOverrideParams {
+        val amount = dropInParams.amount
+        return DropInOverrideParamsFactory.create(
+            amount = amount,
+            // when creating a component, the sessions amount has priority over the drop-in amount
+            // but after a partial payment is successful the sessions amount is not updated to the remaining amount
+            // this is due to the backend not returning the updated amount value in the sessions setup call
+            // therefore we modify the amount ourselves here before passing it to the components
+            sessionDetails = sessionDetails?.copy(amount = amount),
+        )
     }
 
     fun onCreated() {
@@ -163,15 +192,15 @@ internal class DropInViewModel(
     fun onDropInServiceConnected() {
         val sessionModel = sessionDetails?.mapToModel()
         if (sessionModel == null) {
-            Logger.d(TAG, "Session is null")
+            adyenLog(AdyenLogLevel.DEBUG) { "Session is null" }
             return
         }
 
         val event = DropInActivityEvent.SessionServiceConnected(
             sessionModel = sessionModel,
-            clientKey = dropInConfiguration.clientKey,
-            environment = dropInConfiguration.environment,
-            isFlowTakenOver = isSessionsFlowTakenOver
+            clientKey = dropInParams.clientKey,
+            environment = dropInParams.environment,
+            isFlowTakenOver = isSessionsFlowTakenOver,
         )
         sendEvent(event)
     }
@@ -202,7 +231,7 @@ internal class DropInViewModel(
     }
 
     private fun setupAnalytics() {
-        Logger.v(TAG, "setupAnalytics")
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         viewModelScope.launch {
             analyticsRepository.setupAnalytics()
         }
@@ -216,7 +245,7 @@ internal class DropInViewModel(
     ): PaymentComponentData<GiftCardPaymentMethod>? {
         val paymentMethod = giftCardComponentState.data.paymentMethod
         if (paymentMethod == null) {
-            Logger.e(TAG, "onBalanceCallRequested - paymentMethod is null")
+            adyenLog(AdyenLogLevel.ERROR) { "onBalanceCallRequested - paymentMethod is null" }
             return null
         }
         cachedGiftCardComponentState = giftCardComponentState
@@ -224,51 +253,49 @@ internal class DropInViewModel(
     }
 
     fun handleBalanceResult(balanceResult: BalanceResult): GiftCardBalanceResult {
-        Logger.d(
-            TAG,
+        adyenLog(AdyenLogLevel.DEBUG) {
             "handleBalanceResult - balance: ${balanceResult.balance} - " +
                 "transactionLimit: ${balanceResult.transactionLimit}"
-        )
+        }
 
         val giftCardBalanceResult = GiftCardBalanceUtils.checkBalance(
             balance = balanceResult.balance,
             transactionLimit = balanceResult.transactionLimit,
-            amountToBePaid = amount
+            amountToBePaid = dropInParams.amount,
         )
         val cachedGiftCardComponentState =
             cachedGiftCardComponentState ?: throw CheckoutException("Failed to retrieved cached gift card object")
         return when (giftCardBalanceResult) {
             is GiftCardBalanceStatus.ZeroBalance -> {
-                Logger.i(TAG, "handleBalanceResult - Gift Card has zero balance")
+                adyenLog(AdyenLogLevel.INFO) { "handleBalanceResult - Gift Card has zero balance" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_zero_balance,
                     "Gift Card has zero balance",
-                    false
+                    false,
                 )
             }
 
             is GiftCardBalanceStatus.NonMatchingCurrencies -> {
-                Logger.e(TAG, "handleBalanceResult - Gift Card currency mismatch")
+                adyenLog(AdyenLogLevel.ERROR) { "handleBalanceResult - Gift Card currency mismatch" }
                 GiftCardBalanceResult.Error(
                     R.string.checkout_giftcard_error_currency,
                     "Gift Card currency mismatch",
-                    false
+                    false,
                 )
             }
 
             is GiftCardBalanceStatus.ZeroAmountToBePaid -> {
-                Logger.e(
-                    TAG,
+                adyenLog(AdyenLogLevel.ERROR) {
                     "handleBalanceResult - You must set an amount in DropInConfiguration.Builder to enable gift " +
                         "card payments"
-                )
+                }
                 GiftCardBalanceResult.Error(R.string.payment_failed, "Drop-in amount is not set", true)
             }
 
             is GiftCardBalanceStatus.FullPayment -> {
                 cachedPartialPaymentAmount = giftCardBalanceResult.amountPaid
                 GiftCardBalanceResult.FullPayment(
-                    createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState)
+                    createGiftCardPaymentConfirmationData(giftCardBalanceResult, cachedGiftCardComponentState),
                 )
             }
 
@@ -290,14 +317,14 @@ internal class DropInViewModel(
         return GiftCardPaymentConfirmationData(
             amountPaid = giftCardBalanceStatus.amountPaid,
             remainingBalance = giftCardBalanceStatus.remainingBalance,
-            shopperLocale = dropInConfiguration.shopperLocale,
+            shopperLocale = dropInParams.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
-            lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty()
+            lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty(),
         )
     }
 
     fun handleOrderCreated(orderResponse: OrderResponse) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(orderResponse)
             if (currentOrder != null) {
                 partialPaymentRequested()
@@ -309,15 +336,14 @@ internal class DropInViewModel(
         val orderModel = getOrderDetails(orderResponse)
         if (orderModel == null) {
             currentOrder = null
-            amount = getInitialAmount()
-            Logger.d(TAG, "handleOrderResponse - Amount reverted: $amount")
-            Logger.d(TAG, "handleOrderResponse - Order cancelled")
+            overrideAmount = null
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Amount reverted: ${dropInParams.amount}" }
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cancelled" }
         } else {
             currentOrder = orderModel
-            amount = orderModel.remainingAmount
-            sessionDetails = sessionDetails?.copy(amount = orderModel.remainingAmount)
-            Logger.d(TAG, "handleOrderResponse - New amount set: $amount")
-            Logger.d(TAG, "handleOrderResponse - Order cached")
+            overrideAmount = orderModel.remainingAmount
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - New amount set: ${dropInParams.amount}" }
+            adyenLog(AdyenLogLevel.DEBUG) { "handleOrderResponse - Order cached" }
         }
     }
 
@@ -326,33 +352,33 @@ internal class DropInViewModel(
         val existingAmount = paymentComponentState.data.amount
         when {
             existingAmount != null -> {
-                Logger.d(TAG, "Payment amount already set: $existingAmount")
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount already set: $existingAmount" }
             }
 
-            amount != null -> {
-                paymentComponentState.data.amount = amount
-                Logger.d(TAG, "Payment amount set: $amount")
+            dropInParams.amount != null -> {
+                paymentComponentState.data.amount = dropInParams.amount
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount set: ${dropInParams.amount}" }
             }
 
             else -> {
-                Logger.d(TAG, "Payment amount not set")
+                adyenLog(AdyenLogLevel.DEBUG) { "Payment amount not set" }
             }
         }
         currentOrder?.let {
             paymentComponentState.data.order = createOrder(it)
-            Logger.d(TAG, "Order appended to payment")
+            adyenLog(AdyenLogLevel.DEBUG) { "Order appended to payment" }
         }
     }
 
     private fun createOrder(order: OrderModel): OrderRequest {
         return OrderRequest(
             pspReference = order.pspReference,
-            orderData = order.orderData
+            orderData = order.orderData,
         )
     }
 
     fun handlePaymentMethodsUpdate(paymentMethodsApiResponse: PaymentMethodsApiResponse, order: OrderResponse?) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineDispatcher) {
             handleOrderResponse(order)
             this@DropInViewModel.paymentMethodsApiResponse = paymentMethodsApiResponse
             sendEvent(DropInActivityEvent.ShowPaymentMethods)
@@ -378,20 +404,20 @@ internal class DropInViewModel(
     private suspend fun getOrderDetails(orderResponse: OrderResponse?): OrderModel? {
         if (orderResponse == null) return null
 
-        return orderStatusRepository.getOrderStatus(dropInConfiguration, orderResponse.orderData)
+        return orderStatusRepository.getOrderStatus(dropInParams.clientKey, orderResponse.orderData)
             .fold(
                 onSuccess = { statusResponse ->
                     OrderModel(
                         orderData = orderResponse.orderData,
                         pspReference = orderResponse.pspReference,
                         remainingAmount = statusResponse.remainingAmount,
-                        paymentMethods = statusResponse.paymentMethods
+                        paymentMethods = statusResponse.paymentMethods,
                     )
                 },
                 onFailure = { e ->
-                    Logger.e(TAG, "Unable to fetch order details", e)
+                    adyenLog(AdyenLogLevel.ERROR, e) { "Unable to fetch order details" }
                     null
-                }
+                },
             )
     }
 
@@ -401,7 +427,7 @@ internal class DropInViewModel(
         val partialPaymentAmount = cachedPartialPaymentAmount
             ?: throw CheckoutException("Lost reference to cached partial payment amount")
         paymentComponentState.data.amount = partialPaymentAmount
-        Logger.d(TAG, "Partial payment amount set: $partialPaymentAmount")
+        adyenLog(AdyenLogLevel.DEBUG) { "Partial payment amount set: $partialPaymentAmount" }
         cachedGiftCardComponentState = null
         cachedPartialPaymentAmount = null
         sendEvent(DropInActivityEvent.MakePartialPayment(paymentComponentState))
@@ -413,6 +439,16 @@ internal class DropInViewModel(
         sendCancelOrderEvent(order, false)
     }
 
+    fun onAddressLookupOptions(options: List<LookupAddress>) {
+        adyenLog(AdyenLogLevel.DEBUG) { "onAddressLookupOptions $options" }
+        viewModelScope.launch { _addressLookupOptionsFlow.send(options) }
+    }
+
+    fun onAddressLookupComplete(lookupAddress: LookupAddress) {
+        adyenLog(AdyenLogLevel.DEBUG) { "onAddressLookupComplete $lookupAddress" }
+        viewModelScope.launch { _addressLookupCompleteFlow.send(AddressLookupResult.Completed(lookupAddress)) }
+    }
+
     fun cancelDropIn() {
         currentOrder?.let { sendCancelOrderEvent(it, true) }
         sendEvent(DropInActivityEvent.CancelDropIn)
@@ -421,19 +457,15 @@ internal class DropInViewModel(
     private fun sendCancelOrderEvent(order: OrderModel, isDropInCancelledByUser: Boolean) {
         val orderRequest = OrderRequest(
             pspReference = order.pspReference,
-            orderData = order.orderData
+            orderData = order.orderData,
         )
         sendEvent(DropInActivityEvent.CancelOrder(orderRequest, isDropInCancelledByUser))
     }
 
     private fun sendEvent(event: DropInActivityEvent) {
         viewModelScope.launch {
-            Logger.d(TAG, "sendEvent - ${event::class.simpleName}")
+            adyenLog(AdyenLogLevel.DEBUG) { "sendEvent - ${event::class.simpleName}" }
             eventChannel.send(event)
         }
-    }
-
-    companion object {
-        private val TAG = LogUtil.getTag()
     }
 }

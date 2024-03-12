@@ -9,61 +9,36 @@
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
+import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import java.util.Locale
 
 internal class Adyen3DS2ComponentParamsMapper(
-    private val overrideComponentParams: ComponentParams?,
-    private val overrideSessionParams: SessionParams?,
+    private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
     fun mapToParams(
-        adyen3DS2Configuration: Adyen3DS2Configuration,
-        sessionParams: SessionParams?,
+        checkoutConfiguration: CheckoutConfiguration,
+        deviceLocale: Locale,
+        dropInOverrideParams: DropInOverrideParams?,
+        componentSessionParams: SessionParams?,
     ): Adyen3DS2ComponentParams {
-        return adyen3DS2Configuration
-            .mapToParamsInternal()
-            .override(overrideComponentParams)
-            .override(sessionParams ?: overrideSessionParams)
-    }
-
-    private fun Adyen3DS2Configuration.mapToParamsInternal(): Adyen3DS2ComponentParams {
+        val commonComponentParamsMapperData = commonComponentParamsMapper.mapToParams(
+            checkoutConfiguration,
+            deviceLocale,
+            dropInOverrideParams,
+            componentSessionParams,
+        )
+        val adyen3ds2Configuration = checkoutConfiguration.getAdyen3DS2Configuration()
         return Adyen3DS2ComponentParams(
-            shopperLocale = shopperLocale,
-            environment = environment,
-            clientKey = clientKey,
-            analyticsParams = AnalyticsParams(analyticsConfiguration),
-            isCreatedByDropIn = false,
-            amount = amount,
-            uiCustomization = uiCustomization,
-            threeDSRequestorAppURL = threeDSRequestorAppURL,
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            uiCustomization = adyen3ds2Configuration?.uiCustomization,
+            threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,
             // Hardcoded for now, but in the feature we could make this configurable
             deviceParameterBlockList = DEVICE_PARAMETER_BLOCK_LIST,
-        )
-    }
-
-    private fun Adyen3DS2ComponentParams.override(
-        overrideComponentParams: ComponentParams?
-    ): Adyen3DS2ComponentParams {
-        if (overrideComponentParams == null) return this
-        return copy(
-            shopperLocale = overrideComponentParams.shopperLocale,
-            environment = overrideComponentParams.environment,
-            clientKey = overrideComponentParams.clientKey,
-            analyticsParams = overrideComponentParams.analyticsParams,
-            isCreatedByDropIn = overrideComponentParams.isCreatedByDropIn,
-            amount = overrideComponentParams.amount,
-        )
-    }
-
-    private fun Adyen3DS2ComponentParams.override(
-        sessionParams: SessionParams? = null
-    ): Adyen3DS2ComponentParams {
-        if (sessionParams == null) return this
-        return copy(
-            amount = sessionParams.amount ?: amount,
         )
     }
 

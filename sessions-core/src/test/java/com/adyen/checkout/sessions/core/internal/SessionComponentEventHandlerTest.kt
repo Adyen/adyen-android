@@ -16,12 +16,13 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
+import com.adyen.checkout.sessions.core.TestComponentState
+import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +46,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class SessionComponentEventHandlerTest(
     @Mock private val sessionInteractor: SessionInteractor,
     @Mock private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
@@ -56,7 +57,6 @@ internal class SessionComponentEventHandlerTest(
     @BeforeEach
     fun beforeEach() {
         sessionComponentEventHandler = SessionComponentEventHandler(sessionInteractor, sessionSavedStateHandleContainer)
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Test
@@ -85,7 +85,7 @@ internal class SessionComponentEventHandlerTest(
             assertThrows<CheckoutException> {
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    object : BaseComponentCallback {}
+                    object : BaseComponentCallback {},
                 )
             }
         }
@@ -100,7 +100,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onLoading(true)
@@ -116,7 +116,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onAction(action)
@@ -131,7 +131,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 val errorCaptor = argumentCaptor<ComponentError>()
@@ -148,7 +148,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onFinished(result)
@@ -163,7 +163,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onFinished(result)
@@ -178,7 +178,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onFinished(result)
@@ -192,7 +192,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Submit(createPaymentComponentState()),
-                    callback
+                    callback,
                 )
 
                 verify(sessionSavedStateHandleContainer).isFlowTakenOver = true
@@ -209,7 +209,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onLoading(true)
@@ -225,7 +225,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onAction(action)
@@ -240,7 +240,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
-                    callback
+                    callback,
                 )
 
                 val errorCaptor = argumentCaptor<ComponentError>()
@@ -257,7 +257,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onFinished(result)
@@ -271,7 +271,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.ActionDetails(ActionComponentData()),
-                    callback
+                    callback,
                 )
 
                 verify(sessionSavedStateHandleContainer).isFlowTakenOver = true
@@ -289,7 +289,7 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.StateChanged(componentState),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onStateChanged(componentState)
@@ -307,10 +307,29 @@ internal class SessionComponentEventHandlerTest(
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
                     PaymentComponentEvent.Error(error),
-                    callback
+                    callback,
                 )
 
                 verify(callback).onError(error)
+            }
+        }
+
+        @Nested
+        @DisplayName("is PermissionRequested")
+        inner class PermissionRequestedTest {
+
+            @Test
+            fun `then permission requested should be propagated`() = runTest {
+                val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
+                val requiredPermission = "Required Permission"
+                val permissionCallback = mock<PermissionHandlerCallback>()
+
+                sessionComponentEventHandler.onPaymentComponentEvent(
+                    PaymentComponentEvent.PermissionRequest(requiredPermission, permissionCallback),
+                    callback,
+                )
+
+                verify(callback).onPermissionRequest(requiredPermission, permissionCallback)
             }
         }
     }

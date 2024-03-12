@@ -10,21 +10,22 @@ package com.adyen.checkout.econtext.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.Logger
 import com.adyen.checkout.econtext.TestEContextComponentState
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,10 +47,10 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
-import java.util.*
+import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultEContextDelegateTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
@@ -60,7 +61,6 @@ internal class DefaultEContextDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createEContextDelegate()
-        AdyenLogger.setLogLevel(Logger.NONE)
     }
 
     @Nested
@@ -139,7 +139,7 @@ internal class DefaultEContextDelegateTest(
                         lastNameState = FieldState("", Validation.Invalid(0)),
                         phoneNumberState = FieldState("", Validation.Invalid(0)),
                         emailAddressState = FieldState("", Validation.Invalid(0)),
-                    )
+                    ),
                 )
                 with(expectMostRecentItem()) {
                     assertFalse(isInputValid)
@@ -157,7 +157,7 @@ internal class DefaultEContextDelegateTest(
                         lastNameState = FieldState("lastName", Validation.Valid),
                         phoneNumberState = FieldState("phoneNumber", Validation.Valid),
                         emailAddressState = FieldState("emailAddress", Validation.Valid),
-                    )
+                    ),
                 )
                 with(expectMostRecentItem()) {
                     with(requireNotNull(data.paymentMethod)) {
@@ -180,9 +180,7 @@ internal class DefaultEContextDelegateTest(
             expectedComponentStateValue: Amount?,
         ) = runTest {
             if (configurationValue != null) {
-                val configuration = getDefaultTestEContextConfigurationBuilder()
-                    .setAmount(configurationValue)
-                    .build()
+                val configuration = createCheckoutConfiguration(configurationValue)
                 delegate = createEContextDelegate(configuration = configuration)
             }
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -211,9 +209,9 @@ internal class DefaultEContextDelegateTest(
         @Test
         fun `when submit button is configured to be hidden, then it should not show`() {
             delegate = createEContextDelegate(
-                configuration = getDefaultTestEContextConfigurationBuilder()
-                    .setSubmitButtonVisible(false)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
             )
 
             assertFalse(delegate.shouldShowSubmitButton())
@@ -222,9 +220,9 @@ internal class DefaultEContextDelegateTest(
         @Test
         fun `when submit button is configured to be visible, then it should show`() {
             delegate = createEContextDelegate(
-                configuration = getDefaultTestEContextConfigurationBuilder()
-                    .setSubmitButtonVisible(true)
-                    .build()
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
@@ -282,11 +280,17 @@ internal class DefaultEContextDelegateTest(
     }
 
     private fun createEContextDelegate(
-        configuration: TestEContextConfiguration = getDefaultTestEContextConfigurationBuilder().build(),
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: Order = TEST_ORDER
     ) = DefaultEContextDelegate(
         observerRepository = PaymentObserverRepository(),
-        componentParams = ButtonComponentParamsMapper(null, null).mapToParams(configuration, null),
+        componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+        ),
         paymentMethod = PaymentMethod(),
         order = order,
         analyticsRepository = analyticsRepository,
@@ -296,21 +300,31 @@ internal class DefaultEContextDelegateTest(
             TestEContextComponentState(
                 data = data,
                 isInputValid = isInputValid,
-                isReady = isReady
+                isReady = isReady,
             )
-        }
+        },
     )
 
-    private fun getDefaultTestEContextConfigurationBuilder() = TestEContextConfiguration.Builder(
-        Locale.US,
-        Environment.TEST,
-        TEST_CLIENT_KEY_1
-    )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: TestEContextConfiguration.Builder.() -> Unit = {}
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = TEST_CLIENT_KEY_1,
+        amount = amount,
+    ) {
+        val econtextConfiguration = TestEContextConfiguration.Builder(shopperLocale, environment, clientKey)
+            .apply(configuration)
+            .build()
+        addConfiguration(TEST_CONFIGURATION_KEY, econtextConfiguration)
+    }
 
     companion object {
         private const val TEST_CLIENT_KEY_1 = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private const val TEST_CONFIGURATION_KEY = "TEST_CONFIGURATION_KEY"
 
         @JvmStatic
         fun amountSource() = listOf(

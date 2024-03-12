@@ -9,8 +9,9 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
-import com.adyen.checkout.ui.core.internal.ui.model.AddressInputModel
+import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardInputData(
@@ -22,8 +23,9 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
+    var addressLookupInputData: AddressLookupInputData = AddressLookupInputData(),
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
     var selectedCardIndex: Int = -1,
-    var installmentOption: InstallmentModel? = null
+    var installmentOption: InstallmentModel? = null,
 ) : InputData

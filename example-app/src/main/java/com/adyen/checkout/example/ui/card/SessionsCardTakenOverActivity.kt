@@ -19,6 +19,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.getLogTag
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SessionsCardTakenOverActivity : AppCompatActivity() {
+class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
@@ -101,13 +103,15 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
             activity = this,
             checkoutSession = sessionsCardComponentData.checkoutSession,
             paymentMethod = sessionsCardComponentData.paymentMethod,
-            configuration = checkoutConfigurationProvider.getCardConfiguration(),
-            componentCallback = sessionsCardComponentData.callback
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
+            componentCallback = sessionsCardComponentData.callback,
         )
 
         cardComponent.setOnRedirectListener {
             Log.d(TAG, "On redirect")
         }
+
+        cardComponent.setAddressLookupCallback(this)
 
         this.cardComponent = cardComponent
 
@@ -118,6 +122,9 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
         when (event) {
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
+            is CardEvent.AddressLookup -> onAddressLookup(event.options)
+            is CardEvent.AddressLookupCompleted -> {}
+            is CardEvent.AddressLookupError -> {}
         }
     }
 
@@ -128,6 +135,15 @@ class SessionsCardTakenOverActivity : AppCompatActivity() {
     private fun onPaymentResult(result: String) {
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show()
         finish()
+    }
+
+    private fun onAddressLookup(options: List<LookupAddress>) {
+        cardComponent?.updateAddressLookupOptions(options)
+    }
+
+    override fun onQueryChanged(query: String) {
+        Log.d(TAG, "On address lookup query changed: $query")
+        cardViewModel.onAddressLookupQueryChanged(query)
     }
 
     override fun onDestroy() {

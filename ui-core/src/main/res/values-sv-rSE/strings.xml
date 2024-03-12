@@ -11,6 +11,10 @@
     <string name="pay_button_with_value">Betala %s</string>
     <string name="confirm_preauthorization">Bekräfta förauktorisering</string>
 
+    <string name="error_dialog_title">Fel</string>
+    <string name="error_dialog_button">OK</string>
+    <string name="component_error">Någonting gick fel.</string>
+
     <string name="paymentInProgressView_title">En betalningsprocess pågår</string>
     <string name="paymentInProgressView_loadingText">Väntar på slutförande…</string>
     <string name="paymentInProgressView_cancelButton">Avbryt</string>
@@ -42,4 +46,12 @@
     <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valfritt)</string>
     <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valfritt)</string>
     <string name="checkout_address_form_city_town_hint_optional">Ort (valfritt)</string>
+
+    <string name="checkout_address_lookup_hint">Sök upp din adress</string>
+    <string name="checkout_address_lookup_initial">Kan du inte söka efter din adress?</string>
+    <string name="checkout_address_lookup_initial_description">Du kan alltid #ange din adress manuellt#</string>
+    <string name="checkout_address_lookup_empty">Inga resultat hittades</string>
+    <string name="checkout_address_lookup_empty_description">Det finns inga matchningar för ”%s”. Försök igen eller använd #manuell adressinmatning#</string>
+    <string name="checkout_address_lookup_enter_manually">Ange adress manuellt</string>
+
 </resources>

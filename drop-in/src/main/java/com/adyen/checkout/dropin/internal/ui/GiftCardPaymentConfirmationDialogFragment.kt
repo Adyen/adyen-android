@@ -14,8 +14,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.core.internal.util.LogUtil
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftCardPaymentConfirmationBinding
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
@@ -36,11 +36,11 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        Logger.d(TAG, "onAttach")
+        adyenLog(AdyenLogLevel.DEBUG) { "onAttach" }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        Logger.d(TAG, "onCreateView")
+        adyenLog(AdyenLogLevel.DEBUG) { "onCreateView" }
         _binding = FragmentGiftCardPaymentConfirmationBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -50,13 +50,13 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
 
         val amountToPay = CurrencyUtils.formatAmount(
             giftCardPaymentConfirmationData.amountPaid,
-            giftCardPaymentConfirmationData.shopperLocale
+            giftCardPaymentConfirmationData.shopperLocale,
         )
         binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), amountToPay)
 
         val remainingBalance = CurrencyUtils.formatAmount(
             giftCardPaymentConfirmationData.remainingBalance,
-            giftCardPaymentConfirmationData.shopperLocale
+            giftCardPaymentConfirmationData.shopperLocale,
         )
         binding.textViewRemainingBalance.text =
             String.format(resources.getString(R.string.checkout_giftcard_remaining_balance_text), remainingBalance)
@@ -80,7 +80,7 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
                 amount = it.amount,
                 transactionLimit = it.transactionLimit,
                 shopperLocale = giftCardPaymentConfirmationData.shopperLocale,
-                environment = dropInViewModel.dropInConfiguration.environment,
+                environment = dropInViewModel.dropInParams.environment,
             )
         }
         val currentPaymentMethod = GiftCardPaymentMethodModel(
@@ -89,7 +89,7 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
             amount = null,
             transactionLimit = null,
             shopperLocale = null,
-            environment = dropInViewModel.dropInConfiguration.environment,
+            environment = dropInViewModel.dropInParams.environment,
         )
 
         val paymentMethods = alreadyPaidMethods + currentPaymentMethod
@@ -119,7 +119,6 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
     }
 
     companion object {
-        private val TAG = LogUtil.getTag()
         private const val GIFT_CARD_DATA = "GIFT_CARD_DATA"
 
         @JvmStatic
