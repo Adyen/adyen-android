@@ -18,8 +18,8 @@ apply from: "${rootDir}/config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
-} else if (System.getenv('CI')) {
-    // if building from CI use example file as it is to ensure the build passes
+} else if (System.getenv('CI') || System.getenv('RENOVATE_ENV')) {
+    // if building from CI or Renovate use example file as it is to ensure the build passes
     apply from: "example.local.gradle"
 } else {
     throw new GradleException("File example-app/local.gradle not found. Check example-app/README.md for more instructions.")
