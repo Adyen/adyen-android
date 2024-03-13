@@ -18,11 +18,15 @@ apply from: "${rootDir}/config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
-} else if (System.getenv('CI')) {
-    // if building from CI use example file as it is to ensure the build passes
+} else if (!isIDEBuild()) {
+    // if not building from an IDE, use example file as it is to ensure the build passes (for CI, renovate, etc)
     apply from: "example.local.gradle"
 } else {
     throw new GradleException("File example-app/local.gradle not found. Check example-app/README.md for more instructions.")
+}
+
+def isIDEBuild() {
+    return project.properties['android.injected.invoked.from.ide'] == 'true'
 }
 
 // This runConnectedAndroidTest.gradle script is applied,
