@@ -78,6 +78,15 @@ internal class DefaultGenericActionDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: Action? = savedStateHandle[ACTION_KEY]
+        if (_delegate == null && action != null) {
+            createDelegateAndObserve(action)
+        }
     }
 
     override fun observe(
@@ -125,7 +134,7 @@ internal class DefaultGenericActionDelegate(
             savedStateHandle = savedStateHandle,
             application = application,
         )
-        this._delegate = delegate
+        _delegate = delegate
         adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
 
         if (delegate is RedirectableDelegate) {
@@ -182,16 +191,7 @@ internal class DefaultGenericActionDelegate(
     override fun handleIntent(intent: Intent) {
         when (val delegate = _delegate) {
             null -> {
-                val action: Action? = savedStateHandle[ACTION_KEY]
-                if (action == null) {
-                    exceptionChannel.trySend(
-                        ComponentException("handleIntent should not be called before handleAction"),
-                    )
-                    return
-                }
-                adyenLog(AdyenLogLevel.DEBUG) { "Recreating delegate and trying again" }
-                createDelegateAndObserve(action)
-                handleIntent(intent)
+                exceptionChannel.trySend(ComponentException("handleIntent should not be called before handleAction"))
             }
 
             !is IntentHandlingDelegate -> {
