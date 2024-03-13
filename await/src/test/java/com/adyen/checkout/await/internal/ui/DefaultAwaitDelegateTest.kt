@@ -53,11 +53,12 @@ internal class DefaultAwaitDelegateTest {
             TEST_CLIENT_KEY,
         )
         delegate = DefaultAwaitDelegate(
-            ActionObserverRepository(),
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = SavedStateHandle(),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            statusRepository,
-            paymentDataRepository,
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository,
         )
     }
 

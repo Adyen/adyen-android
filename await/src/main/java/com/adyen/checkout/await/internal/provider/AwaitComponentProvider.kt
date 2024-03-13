@@ -90,6 +90,7 @@ constructor(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
