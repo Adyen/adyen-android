@@ -11,6 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
@@ -46,6 +47,7 @@ import java.util.concurrent.TimeUnit
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
+    private val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -74,6 +76,14 @@ internal class DefaultAwaitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        val action: Action? = savedStateHandle[ACTION_KEY]
+        if (action != null) {
+            handleAction(action)
+        }
     }
 
     override fun observe(
@@ -99,6 +109,11 @@ internal class DefaultAwaitDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
+        savedStateHandle[ACTION_KEY] = action
+        handleAction(action)
+    }
+
+    private fun handleAction(action: Action) {
         if (action !is AwaitAction) {
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
@@ -191,6 +206,8 @@ internal class DefaultAwaitDelegate(
 
     companion object {
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+
+        private const val ACTION_KEY = "ACTION_KEY"
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
