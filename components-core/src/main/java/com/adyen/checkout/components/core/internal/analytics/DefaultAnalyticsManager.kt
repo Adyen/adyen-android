@@ -72,7 +72,6 @@ internal class DefaultAnalyticsManager internal constructor(
                 analyticsRepository.storeEvent(event)
 
                 if (event.shouldForceSend) {
-                    stopTimer()
                     sendEvents()
                     startTimer()
                 }
@@ -122,12 +121,13 @@ internal class DefaultAnalyticsManager internal constructor(
 
     override fun clear(owner: Any) {
         if (ownerReference != owner::class.qualifiedName) return
+        // TODO: Log here if there are still events which are not sent when clearing or if possible send events
         _coroutineScope = null
         checkoutAttemptId = null
-        stopTimer()
-        timerJob = null
         ownerReference = null
         isInitialized = false
+        stopTimer()
+        timerJob = null
     }
 
     companion object {
