@@ -23,8 +23,5 @@
       "schedule" : ["on the first day of the month"]
     }
   ],
-  "rebaseWhen" : "never",
-  "env": {
-    "CI": "true"
-  }
+  "rebaseWhen" : "never"
 }
