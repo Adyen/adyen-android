@@ -21,6 +21,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 internal class DefaultAnalyticsManager internal constructor(
@@ -39,6 +40,8 @@ internal class DefaultAnalyticsManager internal constructor(
     private var timerJob: Job? = null
 
     private var ownerReference: String? = null
+
+    private var storedEventCount: AtomicInteger = AtomicInteger(0)
 
     override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
         if (isInitialized) {
@@ -82,7 +85,7 @@ internal class DefaultAnalyticsManager internal constructor(
                     startTimer()
                 }
             }.fold(
-                onSuccess = { /* Not necessary */ },
+                onSuccess = { storedEventCount.incrementAndGet() },
                 onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" } },
             )
         }
@@ -117,7 +120,10 @@ internal class DefaultAnalyticsManager internal constructor(
         runSuspendCatching {
             analyticsRepository.sendEvents(checkoutAttemptId)
         }.fold(
-            onSuccess = { adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" } },
+            onSuccess = {
+                adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
+                storedEventCount.set(0)
+            },
             onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" } },
         )
     }
@@ -133,7 +139,9 @@ internal class DefaultAnalyticsManager internal constructor(
             adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
             return
         }
-        // TODO: Log here if there are still events which are not sent when clearing or if possible send events
+
+        adyenLog(AdyenLogLevel.DEBUG) { "Clear called while there are ${storedEventCount.get()} events stored." }
+
         _coroutineScope = null
         checkoutAttemptId = null
         ownerReference = null
