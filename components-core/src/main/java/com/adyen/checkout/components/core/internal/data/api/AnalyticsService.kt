@@ -38,13 +38,11 @@ class AnalyticsService(
         )
     }
 
-    @Suppress("ForbiddenComment")
-    // TODO: Add tests
     internal suspend fun sendEvents(
         request: AnalyticsTrackRequest,
         checkoutAttemptId: String,
         clientKey: String,
-    ) {
+    ): EmptyResponse = withContext(coroutineDispatcher) {
         httpClient.post(
             path = "v3/analytics/$checkoutAttemptId",
             queryParameters = mapOf("clientKey" to clientKey),
