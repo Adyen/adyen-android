@@ -27,7 +27,7 @@ ext {
     compose_compiler_version = '1.5.8'
 
     // Code quality
-    detekt_version = "1.23.4"
+    detekt_version = "1.23.5"
     jacoco_version = '0.8.9'
     ktlint_version = '1.0.1'
     sonarqube_version = '4.4.1.3373'
