@@ -41,7 +41,10 @@ internal class DefaultAnalyticsManager internal constructor(
     private var ownerReference: String? = null
 
     override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
-        if (isInitialized) return
+        if (isInitialized) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
+            return
+        }
         isInitialized = true
 
         ownerReference = owner::class.qualifiedName
@@ -66,7 +69,10 @@ internal class DefaultAnalyticsManager internal constructor(
     }
 
     override fun trackEvent(event: AnalyticsEvent) {
-        if (cannotSendEvents()) return
+        if (cannotSendEvents()) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
+            return
+        }
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
                 analyticsRepository.storeEvent(event)
@@ -97,7 +103,10 @@ internal class DefaultAnalyticsManager internal constructor(
     }
 
     private suspend fun sendEvents() {
-        if (cannotSendEvents()) return
+        if (cannotSendEvents()) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to send events, ignoring." }
+            return
+        }
 
         val checkoutAttemptId = checkoutAttemptId
         if (checkoutAttemptId == null) {
@@ -120,7 +129,10 @@ internal class DefaultAnalyticsManager internal constructor(
     }
 
     override fun clear(owner: Any) {
-        if (ownerReference != owner::class.qualifiedName) return
+        if (ownerReference != owner::class.qualifiedName) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
+            return
+        }
         // TODO: Log here if there are still events which are not sent when clearing or if possible send events
         _coroutineScope = null
         checkoutAttemptId = null
