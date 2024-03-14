@@ -69,7 +69,7 @@ object GenericEvents {
         target = target,
     )
 
-    fun unFocus(
+    fun unfocus(
         component: String,
         target: String,
     ) = AnalyticsEvent.Info(
