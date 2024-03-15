@@ -9,7 +9,7 @@
 apply plugin: "org.jetbrains.dokka"
 
 tasks.named("dokkaHtmlMultiModule") {
-    def dokkaDir = "$rootProject.buildDir/docs"
+    def dokkaDir = "${rootProject.layout.buildDirectory.get().asFile}/docs"
     outputDirectory.set(file(dokkaDir))
     doLast {
         copy {
