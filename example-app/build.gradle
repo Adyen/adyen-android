@@ -35,7 +35,7 @@ def isIDEBuild() {
 apply from: "${rootDir}/config/gradle/runConnectedAndroidTest.gradle"
 
 android {
-    compileSdkVersion compile_sdk_version
+    compileSdk compile_sdk_version
 
     defaultConfig {
         applicationId "com.adyen.checkout.example"
