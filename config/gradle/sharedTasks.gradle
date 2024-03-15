@@ -9,6 +9,4 @@
 
 apply from: "${rootDir}/config/gradle/buildConfig.gradle"
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
-apply from: "${rootDir}/config/gradle/ci.gradle"
 apply from: "${rootDir}/config/gradle/release.gradle"
-apply from: "${rootDir}/config/gradle/runConnectedAndroidTest.gradle"
