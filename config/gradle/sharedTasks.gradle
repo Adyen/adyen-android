@@ -7,7 +7,7 @@
  * Created by caiof on 11/2/2019.
  */
 
-apply from: "${rootDir}/config/gradle/versionName.gradle"
+apply from: "${rootDir}/config/gradle/buildConfig.gradle"
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 apply from: "${rootDir}/config/gradle/ci.gradle"
 apply from: "${rootDir}/config/gradle/release.gradle"
