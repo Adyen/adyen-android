@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -40,7 +40,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultGooglePayDelegate(
@@ -48,7 +47,7 @@ internal class DefaultGooglePayDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: GooglePayComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -61,18 +60,16 @@ internal class DefaultGooglePayDelegate(
     override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     private fun onState(state: GooglePayComponentState) {
@@ -115,7 +112,7 @@ internal class DefaultGooglePayDelegate(
         val paymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
             paymentData = paymentData,
             paymentMethodType = paymentMethod.type,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
         )
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
@@ -181,5 +178,6 @@ internal class DefaultGooglePayDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }
