@@ -47,7 +47,7 @@ internal class AnalyticsTrackRequestProviderTest {
             ),
         )
 
-        val result = analyticsTrackRequestProvider(infoList, logList)
+        val result = analyticsTrackRequestProvider.invoke(infoList, logList)
 
         val expected = AnalyticsTrackRequest(
             channel = "android",

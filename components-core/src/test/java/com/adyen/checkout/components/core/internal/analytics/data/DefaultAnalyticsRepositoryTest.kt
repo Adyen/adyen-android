@@ -104,7 +104,7 @@ internal class DefaultAnalyticsRepositoryTest(
             whenever(localInfoDataStore.fetchEvents(any())) doReturn listOf(mock())
             whenever(localLogDataStore.fetchEvents(any())) doReturn listOf(mock())
             whenever(analyticsTrackRequestProvider.invoke(any(), any())) doReturn mock()
-            whenever(remoteDataStore.sendEvents(any(), any())) doAnswer { throw RuntimeException() }
+            whenever(remoteDataStore.sendEvents(any(), any())) doAnswer { error("test") }
 
             runCatching {
                 analyticsRepository.sendEvents("test")

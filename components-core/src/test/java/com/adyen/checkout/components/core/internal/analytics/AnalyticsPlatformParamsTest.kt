@@ -1,6 +1,7 @@
 package com.adyen.checkout.components.core.internal.analytics
 
 import com.adyen.checkout.components.core.BuildConfig
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -9,6 +10,11 @@ internal class AnalyticsPlatformParamsTest {
 
     @BeforeEach
     fun setup() {
+        AnalyticsPlatformParams.resetToDefaults()
+    }
+
+    @AfterEach
+    fun cleanup() {
         AnalyticsPlatformParams.resetToDefaults()
     }
 
