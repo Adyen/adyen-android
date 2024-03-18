@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -30,14 +30,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     override val componentParams: InstantComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
 ) : InstantPaymentDelegate {
 
     override val componentStateFlow: StateFlow<InstantComponentState> = MutableStateFlow(createComponentState())
@@ -55,7 +54,7 @@ internal class DefaultInstantPaymentDelegate(
         val paymentComponentData = PaymentComponentData<PaymentMethodDetails>(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
-                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 subtype = getSubtype(paymentMethod),
             ),
             order = order,
@@ -78,14 +77,12 @@ internal class DefaultInstantPaymentDelegate(
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     override fun observe(
@@ -109,6 +106,7 @@ internal class DefaultInstantPaymentDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 
     companion object {
