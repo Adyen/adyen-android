@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -31,6 +31,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -38,13 +39,15 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class StoredCashAppPayDelegateTest(
-    @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val analyticsManager: AnalyticsManager,
 ) {
 
     private lateinit var delegate: StoredCashAppPayDelegate
@@ -62,12 +65,6 @@ internal class StoredCashAppPayDelegateTest(
             assertTrue(isReady)
             assertTrue(isValid)
         }
-    }
-
-    @Test
-    fun `when delegate is initialized, then analytics event is sent`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).setupAnalytics()
     }
 
     @ParameterizedTest
@@ -118,10 +115,26 @@ internal class StoredCashAppPayDelegateTest(
         assertEquals(expected, testFlow.latestValue)
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            verify(analyticsManager).initialize(eq(delegate), any())
+        }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.onCleared()
+            verify(analyticsManager).clear(eq(delegate))
+        }
+    }
+
     private fun createStoredCashAppPayDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration()
     ) = StoredCashAppPayDelegate(
-        analyticsRepository = analyticsRepository,
+        analyticsManager = analyticsManager,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = StoredPaymentMethod(
             id = TEST_PAYMENT_METHOD_ID,
