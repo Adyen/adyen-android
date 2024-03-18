@@ -35,11 +35,9 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -67,7 +65,7 @@ class CashAppPayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: AnalyticsRepository? = null,
+    private val analyticsManager: AnalyticsManager? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -118,21 +116,16 @@ constructor(
                 context = application,
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val cashAppPayDelegate = DefaultCashAppPayDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
@@ -204,20 +197,15 @@ constructor(
                 context = application,
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val cashAppPayDelegate = StoredCashAppPayDelegate(
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = storedPaymentMethod,
                 order = order,
@@ -291,22 +279,16 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val cashAppPayDelegate = DefaultCashAppPayDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
@@ -388,21 +370,15 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val cashAppPayDelegate = StoredCashAppPayDelegate(
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = storedPaymentMethod,
                 order = checkoutSession.order,
