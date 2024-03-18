@@ -33,7 +33,7 @@ data class VoucherAction(
     var alternativeReference: String? = null,
     var merchantName: String? = null,
     var merchantReference: String? = null,
-    // TODO: remove url when it's fixed from backend side
+    // TODO remove url when it's fixed from backend side
     var url: String? = null,
     var downloadUrl: String? = null,
     var instructionsUrl: String? = null,

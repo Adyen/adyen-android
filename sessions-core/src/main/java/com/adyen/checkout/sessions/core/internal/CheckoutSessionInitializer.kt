@@ -33,7 +33,7 @@ internal class CheckoutSessionInitializer(
     private val sessionService = SessionService(httpClient)
     private val sessionRepository = SessionRepository(sessionService, clientKey)
 
-    // TODO: Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
+    // TODO Once Backend provides the correct amount in the SessionSetupResponse use that in SessionDetails instead of
     //  override Amount
     suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(coroutineDispatcher) {
         sessionRepository.setupSession(

@@ -113,7 +113,7 @@ internal class DefaultVoucherDelegate(
         action: VoucherAction,
         config: VoucherPaymentMethodConfig
     ) {
-        // TODO: remove action.url when it's fixed from backend side
+        // TODO remove action.url when it's fixed from backend side
         val downloadUrl = action.downloadUrl ?: action.url
         val storeAction = downloadUrl?.let { url ->
             VoucherStoreAction.DownloadPdf(url)
