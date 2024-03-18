@@ -109,7 +109,7 @@ internal abstract class BaseComponentDialogFragment :
                     checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                     dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                     componentCallback = this,
-                    analyticsRepository = dropInViewModel.analyticsRepository,
+                    analyticsManager = dropInViewModel.analyticsManager,
                     onRedirect = protocol::onRedirect,
                 )
             } else {
@@ -119,7 +119,6 @@ internal abstract class BaseComponentDialogFragment :
                     checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                     dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                     componentCallback = this,
-                    analyticsRepository = dropInViewModel.analyticsRepository,
                     analyticsManager = dropInViewModel.analyticsManager,
                     onRedirect = protocol::onRedirect,
                 )
