@@ -21,7 +21,7 @@ internal class AnalyticsTrackRequestProvider {
         logList: List<AnalyticsEvent.Log>,
     ): AnalyticsTrackRequest {
         return AnalyticsTrackRequest(
-            channel = AnalyticsPlatformParams.CHANNEL,
+            channel = AnalyticsPlatformParams.channel,
             platform = AnalyticsPlatformParams.platform,
             info = infoList.map { event -> event.mapToTrackEvent() },
             logs = logList.map { event -> event.mapToTrackEvent() },
