@@ -16,13 +16,8 @@ import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
-import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
@@ -38,8 +33,6 @@ internal class DropInViewModelFactory(
     localeProvider: LocaleProvider = LocaleProvider(),
 ) : AbstractSavedStateViewModelFactory(activity, activity.intent.extras) {
 
-    private val packageName: String = activity.packageName
-    private val screenWidth: Int = activity.screenWidthPixels
     private val deviceLocale: Locale = localeProvider.getLocale(activity)
     private val application: Application = activity.application
 
@@ -57,23 +50,6 @@ internal class DropInViewModelFactory(
 
         val httpClient = HttpClientFactory.getHttpClient(dropInParams.environment)
         val orderStatusRepository = OrderStatusRepository(OrderStatusService(httpClient))
-        val analyticsRepository = DefaultAnalyticsRepository(
-            analyticsRepositoryData = AnalyticsRepositoryData(
-                level = dropInParams.analyticsParams.level,
-                packageName = packageName,
-                locale = dropInParams.shopperLocale,
-                source = AnalyticsSource.DropIn(paymentMethods),
-                clientKey = dropInParams.clientKey,
-                amount = dropInParams.amount,
-                screenWidth = screenWidth,
-                paymentMethods = paymentMethods,
-                sessionId = bundleHandler.sessionDetails?.id,
-            ),
-            analyticsService = AnalyticsService(
-                httpClient = HttpClientFactory.getAnalyticsHttpClient(dropInParams.environment),
-            ),
-            analyticsMapper = AnalyticsMapper(),
-        )
         val analyticsManager = AnalyticsManagerFactory().provide(
             shopperLocale = dropInParams.shopperLocale,
             environment = dropInParams.environment,
@@ -90,7 +66,6 @@ internal class DropInViewModelFactory(
         return DropInViewModel(
             bundleHandler,
             orderStatusRepository,
-            analyticsRepository,
             analyticsManager,
             dropInParams,
         ) as T
