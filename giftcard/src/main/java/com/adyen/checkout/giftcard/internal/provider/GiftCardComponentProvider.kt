@@ -19,11 +19,9 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
@@ -59,7 +57,7 @@ class GiftCardComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: AnalyticsRepository? = null,
+    private val analyticsManager: AnalyticsManager? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -100,23 +98,18 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val giftCardDelegate = DefaultGiftCardDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
@@ -195,24 +188,18 @@ constructor(
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
             val publicKeyService = PublicKeyService(httpClient)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val giftCardDelegate = DefaultGiftCardDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 publicKeyRepository = DefaultPublicKeyRepository(publicKeyService),
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
