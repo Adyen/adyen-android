@@ -93,17 +93,19 @@ constructor(
                 componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
             )
 
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = null,
+            )
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
-                analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
-                    componentParams = componentParams,
-                    application = application,
-                    source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
-                    sessionId = null,
-                ),
+                analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
@@ -178,17 +180,19 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
+            )
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
-                analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
-                    componentParams = componentParams,
-                    application = application,
-                    source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
+                analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
