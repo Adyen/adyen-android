@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -30,11 +30,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class StoredCashAppPayDelegate(
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
@@ -51,18 +50,16 @@ internal class StoredCashAppPayDelegate(
     override val submitFlow: Flow<CashAppPayComponentState> = submitChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     private fun onState(componentState: CashAppPayComponentState) {
@@ -94,10 +91,13 @@ internal class StoredCashAppPayDelegate(
         adyenLog(AdyenLogLevel.WARN) { "updateInputData should not be called for stored Cash App Pay" }
     }
 
+    @Suppress("ForbiddenComment")
+    // TODO: Here we only call this method on initialization. The checkoutAttemptId will only be available if it is
+    //  passed by drop-in. This should be fixed as part of state refactoring.
     private fun createComponentState(): CashAppPayComponentState {
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             storedPaymentMethodId = paymentMethod.id,
         )
 
@@ -120,5 +120,6 @@ internal class StoredCashAppPayDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }
