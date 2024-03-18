@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -42,13 +42,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class StoredACHDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val storedPaymentMethod: StoredPaymentMethod,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     override val componentParams: ACHDirectDebitComponentParams,
     private val order: OrderRequest?,
 ) : ACHDirectDebitDelegate {
@@ -87,11 +86,16 @@ internal class StoredACHDirectDebitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
 
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     private fun onState(achDirectDebitComponentState: ACHDirectDebitComponentState) {
@@ -104,17 +108,10 @@ internal class StoredACHDirectDebitDelegate(
         adyenLog(AdyenLogLevel.ERROR) { "updateInputData should not be called in StoredACHDirectDebitDelegate" }
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
-    }
-
     private fun createComponentState(): ACHDirectDebitComponentState {
         val paymentMethod = ACHDirectDebitPaymentMethod(
             type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 
@@ -146,6 +143,7 @@ internal class StoredACHDirectDebitDelegate(
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        analyticsManager.clear(this)
     }
 
     override fun getPaymentMethodType(): String {
