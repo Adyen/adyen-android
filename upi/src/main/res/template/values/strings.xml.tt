@@ -14,7 +14,9 @@
     <string name="checkout_upi_continue">%%continue%%</string>
 
     <!-- Untranslatable strings -->
+    <string name="checkout_upi_collect" translatable="false">Pay with any UPI</string>
     <string name="checkout_upi_vpa" translatable="false">VPA</string>
     <string name="checkout_upi_vpa_full" translatable="false">Virtual Payment Address</string>
+    <string name="checkout_upi_manual_address" translatable="false">Email or UPI account</string>
     <string name="checkout_upi_qr_code" translatable="false">QR code</string>
 </resources>

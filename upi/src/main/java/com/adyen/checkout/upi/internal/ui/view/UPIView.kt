@@ -29,6 +29,7 @@ import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.databinding.UpiViewBinding
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
+import com.adyen.checkout.upi.internal.ui.model.UPIApp
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import kotlinx.coroutines.CoroutineScope
 
@@ -45,6 +46,8 @@ internal class UPIView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
+    private var upiAppsAdapter: UPIAppsAdapter? = null
+
     init {
         orientation = VERTICAL
 
@@ -59,13 +62,18 @@ internal class UPIView @JvmOverloads constructor(
 
         initLocalizedStrings(localizedContext)
 
-        initPicker(delegate)
+        initPicker(delegate.outputData.availableModes, delegate.outputData.checkedMode)
+        // TODO: Check if we need this
         initVpaInput(delegate, localizedContext)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewModeSelection.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_ModeSelectionTextView,
+            localizedContext,
+        )
+        binding.buttonCollect.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_CollectButton,
             localizedContext,
         )
         binding.buttonVpa.setLocalizedTextFromStyle(
@@ -86,35 +94,108 @@ internal class UPIView @JvmOverloads constructor(
         )
     }
 
-    private fun initPicker(delegate: UPIDelegate) {
-        binding.toggleButtonChoice.check(R.id.button_vpa)
+
+    private fun initPicker(availableModes: List<UPIMode>, checkedMode: UPIMode) {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
-                R.id.button_vpa -> {
-                    binding.textInputLayoutVpa.isVisible = isChecked
-                    binding.textViewQrCodeDescription.isVisible = !isChecked
-                    binding.editTextVpa.isFocusableInTouchMode = isChecked
-                    binding.editTextVpa.isFocusable = isChecked
-                    if (isChecked) {
-                        binding.editTextVpa.requestFocus()
-                        binding.editTextVpa.showKeyboard()
-                        delegate.updateInputData { mode = UPIMode.VPA }
-                    }
-                }
-
-                R.id.button_qrCode -> {
-                    binding.textInputLayoutVpa.isVisible = !isChecked
-                    binding.textViewQrCodeDescription.isVisible = isChecked
-                    binding.editTextVpa.isFocusableInTouchMode = !isChecked
-                    binding.editTextVpa.isFocusable = !isChecked
-                    if (isChecked) {
-                        binding.editTextVpa.clearFocus()
-                        hideKeyboard()
-                        delegate.updateInputData { mode = UPIMode.QR }
-                    }
-                }
+                R.id.button_collect -> updateUpiCollectViews(isChecked)
+                R.id.button_vpa -> updateUpiVpaViews(isChecked)
+                R.id.button_qrCode -> updateUpiQrCodeViews(isChecked)
             }
         }
+
+        availableModes.forEach { mode ->
+            initViewsForMode(mode = mode, isChecked = mode == checkedMode)
+        }
+    }
+
+    private fun initViewsForMode(mode: UPIMode, isChecked: Boolean) {
+        when (mode) {
+            is UPIMode.Collect -> {
+                initViewsForCollect(mode.apps, isChecked)
+            }
+
+            is UPIMode.Vpa -> {
+                initViewsForVpa(isChecked)
+            }
+
+            is UPIMode.Qr -> {
+                initViewsForQr(isChecked)
+            }
+        }
+    }
+
+    private fun initViewsForCollect(apps: List<UPIApp>, isChecked: Boolean) = with(binding) {
+        buttonCollect.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_collect)
+        }
+
+        if (upiAppsAdapter == null) {
+            upiAppsAdapter = UPIAppsAdapter(
+                context = context,
+                paymentMethod = delegate.getPaymentMethodType()
+            )
+            recyclerViewUpiCollect.adapter = upiAppsAdapter
+        }
+        upiAppsAdapter?.setItems(apps)
+    }
+
+    private fun initViewsForVpa(isChecked: Boolean) = with(binding) {
+        buttonVpa.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_vpa)
+        }
+    }
+
+    private fun initViewsForQr(isChecked: Boolean) = with(binding) {
+        buttonQrCode.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_qrCode)
+        }
+    }
+
+    private fun updateUpiCollectViews(isChecked: Boolean) {
+//        resetUpiModeViews()
+        binding.recyclerViewUpiCollect.isVisible = isChecked
+        if (isChecked) {
+            // TODO: This should work differently
+//            delegate.updateInputData { mode = COLLECT }
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
+        }
+    }
+
+    private fun updateUpiVpaViews(isChecked: Boolean) {
+//        resetUpiModeViews()
+        binding.textInputLayoutVpa.isVisible = isChecked
+        binding.editTextVpa.isFocusableInTouchMode = isChecked
+        binding.editTextVpa.isFocusable = isChecked
+        if (isChecked) {
+            binding.editTextVpa.requestFocus()
+            binding.editTextVpa.showKeyboard()
+//            delegate.updateInputData { mode = VPA }
+        }
+    }
+
+    private fun updateUpiQrCodeViews(isChecked: Boolean) {
+//        resetUpiModeViews()
+        binding.textViewQrCodeDescription.isVisible = isChecked
+        if (isChecked) {
+//            delegate.updateInputData { mode = QR }
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
+        }
+    }
+
+    private fun resetUpiModeViews() {
+        binding.recyclerViewUpiCollect.isVisible = false
+        binding.textInputLayoutVpa.isVisible = false
+        binding.textViewQrCodeDescription.isVisible = false
+        binding.editTextVpa.isFocusableInTouchMode = false
+        binding.editTextVpa.isFocusable = false
+        binding.editTextVpa.clearFocus()
+        hideKeyboard()
     }
 
     private fun initVpaInput(delegate: UPIDelegate, localizedContext: Context) {

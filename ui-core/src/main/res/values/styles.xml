@@ -150,6 +150,14 @@
         <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
+    <style name="AdyenCheckout.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
+        <item name="android:theme">@style/AdyenCheckout.RadioButtonTheme</item>
+    </style>
+
+    <style name="AdyenCheckout.RadioButtonTheme" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="colorAccent">?attr/colorPrimary</item>
+    </style>
+
     <style name="AdyenCheckout.Button" />
 
     <style name="AdyenCheckout.Button.Colored" parent="AdyenCheckout.Button.Primary">

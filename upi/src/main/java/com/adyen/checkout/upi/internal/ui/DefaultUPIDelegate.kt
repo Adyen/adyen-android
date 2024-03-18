@@ -10,6 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.AppId
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -108,8 +109,23 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData() = with(inputData) {
+        // TODO: Mock data to be removed
+        paymentMethod.appIds = listOf(
+            AppId("bhim", "BHIM"),
+            AppId("gpay", "Google Pay"),
+            AppId("PhonePe", "phonepe"),
+        )
+
+        // TODO: Change the logic here
+        val availableModes = listOf(
+            UPIMode.Collect(paymentMethod.appIds?.mapToUPIApp(componentParams.environment).orEmpty()),
+            UPIMode.Vpa,
+            UPIMode.Qr,
+        )
+
         UPIOutputData(
             mode = mode,
+            availableModes = availableModes,
             virtualPaymentAddress = virtualPaymentAddress,
         )
     }
@@ -128,9 +144,9 @@ internal class DefaultUPIDelegate(
         outputData: UPIOutputData = this.outputData
     ): UPIComponentState {
         val paymentMethod = UPIPaymentMethod(
-            type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            type = if (outputData.mode is UPIMode.Vpa) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
             checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
-            virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
+            virtualPaymentAddress = if (outputData.mode is UPIMode.Vpa) {
                 outputData.virtualPaymentAddressFieldState.value
             } else {
                 null

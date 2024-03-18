@@ -14,7 +14,10 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.upi.R
 
 internal class UPIOutputData(
+    // TODO: This is only needed for validation. Can we improve this?
     val mode: UPIMode,
+    val availableModes: List<UPIMode>,
+    val checkedMode: UPIMode = availableModes.first(),
     virtualPaymentAddress: String,
 ) : OutputData {
 
@@ -22,8 +25,10 @@ internal class UPIOutputData(
 
     override val isValid: Boolean
         get() = when (mode) {
-            UPIMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
-            UPIMode.QR -> true
+            // TODO: Add logic to check validity
+            is UPIMode.Collect -> false
+            UPIMode.Vpa -> virtualPaymentAddressFieldState.validation.isValid()
+            UPIMode.Qr -> true
         }
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =

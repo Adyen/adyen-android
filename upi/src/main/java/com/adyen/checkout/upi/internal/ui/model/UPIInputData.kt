@@ -11,6 +11,7 @@ package com.adyen.checkout.upi.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class UPIInputData(
-    var mode: UPIMode = UPIMode.VPA,
+    // TODO: This should change
+    var mode: UPIMode = UPIMode.Vpa,
     var virtualPaymentAddress: String = "",
 ) : InputData
