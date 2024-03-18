@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -38,14 +38,17 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredACHDirectDebitDelegateTest(
-    @Mock private val analyticsRepository: AnalyticsRepository
+    @Mock private val analyticsManager: AnalyticsManager,
 ) {
     private lateinit var delegate: ACHDirectDebitDelegate
 
@@ -93,8 +96,14 @@ internal class StoredACHDirectDebitDelegateTest(
     inner class AnalyticsTest {
 
         @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            verify(analyticsManager).initialize(eq(delegate), any())
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
 
             delegate = createAchDelegate()
 
@@ -102,17 +111,23 @@ internal class StoredACHDirectDebitDelegateTest(
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.onCleared()
+            verify(analyticsManager).clear(eq(delegate))
+        }
     }
 
     private fun createAchDelegate(
         paymentMethod: StoredPaymentMethod = StoredPaymentMethod(id = STORED_ID),
-        analyticsRepository: AnalyticsRepository = this.analyticsRepository,
+        analyticsManager: AnalyticsManager = this.analyticsManager,
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
     ) = StoredACHDirectDebitDelegate(
         observerRepository = PaymentObserverRepository(),
         storedPaymentMethod = paymentMethod,
-        analyticsRepository = analyticsRepository,
+        analyticsManager = analyticsManager,
         componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, DEVICE_LOCALE, null, null),
         order = order,
