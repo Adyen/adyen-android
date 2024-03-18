@@ -14,7 +14,7 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingSKPaymentMethod
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
@@ -29,7 +29,7 @@ class OnlineBankingSKComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     dropInOverrideParams: DropInOverrideParams? = null,
-    analyticsRepository: AnalyticsRepository? = null,
+    analyticsManager: AnalyticsManager? = null,
 ) : OnlineBankingComponentProvider<
     OnlineBankingSKComponent,
     OnlineBankingSKConfiguration,
@@ -38,7 +38,7 @@ constructor(
     >(
     componentClass = OnlineBankingSKComponent::class.java,
     dropInOverrideParams = dropInOverrideParams,
-    analyticsRepository = analyticsRepository,
+    analyticsManager = analyticsManager,
 ) {
 
     override fun createPaymentMethod(): OnlineBankingSKPaymentMethod {
