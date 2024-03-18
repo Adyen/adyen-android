@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.analytics.data.AnalyticsRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
@@ -24,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
-internal class DefaultAnalyticsManager internal constructor(
+internal class DefaultAnalyticsManager(
     private val analyticsRepository: AnalyticsRepository,
     private val analyticsParams: AnalyticsParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
@@ -106,11 +107,6 @@ internal class DefaultAnalyticsManager internal constructor(
     }
 
     private suspend fun sendEvents() {
-        if (cannotSendEvents()) {
-            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to send events, ignoring." }
-            return
-        }
-
         val checkoutAttemptId = checkoutAttemptId
         if (checkoutAttemptId == null) {
             adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should not be null at this point." }
@@ -151,7 +147,10 @@ internal class DefaultAnalyticsManager internal constructor(
     }
 
     companion object {
-        private const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
-        private val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
+        @VisibleForTesting
+        internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+
+        @VisibleForTesting
+        internal val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
     }
 }
