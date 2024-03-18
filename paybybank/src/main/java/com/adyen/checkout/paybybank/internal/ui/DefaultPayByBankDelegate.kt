@@ -18,7 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -34,7 +34,6 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultPayByBankDelegate(
@@ -42,7 +41,7 @@ internal class DefaultPayByBankDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     override val componentParams: GenericComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<PayByBankComponentState>,
 ) : PayByBankDelegate {
 
@@ -76,14 +75,12 @@ internal class DefaultPayByBankDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
     }
 
     override fun observe(
@@ -144,7 +141,7 @@ internal class DefaultPayByBankDelegate(
     ): PayByBankComponentState {
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType(),
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             issuer = outputData?.selectedIssuer?.id,
         )
 
@@ -196,5 +193,6 @@ internal class DefaultPayByBankDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }
