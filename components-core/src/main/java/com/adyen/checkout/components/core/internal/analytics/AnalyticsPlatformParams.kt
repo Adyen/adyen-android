@@ -15,7 +15,8 @@ import com.adyen.checkout.components.core.BuildConfig
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AnalyticsPlatformParams {
 
-    const val CHANNEL = "android"
+    @Suppress("ConstPropertyName", "ktlint:standard:property-naming")
+    const val channel = "android"
 
     var platform = AnalyticsPlatform.ANDROID.value
         private set
