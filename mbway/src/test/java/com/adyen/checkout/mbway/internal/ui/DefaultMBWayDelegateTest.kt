@@ -43,6 +43,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -198,12 +199,6 @@ internal class DefaultMBWayDelegateTest(
         }
     }
 
-    @Test
-    fun `when delegate is initialized then analytics manager is initialized`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsManager).initialize(any(), any())
-    }
-
     @Nested
     inner class SubmitButtonVisibilityTest {
 
@@ -261,6 +256,12 @@ internal class DefaultMBWayDelegateTest(
     inner class AnalyticsTest {
 
         @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            verify(analyticsManager).initialize(eq(delegate), any())
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
 
@@ -274,6 +275,12 @@ internal class DefaultMBWayDelegateTest(
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
+        }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.onCleared()
+            verify(analyticsManager).clear(eq(delegate))
         }
     }
 
