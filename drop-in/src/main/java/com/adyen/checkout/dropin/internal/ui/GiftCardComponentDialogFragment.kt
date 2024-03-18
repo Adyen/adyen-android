@@ -73,7 +73,6 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = this,
-                analyticsRepository = dropInViewModel.analyticsRepository,
                 analyticsManager = dropInViewModel.analyticsManager,
                 onRedirect = protocol::onRedirect,
             ) as GiftCardComponent

@@ -80,7 +80,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = storedPaymentViewModel,
-                analyticsRepository = dropInViewModel.analyticsRepository,
+                analyticsManager = dropInViewModel.analyticsManager,
                 onRedirect = protocol::onRedirect,
             )
         } catch (e: CheckoutException) {
