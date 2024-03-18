@@ -33,7 +33,6 @@ internal class DefaultAnalyticsManagerTest(
     @Mock private val analyticsRepository: AnalyticsRepository,
 ) {
 
-
     private lateinit var analyticsManager: DefaultAnalyticsManager
 
     @BeforeEach
@@ -70,7 +69,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `fetching checkoutAttemptId fails, then checkoutAttemptId is null`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { throw RuntimeException() }
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
             analyticsManager.initialize(this@InitializeTest, this)
 
@@ -79,7 +78,7 @@ internal class DefaultAnalyticsManagerTest(
 
         @Test
         fun `initialize is called twice, then the second time is ignored`() = runTest {
-            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { throw RuntimeException() }
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
             analyticsManager.initialize(this@InitializeTest, this)
             analyticsManager.initialize(this@InitializeTest, this)
