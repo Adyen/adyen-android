@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.analytics.data
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
 
-internal interface NewAnalyticsRepository {
+internal interface AnalyticsRepository {
 
     suspend fun fetchCheckoutAttemptId(): String?
 
