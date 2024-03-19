@@ -10,7 +10,8 @@
 project.plugins.withId("kotlin-android") {
     apply plugin: "org.jetbrains.dokka"
 
-    task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+    tasks.register("javadocJar", Jar) {
+        dependsOn tasks.named("dokkaJavadoc")
         archiveClassifier.set('javadoc')
         from dokkaJavadoc.outputDirectory
     }

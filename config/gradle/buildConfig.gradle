@@ -10,5 +10,8 @@ android {
     defaultConfig {
         buildConfigField "String", "CHECKOUT_VERSION", "\"$version_name\""
     }
-}
 
+    buildFeatures {
+        buildConfig true
+    }
+}

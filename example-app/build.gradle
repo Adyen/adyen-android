@@ -14,7 +14,6 @@ plugins {
 }
 
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
-apply from: "${rootDir}/config/gradle/ci.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
@@ -29,20 +28,15 @@ def isIDEBuild() {
     return project.properties['android.injected.invoked.from.ide'] == 'true'
 }
 
-// This runConnectedAndroidTest.gradle script is applied,
-// so it will be possible to run the example app connected android tests
-// in Jenkins release process.
-apply from: "${rootDir}/config/gradle/runConnectedAndroidTest.gradle"
-
 android {
-    compileSdkVersion compile_sdk_version
+    compileSdk compile_sdk_version
 
     defaultConfig {
         applicationId "com.adyen.checkout.example"
         namespace "com.adyen.checkout.example"
 
-        minSdkVersion min_sdk_version
-        targetSdkVersion target_sdk_version
+        minSdk min_sdk_version
+        targetSdk target_sdk_version
         versionCode version_code
         versionName version_name
 
@@ -63,6 +57,7 @@ android {
     buildFeatures {
         compose true
         viewBinding true
+        buildConfig true
     }
 
     composeOptions {

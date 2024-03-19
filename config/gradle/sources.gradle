@@ -6,7 +6,7 @@
  * Created by ran on 6/2/2019.
  */
 
-task androidSourcesJar(type: Jar) {
+tasks.register("androidSourcesJar", Jar) {
     archiveClassifier.set('sources')
     if (project.plugins.findPlugin("com.android.library")) {
         from android.sourceSets.main.java.srcDirs
