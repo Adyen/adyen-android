@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -47,7 +47,9 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -56,7 +58,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultUPIDelegateTest(
     @Mock private val submitHandler: SubmitHandler<UPIComponentState>,
-    @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val analyticsManager: AnalyticsManager,
 ) {
 
     private lateinit var delegate: DefaultUPIDelegate
@@ -64,13 +66,6 @@ internal class DefaultUPIDelegateTest(
     @BeforeEach
     fun beforeEach() {
         delegate = createUPIDelegate()
-    }
-
-    @Test
-    fun `when delegate is initialized then analytics event is sent`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-        verify(analyticsRepository).setupAnalytics()
     }
 
     @Nested
@@ -218,8 +213,14 @@ internal class DefaultUPIDelegateTest(
     inner class AnalyticsTest {
 
         @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            verify(analyticsManager).initialize(eq(delegate), any())
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -230,6 +231,12 @@ internal class DefaultUPIDelegateTest(
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
+        }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.onCleared()
+            verify(analyticsManager).clear(eq(delegate))
         }
     }
 
@@ -249,7 +256,7 @@ internal class DefaultUPIDelegateTest(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultUPIDelegate(
         submitHandler = submitHandler,
-        analyticsRepository = analyticsRepository,
+        analyticsManager = analyticsManager,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = PaymentMethod(),
         order = order,

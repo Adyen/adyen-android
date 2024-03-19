@@ -35,7 +35,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -63,6 +63,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -73,7 +74,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCashAppPayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CashAppPayComponentState>,
-    @Mock private val analyticsRepository: AnalyticsRepository,
+    @Mock private val analyticsManager: AnalyticsManager,
     @Mock private val cashAppPayFactory: CashAppPayFactory,
     @Mock private val cashAppPay: CashAppPay,
 ) {
@@ -90,12 +91,6 @@ internal class DefaultCashAppPayDelegateTest(
     @Nested
     @DisplayName("when delegate is initialized")
     inner class InitializeTest {
-
-        @Test
-        fun `then analytics event is sent`() = runTest {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsRepository).setupAnalytics()
-        }
 
         @Test
         fun `no confirmation is required, then payment should be initiated`() = runTest {
@@ -453,8 +448,14 @@ internal class DefaultCashAppPayDelegateTest(
     inner class AnalyticsTest {
 
         @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            verify(analyticsManager).initialize(eq(delegate), any())
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
 
             val testFlow = delegate.componentStateFlow.test(testScheduler)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -468,13 +469,20 @@ internal class DefaultCashAppPayDelegateTest(
 
             assertEquals(TEST_CHECKOUT_ATTEMPT_ID, testFlow.latestValue.data.paymentMethod?.checkoutAttemptId)
         }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.onCleared()
+            verify(analyticsManager).clear(eq(delegate))
+        }
     }
 
     private fun createDefaultCashAppPayDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultCashAppPayDelegate(
         submitHandler = submitHandler,
-        analyticsRepository = analyticsRepository,
+        analyticsManager = analyticsManager,
         observerRepository = PaymentObserverRepository(),
         paymentMethod = getPaymentMethod(),
         order = TEST_ORDER,
