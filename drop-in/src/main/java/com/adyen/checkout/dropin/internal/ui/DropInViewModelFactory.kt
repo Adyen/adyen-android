@@ -8,18 +8,20 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import android.app.Application
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
@@ -39,6 +41,7 @@ internal class DropInViewModelFactory(
     private val packageName: String = activity.packageName
     private val screenWidth: Int = activity.screenWidthPixels
     private val deviceLocale: Locale = localeProvider.getLocale(activity)
+    private val application: Application = activity.application
 
     override fun <T : ViewModel> create(key: String, modelClass: Class<T>, handle: SavedStateHandle): T {
         val bundleHandler = DropInSavedStateHandleContainer(handle)
@@ -59,7 +62,7 @@ internal class DropInViewModelFactory(
                 level = dropInParams.analyticsParams.level,
                 packageName = packageName,
                 locale = dropInParams.shopperLocale,
-                source = AnalyticsSource.DropIn(),
+                source = AnalyticsSource.DropIn(paymentMethods),
                 clientKey = dropInParams.clientKey,
                 amount = dropInParams.amount,
                 screenWidth = screenWidth,
@@ -71,9 +74,26 @@ internal class DropInViewModelFactory(
             ),
             analyticsMapper = AnalyticsMapper(),
         )
+        val analyticsManager = AnalyticsManagerFactory().provide(
+            shopperLocale = dropInParams.shopperLocale,
+            environment = dropInParams.environment,
+            clientKey = dropInParams.clientKey,
+            analyticsParams = dropInParams.analyticsParams,
+            isCreatedByDropIn = true,
+            amount = dropInParams.amount,
+            application = application,
+            source = AnalyticsSource.DropIn(paymentMethods),
+            sessionId = bundleHandler.sessionDetails?.id,
+        )
 
         @Suppress("UNCHECKED_CAST")
-        return DropInViewModel(bundleHandler, orderStatusRepository, analyticsRepository, dropInParams) as T
+        return DropInViewModel(
+            bundleHandler,
+            orderStatusRepository,
+            analyticsRepository,
+            analyticsManager,
+            dropInParams,
+        ) as T
     }
 
     private fun getDropInParams(

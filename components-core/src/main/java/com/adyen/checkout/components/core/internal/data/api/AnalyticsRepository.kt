@@ -10,6 +10,8 @@ package com.adyen.checkout.components.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 
+@Suppress("ForbiddenComment")
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface AnalyticsRepository {
     suspend fun setupAnalytics()

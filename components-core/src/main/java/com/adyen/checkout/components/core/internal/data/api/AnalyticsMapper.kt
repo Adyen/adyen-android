@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/11/2022.
+ * Created by oscars on 6/3/2024.
  */
 
 package com.adyen.checkout.components.core.internal.data.api
@@ -13,10 +13,13 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BuildConfig
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatform
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
 import java.util.Locale
 
+@Suppress("ForbiddenComment")
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsMapper {
     @Suppress("LongParameterList")
@@ -40,7 +43,7 @@ class AnalyticsMapper {
             deviceModel = Build.MODEL,
             referrer = packageName,
             systemVersion = Build.VERSION.SDK_INT.toString(),
-            screenWidth = screenWidth,
+            screenWidth = screenWidth.toInt(),
             paymentMethods = paymentMethods,
             amount = amount,
             // unused for Android
@@ -49,14 +52,10 @@ class AnalyticsMapper {
         )
     }
 
+    @Suppress("FunctionOnlyReturningConstant", "UnusedParameter")
     @VisibleForTesting
     internal fun getFlavorQueryParameter(source: AnalyticsSource): String {
-        return when (source) {
-            is AnalyticsSource.DropIn -> Flavor.DROP_IN
-            is AnalyticsSource.PaymentComponent -> {
-                if (source.isCreatedByDropIn) Flavor.DROP_IN else Flavor.COMPONENTS
-            }
-        }.value
+        return "stub - this class will be deleted"
     }
 
     @VisibleForTesting
@@ -67,6 +66,7 @@ class AnalyticsMapper {
         }
     }
 
+    @Suppress("unused")
     private enum class Flavor(val value: String) {
         DROP_IN("dropin"),
         COMPONENTS("components")

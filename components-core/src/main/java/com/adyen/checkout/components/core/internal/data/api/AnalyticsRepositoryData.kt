@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/7/2023.
+ * Created by ararat on 4/3/2024.
  */
 
 package com.adyen.checkout.components.core.internal.data.api
@@ -13,12 +13,14 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.data.model.AnalyticsSource
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.screenWidthPixels
 import java.util.Locale
 
+@Suppress("ForbiddenComment")
+// TODO: Remove this file
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsRepositoryData(
     val level: AnalyticsParamsLevel,
@@ -40,7 +42,7 @@ data class AnalyticsRepositoryData(
     ) : this(
         application = application,
         componentParams = componentParams,
-        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, paymentMethod),
+        source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
         paymentMethodType = paymentMethod.type,
         sessionId = sessionId,
     )
@@ -53,7 +55,7 @@ data class AnalyticsRepositoryData(
     ) : this(
         application = application,
         componentParams = componentParams,
-        source = AnalyticsSource.PaymentComponent(componentParams.isCreatedByDropIn, storedPaymentMethod),
+        source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
         paymentMethodType = storedPaymentMethod.type,
         sessionId = sessionId,
     )

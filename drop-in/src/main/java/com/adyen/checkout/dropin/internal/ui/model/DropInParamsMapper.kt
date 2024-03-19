@@ -27,7 +27,10 @@ internal class DropInParamsMapper {
             shopperLocale = getShopperLocale(checkoutConfiguration, sessionParams) ?: deviceLocale,
             environment = sessionParams?.environment ?: checkoutConfiguration.environment,
             clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
-            analyticsParams = AnalyticsParams(checkoutConfiguration.analyticsConfiguration),
+            analyticsParams = AnalyticsParams(
+                analyticsConfiguration = checkoutConfiguration.analyticsConfiguration,
+                clientKey = checkoutConfiguration.clientKey,
+            ),
             amount = sessionParams?.amount ?: checkoutConfiguration.amount,
             showPreselectedStoredPaymentMethod = dropInConfiguration?.showPreselectedStoredPaymentMethod ?: true,
             skipListWhenSinglePaymentMethod = dropInConfiguration?.skipListWhenSinglePaymentMethod ?: false,
