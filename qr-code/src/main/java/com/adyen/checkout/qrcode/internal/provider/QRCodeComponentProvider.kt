@@ -91,6 +91,7 @@ constructor(
 
         return DefaultQRCodeDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             statusRepository = statusRepository,
             statusCountDownTimer = countDownTimer,
