@@ -14,6 +14,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
@@ -61,6 +62,7 @@ import kotlin.time.Duration.Companion.seconds
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
+    private val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
@@ -115,6 +117,14 @@ internal class DefaultQRCodeDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        val action: QrCodeAction? = savedStateHandle[ACTION_KEY]
+        if (action != null) {
+            handleAction(action)
+        }
     }
 
     override fun observe(
@@ -146,18 +156,24 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
-        if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
-            exceptionChannel.trySend(ComponentException("Payment data is null"))
-            return
-        }
+        savedStateHandle[ACTION_KEY] = action
+        paymentDataRepository.paymentData = action.paymentData
 
         if (shouldLaunchRedirect(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Action does not require a view, redirecting." }
             _viewFlow.tryEmit(QrCodeComponentViewType.REDIRECT)
             makeRedirect(activity, action)
+            return
+        }
+
+        handleAction(action)
+    }
+
+    private fun handleAction(action: QrCodeAction) {
+        val paymentData = action.paymentData
+        if (paymentData == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
 
@@ -359,5 +375,7 @@ internal class DefaultQRCodeDelegate(
 
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"
+
+        private const val ACTION_KEY = "ACTION_KEY"
     }
 }

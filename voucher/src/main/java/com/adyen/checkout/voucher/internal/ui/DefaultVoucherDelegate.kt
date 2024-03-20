@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@Suppress("TooManyFunctions")
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
     private val savedStateHandle: SavedStateHandle,
