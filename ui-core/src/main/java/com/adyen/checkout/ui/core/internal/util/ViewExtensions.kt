@@ -7,6 +7,7 @@ import android.text.style.URLSpan
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.annotation.RestrictTo
 import androidx.annotation.StyleRes
@@ -44,6 +45,14 @@ fun TextView.setLocalizedTextFromStyle(
     val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
     val stringResValue = typedArray.getString(0).orEmpty()
     text = if (formatHyperLink) stringResValue.formatStringWithHyperlink() else stringResValue
+    typedArray.recycle()
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun SearchView.setLocalizedQueryHintFromStyle(@StyleRes styleResId: Int, localizedContext: Context) {
+    val attrs = intArrayOf(android.R.attr.queryHint)
+    val typedArray = localizedContext.obtainStyledAttributes(styleResId, attrs)
+    queryHint = typedArray.getString(0)
     typedArray.recycle()
 }
 

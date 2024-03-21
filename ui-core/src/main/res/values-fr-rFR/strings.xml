@@ -47,11 +47,12 @@
     <string name="checkout_address_form_province_territory_hint_optional">Province ou territoire (facultatif)</string>
     <string name="checkout_address_form_city_town_hint_optional">Ville (facultatif)</string>
 
-    <string name="checkout_address_lookup_hint">Rechercher votre adresse</string>
+    <string name="checkout_address_lookup_hint">Recherchez votre adresse</string>
     <string name="checkout_address_lookup_initial">Vous ne pouvez pas rechercher votre adresse ?</string>
     <string name="checkout_address_lookup_initial_description">Vous pouvez toujours #saisir votre adresse manuellement#</string>
     <string name="checkout_address_lookup_empty">Aucun résultat trouvé</string>
     <string name="checkout_address_lookup_empty_description">Aucune correspondance pour \'%s\', réessayez ou #saisissez votre adresse manuellement#</string>
     <string name="checkout_address_lookup_enter_manually">Saisissez l\'adresse manuellement</string>
+    <string name="checkout_address_lookup_submit">Utiliser cette adresse</string>
 
 </resources>

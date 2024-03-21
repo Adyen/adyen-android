@@ -53,5 +53,6 @@
     <string name="checkout_address_lookup_empty">Nenhum resultado encontrado</string>
     <string name="checkout_address_lookup_empty_description">\'%s\' não devolveu resultados, tente novamente ou use #inserção manual do endereço#</string>
     <string name="checkout_address_lookup_enter_manually">Introduza o endereço manualmente</string>
+    <string name="checkout_address_lookup_submit">Utilize este endereço</string>
 
 </resources>
