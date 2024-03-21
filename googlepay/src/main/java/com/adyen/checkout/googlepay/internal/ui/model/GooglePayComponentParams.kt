@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.googlepay.internal.ui.model
 
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters

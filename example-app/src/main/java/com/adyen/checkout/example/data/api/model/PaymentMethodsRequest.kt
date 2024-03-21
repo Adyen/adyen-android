@@ -9,8 +9,8 @@
 package com.adyen.checkout.example.data.api.model
 
 import androidx.annotation.Keep
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.core.Amount
 
 @Keep
 data class PaymentMethodsRequest(

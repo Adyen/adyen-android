@@ -11,9 +11,9 @@ package com.adyen.checkout.ui.core.internal.util
 import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.isZero
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.internal.util.CurrencyUtils
+import com.adyen.checkout.core.internal.util.isZero
 import com.adyen.checkout.ui.core.R
 import java.util.Locale
 

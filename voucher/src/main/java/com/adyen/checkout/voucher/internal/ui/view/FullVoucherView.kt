@@ -20,14 +20,14 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
-import com.adyen.checkout.components.core.internal.util.isEmpty
 import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.isEmpty
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo

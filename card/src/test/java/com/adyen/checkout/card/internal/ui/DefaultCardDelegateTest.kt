@@ -40,20 +40,20 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.cse.internal.test.TestCardEncryptor
@@ -1421,8 +1421,14 @@ internal class DefaultCardDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
         )
     }

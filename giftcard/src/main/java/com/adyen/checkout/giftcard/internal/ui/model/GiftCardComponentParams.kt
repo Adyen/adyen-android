@@ -10,7 +10,7 @@ package com.adyen.checkout.giftcard.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 
 internal data class GiftCardComponentParams(
     private val commonComponentParams: CommonComponentParams,

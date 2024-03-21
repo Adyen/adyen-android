@@ -13,7 +13,6 @@ import android.content.Context
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
 import app.cash.turbine.test
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
@@ -22,6 +21,7 @@ import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.ComponentException

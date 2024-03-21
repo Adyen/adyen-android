@@ -9,8 +9,8 @@
 package com.adyen.checkout.sessions.core.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
@@ -41,12 +41,12 @@ data class SessionBalanceRequest(
                         PAYMENT_METHOD,
                         ModelUtils.serializeOpt(
                             modelObject.paymentMethod,
-                            PaymentMethodDetails.SERIALIZER
-                        )
+                            PaymentMethodDetails.SERIALIZER,
+                        ),
                     )
                     jsonObject.putOpt(
                         AMOUNT,
-                        ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER)
+                        ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionBalanceRequest::class.java, e)
@@ -60,12 +60,12 @@ data class SessionBalanceRequest(
                         sessionData = jsonObject.optString(SESSION_DATA),
                         paymentMethod = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHOD),
-                            PaymentMethodDetails.SERIALIZER
+                            PaymentMethodDetails.SERIALIZER,
                         ),
                         amount = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(AMOUNT),
-                            Amount.SERIALIZER
-                        )
+                            Amount.SERIALIZER,
+                        ),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionBalanceRequest::class.java, e)

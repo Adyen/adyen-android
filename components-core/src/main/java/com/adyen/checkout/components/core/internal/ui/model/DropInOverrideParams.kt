@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Amount
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class DropInOverrideParams(

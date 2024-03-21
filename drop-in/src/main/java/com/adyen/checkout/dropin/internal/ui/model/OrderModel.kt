@@ -9,8 +9,8 @@
 package com.adyen.checkout.dropin.internal.ui.model
 
 import android.os.Parcelable
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.data.model.OrderPaymentMethod
+import com.adyen.checkout.core.Amount
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

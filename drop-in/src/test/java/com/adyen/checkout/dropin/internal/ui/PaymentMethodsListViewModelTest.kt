@@ -10,11 +10,11 @@ package com.adyen.checkout.dropin.internal.ui
 
 import android.app.Application
 import app.cash.turbine.test
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.dropin.internal.ConfigurationProvider
 import com.adyen.checkout.dropin.internal.DataProvider
 import com.adyen.checkout.dropin.internal.Helpers.mapToPaymentMethodModelList

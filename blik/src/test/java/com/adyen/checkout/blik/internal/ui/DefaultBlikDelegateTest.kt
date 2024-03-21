@@ -14,15 +14,15 @@ import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.blik
 import com.adyen.checkout.blik.getBlikConfiguration
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
@@ -315,8 +315,14 @@ internal class DefaultBlikDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
             arguments(null, null),
         )

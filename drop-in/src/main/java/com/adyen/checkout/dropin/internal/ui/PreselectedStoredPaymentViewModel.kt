@@ -11,12 +11,12 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel

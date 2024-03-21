@@ -4,10 +4,10 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.getCardConfiguration
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.getGooglePayConfiguration

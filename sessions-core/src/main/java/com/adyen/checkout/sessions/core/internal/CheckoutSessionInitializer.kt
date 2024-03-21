@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.sessions.core.internal
 
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory

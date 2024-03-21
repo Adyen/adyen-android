@@ -11,8 +11,8 @@ package com.adyen.checkout.example.data.storage
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.extensions.getBoolean

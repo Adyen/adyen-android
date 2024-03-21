@@ -14,9 +14,9 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.OnlineBankingCZPaymentMethod
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.onlinebankingcore.internal.provider.OnlineBankingComponentProvider
 import com.adyen.checkout.onlinebankingcore.internal.ui.OnlineBankingDelegate
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZComponent

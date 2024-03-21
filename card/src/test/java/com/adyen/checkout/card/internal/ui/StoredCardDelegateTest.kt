@@ -29,13 +29,11 @@ import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -43,7 +41,9 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.test.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -625,8 +625,14 @@ internal class StoredCardDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
             arguments(null, null),
         )

@@ -14,11 +14,11 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.bacs.BacsDirectDebitComponentState
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.CheckoutCurrency
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -78,7 +78,7 @@ internal class BacsViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val paymentMethod = paymentMethodResponse
@@ -91,8 +91,8 @@ internal class BacsViewModel @Inject constructor(
             _bacsComponentDataFlow.emit(
                 BacsComponentData(
                     paymentMethod,
-                    this@BacsViewModel
-                )
+                    this@BacsViewModel,
+                ),
             )
             _viewState.emit(BacsViewState.ShowComponent)
         }

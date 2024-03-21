@@ -1,9 +1,9 @@
 package com.adyen.checkout.instant
 
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

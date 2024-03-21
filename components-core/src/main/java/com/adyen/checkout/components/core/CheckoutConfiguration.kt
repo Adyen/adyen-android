@@ -15,6 +15,8 @@ import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleUtil

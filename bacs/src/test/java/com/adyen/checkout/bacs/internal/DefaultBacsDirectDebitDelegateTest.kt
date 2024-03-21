@@ -18,17 +18,17 @@ import com.adyen.checkout.bacs.getBacsDirectDebitConfiguration
 import com.adyen.checkout.bacs.internal.ui.BacsComponentViewType
 import com.adyen.checkout.bacs.internal.ui.DefaultBacsDirectDebitDelegate
 import com.adyen.checkout.bacs.internal.ui.model.BacsDirectDebitOutputData
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
@@ -628,8 +628,14 @@ internal class DefaultBacsDirectDebitDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
             arguments(null, null),
         )

@@ -10,8 +10,8 @@ package com.adyen.checkout.dropin.internal
 
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.card
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.googlepay.googlePay

@@ -9,12 +9,12 @@ package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
 import android.content.IntentFilter
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.internal.ui.activity.ChallengeActivity

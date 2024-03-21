@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.InstallmentViewBinding
 import com.adyen.checkout.card.internal.ui.model.InstallmentOption
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Amount
 import java.util.Locale
 
 // We need context to inflate the views and localizedContext to fetch the strings

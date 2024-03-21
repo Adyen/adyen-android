@@ -18,9 +18,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.util.createLocalizedContext
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.databinding.AdyenComponentViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType

@@ -13,8 +13,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftCardPaymentConfirmationBinding

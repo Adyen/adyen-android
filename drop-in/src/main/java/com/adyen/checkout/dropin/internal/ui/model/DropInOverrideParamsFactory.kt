@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.dropin.internal.ui.model
 
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
 

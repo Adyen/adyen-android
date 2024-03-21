@@ -14,12 +14,12 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.CheckoutCurrency
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
+import com.adyen.checkout.core.CheckoutCurrency
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -69,7 +69,7 @@ class BlikViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val blikPaymentMethod = paymentMethodResponse
@@ -131,6 +131,7 @@ class BlikViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     _blikViewState.value = BlikViewState.Action(action)
                 }
+
                 else -> _events.emit(BlikEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(BlikEvent.PaymentResult("Failed"))

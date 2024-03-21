@@ -2,6 +2,9 @@ package com.adyen.checkout.components.core
 
 import android.os.Parcel
 import com.adyen.checkout.components.core.internal.Configuration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
 import org.junit.Assert.assertEquals
 import org.junit.Test

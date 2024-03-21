@@ -2,8 +2,8 @@ package com.adyen.checkout.components.core.internal
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import java.util.Locale
 

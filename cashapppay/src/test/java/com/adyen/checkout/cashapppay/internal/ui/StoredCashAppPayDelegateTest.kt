@@ -12,16 +12,16 @@ import android.app.Application
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.cashAppPay
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParamsMapper
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -173,8 +173,14 @@ internal class StoredCashAppPayDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
             arguments(null, null),
         )

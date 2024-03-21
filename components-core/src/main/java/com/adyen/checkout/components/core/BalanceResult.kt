@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.components.core
 
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -33,7 +34,7 @@ data class BalanceResult(
                         putOpt(BALANCE, ModelUtils.serializeOpt(modelObject.balance, Amount.SERIALIZER))
                         putOpt(
                             TRANSACTION_LIMIT,
-                            ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER)
+                            ModelUtils.serializeOpt(modelObject.transactionLimit, Amount.SERIALIZER),
                         )
                     } catch (e: JSONException) {
                         throw ModelSerializationException(BalanceResult::class.java, e)
@@ -47,8 +48,8 @@ data class BalanceResult(
                         ?: throw CheckoutException("Balance not found"),
                     transactionLimit = ModelUtils.deserializeOpt(
                         jsonObject.optJSONObject(TRANSACTION_LIMIT),
-                        Amount.SERIALIZER
-                    )
+                        Amount.SERIALIZER,
+                    ),
                 )
             }
         }

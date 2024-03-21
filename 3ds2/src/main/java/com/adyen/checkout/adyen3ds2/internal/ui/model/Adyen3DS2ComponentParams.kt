@@ -9,7 +9,7 @@
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import com.adyen.threeds2.customization.UiCustomization
 
 internal data class Adyen3DS2ComponentParams(

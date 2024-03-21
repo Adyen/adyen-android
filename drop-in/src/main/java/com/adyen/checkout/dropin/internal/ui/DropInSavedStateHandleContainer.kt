@@ -12,12 +12,12 @@ import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
 import com.adyen.checkout.giftcard.GiftCardComponentState

@@ -10,7 +10,7 @@ package com.adyen.checkout.sessions.core.internal.data.model
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionModel

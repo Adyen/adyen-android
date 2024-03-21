@@ -9,18 +9,18 @@
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
 import com.adyen.checkout.adyen3ds2.adyen3DS2
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -250,9 +250,24 @@ internal class Adyen3DS2ComponentParamsMapperTest {
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, dropInValue, sessionsValue, expectedValue
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            Arguments.arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            Arguments.arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            Arguments.arguments(
+                Amount("EUR", 100),
+                Amount("USD", 200),
+                Amount("CAD", 300),
+                Amount("CAD", 300),
+            ),
+            Arguments.arguments(
+                Amount("EUR", 100),
+                Amount("USD", 200),
+                null,
+                Amount("USD", 200),
+            ),
+            Arguments.arguments(
+                Amount("EUR", 100),
+                null,
+                null,
+                Amount("EUR", 100),
+            ),
         )
 
         @JvmStatic

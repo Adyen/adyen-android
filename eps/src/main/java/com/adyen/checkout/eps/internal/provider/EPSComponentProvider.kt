@@ -14,9 +14,9 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.EPSPaymentMethod
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.eps.EPSComponent
 import com.adyen.checkout.eps.EPSComponentState
 import com.adyen.checkout.eps.EPSConfiguration

@@ -8,8 +8,9 @@
 
 package com.adyen.checkout.components.core.internal.util
 
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.internal.util.CurrencyUtils
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

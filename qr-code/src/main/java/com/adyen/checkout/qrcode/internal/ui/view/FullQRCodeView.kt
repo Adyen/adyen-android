@@ -16,11 +16,11 @@ import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
-import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.toast
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.FullQrcodeViewBinding

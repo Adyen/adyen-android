@@ -14,9 +14,9 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.ideal.IdealComponent
 import com.adyen.checkout.ideal.IdealComponentState
 import com.adyen.checkout.ideal.IdealConfiguration

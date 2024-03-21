@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.sessions.core
 
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
@@ -52,13 +52,13 @@ data class SessionSetupResponse(
                         PAYMENT_METHODS,
                         ModelUtils.serializeOpt(
                             modelObject.paymentMethodsApiResponse,
-                            PaymentMethodsApiResponse.SERIALIZER
-                        )
+                            PaymentMethodsApiResponse.SERIALIZER,
+                        ),
                     )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
                     jsonObject.putOpt(
                         CONFIGURATION,
-                        ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER)
+                        ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER),
                     )
                     jsonObject.putOpt(SHOPPER_LOCALE, modelObject.shopperLocale)
                 } catch (e: JSONException) {
@@ -76,12 +76,12 @@ data class SessionSetupResponse(
                         expiresAt = jsonObject.optString(EXPIRES_AT),
                         paymentMethodsApiResponse = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
-                            PaymentMethodsApiResponse.SERIALIZER
+                            PaymentMethodsApiResponse.SERIALIZER,
                         ),
                         returnUrl = jsonObject.optString(RETURN_URL),
                         configuration = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(CONFIGURATION),
-                            SessionSetupConfiguration.SERIALIZER
+                            SessionSetupConfiguration.SERIALIZER,
                         ),
                         shopperLocale = jsonObject.optString(SHOPPER_LOCALE),
                     )

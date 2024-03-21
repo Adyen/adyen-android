@@ -10,15 +10,15 @@ package com.adyen.checkout.onlinebankingcore.internal.ui
 
 import android.content.Context
 import app.cash.turbine.test
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingComponentState

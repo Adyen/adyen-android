@@ -43,6 +43,9 @@ dependencies {
     //Tests
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
+    testImplementation testLibraries.mockito
+    testImplementation testLibraries.kotlinCoroutines
+
     androidTestImplementation testLibraries.androidTest
     androidTestImplementation testLibraries.espresso
 }

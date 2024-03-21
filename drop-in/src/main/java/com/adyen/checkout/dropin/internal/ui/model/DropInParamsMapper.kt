@@ -9,8 +9,8 @@
 package com.adyen.checkout.dropin.internal.ui.model
 
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.dropin.DropInConfiguration
 import com.adyen.checkout.dropin.getDropInConfiguration
 import java.util.Locale

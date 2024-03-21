@@ -11,7 +11,7 @@ package com.adyen.checkout.cashapppay.internal.ui.model
 import com.adyen.checkout.cashapppay.CashAppPayEnvironment
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 
 internal data class CashAppPayComponentParams(
     private val commonComponentParams: CommonComponentParams,

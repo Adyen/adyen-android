@@ -11,9 +11,9 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig

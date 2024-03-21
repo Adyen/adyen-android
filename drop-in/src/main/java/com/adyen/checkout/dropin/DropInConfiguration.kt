@@ -19,13 +19,13 @@ import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.conveniencestoresjp.ConvenienceStoresJPConfiguration
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dotpay.DotpayConfiguration
 import com.adyen.checkout.dropin.DropInConfiguration.Builder

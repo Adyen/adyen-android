@@ -1,6 +1,6 @@
 package com.adyen.checkout.giftcard.internal.util
 
-import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.core.Amount
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

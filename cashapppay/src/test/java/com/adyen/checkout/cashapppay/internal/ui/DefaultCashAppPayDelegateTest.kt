@@ -28,18 +28,18 @@ import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOnFileData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOneTimeData
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayOutputData
-import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
+import com.adyen.checkout.core.Amount
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -529,8 +529,14 @@ internal class DefaultCashAppPayDelegateTest(
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
-            arguments(Amount("EUR", 100), Amount("EUR", 100)),
-            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("EUR", 100),
+            ),
+            arguments(
+                Amount("USD", 0),
+                Amount("USD", 0),
+            ),
             arguments(null, null),
             arguments(null, null),
         )

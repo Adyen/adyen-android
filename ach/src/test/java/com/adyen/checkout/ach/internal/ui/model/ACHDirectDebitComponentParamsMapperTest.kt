@@ -11,18 +11,18 @@ package com.adyen.checkout.ach.internal.ui.model
 import com.adyen.checkout.ach.ACHDirectDebitAddressConfiguration
 import com.adyen.checkout.ach.ACHDirectDebitConfiguration
 import com.adyen.checkout.ach.achDirectDebit
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.Amount
+import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.AnalyticsLevel
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -369,9 +369,24 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, dropInValue, sessionsValue, expectedValue
-            arguments(Amount("EUR", 100), Amount("USD", 200), Amount("CAD", 300), Amount("CAD", 300)),
-            arguments(Amount("EUR", 100), Amount("USD", 200), null, Amount("USD", 200)),
-            arguments(Amount("EUR", 100), null, null, Amount("EUR", 100)),
+            arguments(
+                Amount("EUR", 100),
+                Amount("USD", 200),
+                Amount("CAD", 300),
+                Amount("CAD", 300),
+            ),
+            arguments(
+                Amount("EUR", 100),
+                Amount("USD", 200),
+                null,
+                Amount("USD", 200),
+            ),
+            arguments(
+                Amount("EUR", 100),
+                null,
+                null,
+                Amount("EUR", 100),
+            ),
         )
 
         @JvmStatic

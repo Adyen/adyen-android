@@ -9,7 +9,7 @@
 package com.adyen.checkout.components.core.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
