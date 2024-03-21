@@ -80,6 +80,7 @@ constructor(
 
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             pdfOpener = PdfOpener(),
             imageSaver = ImageSaver(),
@@ -131,7 +132,7 @@ constructor(
             PaymentMethodTypes.ECONTEXT_ONLINE,
             PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
             PaymentMethodTypes.ECONTEXT_STORES,
-            PaymentMethodTypes.MULTIBANCO
+            PaymentMethodTypes.MULTIBANCO,
         )
     }
 }

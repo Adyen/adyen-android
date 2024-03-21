@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -71,11 +72,12 @@ internal class DefaultVoucherDelegateTest(
             voucher()
         }
         delegate = DefaultVoucherDelegate(
-            observerRepository,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = observerRepository,
+            savedStateHandle = SavedStateHandle(),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            pdfOpener,
-            imageSaver,
+            pdfOpener = pdfOpener,
+            imageSaver = imageSaver,
         )
     }
 

@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -40,8 +41,10 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@Suppress("TooManyFunctions")
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
+    private val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
     private val imageSaver: ImageSaver,
@@ -69,6 +72,14 @@ internal class DefaultVoucherDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        val action: Action? = savedStateHandle[ACTION_KEY]
+        if (action != null) {
+            handleAction(action)
+        }
     }
 
     override fun observe(
@@ -91,6 +102,11 @@ internal class DefaultVoucherDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
+        savedStateHandle[ACTION_KEY] = action
+        handleAction(action)
+    }
+
+    private fun handleAction(action: Action) {
         if (action !is VoucherAction) {
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
@@ -190,5 +206,6 @@ internal class DefaultVoucherDelegate(
 
     companion object {
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
+        private const val ACTION_KEY = "ACTION_KEY"
     }
 }

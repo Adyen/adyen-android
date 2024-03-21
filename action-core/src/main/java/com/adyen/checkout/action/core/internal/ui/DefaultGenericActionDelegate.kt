@@ -9,6 +9,7 @@
 package com.adyen.checkout.action.core.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
@@ -51,6 +52,7 @@ internal class DefaultGenericActionDelegate(
     private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
+    private val application: Application,
 ) : GenericActionDelegate {
 
     private var _delegate: ActionDelegate? = null
@@ -76,6 +78,15 @@ internal class DefaultGenericActionDelegate(
     override fun initialize(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: Action? = savedStateHandle[ACTION_KEY]
+        if (_delegate == null && action != null) {
+            createDelegateAndObserve(action)
+        }
     }
 
     override fun observe(
@@ -101,6 +112,8 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
+        savedStateHandle[ACTION_KEY] = action
+
         // This check is to support an older flow where you might need to call handleAction several times with 3DS2.
         // Initially handleAction is called with a fingerprint action then with a challenge action.
         // During this whole flow the same transaction instance should be used for both fingerprint and challenge.
@@ -108,28 +121,36 @@ internal class DefaultGenericActionDelegate(
         if (isOld3DS2Flow(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Continuing the handling of 3ds2 challenge with old flow." }
         } else {
-            val delegate = actionDelegateProvider.getDelegate(
-                action = action,
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = activity.application,
-            )
-            this._delegate = delegate
-            adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
-
-            if (delegate is RedirectableDelegate) {
-                onRedirectListener?.let { delegate.setOnRedirectListener(it) }
-            }
-
-            delegate.initialize(coroutineScope)
-
-            observeDetails(delegate)
-            observeExceptions(delegate)
-            observePermissionRequests(delegate)
-            observeViewFlow(delegate)
+            createDelegateAndObserve(action)
         }
 
         delegate.handleAction(action, activity)
+    }
+
+    private fun createDelegateAndObserve(action: Action) {
+        val delegate = actionDelegateProvider.getDelegate(
+            action = action,
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+            application = application,
+        )
+        _delegate = delegate
+        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
+
+        if (delegate is RedirectableDelegate) {
+            onRedirectListener?.let { delegate.setOnRedirectListener(it) }
+        }
+
+        delegate.initialize(coroutineScope)
+
+        observeDelegate(delegate)
+    }
+
+    private fun observeDelegate(delegate: ActionDelegate) {
+        observeDetails(delegate)
+        observeExceptions(delegate)
+        observePermissionRequests(delegate)
+        observeViewFlow(delegate)
     }
 
     private fun isOld3DS2Flow(action: Action): Boolean {
@@ -206,5 +227,9 @@ internal class DefaultGenericActionDelegate(
         _delegate = null
         _coroutineScope = null
         onRedirectListener = null
+    }
+
+    companion object {
+        private const val ACTION_KEY = "ACTION_KEY"
     }
 }

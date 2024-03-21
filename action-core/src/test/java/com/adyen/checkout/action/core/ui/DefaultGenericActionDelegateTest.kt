@@ -70,6 +70,7 @@ internal class DefaultGenericActionDelegateTest(
             GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
             actionDelegateProvider,
+            Application(),
         )
         whenever(activity.application) doReturn Application()
 
@@ -230,6 +231,20 @@ internal class DefaultGenericActionDelegateTest(
 
         assertEquals(adyen3DS2Delegate, genericActionDelegate.delegate)
         assertTrue(adyen3DS2Delegate.handleActionCalled)
+    }
+
+    @Test
+    fun `when process died during handling action, then handleIntent should restore state and continue`() {
+        // Create genericActionDelegate and handle action
+        genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        genericActionDelegate.handleAction(Threeds2FingerprintAction(), activity)
+        // Simulate destroying and recreating genericActionDelegate
+        genericActionDelegate.onCleared()
+        genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        genericActionDelegate.handleIntent(Intent())
+
+        assertTrue(testDelegate.handleIntentCalled)
     }
 
     companion object {

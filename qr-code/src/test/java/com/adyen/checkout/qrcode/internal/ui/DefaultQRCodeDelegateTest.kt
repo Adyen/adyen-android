@@ -598,6 +598,7 @@ internal class DefaultQRCodeDelegateTest(
         imageSaver: ImageSaver = mock(),
     ) = DefaultQRCodeDelegate(
         observerRepository = observerRepository,
+        savedStateHandle = SavedStateHandle(),
         componentParams = componentParams,
         statusRepository = statusRepository,
         statusCountDownTimer = statusCountDownTimer,
