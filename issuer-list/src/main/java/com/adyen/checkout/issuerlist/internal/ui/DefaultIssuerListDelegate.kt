@@ -135,6 +135,13 @@ internal class DefaultIssuerListDelegate<
         _outputDataFlow.tryEmit(outputData)
 
         updateComponentState(outputData)
+
+        val event = GenericEvents.selected(
+            component = paymentMethod.type.orEmpty(),
+            target = ANALYTICS_TARGET,
+            issuer = outputData.selectedIssuer?.name.orEmpty(),
+        )
+        analyticsManager.trackEvent(event)
     }
 
     private fun createOutputData() = IssuerListOutputData(inputData.selectedIssuer)
@@ -178,5 +185,10 @@ internal class DefaultIssuerListDelegate<
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
+    }
+
+    companion object {
+        @VisibleForTesting
+        internal const val ANALYTICS_TARGET = "list"
     }
 }
