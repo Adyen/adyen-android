@@ -316,6 +316,20 @@ internal class DefaultIssuerListDelegateTest(
         }
 
         @Test
+        fun `when updateInputData is called, then selected event is tracked`() {
+            delegate.updateInputData {
+                selectedIssuer = IssuerModel(id = "id", name = "test", environment = Environment.TEST)
+            }
+
+            val expectedEvent = GenericEvents.selected(
+                component = PaymentMethodTypes.IDEAL,
+                target = DefaultIssuerListDelegate.ANALYTICS_TARGET,
+                issuer = "test",
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
