@@ -271,8 +271,6 @@ internal class DefaultMBWayDelegateTest(
 
         @Test
         fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
             delegate.onSubmit()
 
             val expectedEvent = GenericEvents.submit(PaymentMethodTypes.MB_WAY)
