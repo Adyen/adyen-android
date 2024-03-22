@@ -13,8 +13,10 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -44,24 +46,21 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultIssuerListDelegateTest(
-    @Mock private val analyticsManager: AnalyticsManager,
     @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultIssuerListDelegate<TestIssuerPaymentMethod, TestIssuerComponentState>
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         delegate = createIssuerListDelegate()
     }
 
@@ -294,12 +293,31 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsManager).initialize(eq(delegate), any())
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.IDEAL)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(PaymentMethodTypes.IDEAL)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -315,7 +333,8 @@ internal class DefaultIssuerListDelegateTest(
         @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
-            verify(analyticsManager).clear(eq(delegate))
+
+            analyticsManager.assertIsCleared()
         }
     }
 
@@ -331,7 +350,7 @@ internal class DefaultIssuerListDelegateTest(
             componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
             hideIssuerLogosDefaultValue = false,
         ),
-        paymentMethod = PaymentMethod(),
+        paymentMethod = PaymentMethod(type = PaymentMethodTypes.IDEAL),
         order = TEST_ORDER,
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
