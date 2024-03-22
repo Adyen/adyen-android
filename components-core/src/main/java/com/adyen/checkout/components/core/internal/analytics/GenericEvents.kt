@@ -18,8 +18,7 @@ object GenericEvents {
     // Info events
     fun rendered(
         component: String,
-        // Check if this should be null or false by default
-        isStoredPaymentMethod: Boolean,
+        isStoredPaymentMethod: Boolean? = null,
         brand: String? = null,
     ) = AnalyticsEvent.Info(
         component = component,
