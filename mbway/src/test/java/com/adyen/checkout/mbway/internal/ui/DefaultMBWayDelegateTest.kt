@@ -255,21 +255,22 @@ internal class DefaultMBWayDelegateTest(
     inner class AnalyticsTest {
 
         @Test
-        fun `when delegate is initialized then analytics manager is initialized`() = runTest {
+        fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
             analyticsManager.assertIsInitialized()
         }
 
         @Test
-        fun `when delegate is initialized, then render event is tracked`() = runTest {
+        fun `when delegate is initialized, then render event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.MB_WAY, false)
+            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.MB_WAY)
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() = runTest {
+        fun `when onSubmit is called, then submit event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.onSubmit()
@@ -297,6 +298,7 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
+
             analyticsManager.assertIsCleared()
         }
     }

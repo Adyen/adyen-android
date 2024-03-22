@@ -78,10 +78,7 @@ internal class DefaultMBWayDelegate(
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
 
-        val event = GenericEvents.rendered(
-            component = paymentMethod.type.orEmpty(),
-            isStoredPaymentMethod = false,
-        )
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
     }
 
