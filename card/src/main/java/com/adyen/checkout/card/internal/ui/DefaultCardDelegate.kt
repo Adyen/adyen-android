@@ -45,6 +45,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -174,6 +175,9 @@ class DefaultCardDelegate(
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
@@ -476,6 +480,9 @@ class DefaultCardDelegate(
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state = state)
+
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun startAddressLookup() {
