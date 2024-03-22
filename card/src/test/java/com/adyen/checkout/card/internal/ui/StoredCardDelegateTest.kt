@@ -36,6 +36,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -70,28 +72,25 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
-    @Mock private val analyticsManager: AnalyticsManager,
     @Mock private val submitHandler: SubmitHandler<CardComponentState>
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
     private lateinit var publicKeyRepository: TestPublicKeyRepository
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: StoredCardDelegate
 
     @BeforeEach
     fun before() {
         cardEncryptor = TestCardEncryptor()
         publicKeyRepository = TestPublicKeyRepository()
+        analyticsManager = TestAnalyticsManager()
         delegate = createCardDelegate()
     }
 
@@ -428,12 +427,31 @@ internal class StoredCardDelegateTest(
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsManager).initialize(eq(delegate), any())
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.SCHEME, isStoredPaymentMethod = true)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(PaymentMethodTypes.SCHEME)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -449,7 +467,8 @@ internal class StoredCardDelegateTest(
         @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
-            verify(analyticsManager).clear(eq(delegate))
+
+            analyticsManager.assertIsCleared()
         }
     }
 
