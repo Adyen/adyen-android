@@ -47,11 +47,12 @@
     <string name="checkout_address_form_province_territory_hint_optional">Provincie nebo teritorium</string>
     <string name="checkout_address_form_city_town_hint_optional">Město (nepovinné)</string>
 
-    <string name="checkout_address_lookup_hint">Vyhledat vaši adresu</string>
-    <string name="checkout_address_lookup_initial">Nedaří se vám vyhledat vaši adresu?</string>
+    <string name="checkout_address_lookup_hint">Vyhledat svou adresu</string>
+    <string name="checkout_address_lookup_initial">Nemůžete najít svou adresu?</string>
     <string name="checkout_address_lookup_initial_description">Vždy můžete #zadat svou adresu ručně#</string>
     <string name="checkout_address_lookup_empty">Nebyly nalezeny žádné výsledky</string>
     <string name="checkout_address_lookup_empty_description">„%s“ se s ničím neshoduje, zkuste to znovu nebo použijte #ruční zadání adresy#</string>
     <string name="checkout_address_lookup_enter_manually">Zadejte adresu ručně</string>
+    <string name="checkout_address_lookup_submit">Použijte tuto adresu</string>
 
 </resources>

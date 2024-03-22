@@ -47,11 +47,12 @@
     <string name="checkout_address_form_province_territory_hint_optional">Provins eller territorium (valgfrit)</string>
     <string name="checkout_address_form_city_town_hint_optional">By (valgfrit)</string>
 
-    <string name="checkout_address_lookup_hint">Søg på din adresse</string>
-    <string name="checkout_address_lookup_initial">Kan du ikke søge på din adresse?</string>
+    <string name="checkout_address_lookup_hint">Søg efter din adresse</string>
+    <string name="checkout_address_lookup_initial">Kan du ikke søge efter din adresse?</string>
     <string name="checkout_address_lookup_initial_description">Du kan altid #indtaste din adresse manuelt#</string>
     <string name="checkout_address_lookup_empty">Ingen resultater fundet</string>
     <string name="checkout_address_lookup_empty_description">Fandt ikke noget match for \'%s\'. Prøv igen eller #indtast adresse manuelt#.</string>
     <string name="checkout_address_lookup_enter_manually">Indtast adresse manuelt</string>
+    <string name="checkout_address_lookup_submit">Brug denne adresse</string>
 
 </resources>
