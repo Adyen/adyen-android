@@ -484,7 +484,7 @@ constructor(
         delegate: ACHDirectDebitDelegate,
         componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
     ): ACHDirectDebitComponent {
-        val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+        val genericActionDelegate = GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
             application = application,

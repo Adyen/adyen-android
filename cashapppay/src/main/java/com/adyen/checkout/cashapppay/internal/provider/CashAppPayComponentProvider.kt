@@ -440,7 +440,7 @@ constructor(
         delegate: CashAppPayDelegate,
         componentEventHandler: ComponentEventHandler<CashAppPayComponentState>,
     ): CashAppPayComponent {
-        val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+        val genericActionDelegate = GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
             application = application,
