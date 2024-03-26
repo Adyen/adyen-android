@@ -119,11 +119,12 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             createComponent(
                 delegate = onlineBankingDelegate,
@@ -212,11 +213,12 @@ constructor(
                 componentStateFactory = ::createComponentState,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
                 savedStateHandle = savedStateHandle,
