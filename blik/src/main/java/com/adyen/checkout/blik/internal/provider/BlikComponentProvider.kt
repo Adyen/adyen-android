@@ -126,11 +126,12 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             BlikComponent(
                 blikDelegate = blikDelegate,
@@ -210,11 +211,12 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             BlikComponent(
                 blikDelegate = blikDelegate,
@@ -297,11 +299,12 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
                 savedStateHandle = savedStateHandle,
@@ -403,11 +406,12 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
                 savedStateHandle = savedStateHandle,

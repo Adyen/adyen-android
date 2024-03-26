@@ -140,11 +140,12 @@ constructor(
                 ),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             BcmcComponent(
                 cardDelegate = cardDelegate,
@@ -244,11 +245,12 @@ constructor(
                 ),
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
                 savedStateHandle = savedStateHandle,
