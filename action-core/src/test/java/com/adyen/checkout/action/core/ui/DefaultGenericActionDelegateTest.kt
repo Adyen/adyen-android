@@ -23,6 +23,8 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -38,6 +40,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -53,11 +56,14 @@ internal class DefaultGenericActionDelegateTest(
     @Mock private val activity: Activity,
     @Mock private val actionDelegateProvider: ActionDelegateProvider,
 ) {
+
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var genericActionDelegate: DefaultGenericActionDelegate
     private lateinit var testDelegate: TestActionDelegate
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         genericActionDelegate = createDelegate()
         whenever(activity.application) doReturn Application()
 
@@ -220,6 +226,27 @@ internal class DefaultGenericActionDelegateTest(
         assertTrue(adyen3DS2Delegate.handleActionCalled)
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = RedirectAction(
+                paymentMethodType = "redirect",
+                type = "redirect_type",
+            )
+
+            genericActionDelegate.handleAction(action, activity)
+
+            val expectedEvent = GenericEvents.action(
+                component = action.paymentMethodType.orEmpty(),
+                subType = action.type.orEmpty(),
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     @Test
     fun `when process died during handling action, then handleIntent should restore state and continue`() {
         val savedStateHandle = SavedStateHandle().apply {
@@ -243,13 +270,14 @@ internal class DefaultGenericActionDelegateTest(
         )
 
         return DefaultGenericActionDelegate(
-            ActionObserverRepository(),
-            savedStateHandle,
-            configuration,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            checkoutConfiguration = configuration,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            actionDelegateProvider,
-            Application(),
+            actionDelegateProvider = actionDelegateProvider,
+            analyticsManager = analyticsManager,
+            application = Application(),
         )
     }
 
