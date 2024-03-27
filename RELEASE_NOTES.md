@@ -10,3 +10,4 @@
 
 ## Fixed
 - Localization issues in address lookup functionality.
+- Overriding some of the XML styles without specifying a parent style no longer causes a build error.

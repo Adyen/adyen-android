@@ -83,6 +83,8 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="AdyenCheckout.DropdownTextInputLayout" />
+
     <style name="AdyenCheckout.DropdownTextInputLayout.Installments" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="android:hint">@string/checkout_card_installments_title</item>
     </style>
@@ -92,6 +94,8 @@
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.Card.AddressLookup" />
 
     <style name="AdyenCheckout.Card.AddressLookup.DropdownTextInputLayout" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="endIconMode">none</item>
