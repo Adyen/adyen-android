@@ -22,6 +22,8 @@ import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -66,7 +68,8 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
-    private val imageSaver: ImageSaver
+    private val imageSaver: ImageSaver,
+    private val analyticsManager: AnalyticsManager?,
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -300,6 +303,12 @@ internal class DefaultQRCodeDelegate(
         val paymentMethodType = outputData.paymentMethodType ?: ""
         val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
         val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
+
+        val event = GenericEvents.download(
+            component = paymentMethodType,
+            target = "qr_download_button"
+        )
+        analyticsManager?.trackEvent(event)
 
         coroutineScope.launch {
             imageSaver.saveImageFromUrl(

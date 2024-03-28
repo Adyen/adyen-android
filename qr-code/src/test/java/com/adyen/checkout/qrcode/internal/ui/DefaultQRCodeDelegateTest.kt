@@ -22,6 +22,8 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
@@ -77,6 +79,7 @@ internal class DefaultQRCodeDelegateTest(
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultQRCodeDelegate
 
     @BeforeEach
@@ -90,6 +93,7 @@ internal class DefaultQRCodeDelegateTest(
         ) {
             qrCode()
         }
+        analyticsManager = TestAnalyticsManager()
         delegate = createDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
@@ -576,6 +580,31 @@ internal class DefaultQRCodeDelegateTest(
         verify(redirectHandler).removeOnRedirectListener()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when downloadQRImage is called, then download event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = PaymentMethodTypes.PIX,
+                    qrCodeData = "qrData",
+                    paymentData = "paymentData",
+                ),
+                mock(),
+            )
+
+            delegate.downloadQRImage(context)
+
+            val expectedEvent = GenericEvents.download(
+                component = PaymentMethodTypes.PIX,
+                target = "qr_download_button",
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createTestAction(
         type: String = "test",
         paymentData: String = "paymentData",
@@ -604,6 +633,7 @@ internal class DefaultQRCodeDelegateTest(
         redirectHandler = redirectHandler,
         paymentDataRepository = paymentDataRepository,
         imageSaver = imageSaver,
+        analyticsManager = analyticsManager,
     )
 
     companion object {
