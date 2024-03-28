@@ -335,6 +335,12 @@ internal class DefaultQRCodeDelegate(
         val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
         val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
 
+        val event = GenericEvents.download(
+            component = paymentMethodType,
+            target = ANALYTICS_TARGET_QR_BUTTON
+        )
+        analyticsManager?.trackEvent(event)
+
         coroutineScope.launch {
             imageSaver.saveImageFromUrl(
                 context = context,
@@ -404,6 +410,9 @@ internal class DefaultQRCodeDelegate(
         private val STATUS_POLLING_INTERVAL_MILLIS = 1.seconds.inWholeMilliseconds
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
+
+        @VisibleForTesting
+        internal const val ANALYTICS_TARGET_QR_BUTTON = "qr_download_button"
 
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"

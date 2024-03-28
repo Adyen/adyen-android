@@ -627,11 +627,32 @@ internal class DefaultQRCodeDelegateTest(
                 paymentData = TEST_PAYMENT_DATA,
             )
 
-            delegate.handleAction(action, Activity())
+            delegate.handleAction(action, mock())
 
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when downloadQRImage is called, then download event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = PaymentMethodTypes.PIX,
+                    qrCodeData = TEST_QR_CODE_DATA,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                mock(),
+            )
+
+            delegate.downloadQRImage(context)
+
+            val expectedEvent = GenericEvents.download(
+                component = PaymentMethodTypes.PIX,
+                target = DefaultQRCodeDelegate.ANALYTICS_TARGET_QR_BUTTON,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
@@ -675,5 +696,6 @@ internal class DefaultQRCodeDelegateTest(
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
         private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
         private const val TEST_PAYMENT_DATA = "TEST_PAYMENT_DATA"
+        private const val TEST_QR_CODE_DATA = "TEST_QR_CODE_DATA"
     }
 }
