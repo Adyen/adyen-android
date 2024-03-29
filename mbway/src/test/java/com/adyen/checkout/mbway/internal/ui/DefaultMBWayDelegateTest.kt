@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
@@ -265,7 +264,7 @@ internal class DefaultMBWayDelegateTest(
         fun `when delegate is initialized, then render event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.MB_WAY)
+            val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
@@ -273,7 +272,7 @@ internal class DefaultMBWayDelegateTest(
         fun `when onSubmit is called, then submit event is tracked`() {
             delegate.onSubmit()
 
-            val expectedEvent = GenericEvents.submit(PaymentMethodTypes.MB_WAY)
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
@@ -312,7 +311,7 @@ internal class DefaultMBWayDelegateTest(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultMBWayDelegate(
         observerRepository = PaymentObserverRepository(),
-        paymentMethod = PaymentMethod(type = PaymentMethodTypes.MB_WAY),
+        paymentMethod = PaymentMethod(type = TEST_PAYMENT_METHOD_TYPE),
         order = TEST_ORDER,
         componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
@@ -341,6 +340,7 @@ internal class DefaultMBWayDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun amountSource() = listOf(
