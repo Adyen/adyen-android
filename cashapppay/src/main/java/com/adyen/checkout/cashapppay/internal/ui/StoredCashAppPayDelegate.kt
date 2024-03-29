@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -60,10 +61,19 @@ internal class StoredCashAppPayDelegate(
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(
+            component = paymentMethod.type.orEmpty(),
+            isStoredPaymentMethod = true
+        )
+        analyticsManager.trackEvent(event)
     }
 
     private fun onState(componentState: CashAppPayComponentState) {
         if (componentState.isValid) {
+            val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+            analyticsManager.trackEvent(event)
+
             submitChannel.trySend(componentState)
         }
     }
