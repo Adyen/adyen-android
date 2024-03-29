@@ -35,7 +35,8 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -63,7 +64,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -74,15 +74,16 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultCashAppPayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CashAppPayComponentState>,
-    @Mock private val analyticsManager: AnalyticsManager,
     @Mock private val cashAppPayFactory: CashAppPayFactory,
     @Mock private val cashAppPay: CashAppPay,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultCashAppPayDelegate
 
     @BeforeEach
     fun before() {
+        analyticsManager = TestAnalyticsManager()
         whenever(cashAppPayFactory.createSandbox(any())) doReturn cashAppPay
         whenever(cashAppPayFactory.create(any())) doReturn cashAppPay
         delegate = createDefaultCashAppPayDelegate()
@@ -124,7 +125,7 @@ internal class DefaultCashAppPayDelegateTest(
         val expected = CashAppPayComponentState(
             data = PaymentComponentData(
                 paymentMethod = CashAppPayPaymentMethod(
-                    type = null,
+                    type = TEST_PAYMENT_METHOD_TYPE,
                     checkoutAttemptId = null,
                     grantId = "grantId",
                     onFileGrantId = "grantId",
@@ -450,12 +451,21 @@ internal class DefaultCashAppPayDelegateTest(
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsManager).initialize(eq(delegate), any())
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
             val testFlow = delegate.componentStateFlow.test(testScheduler)
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -471,10 +481,20 @@ internal class DefaultCashAppPayDelegateTest(
         }
 
         @Test
+        fun `when onSubmit is called, then submit event is tracked`() {
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
             delegate.onCleared()
-            verify(analyticsManager).clear(eq(delegate))
+
+            analyticsManager.assertIsCleared()
         }
     }
 
@@ -518,6 +538,7 @@ internal class DefaultCashAppPayDelegateTest(
             clientId = "clientId",
             scopeId = TEST_SCOPE_ID,
         ),
+        type = TEST_PAYMENT_METHOD_TYPE,
     )
 
     companion object {
@@ -525,6 +546,7 @@ internal class DefaultCashAppPayDelegateTest(
         private const val TEST_RETURN_URL = "testReturnUrl"
         private const val TEST_SCOPE_ID = "testScopeId"
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun amountSource() = listOf(

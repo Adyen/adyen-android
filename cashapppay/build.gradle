@@ -52,6 +52,7 @@ dependencies {
     implementation libraries.material
 
     testImplementation project(':test-core')
+    testImplementation testFixtures(project(':components-core'))
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito
