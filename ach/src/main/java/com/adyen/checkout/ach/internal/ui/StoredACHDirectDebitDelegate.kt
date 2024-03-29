@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -96,10 +97,19 @@ internal class StoredACHDirectDebitDelegate(
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(
+            component = storedPaymentMethod.type.orEmpty(),
+            isStoredPaymentMethod = true
+        )
+        analyticsManager.trackEvent(event)
     }
 
     private fun onState(achDirectDebitComponentState: ACHDirectDebitComponentState) {
         if (achDirectDebitComponentState.isValid) {
+            val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
+            analyticsManager.trackEvent(event)
+
             submitChannel.trySend(achDirectDebitComponentState)
         }
     }
@@ -108,6 +118,9 @@ internal class StoredACHDirectDebitDelegate(
         adyenLog(AdyenLogLevel.ERROR) { "updateInputData should not be called in StoredACHDirectDebitDelegate" }
     }
 
+    @Suppress("ForbiddenComment")
+    // TODO: Here we only call this method on initialization. The checkoutAttemptId will only be available if it is
+    //  passed by drop-in. This should be fixed as part of state refactoring.
     private fun createComponentState(): ACHDirectDebitComponentState {
         val paymentMethod = ACHDirectDebitPaymentMethod(
             type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
