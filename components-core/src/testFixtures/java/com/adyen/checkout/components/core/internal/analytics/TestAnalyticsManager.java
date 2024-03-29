@@ -15,6 +15,9 @@ import androidx.annotation.Nullable;
 
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import kotlinx.coroutines.CoroutineScope;
 
 public class TestAnalyticsManager implements AnalyticsManager {
@@ -24,6 +27,8 @@ public class TestAnalyticsManager implements AnalyticsManager {
     private boolean isCleared = false;
 
     private String checkoutAttemptId = null;
+
+    private final List<AnalyticsEvent> events = new ArrayList<>();
 
     private AnalyticsEvent lastEvent = null;
 
@@ -38,17 +43,28 @@ public class TestAnalyticsManager implements AnalyticsManager {
 
     @Override
     public void trackEvent(@NonNull AnalyticsEvent event) {
+        events.add(event);
         lastEvent = event;
     }
 
+    public void assertHasEventEquals(AnalyticsEvent expected) {
+        assertTrue(events.stream().anyMatch(event ->
+            areEventsEqual(expected, event)
+        ));
+    }
+
     public void assertLastEventEquals(AnalyticsEvent expected) {
+        assertTrue(areEventsEqual(expected, lastEvent));
+    }
+
+    private boolean areEventsEqual(AnalyticsEvent expected, AnalyticsEvent actual) {
         ReflectionEquals re = new ReflectionEquals(
             expected,
             // Exclude these field as they are generated at runtime
             "id",
             "timestamp"
         );
-        assertTrue(re.matches(lastEvent));
+        return re.matches(actual);
     }
 
     @Nullable
