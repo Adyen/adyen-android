@@ -309,11 +309,11 @@ internal class StoredCardDelegate(
     }
 
     override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
-
         val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(state)
     }
 
     override fun startAddressLookup() = Unit
