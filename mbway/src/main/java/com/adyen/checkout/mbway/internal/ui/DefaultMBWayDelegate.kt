@@ -161,11 +161,11 @@ internal class DefaultMBWayDelegate(
     override fun getSupportedCountries(): List<CountryInfo> = CountryUtils.getCountries(SUPPORTED_COUNTRIES)
 
     override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
-
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(state)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
