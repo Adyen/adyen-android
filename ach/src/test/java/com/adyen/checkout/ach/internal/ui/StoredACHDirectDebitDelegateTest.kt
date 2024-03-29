@@ -18,6 +18,8 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -36,24 +38,19 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
-internal class StoredACHDirectDebitDelegateTest(
-    @Mock private val analyticsManager: AnalyticsManager,
-) {
+internal class StoredACHDirectDebitDelegateTest {
+
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: ACHDirectDebitDelegate
 
     @BeforeEach
     fun setUp() {
+        analyticsManager = TestAnalyticsManager()
         delegate = createAchDelegate()
     }
 
@@ -98,29 +95,42 @@ internal class StoredACHDirectDebitDelegateTest(
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsManager).initialize(eq(delegate), any())
+
+            analyticsManager.assertIsInitialized()
         }
 
         @Test
-        fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsManager.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate = createAchDelegate()
+            val expectedEvent = GenericEvents.rendered(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                isStoredPaymentMethod = true,
+            )
+            analyticsManager.assertHasEventEquals(expectedEvent)
+        }
 
-            delegate.componentStateFlow.test {
-                assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
-            }
+        @Test
+        fun `when component is initialized with valid data, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
-            verify(analyticsManager).clear(eq(delegate))
+
+            analyticsManager.assertIsCleared()
         }
     }
 
     private fun createAchDelegate(
-        paymentMethod: StoredPaymentMethod = StoredPaymentMethod(id = STORED_ID),
+        paymentMethod: StoredPaymentMethod = StoredPaymentMethod(
+            id = STORED_ID,
+            type = TEST_PAYMENT_METHOD_TYPE,
+        ),
         analyticsManager: AnalyticsManager = this.analyticsManager,
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: OrderRequest? = TEST_ORDER,
@@ -149,8 +159,8 @@ internal class StoredACHDirectDebitDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val STORED_ID = "Stored_id"
-        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private val DEVICE_LOCALE = Locale("nl", "NL")
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun amountSource() = listOf(
