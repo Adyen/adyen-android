@@ -18,7 +18,8 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -37,23 +38,19 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class StoredCashAppPayDelegateTest(
-    @Mock private val analyticsManager: AnalyticsManager,
-) {
+internal class StoredCashAppPayDelegateTest {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: StoredCashAppPayDelegate
 
     @BeforeEach
     fun before() {
+        analyticsManager = TestAnalyticsManager()
         delegate = createStoredCashAppPayDelegate()
     }
 
@@ -121,13 +118,34 @@ internal class StoredCashAppPayDelegateTest(
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            verify(analyticsManager).initialize(eq(delegate), any())
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                isStoredPaymentMethod = true,
+            )
+            analyticsManager.assertHasEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when component is initialized with valid data, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
-            verify(analyticsManager).clear(eq(delegate))
+
+            analyticsManager.assertIsCleared()
         }
     }
 
