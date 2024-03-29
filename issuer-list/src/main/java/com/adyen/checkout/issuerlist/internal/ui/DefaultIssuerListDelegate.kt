@@ -122,11 +122,11 @@ internal class DefaultIssuerListDelegate<
     }
 
     override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
-
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(state)
     }
 
     private fun onInputDataChanged() {
