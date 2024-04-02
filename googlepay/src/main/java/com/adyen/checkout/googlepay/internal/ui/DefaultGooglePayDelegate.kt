@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -70,10 +71,16 @@ internal class DefaultGooglePayDelegate(
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     private fun onState(state: GooglePayComponentState) {
         if (state.isValid) {
+            val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+            analyticsManager.trackEvent(event)
+
             submitChannel.trySend(state)
         }
     }
