@@ -11,3 +11,9 @@
 ## Fixed
 - Localization issues in address lookup functionality.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
+
+## Changed
+- Dependency versions:
+  | Name                                                                                                   | Version                       |
+  |--------------------------------------------------------------------------------------------------------|-------------------------------|
+  | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                    | **8.3.1**                     |
