@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -83,6 +84,12 @@ internal class DefaultInstantPaymentDelegate(
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
+
+        val renderedEvent = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(renderedEvent)
+
+        val submitEvent = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(submitEvent)
     }
 
     override fun observe(
