@@ -13,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -35,9 +36,13 @@ class TestFlow<T> internal constructor(flow: Flow<T>, testScheduler: TestCorouti
 
     val latestValue: T get() = values.last()
 
+    var completionThrowable: Throwable? = null
+        private set
+
     init {
         flow
             .onEach { _values.add(it) }
+            .onCompletion { completionThrowable = it }
             .launchIn(this)
     }
 }
