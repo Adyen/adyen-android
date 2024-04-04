@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -42,6 +43,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 class WeChatPayActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
@@ -92,6 +94,7 @@ constructor(
             iwxApi = iwxApi,
             payRequestGenerator = requestGenerator,
             paymentDataRepository = paymentDataRepository,
+            analyticsManager = analyticsManager,
         )
     }
 
