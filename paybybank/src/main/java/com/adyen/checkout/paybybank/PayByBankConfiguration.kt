@@ -110,7 +110,7 @@ fun CheckoutConfiguration.payByBank(
     return this
 }
 
-fun CheckoutConfiguration.getPayByBankConfiguration(): PayByBankConfiguration? {
+internal fun CheckoutConfiguration.getPayByBankConfiguration(): PayByBankConfiguration? {
     return getConfiguration(PaymentMethodTypes.PAY_BY_BANK)
 }
 

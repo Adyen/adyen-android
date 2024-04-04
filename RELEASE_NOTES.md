@@ -12,6 +12,9 @@
 - Localization issues in address lookup functionality.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
 
+## Removed
+- The functions to get specific configurations from `CheckoutConfiguration` (such as `CheckoutConfiguration.getDropInConfiguration()` or `CheckoutConfiguration.getCardConfiguration()`) are no longer accessible. Pass the `CheckoutConfiguration` object as it is when starting Drop-in or Components.
+
 ## Changed
 - Dependency versions:
   | Name                                                                                                   | Version                       |

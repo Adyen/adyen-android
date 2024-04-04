@@ -130,7 +130,7 @@ fun CheckoutConfiguration.blik(
     return this
 }
 
-fun CheckoutConfiguration.getBlikConfiguration(): BlikConfiguration? {
+internal fun CheckoutConfiguration.getBlikConfiguration(): BlikConfiguration? {
     return getConfiguration(PaymentMethodTypes.BLIK)
 }
 

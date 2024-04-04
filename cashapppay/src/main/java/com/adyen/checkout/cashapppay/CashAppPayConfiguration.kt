@@ -199,7 +199,7 @@ fun CheckoutConfiguration.cashAppPay(
     return this
 }
 
-fun CheckoutConfiguration.getCashAppPayConfiguration(): CashAppPayConfiguration? {
+internal fun CheckoutConfiguration.getCashAppPayConfiguration(): CashAppPayConfiguration? {
     return getConfiguration(PaymentMethodTypes.CASH_APP_PAY)
 }
 

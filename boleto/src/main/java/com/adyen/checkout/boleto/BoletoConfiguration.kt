@@ -145,7 +145,7 @@ fun CheckoutConfiguration.boleto(
     return this
 }
 
-fun CheckoutConfiguration.getBoletoConfiguration(): BoletoConfiguration? {
+internal fun CheckoutConfiguration.getBoletoConfiguration(): BoletoConfiguration? {
     return BoletoComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
         getConfiguration(key)
     }

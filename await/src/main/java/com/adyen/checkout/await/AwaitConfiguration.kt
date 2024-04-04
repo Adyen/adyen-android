@@ -8,6 +8,7 @@
 package com.adyen.checkout.await
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -105,7 +106,8 @@ fun CheckoutConfiguration.await(
     return this
 }
 
-fun CheckoutConfiguration.getAwaitConfiguration(): AwaitConfiguration? {
+@VisibleForTesting
+internal fun CheckoutConfiguration.getAwaitConfiguration(): AwaitConfiguration? {
     return getActionConfiguration(AwaitConfiguration::class.java)
 }
 

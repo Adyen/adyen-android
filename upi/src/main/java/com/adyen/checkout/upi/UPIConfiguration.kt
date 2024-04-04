@@ -132,7 +132,7 @@ fun CheckoutConfiguration.upi(
     return this
 }
 
-fun CheckoutConfiguration.getUPIConfiguration(): UPIConfiguration? {
+internal fun CheckoutConfiguration.getUPIConfiguration(): UPIConfiguration? {
     return UPIComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
         getConfiguration(key)
     }

@@ -167,7 +167,7 @@ fun CheckoutConfiguration.achDirectDebit(
     return this
 }
 
-fun CheckoutConfiguration.getACHDirectDebitConfiguration(): ACHDirectDebitConfiguration? {
+internal fun CheckoutConfiguration.getACHDirectDebitConfiguration(): ACHDirectDebitConfiguration? {
     return getConfiguration(PaymentMethodTypes.ACH)
 }
 

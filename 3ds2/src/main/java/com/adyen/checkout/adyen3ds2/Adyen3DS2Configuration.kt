@@ -141,7 +141,7 @@ fun CheckoutConfiguration.adyen3DS2(
     return this
 }
 
-fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
+internal fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
     return getActionConfiguration(Adyen3DS2Configuration::class.java)
 }
 

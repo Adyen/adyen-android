@@ -105,7 +105,7 @@ fun CheckoutConfiguration.weChatPayAction(
     return this
 }
 
-fun CheckoutConfiguration.getWeChatPayActionConfiguration(): WeChatPayActionConfiguration? {
+internal fun CheckoutConfiguration.getWeChatPayActionConfiguration(): WeChatPayActionConfiguration? {
     return getActionConfiguration(WeChatPayActionConfiguration::class.java)
 }
 
