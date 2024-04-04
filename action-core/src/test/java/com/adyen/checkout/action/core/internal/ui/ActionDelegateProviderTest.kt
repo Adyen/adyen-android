@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -44,12 +45,18 @@ internal class ActionDelegateProviderTest(
     @Mock private val localeProvider: LocaleProvider
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var actionDelegateProvider: ActionDelegateProvider
 
     @BeforeEach
     fun setup() {
         whenever(localeProvider.getLocale(any())) doReturn Locale.US
-        actionDelegateProvider = ActionDelegateProvider(null, localeProvider)
+        analyticsManager = TestAnalyticsManager()
+        actionDelegateProvider = ActionDelegateProvider(
+            analyticsManager = analyticsManager,
+            dropInOverrideParams = null,
+            localeProvider = localeProvider,
+        )
     }
 
     @ParameterizedTest

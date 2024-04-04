@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.VoucherAction
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.exception.CheckoutException
@@ -30,6 +31,7 @@ import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentProvider
 
 internal class ActionDelegateProvider(
+    private val analyticsManager: AnalyticsManager?,
     private val dropInOverrideParams: DropInOverrideParams?,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) {
