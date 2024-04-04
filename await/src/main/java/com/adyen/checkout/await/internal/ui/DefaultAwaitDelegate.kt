@@ -21,6 +21,8 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -53,6 +55,7 @@ internal class DefaultAwaitDelegate(
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
+    private val analyticsManager: AnalyticsManager?,
 ) : AwaitDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -133,6 +136,13 @@ internal class DefaultAwaitDelegate(
             return
         }
         createOutputData(null, action)
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
+
         startStatusPolling(paymentData, action)
     }
 
