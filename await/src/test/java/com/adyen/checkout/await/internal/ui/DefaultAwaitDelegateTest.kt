@@ -15,6 +15,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -31,6 +33,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import java.io.IOException
@@ -40,12 +43,14 @@ import java.util.Locale
 @ExtendWith(LoggingExtension::class)
 internal class DefaultAwaitDelegateTest {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultAwaitDelegate
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         val configuration = CheckoutConfiguration(
@@ -53,11 +58,12 @@ internal class DefaultAwaitDelegateTest {
             TEST_CLIENT_KEY,
         )
         delegate = DefaultAwaitDelegate(
-            ActionObserverRepository(),
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = ActionObserverRepository(),
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            statusRepository,
-            paymentDataRepository,
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository,
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -70,18 +76,24 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.outputDataFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            delegate.handleAction(
+                AwaitAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
             skipItems(1)
 
             with(awaitItem()) {
                 assertFalse(isValid)
-                assertEquals("test", paymentMethodType)
+                assertEquals(TEST_PAYMENT_METHOD_TYPE, paymentMethodType)
             }
 
             with(awaitItem()) {
                 assertTrue(isValid)
-                assertEquals("test", paymentMethodType)
+                assertEquals(TEST_PAYMENT_METHOD_TYPE, paymentMethodType)
             }
 
             cancelAndIgnoreRemainingEvents()
@@ -96,7 +108,13 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.detailsFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            delegate.handleAction(
+                AwaitAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
             val expectedDetails = JSONObject().apply {
                 put(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY, "testpayload")
@@ -104,7 +122,7 @@ internal class DefaultAwaitDelegateTest {
 
             with(awaitItem()) {
                 assertEquals(expectedDetails.toString(), details.toString())
-                assertEquals("paymentData", paymentData)
+                assertEquals(TEST_PAYMENT_DATA, paymentData)
             }
 
             cancelAndIgnoreRemainingEvents()
@@ -118,7 +136,13 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            delegate.handleAction(
+                AwaitAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
             assertEquals(error, awaitItem().cause)
 
@@ -134,7 +158,13 @@ internal class DefaultAwaitDelegateTest {
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
         delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            delegate.handleAction(
+                AwaitAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
             assertTrue(awaitItem() is ComponentException)
 
@@ -142,7 +172,32 @@ internal class DefaultAwaitDelegateTest {
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = AwaitAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_PAYMENT_DATA = "TEST_PAYMENT_DATA"
     }
 }
