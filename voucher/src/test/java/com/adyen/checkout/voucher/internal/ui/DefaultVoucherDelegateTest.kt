@@ -21,6 +21,8 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -42,6 +44,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -67,10 +70,12 @@ internal class DefaultVoucherDelegateTest(
     @Mock private val imageSaver: ImageSaver,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultVoucherDelegate
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         delegate = createDelegate()
     }
 
@@ -331,6 +336,27 @@ internal class DefaultVoucherDelegateTest(
         verify(observerRepository).removeObservers()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = VoucherAction(
+                paymentMethodType = PaymentMethodTypes.BACS,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, activity)
+
+            val expectedEvent = GenericEvents.action(
+                component = PaymentMethodTypes.BACS,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createDelegate(
         savedStateHandle: SavedStateHandle = SavedStateHandle()
     ): DefaultVoucherDelegate {
@@ -345,6 +371,7 @@ internal class DefaultVoucherDelegateTest(
                 .mapToParams(configuration, Locale.US, null, null),
             pdfOpener = pdfOpener,
             imageSaver = imageSaver,
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -361,6 +388,7 @@ internal class DefaultVoucherDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun viewTypeSource() = listOf(

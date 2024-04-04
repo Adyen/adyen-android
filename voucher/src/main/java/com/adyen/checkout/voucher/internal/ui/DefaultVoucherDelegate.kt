@@ -21,6 +21,8 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -53,6 +55,7 @@ internal class DefaultVoucherDelegate(
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
     private val imageSaver: ImageSaver,
+    private val analyticsManager: AnalyticsManager?,
 ) : VoucherDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -126,6 +129,12 @@ internal class DefaultVoucherDelegate(
             emitError(ComponentException("Payment method ${action.paymentMethodType} not supported for this action"))
             return
         }
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         _viewFlow.tryEmit(config.viewType)
 

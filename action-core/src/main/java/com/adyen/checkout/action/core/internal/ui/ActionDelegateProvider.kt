@@ -50,9 +50,8 @@ internal class ActionDelegateProvider(
             is QrCodeAction -> QRCodeComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is RedirectAction -> RedirectComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is BaseThreeds2Action -> Adyen3DS2ComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
-            is VoucherAction -> VoucherComponentProvider(dropInOverrideParams, localeProvider)
+            is VoucherAction -> VoucherComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is SdkAction<*> -> getSdkActionComponentProvider(action)
-
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
 
@@ -69,6 +68,7 @@ internal class ActionDelegateProvider(
         return when (action.paymentMethodType) {
             PaymentMethodTypes.TWINT -> TwintActionComponentProvider(dropInOverrideParams, localeProvider)
             PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
+                analyticsManager,
                 dropInOverrideParams,
                 localeProvider,
             )
