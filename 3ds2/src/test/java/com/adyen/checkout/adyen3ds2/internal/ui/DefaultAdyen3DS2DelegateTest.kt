@@ -27,6 +27,8 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.JavaBase64Encoder
 import com.adyen.checkout.core.Environment
@@ -74,6 +76,7 @@ internal class DefaultAdyen3DS2DelegateTest(
     @Mock private val threeDS2Service: ThreeDS2Service,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var delegate: DefaultAdyen3DS2Delegate
     private lateinit var paymentDataRepository: PaymentDataRepository
@@ -82,6 +85,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     @BeforeEach
     fun setup() {
+        analyticsManager = TestAnalyticsManager()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
@@ -100,6 +104,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             coroutineDispatcher = UnconfinedTestDispatcher(),
             base64Encoder = base64Encoder,
             application = Application(),
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -538,6 +543,88 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called for Threeds2FingerprintAction, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = Threeds2FingerprintAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                token = base64Encoder.encode(TEST_FINGERPRINT_TOKEN),
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleAction is called for Threeds2ChallengeAction, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = Threeds2ChallengeAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                token = base64Encoder.encode(TEST_FINGERPRINT_TOKEN),
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleAction is called for Threeds2Action and subType is fingerprint, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = Threeds2Action(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                subtype = Threeds2Action.SubType.FINGERPRINT.value,
+                token = base64Encoder.encode(TEST_FINGERPRINT_TOKEN),
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleAction is called for Threeds2Action and subType is challenge, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = Threeds2Action(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                subtype = Threeds2Action.SubType.CHALLENGE.value,
+                token = base64Encoder.encode(TEST_FINGERPRINT_TOKEN),
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private class TestTransaction(
         val authReqParameters: AuthenticationRequestParameters? = null
     ) : Transaction {
@@ -598,6 +685,8 @@ internal class DefaultAdyen3DS2DelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_ACTION_TYPE = "TEST_ACTION_TYPE"
         private val TEST_FINGERPRINT_TOKEN =
             """
             {
