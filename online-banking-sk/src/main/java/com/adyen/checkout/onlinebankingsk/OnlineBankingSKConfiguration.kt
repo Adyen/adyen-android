@@ -112,7 +112,7 @@ fun CheckoutConfiguration.onlineBankingSK(
     return this
 }
 
-fun CheckoutConfiguration.getOnlineBankingSKConfiguration(): OnlineBankingSKConfiguration? {
+internal fun CheckoutConfiguration.getOnlineBankingSKConfiguration(): OnlineBankingSKConfiguration? {
     return getConfiguration(PaymentMethodTypes.ONLINE_BANKING_SK)
 }
 

@@ -116,7 +116,7 @@ fun CheckoutConfiguration.dotpay(
     return this
 }
 
-fun CheckoutConfiguration.getDotpayConfiguration(): DotpayConfiguration? {
+internal fun CheckoutConfiguration.getDotpayConfiguration(): DotpayConfiguration? {
     return getConfiguration(PaymentMethodTypes.DOTPAY)
 }
 

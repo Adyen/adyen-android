@@ -112,7 +112,7 @@ fun CheckoutConfiguration.convenienceStoresJP(
     return this
 }
 
-fun CheckoutConfiguration.getConvenienceStoresJPConfiguration(): ConvenienceStoresJPConfiguration? {
+internal fun CheckoutConfiguration.getConvenienceStoresJPConfiguration(): ConvenienceStoresJPConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_STORES)
 }
 

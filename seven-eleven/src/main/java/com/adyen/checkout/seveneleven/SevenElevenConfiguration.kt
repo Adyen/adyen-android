@@ -112,7 +112,7 @@ fun CheckoutConfiguration.sevenEleven(
     return this
 }
 
-fun CheckoutConfiguration.getSevenElevenConfiguration(): SevenElevenConfiguration? {
+internal fun CheckoutConfiguration.getSevenElevenConfiguration(): SevenElevenConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN)
 }
 

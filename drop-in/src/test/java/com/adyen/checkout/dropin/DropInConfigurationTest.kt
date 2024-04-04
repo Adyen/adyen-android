@@ -1,22 +1,18 @@
 package com.adyen.checkout.dropin
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
-import com.adyen.checkout.googlepay.getGooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
-import com.adyen.checkout.ideal.getIdealConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.redirect.getRedirectConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
-import com.adyen.checkout.wechatpay.getWeChatPayActionConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -129,12 +125,14 @@ internal class DropInConfigurationTest {
             actualDropInConfig?.isRemovingStoredPaymentMethodsEnabled,
         )
         assertEquals(config.overriddenPaymentMethodInformation, actualDropInConfig?.overriddenPaymentMethodInformation)
-        assertNotNull(actual.getCardConfiguration())
-        assertNotNull(actual.getGooglePayConfiguration())
-        assertNotNull(actual.getIdealConfiguration())
-        assertNotNull(actual.getAdyen3DS2Configuration())
-        assertNotNull(actual.getRedirectConfiguration())
-        assertNotNull(actual.getWeChatPayActionConfiguration())
+        assertNotNull(actual.getConfiguration(PaymentMethodTypes.SCHEME))
+        assertNotNull(
+            GooglePayComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key -> actual.getConfiguration(key) },
+        )
+        assertNotNull(actual.getConfiguration(PaymentMethodTypes.IDEAL))
+        assertNotNull(actual.getActionConfiguration(Adyen3DS2Configuration::class.java))
+        assertNotNull(actual.getActionConfiguration(RedirectConfiguration::class.java))
+        assertNotNull(actual.getActionConfiguration(WeChatPayActionConfiguration::class.java))
     }
 
     companion object {

@@ -187,7 +187,7 @@ fun CheckoutConfiguration.bcmc(
     return this
 }
 
-fun CheckoutConfiguration.getBcmcConfiguration(): BcmcConfiguration? {
+internal fun CheckoutConfiguration.getBcmcConfiguration(): BcmcConfiguration? {
     return getConfiguration(PaymentMethodTypes.BCMC)
 }
 

@@ -112,7 +112,7 @@ fun CheckoutConfiguration.onlineBankingCZ(
     return this
 }
 
-fun CheckoutConfiguration.getOnlineBankingCZConfiguration(): OnlineBankingCZConfiguration? {
+internal fun CheckoutConfiguration.getOnlineBankingCZConfiguration(): OnlineBankingCZConfiguration? {
     return getConfiguration(PaymentMethodTypes.ONLINE_BANKING_CZ)
 }
 

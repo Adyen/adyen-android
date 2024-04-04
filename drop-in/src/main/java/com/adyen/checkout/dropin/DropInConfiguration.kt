@@ -475,6 +475,6 @@ fun CheckoutConfiguration.dropIn(
     return this
 }
 
-fun CheckoutConfiguration.getDropInConfiguration(): DropInConfiguration? {
+internal fun CheckoutConfiguration.getDropInConfiguration(): DropInConfiguration? {
     return getConfiguration(DROP_IN_CONFIG_KEY)
 }

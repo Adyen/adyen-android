@@ -112,7 +112,7 @@ fun CheckoutConfiguration.onlineBankingJP(
     return this
 }
 
-fun CheckoutConfiguration.getOnlineBankingJPConfiguration(): OnlineBankingJPConfiguration? {
+internal fun CheckoutConfiguration.getOnlineBankingJPConfiguration(): OnlineBankingJPConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_ONLINE)
 }
 

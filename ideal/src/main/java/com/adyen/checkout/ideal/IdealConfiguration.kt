@@ -116,7 +116,7 @@ fun CheckoutConfiguration.ideal(
     return this
 }
 
-fun CheckoutConfiguration.getIdealConfiguration(): IdealConfiguration? {
+internal fun CheckoutConfiguration.getIdealConfiguration(): IdealConfiguration? {
     return getConfiguration(PaymentMethodTypes.IDEAL)
 }
 

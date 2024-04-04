@@ -119,7 +119,7 @@ fun CheckoutConfiguration.molpay(
     return this
 }
 
-fun CheckoutConfiguration.getMolpayConfiguration(): MolpayConfiguration? {
+internal fun CheckoutConfiguration.getMolpayConfiguration(): MolpayConfiguration? {
     return MolpayComponent.PAYMENT_METHOD_TYPES.firstNotNullOfOrNull { key ->
         getConfiguration(key)
     }

@@ -146,7 +146,7 @@ fun CheckoutConfiguration.giftCard(
     return this
 }
 
-fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
+internal fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
     return getConfiguration(PaymentMethodTypes.GIFTCARD)
 }
 

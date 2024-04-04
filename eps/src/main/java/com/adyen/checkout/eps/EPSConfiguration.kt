@@ -127,7 +127,7 @@ fun CheckoutConfiguration.eps(
     return this
 }
 
-fun CheckoutConfiguration.getEPSConfiguration(): EPSConfiguration? {
+internal fun CheckoutConfiguration.getEPSConfiguration(): EPSConfiguration? {
     return getConfiguration(PaymentMethodTypes.EPS)
 }
 

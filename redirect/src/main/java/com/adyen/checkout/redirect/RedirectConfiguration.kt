@@ -105,7 +105,7 @@ fun CheckoutConfiguration.redirect(
     return this
 }
 
-fun CheckoutConfiguration.getRedirectConfiguration(): RedirectConfiguration? {
+internal fun CheckoutConfiguration.getRedirectConfiguration(): RedirectConfiguration? {
     return getActionConfiguration(RedirectConfiguration::class.java)
 }
 
