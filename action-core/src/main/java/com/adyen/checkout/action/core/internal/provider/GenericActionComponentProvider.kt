@@ -94,7 +94,7 @@ constructor(
             savedStateHandle = savedStateHandle,
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams),
+            actionDelegateProvider = ActionDelegateProvider(analyticsManager, dropInOverrideParams),
             analyticsManager = analyticsManager,
         )
     }
