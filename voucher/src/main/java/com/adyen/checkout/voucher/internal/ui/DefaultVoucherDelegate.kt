@@ -17,6 +17,8 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -45,6 +47,7 @@ internal class DefaultVoucherDelegate(
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
     private val imageSaver: ImageSaver,
+    private val analyticsManager: AnalyticsManager?,
 ) : VoucherDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -103,6 +106,12 @@ internal class DefaultVoucherDelegate(
             )
             return
         }
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         _viewFlow.tryEmit(config.viewType)
 

@@ -20,6 +20,8 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -38,6 +40,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -63,19 +66,22 @@ internal class DefaultVoucherDelegateTest(
     @Mock private val imageSaver: ImageSaver,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultVoucherDelegate
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
             voucher()
         }
         delegate = DefaultVoucherDelegate(
-            observerRepository,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = observerRepository,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            pdfOpener,
-            imageSaver,
+            pdfOpener = pdfOpener,
+            imageSaver = imageSaver,
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -305,6 +311,27 @@ internal class DefaultVoucherDelegateTest(
         verify(observerRepository).removeObservers()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = VoucherAction(
+                paymentMethodType = PaymentMethodTypes.BACS,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, activity)
+
+            val expectedEvent = GenericEvents.action(
+                component = PaymentMethodTypes.BACS,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createTestAction(
         type: String = "test",
         paymentData: String = "paymentData",
@@ -318,6 +345,7 @@ internal class DefaultVoucherDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun viewTypeSource() = listOf(
