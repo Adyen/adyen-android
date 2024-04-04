@@ -34,6 +34,8 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -80,6 +82,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val threeDS2Service: ThreeDS2Service,
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
+    private val analyticsManager: AnalyticsManager?,
 ) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -146,6 +149,9 @@ internal class DefaultAdyen3DS2Delegate(
             emitError(ComponentException("Fingerprint token not found."))
             return
         }
+
+        trackFingerprintActionEvent(action)
+
         identifyShopper(
             activity = activity,
             encodedFingerprintToken = action.token.orEmpty(),
@@ -161,6 +167,9 @@ internal class DefaultAdyen3DS2Delegate(
             emitError(ComponentException("Challenge token not found."))
             return
         }
+
+        trackChallengeActionEvent(action)
+
         challengeShopper(activity, action.token.orEmpty())
     }
 
@@ -177,22 +186,31 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
         val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
-        handleActionSubtype(activity, subtype, action.token.orEmpty())
+        handleThreeds2ActionSubtype(action, activity, subtype)
     }
 
-    private fun handleActionSubtype(
+    private fun handleThreeds2ActionSubtype(
+        action: Threeds2Action,
         activity: Activity,
         subtype: Threeds2Action.SubType,
-        token: String,
     ) {
+        val token = action.token.orEmpty()
         when (subtype) {
-            Threeds2Action.SubType.FINGERPRINT -> identifyShopper(
-                activity = activity,
-                encodedFingerprintToken = token,
-                submitFingerprintAutomatically = true,
-            )
+            Threeds2Action.SubType.FINGERPRINT -> {
+                trackFingerprintActionEvent(action)
 
-            Threeds2Action.SubType.CHALLENGE -> challengeShopper(activity, token)
+                identifyShopper(
+                    activity = activity,
+                    encodedFingerprintToken = token,
+                    submitFingerprintAutomatically = true,
+                )
+            }
+
+            Threeds2Action.SubType.CHALLENGE -> {
+                trackChallengeActionEvent(action)
+
+                challengeShopper(activity, token)
+            }
         }
     }
 
@@ -492,6 +510,19 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    private fun trackFingerprintActionEvent(action: Action) = trackActionEvent(action, ANALYTICS_MESSAGE_FINGERPRINT)
+
+    private fun trackChallengeActionEvent(action: Action) = trackActionEvent(action, ANALYTICS_MESSAGE_CHALLENGE)
+
+    private fun trackActionEvent(action: Action, message: String) {
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+            message = message,
+        )
+        analyticsManager?.trackEvent(event)
+    }
+
     private fun closeTransaction() {
         currentTransaction?.close()
         currentTransaction = null
@@ -558,6 +589,12 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
+        @VisibleForTesting
+        internal const val ANALYTICS_MESSAGE_FINGERPRINT = "Fingerprint action was handled by the SDK"
+
+        @VisibleForTesting
+        internal const val ANALYTICS_MESSAGE_CHALLENGE = "Challenge action was handled by the SDK"
+
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 
