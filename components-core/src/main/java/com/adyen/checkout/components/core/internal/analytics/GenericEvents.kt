@@ -119,9 +119,11 @@ object GenericEvents {
     fun action(
         component: String,
         subType: String,
+        message: String? = null
     ) = AnalyticsEvent.Log(
         component = component,
         type = AnalyticsEvent.Log.Type.ACTION,
         subType = subType,
+        message = message,
     )
 }
