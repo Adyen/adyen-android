@@ -47,7 +47,7 @@ internal class ActionDelegateProvider(
             is QrCodeAction -> QRCodeComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is RedirectAction -> RedirectComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is BaseThreeds2Action -> Adyen3DS2ComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
-            is VoucherAction -> VoucherComponentProvider(dropInOverrideParams, localeProvider)
+            is VoucherAction -> VoucherComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is SdkAction<*> -> WeChatPayActionComponentProvider(dropInOverrideParams, localeProvider)
             else -> throw CheckoutException("Can't find delegate for action: ${action.type}")
         }
