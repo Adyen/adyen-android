@@ -22,6 +22,8 @@ import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -66,7 +68,8 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
-    private val imageSaver: ImageSaver
+    private val imageSaver: ImageSaver,
+    private val analyticsManager: AnalyticsManager?,
 ) : QRCodeDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -153,6 +156,12 @@ internal class DefaultQRCodeDelegate(
             exceptionChannel.trySend(ComponentException("Payment data is null"))
             return
         }
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         if (shouldLaunchRedirect(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Action does not require a view, redirecting." }

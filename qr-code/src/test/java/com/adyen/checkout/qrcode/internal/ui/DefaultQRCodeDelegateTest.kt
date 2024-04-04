@@ -22,6 +22,8 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
@@ -76,6 +78,7 @@ internal class DefaultQRCodeDelegateTest(
     @Mock private val imageSaver: ImageSaver
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
@@ -83,6 +86,7 @@ internal class DefaultQRCodeDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -196,7 +200,7 @@ internal class DefaultQRCodeDelegateTest(
                     QrCodeAction(
                         paymentMethodType = PaymentMethodTypes.PIX,
                         qrCodeData = "qrData",
-                        paymentData = "paymentData",
+                        paymentData = TEST_PAYMENT_DATA,
                     ),
                     Activity(),
                 )
@@ -228,7 +232,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.detailsFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -246,7 +250,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.exceptionFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -265,7 +269,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.exceptionFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -283,7 +287,7 @@ internal class DefaultQRCodeDelegateTest(
                 assertNull(awaitItem())
 
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -304,7 +308,7 @@ internal class DefaultQRCodeDelegateTest(
                     QrCodeAction(
                         paymentMethodType = PaymentMethodTypes.PAY_NOW,
                         qrCodeData = "qrData",
-                        paymentData = "paymentData",
+                        paymentData = TEST_PAYMENT_DATA,
                     ),
                     Activity(),
                 )
@@ -334,7 +338,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.detailsFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -353,7 +357,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.exceptionFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -371,7 +375,7 @@ internal class DefaultQRCodeDelegateTest(
 
             delegate.exceptionFlow.test {
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -387,7 +391,7 @@ internal class DefaultQRCodeDelegateTest(
                 assertNull(awaitItem())
 
                 delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
+                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
                     Activity(),
                 )
 
@@ -406,7 +410,13 @@ internal class DefaultQRCodeDelegateTest(
             redirectHandler.exception = error
 
             delegate.exceptionFlow.test {
-                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+                delegate.handleAction(
+                    QrCodeAction(
+                        paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                        paymentData = TEST_PAYMENT_DATA,
+                    ),
+                    Activity(),
+                )
 
                 assertEquals(error, awaitItem())
             }
@@ -415,7 +425,13 @@ internal class DefaultQRCodeDelegateTest(
         @Test
         fun `handleAction is called with valid data, then no error is propagated`() = runTest {
             delegate.exceptionFlow.test {
-                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+                delegate.handleAction(
+                    QrCodeAction(
+                        paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                        paymentData = TEST_PAYMENT_DATA,
+                    ),
+                    Activity(),
+                )
 
                 expectNoEvents()
             }
@@ -436,12 +452,12 @@ internal class DefaultQRCodeDelegateTest(
         @Test
         fun `handleIntent is called with valid data, then the details are emitted`() = runTest {
             delegate.detailsFlow.test {
-                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
+                delegate.handleAction(QrCodeAction(paymentData = TEST_PAYMENT_DATA), Activity())
                 delegate.handleIntent(Intent())
 
                 with(awaitItem()) {
                     assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
-                    assertEquals("paymentData", paymentData)
+                    assertEquals(TEST_PAYMENT_DATA, paymentData)
                 }
             }
         }
@@ -451,7 +467,7 @@ internal class DefaultQRCodeDelegateTest(
             delegate.viewFlow.test {
                 assertNull(awaitItem())
 
-                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
+                delegate.handleAction(QrCodeAction(paymentData = TEST_PAYMENT_DATA), Activity())
 
                 assertEquals(awaitItem(), QrCodeComponentViewType.REDIRECT)
             }
@@ -580,6 +596,28 @@ internal class DefaultQRCodeDelegateTest(
         verify(redirectHandler).removeOnRedirectListener()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = QrCodeAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createTestAction(
         type: String = "test",
         paymentData: String = "paymentData",
@@ -608,9 +646,13 @@ internal class DefaultQRCodeDelegateTest(
         redirectHandler = redirectHandler,
         paymentDataRepository = paymentDataRepository,
         imageSaver = imageSaver,
+        analyticsManager = analyticsManager,
     )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_PAYMENT_DATA = "TEST_PAYMENT_DATA"
     }
 }
