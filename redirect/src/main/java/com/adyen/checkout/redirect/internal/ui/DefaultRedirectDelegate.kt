@@ -18,6 +18,8 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -46,6 +48,7 @@ internal class DefaultRedirectDelegate(
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
+    private val analyticsManager: AnalyticsManager?,
 ) : RedirectDelegate {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -87,6 +90,12 @@ internal class DefaultRedirectDelegate(
             exceptionChannel.trySend(ComponentException("Unsupported action"))
             return
         }
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         when (action.type) {
             ActionTypes.NATIVE_REDIRECT -> {
