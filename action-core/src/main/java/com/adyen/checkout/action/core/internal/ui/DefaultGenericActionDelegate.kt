@@ -20,8 +20,6 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
-import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
-import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -53,7 +51,6 @@ internal class DefaultGenericActionDelegate(
     private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
-    private val analyticsManager: AnalyticsManager?,
 ) : GenericActionDelegate {
 
     private var _delegate: ActionDelegate? = null
@@ -131,12 +128,6 @@ internal class DefaultGenericActionDelegate(
             observePermissionRequests(delegate)
             observeViewFlow(delegate)
         }
-
-        val event = GenericEvents.action(
-            component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
-        )
-        analyticsManager?.trackEvent(event)
 
         delegate.handleAction(action, activity)
     }
