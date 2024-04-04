@@ -95,7 +95,6 @@ constructor(
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
             actionDelegateProvider = ActionDelegateProvider(analyticsManager, dropInOverrideParams),
-            analyticsManager = analyticsManager,
         )
     }
 
