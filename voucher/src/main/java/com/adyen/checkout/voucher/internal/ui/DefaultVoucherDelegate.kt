@@ -18,12 +18,16 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -44,11 +48,11 @@ import java.util.Calendar
 @Suppress("TooManyFunctions")
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
     private val imageSaver: ImageSaver,
-) : VoucherDelegate {
+) : VoucherDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<VoucherOutputData> = _outputDataFlow
@@ -70,13 +74,16 @@ internal class DefaultVoucherDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
         restoreState()
     }
 
     private fun restoreState() {
-        val action: Action? = savedStateHandle[ACTION_KEY]
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: Action? = action
         if (action != null) {
             handleAction(action)
         }
@@ -102,7 +109,7 @@ internal class DefaultVoucherDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        savedStateHandle[ACTION_KEY] = action
+        this.action = action
         handleAction(action)
     }
 

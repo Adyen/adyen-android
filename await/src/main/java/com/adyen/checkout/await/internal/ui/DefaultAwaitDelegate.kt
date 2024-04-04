@@ -19,6 +19,8 @@ import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -47,11 +49,11 @@ import java.util.concurrent.TimeUnit
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
-) : AwaitDelegate {
+) : AwaitDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<AwaitOutputData> = _outputDataFlow
@@ -74,13 +76,16 @@ internal class DefaultAwaitDelegate(
 
     private var statusPollingJob: Job? = null
 
+    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
         restoreState()
     }
 
     private fun restoreState() {
-        val action: Action? = savedStateHandle[ACTION_KEY]
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: Action? = action
         if (action != null) {
             handleAction(action)
         }
@@ -109,7 +114,7 @@ internal class DefaultAwaitDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        savedStateHandle[ACTION_KEY] = action
+        this.action = action
         handleAction(action)
     }
 

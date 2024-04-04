@@ -21,6 +21,8 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -48,12 +50,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
     private val application: Application,
-) : GenericActionDelegate {
+) : GenericActionDelegate, SavedStateHandleContainer {
 
     private var _delegate: ActionDelegate? = null
     override val delegate: ActionDelegate get() = requireNotNull(_delegate)
@@ -75,6 +77,8 @@ internal class DefaultGenericActionDelegate(
 
     private var onRedirectListener: (() -> Unit)? = null
 
+    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
         _coroutineScope = coroutineScope
@@ -83,7 +87,7 @@ internal class DefaultGenericActionDelegate(
 
     private fun restoreState() {
         adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        val action: Action? = savedStateHandle[ACTION_KEY]
+        val action: Action? = action
         if (_delegate == null && action != null) {
             createDelegateAndObserve(action)
         }
@@ -112,7 +116,7 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        savedStateHandle[ACTION_KEY] = action
+        this.action = action
 
         // This check is to support an older flow where you might need to call handleAction several times with 3DS2.
         // Initially handleAction is called with a fingerprint action then with a challenge action.

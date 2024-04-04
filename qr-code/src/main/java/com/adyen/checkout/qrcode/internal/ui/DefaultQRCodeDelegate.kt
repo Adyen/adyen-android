@@ -23,6 +23,8 @@ import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -62,14 +64,14 @@ import kotlin.time.Duration.Companion.seconds
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultQRCodeDelegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
     private val imageSaver: ImageSaver
-) : QRCodeDelegate {
+) : QRCodeDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<QRCodeOutputData> = _outputDataFlow
@@ -101,6 +103,8 @@ internal class DefaultQRCodeDelegate(
 
     private var maxPollingDurationMillis = DEFAULT_MAX_POLLING_DURATION
 
+    private var action: QrCodeAction? by SavedStateHandleProperty(ACTION_KEY)
+
     private fun attachStatusTimer() {
         statusCountDownTimer.attach(
             millisInFuture = maxPollingDurationMillis,
@@ -121,7 +125,8 @@ internal class DefaultQRCodeDelegate(
     }
 
     private fun restoreState() {
-        val action: QrCodeAction? = savedStateHandle[ACTION_KEY]
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: QrCodeAction? = action
         if (action != null) {
             handleAction(action)
         }
@@ -156,7 +161,7 @@ internal class DefaultQRCodeDelegate(
             return
         }
 
-        savedStateHandle[ACTION_KEY] = action
+        this.action = action
         paymentDataRepository.paymentData = action.paymentData
 
         if (shouldLaunchRedirect(action)) {
