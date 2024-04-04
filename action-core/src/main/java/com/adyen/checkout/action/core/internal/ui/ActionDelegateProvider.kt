@@ -45,7 +45,7 @@ internal class ActionDelegateProvider(
         val provider = when (action) {
             is AwaitAction -> AwaitComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is QrCodeAction -> QRCodeComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
-            is RedirectAction -> RedirectComponentProvider(dropInOverrideParams, localeProvider)
+            is RedirectAction -> RedirectComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is BaseThreeds2Action -> Adyen3DS2ComponentProvider(analyticsManager, dropInOverrideParams, localeProvider)
             is VoucherAction -> VoucherComponentProvider(dropInOverrideParams, localeProvider)
             is SdkAction<*> -> WeChatPayActionComponentProvider(dropInOverrideParams, localeProvider)
