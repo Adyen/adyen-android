@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">分期付款期数</string>
     <string name="checkout_card_installments_option_regular">%s 个月</string>
-    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">全款支付</string>
     <string name="checkout_card_installments_option_revolving">循环支付</string>
 

@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">Liczba rat</string>
     <string name="checkout_card_installments_option_regular">%s miesięcy</string>
-    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">Płatność jednorazowa</string>
     <string name="checkout_card_installments_option_revolving">Płatność odnawialna</string>
 

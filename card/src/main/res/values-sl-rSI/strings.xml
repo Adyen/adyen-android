@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">Število obrokov</string>
     <string name="checkout_card_installments_option_regular">Št. mesecev: %s</string>
-    <string name="checkout_card_installments_option_regular_with_price">%s × %s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$s × %2$s</string>
     <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>
     <string name="checkout_card_installments_option_revolving">Revolving plačilo</string>
 

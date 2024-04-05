@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">Numero di rate</string>
     <string name="checkout_card_installments_option_regular">%s mesi</string>
-    <string name="checkout_card_installments_option_regular_with_price">%s x%s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%2$s x%1$s</string>
     <string name="checkout_card_installments_option_one_time">Pagamento una tantum</string>
     <string name="checkout_card_installments_option_revolving">Pagamento ricorrente</string>
 
