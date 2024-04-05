@@ -83,7 +83,6 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="AdyenCheckout.DropdownTextInputLayout" />
 
     <style name="AdyenCheckout.DropdownTextInputLayout.Installments" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="android:hint">@string/checkout_card_installments_title</item>
