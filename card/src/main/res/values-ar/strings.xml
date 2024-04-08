@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">عدد الأقساط</string>
     <string name="checkout_card_installments_option_regular">%s أشهر</string>
-    <string name="checkout_card_installments_option_regular_with_price">%s × %s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$s × %2$s</string>
     <string name="checkout_card_installments_option_one_time">الدفع مرة واحدة</string>
     <string name="checkout_card_installments_option_revolving">الدفع الدوري</string>
 

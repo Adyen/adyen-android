@@ -12,6 +12,7 @@
 - Localization issues in address lookup functionality.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
 - Not defining `?android:attr/textColor` in your own theme will no longer crash.
+- The build output should no longer contain warnings about multiple substitutions specified in non-positional format in string resources.
 
 ## Removed
 - The functions to get specific configurations from `CheckoutConfiguration` (such as `CheckoutConfiguration.getDropInConfiguration()` or `CheckoutConfiguration.getCardConfiguration()`) are no longer accessible. Pass the `CheckoutConfiguration` object as it is when starting Drop-in or Components.
