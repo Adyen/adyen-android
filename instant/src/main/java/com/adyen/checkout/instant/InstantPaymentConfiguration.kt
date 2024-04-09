@@ -9,6 +9,7 @@
 package com.adyen.checkout.instant
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
@@ -95,7 +96,8 @@ class InstantPaymentConfiguration private constructor(
     }
 }
 
-private const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
 
 fun CheckoutConfiguration.instantPayment(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,

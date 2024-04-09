@@ -35,6 +35,8 @@ import com.adyen.checkout.eps.EPSConfiguration
 import com.adyen.checkout.giftcard.GiftCardConfiguration
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
+import com.adyen.checkout.instant.GLOBAL_INSTANT_CONFIG_KEY
+import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
@@ -45,7 +47,6 @@ import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
-import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.upi.UPIConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
@@ -423,6 +424,18 @@ class DropInConfiguration private constructor(
          */
         fun addGiftCardConfiguration(giftCardConfiguration: GiftCardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.GIFTCARD] = giftCardConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for instant payment methods.
+         */
+        @JvmOverloads
+        fun addInstantPaymentConfiguration(
+            instantPaymentConfiguration: InstantPaymentConfiguration,
+            paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
+        ): Builder {
+            availablePaymentConfigs[paymentMethod] = instantPaymentConfiguration
             return this
         }
 
