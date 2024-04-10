@@ -566,11 +566,23 @@ internal class DefaultBacsDirectDebitDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
+        fun `when onSubmit is called and component is in confirmation mode, then submit event is tracked`() {
+            delegate.updateInputData { mode = BacsDirectDebitMode.CONFIRMATION }
+
             delegate.onSubmit()
 
             val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called and component is not in confirmation mode, then submit event is not tracked`() {
+            delegate.updateInputData { mode = BacsDirectDebitMode.INPUT }
+
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventNotEquals(expectedEvent)
         }
 
         @Test

@@ -195,12 +195,12 @@ constructor(
         if (isConfirmationRequired()) {
             initiatePayment()
         }
-
-        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
     }
 
     private fun initiatePayment() {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         val actions = listOfNotNull(
             getOneTimeAction(),
             getOnFileAction(outputData),
