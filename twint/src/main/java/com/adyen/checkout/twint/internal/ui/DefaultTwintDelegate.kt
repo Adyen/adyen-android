@@ -19,7 +19,11 @@ import com.adyen.checkout.components.core.action.TwintSdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.data.api.StatusRepository
+import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -28,16 +32,23 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.twint.Twint
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
+@Suppress("TooManyFunctions")
 internal class DefaultTwintDelegate(
     private val observerRepository: ActionObserverRepository,
     override val componentParams: GenericComponentParams,
     private val paymentDataRepository: PaymentDataRepository,
+    private val statusRepository: StatusRepository,
 ) : TwintDelegate {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -48,7 +59,17 @@ internal class DefaultTwintDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
 
-    override fun initialize(coroutineScope: CoroutineScope) = Unit
+    // Not used for Twint action
+    override val timerFlow: Flow<TimerData> = flow {}
+
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+
+    private var statusPollingJob: Job? = null
+
+    override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
+    }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
@@ -103,7 +124,7 @@ internal class DefaultTwintDelegate(
     internal fun handleTwintResult(result: TwintPayResult) {
         when (result) {
             TwintPayResult.TW_B_SUCCESS -> {
-                detailsChannel.trySend(createActionComponentData())
+                startStatusPolling()
             }
 
             TwintPayResult.TW_B_ERROR -> {
@@ -116,11 +137,52 @@ internal class DefaultTwintDelegate(
         }
     }
 
-    private fun createActionComponentData(): ActionComponentData {
+    private fun startStatusPolling() {
+        statusPollingJob?.cancel()
+
+        val paymentData = paymentDataRepository.paymentData
+        if (paymentData == null) {
+            exceptionChannel.trySend(ComponentException("PaymentData should not be null."))
+            return
+        }
+
+        statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
+            .onEach { onStatus(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun onStatus(result: Result<StatusResponse>) {
+        result.fold(
+            onSuccess = { response ->
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
+                onPollingSuccessful(response)
+            },
+            onFailure = {
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
+                exceptionChannel.trySend(ComponentException("Error while polling status.", it))
+            },
+        )
+    }
+
+    private fun onPollingSuccessful(statusResponse: StatusResponse) {
+        val payload = statusResponse.payload
+        // Not authorized status should still call /details so that merchant can get more info
+        if (StatusResponseUtils.isFinalResult(statusResponse)) {
+            if (!payload.isNullOrEmpty()) {
+                detailsChannel.trySend(createActionComponentData(payload))
+            } else {
+                exceptionChannel.trySend(
+                    ComponentException("Payload is missing from StatusResponse."),
+                )
+            }
+        }
+    }
+
+    private fun createActionComponentData(payload: String): ActionComponentData {
         return ActionComponentData(
-            // The backend doesn't accept null, so we have to send an empty json object.
-            details = JSONObject(),
-            paymentData = paymentDataRepository.paymentData,
+            details = JSONObject().put(PAYLOAD_DETAILS_KEY, payload),
+            // We don't share paymentData on purpose, so merchant will not use it to build their own polling.
+            paymentData = null,
         )
     }
 
@@ -128,7 +190,20 @@ internal class DefaultTwintDelegate(
         exceptionChannel.trySend(e)
     }
 
+    override fun refreshStatus() {
+        if (statusPollingJob == null) return
+        val paymentData = paymentDataRepository.paymentData ?: return
+        statusRepository.refreshStatus(paymentData)
+    }
+
     override fun onCleared() {
         removeObserver()
+    }
+
+    companion object {
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+
+        @VisibleForTesting
+        internal const val PAYLOAD_DETAILS_KEY = "payload"
     }
 }

@@ -23,12 +23,15 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
+import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.twint.TwintActionComponent
 import com.adyen.checkout.twint.TwintActionConfiguration
@@ -78,10 +81,15 @@ constructor(
             componentSessionParams = null,
         )
 
+        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val statusService = StatusService(httpClient)
+        val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
+
         return DefaultTwintDelegate(
             observerRepository = ActionObserverRepository(),
             componentParams = componentParams,
             paymentDataRepository = PaymentDataRepository(savedStateHandle),
+            statusRepository = statusRepository,
         )
     }
 
