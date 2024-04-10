@@ -8,7 +8,9 @@
 
 package com.adyen.checkout.components.core.internal.analytics;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,8 +32,6 @@ public class TestAnalyticsManager implements AnalyticsManager {
 
     private final List<AnalyticsEvent> events = new ArrayList<>();
 
-    private AnalyticsEvent lastEvent = null;
-
     @Override
     public void initialize(@NonNull Object owner, @NonNull CoroutineScope coroutineScope) {
         isInitialized = true;
@@ -44,7 +44,6 @@ public class TestAnalyticsManager implements AnalyticsManager {
     @Override
     public void trackEvent(@NonNull AnalyticsEvent event) {
         events.add(event);
-        lastEvent = event;
     }
 
     public void assertHasEventEquals(AnalyticsEvent expected) {
@@ -54,7 +53,21 @@ public class TestAnalyticsManager implements AnalyticsManager {
     }
 
     public void assertLastEventEquals(AnalyticsEvent expected) {
+        if (events.isEmpty()) {
+            fail("The events list is empty");
+        }
+
+        AnalyticsEvent lastEvent = events.get(events.size() - 1);
         assertTrue(areEventsEqual(expected, lastEvent));
+    }
+
+    public void assertLastEventNotEquals(AnalyticsEvent expected) {
+        if (events.isEmpty()) {
+            return;
+        }
+
+        AnalyticsEvent lastEvent = events.get(events.size() - 1);
+        assertFalse(areEventsEqual(expected, lastEvent));
     }
 
     private boolean areEventsEqual(AnalyticsEvent expected, AnalyticsEvent actual) {

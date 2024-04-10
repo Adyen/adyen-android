@@ -464,6 +464,28 @@ internal class DefaultCashAppPayDelegateTest(
         }
 
         @Test
+        fun `when delegate is initialized, then submit event is not tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventNotEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when delegate is initialized and confirmation is not required, then submit event is tracked`() {
+            delegate = createDefaultCashAppPayDelegate(
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
+            )
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
@@ -486,6 +508,20 @@ internal class DefaultCashAppPayDelegateTest(
 
             val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called and confirmation is not required, then submit event is not tracked`() {
+            delegate = createDefaultCashAppPayDelegate(
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
+            )
+
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventNotEquals(expectedEvent)
         }
 
         @Test

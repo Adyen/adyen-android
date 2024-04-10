@@ -125,9 +125,6 @@ internal class DefaultBacsDirectDebitDelegate(
     }
 
     override fun onSubmit() {
-        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
-
         val state = _componentStateFlow.value
         when (inputData.mode) {
             BacsDirectDebitMode.INPUT -> {
@@ -140,6 +137,9 @@ internal class DefaultBacsDirectDebitDelegate(
             }
 
             BacsDirectDebitMode.CONFIRMATION -> {
+                val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+                analyticsManager.trackEvent(event)
+
                 submitHandler.onSubmit(state)
             }
         }
