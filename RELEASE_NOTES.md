@@ -9,14 +9,14 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Fixed
-- Localization issues in address lookup functionality.
+- For Drop-in and Components, when `?android:attr/textColor` is not defined in your own theme, the Card Component no longer crashes.
+- The `onAdditionalDetails` event is now triggered only once. Previously, the event was triggered multiple times in some edge cases.
+- The build output no longer contains warnings about multiple substitutions specified in non-positional format in string resources.
+- For the Card Component, we fixed localization issues that occurred when using the Address Lookup functionality.
 - Overriding some of the XML styles without specifying a parent style no longer causes a build error.
-- Not defining `?android:attr/textColor` in your own theme will no longer crash.
-- The build output should no longer contain warnings about multiple substitutions specified in non-positional format in string resources.
-- In some edge cases `onAdditionalDetails` was triggered multiple times, this no longer happens.
 
 ## Removed
-- The functions to get specific configurations from `CheckoutConfiguration` (such as `CheckoutConfiguration.getDropInConfiguration()` or `CheckoutConfiguration.getCardConfiguration()`) are no longer accessible. Pass the `CheckoutConfiguration` object as it is when starting Drop-in or Components.
+- You can no longer use functions like `CheckoutConfiguration.getCardConfiguration()` or `CheckoutConfiguration.getDropInConfiguration()` to get configurations from the  `CheckoutConfiguration` object. When starting Drop-in or Components, pass the full `CheckoutConfiguration` object.
 
 ## Changed
 - Dependency versions:
