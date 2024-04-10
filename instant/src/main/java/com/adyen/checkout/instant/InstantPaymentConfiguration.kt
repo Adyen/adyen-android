@@ -9,6 +9,7 @@
 package com.adyen.checkout.instant
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
@@ -112,7 +113,8 @@ fun CheckoutConfiguration.instantPayment(
     return this
 }
 
-fun CheckoutConfiguration.getInstantPaymentConfiguration(
+@VisibleForTesting
+internal fun CheckoutConfiguration.getInstantPaymentConfiguration(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
 ): InstantPaymentConfiguration? {
     return getConfiguration(paymentMethod)

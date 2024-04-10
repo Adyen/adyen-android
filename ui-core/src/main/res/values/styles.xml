@@ -326,7 +326,6 @@
         <item name="android:text">@string/checkout_address_form_billing_address_title</item>
     </style>
 
-    <!-- TODO address lookup translations -->
     <style name="AdyenCheckout.AddressLookup.Query">
         <item name="android:layout_height">@dimen/input_height</item>
         <item name="android:background">@drawable/address_lookup_search_border</item>
@@ -340,13 +339,13 @@
     </style>
 
     <style name="AdyenCheckout.AddressLookup.Item.Header" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.Item.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">12sp</item>
         <item name="android:alpha">0.38</item>
         <item name="android:layout_gravity">center_vertical</item>
@@ -355,29 +354,29 @@
     <style name="AdyenCheckout.AddressLookup.Button.Submit" parent="AdyenCheckout.Button.Colored">
         <item name="android:layout_marginStart">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
-        <item name="android:text">Use this address</item>
+        <item name="android:text">@string/checkout_address_lookup_submit</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Title" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_address_lookup_initial</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_address_lookup_initial_description</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.Empty.Title" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_address_lookup_empty</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.Empty.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/checkout_address_lookup_empty_description</item>
     </style>

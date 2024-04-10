@@ -83,15 +83,18 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+
     <style name="AdyenCheckout.DropdownTextInputLayout.Installments" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="android:hint">@string/checkout_card_installments_title</item>
     </style>
 
     <style name="AdyenCheckout.InstallmentOptionTextView" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?android:attr/textColor</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.Card.AddressLookup" />
 
     <style name="AdyenCheckout.Card.AddressLookup.DropdownTextInputLayout" parent="AdyenCheckout.DropdownTextInputLayout">
         <item name="endIconMode">none</item>
@@ -102,8 +105,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginBottom">@dimen/standard_margin</item>
         <item name="android:minHeight">@dimen/input_height</item>
-        <item name="android:hint">Search Address</item>
-        <item name="android:text">@string/checkout_address_lookup_hint</item>
-        <item name="drawableTint">?android:attr/textColor</item>
+        <item name="android:hint">@string/checkout_address_lookup_hint</item>
+        <item name="drawableTint">?attr/colorOnSurface</item>
     </style>
 </resources>

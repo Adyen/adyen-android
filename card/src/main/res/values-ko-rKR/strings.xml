@@ -32,7 +32,7 @@
 
     <string name="checkout_card_installments_title">할부 개월 수</string>
     <string name="checkout_card_installments_option_regular">%s개월</string>
-    <string name="checkout_card_installments_option_regular_with_price">%sx %s</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">일시불 결제</string>
     <string name="checkout_card_installments_option_revolving">리볼빙 결제</string>
 

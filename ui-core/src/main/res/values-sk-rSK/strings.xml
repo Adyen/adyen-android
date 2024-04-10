@@ -53,5 +53,6 @@
     <string name="checkout_address_lookup_empty">Nenašli sa žiadne výsledky</string>
     <string name="checkout_address_lookup_empty_description">\'%s\' sa s ničím nezhoduje, skúste to znova alebo použite #ručné zadanie adresy#</string>
     <string name="checkout_address_lookup_enter_manually">Manuálne zadajte adresu</string>
+    <string name="checkout_address_lookup_submit">Použite túto adresu</string>
 
 </resources>

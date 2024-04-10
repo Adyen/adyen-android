@@ -130,7 +130,7 @@ fun CheckoutConfiguration.mbWay(
     return this
 }
 
-fun CheckoutConfiguration.getMBWayConfiguration(): MBWayConfiguration? {
+internal fun CheckoutConfiguration.getMBWayConfiguration(): MBWayConfiguration? {
     return getConfiguration(PaymentMethodTypes.MB_WAY)
 }
 

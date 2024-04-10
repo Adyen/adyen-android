@@ -117,7 +117,7 @@ fun CheckoutConfiguration.onlineBankingPL(
     return this
 }
 
-fun CheckoutConfiguration.getOnlineBankingPLConfiguration(): OnlineBankingPLConfiguration? {
+internal fun CheckoutConfiguration.getOnlineBankingPLConfiguration(): OnlineBankingPLConfiguration? {
     return getConfiguration(PaymentMethodTypes.ONLINE_BANKING_PL)
 }
 

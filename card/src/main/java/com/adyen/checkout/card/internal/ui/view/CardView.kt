@@ -302,7 +302,7 @@ class CardView @JvmOverloads constructor(
             )
             setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
 
-            // TODO: 29/01/2021 get this logic from OutputData
+            // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 

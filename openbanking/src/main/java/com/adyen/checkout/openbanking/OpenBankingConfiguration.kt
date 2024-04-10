@@ -116,7 +116,7 @@ fun CheckoutConfiguration.openBanking(
     return this
 }
 
-fun CheckoutConfiguration.getOpenBankingConfiguration(): OpenBankingConfiguration? {
+internal fun CheckoutConfiguration.getOpenBankingConfiguration(): OpenBankingConfiguration? {
     return getConfiguration(PaymentMethodTypes.OPEN_BANKING)
 }
 

@@ -116,7 +116,7 @@ fun CheckoutConfiguration.entercash(
     return this
 }
 
-fun CheckoutConfiguration.getEntercashConfiguration(): EntercashConfiguration? {
+internal fun CheckoutConfiguration.getEntercashConfiguration(): EntercashConfiguration? {
     return getConfiguration(PaymentMethodTypes.ENTERCASH)
 }
 

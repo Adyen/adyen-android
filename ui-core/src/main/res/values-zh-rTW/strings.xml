@@ -53,5 +53,6 @@
     <string name="checkout_address_lookup_empty">找不到任何結果</string>
     <string name="checkout_address_lookup_empty_description">「%s」不符合任何搜尋內容，請再試一次或#手動輸入地址#</string>
     <string name="checkout_address_lookup_enter_manually">手動輸入地址</string>
+    <string name="checkout_address_lookup_submit">使用此地址</string>
 
 </resources>

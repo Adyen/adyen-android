@@ -53,5 +53,6 @@
     <string name="checkout_address_lookup_empty">Tuloksia ei löytynyt</string>
     <string name="checkout_address_lookup_empty_description">\'%s\' ei tuottanut tuloksia. Yritä uudelleen tai käytä #manuaalista osoitteen syöttöä#</string>
     <string name="checkout_address_lookup_enter_manually">Syötä osoite manuaalisesti</string>
+    <string name="checkout_address_lookup_submit">Käytä tätä osoitetta</string>
 
 </resources>

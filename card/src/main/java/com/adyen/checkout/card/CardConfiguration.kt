@@ -330,7 +330,7 @@ fun CheckoutConfiguration.card(
     return this
 }
 
-fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
+internal fun CheckoutConfiguration.getCardConfiguration(): CardConfiguration? {
     return getConfiguration(PaymentMethodTypes.SCHEME)
 }
 

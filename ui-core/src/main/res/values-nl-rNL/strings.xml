@@ -47,11 +47,12 @@
     <string name="checkout_address_form_province_territory_hint_optional">Provincie of territorium (optioneel)</string>
     <string name="checkout_address_form_city_town_hint_optional">Stad (optioneel)</string>
 
-    <string name="checkout_address_lookup_hint">Zoek uw adres</string>
-    <string name="checkout_address_lookup_initial">Werd uw adres niet gevonden?</string>
+    <string name="checkout_address_lookup_hint">Zoeken naar uw adres</string>
+    <string name="checkout_address_lookup_initial">Kunt u niet zoeken naar uw adres?</string>
     <string name="checkout_address_lookup_initial_description">U kunt #uw adres handmatig invoeren#</string>
     <string name="checkout_address_lookup_empty">Geen resultaten gevonden</string>
     <string name="checkout_address_lookup_empty_description">Geen resulaten gevonden voor \'%s\', probeer het opnieuw of gebruik #adres handmatig invoeren#</string>
     <string name="checkout_address_lookup_enter_manually">Voer het adres handmatig in</string>
+    <string name="checkout_address_lookup_submit">Dit adres gebruiken</string>
 
 </resources>

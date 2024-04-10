@@ -53,6 +53,7 @@
     <string name="checkout_address_lookup_empty">%%address.lookup.search.empty.title.noResults%%</string>
     <string name="checkout_address_lookup_empty_description">%%address.lookup.search.empty.subtitle.noResults%%</string>
     <string name="checkout_address_lookup_enter_manually">%%address.enterManually%%</string>
+    <string name="checkout_address_lookup_submit">%%address.lookup.submit%%</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>

@@ -130,7 +130,7 @@ fun CheckoutConfiguration.sepa(
     return this
 }
 
-fun CheckoutConfiguration.getSepaConfiguration(): SepaConfiguration? {
+internal fun CheckoutConfiguration.getSepaConfiguration(): SepaConfiguration? {
     return getConfiguration(PaymentMethodTypes.SEPA)
 }
 

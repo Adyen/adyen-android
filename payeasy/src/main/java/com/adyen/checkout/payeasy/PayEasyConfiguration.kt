@@ -112,7 +112,7 @@ fun CheckoutConfiguration.payEasy(
     return this
 }
 
-fun CheckoutConfiguration.getPayEasyConfiguration(): PayEasyConfiguration? {
+internal fun CheckoutConfiguration.getPayEasyConfiguration(): PayEasyConfiguration? {
     return getConfiguration(PaymentMethodTypes.ECONTEXT_ATM)
 }
 

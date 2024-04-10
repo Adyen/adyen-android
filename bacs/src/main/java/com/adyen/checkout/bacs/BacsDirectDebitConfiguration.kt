@@ -131,7 +131,7 @@ fun CheckoutConfiguration.bacsDirectDebit(
     return this
 }
 
-fun CheckoutConfiguration.getBacsDirectDebitConfiguration(): BacsDirectDebitConfiguration? {
+internal fun CheckoutConfiguration.getBacsDirectDebitConfiguration(): BacsDirectDebitConfiguration? {
     return getConfiguration(PaymentMethodTypes.BACS)
 }
 

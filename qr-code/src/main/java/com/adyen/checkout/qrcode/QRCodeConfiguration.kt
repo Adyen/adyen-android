@@ -8,6 +8,7 @@
 package com.adyen.checkout.qrcode
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -105,7 +106,8 @@ fun CheckoutConfiguration.qrCode(
     return this
 }
 
-fun CheckoutConfiguration.getQRCodeConfiguration(): QRCodeConfiguration? {
+@VisibleForTesting
+internal fun CheckoutConfiguration.getQRCodeConfiguration(): QRCodeConfiguration? {
     return getActionConfiguration(QRCodeConfiguration::class.java)
 }
 

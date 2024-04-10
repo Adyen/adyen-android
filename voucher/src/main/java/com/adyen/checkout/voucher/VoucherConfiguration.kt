@@ -106,7 +106,7 @@ fun CheckoutConfiguration.voucher(
     return this
 }
 
-fun CheckoutConfiguration.getVoucherConfiguration(): VoucherConfiguration? {
+internal fun CheckoutConfiguration.getVoucherConfiguration(): VoucherConfiguration? {
     return getActionConfiguration(VoucherConfiguration::class.java)
 }
 

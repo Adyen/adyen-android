@@ -1,5 +1,5 @@
 // From: https://github.com/tfcporciuncula/readme-graph/blob/master/gradle/projectDependencyGraph.gradle
-task dependencyGraph {
+tasks.register("dependencyGraph") {
     doLast {
         def dot = new File(rootProject.rootDir, 'dependency-graph/project.dot')
         dot.parentFile.mkdirs()
@@ -43,7 +43,7 @@ task dependencyGraph {
                 javaProjects.add(project)
             }
 
-            project.configurations.all { config ->
+            project.configurations.configureEach { config ->
                 config.dependencies
                     .withType(ProjectDependency)
                     .collect { it.dependencyProject }
@@ -97,7 +97,7 @@ task dependencyGraph {
 
         dot << '\n  # Dependencies\n\n'
         dependencies.forEach { key, traits ->
-            dot << "  \"${key.first.path}\" -> \"${key.second.path}\""
+            dot << "  \"${key.v1.path}\" -> \"${key.v2.path}\""
             if (!traits.isEmpty()) {
                 dot << " [${traits.join(", ")}]"
             }
