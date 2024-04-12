@@ -20,7 +20,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -49,7 +48,6 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             binding.componentView.attach(component, viewLifecycleOwner)
 
             if ((component as? ButtonComponent)?.isConfirmationRequired() == true) {
-                setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
                 binding.componentView.requestFocus()
             }
         }

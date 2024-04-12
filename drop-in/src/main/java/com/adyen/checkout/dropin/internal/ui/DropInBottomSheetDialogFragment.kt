@@ -34,12 +34,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     private var _protocol: Protocol? = null
     protected val protocol: Protocol get() = requireNotNull(_protocol)
 
-    private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
     protected val dropInViewModel: DropInViewModel by activityViewModels { DropInViewModelFactory(requireActivity()) }
-
-    fun setInitViewState(firstViewState: Int) {
-        this.dialogInitViewState = firstViewState
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,12 +60,13 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
             )
 
             if (bottomSheet != null) {
-                val behavior = BottomSheetBehavior.from(bottomSheet)
-
-                if (this.dialogInitViewState == BottomSheetBehavior.STATE_EXPANDED) {
-                    behavior.skipCollapsed = true
+                BottomSheetBehavior.from(bottomSheet).apply {
+                    skipCollapsed = true
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    isHideable = false
+                    isDraggable = false
+                    isShouldRemoveExpandedCorners = false
                 }
-                behavior.state = this.dialogInitViewState
             } else {
                 adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
             }

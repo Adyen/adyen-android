@@ -45,7 +45,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
         if (bacsDirectDebitComponent.isConfirmationRequired()) {
-            setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.bacsView.requestFocus()
         }
     }
@@ -70,12 +69,18 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             val bottomSheetDialog = dialog as BottomSheetDialog
             val bottomSheet =
                 bottomSheetDialog.findViewById<FrameLayout>(MaterialR.id.design_bottom_sheet)
-            val layoutParams = bottomSheet?.layoutParams
-            val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
-            behavior?.isDraggable = false
-            layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
-            bottomSheet?.layoutParams = layoutParams
-            behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+
+            bottomSheet?.let {
+                val layoutParams = it.layoutParams
+                layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
+                it.layoutParams = layoutParams
+
+                BottomSheetBehavior.from(it).apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    isHideable = false
+                    isDraggable = false
+                }
+            }
         }
     }
 

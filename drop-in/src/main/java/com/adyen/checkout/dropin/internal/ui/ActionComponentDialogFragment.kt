@@ -35,7 +35,6 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.internal.util.arguments
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -79,7 +78,6 @@ internal class ActionComponentDialogFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGenericActionComponentBinding.inflate(inflater)
-        setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
         return binding.root
     }
 
