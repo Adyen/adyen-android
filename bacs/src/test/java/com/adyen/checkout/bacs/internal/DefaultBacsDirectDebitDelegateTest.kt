@@ -277,7 +277,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
         @Test
         fun `with INPUT parameter while current mode is also INPUT, then no value should be emitted`() = runTest {
             delegate.updateInputData { mode = BacsDirectDebitMode.INPUT }
-            delegate._viewFlow.value = BacsComponentViewType.INPUT
 
             delegate.viewFlow.test {
                 awaitItem()
@@ -292,7 +291,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
         fun `with CONFIRMATION parameter while current mode is also CONFIRMATION, then no value should be emitted`() =
             runTest {
                 delegate.updateInputData { mode = BacsDirectDebitMode.CONFIRMATION }
-                delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
 
                 delegate.viewFlow.test {
                     awaitItem()
@@ -306,7 +304,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
         @Test
         fun `with INPUT parameter while current mode is CONFIRMATION, then INPUT should be emitted`() = runTest {
             delegate.updateInputData { mode = BacsDirectDebitMode.CONFIRMATION }
-            delegate._viewFlow.value = BacsComponentViewType.CONFIRMATION
 
             delegate.viewFlow.test {
                 awaitItem()
@@ -329,7 +326,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
                     isAccountConsentChecked = true
                     mode = BacsDirectDebitMode.INPUT
                 }
-                delegate._viewFlow.value = BacsComponentViewType.INPUT
 
                 delegate.viewFlow.test {
                     awaitItem()
@@ -344,7 +340,6 @@ internal class DefaultBacsDirectDebitDelegateTest(
         fun `with CONFIRMATION parameter while current mode is INPUT and input data is invalid, then no value should be emitted`() =
             runTest {
                 delegate.updateInputData { mode = BacsDirectDebitMode.INPUT }
-                delegate._viewFlow.value = BacsComponentViewType.INPUT
 
                 delegate.viewFlow.test {
                     awaitItem()

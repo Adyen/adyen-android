@@ -59,9 +59,7 @@ internal class DefaultBacsDirectDebitDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
-    @VisibleForTesting
-    @Suppress("VariableNaming", "PropertyName")
-    internal val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BacsComponentViewType.INPUT)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BacsComponentViewType.INPUT)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
