@@ -49,6 +49,7 @@ import com.adyen.threeds2.ChallengeStatusHandler
 import com.adyen.threeds2.InitializeResult
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
+import com.adyen.threeds2.TransactionResult
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
@@ -289,17 +290,22 @@ internal class DefaultAdyen3DS2Delegate(
 
     private fun createTransaction(fingerprintToken: FingerprintToken): Transaction? {
         if (fingerprintToken.threeDSMessageVersion == null) {
-            exceptionChannel.trySend(
-                ComponentException(
-                    "Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken.",
-                ),
-            )
+            val error = "Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."
+            exceptionChannel.trySend(ComponentException(error))
             return null
         }
 
         return try {
             adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
-            threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)
+            when (val result = threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)) {
+                is TransactionResult.Failure -> {
+                    val details = makeDetails(result.transactionStatus, result.additionalDetails)
+                    emitDetails(details)
+                    null
+                }
+
+                is TransactionResult.Success -> result.transaction
+            }
         } catch (e: SDKNotInitializedException) {
             exceptionChannel.trySend(ComponentException("Failed to create 3DS2 Transaction", e))
             null
