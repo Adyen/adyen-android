@@ -46,6 +46,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
+import com.adyen.threeds2.InitializeResult
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
 import com.adyen.threeds2.exception.InvalidInputException
@@ -224,11 +225,13 @@ internal class DefaultAdyen3DS2Delegate(
             // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
             closeTransaction()
 
-            try {
-                adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
+            adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
+            val initializeResult =
                 threeDS2Service.initialize(activity, configParameters, null, componentParams.uiCustomization)
-            } catch (e: SDKRuntimeException) {
-                exceptionChannel.trySend(ComponentException("Failed to initialize 3DS2 SDK", e))
+
+            if (initializeResult is InitializeResult.Failure) {
+                val details = makeDetails(initializeResult.transactionStatus, initializeResult.additionalDetails)
+                emitDetails(details)
                 return@launch
             }
 
