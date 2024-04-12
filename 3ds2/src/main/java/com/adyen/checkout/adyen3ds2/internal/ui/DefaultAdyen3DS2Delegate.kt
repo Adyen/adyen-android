@@ -210,7 +210,10 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
-        val configParameters = createAdyenConfigParameters(fingerprintToken)
+        val configParameters = createAdyenConfigParameters(fingerprintToken) ?: run {
+            exceptionChannel.trySend(ComponentException("Failed to create ConfigParameters."))
+            return
+        }
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
@@ -259,18 +262,27 @@ internal class DefaultAdyen3DS2Delegate(
         return FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
     }
 
+    @Suppress("DestructuringDeclarationWithTooManyEntries")
     private fun createAdyenConfigParameters(
         fingerprintToken: FingerprintToken
-    ): ConfigParameters = AdyenConfigParameters.Builder(
-        // directoryServerId
-        fingerprintToken.directoryServerId,
-        // directoryServerPublicKey
-        fingerprintToken.directoryServerPublicKey,
-        // directoryServerRootCertificates
-        fingerprintToken.directoryServerRootCertificates,
-    )
-        .deviceParameterBlockList(componentParams.deviceParameterBlockList)
-        .build()
+    ): ConfigParameters? {
+        val (directoryServerId, directoryServerPublicKey, directoryServerRootCertificates, _, _) = fingerprintToken
+
+        if (directoryServerId == null || directoryServerPublicKey == null || directoryServerRootCertificates == null) {
+            adyenLog(AdyenLogLevel.DEBUG) {
+                "directoryServerId, directoryServerPublicKey or directoryServerRootCertificates is null."
+            }
+            return null
+        }
+
+        return AdyenConfigParameters.Builder(
+            directoryServerId,
+            directoryServerPublicKey,
+            directoryServerRootCertificates,
+        )
+            .deviceParameterBlockList(componentParams.deviceParameterBlockList)
+            .build()
+    }
 
     private fun createTransaction(fingerprintToken: FingerprintToken): Transaction? {
         if (fingerprintToken.threeDSMessageVersion == null) {
