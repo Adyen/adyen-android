@@ -34,13 +34,22 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
-        binding.header.text = paymentMethod.name
+
+        initToolbar()
 
         try {
             attachComponent(component)
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(paymentMethod.name)
+        setOnButtonClickListener {
+            onBackPressed()
+        }
+        setMode(toolbarMode)
     }
 
     private fun attachComponent(component: PaymentComponent) {
