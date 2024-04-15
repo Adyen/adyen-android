@@ -71,6 +71,13 @@ internal class ActionComponentDialogFragment :
             }
         }
 
+    private val navigationSource: NavigationSource
+        get() = when {
+            shouldFinishWithAction() -> NavigationSource.ACTION
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> NavigationSource.NO_SOURCE
+            else -> NavigationSource.PAYMENT_METHOD_LIST
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
@@ -89,7 +96,7 @@ internal class ActionComponentDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
         initObservers()
-        binding.header.isVisible = false
+        initToolbar()
 
         try {
             val analyticsManager = dropInViewModel.analyticsManager
@@ -113,6 +120,19 @@ internal class ActionComponentDialogFragment :
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setOnButtonClickListener {
+            performBackAction()
+        }
+
+        val toolbarMode = when (navigationSource) {
+            NavigationSource.ACTION -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+            NavigationSource.PAYMENT_METHOD_LIST -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+        }
+        setMode(toolbarMode)
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
@@ -155,20 +175,14 @@ internal class ActionComponentDialogFragment :
         actionComponent.handleAction(action, requireActivity())
     }
 
-    override fun onBackPressed(): Boolean {
+    override fun onBackPressed() = performBackAction()
+
+    private fun performBackAction(): Boolean {
         // polling will be canceled by lifecycle event
-        when {
-            shouldFinishWithAction() -> {
-                protocol.finishWithAction()
-            }
-
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> {
-                protocol.terminateDropIn()
-            }
-
-            else -> {
-                protocol.showPaymentMethodsDialog()
-            }
+        when (navigationSource) {
+            NavigationSource.ACTION -> protocol.finishWithAction()
+            NavigationSource.PAYMENT_METHOD_LIST -> protocol.showPaymentMethodsDialog()
+            NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
         }
         return true
     }
@@ -193,7 +207,7 @@ internal class ActionComponentDialogFragment :
         when (componentError.exception) {
             is CancellationException -> {
                 adyenLog(AdyenLogLevel.DEBUG) { "Flow was cancelled by user" }
-                onBackPressed()
+                performBackAction()
             }
 
             else -> {
@@ -215,6 +229,12 @@ internal class ActionComponentDialogFragment :
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    internal enum class NavigationSource {
+        ACTION,
+        PAYMENT_METHOD_LIST,
+        NO_SOURCE,
     }
 
     companion object {
