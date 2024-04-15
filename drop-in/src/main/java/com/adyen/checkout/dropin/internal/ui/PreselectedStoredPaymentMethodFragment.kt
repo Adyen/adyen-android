@@ -18,7 +18,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.AdyenLogLevel
@@ -48,13 +47,11 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dropInViewModel.dropInParams,
             )
         }
-
     }
 
     private var _binding: FragmentStoredPaymentMethodBinding? = null
     private val binding: FragmentStoredPaymentMethodBinding get() = requireNotNull(_binding)
     private val storedPaymentMethod: StoredPaymentMethod by arguments(STORED_PAYMENT_KEY)
-    private lateinit var component: PaymentComponent
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         if (storedPaymentMethod.type.isNullOrEmpty()) {
@@ -77,7 +74,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun loadComponent() {
         try {
-            component = getComponentFor(
+            getComponentFor(
                 fragment = this,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
