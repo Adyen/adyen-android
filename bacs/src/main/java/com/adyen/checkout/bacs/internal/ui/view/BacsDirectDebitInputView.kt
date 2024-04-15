@@ -42,16 +42,9 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    LinearLayout(
-        context,
-        attrs,
-        defStyleAttr,
-    ),
-    ComponentView {
+) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
-    private val binding: BacsDirectDebitInputViewBinding =
-        BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = BacsDirectDebitInputViewBinding.inflate(LayoutInflater.from(context), this)
 
     private lateinit var localizedContext: Context
 

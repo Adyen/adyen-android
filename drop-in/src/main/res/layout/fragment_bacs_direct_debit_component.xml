@@ -7,18 +7,19 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/header"
-        style="@style/AdyenCheckout.TextAppearance.HeaderTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textIsSelectable="false"
-        tools:text="Header" />
+    <include
+        layout="@layout/bottom_sheet_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
+        android:id="@+id/bottom_sheet_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
