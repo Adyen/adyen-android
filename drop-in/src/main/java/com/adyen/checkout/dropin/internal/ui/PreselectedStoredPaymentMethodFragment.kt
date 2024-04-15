@@ -14,11 +14,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.util.DateUtils
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -31,7 +33,6 @@ import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.arguments
-import com.adyen.checkout.dropin.internal.util.viewModelsFactory
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
@@ -40,11 +41,14 @@ import kotlinx.coroutines.flow.onEach
 @Suppress("TooManyFunctions")
 internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
 
-    private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModelsFactory {
-        PreselectedStoredPaymentViewModel(
-            storedPaymentMethod,
-            dropInViewModel.dropInParams,
-        )
+    private val storedPaymentViewModel: PreselectedStoredPaymentViewModel by viewModels {
+        viewModelFactory {
+            PreselectedStoredPaymentViewModel(
+                storedPaymentMethod,
+                dropInViewModel.dropInParams,
+            )
+        }
+
     }
 
     private var _binding: FragmentStoredPaymentMethodBinding? = null
