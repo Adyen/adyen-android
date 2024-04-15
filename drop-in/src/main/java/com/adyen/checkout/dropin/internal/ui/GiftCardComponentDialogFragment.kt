@@ -37,6 +37,12 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
     private lateinit var paymentMethod: PaymentMethod
     private lateinit var giftCardComponent: GiftCardComponent
 
+    private val navigationSource: NavigationSource
+        get() = when {
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> NavigationSource.NO_SOURCE
+            else -> NavigationSource.PAYMENT_METHOD_LIST
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
         super.onCreate(savedInstanceState)
@@ -53,7 +59,8 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
-        binding.header.text = paymentMethod.name
+
+        initToolbar()
 
         try {
             loadComponent()
@@ -61,6 +68,19 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         } catch (e: CheckoutException) {
             handleError(ComponentError(e))
         }
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(paymentMethod.name)
+        setOnButtonClickListener {
+            performBackAction()
+        }
+
+        val toolbarMode = when (navigationSource) {
+            NavigationSource.PAYMENT_METHOD_LIST -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+        }
+        setMode(toolbarMode)
     }
 
     @Suppress("SwallowedException")
@@ -126,14 +146,12 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         protocol.showError(null, getString(UICoreR.string.component_error), componentError.errorMessage, true)
     }
 
-    override fun onBackPressed(): Boolean {
-        return performBackAction()
-    }
+    override fun onBackPressed() = performBackAction()
 
     private fun performBackAction(): Boolean {
-        when {
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> protocol.terminateDropIn()
-            else -> protocol.showPaymentMethodsDialog()
+        when (navigationSource) {
+            NavigationSource.PAYMENT_METHOD_LIST -> protocol.showPaymentMethodsDialog()
+            NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
         }
         return true
     }
@@ -156,5 +174,10 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
                 arguments = args
             }
         }
+    }
+
+    internal enum class NavigationSource {
+        PAYMENT_METHOD_LIST,
+        NO_SOURCE,
     }
 }
