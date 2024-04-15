@@ -41,6 +41,20 @@ internal abstract class BaseComponentDialogFragment :
     protected var isStoredPayment = false
     private var navigatedFromPreselected = false
 
+    private val navigationSource: NavigationSource
+        get() = when {
+            navigatedFromPreselected -> NavigationSource.PRESELECTED_PAYMENT_METHOD
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> NavigationSource.NO_SOURCE
+            else -> NavigationSource.PAYMENT_METHOD_LIST
+        }
+
+    protected val toolbarMode: DropInBottomSheetToolbarMode
+        get() = when (navigationSource) {
+            NavigationSource.PRESELECTED_PAYMENT_METHOD -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.PAYMENT_METHOD_LIST -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+        }
+
     open class BaseCompanion<T : BaseComponentDialogFragment>(private var classes: Class<T>) {
 
         fun newInstance(
@@ -84,13 +98,15 @@ internal abstract class BaseComponentDialogFragment :
         savedInstanceState: Bundle?
     ): View?
 
-    override fun onBackPressed(): Boolean {
+    override fun onBackPressed() = performBackAction()
+
+    private fun performBackAction(): Boolean {
         adyenLog(AdyenLogLevel.DEBUG) { "onBackPressed - $navigatedFromPreselected" }
 
-        when {
-            navigatedFromPreselected -> protocol.showPreselectedDialog()
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> protocol.terminateDropIn()
-            else -> protocol.showPaymentMethodsDialog()
+        when (navigationSource) {
+            NavigationSource.PRESELECTED_PAYMENT_METHOD -> protocol.showPreselectedDialog()
+            NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
+            NavigationSource.PAYMENT_METHOD_LIST -> protocol.showPaymentMethodsDialog()
         }
         return true
     }
@@ -164,5 +180,11 @@ internal abstract class BaseComponentDialogFragment :
     fun handleError(componentError: ComponentError) {
         adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
         protocol.showError(null, getString(UICoreR.string.component_error), componentError.errorMessage, true)
+    }
+
+    internal enum class NavigationSource {
+        PRESELECTED_PAYMENT_METHOD,
+        PAYMENT_METHOD_LIST,
+        NO_SOURCE,
     }
 }
