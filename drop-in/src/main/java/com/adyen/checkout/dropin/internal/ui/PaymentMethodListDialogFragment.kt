@@ -98,7 +98,8 @@ internal class PaymentMethodListDialogFragment :
             .onEach { paymentMethods ->
                 adyenLog(AdyenLogLevel.DEBUG) { "paymentMethods changed" }
                 paymentMethodAdapter?.submitList(paymentMethods)
-            }.launchIn(lifecycleScope)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
         paymentMethodsListViewModel
             .eventsFlow
@@ -132,7 +133,7 @@ internal class PaymentMethodListDialogFragment :
                     }
                 }
             }
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {
