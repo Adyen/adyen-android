@@ -18,13 +18,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
+        android:id="@+id/bottom_sheet_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_paymentMethods"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="@dimen/standard_half_margin"
         android:paddingBottom="@dimen/standard_half_margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".internal.ui.PaymentMethodListDialogFragment"
