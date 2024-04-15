@@ -51,7 +51,7 @@ class GiftCardPaymentMethod(
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedSecurityCode = jsonObject.getStringOrNull(ENCRYPTED_SECURITY_CODE),
-                    brand = jsonObject.getStringOrNull(BRAND)
+                    brand = jsonObject.getStringOrNull(BRAND),
                 )
             }
         }
