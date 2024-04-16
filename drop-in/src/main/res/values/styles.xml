@@ -11,17 +11,9 @@
     <!-- Override 3DS2 Theme to match Checkout theme -->
     <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
-    <style name="AdyenCheckout.BottomSheetIndicator">
-        <item name="android:layout_width">@dimen/indicator_width</item>
-        <item name="android:layout_height">@dimen/indicator_height</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginTop">@dimen/standard_half_margin</item>
-        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
-        <item name="android:background">@drawable/bottom_sheet_indicator</item>
-    </style>
-
     <style name="AdyenCheckout.BottomSheetToolbar">
         <item name="android:layout_marginStart">@dimen/standard_half_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
     </style>

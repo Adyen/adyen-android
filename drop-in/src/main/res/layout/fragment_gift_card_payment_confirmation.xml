@@ -14,12 +14,6 @@
     android:paddingBottom="@dimen/standard_half_margin"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/bottom_sheet_indicator"
-        layout="@layout/bottom_sheet_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
         android:id="@+id/bottom_sheet_toolbar"
         android:layout_width="match_parent"
