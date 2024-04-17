@@ -74,8 +74,7 @@ internal class ActionComponentDialogFragment :
     private val navigationSource: NavigationSource
         get() = when {
             shouldFinishWithAction() -> NavigationSource.ACTION
-            dropInViewModel.shouldSkipToSinglePaymentMethod() -> NavigationSource.NO_SOURCE
-            else -> NavigationSource.PAYMENT_METHOD_LIST
+            else -> NavigationSource.NO_SOURCE
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,7 +128,6 @@ internal class ActionComponentDialogFragment :
 
         val toolbarMode = when (navigationSource) {
             NavigationSource.ACTION -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
-            NavigationSource.PAYMENT_METHOD_LIST -> DropInBottomSheetToolbarMode.BACK_BUTTON
             NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
         }
         setMode(toolbarMode)
@@ -181,7 +179,6 @@ internal class ActionComponentDialogFragment :
         // polling will be canceled by lifecycle event
         when (navigationSource) {
             NavigationSource.ACTION -> protocol.finishWithAction()
-            NavigationSource.PAYMENT_METHOD_LIST -> protocol.showPaymentMethodsDialog()
             NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
         }
         return true
@@ -233,7 +230,6 @@ internal class ActionComponentDialogFragment :
 
     internal enum class NavigationSource {
         ACTION,
-        PAYMENT_METHOD_LIST,
         NO_SOURCE,
     }
 
