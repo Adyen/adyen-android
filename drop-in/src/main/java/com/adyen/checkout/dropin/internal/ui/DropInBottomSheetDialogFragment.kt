@@ -65,7 +65,6 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
                     state = BottomSheetBehavior.STATE_EXPANDED
                     isHideable = false
                     isDraggable = false
-                    isShouldRemoveExpandedCorners = false
                 }
             } else {
                 adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
