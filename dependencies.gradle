@@ -69,6 +69,7 @@ ext {
 
     // Tests
     arch_core_testing_version = "2.2.0"
+    barista_version = "4.2.0"
     espresso_version = "3.5.1"
     json_version = '20240303'
     jose4j_version = '0.9.6'
@@ -144,11 +145,14 @@ ext {
         androidx        : [
             lifecycle: "androidx.arch.core:core-testing:$arch_core_testing_version"
         ],
+        barista         : "com.adevinta.android:barista:$barista_version",
         espresso        : [
             "androidx.test.espresso:espresso-contrib:$espresso_version",
             "androidx.test.espresso:espresso-core:$espresso_version",
             "androidx.test.espresso:espresso-intents:$espresso_version"
         ],
+        hilt            : "com.google.dagger:hilt-android-testing:$hilt_version",
+        hiltCompiler    : "com.google.dagger:hilt-android-compiler:$hilt_version",
         jose4j          : "org.bitbucket.b_c:jose4j:$jose4j_version",
         json            : "org.json:json:$json_version",
         junit5          : [
