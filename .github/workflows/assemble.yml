@@ -16,16 +16,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: false
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run assembleDebug
         run: ./gradlew assDeb --no-daemon
-
-      - name: Cache build output
-        uses: actions/cache/save@v3
-        with:
-          path: /home/runner/work/adyen-android/adyen-android
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
