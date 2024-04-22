@@ -43,6 +43,7 @@ import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -58,6 +59,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -458,7 +460,9 @@ internal class DefaultQRCodeDelegateTest(
 
     @Test
     fun `when refreshStatus is called, then status for statusRepository gets refreshed`() = runTest {
-        val statusRepository = mock<StatusRepository>()
+        val statusRepository = mock<StatusRepository> {
+            on { poll(any(), any()) } doReturn flowOf()
+        }
         val paymentData = "Payment Data"
         val delegate = createDelegate(
             statusRepository = statusRepository,
