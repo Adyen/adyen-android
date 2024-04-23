@@ -17,9 +17,11 @@ apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 
 if (file("local.gradle").exists()) {
     apply from: "local.gradle"
+} else if (System.getenv("CI") == "true") {
+    apply from: "ci.local.gradle"
 } else if (!isIDEBuild()) {
-    // if not building from an IDE, use example file as it is to ensure the build passes (for CI, renovate, etc)
-    apply from: "example.local.gradle"
+    // Renovate doesn't set the CI variable, so this way we can still make sure the build succeeds.
+    apply from: "ci.local.gradle"
 } else {
     throw new GradleException("File example-app/local.gradle not found. Check example-app/README.md for more instructions.")
 }

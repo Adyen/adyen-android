@@ -59,6 +59,9 @@ jobs:
 
       - name: Run connectedDebugAndroidTest
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ADYEN_ANDROID_MERCHANT_SERVER_URL: 'https://android-ui-tests.adyen.com/'
+          ADYEN_ANDROID_CLIENT_KEY: 'test_fakefakefakefakefakefakefakefake'
         with:
           api-level: ${{ matrix.api-level }}
           target: google_apis
