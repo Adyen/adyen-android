@@ -14,11 +14,9 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultActionComponentEventHandler(
-    private val actionComponentCallback: ActionComponentCallback
-) : ActionComponentEventHandler {
+class DefaultActionComponentEventHandler : ActionComponentEventHandler {
 
-    override fun onActionComponentEvent(event: ActionComponentEvent) {
+    override fun onActionComponentEvent(event: ActionComponentEvent, actionComponentCallback: ActionComponentCallback) {
         adyenLog(AdyenLogLevel.VERBOSE) { "Event received $event" }
         when (event) {
             is ActionComponentEvent.ActionDetails -> actionComponentCallback.onAdditionalDetails(event.data)

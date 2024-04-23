@@ -62,11 +62,13 @@ constructor(
             val awaitDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,
-                DefaultActionComponentEventHandler(callback),
+                DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+            }
         }
     }
 
