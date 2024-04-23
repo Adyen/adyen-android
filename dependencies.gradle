@@ -70,7 +70,7 @@ ext {
     // Tests
     arch_core_testing_version = "2.2.0"
     espresso_version = "3.5.1"
-    json_version = '20231013'
+    json_version = '20240303'
     jose4j_version = '0.9.6'
     junit_jupiter_version = "5.9.1"
     mockito_kotlin_version = "5.2.1"
