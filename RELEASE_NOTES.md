@@ -9,4 +9,4 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Fixed
-- Fixed a memory leak in `DropInActivity`.
+- Fixed various memory leaks.
