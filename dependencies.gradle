@@ -62,7 +62,7 @@ ext {
     // Example app
     leak_canary_version = '2.13'
     moshi_adapters_version = '1.15.1'
-    moshi_kotlin_adapter_version = '1.14.0'
+    moshi_kotlin_adapter_version = '1.15.1'
     okhttp_logging_version = "4.12.0"
     preference_version = "1.2.1"
     retrofit2_version = '2.10.0'
