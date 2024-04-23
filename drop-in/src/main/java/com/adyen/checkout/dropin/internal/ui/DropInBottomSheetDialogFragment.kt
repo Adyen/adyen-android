@@ -61,10 +61,10 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
 
             if (bottomSheet != null) {
                 BottomSheetBehavior.from(bottomSheet).apply {
-                    skipCollapsed = true
                     state = BottomSheetBehavior.STATE_EXPANDED
                     isHideable = false
                     isDraggable = false
+                    peekHeight = bottomSheet.height
                 }
             } else {
                 adyenLog(AdyenLogLevel.ERROR) { "Failed to set BottomSheetBehavior." }
