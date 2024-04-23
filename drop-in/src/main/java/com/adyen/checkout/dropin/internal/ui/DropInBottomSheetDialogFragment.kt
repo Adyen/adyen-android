@@ -30,7 +30,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
-    lateinit var protocol: Protocol
+    private var _protocol: Protocol? = null
+    protected val protocol: Protocol get() = requireNotNull(_protocol)
 
     private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
     protected val dropInViewModel: DropInViewModel by activityViewModels { DropInViewModelFactory(requireActivity()) }
@@ -43,7 +44,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         super.onAttach(context)
 
         require(activity is Protocol)
-        protocol = activity as Protocol
+        _protocol = activity as Protocol
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -86,6 +87,11 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     override fun onCancel(dialog: DialogInterface) {
         adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         protocol.terminateDropIn()
+    }
+
+    override fun onDetach() {
+        _protocol = null
+        super.onDetach()
     }
 
     /**

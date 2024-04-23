@@ -12,7 +12,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.LookupAddress
@@ -56,13 +56,13 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
             binding.cardView.requestFocus()
         }
 
-        dropInViewModel.addressLookupOptionsFlow.onEach {
-            cardComponent.updateAddressLookupOptions(it)
-        }.launchIn(dropInViewModel.viewModelScope)
+        dropInViewModel.addressLookupOptionsFlow
+            .onEach { cardComponent.updateAddressLookupOptions(it) }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        dropInViewModel.addressLookupCompleteFlow.onEach {
-            cardComponent.setAddressLookupResult(it)
-        }.launchIn(dropInViewModel.viewModelScope)
+        dropInViewModel.addressLookupCompleteFlow
+            .onEach { cardComponent.setAddressLookupResult(it) }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onQueryChanged(query: String) {

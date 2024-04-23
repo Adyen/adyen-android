@@ -15,11 +15,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.children
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponent
+import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
@@ -31,7 +33,6 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
-import com.adyen.checkout.dropin.internal.util.getViewModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
@@ -46,7 +47,19 @@ internal class PaymentMethodListDialogFragment :
     private var _binding: FragmentPaymentMethodsListBinding? = null
     private val binding: FragmentPaymentMethodsListBinding get() = requireNotNull(_binding)
 
-    private lateinit var paymentMethodsListViewModel: PaymentMethodsListViewModel
+    private val paymentMethodsListViewModel: PaymentMethodsListViewModel by viewModels {
+        viewModelFactory {
+            PaymentMethodsListViewModel(
+                application = requireActivity().application,
+                paymentMethods = dropInViewModel.getPaymentMethods(),
+                storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
+                order = dropInViewModel.currentOrder,
+                checkoutConfiguration = dropInViewModel.checkoutConfiguration,
+                dropInParams = dropInViewModel.dropInParams,
+                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
+            )
+        }
+    }
 
     private var paymentMethodAdapter: PaymentMethodAdapter? = null
     private var component: PaymentComponent? = null
@@ -58,17 +71,6 @@ internal class PaymentMethodListDialogFragment :
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         adyenLog(AdyenLogLevel.DEBUG) { "onCreateView" }
-        paymentMethodsListViewModel = getViewModel {
-            PaymentMethodsListViewModel(
-                application = requireActivity().application,
-                paymentMethods = dropInViewModel.getPaymentMethods(),
-                storedPaymentMethods = dropInViewModel.getStoredPaymentMethods(),
-                order = dropInViewModel.currentOrder,
-                checkoutConfiguration = dropInViewModel.checkoutConfiguration,
-                dropInParams = dropInViewModel.dropInParams,
-                dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
-            )
-        }
         _binding = FragmentPaymentMethodsListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -96,7 +98,8 @@ internal class PaymentMethodListDialogFragment :
             .onEach { paymentMethods ->
                 adyenLog(AdyenLogLevel.DEBUG) { "paymentMethods changed" }
                 paymentMethodAdapter?.submitList(paymentMethods)
-            }.launchIn(lifecycleScope)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
 
         paymentMethodsListViewModel
             .eventsFlow
@@ -130,7 +133,7 @@ internal class PaymentMethodListDialogFragment :
                     }
                 }
             }
-            .launchIn(lifecycleScope)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

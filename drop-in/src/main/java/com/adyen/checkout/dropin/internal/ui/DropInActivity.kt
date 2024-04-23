@@ -132,6 +132,7 @@ internal class DropInActivity :
 
         override fun onServiceDisconnected(className: ComponentName) {
             adyenLog(AdyenLogLevel.DEBUG) { "onServiceDisconnected" }
+            serviceBound = false
             dropInService = null
         }
     }
@@ -214,7 +215,7 @@ internal class DropInActivity :
     }
 
     private fun startDropInService() {
-        val bound = BaseDropInService.startService(
+        val bound = BaseDropInService.bindService(
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
@@ -237,9 +238,8 @@ internal class DropInActivity :
 
     private fun stopDropInService() {
         if (serviceBound) {
-            BaseDropInService.stopService(
+            BaseDropInService.unbindService(
                 context = this,
-                merchantService = dropInViewModel.serviceComponentName,
                 connection = serviceConnection,
             )
             serviceBound = false
@@ -295,6 +295,7 @@ internal class DropInActivity :
 
     override fun onDestroy() {
         adyenLog(AdyenLogLevel.VERBOSE) { "onDestroy" }
+        stopDropInService()
         super.onDestroy()
     }
 
