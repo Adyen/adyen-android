@@ -20,7 +20,7 @@ jobs:
           cache: 'gradle'
 
       - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v1
+        uses: ts-graphviz/setup-graphviz@v2
 
       - name: Generate Dependency Graph
         run: ./gradlew dependencyGraph
