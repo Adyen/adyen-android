@@ -163,7 +163,6 @@ ext {
         ],
         mockito         : [
             "org.mockito:mockito-junit-jupiter:$mockito_version",
-            "org.mockito:mockito-inline:$mockito_version",
             "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
         ],
         mockitoAndroid  : [
