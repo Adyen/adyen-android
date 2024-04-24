@@ -14,13 +14,13 @@
     android:padding="@dimen/standard_three_quarters_margin">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textView_flag"
+        android:id="@+id/textView_countryCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/standard_half_margin"
         android:textSize="16sp"
-        tools:text="🇳🇱" />
+        tools:text="NL" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_country"

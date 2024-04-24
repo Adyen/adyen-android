@@ -122,7 +122,6 @@ internal class MbWayView @JvmOverloads constructor(
             isoCode = it.isoCode,
             countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
             callingCode = it.callingCode,
-            emoji = it.emoji,
         )
     }
 }
