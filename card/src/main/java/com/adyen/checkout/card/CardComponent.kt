@@ -40,7 +40,9 @@ import kotlinx.coroutines.flow.Flow
  * A [PaymentComponent] that supports the [PaymentMethodTypes.SCHEME] payment method.
  */
 @Suppress("TooManyFunctions")
-open class CardComponent constructor(
+open class CardComponent
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val cardDelegate: CardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
