@@ -23,11 +23,12 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.util.ThemeUtil
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
-    private var onRedirectListener: (() -> Unit)? = null
+    private var onRedirectListener: WeakReference<(() -> Unit)>? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
@@ -72,7 +73,7 @@ class DefaultRedirectHandler : RedirectHandler {
             launchWithCustomTabs(context, uri) ||
             launchBrowser(context, uri)
         ) {
-            onRedirectListener?.invoke()
+            onRedirectListener?.get()?.invoke()
             return
         }
 
@@ -194,10 +195,11 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
-        onRedirectListener = listener
+        onRedirectListener = WeakReference(listener)
     }
 
     override fun removeOnRedirectListener() {
+        onRedirectListener?.clear()
         onRedirectListener = null
     }
 
