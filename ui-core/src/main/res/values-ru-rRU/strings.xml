@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Номер дома</string>
     <string name="checkout_address_form_apartment_suite_hint">Квартира / помещение</string>
     <string name="checkout_address_form_city_hint">Город</string>
-    <string name="checkout_address_form_country_hint">Страна</string>
+    <string name="checkout_address_form_country_hint">Страна/регион</string>
     <string name="checkout_address_form_states_hint">Штат</string>
     <string name="checkout_address_postal_code_hint">Почтовый индекс</string>
     <string name="checkout_address_form_zip_code_hint">Почтовый индекс</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Номер дома (необязательно)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Квартира / помещение (необязательно)</string>
     <string name="checkout_address_form_city_hint_optional"> Город (необязательно)</string>
-    <string name="checkout_address_form_country_hint_optional">Страна (необязательно)</string>
+    <string name="checkout_address_form_country_hint_optional">Страна/регион (необязательно)</string>
     <string name="checkout_address_form_states_hint_optional">Штат (необязательно)</string>
     <string name="checkout_address_postal_code_hint_optional">Почтовый индекс (необязательно)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Почтовый индекс (необязательно)</string>

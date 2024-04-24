@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Číslo domu</string>
     <string name="checkout_address_form_apartment_suite_hint">Byt/apartmán</string>
     <string name="checkout_address_form_city_hint">Mesto</string>
-    <string name="checkout_address_form_country_hint">Krajina</string>
+    <string name="checkout_address_form_country_hint">Krajina/región</string>
     <string name="checkout_address_form_states_hint">Štát</string>
     <string name="checkout_address_postal_code_hint">PSČ</string>
     <string name="checkout_address_form_zip_code_hint">PSČ</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Číslo domu (nepovinné)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Byt/apartmán (voliteľné)</string>
     <string name="checkout_address_form_city_hint_optional"> Mesto (nepovinné)</string>
-    <string name="checkout_address_form_country_hint_optional">Krajina (voliteľné)</string>
+    <string name="checkout_address_form_country_hint_optional">Krajina/región (voliteľné)</string>
     <string name="checkout_address_form_states_hint_optional">Štát (nepovinné)</string>
     <string name="checkout_address_postal_code_hint_optional">Poštové smerovacie číslo (nepovinné)</string>
     <string name="checkout_address_form_zip_code_hint_optional">PSČ (nepovinné)</string>

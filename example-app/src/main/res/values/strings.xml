@@ -13,7 +13,7 @@
     <string name="gift_card_component_entry">Gift Card</string>
     <string name="gift_card_with_session_component_entry">Gift Card</string>
 
-    <string name="country_code_error">Your country code must be %s</string>
+    <string name="country_code_error">Your country/region code must be %s</string>
     <string name="currency_code_error">Your currency code must be %s</string>
     <string name="google_pay_unavailable_error">Google Pay is unavailable on this device</string>
 
@@ -45,7 +45,7 @@
     <string name="threeds_mode_key">threeds_mode</string>
     <string name="threeds_mode_title">3D Secure</string>
     <string name="shopper_country_key">shopper_country</string>
-    <string name="shopper_country_title">Country</string>
+    <string name="shopper_country_title">Country/region</string>
     <string name="shopper_locale_key">shopper_locale</string>
     <string name="shopper_locale_title">Shopper Locale</string>
     <string name="shopper_email_key">shopper_email</string>

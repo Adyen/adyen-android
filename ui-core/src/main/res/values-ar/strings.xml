@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">رقم المنزل</string>
     <string name="checkout_address_form_apartment_suite_hint">الشقة / الجناح</string>
     <string name="checkout_address_form_city_hint">المدينة</string>
-    <string name="checkout_address_form_country_hint">البلد</string>
+    <string name="checkout_address_form_country_hint">البلد/المنطقة</string>
     <string name="checkout_address_form_states_hint">الولاية</string>
     <string name="checkout_address_postal_code_hint">الرمز البريدي</string>
     <string name="checkout_address_form_zip_code_hint">الرمز البريدي</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">رقم المنزل (اختياري)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">الشقة / الجناح (اختياري)</string>
     <string name="checkout_address_form_city_hint_optional"> المدينة (اختياري)</string>
-    <string name="checkout_address_form_country_hint_optional">البلد (اختياري)</string>
+    <string name="checkout_address_form_country_hint_optional">البلد/المنطقة (اختياري)</string>
     <string name="checkout_address_form_states_hint_optional">الولاية (اختياري)</string>
     <string name="checkout_address_postal_code_hint_optional">الرمز البريدي (اختياري)</string>
     <string name="checkout_address_form_zip_code_hint_optional">الرمز البريدي (اختياري)</string>

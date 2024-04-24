@@ -104,19 +104,19 @@ internal class EContextView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutFirstName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_FirstNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutLastName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_LastNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutMobileNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_PhoneNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutEmailAddress.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_ShopperEmailInput,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -163,7 +163,6 @@ internal class EContextView @JvmOverloads constructor(
                 isoCode = it.isoCode,
                 countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
                 callingCode = it.callingCode,
-                emoji = it.emoji
             )
         }
         countryAdapter = CountryAdapter(context, localizedContext).apply {

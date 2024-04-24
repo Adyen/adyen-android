@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Huisnummer</string>
     <string name="checkout_address_form_apartment_suite_hint">Appartement/Suite</string>
     <string name="checkout_address_form_city_hint">Stad</string>
-    <string name="checkout_address_form_country_hint">Land</string>
+    <string name="checkout_address_form_country_hint">Land/regio</string>
     <string name="checkout_address_form_states_hint">Staat</string>
     <string name="checkout_address_postal_code_hint">Postcode</string>
     <string name="checkout_address_form_zip_code_hint">Postcode</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Huisnummer (optioneel)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Appartement/Suite (optioneel)</string>
     <string name="checkout_address_form_city_hint_optional"> Stad (optioneel)</string>
-    <string name="checkout_address_form_country_hint_optional">Land (optioneel)</string>
+    <string name="checkout_address_form_country_hint_optional">Land/regio (optioneel)</string>
     <string name="checkout_address_form_states_hint_optional">Staat (optioneel)</string>
     <string name="checkout_address_postal_code_hint_optional">Postcode (optioneel)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Postcode (optioneel)</string>

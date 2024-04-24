@@ -17,11 +17,11 @@ internal class CountryViewHolder(private val binding: CountryViewBinding) : Recy
 
     fun bindItem(country: CountryModel) {
         with(binding) {
-            textViewFlag.text = country.emoji
+            textViewCountryCode.text = country.isoCode
             textViewCountry.text = root.context.getString(
                 R.string.checkout_country_name_format,
                 country.countryName,
-                country.callingCode
+                country.callingCode,
             )
         }
     }

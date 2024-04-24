@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Husnummer</string>
     <string name="checkout_address_form_apartment_suite_hint">Lägenhetsnummer</string>
     <string name="checkout_address_form_city_hint">Stad</string>
-    <string name="checkout_address_form_country_hint">Land</string>
+    <string name="checkout_address_form_country_hint">Land/region</string>
     <string name="checkout_address_form_states_hint">Delstat</string>
     <string name="checkout_address_postal_code_hint">Postnummer</string>
     <string name="checkout_address_form_zip_code_hint">Postnummer</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Husnummer (valfritt)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Lägenhetsnummer (valfritt)</string>
     <string name="checkout_address_form_city_hint_optional"> Ort (valfritt)</string>
-    <string name="checkout_address_form_country_hint_optional">Land (valfritt)</string>
+    <string name="checkout_address_form_country_hint_optional">Land/region (valfritt)</string>
     <string name="checkout_address_form_states_hint_optional">Delstat (valfritt)</string>
     <string name="checkout_address_postal_code_hint_optional">Postnummer (valfritt)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valfritt)</string>

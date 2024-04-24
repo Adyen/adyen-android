@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">門牌號</string>
     <string name="checkout_address_form_apartment_suite_hint">公寓／套房</string>
     <string name="checkout_address_form_city_hint">城市</string>
-    <string name="checkout_address_form_country_hint">國家/地區</string>
+    <string name="checkout_address_form_country_hint">國家／地區</string>
     <string name="checkout_address_form_states_hint">州</string>
     <string name="checkout_address_postal_code_hint">郵遞區號</string>
     <string name="checkout_address_form_zip_code_hint">郵遞區號</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">門牌號（選用）</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">公寓／套房（選用）</string>
     <string name="checkout_address_form_city_hint_optional"> 城市（選用）</string>
-    <string name="checkout_address_form_country_hint_optional">國家/地區（選用）</string>
+    <string name="checkout_address_form_country_hint_optional">國家／地區（選用）</string>
     <string name="checkout_address_form_states_hint_optional">州（選用）</string>
     <string name="checkout_address_postal_code_hint_optional">郵遞區號（選用）</string>
     <string name="checkout_address_form_zip_code_hint_optional">郵遞區號（選用）</string>

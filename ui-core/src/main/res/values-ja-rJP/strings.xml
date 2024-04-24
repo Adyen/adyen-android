@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">部屋番号</string>
     <string name="checkout_address_form_apartment_suite_hint">アパート名/部屋名</string>
     <string name="checkout_address_form_city_hint">市区</string>
-    <string name="checkout_address_form_country_hint">国</string>
+    <string name="checkout_address_form_country_hint">国/地域</string>
     <string name="checkout_address_form_states_hint">都道府県</string>
     <string name="checkout_address_postal_code_hint">郵便番号</string>
     <string name="checkout_address_form_zip_code_hint">郵便番号</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">部屋番号 (任意)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">アパート名/部屋名 (任意)</string>
     <string name="checkout_address_form_city_hint_optional"> 市区町村 (任意)</string>
-    <string name="checkout_address_form_country_hint_optional">国 (任意)</string>
+    <string name="checkout_address_form_country_hint_optional">国/地域 (任意)</string>
     <string name="checkout_address_form_states_hint_optional">都道府県 (任意)</string>
     <string name="checkout_address_postal_code_hint_optional">郵便番号 (任意)</string>
     <string name="checkout_address_form_zip_code_hint_optional">郵便番号 (任意)</string>

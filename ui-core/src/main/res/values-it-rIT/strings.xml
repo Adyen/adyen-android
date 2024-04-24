@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Numero civico</string>
     <string name="checkout_address_form_apartment_suite_hint">Appartamento/suite</string>
     <string name="checkout_address_form_city_hint">Città</string>
-    <string name="checkout_address_form_country_hint">Paese</string>
+    <string name="checkout_address_form_country_hint">Paese/Regione</string>
     <string name="checkout_address_form_states_hint">Stato</string>
     <string name="checkout_address_postal_code_hint">Codice postale</string>
     <string name="checkout_address_form_zip_code_hint">CAP</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Numero civico (facoltativo)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Appartamento / Suite (facoltativo)</string>
     <string name="checkout_address_form_city_hint_optional"> Città (facoltativo)</string>
-    <string name="checkout_address_form_country_hint_optional">Paese (facoltativo)</string>
+    <string name="checkout_address_form_country_hint_optional">Paese/Regione (facoltativo)</string>
     <string name="checkout_address_form_states_hint_optional">Stato (facoltativo)</string>
     <string name="checkout_address_postal_code_hint_optional">Codice postale (facoltativo)</string>
     <string name="checkout_address_form_zip_code_hint_optional">CAP (facoltativo)</string>
