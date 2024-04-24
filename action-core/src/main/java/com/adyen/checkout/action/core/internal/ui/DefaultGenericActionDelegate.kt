@@ -196,6 +196,11 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
+        _delegate?.let { delegate ->
+            if (delegate is RedirectableDelegate) {
+                delegate.setOnRedirectListener(listener)
+            }
+        }
         onRedirectListener = listener
     }
 
