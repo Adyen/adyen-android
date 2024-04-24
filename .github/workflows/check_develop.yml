@@ -10,7 +10,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  assemble:
+    name: Assemble
+    uses: ./.github/workflows/assemble.yml
   sonar_cloud:
     name: SonarCloud
     uses: ./.github/workflows/sonar_cloud.yml
+    needs: assemble
     secrets: inherit
