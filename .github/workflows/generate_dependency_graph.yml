@@ -21,7 +21,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
         with:
-          cache-read-only: false
+          cache-read-only: true
 
       - name: Setup Graphviz
         uses: ts-graphviz/setup-graphviz@v2

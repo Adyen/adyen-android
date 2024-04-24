@@ -22,7 +22,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
         with:
-          cache-read-only: false
+          cache-read-only: true
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
