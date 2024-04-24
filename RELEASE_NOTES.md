@@ -10,3 +10,7 @@
 
 ## Fixed
 - Fixed various memory leaks.
+
+## Changed
+- Flags are replaced by ISO codes in the phone number inputs (affected payment methods: MB Way, Pay Easy, Convenience Stores Japan, Online Banking Japan and Seven-Eleven).
+- Strings containing "country" are changed to "country/region".
