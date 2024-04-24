@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Talon numero</string>
     <string name="checkout_address_form_apartment_suite_hint">Huoneisto / sviitti</string>
     <string name="checkout_address_form_city_hint">Kaupunki</string>
-    <string name="checkout_address_form_country_hint">Maa</string>
+    <string name="checkout_address_form_country_hint">Maa/alue</string>
     <string name="checkout_address_form_states_hint">Osavaltio</string>
     <string name="checkout_address_postal_code_hint">Postinumero</string>
     <string name="checkout_address_form_zip_code_hint">Postinumero</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Talon numero (valinnainen)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Huoneisto / sviitti (valinnainen)</string>
     <string name="checkout_address_form_city_hint_optional"> Kaupunki (valinnainen)</string>
-    <string name="checkout_address_form_country_hint_optional">Maa (valinnainen)</string>
+    <string name="checkout_address_form_country_hint_optional">Maa/alue (valinnainen)</string>
     <string name="checkout_address_form_states_hint_optional">Osavaltio (valinnainen)</string>
     <string name="checkout_address_postal_code_hint_optional">Postinumero (valinnainen)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Postinumero (valinnainen)</string>

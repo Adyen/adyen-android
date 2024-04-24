@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">House number</string>
     <string name="checkout_address_form_apartment_suite_hint">Apartment / Suite</string>
     <string name="checkout_address_form_city_hint">City</string>
-    <string name="checkout_address_form_country_hint">Country</string>
+    <string name="checkout_address_form_country_hint">Country/Region</string>
     <string name="checkout_address_form_states_hint">State</string>
     <string name="checkout_address_postal_code_hint">Postal code</string>
     <string name="checkout_address_form_zip_code_hint">Zip code</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">House number (optional)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Apartment / Suite (optional)</string>
     <string name="checkout_address_form_city_hint_optional"> City (optional)</string>
-    <string name="checkout_address_form_country_hint_optional">Country (optional)</string>
+    <string name="checkout_address_form_country_hint_optional">Country/Region (optional)</string>
     <string name="checkout_address_form_states_hint_optional">State (optional)</string>
     <string name="checkout_address_postal_code_hint_optional">Postal code (optional)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Zip code (optional)</string>

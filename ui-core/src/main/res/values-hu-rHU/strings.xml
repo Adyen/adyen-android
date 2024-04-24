@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Házszám</string>
     <string name="checkout_address_form_apartment_suite_hint">Lakás/ajtószám</string>
     <string name="checkout_address_form_city_hint">Város</string>
-    <string name="checkout_address_form_country_hint">Ország</string>
+    <string name="checkout_address_form_country_hint">Ország/régió</string>
     <string name="checkout_address_form_states_hint">Állam</string>
     <string name="checkout_address_postal_code_hint">Irányítószám</string>
     <string name="checkout_address_form_zip_code_hint">Irányítószám</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Házszám (nem kötelező)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Lakás/ajtószám (nem kötelező)</string>
     <string name="checkout_address_form_city_hint_optional"> Város (nem kötelező)</string>
-    <string name="checkout_address_form_country_hint_optional">Ország (nem kötelező)</string>
+    <string name="checkout_address_form_country_hint_optional">Ország/régió (nem kötelező)</string>
     <string name="checkout_address_form_states_hint_optional">Állam (nem kötelező)</string>
     <string name="checkout_address_postal_code_hint_optional">Irányítószám (nem kötelező)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Irányítószám (nem kötelező)</string>

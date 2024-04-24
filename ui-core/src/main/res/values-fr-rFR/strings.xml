@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Numéro de rue</string>
     <string name="checkout_address_form_apartment_suite_hint">Appartement</string>
     <string name="checkout_address_form_city_hint">Ville</string>
-    <string name="checkout_address_form_country_hint">Pays</string>
+    <string name="checkout_address_form_country_hint">Pays/Région</string>
     <string name="checkout_address_form_states_hint">État</string>
     <string name="checkout_address_postal_code_hint">Code postal</string>
     <string name="checkout_address_form_zip_code_hint">Code postal</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Numéro de rue (facultatif)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Appartement (facultatif)</string>
     <string name="checkout_address_form_city_hint_optional"> Ville (facultatif)</string>
-    <string name="checkout_address_form_country_hint_optional">Pays (facultatif)</string>
+    <string name="checkout_address_form_country_hint_optional">Pays/Région (facultatif)</string>
     <string name="checkout_address_form_states_hint_optional">État (facultatif)</string>
     <string name="checkout_address_postal_code_hint_optional">Code postal (facultatif)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Code postal (facultatif)</string>
