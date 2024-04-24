@@ -59,12 +59,14 @@ constructor(
             val redirectDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             RedirectComponent(
                 delegate = redirectDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, redirectFactory)[key, RedirectComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
