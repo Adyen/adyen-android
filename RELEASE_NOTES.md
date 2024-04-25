@@ -10,6 +10,7 @@
 
 ## Fixed
 - Fixed various memory leaks.
+- Drop-in no longer overrides the log level in case of debug builds.
 
 ## Changed
 - Flags are replaced by ISO codes in the phone number inputs (affected payment methods: MB Way, Pay Easy, Convenience Stores Japan, Online Banking Japan and Seven-Eleven).
