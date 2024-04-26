@@ -36,7 +36,6 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
@@ -105,7 +104,6 @@ constructor(
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             coroutineDispatcher = Dispatchers.Default,
-            base64Encoder = AndroidBase64Encoder(),
             application = application,
         )
     }

@@ -34,7 +34,6 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.components.core.internal.util.Base64Encoder
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -66,6 +65,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultAdyen3DS2Delegate(
@@ -78,7 +79,6 @@ internal class DefaultAdyen3DS2Delegate(
     private val redirectHandler: RedirectHandler,
     private val threeDS2Service: ThreeDS2Service,
     private val coroutineDispatcher: CoroutineDispatcher,
-    private val base64Encoder: Base64Encoder,
     private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
 
@@ -253,9 +253,10 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @Throws(ComponentException::class, ModelSerializationException::class)
     private fun decodeFingerprintToken(encoded: String): FingerprintToken {
-        val decodedFingerprintToken = base64Encoder.decode(encoded)
+        val decodedFingerprintToken = Base64.decode(encoded).toString(Charsets.UTF_8)
 
         val fingerprintJson: JSONObject = try {
             JSONObject(decodedFingerprintToken)
@@ -315,6 +316,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @Throws(ComponentException::class)
     private fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
         return try {
@@ -329,7 +331,7 @@ internal class DefaultAdyen3DS2Delegate(
                 }
             }
 
-            base64Encoder.encode(fingerprintJson.toString())
+            Base64.encode(fingerprintJson.toString().toByteArray())
         } catch (e: JSONException) {
             throw ComponentException("Failed to create encoded fingerprint", e)
         }
@@ -389,6 +391,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @VisibleForTesting
     internal fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
         adyenLog(AdyenLogLevel.DEBUG) { "challengeShopper" }
@@ -400,7 +403,7 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
-        val decodedChallengeToken = base64Encoder.decode(encodedChallengeToken)
+        val decodedChallengeToken = Base64.decode(encodedChallengeToken).toString(Charsets.UTF_8)
         val challengeTokenJson: JSONObject = try {
             JSONObject(decodedChallengeToken)
         } catch (e: JSONException) {

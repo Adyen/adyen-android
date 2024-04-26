@@ -6,6 +6,8 @@
  * Created by oscars on 24/8/2022.
  */
 
+@file:OptIn(ExperimentalEncodingApi::class)
+
 package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.app.Activity
@@ -28,7 +30,6 @@ import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.util.JavaBase64Encoder
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -73,6 +74,8 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.io.IOException
 import java.util.Locale
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
@@ -83,8 +86,6 @@ internal class DefaultAdyen3DS2DelegateTest(
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var delegate: DefaultAdyen3DS2Delegate
     private lateinit var paymentDataRepository: PaymentDataRepository
-
-    private val base64Encoder = JavaBase64Encoder()
 
     private val threeDS2Service: TestThreeDS2Service = TestThreeDS2Service()
 
@@ -112,7 +113,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             redirectHandler = redirectHandler,
             threeDS2Service = threeDS2Service,
             coroutineDispatcher = UnconfinedTestDispatcher(),
-            base64Encoder = base64Encoder,
             application = Application(),
         )
     }
@@ -171,7 +171,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(this)
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode("{incorrectJson}")
+            val encodedJson = Base64.encode("{incorrectJson}".toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             assertTrue(exceptionFlow.latestValue is ComponentException)
@@ -184,7 +184,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             assertEquals(error, exceptionFlow.latestValue.cause)
@@ -199,7 +199,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             // We don't care about the encoded value in this test, we just want to know if details are there
@@ -213,7 +213,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             assertEquals(error, exceptionFlow.latestValue.cause)
@@ -225,7 +225,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             // We don't care about the encoded value in this test, we just want to know if details are there
@@ -237,7 +237,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.initialize(this)
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             assertEquals("Failed to retrieve 3DS2 authentication parameters", exceptionFlow.latestValue.message)
@@ -261,7 +261,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             delegate.initialize(this)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, true)
 
             val expected = ActionComponentData(
@@ -289,7 +289,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
                 delegate.initialize(this)
 
-                val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
                 delegate.identifyShopper(Activity(), encodedJson, true)
 
                 redirectHandler.assertLaunchRedirectCalled()
@@ -313,7 +313,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             delegate.initialize(this)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, true)
             assertEquals(error, exceptionFlow.latestValue.cause)
         }
@@ -332,7 +332,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
             delegate.initialize(this)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             assertNotNull(detailsFlow.latestValue.details)
@@ -356,7 +356,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             initializeTransaction(this)
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.challengeShopper(Activity(), base64Encoder.encode("token"))
+            delegate.challengeShopper(Activity(), Base64.encode("token".toByteArray()))
 
             assertTrue(exceptionFlow.latestValue.cause is JSONException)
         }
@@ -366,7 +366,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val transaction = initializeTransaction(this)
 
             // We need to set the messageVersion to workaround an error in the 3DS2 SDK
-            delegate.challengeShopper(Activity(), base64Encoder.encode("{\"messageVersion\":\"2.1.0\"}"))
+            delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
 
             transaction.assertDoChallengeCalled()
         }
@@ -380,7 +380,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
             // We need to set the messageVersion to workaround an error in the 3DS2 SDK
-            delegate.challengeShopper(Activity(), base64Encoder.encode("{\"messageVersion\":\"2.1.0\"}"))
+            delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
 
             assertTrue(exceptionFlow.latestValue.cause is InvalidInputException)
         }
@@ -399,7 +399,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             delegate.initialize(scope)
 
-            val encodedJson = base64Encoder.encode(TEST_FINGERPRINT_TOKEN)
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             return transaction
