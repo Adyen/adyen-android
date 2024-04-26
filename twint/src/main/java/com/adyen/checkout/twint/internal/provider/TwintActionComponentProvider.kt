@@ -59,13 +59,15 @@ constructor(
             val twintDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             TwintActionComponent(
                 delegate = twintDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, twintFactory)[key, TwintActionComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
