@@ -500,7 +500,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun cleanUp3DS2() {
         @Suppress("SwallowedException")
         try {
-            ThreeDS2Service.INSTANCE.cleanup(application)
+            threeDS2Service.cleanup(application)
         } catch (e: SDKNotInitializedException) {
             // Safe to ignore
         }

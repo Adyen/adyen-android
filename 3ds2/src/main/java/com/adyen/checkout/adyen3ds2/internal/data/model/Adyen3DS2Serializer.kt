@@ -13,11 +13,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 internal class Adyen3DS2Serializer {
-    companion object {
-        private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
-        private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
-        private const val THREEDS_RESULT_KEY = "threeDSResult"
-    }
 
     @Throws(ComponentException::class)
     fun createFingerprintDetails(encodedFingerprint: String): JSONObject {
@@ -56,5 +51,11 @@ internal class Adyen3DS2Serializer {
             throw ComponentException("Failed to create ThreeDS Result details", e)
         }
         return threeDsDetails
+    }
+
+    companion object {
+        private const val FINGERPRINT_DETAILS_KEY = "threeds2.fingerprint"
+        private const val CHALLENGE_DETAILS_KEY = "threeds2.challengeResult"
+        private const val THREEDS_RESULT_KEY = "threeDSResult"
     }
 }

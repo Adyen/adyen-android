@@ -12,7 +12,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import app.cash.turbine.test
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2ComponentViewType
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.action.Threeds2Action
@@ -21,6 +20,7 @@ import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
@@ -80,10 +80,9 @@ internal class Adyen3DS2ComponentTest(
 
     @Test
     fun `when component is initialized then view flow should match delegate view flow`() = runTest {
-        component.viewFlow.test {
-            assertEquals(Adyen3DS2ComponentViewType, awaitItem())
-            expectNoEvents()
-        }
+        val viewFlow = component.viewFlow.test(testScheduler)
+
+        assertEquals(Adyen3DS2ComponentViewType, viewFlow.latestValue)
     }
 
     @Test
@@ -91,15 +90,12 @@ internal class Adyen3DS2ComponentTest(
         val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(adyen3DS2Delegate.viewFlow) doReturn delegateViewFlow
         component = Adyen3DS2Component(adyen3DS2Delegate, actionComponentEventHandler)
+        val viewFlow = component.viewFlow.test(testScheduler)
 
-        component.viewFlow.test {
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+        assertEquals(TestComponentViewType.VIEW_TYPE_1, viewFlow.values[0])
 
-            delegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
-
-            expectNoEvents()
-        }
+        delegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+        assertEquals(TestComponentViewType.VIEW_TYPE_2, viewFlow.values[1])
     }
 
     @Test
