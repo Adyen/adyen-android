@@ -9,6 +9,7 @@
 package com.adyen.checkout.core
 
 import android.util.Log
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.internal.util.LogcatLogger
 import com.adyen.checkout.core.internal.util.Logger
 
@@ -35,6 +36,8 @@ interface AdyenLogger {
         internal var logger: AdyenLogger = LogcatLogger()
             private set
 
+        private var didSetLogLevelManually = false
+
         /**
          * Sets the minimum level to be logged.
          */
@@ -55,13 +58,14 @@ interface AdyenLogger {
                 Log.ERROR -> AdyenLogLevel.ERROR
                 else -> AdyenLogLevel.NONE
             }
-            logger.setLogLevel(mappedLevel)
+            setLogLevel(mappedLevel)
         }
 
         /**
          * Sets the minimum level to be logged.
          */
         fun setLogLevel(level: AdyenLogLevel) {
+            didSetLogLevelManually = true
             logger.setLogLevel(level)
         }
 
@@ -77,6 +81,14 @@ interface AdyenLogger {
          */
         fun resetLogger() {
             this.logger = LogcatLogger()
+            didSetLogLevelManually = false
+        }
+
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+        fun setInitialLogLevel(level: AdyenLogLevel) {
+            if (!didSetLogLevelManually) {
+                logger.setLogLevel(level)
+            }
         }
     }
 }
