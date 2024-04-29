@@ -277,6 +277,11 @@ class CardView @JvmOverloads constructor(
             if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
                 binding.addressFormInput.highlightValidationErrors(isErrorFocused)
             }
+            if (binding.textInputLayoutAddressLookup.isVisible && !it.addressState.isValid) {
+                binding.textInputLayoutAddressLookup.showError(
+                    localizedContext.getString(R.string.checkout_address_lookup_validation_empty)
+                )
+            }
         }
     }
 

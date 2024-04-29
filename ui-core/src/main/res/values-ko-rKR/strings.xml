@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">\'%s\'와(과) 일치하는 항목이 없습니다. 다시 시도하거나 #수동 주소 입력#을 사용하세요.</string>
     <string name="checkout_address_lookup_enter_manually">수동으로 주소 입력</string>
     <string name="checkout_address_lookup_submit">이 주소 사용</string>
+    <string name="checkout_address_lookup_validation_empty">주소 필수</string>
 
 </resources>

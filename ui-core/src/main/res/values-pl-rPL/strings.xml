@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Nie znaleziono żadnych dopasowań dla \'%s\', spróbuj ponownie lub #wprowadź adres ręcznie#</string>
     <string name="checkout_address_lookup_enter_manually">Wprowadź adres ręcznie</string>
     <string name="checkout_address_lookup_submit">Użyj tego adresu</string>
+    <string name="checkout_address_lookup_validation_empty">Wymagane jest podanie adresu</string>
 
 </resources>

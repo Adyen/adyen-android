@@ -54,6 +54,7 @@
     <string name="checkout_address_lookup_empty_description">\'%s\' did not match with anything, try again or use #manual address entry#</string>
     <string name="checkout_address_lookup_enter_manually">Enter address manually</string>
     <string name="checkout_address_lookup_submit">Use this address</string>
+    <string name="checkout_address_lookup_validation_empty">Address required</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_country_name_format" translatable="false">%1$s (%2$s)</string>
