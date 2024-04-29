@@ -107,15 +107,6 @@ object GenericEvents {
         type = AnalyticsEvent.Log.Type.SUBMIT,
     )
 
-    fun threeDS2(
-        component: String,
-        message: String,
-    ) = AnalyticsEvent.Log(
-        component = component,
-        type = AnalyticsEvent.Log.Type.THREEDS2,
-        message = message,
-    )
-
     fun action(
         component: String,
         subType: String,
