@@ -68,6 +68,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
+import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
@@ -790,7 +791,7 @@ internal class DefaultCardDelegateTest(
                     assertNull(encryptedPassword)
                     assertNull(fundingSource)
                     assertNull(storedPaymentMethodId)
-                    assertEquals("2.2.15", threeDS2SdkVersion)
+                    assertEquals(ThreeDS2Service.SDK_VERSION, threeDS2SdkVersion)
                 }
             }
         }
@@ -894,7 +895,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals(PaymentMethodTypes.SCHEME, type)
                     assertEquals(CardType.VISA.txVariant, brand)
                     assertNull(storedPaymentMethodId)
-                    assertEquals("2.2.15", threeDS2SdkVersion)
+                    assertEquals(ThreeDS2Service.SDK_VERSION, threeDS2SdkVersion)
                 }
             }
         }

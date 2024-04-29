@@ -34,7 +34,6 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
-import com.adyen.checkout.components.core.internal.util.Base64Encoder
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -46,8 +45,10 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
+import com.adyen.threeds2.InitializeResult
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
+import com.adyen.threeds2.TransactionResult
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
@@ -64,6 +65,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultAdyen3DS2Delegate(
@@ -76,7 +79,6 @@ internal class DefaultAdyen3DS2Delegate(
     private val redirectHandler: RedirectHandler,
     private val threeDS2Service: ThreeDS2Service,
     private val coroutineDispatcher: CoroutineDispatcher,
-    private val base64Encoder: Base64Encoder,
     private val application: Application,
 ) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
 
@@ -210,7 +212,10 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
-        val configParameters = createAdyenConfigParameters(fingerprintToken)
+        val configParameters = createAdyenConfigParameters(fingerprintToken) ?: run {
+            exceptionChannel.trySend(ComponentException("Failed to create ConfigParameters."))
+            return
+        }
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
@@ -221,11 +226,13 @@ internal class DefaultAdyen3DS2Delegate(
             // This makes sure the 3DS2 SDK doesn't re-use any state from previous transactions
             closeTransaction()
 
-            try {
-                adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
+            adyenLog(AdyenLogLevel.DEBUG) { "initialize 3DS2 SDK" }
+            val initializeResult =
                 threeDS2Service.initialize(activity, configParameters, null, componentParams.uiCustomization)
-            } catch (e: SDKRuntimeException) {
-                exceptionChannel.trySend(ComponentException("Failed to initialize 3DS2 SDK", e))
+
+            if (initializeResult is InitializeResult.Failure) {
+                val details = makeDetails(initializeResult.transactionStatus, initializeResult.additionalDetails)
+                emitDetails(details)
                 return@launch
             }
 
@@ -246,9 +253,10 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @Throws(ComponentException::class, ModelSerializationException::class)
     private fun decodeFingerprintToken(encoded: String): FingerprintToken {
-        val decodedFingerprintToken = base64Encoder.decode(encoded)
+        val decodedFingerprintToken = Base64.decode(encoded).toString(Charsets.UTF_8)
 
         val fingerprintJson: JSONObject = try {
             JSONObject(decodedFingerprintToken)
@@ -259,32 +267,46 @@ internal class DefaultAdyen3DS2Delegate(
         return FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
     }
 
+    @Suppress("DestructuringDeclarationWithTooManyEntries")
     private fun createAdyenConfigParameters(
         fingerprintToken: FingerprintToken
-    ): ConfigParameters = AdyenConfigParameters.Builder(
-        // directoryServerId
-        fingerprintToken.directoryServerId,
-        // directoryServerPublicKey
-        fingerprintToken.directoryServerPublicKey,
-        // directoryServerRootCertificates
-        fingerprintToken.directoryServerRootCertificates,
-    )
-        .deviceParameterBlockList(componentParams.deviceParameterBlockList)
-        .build()
+    ): ConfigParameters? {
+        val (directoryServerId, directoryServerPublicKey, directoryServerRootCertificates, _, _) = fingerprintToken
+
+        if (directoryServerId == null || directoryServerPublicKey == null || directoryServerRootCertificates == null) {
+            adyenLog(AdyenLogLevel.DEBUG) {
+                "directoryServerId, directoryServerPublicKey or directoryServerRootCertificates is null."
+            }
+            return null
+        }
+
+        return AdyenConfigParameters.Builder(
+            directoryServerId,
+            directoryServerPublicKey,
+            directoryServerRootCertificates,
+        )
+            .deviceParameterBlockList(componentParams.deviceParameterBlockList)
+            .build()
+    }
 
     private fun createTransaction(fingerprintToken: FingerprintToken): Transaction? {
         if (fingerprintToken.threeDSMessageVersion == null) {
-            exceptionChannel.trySend(
-                ComponentException(
-                    "Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken.",
-                ),
-            )
+            val error = "Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."
+            exceptionChannel.trySend(ComponentException(error))
             return null
         }
 
         return try {
             adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
-            threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)
+            when (val result = threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)) {
+                is TransactionResult.Failure -> {
+                    val details = makeDetails(result.transactionStatus, result.additionalDetails)
+                    emitDetails(details)
+                    null
+                }
+
+                is TransactionResult.Success -> result.transaction
+            }
         } catch (e: SDKNotInitializedException) {
             exceptionChannel.trySend(ComponentException("Failed to create 3DS2 Transaction", e))
             null
@@ -294,6 +316,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @Throws(ComponentException::class)
     private fun createEncodedFingerprint(authenticationRequestParameters: AuthenticationRequestParameters): String {
         return try {
@@ -308,7 +331,7 @@ internal class DefaultAdyen3DS2Delegate(
                 }
             }
 
-            base64Encoder.encode(fingerprintJson.toString())
+            Base64.encode(fingerprintJson.toString().toByteArray())
         } catch (e: JSONException) {
             throw ComponentException("Failed to create encoded fingerprint", e)
         }
@@ -368,6 +391,7 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     @VisibleForTesting
     internal fun challengeShopper(activity: Activity, encodedChallengeToken: String) {
         adyenLog(AdyenLogLevel.DEBUG) { "challengeShopper" }
@@ -379,7 +403,7 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
-        val decodedChallengeToken = base64Encoder.decode(encodedChallengeToken)
+        val decodedChallengeToken = Base64.decode(encodedChallengeToken).toString(Charsets.UTF_8)
         val challengeTokenJson: JSONObject = try {
             JSONObject(decodedChallengeToken)
         } catch (e: JSONException) {
@@ -479,7 +503,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun cleanUp3DS2() {
         @Suppress("SwallowedException")
         try {
-            ThreeDS2Service.INSTANCE.cleanup(application)
+            threeDS2Service.cleanup(application)
         } catch (e: SDKNotInitializedException) {
             // Safe to ignore
         }
