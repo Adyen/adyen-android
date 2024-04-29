@@ -52,6 +52,7 @@ sealed interface AnalyticsEvent {
         override val component: String,
         val type: Type? = null,
         val subType: String? = null,
+        val result: String? = null,
         val target: String? = null,
         val message: String? = null,
     ) : AnalyticsEvent {
