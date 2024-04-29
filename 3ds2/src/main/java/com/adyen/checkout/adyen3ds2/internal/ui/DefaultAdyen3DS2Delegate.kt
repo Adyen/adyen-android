@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
@@ -314,6 +315,11 @@ internal class DefaultAdyen3DS2Delegate(
             return null
         }
 
+        val event = ThreeDS2Events.threeDS2Fingerprint(
+            subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
+        )
+        analyticsManager?.trackEvent(event)
+
         return try {
             adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
             when (val result = threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)) {
@@ -378,17 +384,28 @@ internal class DefaultAdyen3DS2Delegate(
 
         when (result) {
             is SubmitFingerprintResult.Completed -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.COMPLETED)
                 emitDetails(result.details)
             }
 
             is SubmitFingerprintResult.Redirect -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.REDIRECT)
                 makeRedirect(activity, result.action)
             }
 
             is SubmitFingerprintResult.Threeds2 -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.THREEDS2)
                 handleAction(result.action, activity)
             }
         }
+    }
+
+    private fun trackFingerprintCompletedEvent(result: ThreeDS2Events.Result) {
+        val event = ThreeDS2Events.threeDS2Fingerprint(
+            subType = ThreeDS2Events.SubType.FINGERPRINT_COMPLETED,
+            result = result,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     private fun emitDetails(details: JSONObject) {
@@ -429,10 +446,20 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
+        val challengeSentEvent = ThreeDS2Events.threeDS2Challenge(
+            subType = ThreeDS2Events.SubType.CHALLENGE_DATA_SENT,
+        )
+        analyticsManager?.trackEvent(challengeSentEvent)
+
         val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
         try {
             currentTransaction?.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT)
+
+            val challengeDisplayedEvent = ThreeDS2Events.threeDS2Challenge(
+                subType = ThreeDS2Events.SubType.CHALLENGE_DISPLAYED,
+            )
+            analyticsManager?.trackEvent(challengeDisplayedEvent)
         } catch (e: InvalidInputException) {
             exceptionChannel.trySend(CheckoutException("Error starting challenge", e))
         }
@@ -505,11 +532,34 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun onCompletion(result: ChallengeResult) {
         when (result) {
-            is ChallengeResult.Cancelled -> onCancelled()
-            is ChallengeResult.Completed -> onCompleted(result.transactionStatus)
-            is ChallengeResult.Error -> onError(result)
-            is ChallengeResult.Timeout -> onTimeout(result)
+            is ChallengeResult.Cancelled -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.CANCELLED)
+                onCancelled()
+            }
+
+            is ChallengeResult.Completed -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.COMPLETED)
+                onCompleted(result.transactionStatus)
+            }
+
+            is ChallengeResult.Error -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.ERROR)
+                onError(result)
+            }
+
+            is ChallengeResult.Timeout -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.TIMEOUT)
+                onTimeout(result)
+            }
         }
+    }
+
+    private fun trackChallengeCompletedEvent(result: ThreeDS2Events.Result) {
+        val event = ThreeDS2Events.threeDS2Challenge(
+            subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
+            result = result,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     private fun trackFingerprintActionEvent(action: Action) = trackActionEvent(action, ANALYTICS_MESSAGE_FINGERPRINT)

@@ -17,6 +17,7 @@ import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
@@ -66,6 +67,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
@@ -250,15 +254,8 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `fingerprint is submitted automatically and result is completed, then details are emitted`() = runTest {
-            val authReqParams = TestAuthenticationRequestParameters(
-                deviceData = "deviceData",
-                sdkTransactionID = "sdkTransactionID",
-                sdkAppID = "sdkAppID",
-                sdkReferenceNumber = "sdkReferenceNumber",
-                sdkEphemeralPublicKey = "{}",
-                messageVersion = "messageVersion",
-            )
-            threeDS2Service.transactionResult = TransactionResult.Success(TestTransaction(authReqParams))
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
             val submitFingerprintResult = SubmitFingerprintResult.Completed(JSONObject())
             whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                 Result.success(submitFingerprintResult)
@@ -279,15 +276,8 @@ internal class DefaultAdyen3DS2DelegateTest(
         @Test
         fun `fingerprint is submitted automatically and result is redirect, then redirect should be handled`() =
             runTest {
-                val authReqParams = TestAuthenticationRequestParameters(
-                    deviceData = "deviceData",
-                    sdkTransactionID = "sdkTransactionID",
-                    sdkAppID = "sdkAppID",
-                    sdkReferenceNumber = "sdkReferenceNumber",
-                    sdkEphemeralPublicKey = "{}",
-                    messageVersion = "messageVersion",
-                )
-                threeDS2Service.transactionResult = TransactionResult.Success(TestTransaction(authReqParams))
+                threeDS2Service.transactionResult =
+                    TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
                 val submitFingerprintResult = SubmitFingerprintResult.Redirect(RedirectAction())
                 whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                     Result.success(submitFingerprintResult)
@@ -302,15 +292,8 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `fingerprint is submitted automatically and it fails, then an exception is emitted`() = runTest {
-            val authReqParams = TestAuthenticationRequestParameters(
-                deviceData = "deviceData",
-                sdkTransactionID = "sdkTransactionID",
-                sdkAppID = "sdkAppID",
-                sdkReferenceNumber = "sdkReferenceNumber",
-                sdkEphemeralPublicKey = "{}",
-                messageVersion = "messageVersion",
-            )
-            threeDS2Service.transactionResult = TransactionResult.Success(TestTransaction(authReqParams))
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
             val error = IOException("test")
             whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
                 Result.failure(error)
@@ -325,15 +308,8 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `fingerprint is not submitted automatically, then details are emitted`() = runTest {
-            val authReqParams = TestAuthenticationRequestParameters(
-                deviceData = "deviceData",
-                sdkTransactionID = "sdkTransactionID",
-                sdkAppID = "sdkAppID",
-                sdkReferenceNumber = "sdkReferenceNumber",
-                sdkEphemeralPublicKey = "{}",
-                messageVersion = "messageVersion",
-            )
-            threeDS2Service.transactionResult = TransactionResult.Success(TestTransaction(authReqParams))
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
             delegate.initialize(this)
 
@@ -358,7 +334,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `token can't be decoded, then an exception is emitted`() = runTest {
-            initializeTransaction(this)
+            initializeChallengeTransaction(this)
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
             delegate.challengeShopper(Activity(), Base64.encode("token".toByteArray()))
@@ -368,7 +344,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `everything is good, then challenge should be executed`() = runTest {
-            val transaction = initializeTransaction(this)
+            val transaction = initializeChallengeTransaction(this)
 
             // We need to set the messageVersion to workaround an error in the 3DS2 SDK
             delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
@@ -378,7 +354,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         @Test
         fun `challenge fails, then an exception is emitted`() = runTest {
-            initializeTransaction(this).apply {
+            initializeChallengeTransaction(this).apply {
                 shouldThrowError = true
             }
 
@@ -389,26 +365,18 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             assertTrue(exceptionFlow.latestValue.cause is InvalidInputException)
         }
+    }
 
-        private fun initializeTransaction(scope: CoroutineScope): TestTransaction {
-            val authReqParams = TestAuthenticationRequestParameters(
-                deviceData = "deviceData",
-                sdkTransactionID = "sdkTransactionID",
-                sdkAppID = "sdkAppID",
-                sdkReferenceNumber = "sdkReferenceNumber",
-                sdkEphemeralPublicKey = "{}",
-                messageVersion = "2.1.0",
-            )
-            val transaction = TestTransaction(authReqParams)
-            threeDS2Service.transactionResult = TransactionResult.Success(transaction)
+    private fun initializeChallengeTransaction(scope: CoroutineScope): TestTransaction {
+        val transaction = TestTransaction(getAuthenticationRequestParams())
+        threeDS2Service.transactionResult = TransactionResult.Success(transaction)
 
-            delegate.initialize(scope)
+        delegate.initialize(scope)
 
-            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
-            delegate.identifyShopper(Activity(), encodedJson, false)
+        val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+        delegate.identifyShopper(Activity(), encodedJson, false)
 
-            return transaction
-        }
+        return transaction
     }
 
     @Nested
@@ -545,7 +513,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 subType = TEST_ACTION_TYPE,
                 message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @Test
@@ -564,7 +532,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 subType = TEST_ACTION_TYPE,
                 message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @Test
@@ -584,7 +552,7 @@ internal class DefaultAdyen3DS2DelegateTest(
                 subType = TEST_ACTION_TYPE,
                 message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @Test
@@ -604,9 +572,87 @@ internal class DefaultAdyen3DS2DelegateTest(
                 subType = TEST_ACTION_TYPE,
                 message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
+            analyticsManager.assertHasEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when identifyShopper is called, then event is tracked`() = runTest {
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.initialize(this)
+
+            delegate.identifyShopper(Activity(), encodedJson, true)
+
+            val expectedEvent = ThreeDS2Events.threeDS2Fingerprint(
+                subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2DelegateTest#fingerprintResult")
+        fun `when fingerprint result is returned, then event is tracked`(
+            fingerprintResult: SubmitFingerprintResult,
+            analyticsResult: ThreeDS2Events.Result
+        ) = runTest {
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.success(fingerprintResult)
+            delegate.initialize(this)
+
+            delegate.identifyShopper(Activity(), encodedJson, true)
+
+            val expectedEvent = ThreeDS2Events.threeDS2Fingerprint(
+                subType = ThreeDS2Events.SubType.FINGERPRINT_COMPLETED,
+                result = analyticsResult,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when challengeShopper is called, then event is tracked`() = runTest {
+            initializeChallengeTransaction(this)
+            // We need to set the messageVersion to workaround an error in the 3DS2 SDK
+            delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
+
+            val expectedDataSentEvent = ThreeDS2Events.threeDS2Challenge(
+                subType = ThreeDS2Events.SubType.CHALLENGE_DATA_SENT,
+            )
+            analyticsManager.assertHasEventEquals(expectedDataSentEvent)
+
+            val expectedDisplayedEvent = ThreeDS2Events.threeDS2Challenge(
+                subType = ThreeDS2Events.SubType.CHALLENGE_DISPLAYED,
+            )
+            analyticsManager.assertLastEventEquals(expectedDisplayedEvent)
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2DelegateTest#challengeResult")
+        fun `when challenge result is returned, then event is tracked`(
+            challengeResult: ChallengeResult,
+            analyticsResult: ThreeDS2Events.Result
+        ) = runTest {
+            delegate.onCompletion(
+                result = challengeResult,
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2Challenge(
+                subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
+                result = analyticsResult,
+            )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
     }
+
+    private fun getAuthenticationRequestParams() = TestAuthenticationRequestParameters(
+        deviceData = "deviceData",
+        sdkTransactionID = "sdkTransactionID",
+        sdkAppID = "sdkAppID",
+        sdkReferenceNumber = "sdkReferenceNumber",
+        sdkEphemeralPublicKey = "{}",
+        messageVersion = "messageVersion",
+    )
 
     private class TestAuthenticationRequestParameters(
         private val deviceData: String? = null,
@@ -643,6 +689,35 @@ internal class DefaultAdyen3DS2DelegateTest(
                 "threeDSMessageVersion":"2.1.0"
             }
             """.trimIndent()
+
+        @JvmStatic
+        fun fingerprintResult() = listOf(
+            // fingerprintResult, analyticsResult
+            Arguments.arguments(SubmitFingerprintResult.Completed(JSONObject()), ThreeDS2Events.Result.COMPLETED),
+            Arguments.arguments(SubmitFingerprintResult.Redirect(RedirectAction()), ThreeDS2Events.Result.REDIRECT),
+            Arguments.arguments(SubmitFingerprintResult.Threeds2(Threeds2Action()), ThreeDS2Events.Result.THREEDS2),
+        )
+
+        @JvmStatic
+        fun challengeResult() = listOf(
+            // challengeResult, analyticsResult
+            Arguments.arguments(
+                ChallengeResult.Completed("transactionStatus"),
+                ThreeDS2Events.Result.COMPLETED,
+            ),
+            Arguments.arguments(
+                ChallengeResult.Cancelled("transactionStatus", "additionalDetails"),
+                ThreeDS2Events.Result.CANCELLED,
+            ),
+            Arguments.arguments(
+                ChallengeResult.Error("transactionStatus", "additionalDetails"),
+                ThreeDS2Events.Result.ERROR,
+            ),
+            Arguments.arguments(
+                ChallengeResult.Timeout("transactionStatus", "additionalDetails"),
+                ThreeDS2Events.Result.TIMEOUT,
+            ),
+        )
     }
 }
 
