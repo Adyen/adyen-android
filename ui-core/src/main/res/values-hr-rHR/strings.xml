@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">\'%s\' nije se podudarao s ničime, pokušajte ponovno ili upotrijebite #ručni unos adrese#</string>
     <string name="checkout_address_lookup_enter_manually">Ručno unesite adresu</string>
     <string name="checkout_address_lookup_submit">Koristi ovu adresu</string>
+    <string name="checkout_address_lookup_validation_empty">Potrebna je adresa</string>
 
 </resources>

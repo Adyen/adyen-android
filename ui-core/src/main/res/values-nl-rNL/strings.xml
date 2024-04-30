@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Geen resulaten gevonden voor \'%s\', probeer het opnieuw of gebruik #adres handmatig invoeren#</string>
     <string name="checkout_address_lookup_enter_manually">Voer het adres handmatig in</string>
     <string name="checkout_address_lookup_submit">Dit adres gebruiken</string>
+    <string name="checkout_address_lookup_validation_empty">Adres verplicht</string>
 
 </resources>

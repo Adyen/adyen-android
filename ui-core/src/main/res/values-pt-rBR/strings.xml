@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">A pesquisa de \'%s\' não obteve resultados. Tente novamente ou use #inserir endereço manualmente#</string>
     <string name="checkout_address_lookup_enter_manually">Inserir endereço manualmente</string>
     <string name="checkout_address_lookup_submit">Usar este endereço</string>
+    <string name="checkout_address_lookup_validation_empty">O endereço é obrigatório</string>
 
 </resources>

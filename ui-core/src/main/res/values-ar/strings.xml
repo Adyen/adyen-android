@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">لم يتطابق \'%s\' مع أي شيء، حاول مرة أخرى أو استخدم #إدخال العنوان يدويًا#</string>
     <string name="checkout_address_lookup_enter_manually">أدخل العنوان يدويًا</string>
     <string name="checkout_address_lookup_submit">استخدم هذا العنوان</string>
+    <string name="checkout_address_lookup_validation_empty">العنوان مطلوب</string>
 
 </resources>

@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">A keresett „%s„ kifejezésre nincs találat, próbálkozzon újra, vagy #írja be manuálisan a címet#</string>
     <string name="checkout_address_lookup_enter_manually">Manuálisan írjon be egy címet</string>
     <string name="checkout_address_lookup_submit">Használja ezt a címet</string>
+    <string name="checkout_address_lookup_validation_empty">A cím megadása kötelező</string>
 
 </resources>

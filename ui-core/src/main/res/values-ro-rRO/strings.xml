@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">\'%s\' nu s-a potrivit cu nimic, încercați din nou sau folosiți #completarea manuală a adresei#</string>
     <string name="checkout_address_lookup_enter_manually">Introduceți adresa manual</string>
     <string name="checkout_address_lookup_submit">Folosiți această adresă</string>
+    <string name="checkout_address_lookup_validation_empty">Adresa este necesară</string>
 
 </resources>

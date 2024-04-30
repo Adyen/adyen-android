@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">「%s」との一致はありませんでした。もう一度試すか、#手動でアドレスを入力#してください</string>
     <string name="checkout_address_lookup_enter_manually">住所を手動で入力してください</string>
     <string name="checkout_address_lookup_submit">この住所を使用する</string>
+    <string name="checkout_address_lookup_validation_empty">住所が必要です</string>
 
 </resources>

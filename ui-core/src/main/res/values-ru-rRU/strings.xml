@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Не найдено соответствий «%s». Повторите попытку или используйте #ручной ввод адреса#</string>
     <string name="checkout_address_lookup_enter_manually">Ввести адрес вручную</string>
     <string name="checkout_address_lookup_submit">Используйте этот адрес</string>
+    <string name="checkout_address_lookup_validation_empty">Требуется адрес</string>
 
 </resources>

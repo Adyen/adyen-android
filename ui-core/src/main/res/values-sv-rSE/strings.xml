@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Det finns inga matchningar för ”%s”. Försök igen eller använd #manuell adressinmatning#</string>
     <string name="checkout_address_lookup_enter_manually">Ange adress manuellt</string>
     <string name="checkout_address_lookup_submit">Använd denna adress</string>
+    <string name="checkout_address_lookup_validation_empty">Adress krävs</string>
 
 </resources>
