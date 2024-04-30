@@ -39,8 +39,10 @@ import com.adyen.checkout.redirect.RedirectDelegate
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
+import com.adyen.threeds2.InitializeResult
 import com.adyen.threeds2.ThreeDS2Service
 import com.adyen.threeds2.Transaction
+import com.adyen.threeds2.TransactionResult
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
 import com.adyen.threeds2.exception.SDKAlreadyInitializedException
@@ -117,12 +119,14 @@ class Adyen3DS2Component(
                 }
                 identifyShopper(activity, action.token.orEmpty(), submitFingerprintAutomatically = false)
             }
+
             is Threeds2ChallengeAction -> {
                 if (action.token.isNullOrEmpty()) {
                     throw ComponentException("Challenge token not found.")
                 }
                 challengeShopper(activity, action.token.orEmpty())
             }
+
             is Threeds2Action -> {
                 if (action.token.isNullOrEmpty()) {
                     throw ComponentException("3DS2 token not found.")
@@ -196,9 +200,13 @@ class Adyen3DS2Component(
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "DestructuringDeclarationWithTooManyEntries", "ComplexMethod")
     @Throws(ComponentException::class)
-    private fun identifyShopper(activity: Activity, encodedFingerprintToken: String, submitFingerprintAutomatically: Boolean) {
+    private fun identifyShopper(
+        activity: Activity,
+        encodedFingerprintToken: String,
+        submitFingerprintAutomatically: Boolean
+    ) {
         Logger.d(TAG, "identifyShopper - submitFingerprintAutomatically: $submitFingerprintAutomatically")
         val decodedFingerprintToken = Base64Encoder.decode(encodedFingerprintToken)
 
@@ -209,10 +217,18 @@ class Adyen3DS2Component(
         }
 
         val fingerprintToken = FingerprintToken.SERIALIZER.deserialize(fingerprintJson)
+        val (directoryServerId, directoryServerPublicKey, directoryServerRootCertificates, _, _) = fingerprintToken
+        if (directoryServerId == null || directoryServerPublicKey == null || directoryServerRootCertificates == null) {
+            val message = "directoryServerId, directoryServerPublicKey or directoryServerRootCertificates is null."
+            Logger.d(TAG, message)
+            notifyException(ComponentException(message))
+            return
+        }
+
         val configParameters = AdyenConfigParameters.Builder(
-            /* directoryServerId = */ fingerprintToken.directoryServerId,
-            /* directoryServerPublicKey = */ fingerprintToken.directoryServerPublicKey,
-            /* directoryServerRootCertificates = */ fingerprintToken.directoryServerRootCertificates,
+            /* directoryServerId = */ directoryServerId,
+            /* directoryServerPublicKey = */ directoryServerPublicKey,
+            /* directoryServerRootCertificates = */ directoryServerRootCertificates,
         )
             .deviceParameterBlockList(setOf(PHONE_NUMBER_PARAMETER))
             .build()
@@ -226,7 +242,12 @@ class Adyen3DS2Component(
             closeTransaction(getApplication())
             try {
                 Logger.d(TAG, "initialize 3DS2 SDK")
-                ThreeDS2Service.INSTANCE.initialize(activity, configParameters, null, mUiCustomization)
+                val result = ThreeDS2Service.INSTANCE.initialize(activity, configParameters, null, mUiCustomization)
+
+                if (result is InitializeResult.Failure) {
+                    val details = makeDetails(result.transactionStatus, result.additionalDetails)
+                    notifyDetails(details)
+                }
             } catch (e: SDKRuntimeException) {
                 notifyException(ComponentException("Failed to initialize 3DS2 SDK", e))
                 return@launch
@@ -237,11 +258,21 @@ class Adyen3DS2Component(
 
             mTransaction = try {
                 Logger.d(TAG, "create transaction")
-                if (fingerprintToken.threeDSMessageVersion != null) {
-                    ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
-                } else {
+                if (fingerprintToken.threeDSMessageVersion == null) {
                     notifyException(ComponentException("Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."))
                     return@launch
+                }
+
+                when (
+                    val result = ThreeDS2Service.INSTANCE.createTransaction(null, fingerprintToken.threeDSMessageVersion)
+                ) {
+                    is TransactionResult.Failure -> {
+                        val details = makeDetails(result.transactionStatus, result.additionalDetails)
+                        notifyDetails(details)
+                        null
+                    }
+
+                    is TransactionResult.Success -> result.transaction
                 }
             } catch (e: SDKNotInitializedException) {
                 notifyException(ComponentException("Failed to create 3DS2 Transaction", e))
@@ -279,9 +310,11 @@ class Adyen3DS2Component(
                         notifyDetails(result.details)
                     }
                 }
+
                 is SubmitFingerprintResult.Redirect -> {
                     redirectDelegate.makeRedirect(activity, result.action)
                 }
+
                 is SubmitFingerprintResult.Threeds2 -> {
                     handleAction(activity, result.action)
                 }
