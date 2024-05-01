@@ -35,4 +35,4 @@ jobs:
 
       # Run gradlew check
       - name: Gradle check
-        run: ./gradlew check --no-daemon
+        run: ./gradlew check
