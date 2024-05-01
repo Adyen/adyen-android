@@ -1,10 +1,9 @@
 name: UI Tests
 
 on:
-  pull_request:
-    branches-ignore:
-      - 'main'
-    types: [ opened, synchronize, reopened ]
+  push:
+    branches:
+      - 'develop'
   workflow_dispatch:
 
 jobs:
