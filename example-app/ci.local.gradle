@@ -1,0 +1,24 @@
+android {
+    buildTypes {
+
+        def merchantAccount = System.getenv('ADYEN_ANDROID_MERCHANT_ACCOUNT')
+        def merchantServerUrl = System.getenv('ADYEN_ANDROID_MERCHANT_SERVER_URL')
+        def authorizationHeaderName = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_NAME')
+        def authorizationHeaderValue = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_VALUE')
+        def clientKey = System.getenv('ADYEN_ANDROID_CLIENT_KEY')
+
+        debug {
+            buildConfigField "String", "MERCHANT_ACCOUNT", "\"$merchantAccount\""
+            buildConfigField "String", "MERCHANT_SERVER_URL", "\"$merchantServerUrl\""
+            buildConfigField "String", "AUTHORIZATION_HEADER_NAME", "\"$authorizationHeaderName\""
+            buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", "\"$authorizationHeaderValue\""
+            buildConfigField "String", "CLIENT_KEY", "\"$clientKey\""
+            buildConfigField "String", "MERCHANT_RECURRING_SERVER_URL", "\"$merchantServerUrl\""
+        }
+
+        release {
+            initWith debug
+            matchingFallbacks = ['debug']
+        }
+    }
+}

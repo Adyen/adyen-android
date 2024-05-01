@@ -24,7 +24,11 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
