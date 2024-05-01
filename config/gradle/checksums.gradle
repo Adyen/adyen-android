@@ -9,7 +9,7 @@
 if (!hasProperty("checksums")) {
     final checksums = [
             // Adyen dependencies
-            "com.adyen.threeds:adyen-3ds2:2.2.15:876c1cda05d330e57c62dc4de35b6c91:MD5",
+            "com.adyen.threeds:adyen-3ds2:2.2.17:65ee27c86c8bf420b95e9d6877d2d8f7:MD5",
 
             // Kotlin
             "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20:2097cb28602f5a6320bcc1bd74914db9:MD5",
