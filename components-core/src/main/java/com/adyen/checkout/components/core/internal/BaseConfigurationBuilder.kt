@@ -32,7 +32,7 @@ constructor(
     protected var amount: Amount? = null
 
     init {
-        if (!ValidationUtils.isClientKeyValid(clientKey)) {
+        if (!ValidationUtils.isClientKeyValid(clientKey, environment)) {
             throw CheckoutException("Client key is not valid.")
         }
     }
@@ -122,10 +122,6 @@ constructor(
      * Build a configuration from the builder parameters.
      */
     fun build(): ConfigurationT {
-        if (!ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment)) {
-            throw CheckoutException("Client key does not match the environment.")
-        }
-
         shopperLocale?.let {
             if (!LocaleUtil.isValidLocale(it)) {
                 throw CheckoutException("Invalid shopper locale: $shopperLocale.")
