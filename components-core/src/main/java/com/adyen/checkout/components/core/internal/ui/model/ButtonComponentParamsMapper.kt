@@ -24,9 +24,11 @@ class ButtonComponentParamsMapper(
             dropInOverrideParams,
             componentSessionParams,
         )
+        val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
         return ButtonComponentParams(
-            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
-            isSubmitButtonVisible = (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
+            commonComponentParams = commonComponentParams,
+            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
+                ?: (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
         )
     }
 }

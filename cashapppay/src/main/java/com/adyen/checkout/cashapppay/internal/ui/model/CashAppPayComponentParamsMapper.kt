@@ -57,6 +57,7 @@ internal class CashAppPayComponentParamsMapper(
         val params = mapToParamsInternal(
             commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
             sessionParams = commonComponentParamsMapperData.sessionParams,
+            dropInOverrideParams = dropInOverrideParams,
             cashAppPayConfiguration = cashAppPayConfiguration,
             clientId = clientId,
             scopeId = scopeId,
@@ -93,6 +94,7 @@ internal class CashAppPayComponentParamsMapper(
         return mapToParamsInternal(
             commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
             sessionParams = commonComponentParamsMapperData.sessionParams,
+            dropInOverrideParams = dropInOverrideParams,
             cashAppPayConfiguration = cashAppPayConfiguration,
             clientId = null,
             scopeId = null,
@@ -104,6 +106,7 @@ internal class CashAppPayComponentParamsMapper(
     private fun mapToParamsInternal(
         commonComponentParams: CommonComponentParams,
         sessionParams: SessionParams?,
+        dropInOverrideParams: DropInOverrideParams?,
         cashAppPayConfiguration: CashAppPayConfiguration?,
         clientId: String?,
         scopeId: String?,
@@ -111,7 +114,8 @@ internal class CashAppPayComponentParamsMapper(
     ): CashAppPayComponentParams {
         return CashAppPayComponentParams(
             commonComponentParams = commonComponentParams,
-            isSubmitButtonVisible = cashAppPayConfiguration?.isSubmitButtonVisible ?: true,
+            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
+                ?: cashAppPayConfiguration?.isSubmitButtonVisible ?: true,
             cashAppPayEnvironment = getCashAppPayEnvironment(
                 commonComponentParams.environment,
                 cashAppPayConfiguration,

@@ -146,6 +146,39 @@ internal class CashAppPayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is set to false in cash app configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.GERMAN,
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            amount = Amount(
+                currency = "CAD",
+                value = 1235_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            cashAppPay {
+                setReturnUrl(TEST_RETURN_URL)
+                setAmount(Amount("USD", 1L))
+                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     fun `showStorePaymentField should match value set in sessions if it exists, otherwise should match configuration`(

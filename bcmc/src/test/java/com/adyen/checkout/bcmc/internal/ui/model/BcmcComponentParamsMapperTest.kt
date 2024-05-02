@@ -119,6 +119,29 @@ internal class BcmcComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is set to false in bcmc configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            bcmc {
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = bcmcComponentParamsMapper.mapToParams(
+            configuration,
+            DEVICE_LOCALE,
+            dropInOverrideParams,
+            null,
+            PaymentMethod(),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     @Suppress("MaxLineLength")

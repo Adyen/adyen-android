@@ -39,6 +39,7 @@ internal class ACHDirectDebitComponentParamsMapper(
         return mapToParams(
             commonComponentParamsMapperData.commonComponentParams,
             commonComponentParamsMapperData.sessionParams,
+            dropInOverrideParams,
             achDirectDebitConfiguration,
         )
     }
@@ -46,11 +47,13 @@ internal class ACHDirectDebitComponentParamsMapper(
     private fun mapToParams(
         commonComponentParams: CommonComponentParams,
         sessionParams: SessionParams?,
+        dropInOverrideParams: DropInOverrideParams?,
         achDirectDebitConfiguration: ACHDirectDebitConfiguration?,
     ): ACHDirectDebitComponentParams {
         return ACHDirectDebitComponentParams(
             commonComponentParams = commonComponentParams,
-            isSubmitButtonVisible = achDirectDebitConfiguration?.isSubmitButtonVisible ?: true,
+            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
+                ?: achDirectDebitConfiguration?.isSubmitButtonVisible ?: true,
             addressParams = achDirectDebitConfiguration?.addressConfiguration?.mapToAddressParam()
                 ?: AddressParams.FullAddress(
                     supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,

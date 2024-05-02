@@ -33,10 +33,10 @@ internal class GiftCardComponentParamsMapper(
         )
         val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
         val giftCardConfiguration = checkoutConfiguration.getGiftCardConfiguration()
-
         return GiftCardComponentParams(
             commonComponentParams = commonComponentParams,
-            isSubmitButtonVisible = giftCardConfiguration?.isSubmitButtonVisible ?: true,
+            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
+                ?: giftCardConfiguration?.isSubmitButtonVisible ?: true,
             isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
         )
     }
