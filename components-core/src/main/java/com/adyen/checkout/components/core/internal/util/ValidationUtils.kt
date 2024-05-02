@@ -17,7 +17,7 @@ object ValidationUtils {
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
     private val PHONE_PATTERN = Pattern.compile(PHONE_REGEX)
 
-    private const val CLIENT_KEY_REGEX = "([a-z]){4}\\_([A-z]|\\d){32}"
+    private const val CLIENT_KEY_REGEX = "([a-z]){4}_([a-zA-Z0-9]){32}"
     private val CLIENT_KEY_PATTERN = Pattern.compile(CLIENT_KEY_REGEX)
 
     private const val CLIENT_KEY_TEST_PREFIX = "test_"
