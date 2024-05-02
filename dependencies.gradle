@@ -44,7 +44,7 @@ ext {
     constraintlayout_version = '2.1.4'
 
     // Compose Dependencies
-    compose_activity_version = '1.8.2'
+    compose_activity_version = '1.9.0'
     compose_bom_version = '2024.02.02'
     compose_hilt_version = '1.2.0'
     compose_viewmodel_version = '2.7.0'
