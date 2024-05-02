@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 12/3/2024.
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_upi_app"
+    style="@style/AdyenCheckout.UPI.RecyclerListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+        android:id="@+id/imageView_upi_logo"
+        style="@style/AdyenCheckout.UPI.Collect.Icon.Generic"
+        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textView_upi_app_name"
+        style="@style/AdyenCheckout.UPI.Collect.AppIdTextView.Generic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintEnd_toStartOf="@+id/radioButton_upi_app"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/imageView_upi_logo"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="GooglePay" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radioButton_upi_app"
+        style="@style/AdyenCheckout.UPI.Collect.RadioButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider_upi_app"
+        style="@style/AdyenCheckout.UPI.Collect.Divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
