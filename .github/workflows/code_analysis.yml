@@ -26,7 +26,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt -Pstrip-resources=true
 
   ktlint:
     name: Run ktlint
@@ -50,4 +50,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run ktlint
-        run: ./gradlew ktlint
+        run: ./gradlew ktlint -Pstrip-resources=true
