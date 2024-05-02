@@ -6,6 +6,7 @@
   ~ Created by oscars on 7/2/2023.
   -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,18 +26,31 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/button_collect"
+            style="@style/AdyenCheckout.UPI.CollectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/button_vpa"
             style="@style/AdyenCheckout.UPI.VPAButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_qrCode"
             style="@style/AdyenCheckout.UPI.QRButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -45,7 +59,9 @@
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp">
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_vpa"

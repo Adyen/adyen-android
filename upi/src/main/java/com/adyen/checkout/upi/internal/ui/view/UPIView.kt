@@ -59,14 +59,17 @@ internal class UPIView @JvmOverloads constructor(
         this.localizedContext = localizedContext
 
         initLocalizedStrings(localizedContext)
-
-        initPicker(delegate)
+        initModeToggle()
         initVpaInput(delegate, localizedContext)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewModeSelection.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_ModeSelectionTextView,
+            localizedContext,
+        )
+        binding.buttonCollect.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_CollectButton,
             localizedContext,
         )
         binding.buttonVpa.setLocalizedTextFromStyle(
@@ -87,21 +90,32 @@ internal class UPIView @JvmOverloads constructor(
         )
     }
 
-    private fun initPicker(delegate: UPIDelegate) {
-        binding.toggleButtonChoice.check(R.id.button_vpa)
+    private fun initModeToggle() {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            when (checkedId) {
-                R.id.button_vpa -> {
-                    binding.textInputLayoutVpa.isVisible = isChecked
-                    binding.textViewQrCodeDescription.isVisible = !isChecked
-                    binding.editTextVpa.isFocusableInTouchMode = isChecked
-                    binding.editTextVpa.isFocusable = isChecked
-                    if (isChecked) {
-                        binding.editTextVpa.requestFocus()
-                        binding.editTextVpa.showKeyboard()
-                        delegate.updateInputData { mode = UPIMode.VPA }
-                    }
-                }
+            when(checkedId) {
+                R.id.button_collect -> updateUpiCollectViews(isChecked)
+                R.id.button_vpa -> updateUpiVpaViews(isChecked)
+                R.id.button_qrCode -> updateUpiQrCodeViews(isChecked)
+            }
+        }
+    }
+
+    private fun updateUpiCollectViews(isChecked: Boolean) {
+        binding.recyclerViewUpiCollect.isVisible = isChecked
+        if (isChecked) {
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
+        }
+    }
+    private fun updateUpiVpaViews(isChecked: Boolean) {
+        binding.textInputLayoutVpa.isVisible = isChecked
+        binding.editTextVpa.isFocusableInTouchMode = isChecked
+        binding.editTextVpa.isFocusable = isChecked
+        if (isChecked) {
+            binding.editTextVpa.requestFocus()
+            binding.editTextVpa.showKeyboard()
+        }
+    }
 
                 R.id.button_qrCode -> {
                     binding.textInputLayoutVpa.isVisible = !isChecked
@@ -115,6 +129,12 @@ internal class UPIView @JvmOverloads constructor(
                     }
                 }
             }
+
+    private fun updateUpiQrCodeViews(isChecked: Boolean) {
+        binding.textViewQrCodeDescription.isVisible = isChecked
+        if (isChecked) {
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
         }
     }
 

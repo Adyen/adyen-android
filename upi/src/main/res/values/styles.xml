@@ -19,6 +19,11 @@
         <item name="singleSelection">true</item>
     </style>
 
+    <style name="AdyenCheckout.UPI.CollectButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_upi_collect</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
     <style name="AdyenCheckout.UPI.VPAButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:text">@string/checkout_upi_vpa</item>
         <item name="textAllCaps">false</item>
