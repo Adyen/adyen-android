@@ -10,6 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.App
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -19,22 +20,29 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
 import com.adyen.checkout.upi.internal.ui.model.UPIInputData
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.internal.ui.model.mapToSelectedMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+// TODO: We should only take UPI payment method from payment methods list, we filter out the other UPIs.
 @Suppress("TooManyFunctions")
 internal class DefaultUPIDelegate(
     private val submitHandler: SubmitHandler<UPIComponentState>,
@@ -63,6 +71,10 @@ internal class DefaultUPIDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    // This allows moving validation to the delegate without changing the communication structure between delegate and
+    // the view. After we refactor state handling and validation logic, this can be improved.
+    private var cachedCollectVirtualPaymentAddress: String = ""
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -109,11 +121,65 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData() = with(inputData) {
+        // TODO: Mock data to be removed
+        paymentMethod.apps = listOf(
+            App("bhim", "BHIM"),
+            App("gpay", "Google Pay"),
+            App("PhonePe", "phonepe"),
+        )
+
+        val appIds = paymentMethod.apps
+        val collectVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(collectVirtualPaymentAddress)
+        var defaultSelectedCollectItem: UPICollectItem? = null
+        val availableModes = if (!appIds.isNullOrEmpty()) {
+            val collectItemList = createCollectItems(
+                appIds,
+                componentParams.environment,
+                collectVirtualPaymentAddressFieldState,
+            )
+            // TODO: This could also be passed to the UPIAppsAdapter to show an item as default at some point.
+            defaultSelectedCollectItem = collectItemList.firstOrNull()
+            listOf(UPIMode.Collect(collectItemList), UPIMode.Qr)
+        } else {
+            listOf(UPIMode.Vpa, UPIMode.Qr)
+        }
+
         UPIOutputData(
-            mode = mode,
-            virtualPaymentAddress = virtualPaymentAddress,
+            selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
+            selectedUPICollectItem = selectedUPICollectItem ?: defaultSelectedCollectItem,
+            availableModes = availableModes,
+            virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
+            collectVirtualPaymentAddressFieldState = collectVirtualPaymentAddressFieldState,
         )
     }
+
+    private fun createCollectItems(
+        apps: List<App>,
+        environment: Environment,
+        collectVirtualPaymentAddressFieldState: FieldState<String>,
+    ): List<UPICollectItem> {
+        val paymentApps = apps.mapToPaymentApp(environment = environment)
+        val manualInputErrorMessageId =
+            getValidationErrorResourceIdOrNull(collectVirtualPaymentAddressFieldState.validation)
+
+        return mutableListOf<UPICollectItem>().apply {
+            addAll(paymentApps)
+            add(UPICollectItem.GenericApp)
+            add(UPICollectItem.ManualInput(manualInputErrorMessageId))
+        }
+    }
+
+    private fun getValidationErrorResourceIdOrNull(validation: Validation?): Int? =
+        (validation as? Validation.Invalid)?.reason
+
+    private fun validateVirtualPaymentAddress(virtualPaymentAddress: String?): FieldState<String> =
+        if (virtualPaymentAddress == null) {
+            FieldState("", Validation.Valid)
+        } else if (virtualPaymentAddress.isNotBlank()) {
+            FieldState(virtualPaymentAddress, Validation.Valid)
+        } else {
+            FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
+        }
 
     private fun outputDataChanged(outputData: UPIOutputData) {
         _outputDataFlow.tryEmit(outputData)

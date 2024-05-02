@@ -28,6 +28,7 @@ data class PaymentMethod(
     var brand: String? = null,
     var fundingSource: String? = null,
     var issuers: List<Issuer>? = null,
+    var apps: List<App>? = null,
     var configuration: Configuration? = null,
     var details: List<InputDetail>? = null,
 ) : ModelObject() {
@@ -43,6 +44,7 @@ data class PaymentMethod(
         private const val BRAND = "brand"
         private const val FUNDING_SOURCE = "fundingSource"
         private const val ISSUERS = "issuers"
+        private const val APPS = "apps"
         private const val CONFIGURATION = "configuration"
 
         // This field is returned in older API versions, only used to retrieve the issuers list
@@ -59,6 +61,7 @@ data class PaymentMethod(
                         putOpt(BRAND, modelObject.brand)
                         putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                         putOpt(ISSUERS, serializeOptList(modelObject.issuers, Issuer.SERIALIZER))
+                        putOpt(APPS, serializeOptList(modelObject.apps, App.SERIALIZER))
                         putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
                         putOpt(DETAILS, serializeOptList(modelObject.details, InputDetail.SERIALIZER))
                     }
@@ -75,6 +78,7 @@ data class PaymentMethod(
                     brand = jsonObject.getStringOrNull(BRAND),
                     fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                     issuers = deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER),
+                    apps = deserializeOptList(jsonObject.optJSONArray(APPS), App.SERIALIZER),
                     configuration = deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER),
                     details = deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER),
                 )

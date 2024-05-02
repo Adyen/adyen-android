@@ -8,7 +8,8 @@
 
 package com.adyen.checkout.upi.internal.ui.model
 
-internal enum class UPIMode {
-    VPA,
-    QR,
+internal sealed class UPIMode {
+    data class Collect(val collectItems: List<UPICollectItem>) : UPIMode()
+    data object Vpa : UPIMode()
+    data object Qr : UPIMode()
 }

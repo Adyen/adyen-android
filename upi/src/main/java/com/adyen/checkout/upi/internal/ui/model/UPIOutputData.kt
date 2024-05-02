@@ -10,26 +10,27 @@ package com.adyen.checkout.upi.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.upi.R
 
 internal class UPIOutputData(
-    val mode: UPIMode,
-    virtualPaymentAddress: String,
+    val availableModes: List<UPIMode>,
+    val selectedMode: UPISelectedMode,
+    var selectedUPICollectItem: UPICollectItem? = null,
+    val virtualPaymentAddressFieldState: FieldState<String>,
+    val collectVirtualPaymentAddressFieldState: FieldState<String>,
 ) : OutputData {
 
-    val virtualPaymentAddressFieldState = validateVirtualPaymentAddress(virtualPaymentAddress)
-
     override val isValid: Boolean
-        get() = when (mode) {
-            UPIMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
-            UPIMode.QR -> true
-        }
+        get() = when (selectedMode) {
+            UPISelectedMode.COLLECT -> {
+                when (selectedUPICollectItem) {
+                    is UPICollectItem.PaymentApp -> true
+                    UPICollectItem.GenericApp -> true
+                    is UPICollectItem.ManualInput -> collectVirtualPaymentAddressFieldState.validation.isValid()
+                    null -> false
+                }
+            }
 
-    private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
-        if (virtualPaymentAddress.isNotBlank()) {
-            FieldState(virtualPaymentAddress, Validation.Valid)
-        } else {
-            FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
+            UPISelectedMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
+            UPISelectedMode.QR -> true
         }
 }
