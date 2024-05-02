@@ -18,8 +18,12 @@ internal class ValidationUtilsTest {
 
     @ParameterizedTest
     @MethodSource("clientKeyEnvironmentSource")
-    fun `client key should match environment`(clientKey: String, environment: Environment, shouldMatch: Boolean) {
-        assertEquals(shouldMatch, ValidationUtils.doesClientKeyMatchEnvironment(clientKey, environment))
+    fun `client key should be valid and match environment`(
+        clientKey: String,
+        environment: Environment,
+        shouldMatch: Boolean
+    ) {
+        assertEquals(shouldMatch, ValidationUtils.isClientKeyValid(clientKey, environment))
     }
 
     @ParameterizedTest
@@ -32,17 +36,24 @@ internal class ValidationUtilsTest {
 
         @JvmStatic
         fun clientKeyEnvironmentSource() = listOf(
-            arguments("test_someclientkey", Environment.TEST, true),
-            arguments("test_someclientkey", Environment.EUROPE, false),
-            arguments("test_someclientkey", Environment.UNITED_STATES, false),
-            arguments("test_someclientkey", Environment.AUSTRALIA, false),
-            arguments("test_someclientkey", Environment.INDIA, false),
-            arguments("test_someclientkey", Environment.APSE, false),
-            arguments("live_someclientkey", Environment.EUROPE, true),
-            arguments("live_someclientkey", Environment.UNITED_STATES, true),
-            arguments("live_someclientkey", Environment.AUSTRALIA, true),
-            arguments("live_someclientkey", Environment.INDIA, true),
-            arguments("live_someclientkey", Environment.APSE, true),
+            arguments("test_tc68xkAsBCgMz9dS1S2Nzf7RlxYQlgip", Environment.TEST, true),
+            arguments("test_aq4kbmxnqBNzKkE0KikMTA9fzZfWaAMY", Environment.EUROPE, false),
+            arguments("test_UuZhEPC3lp6nncNeP7sO4WN6Trhump9t", Environment.UNITED_STATES, false),
+            arguments("test_fossiLYDSmrlaWpASajazDxFwLUsoENN", Environment.AUSTRALIA, false),
+            arguments("test_g3L7gcUvqu1FjBTuUMLBPfnsHXoEIzVO", Environment.INDIA, false),
+            arguments("test_PePWj71RqRaaoKQMGwyRuzPtaBfJIdpk", Environment.APSE, false),
+            arguments("live_sVmERflbpJKBwbR98rxhIxXZhQR8c0p4", Environment.TEST, false),
+            arguments("live_NnBxXwYVUDhqjLbxTy8ndfKHfbV7lSQi", Environment.EUROPE, true),
+            arguments("live_G7XZtbFi9sRYIlkbKDLDmCdT3D6ZnNPQ", Environment.UNITED_STATES, true),
+            arguments("live_L2eA5t2IxqbmovPTKorB425HVyyNrUve", Environment.AUSTRALIA, true),
+            arguments("live_6994xO0qxbkPY0r6lXJxUTQrZW35ImhV", Environment.INDIA, true),
+            arguments("live_5XxMhtcr1GRxglnAgS4Lev441wCpEnrr", Environment.APSE, true),
+            arguments("test_cJhik0487qNNMrwEqKbIBn6g641pVLTjOMiN2GM", Environment.TEST, false),
+            arguments("live_G7XtF9IkKLmCd3D6ZNPQ", Environment.UNITED_STATES, false),
+            arguments("rndm_HgTWDmdsJ9RZxvFKP0znGd3Fh99ybKT1", Environment.APSE, false),
+            arguments("random_PR60zeML0v0oWOCrOUgssznzvLagVUzs", Environment.AUSTRALIA, false),
+            arguments("test_BSByxK#cvLvmkJrb3b9FuEU4XZvHGQLp", Environment.TEST, false),
+            arguments("live_5XxMhtcr1GRxglnAgS4Le_441wCpEnrr", Environment.APSE, false),
         )
 
         @JvmStatic
@@ -62,7 +73,7 @@ internal class ValidationUtilsTest {
             arguments("mailhost!username@example.org", true),
             arguments(
                 "\"very.(),:;<>[]\".VERY.\"very@\\ \"very\".unusual\"@strange.example.com",
-                true
+                true,
             ),
             arguments("user%example.com@example.org", true),
             arguments("user-@example.org", true),
@@ -75,7 +86,7 @@ internal class ValidationUtilsTest {
             arguments(
                 "john!#$%&'*+-/=?^_`{|}~.smith!#$%&'*+-/=?^_`{|}~" +
                     ".efwe!#$%&'*+-/=?^_`{|}~.weoihefw.!#$%&'*+-/=?^_`{|}~@[12.2.255.45]",
-                true
+                true,
             ),
             arguments("\" ewc429 (%($^)*_)*(&&R%$&$&^$#     \"@mohamed12.eldoheiri", true),
 
@@ -83,11 +94,11 @@ internal class ValidationUtilsTest {
             arguments("john.smith@abc-12CB-FVCbh45.co", true),
             arguments(
                 "john.smith@abc-12CB-FVCbh45-979HVU.uk.us.mrweew.co",
-                true
+                true,
             ),
             arguments(
                 "john.smith@abc-12CB-FVCbh45-979HVU.uk-weoh-238y23-ewfioh234.us-wefwef.mrweew.co",
-                true
+                true,
             ),
             // Quoted local part can contain any character except for line terminators
             arguments("\"UYFG)O^R&|.:;(%&*]T*T*[&GIU\"@gmail.com", true),
