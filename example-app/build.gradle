@@ -9,7 +9,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
     id 'dagger.hilt.android.plugin'
 }
 
@@ -96,7 +96,7 @@ dependencies {
     implementation libraries.okhttpLogging
 
     implementation libraries.hilt
-    kapt libraries.hiltCompiler
+    ksp libraries.hiltCompiler
 
     implementation libraries.googlePay.composeButton
 
@@ -113,5 +113,5 @@ dependencies {
     androidTestImplementation testLibraries.espresso
     androidTestImplementation testLibraries.hilt
 
-    kaptAndroidTest testLibraries.hiltCompiler
+    kspAndroidTest testLibraries.hiltCompiler
 }

@@ -21,6 +21,7 @@ ext {
     // Build Script
     android_gradle_plugin_version = '8.3.2'
     kotlin_version = '1.9.23'
+    ksp_version = '1.9.23-1.0.20'
     detekt_gradle_plugin_version = "1.23.6"
     dokka_version = "1.9.20"
     hilt_version = "2.51.1"
