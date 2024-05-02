@@ -28,6 +28,7 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class EContextView @JvmOverloads constructor(
@@ -46,7 +47,7 @@ internal class EContextView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 

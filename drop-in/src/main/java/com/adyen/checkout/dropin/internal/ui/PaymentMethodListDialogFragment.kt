@@ -37,6 +37,7 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class PaymentMethodListDialogFragment :
@@ -122,7 +123,7 @@ internal class PaymentMethodListDialogFragment :
                         adyenLog(AdyenLogLevel.ERROR) { event.componentError.errorMessage }
                         protocol.showError(
                             dialogTitle = null,
-                            errorMessage = getString(R.string.component_error),
+                            errorMessage = getString(UICoreR.string.component_error),
                             reason = event.componentError.errorMessage,
                             terminate = true,
                         )

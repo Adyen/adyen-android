@@ -27,6 +27,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.R as MaterialR
 
 internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -60,7 +61,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
 
         dialog.setOnShowListener {
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(
-                com.google.android.material.R.id.design_bottom_sheet,
+                MaterialR.id.design_bottom_sheet,
             )
 
             if (bottomSheet != null) {

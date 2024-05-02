@@ -47,6 +47,7 @@ import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent.Success
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class FullVoucherView @JvmOverloads constructor(
@@ -70,7 +71,7 @@ internal class FullVoucherView @JvmOverloads constructor(
     private var coroutineScope: CoroutineScope? = null
 
     init {
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         this.setPadding(padding, padding, padding, padding)
     }
 

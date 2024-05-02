@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftcardComponentBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 import com.adyen.checkout.giftcard.GiftCardComponent
@@ -28,6 +27,7 @@ import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment(), GiftCardComponentCallback {
@@ -125,7 +125,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
 
     private fun handleError(componentError: ComponentError) {
         adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
-        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(UICoreR.string.component_error), componentError.errorMessage, true)
     }
 
     override fun onBackPressed(): Boolean {

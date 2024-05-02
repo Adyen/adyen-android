@@ -20,7 +20,6 @@ import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.mbway.R
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -29,6 +28,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class MbWayView @JvmOverloads constructor(
     context: Context,
@@ -46,7 +46,7 @@ internal class MbWayView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 

@@ -53,6 +53,7 @@ import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 /**
  * CardView for [CardComponent].
@@ -82,7 +83,7 @@ class CardView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
@@ -145,7 +146,7 @@ class CardView @JvmOverloads constructor(
             localizedContext,
         )
         binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(
-            R.style.AdyenCheckout_PostalCodeInput,
+            UICoreR.style.AdyenCheckout_PostalCodeInput,
             localizedContext,
         )
         binding.textInputLayoutAddressLookup.setLocalizedHintFromStyle(
@@ -279,7 +280,7 @@ class CardView @JvmOverloads constructor(
             }
             if (binding.textInputLayoutAddressLookup.isVisible && !it.addressState.isValid) {
                 binding.textInputLayoutAddressLookup.showError(
-                    localizedContext.getString(R.string.checkout_address_lookup_validation_empty)
+                    localizedContext.getString(UICoreR.string.checkout_address_lookup_validation_empty),
                 )
             }
         }
@@ -727,9 +728,9 @@ class CardView @JvmOverloads constructor(
             AddressFormUIState.FULL_ADDRESS -> binding.addressFormInput.updateAddressHint(isOptional)
             AddressFormUIState.POSTAL_CODE -> {
                 val postalCodeStyleResId = if (isOptional) {
-                    R.style.AdyenCheckout_PostalCodeInput_Optional
+                    UICoreR.style.AdyenCheckout_PostalCodeInput_Optional
                 } else {
-                    R.style.AdyenCheckout_PostalCodeInput
+                    UICoreR.style.AdyenCheckout_PostalCodeInput
                 }
                 binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
             }

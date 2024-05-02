@@ -45,6 +45,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
+import com.google.android.material.R as MaterialR
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ImageSaver(
@@ -67,7 +68,7 @@ class ImageSaver(
             ?: view.background?.draw(canvas)
             ?: run {
                 val defaultColor = ContextCompat.getColor(context, R.color.white)
-                val defaultBackgroundColor = MaterialColors.getColor(context, R.attr.colorSurface, defaultColor)
+                val defaultBackgroundColor = MaterialColors.getColor(context, MaterialR.attr.colorSurface, defaultColor)
                 canvas.drawColor(defaultBackgroundColor)
             }
 

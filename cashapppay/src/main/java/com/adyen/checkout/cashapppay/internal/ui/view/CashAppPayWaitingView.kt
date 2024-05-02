@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class CashAppPayWaitingView @JvmOverloads constructor(
     context: Context,
@@ -25,7 +26,7 @@ internal class CashAppPayWaitingView @JvmOverloads constructor(
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
 
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
 

@@ -30,6 +30,7 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class BoletoView @JvmOverloads constructor(
@@ -47,7 +48,7 @@ internal class BoletoView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 

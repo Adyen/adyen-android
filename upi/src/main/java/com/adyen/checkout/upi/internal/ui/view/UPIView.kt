@@ -31,6 +31,7 @@ import com.adyen.checkout.upi.databinding.UpiViewBinding
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class UPIView @JvmOverloads constructor(
     context: Context,
@@ -48,7 +49,7 @@ internal class UPIView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
