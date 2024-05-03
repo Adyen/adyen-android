@@ -47,6 +47,7 @@ object PaymentMethodTypes {
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
     const val UPI = "upi"
+    const val UPI_INTENT = "upi_intent"
     const val UPI_COLLECT = "upi_collect"
     const val UPI_QR = "upi_qr"
 

@@ -18,10 +18,12 @@ import org.json.JSONObject
 data class UPIPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
+    var appId: String?,
     var virtualPaymentAddress: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
+        private const val APP_ID = "appId"
         private const val VIRTUAL_PAYMENT_ADDRESS = "virtualPaymentAddress"
 
         @JvmField
@@ -31,6 +33,7 @@ data class UPIPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(APP_ID, modelObject.appId)
                         putOpt(VIRTUAL_PAYMENT_ADDRESS, modelObject.virtualPaymentAddress)
                     }
                 } catch (e: JSONException) {
@@ -42,6 +45,7 @@ data class UPIPaymentMethod(
                 return UPIPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    appId = jsonObject.getStringOrNull(APP_ID),
                     virtualPaymentAddress = jsonObject.getStringOrNull(VIRTUAL_PAYMENT_ADDRESS),
                 )
             }

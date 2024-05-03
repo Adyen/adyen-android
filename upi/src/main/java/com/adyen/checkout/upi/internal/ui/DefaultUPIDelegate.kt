@@ -37,6 +37,7 @@ import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
 import com.adyen.checkout.upi.internal.ui.model.UPIInputData
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.internal.ui.model.UPISelectedMode
 import com.adyen.checkout.upi.internal.ui.model.mapToSelectedMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -195,13 +196,10 @@ internal class DefaultUPIDelegate(
         outputData: UPIOutputData = this.outputData
     ): UPIComponentState {
         val paymentMethod = UPIPaymentMethod(
-            type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            type = getUPIPaymentMethodType(outputData),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
-                outputData.virtualPaymentAddressFieldState.value
-            } else {
-                null
-            },
+            appId = getCollectItemAppIdForComponentStateOrNull(outputData),
+            virtualPaymentAddress = getVirtualPaymentAddress(outputData),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -215,6 +213,59 @@ internal class DefaultUPIDelegate(
             isInputValid = outputData.isValid,
             isReady = true,
         )
+    }
+
+    private fun getUPIPaymentMethodType(outputData: UPIOutputData) = when (outputData.selectedMode) {
+        UPISelectedMode.COLLECT -> {
+            when (outputData.selectedUPICollectItem) {
+                is UPICollectItem.PaymentApp -> {
+                    PaymentMethodTypes.UPI_INTENT
+                }
+
+                UPICollectItem.GenericApp -> {
+                    PaymentMethodTypes.UPI_INTENT
+                }
+
+                is UPICollectItem.ManualInput -> {
+                    PaymentMethodTypes.UPI_COLLECT
+                }
+
+                null -> null
+            }
+        }
+
+        UPISelectedMode.QR -> {
+            PaymentMethodTypes.UPI_QR
+        }
+
+        UPISelectedMode.VPA -> {
+            PaymentMethodTypes.UPI_COLLECT
+        }
+    }
+
+    private fun getCollectItemAppIdForComponentStateOrNull(outputData: UPIOutputData) =
+        if (outputData.selectedMode == UPISelectedMode.COLLECT) {
+            (outputData.selectedUPICollectItem as? UPICollectItem.PaymentApp)?.id
+        } else {
+            null
+        }
+
+    private fun getVirtualPaymentAddress(outputData: UPIOutputData) = when (outputData.selectedMode) {
+        UPISelectedMode.COLLECT -> {
+            when (outputData.selectedUPICollectItem) {
+                is UPICollectItem.ManualInput -> {
+                    outputData.collectVirtualPaymentAddressFieldState.value
+                }
+
+                else -> null
+            }
+        }
+
+        UPISelectedMode.VPA -> {
+            outputData.virtualPaymentAddressFieldState.value
+        }
+
+        else -> null
     }
 
     private fun componentStateChanged(componentState: UPIComponentState) {
