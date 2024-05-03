@@ -23,8 +23,8 @@ import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
+import com.adyen.checkout.ui.core.R as UICoreR
 
 private const val STORED_PAYMENT_METHOD = "STORED_PAYMENT_METHOD"
 private const val NAVIGATED_FROM_PRESELECTED = "NAVIGATED_FROM_PRESELECTED"
@@ -163,6 +163,6 @@ internal abstract class BaseComponentDialogFragment :
 
     fun handleError(componentError: ComponentError) {
         adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
-        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(UICoreR.string.component_error), componentError.errorMessage, true)
     }
 }

@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @HiltViewModel
 class BlikViewModel @Inject constructor(
@@ -77,7 +78,7 @@ class BlikViewModel @Inject constructor(
             ?.firstOrNull { BlikComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (blikPaymentMethod == null) {
-            BlikViewState.Error(R.string.error_dialog_title)
+            BlikViewState.Error(UICoreR.string.error_dialog_title)
         } else {
             val componentData = BlikComponentData(
                 paymentMethod = blikPaymentMethod,

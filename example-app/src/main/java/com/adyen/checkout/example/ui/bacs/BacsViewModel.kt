@@ -35,6 +35,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Locale
 import javax.inject.Inject
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @HiltViewModel
 internal class BacsViewModel @Inject constructor(
@@ -86,7 +87,7 @@ internal class BacsViewModel @Inject constructor(
             ?.firstOrNull { BacsDirectDebitComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (paymentMethod == null) {
-            _viewState.emit(BacsViewState.Error(R.string.error_dialog_title))
+            _viewState.emit(BacsViewState.Error(UICoreR.string.error_dialog_title))
         } else {
             _bacsComponentDataFlow.emit(
                 BacsComponentData(

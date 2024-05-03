@@ -38,6 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import javax.inject.Inject
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -83,7 +84,7 @@ internal class GooglePayViewModel @Inject constructor(
             ?.firstOrNull { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (paymentMethod == null) {
-            _viewState.emit(GooglePayViewState.Error(R.string.error_dialog_title))
+            _viewState.emit(GooglePayViewState.Error(UICoreR.string.error_dialog_title))
             return@withContext
         }
 

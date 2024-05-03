@@ -21,6 +21,7 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.R as MaterialR
 
 internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
@@ -68,7 +69,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         dialog.setOnShowListener {
             val bottomSheetDialog = dialog as BottomSheetDialog
             val bottomSheet =
-                bottomSheetDialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheetDialog.findViewById<FrameLayout>(MaterialR.id.design_bottom_sheet)
             val layoutParams = bottomSheet?.layoutParams
             val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
             behavior?.isDraggable = false

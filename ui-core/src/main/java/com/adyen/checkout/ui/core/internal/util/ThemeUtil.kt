@@ -12,14 +12,13 @@ import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.ui.core.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ThemeUtil {
 
     @ColorInt
     fun getPrimaryThemeColor(context: Context): Int {
-        return getAttributeColor(context, R.attr.colorPrimary)
+        return getAttributeColor(context, androidx.appcompat.R.attr.colorPrimary)
     }
 
     @ColorInt

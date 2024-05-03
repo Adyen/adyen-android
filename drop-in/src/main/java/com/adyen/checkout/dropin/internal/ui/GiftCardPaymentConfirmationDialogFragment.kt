@@ -20,6 +20,7 @@ import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGiftCardPaymentConfirmationBinding
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDialogFragment() {
 
@@ -52,7 +53,7 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
             giftCardPaymentConfirmationData.amountPaid,
             giftCardPaymentConfirmationData.shopperLocale,
         )
-        binding.payButton.text = String.format(resources.getString(R.string.pay_button_with_value), amountToPay)
+        binding.payButton.text = String.format(resources.getString(UICoreR.string.pay_button_with_value), amountToPay)
 
         val remainingBalance = CurrencyUtils.formatAmount(
             giftCardPaymentConfirmationData.remainingBalance,

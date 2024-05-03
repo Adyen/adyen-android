@@ -36,6 +36,7 @@ import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogFragment() {
@@ -203,7 +204,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
     private fun handleError(componentError: ComponentError) {
         adyenLog(AdyenLogLevel.ERROR) { componentError.errorMessage }
-        protocol.showError(null, getString(R.string.component_error), componentError.errorMessage, true)
+        protocol.showError(null, getString(UICoreR.string.component_error), componentError.errorMessage, true)
     }
 
     private fun showRemoveStoredPaymentDialog() {

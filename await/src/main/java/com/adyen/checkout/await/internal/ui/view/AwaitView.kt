@@ -27,6 +27,7 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class AwaitView @JvmOverloads constructor(
     context: Context,
@@ -48,7 +49,7 @@ internal class AwaitView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_double_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_double_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
 

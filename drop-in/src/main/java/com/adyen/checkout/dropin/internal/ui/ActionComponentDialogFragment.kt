@@ -38,6 +38,7 @@ import com.adyen.checkout.dropin.internal.util.arguments
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @SuppressWarnings("TooManyFunctions")
 internal class ActionComponentDialogFragment :
@@ -83,7 +84,7 @@ internal class ActionComponentDialogFragment :
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
-        window?.setWindowAnimations(R.style.AdyenCheckout_BottomSheet_NoWindowEnterDialogAnimation)
+        window?.setWindowAnimations(UICoreR.style.AdyenCheckout_BottomSheet_NoWindowEnterDialogAnimation)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -134,7 +135,7 @@ internal class ActionComponentDialogFragment :
                 adyenLog(AdyenLogLevel.DEBUG) { "Permission $requiredPermission requested" }
                 requestPermissionLauncher.launch(arrayOf(requiredPermission))
             }
-            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(UICoreR.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
