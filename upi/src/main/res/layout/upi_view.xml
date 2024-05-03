@@ -54,6 +54,18 @@
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_upiCollect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+        android:visibility="gone"
+        android:descendantFocusability="beforeDescendants"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:visibility="visible" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_vpa"
         style="@style/AdyenCheckout.TextInputLayout"
