@@ -109,6 +109,10 @@ internal class UPIView @JvmOverloads constructor(
         }
     }
 
+    private fun onCollectItemInputChanged(value: String) {
+        delegate.updateCollectVirtualPaymentAddress(value)
+    }
+
     private fun updateUpiVpaViews(isChecked: Boolean) {
         binding.textInputLayoutVpa.isVisible = isChecked
         binding.editTextVpa.isFocusableInTouchMode = isChecked

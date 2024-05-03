@@ -43,7 +43,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-// TODO: We should only take UPI payment method from payment methods list, we filter out the other UPIs.
 @Suppress("TooManyFunctions")
 internal class DefaultUPIDelegate(
     private val submitHandler: SubmitHandler<UPIComponentState>,
@@ -138,7 +137,7 @@ internal class DefaultUPIDelegate(
                 componentParams.environment,
                 collectVirtualPaymentAddressFieldState,
             )
-            // TODO: This could also be passed to the UPIAppsAdapter to show an item as default at some point.
+            // TODO: This could also be passed to the UPIAppsAdapter to show an item as default.
             defaultSelectedCollectItem = collectItemList.firstOrNull()
             listOf(UPIMode.Collect(collectItemList), UPIMode.Qr)
         } else {
@@ -272,11 +271,32 @@ internal class DefaultUPIDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
+    override fun updateCollectVirtualPaymentAddress(value: String) {
+        cachedCollectVirtualPaymentAddress = value
+
+        // This makes sure that the field validation gets updated for the delegate too and not only for the input field
+        if (inputData.collectVirtualPaymentAddress != null) {
+            updateInputData {
+                collectVirtualPaymentAddress = null
+            }
+        }
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
+
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
     override fun onSubmit() {
+        // This allows moving validation to the delegate without changing the communication structure between delegate
+        // and the view. After we refactor state handling and validation logic, this can be improved.
+        updateInputData {
+            collectVirtualPaymentAddress = cachedCollectVirtualPaymentAddress
+        }
+
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
 
@@ -286,10 +306,6 @@ internal class DefaultUPIDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
-
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        submitHandler.setInteractionBlocked(isInteractionBlocked)
-    }
 
     override fun onCleared() {
         removeObserver()
