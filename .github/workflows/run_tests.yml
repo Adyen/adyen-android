@@ -26,7 +26,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run testDebugUnitTest
-        run: ./gradlew testDebugUnitTest --no-daemon
+        run: ./gradlew testDebugUnitTest -Pstrip-resources=true
 
   lint:
     name: Run lint
@@ -50,4 +50,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run lintDebug
-        run: ./gradlew lintDebug --no-daemon
+        run: ./gradlew lintDebug -Pstrip-resources=true

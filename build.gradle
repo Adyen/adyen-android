@@ -25,6 +25,18 @@ subprojects {
 
     plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
         android {
+            if (project.hasProperty("strip-resources") && project.property("strip-resources") == "true") {
+                defaultConfig {
+                    resConfigs "en", "xxhdpi"
+                }
+
+                buildTypes {
+                    debug {
+                        crunchPngs false
+                    }
+                }
+            }
+
             compileOptions {
                 sourceCompatibility = javaVersion
                 targetCompatibility = javaVersion
