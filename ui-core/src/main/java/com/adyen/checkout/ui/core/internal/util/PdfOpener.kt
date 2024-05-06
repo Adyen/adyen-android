@@ -65,7 +65,7 @@ class PdfOpener {
         if (isLaunched) {
             adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in custom tab" }
         } else {
-            adyenLog(AdyenLogLevel.ERROR) { "Couldn't open pdf in custom tab" }
+            adyenLog(AdyenLogLevel.DEBUG) { "Couldn't open pdf in custom tab" }
         }
         return isLaunched
     }

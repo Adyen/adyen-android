@@ -62,8 +62,6 @@ object CustomTabsLauncher {
     }
 
     private fun TypedArray.getColorOrNull(@StyleableRes index: Int): Int? {
-        return getColor(index, COLOR_NOT_DEFINED).takeIf { it != COLOR_NOT_DEFINED }
+        return getColor(index, -1).takeIf { it != -1 }
     }
-
-    private const val COLOR_NOT_DEFINED = -1
 }

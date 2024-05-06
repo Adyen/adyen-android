@@ -10,6 +10,7 @@ The base theme can be extended and overridden. You can also use a custom base th
 - [Customizing a specific view](#customizing-a-specific-view)
 - [Adding dark mode support](#adding-dark-mode-support)
 - [Overriding string resources](#overriding-string-resources)
+- [Styling Custom Tabs](#styling-custom-tabs)
 
 ## Customizing the base theme
 
@@ -125,4 +126,22 @@ CheckoutConfiguration(shopperLocale, environment, clientKey) {
 }
 ```
 
-If you cannot find a certain string in the code base, then check whether it is coming from the Checkout API. Make sure you localize these strings by sending the correct [shopperLocale](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-shopperLocale). 
+If you cannot find a certain string in the code base, then check whether it is coming from the Checkout API. Make sure you localize these strings by sending the correct [shopperLocale](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions#request-shopperLocale).
+
+## Styling Custom Tabs
+
+We use Custom Tabs to launch any external redirects that cannot be handled inside the SDK or by another installed native app.
+By default we set the toolbar color to match the `colorPrimary` attribute defined in your theme.
+To change this color to a different value than your `colorPrimary` attribute, you can override the `AdyenCheckout.CustomTabs` style in your `styles.xml`:
+
+```xml
+<style name="AdyenCheckout.CustomTabs">
+    <item name="adyenCustomTabsToolbarColor">@color/someColor1</item>
+    <!--
+    Additional colors that can be overridden as well
+    <item name="adyenCustomTabsSecondaryToolbarColor">@color/someColor2</item>
+    <item name="adyenCustomTabsNavigationBarColor">@color/someColor3</item>
+    <item name="adyenCustomTabsNavigationBarDividerColor">@color/someColor4</item>
+    -->
+</style>
+```
