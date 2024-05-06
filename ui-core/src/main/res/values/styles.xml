@@ -387,4 +387,14 @@
         <item name="android:text">@string/checkout_address_lookup_enter_manually</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+
+    <style name="AdyenCheckout.CustomTabs">
+        <item name="adyenCustomTabsToolbarColor">?attr/colorPrimary</item>
+        <!--
+        Additional colors that can be overridden as well
+        <item name="adyenCustomTabsSecondaryToolbarColor">someColor1</item>
+        <item name="adyenCustomTabsNavigationBarColor">someColor2</item>
+        <item name="adyenCustomTabsNavigationBarDividerColor">someColor3</item>
+        -->
+    </style>
 </resources>
