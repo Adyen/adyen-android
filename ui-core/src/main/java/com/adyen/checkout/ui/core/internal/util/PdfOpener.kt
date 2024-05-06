@@ -14,8 +14,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RestrictTo
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 
@@ -63,23 +61,13 @@ class PdfOpener {
 
     private fun openInCustomTab(context: Context, uri: Uri): Boolean {
         // open in custom tabs if there's no native app for the target uri
-        val defaultColors = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-            .build()
-
-        return try {
-            CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setDefaultColorSchemeParams(defaultColors)
-                .build()
-                .launchUrl(context, uri)
-
+        val isLaunched = CustomTabsLauncher.launchCustomTab(context, uri)
+        if (isLaunched) {
             adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened pdf in custom tab" }
-            true
-        } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open pdf in custom tab" }
-            false
+        } else {
+            adyenLog(AdyenLogLevel.ERROR) { "Couldn't open pdf in custom tab" }
         }
+        return isLaunched
     }
 
     private fun openInBrowser(context: Context, uri: Uri): Boolean {
