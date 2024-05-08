@@ -80,6 +80,23 @@ internal class GiftCardComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is set to false in gift card configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            giftCard {
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = giftCardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, dropInOverrideParams, null)
+
+        assertEquals(true, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `amount should match value set in sessions then drop in then component configuration`(

@@ -102,6 +102,26 @@ internal class BoletoComponentParamsMapperTest {
     }
 
     @Test
+    fun `when setSubmitButtonVisible is set to false in boleto configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            boleto {
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 20L), null)
+        val params = mapParams(
+            configuration = configuration,
+            dropInOverrideParams = dropInOverrideParams,
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
+    }
+
+    @Test
     fun `when send email is set, them params should match`() {
         val configuration = createCheckoutConfiguration {
             setEmailVisibility(true)

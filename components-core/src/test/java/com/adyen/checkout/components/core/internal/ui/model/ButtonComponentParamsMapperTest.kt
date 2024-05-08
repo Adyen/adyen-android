@@ -78,6 +78,30 @@ internal class ButtonComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is set to false in button component configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            val testConfiguration = ButtonTestConfiguration.Builder(Locale.CANADA, Environment.TEST, TEST_CLIENT_KEY_1)
+                .setSubmitButtonVisible(false)
+                .build()
+            addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("USD", 123L), null)
+        val params = buttonComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `amount should match value set in sessions then drop in then component configuration`(
