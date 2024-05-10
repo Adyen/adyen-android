@@ -68,6 +68,16 @@ internal class DefaultTwintDelegateTest {
         )
     }
 
+    @Test
+    fun `when handling action successfully, then a pay event should be emitted`() = runTest {
+        val payEventFlow = delegate.payEventFlow.test(testScheduler)
+        val action = SdkAction(paymentData = "something", sdkData = TwintSdkData("token"))
+
+        delegate.handleAction(action, Activity())
+
+        assertEquals(action.sdkData?.token, payEventFlow.latestValue)
+    }
+
     @ParameterizedTest
     @MethodSource("handleActionSource")
     fun `when handling action, then expect`(action: Action, expectedErrorMessage: String) = runTest {
@@ -191,12 +201,6 @@ internal class DefaultTwintDelegateTest {
             arguments(
                 SdkAction<TwintSdkData>(paymentData = "something", sdkData = null),
                 "SDK Data is null or of wrong type",
-            ),
-            // Success case: we cannot instantiate the Twint SDK (because it uses activity), but if this happens we
-            // successfully handed the action over to Twint.
-            arguments(
-                SdkAction(paymentData = "something", sdkData = TwintSdkData("token")),
-                "Twint not initialised before payment.",
             ),
         )
 

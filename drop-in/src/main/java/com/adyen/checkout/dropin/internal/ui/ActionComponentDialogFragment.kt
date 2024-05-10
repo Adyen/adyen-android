@@ -32,12 +32,9 @@ import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentGenericActionComponentBinding
 import com.adyen.checkout.dropin.internal.util.arguments
-import com.adyen.checkout.twint.Twint
-import com.adyen.checkout.twint.TwintActionComponent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -78,12 +75,6 @@ internal class ActionComponentDialogFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
-
-        if (TwintActionComponent.PROVIDER.canHandleAction(action)) {
-            runCompileOnly {
-                Twint.initialize(this)
-            }
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

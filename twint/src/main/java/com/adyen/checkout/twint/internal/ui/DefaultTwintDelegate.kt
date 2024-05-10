@@ -29,7 +29,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.twint.Twint
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -61,6 +60,9 @@ internal class DefaultTwintDelegate(
 
     // Not used for Twint action
     override val timerFlow: Flow<TimerData> = flow {}
+
+    private val payEventChannel: Channel<String> = bufferedChannel()
+    override val payEventFlow: Flow<String> = payEventChannel.receiveAsFlow()
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -112,16 +114,10 @@ internal class DefaultTwintDelegate(
             return
         }
 
-        Twint.setResultListener(::handleTwintResult)
-        try {
-            Twint.payWithCode(sdkData.token)
-        } catch (e: CheckoutException) {
-            exceptionChannel.trySend(e)
-        }
+        payEventChannel.trySend(sdkData.token)
     }
 
-    @VisibleForTesting
-    internal fun handleTwintResult(result: TwintPayResult) {
+    override fun handleTwintResult(result: TwintPayResult) {
         when (result) {
             TwintPayResult.TW_B_SUCCESS -> {
                 startStatusPolling()

@@ -9,10 +9,10 @@
 package com.adyen.checkout.twint.internal.ui
 
 import android.content.Context
+import android.view.LayoutInflater
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
-import com.adyen.checkout.ui.core.internal.ui.view.PaymentInProgressView
 
 internal object TwintViewProvider : ViewProvider {
 
@@ -20,7 +20,15 @@ internal object TwintViewProvider : ViewProvider {
         viewType: ComponentViewType,
         context: Context,
     ): ComponentView = when (viewType) {
-        TwintComponentViewType -> PaymentInProgressView(context)
+        TwintComponentViewType -> TwintView(context)
+        else -> throw IllegalArgumentException("Unsupported view type")
+    }
+
+    override fun getView(
+        viewType: ComponentViewType,
+        layoutInflater: LayoutInflater
+    ): ComponentView = when (viewType) {
+        TwintComponentViewType -> TwintView(layoutInflater)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

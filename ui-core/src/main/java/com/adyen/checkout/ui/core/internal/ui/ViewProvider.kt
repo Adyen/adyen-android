@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import android.content.Context
+import android.view.LayoutInflater
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -17,4 +18,9 @@ interface ViewProvider {
         viewType: ComponentViewType,
         context: Context,
     ): ComponentView
+
+    fun getView(
+        viewType: ComponentViewType,
+        layoutInflater: LayoutInflater
+    ): ComponentView = getView(viewType, layoutInflater.context)
 }
