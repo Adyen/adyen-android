@@ -12,4 +12,4 @@
 - Dependency versions:
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
-  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.17)   | **2.2.17**                     |
+  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)   | **2.2.18**                     |
