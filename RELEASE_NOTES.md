@@ -17,3 +17,7 @@
 ## Changed
 - Flags are replaced by ISO codes in the phone number inputs (affected payment methods: MB Way, Pay Easy, Convenience Stores Japan, Online Banking Japan and Seven-Eleven).
 - Strings containing "country" are changed to "country/region".
+- Dependency versions:
+  | Name                                                                                                   | Version                       |
+  |--------------------------------------------------------------------------------------------------------|-------------------------------|
+  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)                          | **2.2.18**                    |
