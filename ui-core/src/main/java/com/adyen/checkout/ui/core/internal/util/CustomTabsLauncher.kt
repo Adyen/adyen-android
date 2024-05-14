@@ -10,10 +10,9 @@ package com.adyen.checkout.ui.core.internal.util
 
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.res.TypedArray
 import android.net.Uri
+import androidx.annotation.AttrRes
 import androidx.annotation.RestrictTo
-import androidx.annotation.StyleableRes
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.ui.core.R
@@ -35,23 +34,10 @@ object CustomTabsLauncher {
     }
 
     private fun getDefaultColorSchemeParams(context: Context): CustomTabColorSchemeParams {
-        val typedArray = context.obtainStyledAttributes(
-            R.style.AdyenCheckout_CustomTabs,
-            R.styleable.AdyenCheckoutCustomTabs,
-        )
-        val toolbarColor = typedArray.getColorOrNull(
-            R.styleable.AdyenCheckoutCustomTabs_adyenCustomTabsToolbarColor,
-        )
-        val secondaryToolbarColor = typedArray.getColorOrNull(
-            R.styleable.AdyenCheckoutCustomTabs_adyenCustomTabsSecondaryToolbarColor,
-        )
-        val navigationBarColor = typedArray.getColorOrNull(
-            R.styleable.AdyenCheckoutCustomTabs_adyenCustomTabsNavigationBarColor,
-        )
-        val navigationBarDividerColor = typedArray.getColorOrNull(
-            R.styleable.AdyenCheckoutCustomTabs_adyenCustomTabsNavigationBarDividerColor,
-        )
-        typedArray.recycle()
+        val toolbarColor = context.getColorOrNull(R.attr.adyenCustomTabsToolbarColor)
+        val secondaryToolbarColor = context.getColorOrNull(R.attr.adyenCustomTabsSecondaryToolbarColor)
+        val navigationBarColor = context.getColorOrNull(R.attr.adyenCustomTabsNavigationBarColor)
+        val navigationBarDividerColor = context.getColorOrNull(R.attr.adyenCustomTabsNavigationBarDividerColor)
 
         return CustomTabColorSchemeParams.Builder().apply {
             toolbarColor?.let { setToolbarColor(it) }
@@ -61,7 +47,10 @@ object CustomTabsLauncher {
         }.build()
     }
 
-    private fun TypedArray.getColorOrNull(@StyleableRes index: Int): Int? {
-        return getColor(index, -1).takeIf { it != -1 }
+    private fun Context.getColorOrNull(@AttrRes attribute: Int): Int? {
+        val typedArray = obtainStyledAttributes(R.style.AdyenCheckout_CustomTabs, intArrayOf(attribute))
+        val color = typedArray.getColor(0, -1).takeIf { it != -1 }
+        typedArray.recycle()
+        return color
     }
 }

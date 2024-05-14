@@ -13,10 +13,8 @@
         <attr name="adyenStrokeColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="AdyenCheckoutCustomTabs">
-        <attr name="adyenCustomTabsToolbarColor" format="color" />
-        <attr name="adyenCustomTabsSecondaryToolbarColor" format="color" />
-        <attr name="adyenCustomTabsNavigationBarColor" format="color" />
-        <attr name="adyenCustomTabsNavigationBarDividerColor" format="color" />
-    </declare-styleable>
+    <attr name="adyenCustomTabsToolbarColor" format="color" />
+    <attr name="adyenCustomTabsSecondaryToolbarColor" format="color" />
+    <attr name="adyenCustomTabsNavigationBarColor" format="color" />
+    <attr name="adyenCustomTabsNavigationBarDividerColor" format="color" />
 </resources>
