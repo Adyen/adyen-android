@@ -108,6 +108,7 @@ compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-
 # this unused dependency is needed so that renovate can update the compose compiler version. More info in: https://github.com/renovatebot/renovate/issues/18354
 compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
 google-pay-compose-button = { group = "com.google.pay.button", name = "compose-pay-button", version.ref = "google-pay-compose-button" }
+google-pay-play-services-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 google-pay-play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "play-services-wallet" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
