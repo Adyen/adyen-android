@@ -133,8 +133,6 @@ object PaymentMethodTypes {
         SEPA,
         TWINT,
         UPI,
-        UPI_COLLECT,
-        UPI_QR,
         WECHAT_PAY_SDK,
     )
 
@@ -174,5 +172,8 @@ object PaymentMethodTypes {
         WECHAT_PAY_MINI_PROGRAM,
         WECHAT_PAY_QR,
         WECHAT_PAY_WEB,
+        UPI_INTENT,
+        UPI_COLLECT,
+        UPI_QR,
     )
 }
