@@ -60,6 +60,7 @@ ext {
     cash_app_pay_version = '2.5.0'
     google_pay_compose_button_version = '1.0.0'
     okhttp_version = "4.12.0"
+    play_services_coroutines_version = '1.4.1'
     play_services_wallet_version = '19.4.0'
     twint_version = '8.0.0'
     wechat_pay_version = "6.8.0"
@@ -120,8 +121,9 @@ ext {
             viewmodel: "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_viewmodel_version"
         ],
         googlePay       : [
-            composeButton     : "com.google.pay.button:compose-pay-button:$google_pay_compose_button_version",
-            playServicesWallet: "com.google.android.gms:play-services-wallet:$play_services_wallet_version",
+            composeButton         : "com.google.pay.button:compose-pay-button:$google_pay_compose_button_version",
+            playServicesCoroutines: "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$play_services_coroutines_version",
+            playServicesWallet    : "com.google.android.gms:play-services-wallet:$play_services_wallet_version",
         ],
         hilt            : "com.google.dagger:hilt-android:$hilt_version",
         hiltCompiler    : "com.google.dagger:hilt-compiler:$hilt_version",
