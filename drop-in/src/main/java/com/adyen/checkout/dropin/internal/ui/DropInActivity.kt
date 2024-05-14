@@ -482,6 +482,10 @@ internal class DropInActivity :
 
     private fun handleAction(action: Action) {
         adyenLog(AdyenLogLevel.DEBUG) { "showActionDialog" }
+        getExistingActionFragment()?.apply {
+            handleAction(action)
+            return
+        }
         setLoading(false)
         hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
@@ -563,14 +567,16 @@ internal class DropInActivity :
     private fun isWeChatPayIntent(intent: Intent): Boolean = checkCompileOnly { WeChatPayUtils.isResultIntent(intent) }
 
     private fun handleActionIntentResponse(intent: Intent) {
-        val actionFragment = getActionFragment() ?: return
+        val actionFragment = getExistingActionFragment()
+        if (actionFragment == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "ActionComponentDialogFragment is not loaded" }
+            return
+        }
         actionFragment.handleIntent(intent)
     }
 
-    private fun getActionFragment(): ActionComponentDialogFragment? {
-        val fragment = getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
-        if (fragment == null) adyenLog(AdyenLogLevel.ERROR) { "ActionComponentDialogFragment is not loaded" }
-        return fragment
+    private fun getExistingActionFragment(): ActionComponentDialogFragment? {
+        return getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
     }
 
     private fun initObservers() {

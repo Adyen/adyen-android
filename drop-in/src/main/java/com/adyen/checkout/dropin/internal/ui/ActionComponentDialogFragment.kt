@@ -145,11 +145,15 @@ internal class ActionComponentDialogFragment :
             .onEach {
                 when (it) {
                     ActionComponentFragmentEvent.HANDLE_ACTION -> {
-                        actionComponent.handleAction(action, requireActivity())
+                        handleAction(action)
                     }
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    fun handleAction(action: Action) {
+        actionComponent.handleAction(action, requireActivity())
     }
 
     override fun onBackPressed(): Boolean {
@@ -215,21 +219,19 @@ internal class ActionComponentDialogFragment :
     }
 
     companion object {
-        const val ACTION = "ACTION"
-        const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
+        private const val ACTION = "ACTION"
+        private const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
 
         fun newInstance(
             action: Action,
             checkoutConfiguration: CheckoutConfiguration,
         ): ActionComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(ACTION, action)
-            args.putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
-
-            val componentDialogFragment = ActionComponentDialogFragment()
-            componentDialogFragment.arguments = args
-
-            return componentDialogFragment
+            return ActionComponentDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ACTION, action)
+                    putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
+                }
+            }
         }
     }
 }
