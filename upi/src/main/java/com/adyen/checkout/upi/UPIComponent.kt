@@ -102,6 +102,7 @@ class UPIComponent internal constructor(
             PaymentMethodTypes.UPI,
             PaymentMethodTypes.UPI_COLLECT,
             PaymentMethodTypes.UPI_QR,
+            PaymentMethodTypes.UPI_INTENT
         )
     }
 }
