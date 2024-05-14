@@ -84,7 +84,8 @@ abstract class PaymentMethodDetails : ModelObject() {
 
                 PaymentMethodTypes.UPI,
                 PaymentMethodTypes.UPI_COLLECT,
-                PaymentMethodTypes.UPI_QR -> UPIPaymentMethod.SERIALIZER
+                PaymentMethodTypes.UPI_QR,
+                PaymentMethodTypes.UPI_INTENT -> UPIPaymentMethod.SERIALIZER
 
                 SepaPaymentMethod.PAYMENT_METHOD_TYPE -> SepaPaymentMethod.SERIALIZER
                 SevenElevenPaymentMethod.PAYMENT_METHOD_TYPE -> SevenElevenPaymentMethod.SERIALIZER
