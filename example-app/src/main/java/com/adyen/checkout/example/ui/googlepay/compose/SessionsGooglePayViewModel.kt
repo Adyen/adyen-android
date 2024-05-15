@@ -59,12 +59,11 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-    private val _googlePayState = MutableStateFlow(SessionsGooglePayState(SessionsGooglePayUIState.Loading))
+    private val _googlePayState = MutableStateFlow<SessionsGooglePayState>(SessionsGooglePayState.Loading)
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()
 
-    private var _componentData: SessionsGooglePayComponentData? = null
-    private val componentData: SessionsGooglePayComponentData
-        get() = requireNotNull(_componentData) { "component data should not be null" }
+    private val _stateEvents: MutableStateFlow<SessionsGooglePayEvents> = MutableStateFlow(SessionsGooglePayEvents.None)
+    val stateEvents: StateFlow<SessionsGooglePayEvents> = _stateEvents.asStateFlow()
 
     init {
         viewModelScope.launch { fetchSession() }
@@ -85,13 +84,14 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             return@withContext
         }
 
-        _componentData = SessionsGooglePayComponentData(
+        val componentData = SessionsGooglePayComponentData(
             checkoutSession,
             checkoutConfiguration,
             paymentMethod,
             this@SessionsGooglePayViewModel,
         )
 
+        updateEvent { SessionsGooglePayEvents.ComponentData(componentData) }
         checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
     }
 
@@ -143,7 +143,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
         viewModelScope.launch {
             if (isAvailable) {
-                updateState { it.copy(uiState = SessionsGooglePayUIState.ShowButton(componentData)) }
+                updateState { SessionsGooglePayState.ShowButton }
             } else {
                 onError()
             }
@@ -151,7 +151,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     override fun onAction(action: Action) {
-        updateState { it.copy(actionToHandle = SessionsGooglePayAction(componentData, action)) }
+        updateEvent { SessionsGooglePayEvents.Action(action) }
     }
 
     override fun onError(componentError: ComponentError) {
@@ -160,9 +160,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-        updateState {
-            it.copy(uiState = SessionsGooglePayUIState.FinalResult(getFinalResultState(result)))
-        }
+        updateState { SessionsGooglePayState.FinalResult(getFinalResultState(result)) }
     }
 
     private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
@@ -174,40 +172,22 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     private fun onError() {
-        updateState { it.copy(uiState = SessionsGooglePayUIState.FinalResult(ResultState.FAILURE)) }
+        updateState { SessionsGooglePayState.FinalResult(ResultState.FAILURE) }
     }
 
     private fun updateState(block: (SessionsGooglePayState) -> SessionsGooglePayState) {
         _googlePayState.update(block)
     }
 
-    fun onButtonClicked() {
-        updateState {
-            it.copy(
-                uiState = SessionsGooglePayUIState.ShowComponent(componentData),
-                startGooglePay = SessionsStartGooglePayData(componentData, ACTIVITY_RESULT_CODE),
-            )
-        }
-    }
-
-    fun onGooglePayStarted() {
-        updateState { it.copy(startGooglePay = null) }
-    }
-
-    fun onActionConsumed() {
-        updateState { it.copy(actionToHandle = null) }
+    private fun updateEvent(block: (SessionsGooglePayEvents) -> SessionsGooglePayEvents) {
+        _stateEvents.update(block)
     }
 
     fun onNewIntent(intent: Intent) {
-        updateState { it.copy(intentToHandle = SessionsGooglePayIntent(componentData, intent)) }
-    }
-
-    fun onNewIntentHandled() {
-        updateState { it.copy(intentToHandle = null) }
+        updateEvent { SessionsGooglePayEvents.Intent(intent) }
     }
 
     companion object {
         private val TAG = getLogTag()
-        private const val ACTIVITY_RESULT_CODE = 1
     }
 }
