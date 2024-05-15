@@ -14,9 +14,12 @@ import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-internal interface GooglePayDelegate : PaymentComponentDelegate<GooglePayComponentState> {
+internal interface GooglePayDelegate :
+    PaymentComponentDelegate<GooglePayComponentState>,
+    ViewProvidingDelegate {
 
     val componentStateFlow: Flow<GooglePayComponentState>
 
