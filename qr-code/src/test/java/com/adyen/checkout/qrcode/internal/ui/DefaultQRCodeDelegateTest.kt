@@ -206,7 +206,6 @@ internal class DefaultQRCodeDelegateTest(
                 assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
                 assertEquals("qrData", qrCodeData)
             }
-
         }
 
         @Test

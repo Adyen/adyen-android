@@ -11,6 +11,7 @@ package com.adyen.checkout.voucher.internal.ui
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.action.Action
@@ -115,15 +116,13 @@ internal class DefaultVoucherDelegate(
 
     private fun handleAction(action: Action) {
         if (action !is VoucherAction) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
         val config = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)
         if (config == null) {
-            exceptionChannel.trySend(
-                ComponentException("Payment method ${action.paymentMethodType} not supported for this action"),
-            )
+            emitError(ComponentException("Payment method ${action.paymentMethodType} not supported for this action"))
             return
         }
 
@@ -172,7 +171,7 @@ internal class DefaultVoucherDelegate(
         try {
             pdfOpener.open(context, downloadUrl)
         } catch (e: IllegalStateException) {
-            exceptionChannel.trySend(ComponentException(e.message ?: "", e.cause))
+            emitError(ComponentException(e.message ?: "", e.cause))
         }
     }
 
@@ -206,6 +205,15 @@ internal class DefaultVoucherDelegate(
         permissionChannel.trySend(requestData)
     }
 
+    private fun emitError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
@@ -213,6 +221,8 @@ internal class DefaultVoucherDelegate(
 
     companion object {
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
-        private const val ACTION_KEY = "ACTION_KEY"
+
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }
