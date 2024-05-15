@@ -32,6 +32,7 @@ import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.Wallet
@@ -60,6 +61,8 @@ internal class DefaultGooglePayDelegate(
 
     private val submitChannel: Channel<GooglePayComponentState> = bufferedChannel()
     override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
+
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GooglePayComponentViewType)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         initializeAnalytics(coroutineScope)
