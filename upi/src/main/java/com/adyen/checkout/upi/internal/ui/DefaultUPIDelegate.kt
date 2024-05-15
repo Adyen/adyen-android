@@ -33,8 +33,8 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.UPIComponentState
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
 import com.adyen.checkout.upi.internal.ui.model.UPIInputData
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
 import com.adyen.checkout.upi.internal.ui.model.UPISelectedMode
@@ -74,7 +74,7 @@ internal class DefaultUPIDelegate(
 
     // This allows moving validation to the delegate without changing the communication structure between delegate and
     // the view. After we refactor state handling and validation logic, this can be improved.
-    private var cachedCollectVirtualPaymentAddress: String = ""
+    private var cachedIntentVirtualPaymentAddress: String = ""
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -129,43 +129,43 @@ internal class DefaultUPIDelegate(
         )
 
         val appIds = paymentMethod.apps
-        val collectVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(collectVirtualPaymentAddress)
-        var defaultSelectedCollectItem: UPICollectItem? = null
+        val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+        var defaultSelectedIntentItem: UPIIntentItem? = null
         val availableModes = if (!appIds.isNullOrEmpty()) {
-            val collectItemList = createCollectItems(
+            val intentItemList = createIntentItems(
                 appIds,
                 componentParams.environment,
-                collectVirtualPaymentAddressFieldState,
+                intentVirtualPaymentAddressFieldState,
             )
             // TODO: This could also be passed to the UPIAppsAdapter to show an item as default.
-            defaultSelectedCollectItem = collectItemList.firstOrNull()
-            listOf(UPIMode.Collect(collectItemList), UPIMode.Qr)
+            defaultSelectedIntentItem = intentItemList.firstOrNull()
+            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
         } else {
             listOf(UPIMode.Vpa, UPIMode.Qr)
         }
 
         UPIOutputData(
             selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
-            selectedUPICollectItem = selectedUPICollectItem ?: defaultSelectedCollectItem,
+            selectedUPIIntentItem = selectedUPIIntentItem ?: defaultSelectedIntentItem,
             availableModes = availableModes,
             virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
-            collectVirtualPaymentAddressFieldState = collectVirtualPaymentAddressFieldState,
+            intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )
     }
 
-    private fun createCollectItems(
+    private fun createIntentItems(
         apps: List<App>,
         environment: Environment,
-        collectVirtualPaymentAddressFieldState: FieldState<String>,
-    ): List<UPICollectItem> {
+        intentVirtualPaymentAddressFieldState: FieldState<String>,
+    ): List<UPIIntentItem> {
         val paymentApps = apps.mapToPaymentApp(environment = environment)
         val manualInputErrorMessageId =
-            getValidationErrorResourceIdOrNull(collectVirtualPaymentAddressFieldState.validation)
+            getValidationErrorResourceIdOrNull(intentVirtualPaymentAddressFieldState.validation)
 
-        return mutableListOf<UPICollectItem>().apply {
+        return mutableListOf<UPIIntentItem>().apply {
             addAll(paymentApps)
-            add(UPICollectItem.GenericApp)
-            add(UPICollectItem.ManualInput(manualInputErrorMessageId))
+            add(UPIIntentItem.GenericApp)
+            add(UPIIntentItem.ManualInput(manualInputErrorMessageId))
         }
     }
 
@@ -197,7 +197,7 @@ internal class DefaultUPIDelegate(
         val paymentMethod = UPIPaymentMethod(
             type = getUPIPaymentMethodType(outputData),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            appId = getCollectItemAppIdForComponentStateOrNull(outputData),
+            appId = getIntentItemAppIdForComponentStateOrNull(outputData),
             virtualPaymentAddress = getVirtualPaymentAddress(outputData),
         )
 
@@ -215,17 +215,17 @@ internal class DefaultUPIDelegate(
     }
 
     private fun getUPIPaymentMethodType(outputData: UPIOutputData) = when (outputData.selectedMode) {
-        UPISelectedMode.COLLECT -> {
-            when (outputData.selectedUPICollectItem) {
-                is UPICollectItem.PaymentApp -> {
+        UPISelectedMode.INTENT -> {
+            when (outputData.selectedUPIIntentItem) {
+                is UPIIntentItem.PaymentApp -> {
                     PaymentMethodTypes.UPI_INTENT
                 }
 
-                UPICollectItem.GenericApp -> {
+                UPIIntentItem.GenericApp -> {
                     PaymentMethodTypes.UPI_INTENT
                 }
 
-                is UPICollectItem.ManualInput -> {
+                is UPIIntentItem.ManualInput -> {
                     PaymentMethodTypes.UPI_COLLECT
                 }
 
@@ -242,18 +242,18 @@ internal class DefaultUPIDelegate(
         }
     }
 
-    private fun getCollectItemAppIdForComponentStateOrNull(outputData: UPIOutputData) =
-        if (outputData.selectedMode == UPISelectedMode.COLLECT) {
-            (outputData.selectedUPICollectItem as? UPICollectItem.PaymentApp)?.id
+    private fun getIntentItemAppIdForComponentStateOrNull(outputData: UPIOutputData) =
+        if (outputData.selectedMode == UPISelectedMode.INTENT) {
+            (outputData.selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id
         } else {
             null
         }
 
     private fun getVirtualPaymentAddress(outputData: UPIOutputData) = when (outputData.selectedMode) {
-        UPISelectedMode.COLLECT -> {
-            when (outputData.selectedUPICollectItem) {
-                is UPICollectItem.ManualInput -> {
-                    outputData.collectVirtualPaymentAddressFieldState.value
+        UPISelectedMode.INTENT -> {
+            when (outputData.selectedUPIIntentItem) {
+                is UPIIntentItem.ManualInput -> {
+                    outputData.intentVirtualPaymentAddressFieldState.value
                 }
 
                 else -> null
@@ -271,13 +271,13 @@ internal class DefaultUPIDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    override fun updateCollectVirtualPaymentAddress(value: String) {
-        cachedCollectVirtualPaymentAddress = value
+    override fun updateIntentVirtualPaymentAddress(value: String) {
+        cachedIntentVirtualPaymentAddress = value
 
         // This makes sure that the field validation gets updated for the delegate too and not only for the input field
-        if (inputData.collectVirtualPaymentAddress != null) {
+        if (inputData.intentVirtualPaymentAddress != null) {
             updateInputData {
-                collectVirtualPaymentAddress = null
+                intentVirtualPaymentAddress = null
             }
         }
     }
@@ -294,7 +294,7 @@ internal class DefaultUPIDelegate(
         // This allows moving validation to the delegate without changing the communication structure between delegate
         // and the view. After we refactor state handling and validation logic, this can be improved.
         updateInputData {
-            collectVirtualPaymentAddress = cachedCollectVirtualPaymentAddress
+            intentVirtualPaymentAddress = cachedIntentVirtualPaymentAddress
         }
 
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())

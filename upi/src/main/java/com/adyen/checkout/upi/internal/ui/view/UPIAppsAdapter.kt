@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.adyen.checkout.upi.databinding.UpiAppBinding
 import com.adyen.checkout.upi.databinding.UpiAppGenericBinding
 import com.adyen.checkout.upi.databinding.UpiAppManualAddressBinding
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_TYPE_GENERIC_APP
 import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_TYPE_MANUAL_INPUT
 import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_TYPE_PAYMENT_APP
@@ -27,34 +27,34 @@ internal class UPIAppsAdapter(
     private val context: Context,
     private val localizedContext: Context,
     private val paymentMethod: String,
-    private val onCheckedListener: (UPICollectItem) -> Unit,
+    private val onCheckedListener: (UPIIntentItem) -> Unit,
     private val onInputChangeListener: (String) -> Unit,
-) : ListAdapter<UPICollectItem, UPICollectItemViewHolder>(UPIAppsDiffCallback) {
+) : ListAdapter<UPIIntentItem, UPIIntentItemViewHolder>(UPIAppsDiffCallback) {
 
     private var lastCheckedPosition: Int = 0
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
-        is UPICollectItem.PaymentApp -> VIEW_TYPE_PAYMENT_APP.id
-        is UPICollectItem.GenericApp -> VIEW_TYPE_GENERIC_APP.id
-        is UPICollectItem.ManualInput -> VIEW_TYPE_MANUAL_INPUT.id
+        is UPIIntentItem.PaymentApp -> VIEW_TYPE_PAYMENT_APP.id
+        is UPIIntentItem.GenericApp -> VIEW_TYPE_GENERIC_APP.id
+        is UPIIntentItem.ManualInput -> VIEW_TYPE_MANUAL_INPUT.id
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UPICollectItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UPIIntentItemViewHolder {
         val upiViewType = UPIViewType.entries[viewType]
         return when (upiViewType) {
             VIEW_TYPE_PAYMENT_APP -> {
                 val binding = UpiAppBinding.inflate(LayoutInflater.from(context), parent, false)
-                UPICollectPaymentAppViewHolder(binding, paymentMethod)
+                UPIIntentPaymentAppViewHolder(binding, paymentMethod)
             }
 
             VIEW_TYPE_GENERIC_APP -> {
                 val binding = UpiAppGenericBinding.inflate(LayoutInflater.from(context), parent, false)
-                UPICollectGenericAppViewHolder(binding)
+                UPIIntentGenericAppViewHolder(binding)
             }
 
             VIEW_TYPE_MANUAL_INPUT -> {
                 val binding = UpiAppManualAddressBinding.inflate(LayoutInflater.from(context), parent, false)
-                UPICollectManualAddressViewHolder(
+                UPIIntentManualAddressViewHolder(
                     binding,
                     localizedContext,
                     onInputChangeListener,
@@ -63,7 +63,7 @@ internal class UPIAppsAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: UPICollectItemViewHolder, position: Int) = with(holder) {
+    override fun onBindViewHolder(holder: UPIIntentItemViewHolder, position: Int) = with(holder) {
         bind(
             item = getItem(position),
             isChecked = position == lastCheckedPosition,
@@ -81,14 +81,14 @@ internal class UPIAppsAdapter(
         onCheckedListener.invoke(getItem(lastCheckedPosition))
     }
 
-    object UPIAppsDiffCallback : DiffUtil.ItemCallback<UPICollectItem>() {
-        override fun areItemsTheSame(oldItem: UPICollectItem, newItem: UPICollectItem): Boolean =
+    object UPIAppsDiffCallback : DiffUtil.ItemCallback<UPIIntentItem>() {
+        override fun areItemsTheSame(oldItem: UPIIntentItem, newItem: UPIIntentItem): Boolean =
             oldItem.areItemsTheSame(newItem)
 
-        override fun areContentsTheSame(oldItem: UPICollectItem, newItem: UPICollectItem): Boolean =
+        override fun areContentsTheSame(oldItem: UPIIntentItem, newItem: UPIIntentItem): Boolean =
             oldItem.areContentsTheSame(newItem)
 
-        override fun getChangePayload(oldItem: UPICollectItem, newItem: UPICollectItem) =
+        override fun getChangePayload(oldItem: UPIIntentItem, newItem: UPIIntentItem) =
             oldItem.getChangePayload(newItem)
     }
 

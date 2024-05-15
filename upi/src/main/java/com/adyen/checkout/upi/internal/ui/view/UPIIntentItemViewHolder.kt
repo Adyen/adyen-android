@@ -3,18 +3,18 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 25/4/2024.
+ * Created by ararat on 27/5/2024.
  */
 
 package com.adyen.checkout.upi.internal.ui.view
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-internal abstract class UPICollectItemViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+internal abstract class UPIIntentItemViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    abstract fun bind(item: UPICollectItem, isChecked: Boolean)
+    abstract fun bind(item: UPIIntentItem, isChecked: Boolean)
 
     abstract fun setOnClickListener(onClickListener: (Int) -> Unit)
 }

@@ -26,8 +26,8 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_collect"
-            style="@style/AdyenCheckout.UPI.CollectButton"
+            android:id="@+id/button_intent"
+            style="@style/AdyenCheckout.UPI.IntentButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -55,7 +55,7 @@
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_upiCollect"
+        android:id="@+id/recyclerView_upiIntent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"

@@ -19,8 +19,8 @@
         <item name="singleSelection">true</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.CollectButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:text">@string/checkout_upi_collect</item>
+    <style name="AdyenCheckout.UPI.IntentButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_upi_intent</item>
         <item name="textAllCaps">false</item>
     </style>
 
@@ -40,7 +40,7 @@
     </style>
 
     <style name="AdyenCheckout.UPI.ManualEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_upi_collect_manual_input_hint</item>
+        <item name="android:hint">@string/checkout_upi_intent_manual_input_hint</item>
         <item name="android:maxLines">1</item>
     </style>
 
@@ -54,40 +54,40 @@
         <item name="android:paddingBottom">@dimen/standard_half_margin</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect" />
+    <style name="AdyenCheckout.UPI.Intent" />
 
-    <style name="AdyenCheckout.UPI.Collect.AppIdTextView" parent="AdyenCheckout.ListItemText">
+    <style name="AdyenCheckout.UPI.Intent.AppIdTextView" parent="AdyenCheckout.ListItemText">
         <item name="android:layout_marginStart">@dimen/standard_three_quarters_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
         <item name="android:text">@string/checkout_address_form_country_hint</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.AppIdTextView.Generic" parent="AdyenCheckout.UPI.Collect.AppIdTextView">
-        <item name="android:text">@string/checkout_upi_collect_generic_app</item>
+    <style name="AdyenCheckout.UPI.Intent.AppIdTextView.Generic" parent="AdyenCheckout.UPI.Intent.AppIdTextView">
+        <item name="android:text">@string/checkout_upi_intent_generic_app</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.AppIdTextView.ManualInput" parent="AdyenCheckout.UPI.Collect.AppIdTextView">
-        <item name="android:text">@string/checkout_upi_collect_manual_input</item>
+    <style name="AdyenCheckout.UPI.Intent.AppIdTextView.ManualInput" parent="AdyenCheckout.UPI.Intent.AppIdTextView">
+        <item name="android:text">@string/checkout_upi_intent_manual_input</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.Icon" parent="AdyenCheckout.Image.Logo">
+    <style name="AdyenCheckout.UPI.Intent.Icon" parent="AdyenCheckout.Image.Logo">
         <item name="adyenStrokeColor">@color/stroke_color</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.Icon.Generic" parent="AdyenCheckout.UPI.Collect.Icon">
+    <style name="AdyenCheckout.UPI.Intent.Icon.Generic" parent="AdyenCheckout.UPI.Intent.Icon">
         <item name="android:src">@drawable/ic_upi_generic_app</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.Icon.ManualInput" parent="AdyenCheckout.UPI.Collect.Icon">
+    <style name="AdyenCheckout.UPI.Intent.Icon.ManualInput" parent="AdyenCheckout.UPI.Intent.Icon">
         <item name="android:src">@drawable/ic_upi_manual_input</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.Divider">
+    <style name="AdyenCheckout.UPI.Intent.Divider">
         <item name="android:background">@color/stroke_color</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Collect.RadioButton" parent="AdyenCheckout.RadioButton">
+    <style name="AdyenCheckout.UPI.Intent.RadioButton" parent="AdyenCheckout.RadioButton">
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
         <item name="android:paddingEnd">0dp</item>

@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class UPIInputData(
     var selectedMode: UPISelectedMode? = null,
-    var selectedUPICollectItem: UPICollectItem? = null,
+    var selectedUPIIntentItem: UPIIntentItem? = null,
     var vpaVirtualPaymentAddress: String = "",
-    var collectVirtualPaymentAddress: String? = null,
+    var intentVirtualPaymentAddress: String? = null,
 ) : InputData

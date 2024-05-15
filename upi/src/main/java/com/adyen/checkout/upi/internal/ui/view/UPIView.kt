@@ -29,7 +29,7 @@ import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.databinding.UpiViewBinding
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
 import com.adyen.checkout.upi.internal.ui.model.UPISelectedMode
@@ -77,8 +77,8 @@ internal class UPIView @JvmOverloads constructor(
             R.style.AdyenCheckout_UPI_ModeSelectionTextView,
             localizedContext,
         )
-        binding.buttonCollect.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_UPI_CollectButton,
+        binding.buttonIntent.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_IntentButton,
             localizedContext,
         )
         binding.buttonVpa.setLocalizedTextFromStyle(
@@ -102,7 +102,7 @@ internal class UPIView @JvmOverloads constructor(
     private fun initModeToggle() {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
-                R.id.button_collect -> updateUpiCollectViews(isChecked)
+                R.id.button_intent -> updateUpiIntentViews(isChecked)
                 R.id.button_vpa -> updateUpiVpaViews(isChecked)
                 R.id.button_qrCode -> updateUpiQrCodeViews(isChecked)
             }
@@ -127,8 +127,8 @@ internal class UPIView @JvmOverloads constructor(
 
     private fun initViewsForMode(mode: UPIMode, isChecked: Boolean) {
         when (mode) {
-            is UPIMode.Collect -> {
-                initViewsForCollect(mode, isChecked)
+            is UPIMode.Intent -> {
+                initViewsForIntent(mode, isChecked)
             }
 
             is UPIMode.Vpa -> {
@@ -141,10 +141,10 @@ internal class UPIView @JvmOverloads constructor(
         }
     }
 
-    private fun initViewsForCollect(mode: UPIMode.Collect, isChecked: Boolean) = with(binding) {
-        buttonCollect.isVisible = true
+    private fun initViewsForIntent(mode: UPIMode.Intent, isChecked: Boolean) = with(binding) {
+        buttonIntent.isVisible = true
         if (isChecked) {
-            toggleButtonChoice.check(R.id.button_collect)
+            toggleButtonChoice.check(R.id.button_intent)
         }
 
         if (upiAppsAdapter == null) {
@@ -155,28 +155,28 @@ internal class UPIView @JvmOverloads constructor(
                 onCheckedListener = ::onCollectItemChecked,
                 onInputChangeListener = ::onCollectItemInputChanged,
             )
-            recyclerViewUpiCollect.adapter = upiAppsAdapter
+            recyclerViewUpiIntent.adapter = upiAppsAdapter
         }
         upiAppsAdapter?.submitList(mode.collectItems)
     }
 
-    private fun updateUpiCollectViews(isChecked: Boolean) {
-        binding.recyclerViewUpiCollect.isVisible = isChecked
+    private fun updateUpiIntentViews(isChecked: Boolean) {
+        binding.recyclerViewUpiIntent.isVisible = isChecked
         if (isChecked) {
             binding.editTextVpa.clearFocus()
             hideKeyboard()
-            delegate.updateInputData { selectedMode = UPISelectedMode.COLLECT }
+            delegate.updateInputData { selectedMode = UPISelectedMode.INTENT }
         }
     }
 
-    private fun onCollectItemChecked(item: UPICollectItem) {
+    private fun onCollectItemChecked(item: UPIIntentItem) {
         delegate.updateInputData {
-            selectedUPICollectItem = item
+            selectedUPIIntentItem = item
         }
     }
 
     private fun onCollectItemInputChanged(value: String) {
-        delegate.updateCollectVirtualPaymentAddress(value)
+        delegate.updateIntentVirtualPaymentAddress(value)
     }
 
     private fun initViewsForVpa(isChecked: Boolean) = with(binding) {

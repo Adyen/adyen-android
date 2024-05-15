@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 25/4/2024.
+ * Created by ararat on 27/5/2024.
  */
 
 package com.adyen.checkout.upi.internal.ui.view
@@ -12,15 +12,15 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.upi.databinding.UpiAppBinding
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-internal class UPICollectPaymentAppViewHolder(
+internal class UPIIntentPaymentAppViewHolder(
     private val binding: UpiAppBinding,
     private val paymentMethod: String,
-) : UPICollectItemViewHolder(binding) {
+) : UPIIntentItemViewHolder(binding) {
 
-    override fun bind(item: UPICollectItem, isChecked: Boolean) {
-        val app = (item as? UPICollectItem.PaymentApp) ?: run {
+    override fun bind(item: UPIIntentItem, isChecked: Boolean) {
+        val app = (item as? UPIIntentItem.PaymentApp) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
         }
@@ -34,7 +34,7 @@ internal class UPICollectPaymentAppViewHolder(
 
     private fun bindItem(
         paymentMethod: String,
-        paymentApp: UPICollectItem.PaymentApp,
+        paymentApp: UPIIntentItem.PaymentApp,
         isChecked: Boolean,
     ) = with(binding) {
         radioButtonUpiApp.isChecked = isChecked

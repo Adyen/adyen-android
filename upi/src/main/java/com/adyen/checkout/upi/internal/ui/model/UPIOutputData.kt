@@ -14,18 +14,18 @@ import com.adyen.checkout.components.core.internal.ui.model.OutputData
 internal class UPIOutputData(
     val availableModes: List<UPIMode>,
     val selectedMode: UPISelectedMode,
-    var selectedUPICollectItem: UPICollectItem? = null,
+    var selectedUPIIntentItem: UPIIntentItem? = null,
     val virtualPaymentAddressFieldState: FieldState<String>,
-    val collectVirtualPaymentAddressFieldState: FieldState<String>,
+    val intentVirtualPaymentAddressFieldState: FieldState<String>,
 ) : OutputData {
 
     override val isValid: Boolean
         get() = when (selectedMode) {
-            UPISelectedMode.COLLECT -> {
-                when (selectedUPICollectItem) {
-                    is UPICollectItem.PaymentApp -> true
-                    UPICollectItem.GenericApp -> true
-                    is UPICollectItem.ManualInput -> collectVirtualPaymentAddressFieldState.validation.isValid()
+            UPISelectedMode.INTENT -> {
+                when (selectedUPIIntentItem) {
+                    is UPIIntentItem.PaymentApp -> true
+                    UPIIntentItem.GenericApp -> true
+                    is UPIIntentItem.ManualInput -> intentVirtualPaymentAddressFieldState.validation.isValid()
                     null -> false
                 }
             }

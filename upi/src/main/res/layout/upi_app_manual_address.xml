@@ -16,14 +16,14 @@
 
     <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_upi_logo"
-        style="@style/AdyenCheckout.UPI.Collect.Icon.ManualInput"
+        style="@style/AdyenCheckout.UPI.Intent.Icon.ManualInput"
         app:layout_constraintBottom_toTopOf="@+id/barrier_manual_address"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_upi_app_name"
-        style="@style/AdyenCheckout.UPI.Collect.AppIdTextView.ManualInput"
+        style="@style/AdyenCheckout.UPI.Intent.AppIdTextView.ManualInput"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/barrier_manual_address"
@@ -31,11 +31,11 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/imageView_upi_logo"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/checkout_upi_collect_manual_input" />
+        tools:text="@string/checkout_upi_intent_manual_input" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/radioButton_upi_manual_address"
-        style="@style/AdyenCheckout.UPI.Collect.RadioButton"
+        style="@style/AdyenCheckout.UPI.Intent.RadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
@@ -75,7 +75,7 @@
 
     <View
         android:id="@+id/divider_upi_manual_address"
-        style="@style/AdyenCheckout.UPI.Collect.Divider"
+        style="@style/AdyenCheckout.UPI.Intent.Divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         app:layout_constraintBottom_toBottomOf="parent"

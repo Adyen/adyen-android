@@ -9,14 +9,14 @@
 package com.adyen.checkout.upi.internal.ui.model
 
 internal enum class UPISelectedMode {
-    COLLECT,
+    INTENT,
     VPA,
     QR
 }
 
 // TODO: Probably instead of this there is a better way to handle mode toggle in UPIView?
 internal fun UPIMode.mapToSelectedMode() = when (this) {
-    is UPIMode.Collect -> UPISelectedMode.COLLECT
+    is UPIMode.Intent -> UPISelectedMode.INTENT
     UPIMode.Vpa -> UPISelectedMode.VPA
     UPIMode.Qr -> UPISelectedMode.QR
 }

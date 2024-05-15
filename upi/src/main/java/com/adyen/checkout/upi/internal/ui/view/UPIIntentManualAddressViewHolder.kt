@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 25/4/2024.
+ * Created by ararat on 27/5/2024.
  */
 
 package com.adyen.checkout.upi.internal.ui.view
@@ -18,13 +18,13 @@ import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.showError
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.databinding.UpiAppManualAddressBinding
-import com.adyen.checkout.upi.internal.ui.model.UPICollectItem
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-internal class UPICollectManualAddressViewHolder(
+internal class UPIIntentManualAddressViewHolder(
     private val binding: UpiAppManualAddressBinding,
     private val localizedContext: Context,
     private val onInputChangeListener: (String) -> Unit,
-) : UPICollectItemViewHolder(binding) {
+) : UPIIntentItemViewHolder(binding) {
 
     init {
         binding.editTextManualAddress.setOnChangeListener { editable ->
@@ -32,8 +32,8 @@ internal class UPICollectManualAddressViewHolder(
         }
     }
 
-    override fun bind(item: UPICollectItem, isChecked: Boolean) {
-        (item as? UPICollectItem.ManualInput) ?: run {
+    override fun bind(item: UPIIntentItem, isChecked: Boolean) {
+        (item as? UPIIntentItem.ManualInput) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
         }
