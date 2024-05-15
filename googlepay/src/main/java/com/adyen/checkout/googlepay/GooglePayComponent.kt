@@ -28,6 +28,7 @@ import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -47,7 +48,11 @@ class GooglePayComponent internal constructor(
 
     override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        googlePayDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         googlePayDelegate.initialize(viewModelScope)
@@ -76,6 +81,13 @@ class GooglePayComponent internal constructor(
      */
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         googlePayDelegate.startGooglePayScreen(activity, requestCode)
+    }
+
+    /**
+     * Start the GooglePay screen.
+     */
+    fun startGooglePayScreen() {
+        googlePayDelegate.startGooglePayScreen()
     }
 
     /**
