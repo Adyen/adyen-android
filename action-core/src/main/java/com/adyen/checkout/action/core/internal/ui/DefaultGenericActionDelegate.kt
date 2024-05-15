@@ -11,6 +11,7 @@ package com.adyen.checkout.action.core.internal.ui
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
@@ -77,7 +78,7 @@ internal class DefaultGenericActionDelegate(
 
     private var onRedirectListener: (() -> Unit)? = null
 
-    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+    private val action: Action? by SavedStateHandleProperty(ACTION_KEY)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
@@ -116,8 +117,6 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        this.action = action
-
         // This check is to support an older flow where you might need to call handleAction several times with 3DS2.
         // Initially handleAction is called with a fingerprint action then with a challenge action.
         // During this whole flow the same transaction instance should be used for both fingerprint and challenge.
@@ -239,6 +238,7 @@ internal class DefaultGenericActionDelegate(
     }
 
     companion object {
-        private const val ACTION_KEY = "ACTION_KEY"
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }
