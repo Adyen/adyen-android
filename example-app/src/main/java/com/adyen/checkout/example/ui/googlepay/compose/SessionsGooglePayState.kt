@@ -9,11 +9,16 @@
 package com.adyen.checkout.example.ui.googlepay.compose
 
 import androidx.compose.runtime.Immutable
+import com.adyen.checkout.example.ui.compose.ResultState
 
-@Immutable
-internal data class SessionsGooglePayState(
-    val uiState: SessionsGooglePayUIState,
-    val startGooglePay: SessionsStartGooglePayData? = null,
-    val actionToHandle: SessionsGooglePayAction? = null,
-    val intentToHandle: SessionsGooglePayIntent? = null,
-)
+internal sealed class SessionsGooglePayState {
+
+    @Immutable
+    data object Loading : SessionsGooglePayState()
+
+    @Immutable
+    data object ShowButton : SessionsGooglePayState()
+
+    @Immutable
+    data class FinalResult(val finalResult: ResultState) : SessionsGooglePayState()
+}

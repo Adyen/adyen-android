@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,8 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,8 +42,9 @@ import com.google.pay.button.PayButton
 @Composable
 internal fun SessionsGooglePayScreen(
     useDarkTheme: Boolean,
+    googlePayState: SessionsGooglePayState,
+    eventsState: SessionsGooglePayEvents,
     onBackPressed: () -> Unit,
-    viewModel: SessionsGooglePayViewModel,
 ) {
     Scaffold(
         modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
@@ -54,25 +53,18 @@ internal fun SessionsGooglePayScreen(
                 title = { Text(text = "Google Pay with sessions") },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
             )
         },
     ) { innerPadding ->
-        val googlePayState by viewModel.googlePayState.collectAsState()
         SessionsGooglePayContent(
             googlePayState = googlePayState,
-            onButtonClicked = viewModel::onButtonClicked,
+            googlePayEvents = eventsState,
             useDarkTheme = useDarkTheme,
             modifier = Modifier.padding(innerPadding),
         )
-
-        with(googlePayState) {
-            HandleStartGooglePay(startGooglePay, viewModel::onGooglePayStarted)
-            HandleAction(actionToHandle, viewModel::onActionConsumed)
-            HandleNewIntent(intentToHandle, viewModel::onNewIntentHandled)
-        }
     }
 }
 
@@ -80,81 +72,55 @@ internal fun SessionsGooglePayScreen(
 @Composable
 private fun SessionsGooglePayContent(
     googlePayState: SessionsGooglePayState,
-    onButtonClicked: () -> Unit,
+    googlePayEvents: SessionsGooglePayEvents,
     useDarkTheme: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalContext.current as Activity
+    lateinit var googlePayComponent: GooglePayComponent
+
+    when (googlePayEvents) {
+        is SessionsGooglePayEvents.ComponentData -> {
+            googlePayComponent = getGooglePayComponent(componentData = googlePayEvents.data)
+        }
+
+        is SessionsGooglePayEvents.Action -> {
+            LaunchedEffect(googlePayEvents.action) {
+                googlePayComponent.handleAction(googlePayEvents.action, activity)
+            }
+        }
+
+        is SessionsGooglePayEvents.Intent -> {
+            LaunchedEffect(googlePayEvents.intent) {
+                googlePayComponent.handleIntent(googlePayEvents.intent)
+            }
+        }
+    }
+
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        when (val uiState = googlePayState.uiState) {
-            SessionsGooglePayUIState.Loading -> {
+        when (googlePayState) {
+            SessionsGooglePayState.Loading -> {
                 CircularProgressIndicator()
             }
 
-            is SessionsGooglePayUIState.ShowButton -> {
-                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
+            is SessionsGooglePayState.ShowButton -> {
+                AdyenComponent(googlePayComponent)
+
                 PayButton(
-                    onClick = onButtonClicked,
+                    onClick = { googlePayComponent.startGooglePayScreen() },
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
                     theme = if (useDarkTheme) ButtonTheme.Light else ButtonTheme.Dark,
                     type = ButtonType.Pay,
                 )
             }
 
-            is SessionsGooglePayUIState.ShowComponent -> {
-                val googlePayComponent = getGooglePayComponent(componentData = uiState.componentData)
-                AdyenComponent(
-                    googlePayComponent,
-                    modifier,
-                )
-            }
-
-            is SessionsGooglePayUIState.FinalResult -> {
-                ResultContent(uiState.finalResult)
+            is SessionsGooglePayState.FinalResult -> {
+                ResultContent(googlePayState.finalResult)
             }
         }
-    }
-}
-
-@Composable
-private fun HandleStartGooglePay(
-    startGooglePayData: SessionsStartGooglePayData?,
-    onGooglePayStarted: () -> Unit
-) {
-    if (startGooglePayData == null) return
-    val googlePayComponent = getGooglePayComponent(componentData = startGooglePayData.componentData)
-    LaunchedEffect(startGooglePayData) {
-        googlePayComponent.startGooglePayScreen()
-        onGooglePayStarted()
-    }
-}
-
-@Composable
-private fun HandleAction(
-    actionToHandle: SessionsGooglePayAction?,
-    onActionConsumed: () -> Unit
-) {
-    if (actionToHandle == null) return
-    val activity = LocalContext.current as Activity
-    val googlePayComponent = getGooglePayComponent(componentData = actionToHandle.componentData)
-    LaunchedEffect(actionToHandle) {
-        googlePayComponent.handleAction(actionToHandle.action, activity)
-        onActionConsumed()
-    }
-}
-
-@Composable
-private fun HandleNewIntent(
-    intentToHandle: SessionsGooglePayIntent?,
-    onNewIntentHandled: () -> Unit
-) {
-    if (intentToHandle == null) return
-    val googlePayComponent = getGooglePayComponent(componentData = intentToHandle.componentData)
-    LaunchedEffect(intentToHandle) {
-        googlePayComponent.handleIntent(intentToHandle.intent)
-        onNewIntentHandled()
     }
 }
 
