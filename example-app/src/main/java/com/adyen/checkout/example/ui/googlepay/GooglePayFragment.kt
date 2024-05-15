@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -148,16 +147,7 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         binding.googlePayButton.initialize(buttonOptions)
 
         binding.googlePayButton.setOnClickListener {
-            googlePayComponent?.startGooglePayScreen(requireActivity(), ACTIVITY_RESULT_CODE)
-        }
-    }
-
-    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ACTIVITY_RESULT_CODE) {
-            googlePayComponent?.handleActivityResult(resultCode, data)
+            googlePayComponent?.startGooglePayScreen()
         }
     }
 

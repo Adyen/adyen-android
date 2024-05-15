@@ -27,7 +27,6 @@ import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -197,15 +196,6 @@ internal class SessionsGooglePayViewModel @Inject constructor(
 
     fun onActionConsumed() {
         updateState { it.copy(actionToHandle = null) }
-    }
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != ACTIVITY_RESULT_CODE) return
-        updateState { it.copy(activityResultToHandle = GooglePayActivityResult(componentData, resultCode, data)) }
-    }
-
-    fun onActivityResultHandled() {
-        updateState { it.copy(activityResultToHandle = null) }
     }
 
     fun onNewIntent(intent: Intent) {
