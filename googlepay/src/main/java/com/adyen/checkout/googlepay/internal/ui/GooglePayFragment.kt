@@ -14,14 +14,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.googlepay.databinding.FragmentGooglePayBinding
+import com.google.android.gms.wallet.contract.TaskResultContracts
 
 internal class GooglePayFragment : Fragment() {
 
     private var _binding: FragmentGooglePayBinding? = null
     private val binding: FragmentGooglePayBinding get() = requireNotNull(_binding)
 
-    private var _delegate: GooglePayDelegate? = null
-    private val delegate: GooglePayDelegate get() = requireNotNull(_delegate)
+    private var delegate: GooglePayDelegate? = null
+
+    private val googlePayLauncher = registerForActivityResult(TaskResultContracts.GetPaymentDataResult()) {
+        delegate?.handlePaymentResult(it)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGooglePayBinding.inflate(inflater, container, false)
@@ -29,11 +33,12 @@ internal class GooglePayFragment : Fragment() {
     }
 
     fun initialize(delegate: GooglePayDelegate) {
-        _delegate = delegate
+        delegate.setPaymentDataLauncher(googlePayLauncher)
+        this.delegate = delegate
     }
 
     override fun onDestroyView() {
-        _delegate = null
+        delegate = null
         _binding = null
         super.onDestroyView()
     }
