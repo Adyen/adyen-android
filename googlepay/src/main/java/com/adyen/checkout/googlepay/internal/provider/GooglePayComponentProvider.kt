@@ -114,6 +114,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                application = application,
             )
 
             val genericActionDelegate =
@@ -201,6 +202,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                application = application,
             )
 
             val genericActionDelegate =
