@@ -59,13 +59,6 @@ class SessionsGooglePayActivity : AppCompatActivity() {
         }
     }
 
-    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        sessionsGooglePayViewModel.onActivityResult(requestCode, resultCode, data)
-    }
-
     companion object {
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
     }
