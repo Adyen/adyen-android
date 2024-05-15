@@ -8,7 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">Make a selection on how you would like to use UPI.</string>
+    <string name="checkout_upi_mode_selection">How would you like to use UPI?</string>
     <string name="checkout_upi_vpa_validation">Enter a correct virtual payment address</string>
     <string name="checkout_upi_qr_generation">Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment.</string>
     <string name="checkout_upi_continue">Continue</string>

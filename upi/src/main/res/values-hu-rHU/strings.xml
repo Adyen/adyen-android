@@ -8,7 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">Jelölje meg, hogyan szeretné használni az UPI-t.</string>
+    <string name="checkout_upi_mode_selection">Hogyan szeretné használni az UPI-t?</string>
     <string name="checkout_upi_vpa_validation">Adjon meg egy helyes virtuális fizetési címet</string>
     <string name="checkout_upi_qr_generation">Hozzon létre QR-kódot, amelyet letölthet vagy amelyről képernyőképet készíthet, és töltse fel az UPI alkalmazásba a fizetés végrehajtásához.</string>
     <string name="checkout_upi_continue">Folytatás</string>

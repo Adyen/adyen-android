@@ -8,7 +8,7 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">Maak een selectie over hoe u UPI wilt gebruiken.</string>
+    <string name="checkout_upi_mode_selection">Hoe wilt u UPI gebruiken?</string>
     <string name="checkout_upi_vpa_validation">Voer een correct virtueel betalingsadres in</string>
     <string name="checkout_upi_qr_generation">Genereer de QR-code. U kunt deze downloaden of er een schermafbeelding van maken en deze uploaden naar de UPI-app om de betaling te voltooien.</string>
     <string name="checkout_upi_continue">Doorgaan</string>
