@@ -36,7 +36,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
-import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.google.pay.button.ButtonTheme
 import com.google.pay.button.ButtonType
@@ -71,7 +70,6 @@ internal fun SessionsGooglePayScreen(
 
         with(googlePayState) {
             HandleStartGooglePay(startGooglePay, viewModel::onGooglePayStarted)
-            HandleActivityResult(activityResultToHandle, viewModel::onActivityResultHandled)
             HandleAction(actionToHandle, viewModel::onActionConsumed)
             HandleNewIntent(intentToHandle, viewModel::onNewIntentHandled)
         }
@@ -126,27 +124,10 @@ private fun HandleStartGooglePay(
     onGooglePayStarted: () -> Unit
 ) {
     if (startGooglePayData == null) return
-    val activity = LocalContext.current as Activity
     val googlePayComponent = getGooglePayComponent(componentData = startGooglePayData.componentData)
     LaunchedEffect(startGooglePayData) {
-        googlePayComponent.startGooglePayScreen(
-            activity,
-            startGooglePayData.requestCode,
-        )
+        googlePayComponent.startGooglePayScreen()
         onGooglePayStarted()
-    }
-}
-
-@Composable
-private fun HandleActivityResult(
-    activityResultToHandle: GooglePayActivityResult?,
-    onActivityResultHandled: () -> Unit
-) {
-    if (activityResultToHandle == null) return
-    val googlePayComponent = getGooglePayComponent(componentData = activityResultToHandle.componentData)
-    LaunchedEffect(activityResultToHandle) {
-        googlePayComponent.handleActivityResult(activityResultToHandle.resultCode, activityResultToHandle.data)
-        onActivityResultHandled()
     }
 }
 
