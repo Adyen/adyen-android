@@ -551,6 +551,38 @@ internal class DefaultQRCodeDelegateTest(
     }
 
     @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultQRCodeDelegate.ACTION_KEY,
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultQRCodeDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultQRCodeDelegate.ACTION_KEY,
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultQRCodeDelegate.ACTION_KEY])
+    }
+
+    @Test
     fun `when onCleared is called, observers are removed`() {
         val observerRepository = mock<ActionObserverRepository>()
         val countDownTimer = mock<QRCodeCountDownTimer>()
