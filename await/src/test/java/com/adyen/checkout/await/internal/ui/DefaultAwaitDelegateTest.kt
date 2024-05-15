@@ -10,9 +10,9 @@ package com.adyen.checkout.await.internal.ui
 
 import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
-import app.cash.turbine.test
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.AwaitAction
+import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -29,6 +30,7 @@ import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -48,18 +50,7 @@ internal class DefaultAwaitDelegateTest {
     fun beforeEach() {
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        val configuration = CheckoutConfiguration(
-            Environment.TEST,
-            TEST_CLIENT_KEY,
-        )
-        delegate = DefaultAwaitDelegate(
-            observerRepository = ActionObserverRepository(),
-            savedStateHandle = SavedStateHandle(),
-            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            statusRepository = statusRepository,
-            paymentDataRepository = paymentDataRepository,
-        )
+        delegate = createDelegate()
     }
 
     @Test
@@ -69,23 +60,20 @@ internal class DefaultAwaitDelegateTest {
             Result.success(StatusResponse(resultCode = "finished")),
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val outputDataFlow = delegate.outputDataFlow.test(testScheduler)
 
-        delegate.outputDataFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            skipItems(1)
+        // We skip the first output data value as it's the initial value
 
-            with(awaitItem()) {
-                assertFalse(isValid)
-                assertEquals("test", paymentMethodType)
-            }
+        with(outputDataFlow.values[1]) {
+            assertFalse(isValid)
+            assertEquals("test", paymentMethodType)
+        }
 
-            with(awaitItem()) {
-                assertTrue(isValid)
-                assertEquals("test", paymentMethodType)
-            }
-
-            cancelAndIgnoreRemainingEvents()
+        with(outputDataFlow.values[2]) {
+            assertTrue(isValid)
+            assertEquals("test", paymentMethodType)
         }
     }
 
@@ -95,20 +83,17 @@ internal class DefaultAwaitDelegateTest {
             Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
-        delegate.detailsFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            val expectedDetails = JSONObject().apply {
-                put(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY, "testpayload")
-            }
+        val expectedDetails = JSONObject().apply {
+            put(DefaultAwaitDelegate.PAYLOAD_DETAILS_KEY, "testpayload")
+        }
 
-            with(awaitItem()) {
-                assertEquals(expectedDetails.toString(), details.toString())
-                assertEquals("paymentData", paymentData)
-            }
-
-            cancelAndIgnoreRemainingEvents()
+        with(detailsFlow.latestValue) {
+            assertEquals(expectedDetails.toString(), details.toString())
+            assertEquals("paymentData", paymentData)
         }
     }
 
@@ -117,14 +102,11 @@ internal class DefaultAwaitDelegateTest {
         val error = IOException("test")
         statusRepository.pollingResults = listOf(Result.failure(error))
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-        delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            assertEquals(error, awaitItem().cause)
-
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertEquals(error, exceptionFlow.latestValue.cause)
     }
 
     @Test
@@ -133,14 +115,93 @@ internal class DefaultAwaitDelegateTest {
             Result.success(StatusResponse(resultCode = "finished", payload = "")),
         )
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-        delegate.exceptionFlow.test {
-            delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
-            assertTrue(awaitItem() is ComponentException)
+        assertTrue(exceptionFlow.latestValue is ComponentException)
+        assertEquals("Payment was not completed. - finished", exceptionFlow.latestValue.message)
+    }
 
-            cancelAndIgnoreRemainingEvents()
+    @Test
+    fun `when a wrongly typed action is used, then an error is propagated`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertTrue(exceptionFlow.latestValue is ComponentException)
+        assertEquals("Unsupported action", exceptionFlow.latestValue.message)
+    }
+
+    @Test
+    fun `when payment data is null, then an error is propagated`() = runTest {
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = null), Activity())
+
+        assertTrue(exceptionFlow.latestValue is ComponentException)
+        assertEquals("Payment data is null", exceptionFlow.latestValue.message)
+    }
+
+    @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle().apply {
+            set(DefaultAwaitDelegate.ACTION_KEY, AwaitAction(paymentMethodType = "test", paymentData = "paymentData"))
         }
+        delegate = createDelegate(savedStateHandle)
+        val detailsFlow = delegate.detailsFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertTrue(detailsFlow.values.isNotEmpty())
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertNull(savedStateHandle[DefaultAwaitDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertNull(savedStateHandle[DefaultAwaitDelegate.ACTION_KEY])
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ): DefaultAwaitDelegate {
+        val configuration = CheckoutConfiguration(
+            Environment.TEST,
+            TEST_CLIENT_KEY,
+        )
+
+        return DefaultAwaitDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            statusRepository = statusRepository,
+            paymentDataRepository = paymentDataRepository,
+        )
     }
 
     companion object {

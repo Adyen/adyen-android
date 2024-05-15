@@ -120,7 +120,7 @@ internal class DefaultAwaitDelegate(
 
     private fun handleAction(action: Action) {
         if (action !is AwaitAction) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
@@ -128,7 +128,7 @@ internal class DefaultAwaitDelegate(
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
-            exceptionChannel.trySend(ComponentException("Payment data is null"))
+            emitError(ComponentException("Payment data is null"))
             return
         }
         createOutputData(null, action)
@@ -153,7 +153,7 @@ internal class DefaultAwaitDelegate(
             },
             onFailure = {
                 adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
-                exceptionChannel.trySend(ComponentException("Error while polling status", it))
+                emitError(ComponentException("Error while polling status", it))
             },
         )
     }
@@ -173,10 +173,9 @@ internal class DefaultAwaitDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            val details = createDetails(payload)
-            detailsChannel.trySend(createActionComponentData(details))
+            emitDetails(payload)
         } else {
-            exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -192,9 +191,24 @@ internal class DefaultAwaitDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            exceptionChannel.trySend(ComponentException("Failed to create details.", e))
+            emitError(ComponentException("Failed to create details.", e))
         }
         return jsonObject
+    }
+
+    private fun emitError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun emitDetails(payload: String) {
+        val details = createDetails(payload)
+        detailsChannel.trySend(createActionComponentData(details))
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
     }
 
     override fun refreshStatus() {
@@ -212,7 +226,8 @@ internal class DefaultAwaitDelegate(
     companion object {
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
 
-        private const val ACTION_KEY = "ACTION_KEY"
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"
