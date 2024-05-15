@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -9,8 +8,13 @@
 
 <resources>
     <declare-styleable name="RoundCornerImageView">
-        <attr name="adyenRadius" format="dimension"/>
-        <attr name="adyenStrokeWidth" format="dimension"/>
-        <attr name="adyenStrokeColor" format="color"/>
+        <attr name="adyenRadius" format="dimension" />
+        <attr name="adyenStrokeWidth" format="dimension" />
+        <attr name="adyenStrokeColor" format="color" />
     </declare-styleable>
+
+    <attr name="adyenCustomTabsToolbarColor" format="color" />
+    <attr name="adyenCustomTabsSecondaryToolbarColor" format="color" />
+    <attr name="adyenCustomTabsNavigationBarColor" format="color" />
+    <attr name="adyenCustomTabsNavigationBarDividerColor" format="color" />
 </resources>

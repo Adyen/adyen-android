@@ -8,15 +8,12 @@
 
 package com.adyen.checkout.voucher.internal.ui.view
 
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
@@ -31,7 +28,7 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.util.ThemeUtil
+import com.adyen.checkout.ui.core.internal.util.CustomTabsLauncher
 import com.adyen.checkout.ui.core.internal.util.formatFullStringWithHyperLink
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
@@ -206,20 +203,11 @@ internal class FullVoucherView @JvmOverloads constructor(
     }
 
     private fun onReadInstructionsClicked(url: String) {
-        val defaultColors = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-            .build()
-
-        try {
-            CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setDefaultColorSchemeParams(defaultColors)
-                .build()
-                .launchUrl(context, Uri.parse(url))
-
+        val isLaunched = CustomTabsLauncher.launchCustomTab(context, Uri.parse(url))
+        if (isLaunched) {
             adyenLog(AdyenLogLevel.DEBUG) { "Successfully opened instructions in custom tab" }
-        } catch (e: ActivityNotFoundException) {
-            adyenLog(AdyenLogLevel.DEBUG, e) { "Couldn't open instructions in custom tab" }
+        } else {
+            adyenLog(AdyenLogLevel.ERROR) { "Couldn't open instructions in custom tab" }
         }
     }
 
