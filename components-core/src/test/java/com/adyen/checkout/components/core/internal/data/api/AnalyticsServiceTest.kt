@@ -4,7 +4,6 @@ import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequ
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import com.adyen.checkout.test.LoggingExtension
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.BeforeEach
@@ -17,7 +16,6 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class AnalyticsServiceTest(
     @Mock private val httpClient: HttpClient

@@ -63,9 +63,3 @@ sealed interface AnalyticsEvent {
         }
     }
 }
-
-// TODO: Does it inherit the restrictTo from the Type?
-@Suppress("ForbiddenComment")
-typealias InfoEventType = AnalyticsEvent.Info.Type
-
-typealias LogEventType = AnalyticsEvent.Log.Type

@@ -7,7 +7,6 @@ import com.adyen.checkout.components.core.internal.analytics.data.remote.Analyti
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +24,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultAnalyticsRepositoryTest(
     @Mock private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,

@@ -56,9 +56,9 @@ object GenericEvents {
         target = target,
     )
 
-    // TODO: This might move to the Input fields itself and not be bound to any component. But we should find a way to
-    //  define targets. We could create an enum for target per module
-    @Suppress("ForbiddenComment")
+    // This might move to the Input fields itself and not be bound to any component. But we should find a way to
+    // define targets. We could create an enum for target per module
+    @Suppress("Unused")
     fun focus(
         component: String,
         target: String,
@@ -68,6 +68,9 @@ object GenericEvents {
         target = target,
     )
 
+    // This might move to the Input fields itself and not be bound to any component. But we should find a way to
+    // define targets. We could create an enum for target per module
+    @Suppress("Unused")
     fun unfocus(
         component: String,
         target: String,
@@ -86,6 +89,7 @@ object GenericEvents {
         target = target,
     )
 
+    @Suppress("Unused")
     fun invalidField(
         component: String,
         target: String,
