@@ -98,10 +98,10 @@ internal class DefaultRedirectDelegate(
             }
         }
 
-        makeRedirect(activity, action.url)
+        launchAction(activity, action.url)
     }
 
-    private fun makeRedirect(activity: Activity, url: String?) {
+    private fun launchAction(activity: Activity, url: String?) {
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             // TODO look into emitting a value to tell observers that a redirect was launched so they can track its

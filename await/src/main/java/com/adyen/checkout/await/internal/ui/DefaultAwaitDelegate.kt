@@ -76,7 +76,7 @@ internal class DefaultAwaitDelegate(
 
     private var statusPollingJob: Job? = null
 
-    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+    private var action: AwaitAction? by SavedStateHandleProperty(ACTION_KEY)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -85,9 +85,9 @@ internal class DefaultAwaitDelegate(
 
     private fun restoreState() {
         adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        val action: Action? = action
+        val action: AwaitAction? = action
         if (action != null) {
-            handleAction(action)
+            initState(action)
         }
     }
 
@@ -114,16 +114,17 @@ internal class DefaultAwaitDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        this.action = action
-        handleAction(action)
-    }
-
-    private fun handleAction(action: Action) {
         if (action !is AwaitAction) {
             emitError(ComponentException("Unsupported action"))
             return
         }
 
+        this.action = action
+
+        initState(action)
+    }
+
+    private fun initState(action: AwaitAction) {
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {

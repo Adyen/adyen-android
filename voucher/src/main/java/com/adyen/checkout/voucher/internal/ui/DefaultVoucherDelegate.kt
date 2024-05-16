@@ -75,7 +75,7 @@ internal class DefaultVoucherDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private var action: Action? by SavedStateHandleProperty(ACTION_KEY)
+    private var action: VoucherAction? by SavedStateHandleProperty(ACTION_KEY)
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -84,9 +84,9 @@ internal class DefaultVoucherDelegate(
 
     private fun restoreState() {
         adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        val action: Action? = action
+        val action: VoucherAction? = action
         if (action != null) {
-            handleAction(action)
+            initState(action)
         }
     }
 
@@ -110,16 +110,17 @@ internal class DefaultVoucherDelegate(
     }
 
     override fun handleAction(action: Action, activity: Activity) {
-        this.action = action
-        handleAction(action)
-    }
-
-    private fun handleAction(action: Action) {
         if (action !is VoucherAction) {
             emitError(ComponentException("Unsupported action"))
             return
         }
 
+        this.action = action
+
+        initState(action)
+    }
+
+    private fun initState(action: VoucherAction) {
         val config = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)
         if (config == null) {
             emitError(ComponentException("Payment method ${action.paymentMethodType} not supported for this action"))
