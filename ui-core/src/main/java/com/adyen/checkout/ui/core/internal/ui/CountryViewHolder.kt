@@ -17,12 +17,8 @@ internal class CountryViewHolder(private val binding: CountryViewBinding) : Recy
 
     fun bindItem(country: CountryModel) {
         with(binding) {
-            textViewCountryCode.text = country.isoCode
-            textViewCountry.text = root.context.getString(
-                R.string.checkout_country_name_format,
-                country.countryName,
-                country.callingCode,
-            )
+            textViewCountryCode.text = country.callingCode
+            textViewCountry.text = country.countryName
         }
     }
 }
