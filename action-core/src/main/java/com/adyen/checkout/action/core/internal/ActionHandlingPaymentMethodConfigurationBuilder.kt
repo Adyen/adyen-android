@@ -128,7 +128,7 @@ constructor(
     /**
      * Add configuration for Twint action.
      */
-    override fun addTwintActionConfiguration(configuration: TwintActionConfiguration): BuilderT {
+    final override fun addTwintActionConfiguration(configuration: TwintActionConfiguration): BuilderT {
         genericActionConfigurationBuilder.addTwintActionConfiguration(configuration)
         return this as BuilderT
     }

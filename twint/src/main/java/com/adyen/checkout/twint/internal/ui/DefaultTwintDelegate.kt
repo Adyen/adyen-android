@@ -123,7 +123,6 @@ internal class DefaultTwintDelegate(
         @Suppress("UNCHECKED_CAST")
         this.action = action as SdkAction<TwintSdkData>
 
-
         initState(action)
         launchAction(sdkData)
     }

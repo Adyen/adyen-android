@@ -41,7 +41,7 @@ internal class TwintFragment : Fragment() {
     }
 
     fun initialize(delegate: TwintDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        adyenLog(AdyenLogLevel.ERROR) { "initialize" }
+        adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
 
         binding.paymentInProgressView.initView(delegate, coroutineScope, localizedContext)
 
@@ -51,20 +51,20 @@ internal class TwintFragment : Fragment() {
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
         twintResultQueue?.let {
-            adyenLog(AdyenLogLevel.ERROR) { "initialize: executing queue" }
+            adyenLog(AdyenLogLevel.DEBUG) { "initialize: executing queue" }
             onTwintResult(it)
         }
     }
 
     private fun onTwintResult(result: TwintPayResult) {
-        adyenLog(AdyenLogLevel.ERROR) { "onTwintResult" }
+        adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult" }
         twintDelegate
             ?.handleTwintResult(result)
             ?.also {
-                adyenLog(AdyenLogLevel.ERROR) { "onTwintResult: clearing queue" }
+                adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult: clearing queue" }
                 twintResultQueue = null
             } ?: run {
-            adyenLog(AdyenLogLevel.ERROR) { "onTwintResult: setting queue" }
+            adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult: setting queue" }
             twintResultQueue = result
         }
     }
