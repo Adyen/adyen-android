@@ -11,6 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
@@ -18,6 +19,8 @@ import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -46,10 +49,11 @@ import java.util.concurrent.TimeUnit
 @Suppress("TooManyFunctions")
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
-) : AwaitDelegate {
+) : AwaitDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<AwaitOutputData> = _outputDataFlow
@@ -72,8 +76,19 @@ internal class DefaultAwaitDelegate(
 
     private var statusPollingJob: Job? = null
 
+    private var action: AwaitAction? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: AwaitAction? = action
+        if (action != null) {
+            initState(action)
+        }
     }
 
     override fun observe(
@@ -100,15 +115,21 @@ internal class DefaultAwaitDelegate(
 
     override fun handleAction(action: Action, activity: Activity) {
         if (action !is AwaitAction) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
+        this.action = action
+
+        initState(action)
+    }
+
+    private fun initState(action: AwaitAction) {
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
-            exceptionChannel.trySend(ComponentException("Payment data is null"))
+            emitError(ComponentException("Payment data is null"))
             return
         }
         createOutputData(null, action)
@@ -133,7 +154,7 @@ internal class DefaultAwaitDelegate(
             },
             onFailure = {
                 adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
-                exceptionChannel.trySend(ComponentException("Error while polling status", it))
+                emitError(ComponentException("Error while polling status", it))
             },
         )
     }
@@ -153,10 +174,9 @@ internal class DefaultAwaitDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            val details = createDetails(payload)
-            detailsChannel.trySend(createActionComponentData(details))
+            emitDetails(payload)
         } else {
-            exceptionChannel.trySend(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
@@ -172,9 +192,24 @@ internal class DefaultAwaitDelegate(
         try {
             jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
         } catch (e: JSONException) {
-            exceptionChannel.trySend(ComponentException("Failed to create details.", e))
+            emitError(ComponentException("Failed to create details.", e))
         }
         return jsonObject
+    }
+
+    private fun emitError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun emitDetails(payload: String) {
+        val details = createDetails(payload)
+        detailsChannel.trySend(createActionComponentData(details))
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
     }
 
     override fun refreshStatus() {
@@ -191,6 +226,9 @@ internal class DefaultAwaitDelegate(
 
     companion object {
         private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
 
         @VisibleForTesting
         internal const val PAYLOAD_DETAILS_KEY = "payload"

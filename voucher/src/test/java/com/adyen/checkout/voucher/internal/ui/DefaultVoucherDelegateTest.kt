@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -25,6 +26,7 @@ import com.adyen.checkout.components.core.internal.ui.model.GenericComponentPara
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -37,6 +39,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -67,16 +71,7 @@ internal class DefaultVoucherDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
-            voucher()
-        }
-        delegate = DefaultVoucherDelegate(
-            observerRepository,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            pdfOpener,
-            imageSaver,
-        )
+        delegate = createDelegate()
     }
 
     @Test
@@ -299,10 +294,58 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultVoucherDelegate.ACTION_KEY,
+                VoucherAction(paymentMethodType = PaymentMethodTypes.MULTIBANCO, paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle)
+        val viewFlow = delegate.viewFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNotNull(viewFlow.latestValue)
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultVoucherDelegate.ACTION_KEY,
+                VoucherAction(paymentMethodType = "not a voucher", paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultVoucherDelegate.ACTION_KEY])
+    }
+
+    @Test
     fun `when onCleared is called, observers are removed`() {
         delegate.onCleared()
 
         verify(observerRepository).removeObservers()
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ): DefaultVoucherDelegate {
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
+            voucher()
+        }
+
+        return DefaultVoucherDelegate(
+            observerRepository = observerRepository,
+            savedStateHandle = savedStateHandle,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            pdfOpener = pdfOpener,
+            imageSaver = imageSaver,
+        )
     }
 
     private fun createTestAction(

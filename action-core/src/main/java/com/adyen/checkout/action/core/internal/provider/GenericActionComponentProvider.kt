@@ -91,6 +91,7 @@ constructor(
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
             actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams),
+            application = application,
         )
     }
 
