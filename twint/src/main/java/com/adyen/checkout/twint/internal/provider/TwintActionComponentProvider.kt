@@ -89,6 +89,7 @@ constructor(
 
         return DefaultTwintDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             paymentDataRepository = PaymentDataRepository(savedStateHandle),
             statusRepository = statusRepository,

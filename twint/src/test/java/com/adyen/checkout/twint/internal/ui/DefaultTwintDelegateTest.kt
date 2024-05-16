@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
+import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.TwintSdkData
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
@@ -35,6 +36,7 @@ import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -56,16 +58,8 @@ internal class DefaultTwintDelegateTest {
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
         statusRepository = TestStatusRepository()
-
-        delegate = DefaultTwintDelegate(
-            observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            paymentDataRepository = PaymentDataRepository(SavedStateHandle()),
-            statusRepository = statusRepository,
-        )
+        delegate = createDelegate()
     }
 
     @Test
@@ -185,6 +179,65 @@ internal class DefaultTwintDelegateTest {
         }
     }
 
+    @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle().apply {
+            set(DefaultTwintDelegate.ACTION_KEY, SdkAction(paymentData = "test", sdkData = TwintSdkData("token")))
+            set(DefaultTwintDelegate.IS_POLLING_KEY, true)
+        }
+        delegate = createDelegate(savedStateHandle)
+        val detailsFlow = delegate.detailsFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertTrue(detailsFlow.values.isNotEmpty())
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
+
+        assertNull(savedStateHandle[DefaultTwintDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(DefaultTwintDelegate.ACTION_KEY, SdkAction(paymentData = "test", sdkData = TwintSdkData("token")))
+        }
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertNull(savedStateHandle[DefaultTwintDelegate.ACTION_KEY])
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ): DefaultTwintDelegate {
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
+
+        return DefaultTwintDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            paymentDataRepository = PaymentDataRepository(SavedStateHandle()),
+            statusRepository = statusRepository,
+        )
+    }
+
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_PAYLOAD = "TEST_PAYLOAD"
@@ -197,7 +250,7 @@ internal class DefaultTwintDelegateTest {
                 "SDK Data is null or of wrong type",
             ),
             arguments(SdkAction<WeChatPaySdkData>(paymentData = "something"), "SDK Data is null or of wrong type"),
-            arguments(SdkAction<TwintSdkData>(paymentData = null), "Payment data is null"),
+            arguments(SdkAction(paymentData = null, sdkData = TwintSdkData("")), "Payment data is null"),
             arguments(
                 SdkAction<TwintSdkData>(paymentData = "something", sdkData = null),
                 "SDK Data is null or of wrong type",

@@ -38,11 +38,11 @@ internal class TwintView internal constructor(
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         require(delegate is TwintDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
-        initializeFragment(delegate)
+        initializeFragment(delegate, coroutineScope, localizedContext)
     }
 
-    private fun initializeFragment(delegate: TwintDelegate) {
-        binding.fragmentContainer.getFragment<TwintFragment?>()?.initialize(delegate)
+    private fun initializeFragment(delegate: TwintDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+        binding.fragmentContainer.getFragment<TwintFragment?>()?.initialize(delegate, coroutineScope, localizedContext)
     }
 
     override fun highlightValidationErrors() = Unit
