@@ -177,7 +177,7 @@ internal class DefaultMBWayDelegate(
     }
 
     companion object {
-        private const val ISO_CODE_PORTUGAL = "PT"
+        internal const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
 
         private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
