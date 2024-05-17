@@ -116,10 +116,7 @@ internal class DefaultAnalyticsManager(
         runSuspendCatching {
             analyticsRepository.sendEvents(checkoutAttemptId)
         }.fold(
-            onSuccess = {
-                adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
-                storedEventCount.set(0)
-            },
+            onSuccess = { storedEventCount.set(0) },
             onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" } },
         )
     }
