@@ -73,6 +73,7 @@ internal class AnalyticsTrackRequestProviderTest {
                     component = "dropin",
                     type = null,
                     subType = null,
+                    result = null,
                     target = null,
                     message = null,
                 ),

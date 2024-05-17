@@ -23,6 +23,7 @@ internal data class AnalyticsTrackLog(
     val component: String?,
     val type: String?,
     val subType: String?,
+    val result: String?,
     val target: String?,
     val message: String?,
 ) : ModelObject() {
@@ -33,6 +34,7 @@ internal data class AnalyticsTrackLog(
         private const val COMPONENT = "component"
         private const val TYPE = "type"
         private const val SUBTYPE = "subType"
+        private const val RESULT = "result"
         private const val TARGET = "target"
         private const val MESSAGE = "message"
 
@@ -46,6 +48,7 @@ internal data class AnalyticsTrackLog(
                         putOpt(COMPONENT, modelObject.component)
                         putOpt(TYPE, modelObject.type)
                         putOpt(SUBTYPE, modelObject.subType)
+                        putOpt(RESULT, modelObject.result)
                         putOpt(TARGET, modelObject.target)
                         putOpt(MESSAGE, modelObject.message)
                     }
@@ -63,6 +66,7 @@ internal data class AnalyticsTrackLog(
                             component = getStringOrNull(COMPONENT),
                             type = getStringOrNull(TYPE),
                             subType = getStringOrNull(SUBTYPE),
+                            result = getStringOrNull(RESULT),
                             target = getStringOrNull(TARGET),
                             message = getStringOrNull(MESSAGE),
                         )

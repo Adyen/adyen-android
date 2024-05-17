@@ -16,6 +16,7 @@ internal class AnalyticsTrackLogTest {
             component = "dropin",
             type = "test",
             subType = "subtest",
+            result = "positive",
             target = "field",
             message = "Hello",
         )
@@ -28,6 +29,7 @@ internal class AnalyticsTrackLogTest {
             .put("component", "dropin")
             .put("type", "test")
             .put("subType", "subtest")
+            .put("result", "positive")
             .put("target", "field")
             .put("message", "Hello")
 
@@ -42,6 +44,7 @@ internal class AnalyticsTrackLogTest {
             .put("component", "dropin")
             .put("type", "test")
             .put("subType", "subtest")
+            .put("result", "positive")
             .put("target", "field")
             .put("message", "Hello")
 
@@ -53,6 +56,7 @@ internal class AnalyticsTrackLogTest {
             component = "dropin",
             type = "test",
             subType = "subtest",
+            result = "positive",
             target = "field",
             message = "Hello",
         )

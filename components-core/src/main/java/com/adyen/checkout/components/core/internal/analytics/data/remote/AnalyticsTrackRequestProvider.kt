@@ -49,5 +49,6 @@ internal class AnalyticsTrackRequestProvider {
         subType = subType,
         target = target,
         message = message,
+        result = result,
     )
 }
