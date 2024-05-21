@@ -155,9 +155,7 @@ internal class DropInActivity :
             return
         }
 
-        if (noDialogPresent()) {
-            dropInViewModel.onCreated()
-        }
+        dropInViewModel.onCreated(noDialogPresent())
 
         handleIntent(intent)
 

@@ -184,8 +184,11 @@ internal class DropInViewModel(
         )
     }
 
-    fun onCreated() {
-        navigateToInitialDestination()
+    fun onCreated(noDialogPresent: Boolean) {
+        if (noDialogPresent) {
+            navigateToInitialDestination()
+        }
+
         initializeAnalytics()
     }
 
