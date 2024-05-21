@@ -32,6 +32,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
@@ -58,6 +59,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -78,7 +80,7 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+@ExtendWith(LoggingExtension::class, MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultAdyen3DS2DelegateTest(
     @Mock private val submitFingerprintRepository: SubmitFingerprintRepository,
 ) {
@@ -97,12 +99,13 @@ internal class DefaultAdyen3DS2DelegateTest(
     }
 
     private fun createDelegate(
-        adyen3DS2Serializer: Adyen3DS2Serializer = Adyen3DS2Serializer()
+        adyen3DS2Serializer: Adyen3DS2Serializer = Adyen3DS2Serializer(),
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
     ): DefaultAdyen3DS2Delegate {
         val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
         return DefaultAdyen3DS2Delegate(
             observerRepository = ActionObserverRepository(),
-            savedStateHandle = SavedStateHandle(),
+            savedStateHandle = savedStateHandle,
             componentParams = Adyen3DS2ComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null)
                 // Set it to null to avoid a crash in 3DS2 library (they use Android APIs)
@@ -519,6 +522,33 @@ internal class DefaultAdyen3DS2DelegateTest(
 
             assertNotNull(detailsFlow.latestValue.details)
         }
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultAdyen3DS2Delegate.ACTION_KEY,
+                Threeds2Action(paymentMethodType = "test", paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.onCompletion(ChallengeResult.Completed("test"))
+
+        assertNull(savedStateHandle[DefaultAdyen3DS2Delegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleAction(Threeds2Action(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertNull(savedStateHandle[DefaultAdyen3DS2Delegate.ACTION_KEY])
     }
 
     private class TestAuthenticationRequestParameters(

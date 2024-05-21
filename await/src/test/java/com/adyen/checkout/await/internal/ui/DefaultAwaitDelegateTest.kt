@@ -181,7 +181,7 @@ internal class DefaultAwaitDelegateTest {
         delegate = createDelegate(savedStateHandle)
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+        delegate.handleAction(AwaitAction(paymentMethodType = "test", paymentData = null), Activity())
 
         assertNull(savedStateHandle[DefaultAwaitDelegate.ACTION_KEY])
     }
