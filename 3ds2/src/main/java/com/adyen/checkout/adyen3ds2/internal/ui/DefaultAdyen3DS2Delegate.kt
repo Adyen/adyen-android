@@ -101,6 +101,7 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        SharedChallengeStatusHandler.onCompletionListener = this
     }
 
     override fun observe(
@@ -410,7 +411,12 @@ internal class DefaultAdyen3DS2Delegate(
         val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
         try {
-            currentTransaction?.doChallenge(activity, challengeParameters, this, DEFAULT_CHALLENGE_TIME_OUT)
+            currentTransaction?.doChallenge(
+                activity,
+                challengeParameters,
+                SharedChallengeStatusHandler,
+                DEFAULT_CHALLENGE_TIME_OUT,
+            )
         } catch (e: InvalidInputException) {
             emitError(CheckoutException("Error starting challenge", e))
         }
@@ -550,6 +556,7 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun onCleared() {
         removeObserver()
+        SharedChallengeStatusHandler.onCompletionListener = null
         _coroutineScope = null
         redirectHandler.removeOnRedirectListener()
     }
