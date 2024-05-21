@@ -49,8 +49,9 @@ internal class DefaultAnalyticsRepository(
             logList = logEvents,
         )
         remoteDataStore.sendEvents(request, checkoutAttemptId)
-        localInfoDataStore.clear()
-        localLogDataStore.clear()
+
+        localInfoDataStore.removeEvents(infoEvents)
+        localLogDataStore.removeEvents(logEvents)
 
         adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
     }

@@ -85,16 +85,19 @@ internal class DefaultAnalyticsRepositoryTest(
             verify(remoteDataStore, never()).sendEvents(any(), any())
         }
 
+        @OptIn(DirectAnalyticsEventCreation::class)
         @Test
         fun `it is successful, then events are cleared from storage`() = runTest {
-            whenever(localInfoDataStore.fetchEvents(any())) doReturn listOf(mock())
-            whenever(localLogDataStore.fetchEvents(any())) doReturn listOf(mock())
+            val infoEvents = listOf(AnalyticsEvent.Info(component = "test info"))
+            val logEvents = listOf(AnalyticsEvent.Log(component = "test log"))
+            whenever(localInfoDataStore.fetchEvents(any())) doReturn infoEvents
+            whenever(localLogDataStore.fetchEvents(any())) doReturn logEvents
             whenever(analyticsTrackRequestProvider.invoke(any(), any())) doReturn mock()
 
             analyticsRepository.sendEvents("test")
 
-            verify(localInfoDataStore).clear()
-            verify(localLogDataStore).clear()
+            verify(localInfoDataStore).removeEvents(infoEvents)
+            verify(localLogDataStore).removeEvents(logEvents)
         }
 
         @Test
@@ -108,8 +111,8 @@ internal class DefaultAnalyticsRepositoryTest(
                 analyticsRepository.sendEvents("test")
             }
 
-            verify(localInfoDataStore, never()).clear()
-            verify(localLogDataStore, never()).clear()
+            verify(localInfoDataStore, never()).removeEvents(any())
+            verify(localLogDataStore, never()).removeEvents(any())
         }
     }
 }

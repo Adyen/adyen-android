@@ -29,9 +29,9 @@ internal class LogAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsEve
         list.takeLast(size)
     }
 
-    override suspend fun clear() {
+    override suspend fun removeEvents(events: List<AnalyticsEvent.Log>) {
         mutex.withLock {
-            list.clear()
+            list.removeAll(events.toSet())
         }
     }
 }

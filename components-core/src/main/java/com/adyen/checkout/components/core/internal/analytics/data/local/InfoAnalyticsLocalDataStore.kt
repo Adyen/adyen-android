@@ -29,9 +29,9 @@ internal class InfoAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsEv
         list.takeLast(size)
     }
 
-    override suspend fun clear() {
+    override suspend fun removeEvents(events: List<AnalyticsEvent.Info>) {
         mutex.withLock {
-            list.clear()
+            list.removeAll(events.toSet())
         }
     }
 }

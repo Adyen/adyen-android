@@ -14,5 +14,5 @@ internal interface AnalyticsLocalDataStore<T> {
 
     suspend fun fetchEvents(size: Int): List<T>
 
-    suspend fun clear()
+    suspend fun removeEvents(events: List<T>)
 }
