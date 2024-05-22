@@ -9,13 +9,13 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.components.core.internal.util.CountryInfo
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.flow.Flow
 
 internal interface MBWayDelegate :
@@ -30,7 +30,7 @@ internal interface MBWayDelegate :
 
     val componentStateFlow: Flow<MBWayComponentState>
 
-    fun getSupportedCountries(): List<CountryInfo>
+    fun getSupportedCountries(): List<CountryModel>
 
     fun updateInputData(update: MBWayInputData.() -> Unit)
 

@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.databinding.CountryViewBinding
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 

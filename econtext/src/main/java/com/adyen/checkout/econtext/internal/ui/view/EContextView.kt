@@ -17,7 +17,6 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
@@ -159,13 +158,7 @@ internal class EContextView @JvmOverloads constructor(
 
     private fun initCountryCodeInput() {
         val countryAutoCompleteTextView = binding.autoCompleteTextViewCountry
-        val countries = CountryUtils.getCountries().map {
-            CountryModel(
-                isoCode = it.isoCode,
-                countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
-                callingCode = it.callingCode,
-            )
-        }
+        val countries = delegate.getSupportedCountries()
         countryAdapter = CountryAdapter(context, localizedContext).apply {
             setItems(countries)
         }

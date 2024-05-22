@@ -33,6 +33,8 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -201,6 +203,9 @@ internal class DefaultEContextDelegate<
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }
+
+    override fun getSupportedCountries(): List<CountryModel> =
+        CountryUtils.getLocalizedCountries(componentParams.shopperLocale)
 
     override fun isConfirmationRequired(): Boolean {
         return _viewFlow.value is ButtonComponentViewType
