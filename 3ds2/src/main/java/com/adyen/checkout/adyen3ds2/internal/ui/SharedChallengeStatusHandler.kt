@@ -17,24 +17,24 @@ internal object SharedChallengeStatusHandler : ChallengeStatusHandler {
     var onCompletionListener: ChallengeStatusHandler? = null
         set(value) {
             field = value
-            resultQueue?.let { onCompletion(it) }
+            queuedResult?.let { onCompletion(it) }
         }
 
-    private var resultQueue: ChallengeResult? = null
+    private var queuedResult: ChallengeResult? = null
 
     override fun onCompletion(result: ChallengeResult) {
         onCompletionListener
             ?.onCompletion(result)
             ?.also {
-                resultQueue = null
+                queuedResult = null
             } ?: run {
-            resultQueue = result
+            queuedResult = result
         }
     }
 
     @VisibleForTesting
     internal fun reset() {
         onCompletionListener = null
-        resultQueue = null
+        queuedResult = null
     }
 }

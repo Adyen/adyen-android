@@ -95,8 +95,6 @@ internal class DefaultAdyen3DS2Delegate(
 
     private var currentTransaction: Transaction? = null
 
-    private var authorizationToken: String? by SavedStateHandleProperty(AUTHORIZATION_TOKEN_KEY)
-
     private var action: BaseThreeds2Action? by SavedStateHandleProperty(ACTION_KEY)
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -179,8 +177,6 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
         val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
-        // We need to keep authorizationToken in memory to access it later when the 3DS2 challenge is done
-        authorizationToken = action.authorisationToken
         handleActionSubtype(activity, subtype, action.token.orEmpty())
     }
 
@@ -535,7 +531,7 @@ internal class DefaultAdyen3DS2Delegate(
 
     private fun makeDetails(transactionStatus: String, errorDetails: String? = null): JSONObject {
         // Check whether authorizationToken was set and create the corresponding details object
-        val token = authorizationToken
+        val token = (action as? Threeds2Action)?.authorisationToken
         return if (token == null) {
             adyen3DS2Serializer.createChallengeDetails(
                 transactionStatus = transactionStatus,
@@ -562,7 +558,6 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
-        private const val AUTHORIZATION_TOKEN_KEY = "authorization_token"
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 
