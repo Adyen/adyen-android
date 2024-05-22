@@ -95,7 +95,7 @@ Out of the box the SDK doesn’t support dark mode, but you can easily add this 
 
     <item name="android:textColor">@color/text_color_primary</item>
     <item name="android:textColorPrimary">@color/text_color_primary</item>
-    <item name="android:textColorSecondary">@color/text_color_primary</item>
+    <item name="android:textColorSecondary">@color/text_color_secondary</item>
     <item name="android:textColorTertiary">@color/text_color_primary</item>
     <item name="android:textColorLink">@color/text_color_link</item>
     <item name="bottomSheetDialogTheme">@style/AdyenCheckout.BottomSheetDialogTheme</item>
