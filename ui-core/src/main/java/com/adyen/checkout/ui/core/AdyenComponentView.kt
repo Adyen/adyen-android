@@ -157,6 +157,11 @@ class AdyenComponentView @JvmOverloads constructor(
         }
     }
 
+    /**
+     * Returns the [LayoutInflater] of the parent activity or fragment. Using `LayoutInflater.from(context)` when the
+     * view's parent is a fragment will return the [LayoutInflater] of the fragment's activity. This causes issues with
+     * nested fragment's.
+     */
     @Suppress("SwallowedException")
     private fun getLayoutInflater(): LayoutInflater = try {
         findFragment<Fragment>().layoutInflater

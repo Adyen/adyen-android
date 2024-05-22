@@ -21,8 +21,4 @@ object StatusResponseUtils {
     fun isFinalResult(statusResponse: StatusResponse): Boolean {
         return RESULT_PENDING != statusResponse.resultCode
     }
-
-    fun isPendingResult(statusResponse: StatusResponse): Boolean {
-        return RESULT_PENDING == statusResponse.resultCode
-    }
 }

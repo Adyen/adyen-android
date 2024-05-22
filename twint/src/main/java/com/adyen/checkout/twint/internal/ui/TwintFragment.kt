@@ -33,7 +33,7 @@ internal class TwintFragment : Fragment() {
 
     private var twint: Twint? = Twint(this, ::onTwintResult)
 
-    private var twintResultQueue: TwintPayResult? = null
+    private var queuedTwintResult: TwintPayResult? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentTwintBinding.inflate(inflater, container, false)
@@ -50,7 +50,7 @@ internal class TwintFragment : Fragment() {
             .onEach { twint?.payWithCode(it) }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
-        twintResultQueue?.let {
+        queuedTwintResult?.let {
             adyenLog(AdyenLogLevel.DEBUG) { "initialize: executing queue" }
             onTwintResult(it)
         }
@@ -62,10 +62,10 @@ internal class TwintFragment : Fragment() {
             ?.handleTwintResult(result)
             ?.also {
                 adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult: clearing queue" }
-                twintResultQueue = null
+                queuedTwintResult = null
             } ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult: setting queue" }
-            twintResultQueue = result
+            queuedTwintResult = result
         }
     }
 

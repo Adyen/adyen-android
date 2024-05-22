@@ -83,10 +83,7 @@ internal class DefaultTwintDelegate(
 
     private fun restoreState() {
         adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        val action: SdkAction<TwintSdkData>? = action
-        if (action != null) {
-            initState(action)
-        }
+        action?.let { initState(it) }
     }
 
     override fun observe(
