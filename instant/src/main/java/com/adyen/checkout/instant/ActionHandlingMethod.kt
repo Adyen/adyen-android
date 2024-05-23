@@ -20,7 +20,7 @@ enum class ActionHandlingMethod {
 
     /**
      * The action will be handled with a web flow. **If** there is no way to handle the action with a web flow, then
-     * other methods might be used.
+     * native method will be used.
      */
     PREFER_WEB,
 }
