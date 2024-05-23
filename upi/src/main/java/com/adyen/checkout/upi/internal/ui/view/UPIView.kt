@@ -152,12 +152,13 @@ internal class UPIView @JvmOverloads constructor(
                 context = context,
                 localizedContext = localizedContext,
                 paymentMethod = delegate.getPaymentMethodType(),
-                onCheckedListener = ::onCollectItemChecked,
-                onInputChangeListener = ::onCollectItemInputChanged,
+                onItemClickListener = ::onIntentItemClicked,
+                onInputChangeListener = ::onIntentItemInputChanged,
             )
             recyclerViewUpiIntent.adapter = upiAppsAdapter
         }
-        upiAppsAdapter?.submitList(mode.collectItems)
+        upiAppsAdapter?.submitList(mode.intentItems)
+        upiAppsAdapter?.setSelectedItem(mode.selectedIntentItem)
     }
 
     private fun updateUpiIntentViews(isChecked: Boolean) {
@@ -169,13 +170,13 @@ internal class UPIView @JvmOverloads constructor(
         }
     }
 
-    private fun onCollectItemChecked(item: UPIIntentItem) {
+    private fun onIntentItemClicked(item: UPIIntentItem) {
         delegate.updateInputData {
             selectedUPIIntentItem = item
         }
     }
 
-    private fun onCollectItemInputChanged(value: String) {
+    private fun onIntentItemInputChanged(value: String) {
         delegate.updateIntentVirtualPaymentAddress(value)
     }
 

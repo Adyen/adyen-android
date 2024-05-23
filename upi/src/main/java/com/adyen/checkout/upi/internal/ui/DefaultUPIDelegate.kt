@@ -130,23 +130,20 @@ internal class DefaultUPIDelegate(
 
         val appIds = paymentMethod.apps
         val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
-        var defaultSelectedIntentItem: UPIIntentItem? = null
         val availableModes = if (!appIds.isNullOrEmpty()) {
             val intentItemList = createIntentItems(
                 appIds,
                 componentParams.environment,
                 intentVirtualPaymentAddressFieldState,
             )
-            // TODO: This could also be passed to the UPIAppsAdapter to show an item as default.
-            defaultSelectedIntentItem = intentItemList.firstOrNull()
-            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
+            listOf(UPIMode.Intent(intentItemList, selectedUPIIntentItem), UPIMode.Qr)
         } else {
             listOf(UPIMode.Vpa, UPIMode.Qr)
         }
 
         UPIOutputData(
             selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
-            selectedUPIIntentItem = selectedUPIIntentItem ?: defaultSelectedIntentItem,
+            selectedUPIIntentItem = selectedUPIIntentItem,
             availableModes = availableModes,
             virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
             intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,

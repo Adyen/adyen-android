@@ -27,11 +27,11 @@ internal class UPIAppsAdapter(
     private val context: Context,
     private val localizedContext: Context,
     private val paymentMethod: String,
-    private val onCheckedListener: (UPIIntentItem) -> Unit,
+    private val onItemClickListener: (UPIIntentItem) -> Unit,
     private val onInputChangeListener: (String) -> Unit,
 ) : ListAdapter<UPIIntentItem, UPIIntentItemViewHolder>(UPIAppsDiffCallback) {
 
-    private var lastCheckedPosition: Int = 0
+    private var selectedItem: UPIIntentItem? = null
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is UPIIntentItem.PaymentApp -> VIEW_TYPE_PAYMENT_APP.id
@@ -64,21 +64,22 @@ internal class UPIAppsAdapter(
     }
 
     override fun onBindViewHolder(holder: UPIIntentItemViewHolder, position: Int) = with(holder) {
+        val item = getItem(position)
         bind(
-            item = getItem(position),
-            isChecked = position == lastCheckedPosition,
+            item = item,
+            isChecked = item == selectedItem,
         )
-        setOnClickListener(::onLastCheckedPositionChanged)
+        setOnClickListener(::onItemClicked)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun onLastCheckedPositionChanged(newPosition: Int) {
-        if (lastCheckedPosition != newPosition) {
-            lastCheckedPosition = newPosition
-        }
+    fun setSelectedItem(item: UPIIntentItem?) {
+        selectedItem = item
         notifyDataSetChanged()
+    }
 
-        onCheckedListener.invoke(getItem(lastCheckedPosition))
+    private fun onItemClicked(itemPosition: Int) {
+        onItemClickListener.invoke(getItem(itemPosition))
     }
 
     object UPIAppsDiffCallback : DiffUtil.ItemCallback<UPIIntentItem>() {
