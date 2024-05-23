@@ -31,7 +31,7 @@ ext {
     detekt_version = "1.23.6"
     jacoco_version = '0.8.12'
     ktlint_version = '1.2.1'
-    sonarqube_version = '4.4.1.3373'
+    sonarqube_version = '5.0.0.4638'
 
     // Android Dependencies
     annotation_version = "1.7.1"
