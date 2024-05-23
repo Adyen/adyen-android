@@ -35,4 +35,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew detekt assDeb jacocoDebugTestReport lintDeb sonar -Dsonar.gradle.skipCompile=true -Pstrip-resources=true
+        run: |
+          ./gradlew detekt assDeb jacocoDebugTestReport lintDeb -Pstrip-resources=true
+          ./gradlew sonar
