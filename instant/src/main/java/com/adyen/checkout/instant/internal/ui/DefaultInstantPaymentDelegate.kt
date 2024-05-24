@@ -16,13 +16,14 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.InstantComponentState
+import com.adyen.checkout.instant.internal.ui.model.InstantComponentParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -35,7 +36,7 @@ internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
-    override val componentParams: GenericComponentParams,
+    override val componentParams: InstantComponentParams,
     private val analyticsRepository: AnalyticsRepository,
 ) : InstantPaymentDelegate {
 
@@ -55,11 +56,25 @@ internal class DefaultInstantPaymentDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                subtype = getSubtype(paymentMethod),
             ),
             order = order,
             amount = componentParams.amount,
         )
         return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
+    }
+
+    private fun getSubtype(paymentMethod: PaymentMethod): String? {
+        return when (componentParams.actionHandlingMethod) {
+            ActionHandlingMethod.PREFER_NATIVE -> {
+                when (paymentMethod.type) {
+                    PaymentMethodTypes.TWINT -> SDK_SUBTYPE
+                    else -> null
+                }
+            }
+
+            ActionHandlingMethod.PREFER_WEB -> null
+        }
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -94,5 +109,9 @@ internal class DefaultInstantPaymentDelegate(
 
     override fun onCleared() {
         removeObserver()
+    }
+
+    companion object {
+        private const val SDK_SUBTYPE = "sdk"
     }
 }

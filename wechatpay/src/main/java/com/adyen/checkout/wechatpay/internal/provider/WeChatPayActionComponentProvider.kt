@@ -115,8 +115,7 @@ constructor(
         )
     }
 
-    override val supportedActionTypes: List<String>
-        get() = listOf(SdkAction.ACTION_TYPE)
+    override val supportedActionTypes: List<String> = listOf(SdkAction.ACTION_TYPE)
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)

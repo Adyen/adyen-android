@@ -23,8 +23,10 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 
+class PaymentInProgressView
+@JvmOverloads
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class PaymentInProgressView @JvmOverloads constructor(
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -32,7 +34,7 @@ class PaymentInProgressView @JvmOverloads constructor(
     ConstraintLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -52,15 +54,15 @@ class PaymentInProgressView @JvmOverloads constructor(
         with(binding) {
             textViewPaymentInProgressTitle.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_PaymentInProgressView_TitleTextView,
-                localizedContext
+                localizedContext,
             )
             textViewPaymentInProgressDescription.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_PaymentInProgressView_DescriptionTextView,
-                localizedContext
+                localizedContext,
             )
             buttonPaymentInProgressCancel.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_PaymentInProgressView_CancelButton,
-                localizedContext
+                localizedContext,
             )
         }
     }

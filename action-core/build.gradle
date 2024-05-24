@@ -41,12 +41,14 @@ dependencies {
     api project(':await')
     api project(':qr-code')
     api project(':redirect')
-    compileOnly project(':wechatpay')
+    compileOnly project(':twint')
     api project(':voucher')
+    compileOnly project(':wechatpay')
 
     //Tests
     testImplementation project(':3ds2')
     testImplementation project(':test-core')
+    testImplementation project(':twint')
     testImplementation project(':wechatpay')
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5

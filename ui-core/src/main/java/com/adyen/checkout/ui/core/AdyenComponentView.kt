@@ -14,7 +14,10 @@ import android.view.MotionEvent
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.internal.Component
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -108,6 +111,7 @@ class AdyenComponentView @JvmOverloads constructor(
                     coroutineScope = lifecycleOwner.lifecycleScope,
                 )
             }
+            .flowWithLifecycle(lifecycleOwner.lifecycle)
             .launchIn(lifecycleOwner.lifecycleScope)
         isVisible = true
     }
@@ -118,7 +122,8 @@ class AdyenComponentView @JvmOverloads constructor(
         componentParams: ComponentParams,
         coroutineScope: CoroutineScope,
     ) {
-        val componentView = viewType.viewProvider.getView(viewType, context)
+        val layoutInflater = getLayoutInflater()
+        val componentView = viewType.viewProvider.getView(viewType, layoutInflater)
         this.componentView = componentView
 
         val localizedContext = context.createLocalizedContext(componentParams.shopperLocale)
@@ -150,6 +155,18 @@ class AdyenComponentView @JvmOverloads constructor(
         } else {
             binding.frameLayoutButtonContainer.isVisible = false
         }
+    }
+
+    /**
+     * Returns the [LayoutInflater] of the parent activity or fragment. Using `LayoutInflater.from(context)` when the
+     * view's parent is a fragment will return the [LayoutInflater] of the fragment's activity. This causes issues with
+     * nested fragment's.
+     */
+    @Suppress("SwallowedException")
+    private fun getLayoutInflater(): LayoutInflater = try {
+        findFragment<Fragment>().layoutInflater
+    } catch (e: IllegalStateException) {
+        LayoutInflater.from(context)
     }
 
     private fun setInteractionBlocked(isInteractionBlocked: Boolean) {

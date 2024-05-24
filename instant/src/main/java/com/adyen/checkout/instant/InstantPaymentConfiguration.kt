@@ -9,7 +9,7 @@
 package com.adyen.checkout.instant
 
 import android.content.Context
-import androidx.annotation.VisibleForTesting
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
@@ -25,12 +25,15 @@ import java.util.Locale
  * Configuration class for the [InstantPaymentComponent].
  */
 @Parcelize
-class InstantPaymentConfiguration private constructor(
+class InstantPaymentConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
+    val actionHandlingMethod: ActionHandlingMethod?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -38,6 +41,8 @@ class InstantPaymentConfiguration private constructor(
      * Builder to create an [InstantPaymentConfiguration].
      */
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
+
+        private var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -82,6 +87,16 @@ class InstantPaymentConfiguration private constructor(
             clientKey,
         )
 
+        /**
+         * Sets the method used to handle actions. See [ActionHandlingMethod] for the available options.
+         *
+         * Default is [ActionHandlingMethod.PREFER_NATIVE].
+         */
+        fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
+            this.actionHandlingMethod = actionHandlingMethod
+            return this
+        }
+
         override fun buildInternal(): InstantPaymentConfiguration {
             return InstantPaymentConfiguration(
                 shopperLocale = shopperLocale,
@@ -89,13 +104,15 @@ class InstantPaymentConfiguration private constructor(
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
+                actionHandlingMethod = actionHandlingMethod,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
     }
 }
 
-private const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val GLOBAL_INSTANT_CONFIG_KEY = "GLOBAL_INSTANT_CONFIG_KEY"
 
 fun CheckoutConfiguration.instantPayment(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
@@ -113,7 +130,6 @@ fun CheckoutConfiguration.instantPayment(
     return this
 }
 
-@VisibleForTesting
 internal fun CheckoutConfiguration.getInstantPaymentConfiguration(
     paymentMethod: String = GLOBAL_INSTANT_CONFIG_KEY,
 ): InstantPaymentConfiguration? {

@@ -10,6 +10,20 @@
 
 ## New
 - For external redirects launched in a Custom Tab, you can now [customize the toolbar and navigation bar colors](docs/UI_CUSTOMIZATION.md#styling-custom-tabs) of the Custom Tab.
+- Payment method **twint** now supports a native flow, eliminating the need to redirect through the browser.
+You can change this behaviour by using the following configuration:
+```kotlin
+CheckoutConfiguration(
+    environment = environment,
+    clientKey = clientKey,
+    ..
+) {
+    // Optionally pass the payment method type to only configure it for the specific payment method.
+    instantPayment(PaymentMethodTypes.TWINT) {
+        setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
+    }
+}
+```
 
 ## Fixed
 - Fixed various memory leaks.

@@ -31,7 +31,6 @@ import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepo
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,6 +40,7 @@ import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.instant.internal.ui.DefaultInstantPaymentDelegate
+import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
 import com.adyen.checkout.instant.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -86,11 +86,12 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = InstantComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
                 componentSessionParams = null,
+                paymentMethod = paymentMethod,
             )
 
             val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
@@ -174,11 +175,12 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = InstantComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
                 componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod,
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)

@@ -12,6 +12,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
 import com.adyen.checkout.await.AwaitConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 
@@ -36,6 +37,11 @@ internal interface ActionHandlingConfigurationBuilder<BuilderT> {
      * Add configuration for Redirect action.
      */
     fun addRedirectActionConfiguration(configuration: RedirectConfiguration): BuilderT
+
+    /**
+     * Add configuration for Twint action.
+     */
+    fun addTwintActionConfiguration(configuration: TwintActionConfiguration): BuilderT
 
     /**
      * Add configuration for Voucher action.

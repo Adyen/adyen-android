@@ -235,6 +235,7 @@ internal class DefaultBoletoDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                subtype = null,
             ),
             order = order,
             amount = componentParams.amount,

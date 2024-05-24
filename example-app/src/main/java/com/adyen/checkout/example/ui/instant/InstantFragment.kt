@@ -61,6 +61,7 @@ class InstantFragment : BottomSheetDialogFragment() {
         arguments = (arguments ?: bundleOf()).apply {
             putString(RETURN_URL_EXTRA, returnUrl)
         }
+
         _binding = FragmentInstantBinding.inflate(inflater, container, false)
         return binding.root
     }

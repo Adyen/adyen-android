@@ -22,6 +22,8 @@ import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
+import com.adyen.checkout.instant.ActionHandlingMethod
+import com.adyen.checkout.instant.instantPayment
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -81,6 +83,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
             googlePay {
                 setCountryCode(keyValueStorage.getCountry())
+            }
+
+            instantPayment {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
             }
 
             // Actions

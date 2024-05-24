@@ -74,6 +74,7 @@ dependencies {
     api project(':sepa')
     api project(':seven-eleven')
     api project(':sessions-core')
+    api project(':twint')
     api project(':upi')
     api project(':wechatpay')
 
