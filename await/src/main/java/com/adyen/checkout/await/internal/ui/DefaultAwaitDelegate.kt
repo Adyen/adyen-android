@@ -124,6 +124,12 @@ internal class DefaultAwaitDelegate(
 
         this.action = action
 
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
+
         initState(action)
     }
 
@@ -136,12 +142,6 @@ internal class DefaultAwaitDelegate(
             return
         }
         createOutputData(null, action)
-
-        val event = GenericEvents.action(
-            component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
-        )
-        analyticsManager?.trackEvent(event)
 
         startStatusPolling(paymentData, action)
     }

@@ -120,6 +120,12 @@ internal class DefaultVoucherDelegate(
 
         this.action = action
 
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
+
         initState(action)
     }
 
@@ -129,12 +135,6 @@ internal class DefaultVoucherDelegate(
             emitError(ComponentException("Payment method ${action.paymentMethodType} not supported for this action"))
             return
         }
-
-        val event = GenericEvents.action(
-            component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
-        )
-        analyticsManager?.trackEvent(event)
 
         _viewFlow.tryEmit(config.viewType)
 
