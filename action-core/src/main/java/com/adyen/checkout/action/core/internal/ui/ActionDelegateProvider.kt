@@ -66,7 +66,12 @@ internal class ActionDelegateProvider(
         action: Action,
     ): ActionComponentProvider<*, *, *> {
         return when (action.paymentMethodType) {
-            PaymentMethodTypes.TWINT -> TwintActionComponentProvider(dropInOverrideParams, localeProvider)
+            PaymentMethodTypes.TWINT -> TwintActionComponentProvider(
+                analyticsManager,
+                dropInOverrideParams,
+                localeProvider,
+            )
+
             PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPayActionComponentProvider(
                 analyticsManager,
                 dropInOverrideParams,
