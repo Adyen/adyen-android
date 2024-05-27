@@ -68,6 +68,7 @@ class IdealComponent internal constructor(
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) = Unit
 
+    @Suppress("FunctionOnlyReturningConstant")
     @Deprecated("This method is only kept for backwards compatibility and will always return false.", ReplaceWith(""))
     fun isConfirmationRequired(): Boolean = false
 
