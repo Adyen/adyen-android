@@ -49,7 +49,7 @@ class DefaultRedirectHandler : RedirectHandler {
         }
 
         if (extractedParams.isEmpty()) {
-            throw CheckoutException("Error parsing redirect result, could not any query parameters")
+            throw CheckoutException("Error parsing redirect result, could not find any query parameters")
         }
 
         try {
