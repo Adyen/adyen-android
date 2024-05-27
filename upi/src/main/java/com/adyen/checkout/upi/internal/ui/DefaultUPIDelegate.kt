@@ -121,13 +121,6 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData() = with(inputData) {
-        // TODO: Mock data to be removed
-        paymentMethod.apps = listOf(
-            App("bhim", "BHIM"),
-            App("gpay", "Google Pay"),
-            App("PhonePe", "phonepe"),
-        )
-
         val appIds = paymentMethod.apps
         val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
         val availableModes = if (!appIds.isNullOrEmpty()) {
