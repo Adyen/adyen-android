@@ -14,7 +14,6 @@ internal enum class UPISelectedMode {
     QR
 }
 
-// TODO: Probably instead of this there is a better way to handle mode toggle in UPIView?
 internal fun UPIMode.mapToSelectedMode() = when (this) {
     is UPIMode.Intent -> UPISelectedMode.INTENT
     UPIMode.Vpa -> UPISelectedMode.VPA

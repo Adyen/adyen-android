@@ -12,10 +12,9 @@ import com.adyen.checkout.components.core.App
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-// TODO: Add tests
 internal fun List<App>.mapToPaymentApp(environment: Environment): List<UPIIntentItem.PaymentApp> =
     mapNotNull { (id, name) ->
-        if (id != null && name != null) {
+        if (!id.isNullOrEmpty() && !name.isNullOrEmpty()) {
             UPIIntentItem.PaymentApp(id, name, environment)
         } else {
             null
