@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.jsonToMap
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -20,7 +21,7 @@ data class SessionSetupConfiguration(
     val enableStoreDetails: Boolean? = null,
     val showInstallmentAmount: Boolean = false,
     val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null,
-    val showRemovePaymentMethodButton: Boolean = false,
+    val showRemovePaymentMethodButton: Boolean? = null,
 ) : ModelObject() {
 
     companion object {
@@ -50,11 +51,11 @@ data class SessionSetupConfiguration(
             override fun deserialize(jsonObject: JSONObject): SessionSetupConfiguration {
                 return try {
                     SessionSetupConfiguration(
-                        enableStoreDetails = jsonObject.optBoolean(ENABLE_STORE_DETAILS),
+                        enableStoreDetails = jsonObject.getBooleanOrNull(ENABLE_STORE_DETAILS),
                         showInstallmentAmount = jsonObject.optBoolean(SHOW_INSTALLMENT_AMOUNT),
                         installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
                             ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
-                        showRemovePaymentMethodButton = jsonObject.optBoolean(SHOW_REMOVE_PAYMENT_METHOD_BUTTON),
+                        showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(SHOW_REMOVE_PAYMENT_METHOD_BUTTON),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)
