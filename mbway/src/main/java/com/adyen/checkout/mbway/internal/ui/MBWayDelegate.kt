@@ -32,6 +32,8 @@ internal interface MBWayDelegate :
 
     fun getSupportedCountries(): List<CountryModel>
 
+    fun getInitiallySelectedCountry(): CountryModel?
+
     fun updateInputData(update: MBWayInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)

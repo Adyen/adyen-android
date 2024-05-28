@@ -91,9 +91,7 @@ internal class MbWayView @JvmOverloads constructor(
                 onCountrySelected(country)
             }
         }
-        val initialCountry =
-            countries.firstOrNull { it.isoCode == DefaultMBWayDelegate.ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
-        initialCountry?.let {
+        delegate.getInitiallySelectedCountry()?.let {
             binding.autoCompleteTextViewCountry.setText(it.toShortString())
             onCountrySelected(it)
         }

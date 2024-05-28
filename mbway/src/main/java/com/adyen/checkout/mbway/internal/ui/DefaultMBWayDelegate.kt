@@ -160,6 +160,11 @@ internal class DefaultMBWayDelegate(
     override fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
 
+    override fun getInitiallySelectedCountry(): CountryModel? {
+        val countries = getSupportedCountries()
+        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+    }
+
     override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
@@ -178,7 +183,7 @@ internal class DefaultMBWayDelegate(
     }
 
     companion object {
-        internal const val ISO_CODE_PORTUGAL = "PT"
+        private const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
 
         private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
