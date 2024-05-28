@@ -25,6 +25,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -48,6 +50,7 @@ internal class DefaultAwaitDelegateTest {
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
+    private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var delegate: DefaultAwaitDelegate
 
     @BeforeEach
@@ -55,11 +58,12 @@ internal class DefaultAwaitDelegateTest {
         analyticsManager = TestAnalyticsManager()
         statusRepository = TestStatusRepository()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
+        redirectHandler = TestRedirectHandler()
         delegate = createDelegate()
     }
 
     @Test
-    fun `when  polling status, then output data will be emitted`() = runTest {
+    fun `when polling status, then output data will be emitted`() = runTest {
         statusRepository.pollingResults = listOf(
             Result.success(StatusResponse(resultCode = "pending")),
             Result.success(StatusResponse(resultCode = "finished")),
@@ -216,6 +220,88 @@ internal class DefaultAwaitDelegateTest {
     }
 
     @Nested
+    @DisplayName("when in the await flow and")
+    inner class RedirectFlowTest {
+
+        @Test
+        fun `handleAction is called and action url is null, then redirect does not launch`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = null)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.handleAction(action, Activity())
+
+            redirectHandler.assertLaunchRedirectNotCalled()
+        }
+
+        @Test
+        fun `handleAction is called and action url is null, then polling starts`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = null)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.handleAction(action, Activity())
+
+            statusRepository.assertPollingStarted()
+        }
+
+        @Test
+        fun `handleAction is called and action url exists, then redirect is launched`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = "url")
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.handleAction(action, Activity())
+
+            redirectHandler.assertLaunchRedirectCalled()
+        }
+
+        @Test
+        fun `handleAction is called and action url exists, then polling starts`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = "url")
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.handleAction(action, Activity())
+
+            statusRepository.assertPollingStarted()
+        }
+
+        @Test
+        fun `handleAction is called and redirect handler returns an error, then the polling does not start`() =
+            runTest {
+                val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = "url")
+                val error = ComponentException("Failed to make redirect.")
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                redirectHandler.exception = error
+
+                delegate.handleAction(action, Activity())
+
+                statusRepository.assertPollingNotStarted()
+            }
+
+        @Test
+        fun `handleAction is called and redirect handler returns an error, then the error is propagated`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = "url")
+            val error = ComponentException("Failed to make redirect.")
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            redirectHandler.exception = error
+
+            delegate.handleAction(action, Activity())
+
+            assertEquals(error, exceptionFlow.latestValue)
+        }
+
+        @Test
+        fun `handleAction is called with valid data, then no error is propagated`() = runTest {
+            val action = AwaitAction(paymentMethodType = "test", paymentData = "paymentData", url = "url")
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.handleAction(action, Activity())
+
+            assertTrue(exceptionFlow.values.isEmpty())
+        }
+    }
+
+    @Nested
     inner class AnalyticsTest {
 
         @Test
@@ -250,6 +336,7 @@ internal class DefaultAwaitDelegateTest {
             savedStateHandle = savedStateHandle,
             componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
+            redirectHandler = redirectHandler,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
             analyticsManager = analyticsManager,

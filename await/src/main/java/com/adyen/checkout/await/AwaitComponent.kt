@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.await.internal.provider.AwaitComponentProvider
 import com.adyen.checkout.await.internal.ui.AwaitDelegate
+import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
@@ -32,7 +33,8 @@ class AwaitComponent internal constructor(
     internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,
-    ViewableComponent {
+    ViewableComponent,
+    RedirectableActionComponent {
 
     override val viewFlow: Flow<ComponentViewType?> get() = delegate.viewFlow
 
@@ -54,6 +56,10 @@ class AwaitComponent internal constructor(
 
     override fun handleAction(action: Action, activity: Activity) {
         delegate.handleAction(action, activity)
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        delegate.setOnRedirectListener(listener)
     }
 
     override fun onCleared() {
