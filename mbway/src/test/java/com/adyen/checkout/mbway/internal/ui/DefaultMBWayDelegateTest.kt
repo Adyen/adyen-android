@@ -276,6 +276,13 @@ internal class DefaultMBWayDelegateTest(
         }
     }
 
+    @Test
+    fun `when getting initially selected country, then Portugal should be returned`() {
+        val result = delegate.getInitiallySelectedCountry()
+
+        assertEquals("PT", result?.isoCode)
+    }
+
     private fun createMBWayDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
     ) = DefaultMBWayDelegate(

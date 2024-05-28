@@ -17,7 +17,6 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
@@ -27,7 +26,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
@@ -159,13 +157,7 @@ internal class EContextView @JvmOverloads constructor(
 
     private fun initCountryCodeInput() {
         val countryAutoCompleteTextView = binding.autoCompleteTextViewCountry
-        val countries = CountryUtils.getCountries().map {
-            CountryModel(
-                isoCode = it.isoCode,
-                countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
-                callingCode = it.callingCode,
-            )
-        }
+        val countries = delegate.getSupportedCountries()
         countryAdapter = CountryAdapter(context, localizedContext).apply {
             setItems(countries)
         }
@@ -176,8 +168,7 @@ internal class EContextView @JvmOverloads constructor(
                 val country = countryAdapter?.getItem(position) ?: return@OnItemClickListener
                 onCountrySelected(country)
             }
-            val initialCountry = countries.firstOrNull { it.isoCode == Locale.JAPAN.country } ?: countries.firstOrNull()
-            initialCountry?.let {
+            delegate.getInitiallySelectedCountry()?.let {
                 setText(it.toShortString())
                 onCountrySelected(it)
             }

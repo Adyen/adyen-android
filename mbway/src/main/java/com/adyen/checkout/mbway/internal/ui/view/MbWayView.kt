@@ -16,8 +16,6 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.CountryInfo
-import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
@@ -80,7 +78,7 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun initCountryInput() {
-        val countries = delegate.getSupportedCountries().mapToCountryModel()
+        val countries = delegate.getSupportedCountries()
         val adapter = CountryAdapter(context, localizedContext)
         adapter.setItems(countries)
         binding.autoCompleteTextViewCountry.apply {
@@ -92,10 +90,9 @@ internal class MbWayView @JvmOverloads constructor(
                 onCountrySelected(country)
             }
         }
-        val firstCountry = countries.firstOrNull()
-        if (firstCountry != null) {
-            binding.autoCompleteTextViewCountry.setText(firstCountry.toShortString())
-            onCountrySelected(firstCountry)
+        delegate.getInitiallySelectedCountry()?.let {
+            binding.autoCompleteTextViewCountry.setText(it.toShortString())
+            onCountrySelected(it)
         }
     }
 
@@ -115,13 +112,5 @@ internal class MbWayView @JvmOverloads constructor(
         delegate.updateInputData {
             countryCode = countryModel.callingCode
         }
-    }
-
-    private fun List<CountryInfo>.mapToCountryModel() = map {
-        CountryModel(
-            isoCode = it.isoCode,
-            countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
-            callingCode = it.callingCode,
-        )
     }
 }

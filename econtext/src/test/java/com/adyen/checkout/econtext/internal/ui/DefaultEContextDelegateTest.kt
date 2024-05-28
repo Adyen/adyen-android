@@ -279,6 +279,13 @@ internal class DefaultEContextDelegateTest(
         }
     }
 
+    @Test
+    fun `when getting initially selected country, then Japan should be returned`() {
+        val result = delegate.getInitiallySelectedCountry()
+
+        assertEquals("JP", result?.isoCode)
+    }
+
     private fun createEContextDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
         order: Order = TEST_ORDER

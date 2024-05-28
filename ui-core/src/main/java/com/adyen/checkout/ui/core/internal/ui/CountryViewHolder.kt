@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.internal.ui
 
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.databinding.CountryViewBinding
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
@@ -17,12 +16,8 @@ internal class CountryViewHolder(private val binding: CountryViewBinding) : Recy
 
     fun bindItem(country: CountryModel) {
         with(binding) {
-            textViewCountryCode.text = country.isoCode
-            textViewCountry.text = root.context.getString(
-                R.string.checkout_country_name_format,
-                country.countryName,
-                country.callingCode,
-            )
+            textViewCountryCode.text = country.callingCode
+            textViewCountry.text = country.countryName
         }
     }
 }
