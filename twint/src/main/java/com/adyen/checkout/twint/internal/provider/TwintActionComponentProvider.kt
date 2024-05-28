@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
@@ -42,6 +43,7 @@ import com.adyen.checkout.twint.toCheckoutConfiguration
 class TwintActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<TwintActionComponent, TwintActionConfiguration, TwintDelegate> {
@@ -93,6 +95,7 @@ constructor(
             componentParams = componentParams,
             paymentDataRepository = PaymentDataRepository(savedStateHandle),
             statusRepository = statusRepository,
+            analyticsManager = analyticsManager,
         )
     }
 

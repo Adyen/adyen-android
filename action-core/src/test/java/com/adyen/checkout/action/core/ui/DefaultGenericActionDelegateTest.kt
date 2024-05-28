@@ -53,6 +53,7 @@ internal class DefaultGenericActionDelegateTest(
     @Mock private val activity: Activity,
     @Mock private val actionDelegateProvider: ActionDelegateProvider,
 ) {
+
     private lateinit var genericActionDelegate: DefaultGenericActionDelegate
     private lateinit var testDelegate: TestActionDelegate
 
@@ -243,13 +244,13 @@ internal class DefaultGenericActionDelegateTest(
         )
 
         return DefaultGenericActionDelegate(
-            ActionObserverRepository(),
-            savedStateHandle,
-            configuration,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            checkoutConfiguration = configuration,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
-            actionDelegateProvider,
-            Application(),
+            actionDelegateProvider = actionDelegateProvider,
+            application = Application(),
         )
     }
 

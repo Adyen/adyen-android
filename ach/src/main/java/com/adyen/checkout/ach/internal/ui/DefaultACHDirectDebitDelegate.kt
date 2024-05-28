@@ -20,7 +20,8 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -62,7 +63,7 @@ import kotlinx.coroutines.launch
 internal class DefaultACHDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val publicKeyRepository: PublicKeyRepository,
     private val addressRepository: AddressRepository,
     private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
@@ -110,7 +111,7 @@ internal class DefaultACHDirectDebitDelegate(
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
         fetchPublicKey(coroutineScope)
 
         if (componentParams.addressParams is AddressParams.FullAddress) {
@@ -118,6 +119,14 @@ internal class DefaultACHDirectDebitDelegate(
             subscribeToCountryList()
             requestCountryList()
         }
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
@@ -250,13 +259,6 @@ internal class DefaultACHDirectDebitDelegate(
         )
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
-    }
-
     private fun updateComponentState(outputData: ACHDirectDebitOutputData) {
         adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
         val componentState = createComponentState(outputData)
@@ -290,7 +292,7 @@ internal class DefaultACHDirectDebitDelegate(
 
             val achPaymentMethod = ACHDirectDebitPaymentMethod(
                 type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 encryptedBankAccountNumber = encryptedBankAccountNumber,
                 encryptedBankLocationId = encryptedBankLocationId,
                 ownerName = outputData.ownerName.value,
@@ -354,9 +356,13 @@ internal class DefaultACHDirectDebitDelegate(
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
+        analyticsManager.clear(this)
     }
 
     override fun onSubmit() {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         val state = _componentStateFlow.value
         submitHandler.onSubmit(
             state = state,

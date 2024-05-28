@@ -69,7 +69,7 @@ internal class InstantComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -171,7 +171,7 @@ internal class InstantComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
     ): InstantComponentParams {

@@ -25,6 +25,8 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -70,7 +72,8 @@ internal class DefaultQRCodeDelegate(
     private val statusCountDownTimer: QRCodeCountDownTimer,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
-    private val imageSaver: ImageSaver
+    private val imageSaver: ImageSaver,
+    private val analyticsManager: AnalyticsManager?,
 ) : QRCodeDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -162,6 +165,12 @@ internal class DefaultQRCodeDelegate(
 
         this.action = action
         paymentDataRepository.paymentData = action.paymentData
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         launchAction(action, activity)
         initState(action)
@@ -326,6 +335,12 @@ internal class DefaultQRCodeDelegate(
         val timestamp = DateUtils.formatDateToString(Calendar.getInstance())
         val imageName = String.format(IMAGE_NAME_FORMAT, paymentMethodType, timestamp)
 
+        val event = GenericEvents.download(
+            component = paymentMethodType,
+            target = ANALYTICS_TARGET_QR_BUTTON
+        )
+        analyticsManager?.trackEvent(event)
+
         coroutineScope.launch {
             imageSaver.saveImageFromUrl(
                 context = context,
@@ -395,6 +410,9 @@ internal class DefaultQRCodeDelegate(
         private val STATUS_POLLING_INTERVAL_MILLIS = 1.seconds.inWholeMilliseconds
         private val DEFAULT_MAX_POLLING_DURATION = 15.minutes.inWholeMilliseconds
         private const val HUNDRED = 100
+
+        @VisibleForTesting
+        internal const val ANALYTICS_TARGET_QR_BUTTON = "qr_download_button"
 
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
         private const val QR_IMAGE_BASE_PATH = "%sbarcode.shtml?barcodeType=qrCode&fileType=png&data=%s"

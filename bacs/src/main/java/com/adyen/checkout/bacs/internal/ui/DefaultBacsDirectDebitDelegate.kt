@@ -20,7 +20,8 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -33,7 +34,6 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class DefaultBacsDirectDebitDelegate(
@@ -41,7 +41,7 @@ internal class DefaultBacsDirectDebitDelegate(
     override val componentParams: ButtonComponentParams,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
 ) : BacsDirectDebitDelegate {
 
@@ -64,14 +64,15 @@ internal class DefaultBacsDirectDebitDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
@@ -134,6 +135,9 @@ internal class DefaultBacsDirectDebitDelegate(
             }
 
             BacsDirectDebitMode.CONFIRMATION -> {
+                val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+                analyticsManager.trackEvent(event)
+
                 submitHandler.onSubmit(state)
             }
         }
@@ -189,7 +193,7 @@ internal class DefaultBacsDirectDebitDelegate(
     ): BacsDirectDebitComponentState {
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod(
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             holderName = outputData.holderNameState.value,
             bankAccountNumber = outputData.bankAccountNumberState.value,
             bankLocationId = outputData.sortCodeState.value,
@@ -220,5 +224,6 @@ internal class DefaultBacsDirectDebitDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }

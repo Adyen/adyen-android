@@ -28,7 +28,7 @@ suspend fun <T : ModelObject> HttpClient.get(
     adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
 
     val result = runAndLogHttpException { get(path, queryParameters) }
-    val resultJson = JSONObject(String(result, Charsets.UTF_8))
+    val resultJson = result.toJSONObject()
 
     adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
@@ -66,7 +66,7 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     adyenLog(AdyenLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
 
     val result = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
-    val resultJson = JSONObject(String(result, Charsets.UTF_8))
+    val resultJson = result.toJSONObject()
 
     adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
 
@@ -87,5 +87,13 @@ private fun HttpException.getLogMessage(): String {
         ErrorResponseBody.SERIALIZER.serialize(errorBody).toStringPretty()
     } else {
         "[$code] $message"
+    }
+}
+
+private fun ByteArray.toJSONObject(): JSONObject {
+    return if (isEmpty()) {
+        JSONObject()
+    } else {
+        JSONObject(String(this, Charsets.UTF_8))
     }
 }

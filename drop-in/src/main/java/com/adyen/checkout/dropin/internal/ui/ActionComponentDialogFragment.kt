@@ -94,8 +94,9 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
+            val analyticsManager = dropInViewModel.analyticsManager
             val dropInOverrideParams = dropInViewModel.getDropInOverrideParams()
-            actionComponent = GenericActionComponentProvider(dropInOverrideParams).get(
+            actionComponent = GenericActionComponentProvider(analyticsManager, dropInOverrideParams).get(
                 fragment = this,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = this,

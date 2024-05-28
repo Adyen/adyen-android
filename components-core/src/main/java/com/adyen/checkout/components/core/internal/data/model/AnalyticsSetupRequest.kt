@@ -13,6 +13,7 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
 import com.adyen.checkout.core.internal.data.model.getLongOrNull
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.data.model.optStringList
@@ -33,7 +34,7 @@ internal data class AnalyticsSetupRequest(
     val referrer: String?,
     val systemVersion: String?,
     val containerWidth: Long?,
-    val screenWidth: Long?,
+    val screenWidth: Int?,
     val paymentMethods: List<String>?,
     val amount: Amount?,
     val sessionId: String?,
@@ -97,7 +98,7 @@ internal data class AnalyticsSetupRequest(
                             referrer = getStringOrNull(REFERRER),
                             systemVersion = getStringOrNull(SYSTEM_VERSION),
                             containerWidth = getLongOrNull(CONTAINER_WIDTH),
-                            screenWidth = getLongOrNull(SCREEN_WIDTH),
+                            screenWidth = getIntOrNull(SCREEN_WIDTH),
                             paymentMethods = optStringList(PAYMENT_METHODS),
                             amount = ModelUtils.deserializeOpt(optJSONObject(AMOUNT), Amount.SERIALIZER),
                             sessionId = getStringOrNull(SESSION_ID),

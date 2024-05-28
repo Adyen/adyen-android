@@ -162,7 +162,7 @@ internal class PaymentMethodListDialogFragment :
             checkoutConfiguration = dropInViewModel.checkoutConfiguration,
             dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
             componentCallback = paymentMethodsListViewModel,
-            analyticsRepository = dropInViewModel.analyticsRepository,
+            analyticsManager = dropInViewModel.analyticsManager,
             onRedirect = protocol::onRedirect,
         )
         paymentMethodsListViewModel.onClickStoredItem(storedPaymentMethod, storedPaymentMethodModel)

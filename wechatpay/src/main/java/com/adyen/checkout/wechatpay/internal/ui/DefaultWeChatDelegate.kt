@@ -19,6 +19,8 @@ import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -46,6 +48,7 @@ internal class DefaultWeChatDelegate(
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
     private val paymentDataRepository: PaymentDataRepository,
+    private val analyticsManager: AnalyticsManager?,
 ) : WeChatDelegate {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -133,6 +136,12 @@ internal class DefaultWeChatDelegate(
             exceptionChannel.trySend(ComponentException("SDK Data is null"))
             return
         }
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
 

@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
 import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
+import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
@@ -34,6 +35,8 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -80,6 +83,7 @@ internal class DefaultAdyen3DS2Delegate(
     private val threeDS2Service: ThreeDS2Service,
     private val coroutineDispatcher: CoroutineDispatcher,
     private val application: Application,
+    private val analyticsManager: AnalyticsManager?,
 ) : Adyen3DS2Delegate, ChallengeStatusHandler, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -146,6 +150,9 @@ internal class DefaultAdyen3DS2Delegate(
             emitError(ComponentException("Fingerprint token not found."))
             return
         }
+
+        trackFingerprintActionEvent(action)
+
         identifyShopper(
             activity = activity,
             encodedFingerprintToken = action.token.orEmpty(),
@@ -161,6 +168,9 @@ internal class DefaultAdyen3DS2Delegate(
             emitError(ComponentException("Challenge token not found."))
             return
         }
+
+        trackChallengeActionEvent(action)
+
         challengeShopper(activity, action.token.orEmpty())
     }
 
@@ -177,22 +187,31 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
         val subtype = Threeds2Action.SubType.parse(action.subtype.orEmpty())
-        handleActionSubtype(activity, subtype, action.token.orEmpty())
+        handleThreeds2ActionSubtype(action, activity, subtype)
     }
 
-    private fun handleActionSubtype(
+    private fun handleThreeds2ActionSubtype(
+        action: Threeds2Action,
         activity: Activity,
         subtype: Threeds2Action.SubType,
-        token: String,
     ) {
+        val token = action.token.orEmpty()
         when (subtype) {
-            Threeds2Action.SubType.FINGERPRINT -> identifyShopper(
-                activity = activity,
-                encodedFingerprintToken = token,
-                submitFingerprintAutomatically = true,
-            )
+            Threeds2Action.SubType.FINGERPRINT -> {
+                trackFingerprintActionEvent(action)
 
-            Threeds2Action.SubType.CHALLENGE -> challengeShopper(activity, token)
+                identifyShopper(
+                    activity = activity,
+                    encodedFingerprintToken = token,
+                    submitFingerprintAutomatically = true,
+                )
+            }
+
+            Threeds2Action.SubType.CHALLENGE -> {
+                trackChallengeActionEvent(action)
+
+                challengeShopper(activity, token)
+            }
         }
     }
 
@@ -297,6 +316,11 @@ internal class DefaultAdyen3DS2Delegate(
             return null
         }
 
+        val event = ThreeDS2Events.threeDS2Fingerprint(
+            subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
+        )
+        analyticsManager?.trackEvent(event)
+
         return try {
             adyenLog(AdyenLogLevel.DEBUG) { "create transaction" }
             when (val result = threeDS2Service.createTransaction(null, fingerprintToken.threeDSMessageVersion)) {
@@ -361,17 +385,28 @@ internal class DefaultAdyen3DS2Delegate(
 
         when (result) {
             is SubmitFingerprintResult.Completed -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.COMPLETED)
                 emitDetails(result.details)
             }
 
             is SubmitFingerprintResult.Redirect -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.REDIRECT)
                 makeRedirect(activity, result.action)
             }
 
             is SubmitFingerprintResult.Threeds2 -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.THREEDS2)
                 handleAction(result.action, activity)
             }
         }
+    }
+
+    private fun trackFingerprintCompletedEvent(result: ThreeDS2Events.Result) {
+        val event = ThreeDS2Events.threeDS2Fingerprint(
+            subType = ThreeDS2Events.SubType.FINGERPRINT_COMPLETED,
+            result = result,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     private fun makeRedirect(activity: Activity, action: RedirectAction) {
@@ -404,6 +439,11 @@ internal class DefaultAdyen3DS2Delegate(
             return
         }
 
+        val challengeSentEvent = ThreeDS2Events.threeDS2Challenge(
+            subType = ThreeDS2Events.SubType.CHALLENGE_DATA_SENT,
+        )
+        analyticsManager?.trackEvent(challengeSentEvent)
+
         val challengeToken = ChallengeToken.SERIALIZER.deserialize(challengeTokenJson)
         val challengeParameters = createChallengeParameters(challengeToken)
         try {
@@ -413,6 +453,11 @@ internal class DefaultAdyen3DS2Delegate(
                 SharedChallengeStatusHandler,
                 DEFAULT_CHALLENGE_TIME_OUT,
             )
+
+            val challengeDisplayedEvent = ThreeDS2Events.threeDS2Challenge(
+                subType = ThreeDS2Events.SubType.CHALLENGE_DISPLAYED,
+            )
+            analyticsManager?.trackEvent(challengeDisplayedEvent)
         } catch (e: InvalidInputException) {
             emitError(CheckoutException("Error starting challenge", e))
         }
@@ -485,11 +530,47 @@ internal class DefaultAdyen3DS2Delegate(
 
     override fun onCompletion(result: ChallengeResult) {
         when (result) {
-            is ChallengeResult.Cancelled -> onCancelled()
-            is ChallengeResult.Completed -> onCompleted(result.transactionStatus)
-            is ChallengeResult.Error -> onError(result)
-            is ChallengeResult.Timeout -> onTimeout(result)
+            is ChallengeResult.Cancelled -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.CANCELLED)
+                onCancelled()
+            }
+
+            is ChallengeResult.Completed -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.COMPLETED)
+                onCompleted(result.transactionStatus)
+            }
+
+            is ChallengeResult.Error -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.ERROR)
+                onError(result)
+            }
+
+            is ChallengeResult.Timeout -> {
+                trackChallengeCompletedEvent(ThreeDS2Events.Result.TIMEOUT)
+                onTimeout(result)
+            }
         }
+    }
+
+    private fun trackChallengeCompletedEvent(result: ThreeDS2Events.Result) {
+        val event = ThreeDS2Events.threeDS2Challenge(
+            subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
+            result = result,
+        )
+        analyticsManager?.trackEvent(event)
+    }
+
+    private fun trackFingerprintActionEvent(action: Action) = trackActionEvent(action, ANALYTICS_MESSAGE_FINGERPRINT)
+
+    private fun trackChallengeActionEvent(action: Action) = trackActionEvent(action, ANALYTICS_MESSAGE_CHALLENGE)
+
+    private fun trackActionEvent(action: Action, message: String) {
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+            message = message,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     private fun closeTransaction() {
@@ -558,6 +639,12 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
+        @VisibleForTesting
+        internal const val ANALYTICS_MESSAGE_FINGERPRINT = "Fingerprint action was handled by the SDK"
+
+        @VisibleForTesting
+        internal const val ANALYTICS_MESSAGE_CHALLENGE = "Challenge action was handled by the SDK"
+
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 

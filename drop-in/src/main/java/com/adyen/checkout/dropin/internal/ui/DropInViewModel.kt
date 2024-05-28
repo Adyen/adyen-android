@@ -24,7 +24,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -58,7 +58,7 @@ import kotlinx.coroutines.launch
 internal class DropInViewModel(
     private val bundleHandler: DropInSavedStateHandleContainer,
     private val orderStatusRepository: OrderStatusRepository,
-    internal val analyticsRepository: AnalyticsRepository,
+    internal val analyticsManager: AnalyticsManager,
     private val initialDropInParams: DropInParams,
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -184,9 +184,12 @@ internal class DropInViewModel(
         )
     }
 
-    fun onCreated() {
-        navigateToInitialDestination()
-        setupAnalytics()
+    fun onCreated(noDialogPresent: Boolean) {
+        if (noDialogPresent) {
+            navigateToInitialDestination()
+        }
+
+        initializeAnalytics()
     }
 
     fun onDropInServiceConnected() {
@@ -230,11 +233,9 @@ internal class DropInViewModel(
         sendEvent(DropInActivityEvent.NavigateTo(destination))
     }
 
-    private fun setupAnalytics() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        viewModelScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics() {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, viewModelScope)
     }
 
     /**
@@ -467,5 +468,10 @@ internal class DropInViewModel(
             adyenLog(AdyenLogLevel.DEBUG) { "sendEvent - ${event::class.simpleName}" }
             eventChannel.send(event)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        analyticsManager.clear(this)
     }
 }

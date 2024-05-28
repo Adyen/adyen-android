@@ -22,6 +22,8 @@ import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -52,6 +54,7 @@ internal class DefaultTwintDelegate(
     override val componentParams: GenericComponentParams,
     private val paymentDataRepository: PaymentDataRepository,
     private val statusRepository: StatusRepository,
+    private val analyticsManager: AnalyticsManager?,
 ) : TwintDelegate, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
@@ -119,6 +122,12 @@ internal class DefaultTwintDelegate(
 
         @Suppress("UNCHECKED_CAST")
         this.action = action as SdkAction<TwintSdkData>
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
 
         initState(action)
         launchAction(sdkData)

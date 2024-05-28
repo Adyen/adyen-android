@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 9/11/2023.
+ * Created by ararat on 4/3/2024.
  */
 
-package com.adyen.checkout.components.core.internal.data.api
+package com.adyen.checkout.components.core.internal.analytics
 
 import androidx.annotation.RestrictTo
 
@@ -14,5 +14,7 @@ import androidx.annotation.RestrictTo
 enum class AnalyticsPlatform(val value: String) {
     ANDROID("android"),
     FLUTTER("flutter"),
+
+    @Suppress("unused")
     REACT_NATIVE("react-native"),
 }
