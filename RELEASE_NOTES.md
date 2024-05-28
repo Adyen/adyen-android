@@ -32,6 +32,7 @@ CheckoutConfiguration(
 - Actions no longer crash when your app uses obfuscation.
 - Drop-in no longer throws an error while handling a 3DS2 challenge on API 66 and below.
 - When the app process dies during action handling, then the state will now be restored and the payment can be continued.
+- Fixed ignoring `setEnableRemovingStoredPaymentMethods` flag set in Drop-in configuration for sessions.
 
 ## Changed
 - Flags are replaced by ISO codes in the phone number inputs (affected payment methods: MB Way, Pay Easy, Convenience Stores Japan, Online Banking Japan and Seven-Eleven).
