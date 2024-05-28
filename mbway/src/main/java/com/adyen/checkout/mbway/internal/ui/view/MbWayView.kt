@@ -19,7 +19,6 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
-import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter

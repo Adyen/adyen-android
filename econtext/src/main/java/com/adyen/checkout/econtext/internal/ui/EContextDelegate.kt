@@ -41,4 +41,6 @@ interface EContextDelegate<
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 
     fun getSupportedCountries(): List<CountryModel>
+
+    fun getInitiallySelectedCountry(): CountryModel?
 }

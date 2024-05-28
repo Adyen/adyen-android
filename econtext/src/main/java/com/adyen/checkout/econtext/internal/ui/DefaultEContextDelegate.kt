@@ -39,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultEContextDelegate<
@@ -206,6 +207,11 @@ internal class DefaultEContextDelegate<
 
     override fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale)
+
+    override fun getInitiallySelectedCountry(): CountryModel? {
+        val countries = getSupportedCountries()
+        return countries.firstOrNull { it.isoCode == Locale.JAPAN.country } ?: countries.firstOrNull()
+    }
 
     override fun isConfirmationRequired(): Boolean {
         return _viewFlow.value is ButtonComponentViewType
