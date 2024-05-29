@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.SdkAction
@@ -19,6 +20,8 @@ import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
@@ -42,14 +45,17 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
-internal class DefaultWeChatDelegate(
+internal class DefaultWeChatDelegate
+@Suppress("LongParameterList")
+constructor(
     private val observerRepository: ActionObserverRepository,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val iwxApi: IWXAPI,
     private val payRequestGenerator: WeChatRequestGenerator<*>,
     private val paymentDataRepository: PaymentDataRepository,
     private val analyticsManager: AnalyticsManager?,
-) : WeChatDelegate {
+) : WeChatDelegate, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -59,8 +65,15 @@ internal class DefaultWeChatDelegate(
 
     override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(WeChatComponentViewType)
 
+    private var action: SdkAction<WeChatPaySdkData>? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
-        // no ops
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        action?.let { initState(it) }
     }
 
     override fun observe(
@@ -93,7 +106,7 @@ internal class DefaultWeChatDelegate(
     @VisibleForTesting
     internal fun onResponse(baseResponse: BaseResp) {
         parseResult(baseResponse)?.let { response ->
-            detailsChannel.trySend(createActionComponentData(response))
+            emitDetails(response)
         }
     }
 
@@ -102,7 +115,7 @@ internal class DefaultWeChatDelegate(
         try {
             result.put(RESULT_CODE, baseResp.errCode)
         } catch (e: JSONException) {
-            exceptionChannel.trySend(CheckoutException("Error parsing result.", e))
+            emitError(CheckoutException("Error parsing result.", e))
             return null
         }
         return result
@@ -116,26 +129,18 @@ internal class DefaultWeChatDelegate(
     override fun handleAction(action: Action, activity: Activity) {
         val sdkAction = (action as? SdkAction<*>)
         if (sdkAction == null) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
-            return
-        }
-
-        val activityName = activity.javaClass.name
-        adyenLog(AdyenLogLevel.DEBUG) { "handleAction: activity - $activityName" }
-
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
-        if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
-            exceptionChannel.trySend(ComponentException("Payment data is null"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
         val sdkData = action.sdkData
         if (sdkData == null || sdkData !is WeChatPaySdkData) {
-            exceptionChannel.trySend(ComponentException("SDK Data is null"))
+            emitError(ComponentException("SDK Data is null"))
             return
         }
+
+        @Suppress("UNCHECKED_CAST")
+        this.action = action as SdkAction<WeChatPaySdkData>
 
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
@@ -143,11 +148,28 @@ internal class DefaultWeChatDelegate(
         )
         analyticsManager?.trackEvent(event)
 
+        initState(action)
+        launchAction(sdkData, activity)
+    }
+
+    private fun initState(action: SdkAction<WeChatPaySdkData>) {
+        val paymentData = action.paymentData
+        paymentDataRepository.paymentData = paymentData
+        if (paymentData == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            emitError(ComponentException("Payment data is null"))
+        }
+    }
+
+    private fun launchAction(sdkData: WeChatPaySdkData, activity: Activity) {
+        val activityName = activity.javaClass.name
+
+        adyenLog(AdyenLogLevel.DEBUG) { "handleAction: activity - $activityName" }
+
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
 
         if (isWeChatNotInitiated) {
-            exceptionChannel.trySend(ComponentException("Failed to initialize WeChat app"))
-            return
+            emitError(ComponentException("Failed to initialize WeChat app"))
         }
     }
 
@@ -166,7 +188,21 @@ internal class DefaultWeChatDelegate(
     }
 
     override fun onError(e: CheckoutException) {
+        emitError(e)
+    }
+
+    private fun emitError(e: CheckoutException) {
         exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun emitDetails(details: JSONObject) {
+        detailsChannel.trySend(createActionComponentData(details))
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
     }
 
     override fun onCleared() {
@@ -175,5 +211,8 @@ internal class DefaultWeChatDelegate(
 
     companion object {
         private const val RESULT_CODE = "resultCode"
+
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }

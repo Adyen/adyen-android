@@ -90,6 +90,7 @@ constructor(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             iwxApi = iwxApi,
             payRequestGenerator = requestGenerator,
