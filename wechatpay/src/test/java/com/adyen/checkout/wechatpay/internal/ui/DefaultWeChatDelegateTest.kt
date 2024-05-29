@@ -33,6 +33,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -61,22 +62,8 @@ internal class DefaultWeChatDelegateTest(
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
-        val configuration = CheckoutConfiguration(
-            Environment.TEST,
-            TEST_CLIENT_KEY,
-        ) {
-            weChatPayAction()
-        }
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
-        delegate = DefaultWeChatDelegate(
-            observerRepository = ActionObserverRepository(),
-            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            iwxApi = iwxApi,
-            payRequestGenerator = weChatRequestGenerator,
-            paymentDataRepository = paymentDataRepository,
-            analyticsManager = analyticsManager,
-        )
+        delegate = createDelegate()
     }
 
     @Test
@@ -185,6 +172,73 @@ internal class DefaultWeChatDelegateTest(
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+    }
+
+    @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultWeChatDelegate.ACTION_KEY,
+                SdkAction(paymentMethodType = "test", paymentData = "paymentData", sdkData = WeChatPaySdkData()),
+            )
+        }
+        delegate = createDelegate(savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertEquals("paymentData", paymentDataRepository.paymentData)
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        whenever(iwxApi.sendReq(anyOrNull())) doReturn true
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.handleAction(
+            SdkAction(paymentMethodType = "test", paymentData = "paymentData", sdkData = WeChatPaySdkData()),
+            Activity(),
+        )
+
+        delegate.onResponse(PayResp().apply { errCode = 1 })
+
+        assertNull(savedStateHandle[DefaultWeChatDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.handleAction(
+            SdkAction(paymentMethodType = "test", paymentData = null, sdkData = WeChatPaySdkData()),
+            Activity(),
+        )
+
+        assertNull(savedStateHandle[DefaultWeChatDelegate.ACTION_KEY])
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    ): DefaultWeChatDelegate {
+        val configuration = CheckoutConfiguration(
+            Environment.TEST,
+            TEST_CLIENT_KEY,
+        ) {
+            weChatPayAction()
+        }
+
+        return DefaultWeChatDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            iwxApi = iwxApi,
+            payRequestGenerator = weChatRequestGenerator,
+            paymentDataRepository = paymentDataRepository,
+            analyticsManager = analyticsManager,
+        )
     }
 
     companion object {
