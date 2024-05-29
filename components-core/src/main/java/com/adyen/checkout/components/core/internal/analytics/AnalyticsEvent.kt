@@ -32,6 +32,7 @@ sealed interface AnalyticsEvent {
         val issuer: String? = null,
         val validationErrorCode: String? = null,
         val validationErrorMessage: String? = null,
+        val configData: Map<String, String>? = null,
     ) : AnalyticsEvent {
         enum class Type(val value: String) {
             DISPLAYED("displayed"),

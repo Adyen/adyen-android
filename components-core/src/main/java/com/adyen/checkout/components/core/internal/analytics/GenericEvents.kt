@@ -20,11 +20,13 @@ object GenericEvents {
         component: String,
         isStoredPaymentMethod: Boolean? = null,
         brand: String? = null,
+        configData: Map<String, String>? = null,
     ) = AnalyticsEvent.Info(
         component = component,
         type = AnalyticsEvent.Info.Type.RENDERED,
         isStoredPaymentMethod = isStoredPaymentMethod,
         brand = brand,
+        configData = configData,
     )
 
     fun displayed(

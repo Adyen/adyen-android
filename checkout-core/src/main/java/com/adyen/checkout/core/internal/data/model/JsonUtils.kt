@@ -90,6 +90,27 @@ inline fun <reified T : ModelObject> JSONObject.jsonToMap(
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.getMapOrNull(key: String): Map<String, String>? {
+    return if (has(key)) getJSONObject(key).toMap() else null
+}
+
+private fun JSONObject.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+
+    val iterator = keys()
+    while(iterator.hasNext()) {
+        val key = iterator.next()
+        val value = this[key]
+
+        if (value is String) {
+            map[key] = value
+        }
+    }
+
+    return map
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object JsonUtils {
 
     /**
