@@ -22,7 +22,6 @@ import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_T
 import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_TYPE_MANUAL_INPUT
 import com.adyen.checkout.upi.internal.ui.view.UPIAppsAdapter.UPIViewType.VIEW_TYPE_PAYMENT_APP
 
-// TODO: Check this adapter for LTR languages, like Arabic
 internal class UPIAppsAdapter(
     private val context: Context,
     private val localizedContext: Context,

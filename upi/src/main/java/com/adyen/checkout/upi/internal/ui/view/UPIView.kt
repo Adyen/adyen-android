@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
 
+@Suppress("TooManyFunctions")
 internal class UPIView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
