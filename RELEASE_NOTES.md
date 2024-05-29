@@ -37,6 +37,16 @@ CheckoutConfiguration(
 - The phone number input field in the payment form now shows ISO codes instead of flags.
 - The UI elements that were previously labelled **Country** are now **Country/Region**.
 - Dependency versions:
-  | Name                                                                                                   | Version                       |
-  |--------------------------------------------------------------------------------------------------------|-------------------------------|
-  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)                                                                                      | **2.2.18**                    |
+  | Name                                                                                                         | Version                       |
+  |--------------------------------------------------------------------------------------------------------------|-------------------------------|
+  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)                                | **2.2.18**                    |
+  | [Android Gradle plugin](https://developer.android.com/build/releases/gradle-plugin)                          | **8.3.2**                     |
+  | [AndroidX Browser](https://developer.android.com/jetpack/androidx/releases/browser#1.8.0)                    | **1.8.0**                     |
+  | [AndroidX Compose Activity](https://developer.android.com/jetpack/androidx/releases/activity#1.9.0)          | **1.9.0**                     |
+  | [AndroidX Compose BoM](https://developer.android.com/develop/ui/compose/bom/bom-mapping)                     | **2024.04.01**                |
+  | [AndroidX Compose Compiler](https://developer.android.com/jetpack/androidx/releases/compose-compiler#1.5.12) | **1.5.12**                    |
+  | [AndroidX Lifecycle](https://developer.android.com/jetpack/androidx/releases/lifecycle#2.7.0)                | **2.7.0**                     |
+  | [Google Pay](https://developers.google.com/pay/api/android/support/release-notes#feb-24)                     | **19.3.0**                    |
+  | [Google Pay Compose Button](https://github.com/google-pay/compose-pay-button/releases/tag/v1.0.0)            | **1.0.0**                     |
+  | [Kotlin](https://github.com/JetBrains/kotlin/releases/tag/v1.9.24)                                           | **1.9.24**                    |
+  | [Kotlin coroutines](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.8.0)                         | **1.8.0**                     |
