@@ -9,9 +9,8 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## New
-- For external redirects launched in a Custom Tab, you can now [customize the toolbar and navigation bar colors](docs/UI_CUSTOMIZATION.md#styling-custom-tabs) of the Custom Tab.
-- Payment method **twint** now supports a native flow, eliminating the need to redirect through the browser.
-You can change this behaviour by using the following configuration:
+- For external redirects, you can now [customize the colors of the toolbar and navigation bar](docs/UI_CUSTOMIZATION.md#styling-custom-tabs) displayed in [Custom Tabs](https://developer.chrome.com/docs/android/custom-tabs).
+- TWINT is now supported with a native flow, and you no longer need to redirect shoppers through the browser. To use the redirect flow, set the following configuration:
 ```kotlin
 CheckoutConfiguration(
     environment = environment,
@@ -26,18 +25,18 @@ CheckoutConfiguration(
 ```
 
 ## Fixed
-- Fixed various memory leaks.
-- Drop-in no longer overrides the log level in case of debug builds.
-- Address Lookup not displaying validation error on Card Component when no address has been selected.
+- Fixed some memory leaks.
+- In case of a debug build, Drop-in no longer overrides the log level.
+- For cards, when a shopper does not select an address, the address lookup function now displays a validation error.
 - Actions no longer crash when your app uses obfuscation.
-- Drop-in no longer throws an error while handling a 3DS2 challenge on API 66 and below.
-- When the app process dies during action handling, then the state will now be restored and the payment can be continued.
-- Fixed ignoring `setEnableRemovingStoredPaymentMethods` flag set in Drop-in configuration for sessions.
+- When handling a 3D Secure 2 challenge using Checkout API v66 or earlier, Drop-in no longer throws an error.
+- If the app process unexpectedly terminates when handling actions, the state is now restored and you can proceed with the payment flow.
+- For `/sessions`, fixed an issue where the `setEnableRemovingStoredPaymentMethods` flag in the [Drop-in configuration](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Drop-in#3-optional-add-a-configuration-object) was ignored.
 
 ## Changed
-- Flags are replaced by ISO codes in the phone number inputs (affected payment methods: MB Way, Pay Easy, Convenience Stores Japan, Online Banking Japan and Seven-Eleven).
-- Strings containing "country" are changed to "country/region".
+- The phone number input field in the payment form now shows ISO codes instead of flags.
+- The UI elements that were previously labelled **Country** are now **Country/Region**.
 - Dependency versions:
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
-  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)                          | **2.2.18**                    |
+  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.18)                                                                                      | **2.2.18**                    |
