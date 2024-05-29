@@ -91,6 +91,7 @@ constructor(
 
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
