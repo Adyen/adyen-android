@@ -22,7 +22,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 internal class DefaultAnalyticsManager(
@@ -41,8 +40,6 @@ internal class DefaultAnalyticsManager(
     private var timerJob: Job? = null
 
     private var ownerReference: String? = null
-
-    private var storedEventCount: AtomicInteger = AtomicInteger(0)
 
     override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
         if (isInitialized) {
@@ -86,7 +83,7 @@ internal class DefaultAnalyticsManager(
                     startTimer()
                 }
             }.fold(
-                onSuccess = { storedEventCount.incrementAndGet() },
+                onSuccess = { /* Not necessary */ },
                 onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" } },
             )
         }
@@ -116,7 +113,7 @@ internal class DefaultAnalyticsManager(
         runSuspendCatching {
             analyticsRepository.sendEvents(checkoutAttemptId)
         }.fold(
-            onSuccess = { storedEventCount.set(0) },
+            onSuccess = { /* Not necessary */ },
             onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" } },
         )
     }
@@ -133,7 +130,7 @@ internal class DefaultAnalyticsManager(
             return
         }
 
-        adyenLog(AdyenLogLevel.DEBUG) { "Clear called while there are ${storedEventCount.get()} events stored." }
+        adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
         _coroutineScope = null
         checkoutAttemptId = null
