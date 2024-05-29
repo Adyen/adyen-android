@@ -12,6 +12,7 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.getLongOrNull
+import com.adyen.checkout.core.internal.data.model.getMapOrNull
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -29,6 +30,7 @@ internal data class AnalyticsTrackInfo(
     val issuer: String?,
     val validationErrorCode: String?,
     val validationErrorMessage: String?,
+    val configData: Map<String, String>?,
 ) : ModelObject() {
 
     companion object {
@@ -42,6 +44,7 @@ internal data class AnalyticsTrackInfo(
         private const val ISSUER = "issuer"
         private const val VALIDATION_ERROR_CODE = "validationErrorCode"
         private const val VALIDATION_ERROR_MESSAGE = "validationErrorMessage"
+        private const val CONFIG_DATA = "configData"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackInfo> = object : Serializer<AnalyticsTrackInfo> {
@@ -58,6 +61,7 @@ internal data class AnalyticsTrackInfo(
                         putOpt(ISSUER, modelObject.issuer)
                         putOpt(VALIDATION_ERROR_CODE, modelObject.validationErrorCode)
                         putOpt(VALIDATION_ERROR_MESSAGE, modelObject.validationErrorMessage)
+                        putOpt(CONFIG_DATA, modelObject.configData?.let { JSONObject(it) })
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsTrackInfo::class.java, e)
@@ -78,6 +82,7 @@ internal data class AnalyticsTrackInfo(
                             issuer = getStringOrNull(ISSUER),
                             validationErrorCode = getStringOrNull(VALIDATION_ERROR_CODE),
                             validationErrorMessage = getStringOrNull(VALIDATION_ERROR_MESSAGE),
+                            configData = getMapOrNull(CONFIG_DATA),
                         )
                     }
                 } catch (e: JSONException) {
