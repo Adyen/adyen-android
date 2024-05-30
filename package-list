@@ -55,6 +55,7 @@ module:components-core
 com.adyen.checkout.components.core
 com.adyen.checkout.components.core.action
 com.adyen.checkout.components.core.internal
+com.adyen.checkout.components.core.internal.analytics
 com.adyen.checkout.components.core.internal.data.api
 com.adyen.checkout.components.core.internal.data.model
 com.adyen.checkout.components.core.internal.provider
@@ -165,6 +166,10 @@ com.adyen.checkout.sessions.core.internal.ui.model
 module:seven-eleven
 com.adyen.checkout.seveneleven
 com.adyen.checkout.seveneleven.internal.provider
+module:twint
+com.adyen.checkout.twint
+com.adyen.checkout.twint.internal.provider
+com.adyen.checkout.twint.internal.ui
 module:ui-core
 com.adyen.checkout.ui.core
 com.adyen.checkout.ui.core.internal
