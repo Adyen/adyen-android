@@ -26,6 +26,7 @@ import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class SepaView @JvmOverloads constructor(
     context: Context,
@@ -48,7 +49,7 @@ internal class SepaView @JvmOverloads constructor(
     // Regular View constructor
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 

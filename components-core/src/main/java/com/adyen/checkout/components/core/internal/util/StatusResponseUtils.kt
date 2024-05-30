@@ -18,7 +18,6 @@ object StatusResponseUtils {
     const val RESULT_ERROR = "error"
     const val RESULT_CANCELED = "canceled"
 
-    @JvmStatic
     fun isFinalResult(statusResponse: StatusResponse): Boolean {
         return RESULT_PENDING != statusResponse.resultCode
     }

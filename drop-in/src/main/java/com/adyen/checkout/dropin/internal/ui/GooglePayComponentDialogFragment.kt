@@ -76,7 +76,7 @@ internal class GooglePayComponentDialogFragment :
                 checkoutConfiguration = dropInViewModel.checkoutConfiguration,
                 dropInOverrideParams = dropInViewModel.getDropInOverrideParams(),
                 componentCallback = this,
-                analyticsRepository = dropInViewModel.analyticsRepository,
+                analyticsManager = dropInViewModel.analyticsManager,
                 onRedirect = protocol::onRedirect,
             ) as GooglePayComponent
         } catch (e: CheckoutException) {

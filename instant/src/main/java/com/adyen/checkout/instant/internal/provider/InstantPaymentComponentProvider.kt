@@ -23,15 +23,12 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,6 +38,7 @@ import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.instant.internal.ui.DefaultInstantPaymentDelegate
+import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
 import com.adyen.checkout.instant.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
@@ -56,7 +54,7 @@ class InstantPaymentComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: AnalyticsRepository? = null,
+    private val analyticsManager: AnalyticsManager? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -86,23 +84,19 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = InstantComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
                 componentSessionParams = null,
+                paymentMethod = paymentMethod,
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val instantPaymentDelegate = DefaultInstantPaymentDelegate(
@@ -110,14 +104,15 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             InstantPaymentComponent(
                 instantPaymentDelegate = instantPaymentDelegate,
@@ -174,26 +169,21 @@ constructor(
         assertSupported(paymentMethod)
 
         val genericFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = InstantComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
                 componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                paymentMethod = paymentMethod,
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val instantPaymentDelegate = DefaultInstantPaymentDelegate(
@@ -201,14 +191,15 @@ constructor(
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
             )
 
-            val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = application,
-            )
+            val genericActionDelegate =
+                GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
+                    checkoutConfiguration = checkoutConfiguration,
+                    savedStateHandle = savedStateHandle,
+                    application = application,
+                )
 
             val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
                 savedStateHandle = savedStateHandle,

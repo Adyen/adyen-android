@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.await.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.action.QrCodeAction
@@ -14,14 +15,17 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
+import com.adyen.checkout.components.core.action.TwintSdkData
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
+import com.adyen.checkout.twint.internal.ui.TwintDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -44,12 +48,18 @@ internal class ActionDelegateProviderTest(
     @Mock private val localeProvider: LocaleProvider
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var actionDelegateProvider: ActionDelegateProvider
 
     @BeforeEach
     fun setup() {
         whenever(localeProvider.getLocale(any())) doReturn Locale.US
-        actionDelegateProvider = ActionDelegateProvider(null, localeProvider)
+        analyticsManager = TestAnalyticsManager()
+        actionDelegateProvider = ActionDelegateProvider(
+            analyticsManager = analyticsManager,
+            dropInOverrideParams = null,
+            localeProvider = localeProvider,
+        )
     }
 
     @ParameterizedTest
@@ -74,6 +84,20 @@ internal class ActionDelegateProviderTest(
         }
     }
 
+    @Test
+    fun `when sdk action  with unknown paymentMethodType is used, then an error will be thrown`() {
+        val configuration = CheckoutConfiguration(Environment.TEST, "")
+
+        assertThrows<CheckoutException> {
+            actionDelegateProvider.getDelegate(
+                action = SdkAction<TwintSdkData>(paymentMethodType = "test"),
+                checkoutConfiguration = configuration,
+                savedStateHandle = SavedStateHandle(),
+                application = Application(),
+            )
+        }
+    }
+
     companion object {
 
         @JvmStatic
@@ -85,7 +109,11 @@ internal class ActionDelegateProviderTest(
             arguments(Threeds2ChallengeAction(), Adyen3DS2Delegate::class.java),
             arguments(Threeds2FingerprintAction(), Adyen3DS2Delegate::class.java),
             arguments(VoucherAction(), VoucherDelegate::class.java),
-            arguments(SdkAction<WeChatPaySdkData>(), WeChatDelegate::class.java),
+            arguments(
+                SdkAction<WeChatPaySdkData>(paymentMethodType = PaymentMethodTypes.WECHAT_PAY_SDK),
+                WeChatDelegate::class.java,
+            ),
+            arguments(SdkAction<TwintSdkData>(paymentMethodType = PaymentMethodTypes.TWINT), TwintDelegate::class.java),
         )
     }
 

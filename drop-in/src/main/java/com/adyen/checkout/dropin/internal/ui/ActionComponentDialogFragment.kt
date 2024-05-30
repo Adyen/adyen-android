@@ -38,6 +38,7 @@ import com.adyen.checkout.dropin.internal.util.arguments
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @SuppressWarnings("TooManyFunctions")
 internal class ActionComponentDialogFragment :
@@ -83,7 +84,7 @@ internal class ActionComponentDialogFragment :
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply {
-        window?.setWindowAnimations(R.style.AdyenCheckout_BottomSheet_NoWindowEnterDialogAnimation)
+        window?.setWindowAnimations(UICoreR.style.AdyenCheckout_BottomSheet_NoWindowEnterDialogAnimation)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,8 +94,9 @@ internal class ActionComponentDialogFragment :
         binding.header.isVisible = false
 
         try {
+            val analyticsManager = dropInViewModel.analyticsManager
             val dropInOverrideParams = dropInViewModel.getDropInOverrideParams()
-            actionComponent = GenericActionComponentProvider(dropInOverrideParams).get(
+            actionComponent = GenericActionComponentProvider(analyticsManager, dropInOverrideParams).get(
                 fragment = this,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = this,
@@ -134,7 +136,7 @@ internal class ActionComponentDialogFragment :
                 adyenLog(AdyenLogLevel.DEBUG) { "Permission $requiredPermission requested" }
                 requestPermissionLauncher.launch(arrayOf(requiredPermission))
             }
-            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(UICoreR.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
@@ -144,11 +146,15 @@ internal class ActionComponentDialogFragment :
             .onEach {
                 when (it) {
                     ActionComponentFragmentEvent.HANDLE_ACTION -> {
-                        actionComponent.handleAction(action, requireActivity())
+                        handleAction(action)
                     }
                 }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    fun handleAction(action: Action) {
+        actionComponent.handleAction(action, requireActivity())
     }
 
     override fun onBackPressed(): Boolean {
@@ -214,21 +220,19 @@ internal class ActionComponentDialogFragment :
     }
 
     companion object {
-        const val ACTION = "ACTION"
-        const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
+        private const val ACTION = "ACTION"
+        private const val CHECKOUT_CONFIGURATION = "CHECKOUT_CONFIGURATION"
 
         fun newInstance(
             action: Action,
             checkoutConfiguration: CheckoutConfiguration,
         ): ActionComponentDialogFragment {
-            val args = Bundle()
-            args.putParcelable(ACTION, action)
-            args.putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
-
-            val componentDialogFragment = ActionComponentDialogFragment()
-            componentDialogFragment.arguments = args
-
-            return componentDialogFragment
+            return ActionComponentDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelable(ACTION, action)
+                    putParcelable(CHECKOUT_CONFIGURATION, checkoutConfiguration)
+                }
+            }
         }
     }
 }

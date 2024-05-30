@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">집 전화번호</string>
     <string name="checkout_address_form_apartment_suite_hint">아파트/건물</string>
     <string name="checkout_address_form_city_hint">시</string>
-    <string name="checkout_address_form_country_hint">국가</string>
+    <string name="checkout_address_form_country_hint">국가/지역</string>
     <string name="checkout_address_form_states_hint">주</string>
     <string name="checkout_address_postal_code_hint">우편번호</string>
     <string name="checkout_address_form_zip_code_hint">우편번호</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">집 전화번호(선택 사항)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">아파트/건물(선택 사항)</string>
     <string name="checkout_address_form_city_hint_optional"> 도시(선택 사항)</string>
-    <string name="checkout_address_form_country_hint_optional">국가(선택 사항)</string>
+    <string name="checkout_address_form_country_hint_optional">국가/지역(선택 사항)</string>
     <string name="checkout_address_form_states_hint_optional">주(선택 사항)</string>
     <string name="checkout_address_postal_code_hint_optional">우편번호(선택 사항)</string>
     <string name="checkout_address_form_zip_code_hint_optional">우편 번호(선택 사항)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">\'%s\'와(과) 일치하는 항목이 없습니다. 다시 시도하거나 #수동 주소 입력#을 사용하세요.</string>
     <string name="checkout_address_lookup_enter_manually">수동으로 주소 입력</string>
     <string name="checkout_address_lookup_submit">이 주소 사용</string>
+    <string name="checkout_address_lookup_validation_empty">주소 필수</string>
 
 </resources>

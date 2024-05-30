@@ -42,7 +42,7 @@ data class AddressOutputData(
             postalCode.value,
             city.value,
             stateOrProvince.value,
-            country.value
+            country.value,
         ).filter { it.isNotBlank() }.joinToString(" ")
     }
 }

@@ -256,6 +256,6 @@ object DropIn {
         } else {
             AdyenLogLevel.NONE
         }
-        AdyenLogger.setLogLevel(logLevel)
+        AdyenLogger.setInitialLogLevel(logLevel)
     }
 }

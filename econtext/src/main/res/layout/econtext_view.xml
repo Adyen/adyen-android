@@ -9,7 +9,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
@@ -22,6 +22,7 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_firstName"
             style="@style/AdyenCheckout.EContext.FirstNameInput" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,6 +34,7 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_lastName"
             style="@style/AdyenCheckout.EContext.LastNameInput" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -44,14 +46,15 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_emailAddress"
             style="@style/AdyenCheckout.EContext.ShopperEmailInput" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="DisableBaselineAlignment">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_country"
@@ -64,9 +67,9 @@
                 android:id="@+id/autoCompleteTextView_country"
                 style="@style/AdyenCheckout.DropdownTextInputEditText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:dropDownAnchor="@id/layout_container"
-                android:minEms="7" />
+                android:layout_height="match_parent"
+                android:dropDownAnchor="@id/layout_container" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,6 +83,8 @@
                 android:id="@+id/editText_mobileNumber"
                 style="@style/AdyenCheckout.EContext.PhoneNumberInput"
                 android:autofillHints="phoneNational" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 </merge>

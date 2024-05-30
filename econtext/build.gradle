@@ -48,7 +48,9 @@ dependencies {
     //Tests
     testImplementation project(':3ds2')
     testImplementation project(':test-core')
+    testImplementation project(':twint')
     testImplementation project(':wechatpay')
+    testImplementation testFixtures(project(':components-core'))
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
     testImplementation testLibraries.mockito

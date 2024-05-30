@@ -15,7 +15,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -45,7 +46,6 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.doThrow
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -54,12 +54,12 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class DefaultOnlineBankingDelegateTest(
-    @Mock private val analyticsRepository: AnalyticsRepository,
     @Mock private val context: Context,
     @Mock private val pdfOpener: PdfOpener,
     @Mock private val submitHandler: SubmitHandler<TestOnlineBankingComponentState>,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultOnlineBankingDelegate<
         TestOnlineBankingPaymentMethod,
         TestOnlineBankingComponentState,
@@ -67,6 +67,7 @@ internal class DefaultOnlineBankingDelegateTest(
 
     @BeforeEach
     fun setup() {
+        analyticsManager = TestAnalyticsManager()
         delegate = createOnlineBankingDelegate()
     }
 
@@ -177,12 +178,6 @@ internal class DefaultOnlineBankingDelegateTest(
         }
     }
 
-    @Test
-    fun `when delegate is initialized then analytics event is sent`() = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        verify(analyticsRepository).setupAnalytics()
-    }
-
     @Nested
     inner class SubmitButtonVisibilityTest {
 
@@ -240,8 +235,31 @@ internal class DefaultOnlineBankingDelegateTest(
     inner class AnalyticsTest {
 
         @Test
+        fun `when delegate is initialized then analytics manager is initialized`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called, then submit event is tracked`() {
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
-            whenever(analyticsRepository.getCheckoutAttemptId()) doReturn TEST_CHECKOUT_ATTEMPT_ID
+            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
@@ -253,6 +271,13 @@ internal class DefaultOnlineBankingDelegateTest(
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.onCleared()
+
+            analyticsManager.assertIsCleared()
+        }
     }
 
     private fun createOnlineBankingDelegate(
@@ -261,9 +286,9 @@ internal class DefaultOnlineBankingDelegateTest(
     ) = DefaultOnlineBankingDelegate(
         observerRepository = PaymentObserverRepository(),
         pdfOpener = pdfOpener,
-        paymentMethod = PaymentMethod(),
+        paymentMethod = PaymentMethod(type = TEST_PAYMENT_METHOD_TYPE),
         order = order,
-        analyticsRepository = analyticsRepository,
+        analyticsManager = analyticsManager,
         componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(
                 checkoutConfiguration = configuration,
@@ -305,6 +330,7 @@ internal class DefaultOnlineBankingDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun amountSource() = listOf(

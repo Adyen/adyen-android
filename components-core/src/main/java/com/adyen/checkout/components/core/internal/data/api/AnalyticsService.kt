@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 24/11/2022.
+ * Created by ararat on 4/3/2024.
  */
 
 package com.adyen.checkout.components.core.internal.data.api
@@ -11,8 +11,10 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -33,6 +35,20 @@ class AnalyticsService(
             body = request,
             requestSerializer = AnalyticsSetupRequest.SERIALIZER,
             responseSerializer = AnalyticsSetupResponse.SERIALIZER,
+        )
+    }
+
+    internal suspend fun sendEvents(
+        request: AnalyticsTrackRequest,
+        checkoutAttemptId: String,
+        clientKey: String,
+    ): EmptyResponse = withContext(coroutineDispatcher) {
+        httpClient.post(
+            path = "v3/analytics/$checkoutAttemptId",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = AnalyticsTrackRequest.SERIALIZER,
+            responseSerializer = EmptyResponse.SERIALIZER,
         )
     }
 }

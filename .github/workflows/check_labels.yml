@@ -1,0 +1,48 @@
+name: Check Labels
+
+# Every PR should have a label and some labels should include an update to the release notes
+on:
+  pull_request:
+    branches-ignore:
+      - 'main'
+    types: [ synchronize, labeled, unlabeled ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  labels-check:
+    # https://github.com/actions/virtual-environments/
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check PR labels
+        run: |
+          all_pr_labels_json=$(cat <<EOF
+          ${{ toJson(github.event.pull_request.labels.*.name) }}
+          EOF
+          )
+          all_pr_labels=$(jq -r '.[]' <<< "$all_pr_labels_json")
+          echo "PR labels: $all_pr_labels"
+
+          if [[ "${all_pr_labels[@]}" =~ 'Breaking change' || "${all_pr_labels[@]}" =~ 'Feature' || "${all_pr_labels[@]}" =~ 'Fix' ]]
+          then
+            echo "Checking if release notes were added..."
+            git fetch origin develop --depth 1
+            if [ -n "$(git diff origin/develop RELEASE_NOTES.md)" ]
+            then
+              echo "Release notes were updated."
+              exit 0
+            else
+              echo "::error::Add release notes for your PR by updating RELEASE_NOTES.md"
+              exit 1
+            fi
+          elif [[ "${all_pr_labels[@]}" =~ 'Dependencies' || "${all_pr_labels[@]}" =~ 'Chore' ]]
+            then
+              echo "No extra actions needed for used labels"
+              exit 0
+            fi
+          echo "::error::You must add a valid label to this PR"
+          exit 1

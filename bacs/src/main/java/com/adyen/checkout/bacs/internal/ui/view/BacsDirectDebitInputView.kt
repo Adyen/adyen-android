@@ -35,6 +35,7 @@ import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class BacsDirectDebitInputView @JvmOverloads constructor(
@@ -58,7 +59,7 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 

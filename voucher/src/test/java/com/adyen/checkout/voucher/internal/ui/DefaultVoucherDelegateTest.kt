@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -20,11 +21,14 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -37,7 +41,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -63,20 +70,13 @@ internal class DefaultVoucherDelegateTest(
     @Mock private val imageSaver: ImageSaver,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultVoucherDelegate
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
-            voucher()
-        }
-        delegate = DefaultVoucherDelegate(
-            observerRepository,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            pdfOpener,
-            imageSaver,
-        )
+        analyticsManager = TestAnalyticsManager()
+        delegate = createDelegate()
     }
 
     @Test
@@ -299,10 +299,80 @@ internal class DefaultVoucherDelegateTest(
     }
 
     @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultVoucherDelegate.ACTION_KEY,
+                VoucherAction(paymentMethodType = PaymentMethodTypes.MULTIBANCO, paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle)
+        val viewFlow = delegate.viewFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNotNull(viewFlow.latestValue)
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultVoucherDelegate.ACTION_KEY,
+                VoucherAction(paymentMethodType = "not a voucher", paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultVoucherDelegate.ACTION_KEY])
+    }
+
+    @Test
     fun `when onCleared is called, observers are removed`() {
         delegate.onCleared()
 
         verify(observerRepository).removeObservers()
+    }
+
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = VoucherAction(
+                paymentMethodType = PaymentMethodTypes.BACS,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, activity)
+
+            val expectedEvent = GenericEvents.action(
+                component = PaymentMethodTypes.BACS,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ): DefaultVoucherDelegate {
+        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY) {
+            voucher()
+        }
+
+        return DefaultVoucherDelegate(
+            observerRepository = observerRepository,
+            savedStateHandle = savedStateHandle,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            pdfOpener = pdfOpener,
+            imageSaver = imageSaver,
+            analyticsManager = analyticsManager,
+        )
     }
 
     private fun createTestAction(
@@ -318,6 +388,7 @@ internal class DefaultVoucherDelegateTest(
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun viewTypeSource() = listOf(

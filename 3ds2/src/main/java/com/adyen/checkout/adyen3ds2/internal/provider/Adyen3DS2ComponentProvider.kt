@@ -33,10 +33,10 @@ import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
-import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
@@ -48,6 +48,7 @@ import kotlinx.coroutines.Dispatchers
 class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<Adyen3DS2Component, Adyen3DS2Configuration, Adyen3DS2Delegate> {
@@ -66,12 +67,14 @@ constructor(
 
             Adyen3DS2Component(
                 delegate = adyen3DS2Delegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, threeDS2Factory)[key, Adyen3DS2Component::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
@@ -103,8 +106,8 @@ constructor(
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             coroutineDispatcher = Dispatchers.Default,
-            base64Encoder = AndroidBase64Encoder(),
             application = application,
+            analyticsManager = analyticsManager,
         )
     }
 

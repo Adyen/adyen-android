@@ -28,6 +28,7 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class PayByBankView @JvmOverloads constructor(
     context: Context,
@@ -45,7 +46,7 @@ internal class PayByBankView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(0, padding, 0, 0)
     }
 

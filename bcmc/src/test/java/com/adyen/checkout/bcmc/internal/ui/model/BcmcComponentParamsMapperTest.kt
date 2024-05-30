@@ -108,7 +108,7 @@ internal class BcmcComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "CAD",
@@ -117,6 +117,29 @@ internal class BcmcComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when setSubmitButtonVisible is set to false in bcmc configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            bcmc {
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = bcmcComponentParamsMapper.mapToParams(
+            configuration,
+            DEVICE_LOCALE,
+            dropInOverrideParams,
+            null,
+            PaymentMethod(),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
     }
 
     @ParameterizedTest
@@ -266,7 +289,7 @@ internal class BcmcComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,

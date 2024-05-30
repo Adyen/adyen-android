@@ -28,6 +28,7 @@ import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal open class SimpleVoucherView @JvmOverloads constructor(
     context: Context,
@@ -49,7 +50,7 @@ internal open class SimpleVoucherView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         this.setPadding(padding, padding, padding, padding)
     }
 

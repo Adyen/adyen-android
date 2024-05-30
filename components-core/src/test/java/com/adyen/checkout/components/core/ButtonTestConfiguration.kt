@@ -27,7 +27,7 @@ class ButtonTestConfiguration private constructor(
 
         private var isSubmitButtonVisible: Boolean? = null
 
-        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): ButtonConfigurationBuilder {
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
         }

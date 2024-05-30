@@ -64,6 +64,7 @@ data class SdkAction<SdkDataT : SdkData>(
                 }
                 @Suppress("UNCHECKED_CAST")
                 return when (paymentMethodType) {
+                    PaymentMethodTypes.TWINT -> TwintSdkData.SERIALIZER as Serializer<SdkData>
                     PaymentMethodTypes.WECHAT_PAY_SDK -> WeChatPaySdkData.SERIALIZER as Serializer<SdkData>
                     else -> throw CheckoutException("sdkData not found for type paymentMethodType - $paymentMethodType")
                 }

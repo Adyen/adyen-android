@@ -83,6 +83,7 @@ internal class CardComponentParamsMapper(
         return mapToParams(
             commonComponentParamsMapperData.commonComponentParams,
             commonComponentParamsMapperData.sessionParams,
+            dropInOverrideParams,
             cardConfiguration,
             paymentMethod,
         )
@@ -91,13 +92,15 @@ internal class CardComponentParamsMapper(
     private fun mapToParams(
         commonComponentParams: CommonComponentParams,
         sessionParams: SessionParams?,
+        dropInOverrideParams: DropInOverrideParams?,
         cardConfiguration: CardConfiguration?,
         paymentMethod: PaymentMethod?,
     ): CardComponentParams {
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
             isHolderNameRequired = cardConfiguration?.isHolderNameRequired ?: false,
-            isSubmitButtonVisible = cardConfiguration?.isSubmitButtonVisible ?: true,
+            isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
+                ?: cardConfiguration?.isSubmitButtonVisible ?: true,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
             shopperReference = cardConfiguration?.shopperReference,
             isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, cardConfiguration),

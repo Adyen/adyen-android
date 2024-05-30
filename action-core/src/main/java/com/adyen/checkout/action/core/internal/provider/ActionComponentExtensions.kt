@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.internal.provider.ActionComponentProvi
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.twint.TwintActionComponent
 import com.adyen.checkout.voucher.VoucherComponent
 import com.adyen.checkout.wechatpay.WeChatPayActionComponent
 
@@ -23,6 +24,7 @@ private val allActionProviders = listOfNotNull(
     runCompileOnly { AwaitComponent.PROVIDER },
     runCompileOnly { QRCodeComponent.PROVIDER },
     runCompileOnly { RedirectComponent.PROVIDER },
+    runCompileOnly { TwintActionComponent.PROVIDER },
     runCompileOnly { VoucherComponent.PROVIDER },
     runCompileOnly { WeChatPayActionComponent.PROVIDER },
 )

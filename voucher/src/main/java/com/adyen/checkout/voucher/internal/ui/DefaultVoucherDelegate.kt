@@ -11,18 +11,26 @@ package com.adyen.checkout.voucher.internal.ui
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
@@ -40,12 +48,15 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@Suppress("TooManyFunctions")
 internal class DefaultVoucherDelegate(
     private val observerRepository: ActionObserverRepository,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val pdfOpener: PdfOpener,
     private val imageSaver: ImageSaver,
-) : VoucherDelegate {
+    private val analyticsManager: AnalyticsManager?,
+) : VoucherDelegate, SavedStateHandleContainer {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<VoucherOutputData> = _outputDataFlow
@@ -67,8 +78,19 @@ internal class DefaultVoucherDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    private var action: VoucherAction? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: VoucherAction? = action
+        if (action != null) {
+            initState(action)
+        }
     }
 
     override fun observe(
@@ -92,15 +114,25 @@ internal class DefaultVoucherDelegate(
 
     override fun handleAction(action: Action, activity: Activity) {
         if (action !is VoucherAction) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
+        this.action = action
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
+
+        initState(action)
+    }
+
+    private fun initState(action: VoucherAction) {
         val config = VoucherPaymentMethodConfig.getByPaymentMethodType(action.paymentMethodType)
         if (config == null) {
-            exceptionChannel.trySend(
-                ComponentException("Payment method ${action.paymentMethodType} not supported for this action"),
-            )
+            emitError(ComponentException("Payment method ${action.paymentMethodType} not supported for this action"))
             return
         }
 
@@ -149,7 +181,7 @@ internal class DefaultVoucherDelegate(
         try {
             pdfOpener.open(context, downloadUrl)
         } catch (e: IllegalStateException) {
-            exceptionChannel.trySend(ComponentException(e.message ?: "", e.cause))
+            emitError(ComponentException(e.message ?: "", e.cause))
         }
     }
 
@@ -183,6 +215,15 @@ internal class DefaultVoucherDelegate(
         permissionChannel.trySend(requestData)
     }
 
+    private fun emitError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
+    }
+
     override fun onCleared() {
         removeObserver()
         _coroutineScope = null
@@ -190,5 +231,8 @@ internal class DefaultVoucherDelegate(
 
     companion object {
         private const val IMAGE_NAME_FORMAT = "%s-%s.png"
+
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }

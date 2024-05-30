@@ -103,7 +103,6 @@
     <style name="AdyenCheckout.Card.AddressLookup.DropdownTextInputEditText" parent="AdyenCheckout.DropdownTextInputEditText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
         <item name="android:minHeight">@dimen/input_height</item>
         <item name="android:hint">@string/checkout_address_lookup_hint</item>
         <item name="drawableTint">?attr/colorOnSurface</item>

@@ -32,7 +32,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -72,7 +73,7 @@ internal class StoredCardDelegate(
     private val storedPaymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CardComponentParams,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val cardEncryptor: BaseCardEncryptor,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
@@ -132,7 +133,7 @@ internal class StoredCardDelegate(
 
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
         initializeInputData()
         fetchPublicKey()
 
@@ -151,11 +152,15 @@ internal class StoredCardDelegate(
         }
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(
+            component = storedPaymentMethod.type.orEmpty(),
+            isStoredPaymentMethod = true,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
@@ -304,6 +309,9 @@ internal class StoredCardDelegate(
     }
 
     override fun onSubmit() {
+        val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }
@@ -334,7 +342,7 @@ internal class StoredCardDelegate(
     ): CardComponentState {
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
         ).apply {
             storedPaymentMethodId = getPaymentMethodId()
 
@@ -430,6 +438,7 @@ internal class StoredCardDelegate(
     override fun onCleared() {
         removeObserver()
         coroutineScope = null
+        analyticsManager.clear(this)
     }
 
     companion object {

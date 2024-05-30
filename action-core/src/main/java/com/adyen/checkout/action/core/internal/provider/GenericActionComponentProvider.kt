@@ -34,6 +34,7 @@ import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -45,6 +46,7 @@ import com.adyen.checkout.core.internal.util.LocaleProvider
 class GenericActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<GenericActionComponent, GenericActionConfiguration, GenericActionDelegate> {
@@ -59,22 +61,28 @@ constructor(
         key: String?
     ): GenericActionComponent {
         val genericActionFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val genericActionDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
+            val genericActionDelegate = getDelegate(
+                checkoutConfiguration = checkoutConfiguration,
+                savedStateHandle = savedStateHandle,
+                application = application,
+            )
             GenericActionComponent(
                 genericActionDelegate = genericActionDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, genericActionFactory)[key, GenericActionComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
     override fun getDelegate(
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        application: Application
+        application: Application,
     ): GenericActionDelegate {
         val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
@@ -88,7 +96,8 @@ constructor(
             savedStateHandle = savedStateHandle,
             checkoutConfiguration = checkoutConfiguration,
             componentParams = componentParams,
-            actionDelegateProvider = ActionDelegateProvider(dropInOverrideParams),
+            actionDelegateProvider = ActionDelegateProvider(analyticsManager, dropInOverrideParams),
+            application = application,
         )
     }
 

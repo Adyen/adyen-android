@@ -22,7 +22,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -49,12 +50,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultBoletoDelegate(
     private val submitHandler: SubmitHandler<BoletoComponentState>,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
@@ -94,7 +94,7 @@ internal class DefaultBoletoDelegate(
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
 
         if (componentParams.addressParams is AddressParams.FullAddress) {
             subscribeToStatesList()
@@ -103,11 +103,12 @@ internal class DefaultBoletoDelegate(
         }
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     private fun subscribeToStatesList() {
@@ -234,7 +235,8 @@ internal class DefaultBoletoDelegate(
         val paymentComponentData = PaymentComponentData(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
-                checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                subtype = null,
             ),
             order = order,
             amount = componentParams.amount,
@@ -291,6 +293,9 @@ internal class DefaultBoletoDelegate(
     }
 
     override fun onSubmit() {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         submitHandler.onSubmit(_componentStateFlow.value)
     }
 
@@ -300,5 +305,6 @@ internal class DefaultBoletoDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }

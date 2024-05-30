@@ -33,7 +33,8 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -58,7 +59,7 @@ internal class DefaultCashAppPayDelegate
 @Suppress("LongParameterList")
 constructor(
     private val submitHandler: SubmitHandler<CashAppPayComponentState>,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
@@ -93,7 +94,7 @@ constructor(
 
         cashAppPay = initCashAppPay()
 
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
 
         if (!isConfirmationRequired()) {
             initiatePayment()
@@ -110,11 +111,12 @@ constructor(
         }
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
@@ -168,7 +170,7 @@ constructor(
 
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             grantId = oneTimeData?.grantId,
             customerId = onFileData?.customerId ?: oneTimeData?.customerId,
             onFileGrantId = onFileData?.grantId,
@@ -196,6 +198,9 @@ constructor(
     }
 
     private fun initiatePayment() {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         val actions = listOfNotNull(
             getOneTimeAction(),
             getOnFileAction(outputData),
@@ -324,5 +329,6 @@ constructor(
         _coroutineScope = null
         removeObserver()
         cashAppPay.unregisterFromStateUpdates()
+        analyticsManager.clear(this)
     }
 }

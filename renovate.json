@@ -19,7 +19,7 @@
     },
     {
       "matchPackagePatterns" : ["*"],
-      "minimumReleaseAge" : "30 days",
+      "minimumReleaseAge" : "14 days",
       "schedule" : ["on the first day of the month"]
     }
   ],

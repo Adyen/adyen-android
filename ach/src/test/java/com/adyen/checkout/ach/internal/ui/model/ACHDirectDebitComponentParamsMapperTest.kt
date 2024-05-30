@@ -88,7 +88,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
@@ -97,6 +97,27 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when setSubmitButtonVisible is set to false in ach configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            achDirectDebit {
+                setSubmitButtonVisible(false)
+            }
+        }
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params = achDirectDebitComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
     }
 
     @Test
@@ -326,7 +347,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,

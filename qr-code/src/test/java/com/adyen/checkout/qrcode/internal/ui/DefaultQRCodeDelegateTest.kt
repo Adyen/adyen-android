@@ -14,7 +14,6 @@ import android.content.Intent
 import android.os.Parcel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
-import app.cash.turbine.test
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
@@ -22,6 +21,8 @@ import com.adyen.checkout.components.core.action.QrCodeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.test.TestStatusRepository
@@ -37,12 +38,14 @@ import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.qrcode.qrCode
 import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -58,6 +61,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
@@ -74,6 +78,7 @@ internal class DefaultQRCodeDelegateTest(
     @Mock private val imageSaver: ImageSaver
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var statusRepository: TestStatusRepository
     private lateinit var paymentDataRepository: PaymentDataRepository
@@ -81,6 +86,7 @@ internal class DefaultQRCodeDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         statusRepository = TestStatusRepository()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
@@ -140,26 +146,25 @@ internal class DefaultQRCodeDelegateTest(
 
     @Test
     fun `when handleAction is called with unsupported action, then an error should be emitted`() = runTest {
-        delegate.exceptionFlow.test {
-            delegate.handleAction(
-                createTestAction(),
-                mock(),
-            )
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            assert(expectMostRecentItem() is ComponentException)
-        }
+        delegate.handleAction(
+            createTestAction(),
+            mock(),
+        )
+
+        assert(exceptionFlow.latestValue is ComponentException)
     }
 
     @Test
     fun `when handleAction is called with null payment data, then an error should be emitted`() = runTest {
-        delegate.exceptionFlow.test {
-            delegate.handleAction(
-                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
-                mock(),
-            )
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        delegate.handleAction(
+            QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+            mock(),
+        )
 
-            assert(expectMostRecentItem() is ComponentException)
-        }
+        assert(exceptionFlow.latestValue is ComponentException)
     }
 
     @Nested
@@ -170,15 +175,10 @@ internal class DefaultQRCodeDelegateTest(
         fun `timer ticks, then left over time and progress are emitted`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.timerFlow.test {
-                delegate.onTimerTick(10000)
+            val timerFlow = delegate.timerFlow.test(testScheduler)
+            delegate.onTimerTick(10000)
 
-                skipItems(1)
-
-                assertEquals(TimerData(10000, 1), awaitItem())
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertEquals(TimerData(10000, 1), timerFlow.latestValue)
         }
 
         @Test
@@ -189,31 +189,26 @@ internal class DefaultQRCodeDelegateTest(
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.outputDataFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(
-                        paymentMethodType = PaymentMethodTypes.PIX,
-                        qrCodeData = "qrData",
-                        paymentData = "paymentData",
-                    ),
-                    Activity(),
-                )
+            val outputDataFlow = delegate.outputDataFlow.test(testScheduler)
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = PaymentMethodTypes.PIX,
+                    qrCodeData = "qrData",
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
-                skipItems(1)
+            with(outputDataFlow.values[1]) {
+                assertFalse(isValid)
+                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
+                assertEquals("qrData", qrCodeData)
+            }
 
-                with(awaitItem()) {
-                    assertFalse(isValid)
-                    assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
-                    assertEquals("qrData", qrCodeData)
-                }
-
-                with(awaitItem()) {
-                    assertTrue(isValid)
-                    assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
-                    assertEquals("qrData", qrCodeData)
-                }
-
-                cancelAndIgnoreRemainingEvents()
+            with(outputDataFlow.values[2]) {
+                assertTrue(isValid)
+                assertEquals(PaymentMethodTypes.PIX, paymentMethodType)
+                assertEquals("qrData", qrCodeData)
             }
         }
 
@@ -223,17 +218,17 @@ internal class DefaultQRCodeDelegateTest(
                 Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
-            delegate.detailsFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertEquals(
+                "testpayload",
+                detailsFlow.latestValue.details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY),
+            )
         }
 
         @Test
@@ -241,17 +236,14 @@ internal class DefaultQRCodeDelegateTest(
             val error = IOException("test")
             statusRepository.pollingResults = listOf(Result.failure(error))
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals(error, awaitItem().cause)
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertEquals(error, exceptionFlow.latestValue.cause)
         }
 
         @Test
@@ -260,33 +252,29 @@ internal class DefaultQRCodeDelegateTest(
                 Result.success(StatusResponse(resultCode = "finished", payload = "")),
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertTrue(awaitItem() is ComponentException)
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertTrue(exceptionFlow.latestValue is ComponentException)
         }
 
         @Test
         fun `handleAction is called, then simple qr view flow is updated`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val viewFlow = delegate.viewFlow.test(testScheduler)
 
-            delegate.viewFlow.test {
-                assertNull(awaitItem())
+            assertNull(viewFlow.latestValue)
 
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, awaitItem())
-            }
+            assertEquals(QrCodeComponentViewType.SIMPLE_QR_CODE, viewFlow.latestValue)
         }
 
         @Test
@@ -297,29 +285,26 @@ internal class DefaultQRCodeDelegateTest(
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.outputDataFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(
-                        paymentMethodType = PaymentMethodTypes.PAY_NOW,
-                        qrCodeData = "qrData",
-                        paymentData = "paymentData",
-                    ),
-                    Activity(),
-                )
+            val outputDataFlow = delegate.outputDataFlow.test(testScheduler)
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = PaymentMethodTypes.PAY_NOW,
+                    qrCodeData = "qrData",
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
-                skipItems(1)
+            with(outputDataFlow.values[1]) {
+                assertFalse(isValid)
+                assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
+                assertEquals("qrData", qrCodeData)
+            }
 
-                with(awaitItem()) {
-                    assertFalse(isValid)
-                    assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
-                    assertEquals("qrData", qrCodeData)
-                }
-
-                with(expectMostRecentItem()) {
-                    assertTrue(isValid)
-                    assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
-                    assertEquals("qrData", qrCodeData)
-                }
+            with(outputDataFlow.values[2]) {
+                assertTrue(isValid)
+                assertEquals(PaymentMethodTypes.PAY_NOW, paymentMethodType)
+                assertEquals("qrData", qrCodeData)
             }
         }
 
@@ -330,16 +315,16 @@ internal class DefaultQRCodeDelegateTest(
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.detailsFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
-                    Activity(),
-                )
+            val detailsFlow = delegate.detailsFlow.test(testScheduler)
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals("testpayload", awaitItem().details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY))
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertEquals(
+                "testpayload",
+                detailsFlow.latestValue.details?.getString(DefaultQRCodeDelegate.PAYLOAD_DETAILS_KEY),
+            )
         }
 
         @Test
@@ -348,17 +333,14 @@ internal class DefaultQRCodeDelegateTest(
                 Result.success(StatusResponse(resultCode = "finished", payload = "")),
             )
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertTrue(awaitItem() is ComponentException)
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertTrue(exceptionFlow.latestValue is ComponentException)
         }
 
         @Test
@@ -366,31 +348,29 @@ internal class DefaultQRCodeDelegateTest(
             val error = IOException("test")
             statusRepository.pollingResults = listOf(Result.failure(error))
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals(error, expectMostRecentItem().cause)
-            }
+            assertEquals(error, exceptionFlow.latestValue.cause)
         }
 
         @Test
         fun `handleAction is called, then full qr view flow is updated`() = runTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val viewFlow = delegate.viewFlow.test(testScheduler)
 
-            delegate.viewFlow.test {
-                assertNull(awaitItem())
+            assertNull(viewFlow.latestValue)
 
-                delegate.handleAction(
-                    QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = "paymentData"),
-                    Activity(),
-                )
+            delegate.handleAction(
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PAY_NOW, paymentData = TEST_PAYMENT_DATA),
+                Activity(),
+            )
 
-                assertEquals(QrCodeComponentViewType.FULL_QR_CODE, awaitItem())
-            }
+            assertEquals(QrCodeComponentViewType.FULL_QR_CODE, viewFlow.latestValue)
         }
     }
 
@@ -402,63 +382,74 @@ internal class DefaultQRCodeDelegateTest(
         fun `handleAction is called and RedirectHandler returns an error, then the error is propagated`() = runTest {
             val error = ComponentException("Failed to make redirect.")
             redirectHandler.exception = error
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
 
-                assertEquals(error, awaitItem())
-            }
+            assertEquals(error, exceptionFlow.latestValue)
         }
 
         @Test
         fun `handleAction is called with valid data, then no error is propagated`() = runTest {
-            delegate.exceptionFlow.test {
-                delegate.handleAction(QrCodeAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-                expectNoEvents()
-            }
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                Activity(),
+            )
+
+            assertTrue(exceptionFlow.values.isEmpty())
         }
 
         @Test
         fun `handleIntent is called and RedirectHandler returns an error, then the error is propagated`() = runTest {
             val error = ComponentException("Failed to parse redirect result.")
             redirectHandler.exception = error
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            delegate.exceptionFlow.test {
-                delegate.handleIntent(Intent())
+            delegate.handleIntent(Intent())
 
-                assertEquals(error, awaitItem())
-            }
+            assertEquals(error, exceptionFlow.latestValue)
         }
 
         @Test
         fun `handleIntent is called with valid data, then the details are emitted`() = runTest {
-            delegate.detailsFlow.test {
-                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
-                delegate.handleIntent(Intent())
+            val detailsFlow = delegate.detailsFlow.test(testScheduler)
+            delegate.handleAction(QrCodeAction(paymentData = TEST_PAYMENT_DATA), Activity())
+            delegate.handleIntent(Intent())
 
-                with(awaitItem()) {
-                    assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
-                    assertEquals("paymentData", paymentData)
-                }
+            with(detailsFlow.latestValue) {
+                assertEquals(TestRedirectHandler.REDIRECT_RESULT, details)
+                assertEquals(TEST_PAYMENT_DATA, paymentData)
             }
         }
 
         @Test
         fun `handleAction is called, then the view flow is updated`() = runTest {
-            delegate.viewFlow.test {
-                assertNull(awaitItem())
+            val viewFlow = delegate.viewFlow.test(testScheduler)
 
-                delegate.handleAction(QrCodeAction(paymentData = "paymentData"), Activity())
+            assertNull(viewFlow.latestValue)
 
-                assertEquals(awaitItem(), QrCodeComponentViewType.REDIRECT)
-            }
+            delegate.handleAction(QrCodeAction(paymentData = TEST_PAYMENT_DATA), Activity())
+
+            assertEquals(QrCodeComponentViewType.REDIRECT, viewFlow.latestValue)
         }
     }
 
     @Test
     fun `when refreshStatus is called, then status for statusRepository gets refreshed`() = runTest {
-        val statusRepository = mock<StatusRepository>()
+        val statusRepository = mock<StatusRepository> {
+            on { poll(any(), any()) } doReturn flowOf()
+        }
         val paymentData = "Payment Data"
         val delegate = createDelegate(
             statusRepository = statusRepository,
@@ -502,13 +493,12 @@ internal class DefaultQRCodeDelegateTest(
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        delegate.eventFlow.test {
-            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Success
+        val eventFlow = delegate.eventFlow.test(testScheduler)
+        val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Success
 
-            delegate.downloadQRImage(context)
+        delegate.downloadQRImage(context)
 
-            assertEquals(expectedResult, expectMostRecentItem())
-        }
+        assertEquals(expectedResult, eventFlow.latestValue)
     }
 
     @Test
@@ -518,13 +508,13 @@ internal class DefaultQRCodeDelegateTest(
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        delegate.eventFlow.test {
-            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.PermissionDenied
+        val eventFlow = delegate.eventFlow.test(testScheduler)
 
-            delegate.downloadQRImage(context)
+        val expectedResult = QrCodeUIEvent.QrImageDownloadResult.PermissionDenied
 
-            assertEquals(expectedResult, expectMostRecentItem())
-        }
+        delegate.downloadQRImage(context)
+
+        assertEquals(expectedResult, eventFlow.latestValue)
     }
 
     @Test
@@ -535,13 +525,12 @@ internal class DefaultQRCodeDelegateTest(
         )
 
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        delegate.eventFlow.test {
-            val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Failure(throwable)
+        val eventFlow = delegate.eventFlow.test(testScheduler)
+        val expectedResult = QrCodeUIEvent.QrImageDownloadResult.Failure(throwable)
 
-            delegate.downloadQRImage(context)
+        delegate.downloadQRImage(context)
 
-            assertEquals(expectedResult, expectMostRecentItem())
-        }
+        assertEquals(expectedResult, eventFlow.latestValue)
     }
 
     @Test
@@ -549,13 +538,63 @@ internal class DefaultQRCodeDelegateTest(
         val requiredPermission = "Required Permission"
         val permissionCallback = mock<PermissionHandlerCallback>()
 
-        delegate.permissionFlow.test {
-            delegate.requestPermission(context, requiredPermission, permissionCallback)
+        val permissionFlow = delegate.permissionFlow.test(testScheduler)
+        delegate.requestPermission(context, requiredPermission, permissionCallback)
 
-            val mostRecentValue = expectMostRecentItem()
-            assertEquals(requiredPermission, mostRecentValue.requiredPermission)
-            assertEquals(permissionCallback, mostRecentValue.permissionCallback)
+        val mostRecentValue = permissionFlow.latestValue
+        assertEquals(requiredPermission, mostRecentValue.requiredPermission)
+        assertEquals(permissionCallback, mostRecentValue.permissionCallback)
+    }
+
+    @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultQRCodeDelegate.ACTION_KEY,
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+            )
         }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        val detailsFlow = delegate.detailsFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertTrue(detailsFlow.values.isNotEmpty())
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        statusRepository.pollingResults = listOf(
+            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
+        )
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultQRCodeDelegate.ACTION_KEY,
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultQRCodeDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultQRCodeDelegate.ACTION_KEY,
+                QrCodeAction(paymentMethodType = PaymentMethodTypes.PIX, paymentData = null),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertNull(savedStateHandle[DefaultQRCodeDelegate.ACTION_KEY])
     }
 
     @Test
@@ -576,6 +615,49 @@ internal class DefaultQRCodeDelegateTest(
         verify(redirectHandler).removeOnRedirectListener()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = QrCodeAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+            )
+
+            delegate.handleAction(action, mock())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when downloadQRImage is called, then download event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.handleAction(
+                QrCodeAction(
+                    paymentMethodType = PaymentMethodTypes.PIX,
+                    qrCodeData = TEST_QR_CODE_DATA,
+                    paymentData = TEST_PAYMENT_DATA,
+                ),
+                mock(),
+            )
+
+            delegate.downloadQRImage(context)
+
+            val expectedEvent = GenericEvents.download(
+                component = PaymentMethodTypes.PIX,
+                target = DefaultQRCodeDelegate.ANALYTICS_TARGET_QR_BUTTON,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createTestAction(
         type: String = "test",
         paymentData: String = "paymentData",
@@ -591,22 +673,29 @@ internal class DefaultQRCodeDelegateTest(
     private fun createDelegate(
         observerRepository: ActionObserverRepository = mock(),
         componentParams: GenericComponentParams = mock(),
-        statusRepository: StatusRepository = mock(),
+        statusRepository: StatusRepository = this.statusRepository,
         statusCountDownTimer: QRCodeCountDownTimer = mock(),
         redirectHandler: RedirectHandler = mock(),
         paymentDataRepository: PaymentDataRepository = mock(),
         imageSaver: ImageSaver = mock(),
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
     ) = DefaultQRCodeDelegate(
         observerRepository = observerRepository,
+        savedStateHandle = savedStateHandle,
         componentParams = componentParams,
         statusRepository = statusRepository,
         statusCountDownTimer = statusCountDownTimer,
         redirectHandler = redirectHandler,
         paymentDataRepository = paymentDataRepository,
         imageSaver = imageSaver,
+        analyticsManager = analyticsManager,
     )
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_PAYMENT_DATA = "TEST_PAYMENT_DATA"
+        private const val TEST_QR_CODE_DATA = "TEST_QR_CODE_DATA"
     }
 }

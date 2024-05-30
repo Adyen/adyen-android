@@ -17,6 +17,7 @@ import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -38,4 +39,8 @@ interface EContextDelegate<
     fun updateInputData(update: EContextInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
+
+    fun getSupportedCountries(): List<CountryModel>
+
+    fun getInitiallySelectedCountry(): CountryModel?
 }

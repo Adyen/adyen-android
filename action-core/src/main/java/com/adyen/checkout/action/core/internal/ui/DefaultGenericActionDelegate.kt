@@ -9,7 +9,9 @@
 package com.adyen.checkout.action.core.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
@@ -20,6 +22,8 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PermissionRequestData
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
 import com.adyen.checkout.components.core.internal.ui.IntentHandlingDelegate
@@ -47,11 +51,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 @Suppress("TooManyFunctions")
 internal class DefaultGenericActionDelegate(
     private val observerRepository: ActionObserverRepository,
-    private val savedStateHandle: SavedStateHandle,
+    override val savedStateHandle: SavedStateHandle,
     private val checkoutConfiguration: CheckoutConfiguration,
     override val componentParams: GenericComponentParams,
     private val actionDelegateProvider: ActionDelegateProvider,
-) : GenericActionDelegate {
+    private val application: Application,
+) : GenericActionDelegate, SavedStateHandleContainer {
 
     private var _delegate: ActionDelegate? = null
     override val delegate: ActionDelegate get() = requireNotNull(_delegate)
@@ -73,9 +78,20 @@ internal class DefaultGenericActionDelegate(
 
     private var onRedirectListener: (() -> Unit)? = null
 
+    private val action: Action? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        val action: Action? = action
+        if (_delegate == null && action != null) {
+            createDelegateAndObserve(action)
+        }
     }
 
     override fun observe(
@@ -108,28 +124,36 @@ internal class DefaultGenericActionDelegate(
         if (isOld3DS2Flow(action)) {
             adyenLog(AdyenLogLevel.DEBUG) { "Continuing the handling of 3ds2 challenge with old flow." }
         } else {
-            val delegate = actionDelegateProvider.getDelegate(
-                action = action,
-                checkoutConfiguration = checkoutConfiguration,
-                savedStateHandle = savedStateHandle,
-                application = activity.application,
-            )
-            this._delegate = delegate
-            adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
-
-            if (delegate is RedirectableDelegate) {
-                onRedirectListener?.let { delegate.setOnRedirectListener(it) }
-            }
-
-            delegate.initialize(coroutineScope)
-
-            observeDetails(delegate)
-            observeExceptions(delegate)
-            observePermissionRequests(delegate)
-            observeViewFlow(delegate)
+            createDelegateAndObserve(action)
         }
 
         delegate.handleAction(action, activity)
+    }
+
+    private fun createDelegateAndObserve(action: Action) {
+        val delegate = actionDelegateProvider.getDelegate(
+            action = action,
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+            application = application,
+        )
+        _delegate = delegate
+        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${delegate::class.simpleName}" }
+
+        if (delegate is RedirectableDelegate) {
+            onRedirectListener?.let { delegate.setOnRedirectListener(it) }
+        }
+
+        delegate.initialize(coroutineScope)
+
+        observeDelegate(delegate)
+    }
+
+    private fun observeDelegate(delegate: ActionDelegate) {
+        observeDetails(delegate)
+        observeExceptions(delegate)
+        observePermissionRequests(delegate)
+        observeViewFlow(delegate)
     }
 
     private fun isOld3DS2Flow(action: Action): Boolean {
@@ -196,6 +220,11 @@ internal class DefaultGenericActionDelegate(
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
+        _delegate?.let { delegate ->
+            if (delegate is RedirectableDelegate) {
+                delegate.setOnRedirectListener(listener)
+            }
+        }
         onRedirectListener = listener
     }
 
@@ -206,5 +235,10 @@ internal class DefaultGenericActionDelegate(
         _delegate = null
         _coroutineScope = null
         onRedirectListener = null
+    }
+
+    companion object {
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }

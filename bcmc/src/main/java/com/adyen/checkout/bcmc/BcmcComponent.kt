@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.BCMC] payment method.
  */
-class BcmcComponent(
+class BcmcComponent internal constructor(
     cardDelegate: CardDelegate,
     genericActionDelegate: GenericActionDelegate,
     actionHandlingComponent: DefaultActionHandlingComponent,

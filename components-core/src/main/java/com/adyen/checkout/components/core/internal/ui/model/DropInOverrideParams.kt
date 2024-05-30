@@ -15,4 +15,5 @@ import com.adyen.checkout.components.core.Amount
 data class DropInOverrideParams(
     val amount: Amount?,
     val sessionParams: SessionParams?,
+    val isSubmitButtonVisible: Boolean = true
 )

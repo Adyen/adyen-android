@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Hišna številka</string>
     <string name="checkout_address_form_apartment_suite_hint">Št. apartmaja/stanovanja</string>
     <string name="checkout_address_form_city_hint">Mesto</string>
-    <string name="checkout_address_form_country_hint">Država</string>
+    <string name="checkout_address_form_country_hint">Država/regija</string>
     <string name="checkout_address_form_states_hint">Država</string>
     <string name="checkout_address_postal_code_hint">Poštna številka</string>
     <string name="checkout_address_form_zip_code_hint">Poštna številka</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Hišna številka (neobvezno)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Št. apartmaja/stanovanja (neobvezno)</string>
     <string name="checkout_address_form_city_hint_optional"> Kraj (neobvezno)</string>
-    <string name="checkout_address_form_country_hint_optional">Država (neobvezno)</string>
+    <string name="checkout_address_form_country_hint_optional">Država/regija (neobvezno)</string>
     <string name="checkout_address_form_states_hint_optional">Država (neobvezno)</string>
     <string name="checkout_address_postal_code_hint_optional">Poštna številka (neobvezno)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Poštna številka (neobvezno)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">»%s« se ni ujemalo z ničemer, poskusite znova ali uporabite #ročni vnos naslova#</string>
     <string name="checkout_address_lookup_enter_manually">Naslov vnesite ročno</string>
     <string name="checkout_address_lookup_submit">Uporabite ta naslov</string>
+    <string name="checkout_address_lookup_validation_empty">Naslov je obvezen</string>
 
 </resources>

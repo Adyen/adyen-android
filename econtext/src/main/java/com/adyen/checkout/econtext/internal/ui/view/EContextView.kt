@@ -17,7 +17,6 @@ import android.widget.AdapterView
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
@@ -27,7 +26,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
+import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class EContextView @JvmOverloads constructor(
@@ -46,7 +45,7 @@ internal class EContextView @JvmOverloads constructor(
 
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
@@ -104,19 +103,19 @@ internal class EContextView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutFirstName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_FirstNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutLastName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_LastNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutMobileNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_PhoneNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutEmailAddress.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_EContext_ShopperEmailInput,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -158,14 +157,7 @@ internal class EContextView @JvmOverloads constructor(
 
     private fun initCountryCodeInput() {
         val countryAutoCompleteTextView = binding.autoCompleteTextViewCountry
-        val countries = CountryUtils.getCountries().map {
-            CountryModel(
-                isoCode = it.isoCode,
-                countryName = CountryUtils.getCountryName(it.isoCode, delegate.componentParams.shopperLocale),
-                callingCode = it.callingCode,
-                emoji = it.emoji
-            )
-        }
+        val countries = delegate.getSupportedCountries()
         countryAdapter = CountryAdapter(context, localizedContext).apply {
             setItems(countries)
         }
@@ -176,8 +168,7 @@ internal class EContextView @JvmOverloads constructor(
                 val country = countryAdapter?.getItem(position) ?: return@OnItemClickListener
                 onCountrySelected(country)
             }
-            val initialCountry = countries.firstOrNull { it.isoCode == Locale.JAPAN.country } ?: countries.firstOrNull()
-            initialCountry?.let {
+            delegate.getInitiallySelectedCountry()?.let {
                 setText(it.toShortString())
                 onCountrySelected(it)
             }

@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -42,6 +43,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory
 class WeChatPayActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<WeChatPayActionComponent, WeChatPayActionConfiguration, WeChatDelegate> {
@@ -59,13 +61,15 @@ constructor(
             val weChatDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             WeChatPayActionComponent(
                 delegate = weChatDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
 
         return ViewModelProvider(viewModelStoreOwner, weChatFactory)[key, WeChatPayActionComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
@@ -86,10 +90,12 @@ constructor(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultWeChatDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             iwxApi = iwxApi,
             payRequestGenerator = requestGenerator,
             paymentDataRepository = paymentDataRepository,
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -113,8 +119,7 @@ constructor(
         )
     }
 
-    override val supportedActionTypes: List<String>
-        get() = listOf(SdkAction.ACTION_TYPE)
+    override val supportedActionTypes: List<String> = listOf(SdkAction.ACTION_TYPE)
 
     override fun canHandleAction(action: Action): Boolean {
         return supportedActionTypes.contains(action.type) && PAYMENT_METHODS.contains(action.paymentMethodType)

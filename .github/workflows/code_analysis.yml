@@ -16,13 +16,17 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run detekt
-        run: ./gradlew detekt --no-daemon
+        run: ./gradlew detekt -Pstrip-resources=true
 
   ktlint:
     name: Run ktlint
@@ -36,10 +40,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run ktlint
-        run: ./gradlew ktlint --no-daemon
+        run: ./gradlew ktlint -Pstrip-resources=true

@@ -23,18 +23,22 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       # Generate kdocs
       - name: Generate Dokka HTML documentation
-        run: ./gradlew dokkaHtmlMultiModule --no-daemon
+        run: ./gradlew dokkaHtmlMultiModule
 
       # Deploy to GitHub Pages
       - name: Deploy GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.5.0
+        uses: JamesIves/github-pages-deploy-action@v4.6.0
         with:
           BRANCH: gh-pages
           FOLDER: build/docs/

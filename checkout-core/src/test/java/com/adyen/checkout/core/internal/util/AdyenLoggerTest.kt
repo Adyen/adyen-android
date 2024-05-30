@@ -27,6 +27,7 @@ internal class AdyenLoggerTest {
 
     @BeforeEach
     fun setup() {
+        AdyenLogger.resetLogger()
         logger = TestLogger()
     }
 
@@ -75,6 +76,25 @@ internal class AdyenLoggerTest {
         adyenLog(AdyenLogLevel.VERBOSE) { "test" }
 
         logger.assertLogNotCalled()
+    }
+
+    @Test
+    fun `when log level is set manually, then setting the initial level has no effect`() {
+        AdyenLogger.setLogger(logger)
+        AdyenLogger.setLogLevel(AdyenLogLevel.ASSERT)
+
+        AdyenLogger.setInitialLogLevel(AdyenLogLevel.ERROR)
+
+        logger.assertLogLevel(AdyenLogLevel.ASSERT)
+    }
+
+    @Test
+    fun `when log level is not set manually, then setting the initial level has effect`() {
+        AdyenLogger.setLogger(logger)
+
+        AdyenLogger.setInitialLogLevel(AdyenLogLevel.ERROR)
+
+        logger.assertLogLevel(AdyenLogLevel.ERROR)
     }
 
     @Suppress("DEPRECATION")

@@ -167,22 +167,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
 
         private const val INTENT_EXTRA_ADDITIONAL_DATA = "ADDITIONAL_DATA"
 
-        internal fun startService(
-            context: Context,
-            connection: ServiceConnection,
-            merchantService: ComponentName,
-            additionalData: Bundle?,
-        ): Boolean {
-            adyenLog(AdyenLogLevel.DEBUG) { "startService - ${context::class.simpleName}" }
-            val intent = Intent().apply {
-                component = merchantService
-            }
-            adyenLog(AdyenLogLevel.DEBUG) { "merchant service: ${merchantService.className}" }
-            context.startService(intent)
-            return bindService(context, connection, merchantService, additionalData)
-        }
-
-        private fun bindService(
+        internal fun bindService(
             context: Context,
             connection: ServiceConnection,
             merchantService: ComponentName,
@@ -196,22 +181,7 @@ constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropI
             return context.bindService(intent, connection, Context.BIND_AUTO_CREATE)
         }
 
-        internal fun stopService(
-            context: Context,
-            merchantService: ComponentName,
-            connection: ServiceConnection,
-        ) {
-            unbindService(context, connection)
-
-            adyenLog(AdyenLogLevel.DEBUG) { "stopService - ${context::class.simpleName}" }
-
-            val intent = Intent().apply {
-                component = merchantService
-            }
-            context.stopService(intent)
-        }
-
-        private fun unbindService(context: Context, connection: ServiceConnection) {
+        internal fun unbindService(context: Context, connection: ServiceConnection) {
             adyenLog(AdyenLogLevel.DEBUG) { "unbindService - ${context::class.simpleName}" }
             context.unbindService(connection)
         }

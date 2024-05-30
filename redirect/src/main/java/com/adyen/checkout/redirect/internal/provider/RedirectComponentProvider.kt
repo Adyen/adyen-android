@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -42,6 +43,7 @@ import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<RedirectComponent, RedirectConfiguration, RedirectDelegate> {
@@ -59,12 +61,14 @@ constructor(
             val redirectDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             RedirectComponent(
                 delegate = redirectDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, redirectFactory)[key, RedirectComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
@@ -87,10 +91,12 @@ constructor(
 
         return DefaultRedirectDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
+            analyticsManager = analyticsManager,
         )
     }
 

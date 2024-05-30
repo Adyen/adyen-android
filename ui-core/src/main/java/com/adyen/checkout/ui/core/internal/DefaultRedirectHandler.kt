@@ -14,20 +14,19 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.RestrictTo
-import androidx.browser.customtabs.CustomTabColorSchemeParams
-import androidx.browser.customtabs.CustomTabsIntent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.util.ThemeUtil
+import com.adyen.checkout.ui.core.internal.util.CustomTabsLauncher
 import org.json.JSONException
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultRedirectHandler : RedirectHandler {
 
-    private var onRedirectListener: (() -> Unit)? = null
+    private var onRedirectListener: WeakReference<(() -> Unit)>? = null
 
     override fun parseRedirectResult(data: Uri?): JSONObject {
         adyenLog(AdyenLogLevel.DEBUG) { "parseRedirectResult - $data" }
@@ -72,7 +71,7 @@ class DefaultRedirectHandler : RedirectHandler {
             launchWithCustomTabs(context, uri) ||
             launchBrowser(context, uri)
         ) {
-            onRedirectListener?.invoke()
+            onRedirectListener?.get()?.invoke()
             return
         }
 
@@ -152,25 +151,15 @@ class DefaultRedirectHandler : RedirectHandler {
 
     private fun launchWithCustomTabs(context: Context, uri: Uri): Boolean {
         // open in custom tabs if there's no native app for the target uri
-        val defaultColors = CustomTabColorSchemeParams.Builder()
-            .setToolbarColor(ThemeUtil.getPrimaryThemeColor(context))
-            .build()
-
-        @Suppress("SwallowedException")
-        return try {
-            CustomTabsIntent.Builder()
-                .setShowTitle(true)
-                .setDefaultColorSchemeParams(defaultColors)
-                .build()
-                .launchUrl(context, uri)
+        val isLaunched = CustomTabsLauncher.launchCustomTab(context, uri)
+        if (isLaunched) {
             adyenLog(AdyenLogLevel.DEBUG) { "launchWithCustomTabs - redirect successful with custom tabs" }
-            true
-        } catch (e: ActivityNotFoundException) {
+        } else {
             adyenLog(AdyenLogLevel.DEBUG) {
                 "launchWithCustomTabs - device doesn't support custom tabs or chrome is disabled"
             }
-            false
         }
+        return isLaunched
     }
 
     /**
@@ -194,10 +183,11 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
-        onRedirectListener = listener
+        onRedirectListener = WeakReference(listener)
     }
 
     override fun removeOnRedirectListener() {
+        onRedirectListener?.clear()
         onRedirectListener = null
     }
 

@@ -34,11 +34,9 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsMapper
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepositoryData
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsService
-import com.adyen.checkout.components.core.internal.data.api.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
@@ -71,7 +69,7 @@ class ACHDirectDebitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
-    private val analyticsRepository: AnalyticsRepository? = null,
+    private val analyticsManager: AnalyticsManager? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) :
     PaymentComponentProvider<
@@ -121,23 +119,19 @@ constructor(
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val achDelegate = createDefaultDelegate(
                 paymentMethod = paymentMethod,
                 savedStateHandle = savedStateHandle,
                 componentParams = componentParams,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 httpClient = httpClient,
                 order = order,
             )
@@ -207,24 +201,19 @@ constructor(
             )
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    paymentMethod = paymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val achDelegate = createDefaultDelegate(
                 paymentMethod = paymentMethod,
                 savedStateHandle = savedStateHandle,
                 componentParams = componentParams,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 httpClient = httpClient,
                 order = checkoutSession.order,
             )
@@ -285,7 +274,7 @@ constructor(
         paymentMethod: PaymentMethod,
         savedStateHandle: SavedStateHandle,
         componentParams: ACHDirectDebitComponentParams,
-        analyticsRepository: AnalyticsRepository,
+        analyticsManager: AnalyticsManager,
         httpClient: HttpClient,
         order: Order?,
     ): DefaultACHDirectDebitDelegate {
@@ -297,7 +286,7 @@ constructor(
         return DefaultACHDirectDebitDelegate(
             observerRepository = PaymentObserverRepository(),
             paymentMethod = paymentMethod,
-            analyticsRepository = analyticsRepository,
+            analyticsManager = analyticsManager,
             publicKeyRepository = publicKeyRepository,
             addressRepository = addressRepository,
             submitHandler = SubmitHandler(savedStateHandle),
@@ -328,22 +317,17 @@ constructor(
                 componentSessionParams = null,
             )
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
+                sessionId = null,
             )
 
             val achDelegate = createStoredDelegate(
                 paymentMethod = storedPaymentMethod,
                 componentParams = componentParams,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 order = order,
             )
 
@@ -414,22 +398,16 @@ constructor(
 
             val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
-            val analyticsRepository = analyticsRepository ?: DefaultAnalyticsRepository(
-                analyticsRepositoryData = AnalyticsRepositoryData(
-                    application = application,
-                    componentParams = componentParams,
-                    storedPaymentMethod = storedPaymentMethod,
-                    sessionId = checkoutSession.sessionSetupResponse.id,
-                ),
-                analyticsService = AnalyticsService(
-                    HttpClientFactory.getAnalyticsHttpClient(componentParams.environment),
-                ),
-                analyticsMapper = AnalyticsMapper(),
+            val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
+                componentParams = componentParams,
+                application = application,
+                source = AnalyticsSource.PaymentComponent(storedPaymentMethod.type.orEmpty()),
+                sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
             val achDelegate = createStoredDelegate(
                 paymentMethod = storedPaymentMethod,
-                analyticsRepository = analyticsRepository,
+                analyticsManager = analyticsManager,
                 componentParams = componentParams,
                 order = checkoutSession.order,
             )
@@ -487,13 +465,13 @@ constructor(
     private fun createStoredDelegate(
         paymentMethod: StoredPaymentMethod,
         componentParams: ACHDirectDebitComponentParams,
-        analyticsRepository: AnalyticsRepository,
+        analyticsManager: AnalyticsManager,
         order: Order?
     ): StoredACHDirectDebitDelegate {
         return StoredACHDirectDebitDelegate(
             observerRepository = PaymentObserverRepository(),
             storedPaymentMethod = paymentMethod,
-            analyticsRepository = analyticsRepository,
+            analyticsManager = analyticsManager,
             componentParams = componentParams,
             order = order,
         )
@@ -506,7 +484,7 @@ constructor(
         delegate: ACHDirectDebitDelegate,
         componentEventHandler: ComponentEventHandler<ACHDirectDebitComponentState>,
     ): ACHDirectDebitComponent {
-        val genericActionDelegate = GenericActionComponentProvider(dropInOverrideParams).getDelegate(
+        val genericActionDelegate = GenericActionComponentProvider(analyticsManager, dropInOverrideParams).getDelegate(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
             application = application,

@@ -10,7 +10,9 @@ package com.adyen.checkout.redirect.internal.ui
 
 import android.app.Activity
 import android.content.Intent
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.ActionTypes
@@ -18,6 +20,10 @@ import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
+import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -40,13 +46,17 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @Suppress("TooManyFunctions")
-internal class DefaultRedirectDelegate(
+internal class DefaultRedirectDelegate
+@Suppress("LongParameterList")
+constructor(
     private val observerRepository: ActionObserverRepository,
+    override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val redirectHandler: RedirectHandler,
     private val paymentDataRepository: PaymentDataRepository,
     private val nativeRedirectService: NativeRedirectService,
-) : RedirectDelegate {
+    private val analyticsManager: AnalyticsManager?,
+) : RedirectDelegate, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -59,8 +69,16 @@ internal class DefaultRedirectDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
+    private var action: RedirectAction? by SavedStateHandleProperty(ACTION_KEY)
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
+        restoreState()
+    }
+
+    private fun restoreState() {
+        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
+        action?.let { initState(it) }
     }
 
     override fun observe(
@@ -84,10 +102,23 @@ internal class DefaultRedirectDelegate(
 
     override fun handleAction(action: Action, activity: Activity) {
         if (action !is RedirectAction) {
-            exceptionChannel.trySend(ComponentException("Unsupported action"))
+            emitError(ComponentException("Unsupported action"))
             return
         }
 
+        this.action = action
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager?.trackEvent(event)
+
+        initState(action)
+        launchAction(activity, action.url)
+    }
+
+    private fun initState(action: RedirectAction) {
         when (action.type) {
             ActionTypes.NATIVE_REDIRECT -> {
                 paymentDataRepository.nativeRedirectData = action.nativeRedirectData
@@ -97,11 +128,9 @@ internal class DefaultRedirectDelegate(
                 paymentDataRepository.paymentData = action.paymentData
             }
         }
-
-        makeRedirect(activity, action.url)
     }
 
-    private fun makeRedirect(activity: Activity, url: String?) {
+    private fun launchAction(activity: Activity, url: String?) {
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             // TODO look into emitting a value to tell observers that a redirect was launched so they can track its
@@ -109,7 +138,7 @@ internal class DefaultRedirectDelegate(
             //  PaymentComponentState for actions.
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
-            exceptionChannel.trySend(ex)
+            emitError(ex)
         }
     }
 
@@ -123,11 +152,11 @@ internal class DefaultRedirectDelegate(
                 }
 
                 else -> {
-                    detailsChannel.trySend(createActionComponentData(details))
+                    emitDetails(details)
                 }
             }
         } catch (ex: CheckoutException) {
-            exceptionChannel.trySend(ex)
+            emitError(ex)
         }
     }
 
@@ -147,21 +176,35 @@ internal class DefaultRedirectDelegate(
             try {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
                 val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
-                detailsChannel.trySend(createActionComponentData(detailsJson))
+                emitDetails(detailsJson)
             } catch (e: HttpException) {
-                onError(e)
+                emitError(e)
             } catch (e: ModelSerializationException) {
-                onError(e)
+                emitError(e)
             }
         }
     }
 
     override fun onError(e: CheckoutException) {
-        exceptionChannel.trySend(e)
+        emitError(e)
     }
 
     override fun setOnRedirectListener(listener: () -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
+    }
+
+    private fun emitError(e: CheckoutException) {
+        exceptionChannel.trySend(e)
+        clearState()
+    }
+
+    private fun emitDetails(details: JSONObject) {
+        detailsChannel.trySend(createActionComponentData(details))
+        clearState()
+    }
+
+    private fun clearState() {
+        action = null
     }
 
     override fun onCleared() {
@@ -172,5 +215,8 @@ internal class DefaultRedirectDelegate(
 
     companion object {
         private const val RETURN_URL_QUERY_STRING_PARAMETER = "returnUrlQueryString"
+
+        @VisibleForTesting
+        internal const val ACTION_KEY = "ACTION_KEY"
     }
 }

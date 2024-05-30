@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,11 +6,10 @@
   ~ Created by caiof on 14/8/2020.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
@@ -19,8 +17,8 @@
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:ignore="DisableBaselineAlignment">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_country"
@@ -33,9 +31,9 @@
                 android:id="@+id/autoCompleteTextView_country"
                 style="@style/AdyenCheckout.DropdownTextInputEditText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:dropDownAnchor="@id/layout_container"
-                android:minEms="7" />
+                android:layout_height="match_parent"
+                android:dropDownAnchor="@id/layout_container" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -49,7 +47,9 @@
                 android:id="@+id/editText_mobileNumber"
                 style="@style/AdyenCheckout.MBWay.MobileNumberInput"
                 android:autofillHints="phoneNational" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
 </merge>

@@ -17,6 +17,8 @@ import com.adyen.checkout.components.core.action.ActionTypes
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -27,11 +29,14 @@ import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.redirect.redirect
 import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -53,12 +58,14 @@ internal class DefaultRedirectDelegateTest(
     @Mock private val nativeRedirectService: NativeRedirectService,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var redirectHandler: TestRedirectHandler
     private lateinit var paymentDataRepository: PaymentDataRepository
     private lateinit var delegate: DefaultRedirectDelegate
 
     @BeforeEach
     fun beforeEach() {
+        analyticsManager = TestAnalyticsManager()
         redirectHandler = TestRedirectHandler()
         paymentDataRepository = PaymentDataRepository(SavedStateHandle())
         redirectHandler = TestRedirectHandler()
@@ -173,8 +180,69 @@ internal class DefaultRedirectDelegateTest(
         redirectHandler.assertRemoveOnRedirectListenerCalled()
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when handleAction is called, then action event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = RedirectAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.action(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
+    @Test
+    fun `when initializing and action is set, then state is restored`() = runTest {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                DefaultRedirectDelegate.ACTION_KEY,
+                RedirectAction(paymentMethodType = "test", paymentData = "paymentData"),
+            )
+        }
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertEquals("paymentData", paymentDataRepository.paymentData)
+    }
+
+    @Test
+    fun `when details are emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        delegate.handleIntent(Intent())
+
+        assertNull(savedStateHandle[DefaultRedirectDelegate.ACTION_KEY])
+    }
+
+    @Test
+    fun `when an error is emitted, then state is cleared`() = runTest {
+        val savedStateHandle = SavedStateHandle()
+        delegate = createDelegate(savedStateHandle = savedStateHandle)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        redirectHandler.exception = ComponentException("Test")
+
+        delegate.handleAction(RedirectAction(paymentMethodType = "test", paymentData = "paymentData"), Activity())
+
+        assertNull(savedStateHandle[DefaultRedirectDelegate.ACTION_KEY])
+    }
+
     private fun createDelegate(
-        observerRepository: ActionObserverRepository = ActionObserverRepository()
+        observerRepository: ActionObserverRepository = ActionObserverRepository(),
+        savedStateHandle: SavedStateHandle = SavedStateHandle(),
     ): DefaultRedirectDelegate {
         val configuration = CheckoutConfiguration(
             Environment.TEST,
@@ -184,6 +252,7 @@ internal class DefaultRedirectDelegateTest(
         }
         return DefaultRedirectDelegate(
             observerRepository = observerRepository,
+            savedStateHandle = savedStateHandle,
             componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 configuration,
                 Locale.US,
@@ -193,11 +262,14 @@ internal class DefaultRedirectDelegateTest(
             redirectHandler = redirectHandler,
             paymentDataRepository = paymentDataRepository,
             nativeRedirectService = nativeRedirectService,
+            analyticsManager = analyticsManager,
         )
     }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
+        private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
 
         @JvmStatic
         fun errorSource() = listOf(

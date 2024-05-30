@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Husnummer</string>
     <string name="checkout_address_form_apartment_suite_hint">Lejlighed/suite</string>
     <string name="checkout_address_form_city_hint">By</string>
-    <string name="checkout_address_form_country_hint">Land</string>
+    <string name="checkout_address_form_country_hint">Land/region</string>
     <string name="checkout_address_form_states_hint">Stat</string>
     <string name="checkout_address_postal_code_hint">Postnummer</string>
     <string name="checkout_address_form_zip_code_hint">Postnummer</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Husnummer (valgfrit)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Lejlighed/suite (valgfrit)</string>
     <string name="checkout_address_form_city_hint_optional"> By (valgfrit)</string>
-    <string name="checkout_address_form_country_hint_optional">Land (valgfrit)</string>
+    <string name="checkout_address_form_country_hint_optional">Land/region (valgfrit)</string>
     <string name="checkout_address_form_states_hint_optional">Stat (valgfrit)</string>
     <string name="checkout_address_postal_code_hint_optional">Postnummer (valgfrit)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Postnummer (valgfrit)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Fandt ikke noget match for \'%s\'. Prøv igen eller #indtast adresse manuelt#.</string>
     <string name="checkout_address_lookup_enter_manually">Indtast adresse manuelt</string>
     <string name="checkout_address_lookup_submit">Brug denne adresse</string>
+    <string name="checkout_address_lookup_validation_empty">Adresse er påkrævet</string>
 
 </resources>

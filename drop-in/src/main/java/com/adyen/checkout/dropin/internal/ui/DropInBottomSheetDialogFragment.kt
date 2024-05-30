@@ -27,10 +27,12 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.R as MaterialR
 
 internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
-    lateinit var protocol: Protocol
+    private var _protocol: Protocol? = null
+    protected val protocol: Protocol get() = requireNotNull(_protocol)
 
     private var dialogInitViewState: Int = BottomSheetBehavior.STATE_COLLAPSED
     protected val dropInViewModel: DropInViewModel by activityViewModels { DropInViewModelFactory(requireActivity()) }
@@ -43,7 +45,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
         super.onAttach(context)
 
         require(activity is Protocol)
-        protocol = activity as Protocol
+        _protocol = activity as Protocol
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -59,7 +61,7 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
 
         dialog.setOnShowListener {
             val bottomSheet = (dialog as BottomSheetDialog).findViewById<FrameLayout>(
-                com.google.android.material.R.id.design_bottom_sheet,
+                MaterialR.id.design_bottom_sheet,
             )
 
             if (bottomSheet != null) {
@@ -86,6 +88,11 @@ internal abstract class DropInBottomSheetDialogFragment : BottomSheetDialogFragm
     override fun onCancel(dialog: DialogInterface) {
         adyenLog(AdyenLogLevel.DEBUG) { "onCancel" }
         protocol.terminateDropIn()
+    }
+
+    override fun onDetach() {
+        _protocol = null
+        super.onDetach()
     }
 
     /**

@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Αριθμός οικίας</string>
     <string name="checkout_address_form_apartment_suite_hint">Διαμέρισμα/Γραφείο</string>
     <string name="checkout_address_form_city_hint">Πόλη</string>
-    <string name="checkout_address_form_country_hint">Χώρα</string>
+    <string name="checkout_address_form_country_hint">Χώρα/Περιοχή</string>
     <string name="checkout_address_form_states_hint">Πολιτεία</string>
     <string name="checkout_address_postal_code_hint">Ταχυδρομικός κωδικός</string>
     <string name="checkout_address_form_zip_code_hint">Ταχυδρομικός κώδικας</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Αριθμός οικίας (προαιρετικό)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Διαμέρισμα/Γραφείο (προαιρετικό)</string>
     <string name="checkout_address_form_city_hint_optional"> Πόλη (προαιρετικό)</string>
-    <string name="checkout_address_form_country_hint_optional">Χώρα (προαιρετικό)</string>
+    <string name="checkout_address_form_country_hint_optional">Χώρα/Περιοχή (προαιρετικό)</string>
     <string name="checkout_address_form_states_hint_optional">Πολιτεία (προαιρετικό)</string>
     <string name="checkout_address_postal_code_hint_optional">Ταχυδρομικός κωδικός (προαιρετικό)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Ταχυδρομικός κωδικός (προαιρετικό)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">Το \'%s\' δεν ταιριάζει με τίποτα. Προσπαθήστε ξανά ή χρησιμοποιήστε #μη αυτόματη εισαγωγή διεύθυνσης#</string>
     <string name="checkout_address_lookup_enter_manually">Εισαγάγετε τη διεύθυνση μη αυτόματα</string>
     <string name="checkout_address_lookup_submit">Χρησιμοποιήστε αυτήν τη διεύθυνση</string>
+    <string name="checkout_address_lookup_validation_empty">Απαιτείται διεύθυνση</string>
 
 </resources>

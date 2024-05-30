@@ -16,18 +16,17 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
 
-      - uses: actions/cache/restore@v3
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: /home/runner/work/adyen-android/adyen-android
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+          cache-read-only: false
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run testDebugUnitTest
-        run: ./gradlew testDebugUnitTest --no-daemon
+        run: ./gradlew testDebugUnitTest -Pstrip-resources=true
 
   lint:
     name: Run lint
@@ -41,15 +40,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
 
-      - uses: actions/cache/restore@v3
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
         with:
-          path: /home/runner/work/adyen-android/adyen-android
-          key: cache-${{ github.run_id }}-${{ github.run_attempt }}
+          cache-read-only: false
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Run lintDebug
-        run: ./gradlew lintDebug --no-daemon
+        run: ./gradlew lintDebug -Pstrip-resources=true

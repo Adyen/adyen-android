@@ -66,7 +66,7 @@ internal class ButtonComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "USD",
@@ -76,6 +76,30 @@ internal class ButtonComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when setSubmitButtonVisible is set to false in button component configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            val testConfiguration = ButtonTestConfiguration.Builder(Locale.CANADA, Environment.TEST, TEST_CLIENT_KEY_1)
+                .setSubmitButtonVisible(false)
+                .build()
+            addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("USD", 123L), null)
+        val params = buttonComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
     }
 
     @ParameterizedTest
@@ -204,7 +228,7 @@ internal class ButtonComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,

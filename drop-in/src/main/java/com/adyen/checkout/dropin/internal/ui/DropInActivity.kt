@@ -64,6 +64,7 @@ import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.wechatpay.WeChatPayUtils
 import kotlinx.coroutines.launch
+import com.adyen.checkout.ui.core.R as UICoreR
 
 /**
  * Activity that presents the available PaymentMethods to the Shopper.
@@ -132,6 +133,7 @@ internal class DropInActivity :
 
         override fun onServiceDisconnected(className: ComponentName) {
             adyenLog(AdyenLogLevel.DEBUG) { "onServiceDisconnected" }
+            serviceBound = false
             dropInService = null
         }
     }
@@ -153,9 +155,7 @@ internal class DropInActivity :
             return
         }
 
-        if (noDialogPresent()) {
-            dropInViewModel.onCreated()
-        }
+        dropInViewModel.onCreated(noDialogPresent())
 
         handleIntent(intent)
 
@@ -214,7 +214,7 @@ internal class DropInActivity :
     }
 
     private fun startDropInService() {
-        val bound = BaseDropInService.startService(
+        val bound = BaseDropInService.bindService(
             context = this,
             connection = serviceConnection,
             merchantService = dropInViewModel.serviceComponentName,
@@ -237,9 +237,8 @@ internal class DropInActivity :
 
     private fun stopDropInService() {
         if (serviceBound) {
-            BaseDropInService.stopService(
+            BaseDropInService.unbindService(
                 context = this,
-                merchantService = dropInViewModel.serviceComponentName,
                 connection = serviceConnection,
             )
             serviceBound = false
@@ -273,7 +272,7 @@ internal class DropInActivity :
 
     override fun showError(dialogTitle: String?, errorMessage: String, reason: String, terminate: Boolean) {
         adyenLog(AdyenLogLevel.DEBUG) { "showError - message: $errorMessage" }
-        val title = dialogTitle ?: getString(R.string.error_dialog_title)
+        val title = dialogTitle ?: getString(UICoreR.string.error_dialog_title)
         showDialog(title, errorMessage) {
             errorDialogDismissed(reason, terminate)
         }
@@ -295,6 +294,7 @@ internal class DropInActivity :
 
     override fun onDestroy() {
         adyenLog(AdyenLogLevel.VERBOSE) { "onDestroy" }
+        stopDropInService()
         super.onDestroy()
     }
 
@@ -480,6 +480,10 @@ internal class DropInActivity :
 
     private fun handleAction(action: Action) {
         adyenLog(AdyenLogLevel.DEBUG) { "showActionDialog" }
+        getExistingActionFragment()?.apply {
+            handleAction(action)
+            return
+        }
         setLoading(false)
         hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
@@ -561,14 +565,16 @@ internal class DropInActivity :
     private fun isWeChatPayIntent(intent: Intent): Boolean = checkCompileOnly { WeChatPayUtils.isResultIntent(intent) }
 
     private fun handleActionIntentResponse(intent: Intent) {
-        val actionFragment = getActionFragment() ?: return
+        val actionFragment = getExistingActionFragment()
+        if (actionFragment == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "ActionComponentDialogFragment is not loaded" }
+            return
+        }
         actionFragment.handleIntent(intent)
     }
 
-    private fun getActionFragment(): ActionComponentDialogFragment? {
-        val fragment = getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
-        if (fragment == null) adyenLog(AdyenLogLevel.ERROR) { "ActionComponentDialogFragment is not loaded" }
-        return fragment
+    private fun getExistingActionFragment(): ActionComponentDialogFragment? {
+        return getFragmentByTag(ACTION_FRAGMENT_TAG) as? ActionComponentDialogFragment
     }
 
     private fun initObservers() {
@@ -720,7 +726,7 @@ internal class DropInActivity :
             .setTitle(title)
             .setMessage(message)
             .setOnDismissListener { onDismiss() }
-            .setPositiveButton(R.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
+            .setPositiveButton(UICoreR.string.error_dialog_button) { dialog, _ -> dialog.dismiss() }
             .show()
     }
 

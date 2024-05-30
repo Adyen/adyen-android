@@ -18,7 +18,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
-import com.adyen.checkout.components.core.internal.data.api.AnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -31,7 +32,6 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions")
 internal class StoredBlikDelegate(
@@ -39,7 +39,7 @@ internal class StoredBlikDelegate(
     override val componentParams: ButtonComponentParams,
     private val storedPaymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
-    private val analyticsRepository: AnalyticsRepository,
+    private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<BlikComponentState>,
 ) : BlikDelegate {
 
@@ -63,14 +63,18 @@ internal class StoredBlikDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        setupAnalytics(coroutineScope)
+        initializeAnalytics(coroutineScope)
     }
 
-    private fun setupAnalytics(coroutineScope: CoroutineScope) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "setupAnalytics" }
-        coroutineScope.launch {
-            analyticsRepository.setupAnalytics()
-        }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(
+            component = storedPaymentMethod.type.orEmpty(),
+            isStoredPaymentMethod = true,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
@@ -101,16 +105,22 @@ internal class StoredBlikDelegate(
     }
 
     override fun onSubmit() {
+        val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }
 
     private fun createOutputData() = BlikOutputData(blikCode = "")
 
+    @Suppress("ForbiddenComment")
+    // TODO: Here we only call this method on initialization. The checkoutAttemptId will only be available if it is
+    //  passed by drop-in. This should be fixed as part of state refactoring.
     private fun createComponentState(): BlikComponentState {
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsRepository.getCheckoutAttemptId(),
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 
@@ -137,5 +147,6 @@ internal class StoredBlikDelegate(
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 }

@@ -91,6 +91,7 @@ internal class CashAppPayComponentParamsMapperTest {
             shopperLocale = Locale.FRANCE,
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
             cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
             returnUrl = "https://google.com",
             showStorePaymentField = false,
@@ -135,7 +136,7 @@ internal class CashAppPayComponentParamsMapperTest {
             environment = Environment.EUROPE,
             cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",
@@ -144,6 +145,39 @@ internal class CashAppPayComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when setSubmitButtonVisible is set to false in cash app configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.GERMAN,
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            amount = Amount(
+                currency = "CAD",
+                value = 1235_00L,
+            ),
+            analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.NONE),
+        ) {
+            cashAppPay {
+                setReturnUrl(TEST_RETURN_URL)
+                setAmount(Amount("USD", 1L))
+                setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+                setSubmitButtonVisible(false)
+            }
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("EUR", 123L), null)
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
     }
 
     @ParameterizedTest
@@ -413,7 +447,7 @@ internal class CashAppPayComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,

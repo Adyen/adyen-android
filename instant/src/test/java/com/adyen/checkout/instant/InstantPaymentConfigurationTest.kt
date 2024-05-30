@@ -20,7 +20,9 @@ internal class InstantPaymentConfigurationTest {
             amount = Amount("EUR", 123L),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
         ) {
-            instantPayment("paypal")
+            instantPayment("paypal") {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
+            }
         }
 
         val actual = checkoutConfiguration.getInstantPaymentConfiguration("paypal")
@@ -32,6 +34,7 @@ internal class InstantPaymentConfigurationTest {
         )
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         assertEquals(expected.shopperLocale, actual?.shopperLocale)
@@ -39,6 +42,7 @@ internal class InstantPaymentConfigurationTest {
         assertEquals(expected.clientKey, actual?.clientKey)
         assertEquals(expected.amount, actual?.amount)
         assertEquals(expected.analyticsConfiguration, actual?.analyticsConfiguration)
+        assertEquals(expected.actionHandlingMethod, actual?.actionHandlingMethod)
     }
 
     @Test
@@ -50,6 +54,7 @@ internal class InstantPaymentConfigurationTest {
         )
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         val actual = config.toCheckoutConfiguration()
@@ -60,7 +65,11 @@ internal class InstantPaymentConfigurationTest {
             clientKey = TEST_CLIENT_KEY,
             amount = Amount("EUR", 123L),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
-        )
+        ) {
+            instantPayment {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
+            }
+        }
 
         assertEquals(expected.shopperLocale, actual.shopperLocale)
         assertEquals(expected.environment, actual.environment)
@@ -74,6 +83,7 @@ internal class InstantPaymentConfigurationTest {
         assertEquals(config.clientKey, actualInstantConfig?.clientKey)
         assertEquals(config.amount, actualInstantConfig?.amount)
         assertEquals(config.analyticsConfiguration, actualInstantConfig?.analyticsConfiguration)
+        assertEquals(config.actionHandlingMethod, actualInstantConfig?.actionHandlingMethod)
     }
 
     companion object {

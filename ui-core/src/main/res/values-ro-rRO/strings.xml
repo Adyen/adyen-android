@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Număr</string>
     <string name="checkout_address_form_apartment_suite_hint">Apartament</string>
     <string name="checkout_address_form_city_hint">Oraș</string>
-    <string name="checkout_address_form_country_hint">Țară</string>
+    <string name="checkout_address_form_country_hint">Țară/regiune</string>
     <string name="checkout_address_form_states_hint">Stat</string>
     <string name="checkout_address_postal_code_hint">Cod poștal</string>
     <string name="checkout_address_form_zip_code_hint">Cod poștal</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Număr (opțional)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Apartament(opțional)</string>
     <string name="checkout_address_form_city_hint_optional"> Oraș (opțional)</string>
-    <string name="checkout_address_form_country_hint_optional">Țară (opțional)</string>
+    <string name="checkout_address_form_country_hint_optional">Țară/regiune (opțional)</string>
     <string name="checkout_address_form_states_hint_optional">Stat (opțional)</string>
     <string name="checkout_address_postal_code_hint_optional">Cod poștal (opțional)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Cod poștal (opțional)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">\'%s\' nu s-a potrivit cu nimic, încercați din nou sau folosiți #completarea manuală a adresei#</string>
     <string name="checkout_address_lookup_enter_manually">Introduceți adresa manual</string>
     <string name="checkout_address_lookup_submit">Folosiți această adresă</string>
+    <string name="checkout_address_lookup_validation_empty">Adresa este necesară</string>
 
 </resources>

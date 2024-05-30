@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -40,6 +41,7 @@ import com.adyen.checkout.voucher.toCheckoutConfiguration
 class VoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<VoucherComponent, VoucherConfiguration, VoucherDelegate> {
@@ -57,12 +59,14 @@ constructor(
             val voucherDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             VoucherComponent(
                 delegate = voucherDelegate,
-                actionComponentEventHandler = DefaultActionComponentEventHandler(callback),
+                actionComponentEventHandler = DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, voucherFactory)[key, VoucherComponent::class.java]
             .also { component ->
-                component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+                component.observe(lifecycleOwner) {
+                    component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+                }
             }
     }
 
@@ -80,9 +84,11 @@ constructor(
 
         return DefaultVoucherDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             pdfOpener = PdfOpener(),
             imageSaver = ImageSaver(),
+            analyticsManager = analyticsManager,
         )
     }
 
@@ -131,7 +137,7 @@ constructor(
             PaymentMethodTypes.ECONTEXT_ONLINE,
             PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN,
             PaymentMethodTypes.ECONTEXT_STORES,
-            PaymentMethodTypes.MULTIBANCO
+            PaymentMethodTypes.MULTIBANCO,
         )
     }
 }

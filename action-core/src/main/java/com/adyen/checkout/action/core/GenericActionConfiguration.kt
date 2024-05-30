@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.twint.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
@@ -132,6 +133,14 @@ class GenericActionConfiguration private constructor(
          * Add configuration for Redirect action.
          */
         override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): Builder {
+            availableActionConfigs[configuration::class.java] = configuration
+            return this
+        }
+
+        /**
+         * Add configuration for Twint action.
+         */
+        override fun addTwintActionConfiguration(configuration: TwintActionConfiguration): Builder {
             availableActionConfigs[configuration::class.java] = configuration
             return this
         }

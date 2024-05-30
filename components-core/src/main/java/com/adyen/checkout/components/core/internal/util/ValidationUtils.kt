@@ -17,19 +17,8 @@ object ValidationUtils {
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
     private val PHONE_PATTERN = Pattern.compile(PHONE_REGEX)
 
-    private const val CLIENT_KEY_REGEX = "([a-z]){4}\\_([A-z]|\\d){32}"
-    private val CLIENT_KEY_PATTERN = Pattern.compile(CLIENT_KEY_REGEX)
-
-    private const val CLIENT_KEY_TEST_PREFIX = "test_"
-    private const val CLIENT_KEY_LIVE_PREFIX = "live_"
-
-    private val LIVE_ENVIRONMENTS = listOf(
-        Environment.APSE,
-        Environment.AUSTRALIA,
-        Environment.EUROPE,
-        Environment.INDIA,
-        Environment.UNITED_STATES,
-    )
+    private val TEST_CLIENT_KEY_PATTERN = Pattern.compile("test_([a-zA-Z0-9]){32}")
+    private val LIVE_CLIENT_KEY_PATTERN = Pattern.compile("live_([a-zA-Z0-9]){32}")
 
     /**
      * Check if phone number is valid.
@@ -55,25 +44,21 @@ object ValidationUtils {
      * Check if the Client Key is valid.
      *
      * @param clientKey A string to check if is a client key.
-     * @return If we consider it a valid client key or not.
-     */
-    fun isClientKeyValid(clientKey: String): Boolean {
-        return CLIENT_KEY_PATTERN.matcher(clientKey).matches()
-    }
-
-    /**
-     * Check if the Client Key matches the Environment
-     *
-     * @param clientKey A string to check if is a client key.
      * @param environment Selected environment in the configuration.
-     * @return If Client Key is preceded with correct prefix
+     * @return If the client key is valid and matches the chosen environment.
      */
-    fun doesClientKeyMatchEnvironment(clientKey: String, environment: Environment): Boolean {
-        val isTestEnvironment = environment == Environment.TEST
-        val isLiveEnvironment = LIVE_ENVIRONMENTS.contains(environment)
+    internal fun isClientKeyValid(clientKey: String, environment: Environment): Boolean {
+        return when (environment) {
+            Environment.TEST -> TEST_CLIENT_KEY_PATTERN.matcher(clientKey).matches()
 
-        return (isLiveEnvironment && clientKey.startsWith(CLIENT_KEY_LIVE_PREFIX)) ||
-            (isTestEnvironment && clientKey.startsWith(CLIENT_KEY_TEST_PREFIX)) ||
-            (!isLiveEnvironment && !isTestEnvironment)
+            Environment.APSE,
+            Environment.AUSTRALIA,
+            Environment.EUROPE,
+            Environment.INDIA,
+            Environment.UNITED_STATES -> LIVE_CLIENT_KEY_PATTERN.matcher(clientKey).matches()
+
+            // this should not be reachable in reality as Environment cannot be instantiated using the constructor
+            else -> false
+        }
     }
 }

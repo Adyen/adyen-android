@@ -7,9 +7,10 @@
  */
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.components.core.internal.util.AndroidBase64Encoder
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 internal class ChallengeResult private constructor(val isAuthenticated: Boolean, val payload: String) {
 
@@ -28,6 +29,7 @@ internal class ChallengeResult private constructor(val isAuthenticated: Boolean,
          * @return The filled object with the content needed for the details response.
          * @throws JSONException In case parsing fails.
          */
+        @OptIn(ExperimentalEncodingApi::class)
         fun from(
             transactionStatus: String,
             errorDetails: String? = null,
@@ -38,7 +40,7 @@ internal class ChallengeResult private constructor(val isAuthenticated: Boolean,
             jsonObject.put(KEY_TRANSACTION_STATUS, transactionStatus)
             jsonObject.putOpt(KEY_AUTHORISATION_TOKEN, authorisationToken)
             jsonObject.putOpt(KEY_SDK_ERROR, errorDetails)
-            val payload = AndroidBase64Encoder().encode(jsonObject.toString())
+            val payload = Base64.encode(jsonObject.toString().toByteArray())
             return ChallengeResult(isAuthenticated, payload)
         }
     }

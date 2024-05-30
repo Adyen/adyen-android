@@ -6,6 +6,7 @@ plugins {
     id 'com.android.application' version "$android_gradle_plugin_version" apply false
     id 'com.android.library' version "$android_gradle_plugin_version" apply false
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
+    id 'com.google.devtools.ksp' version "$ksp_version" apply false
     id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
     id 'io.gitlab.arturbosch.detekt' version "$detekt_gradle_plugin_version"
     id 'org.jetbrains.dokka' version "$dokka_version"
@@ -25,9 +26,27 @@ subprojects {
 
     plugins.withType(com.android.build.gradle.BasePlugin).configureEach {
         android {
+            if (project.hasProperty("strip-resources") && project.property("strip-resources") == "true") {
+                defaultConfig {
+                    resConfigs "en", "xxhdpi"
+                }
+
+                buildTypes {
+                    debug {
+                        crunchPngs false
+                    }
+                }
+            }
+
             compileOptions {
                 sourceCompatibility = javaVersion
                 targetCompatibility = javaVersion
+            }
+
+            packagingOptions {
+                excludes += "/META-INF/{AL2.0,LGPL2.1}"
+                merges += "META-INF/LICENSE.md"
+                merges += "META-INF/LICENSE-notice.md"
             }
         }
     }

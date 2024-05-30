@@ -108,7 +108,7 @@ class CheckoutConfiguration(
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun addActionConfiguration(configuration: Configuration) {
-        availableConfigurations[configuration::class.java.simpleName] = configuration
+        availableConfigurations[configuration::class.java.name] = configuration
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -120,7 +120,7 @@ class CheckoutConfiguration(
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun <T : Configuration> getActionConfiguration(configClass: Class<T>): T? {
         @Suppress("UNCHECKED_CAST")
-        return availableConfigurations[configClass.simpleName] as? T
+        return availableConfigurations[configClass.name] as? T
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

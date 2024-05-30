@@ -28,7 +28,7 @@
     <string name="checkout_address_form_house_number_hint">Número de vivienda</string>
     <string name="checkout_address_form_apartment_suite_hint">Apartamento/suite</string>
     <string name="checkout_address_form_city_hint">Ciudad</string>
-    <string name="checkout_address_form_country_hint">País</string>
+    <string name="checkout_address_form_country_hint">País o región</string>
     <string name="checkout_address_form_states_hint">Estado</string>
     <string name="checkout_address_postal_code_hint">Código postal</string>
     <string name="checkout_address_form_zip_code_hint">Código postal</string>
@@ -40,7 +40,7 @@
     <string name="checkout_address_form_house_number_hint_optional">Número de vivienda (opcional)</string>
     <string name="checkout_address_form_apartment_suite_hint_optional">Apartamento/suite (opcional)</string>
     <string name="checkout_address_form_city_hint_optional"> Ciudad (opcional)</string>
-    <string name="checkout_address_form_country_hint_optional">País (opcional)</string>
+    <string name="checkout_address_form_country_hint_optional">País o región (opcional)</string>
     <string name="checkout_address_form_states_hint_optional">Estado (opcional)</string>
     <string name="checkout_address_postal_code_hint_optional">Código postal (opcional)</string>
     <string name="checkout_address_form_zip_code_hint_optional">Código postal (opcional)</string>
@@ -54,5 +54,6 @@
     <string name="checkout_address_lookup_empty_description">"%s" no ha coincidido con nada, inténtelo de nuevo o #introduzca su dirección manualmente#</string>
     <string name="checkout_address_lookup_enter_manually">Introduzca la dirección manualmente</string>
     <string name="checkout_address_lookup_submit">Usar esta dirección</string>
+    <string name="checkout_address_lookup_validation_empty">Se necesita la dirección</string>
 
 </resources>

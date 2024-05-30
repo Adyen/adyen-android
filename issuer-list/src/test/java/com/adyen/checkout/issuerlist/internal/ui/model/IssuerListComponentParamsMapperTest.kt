@@ -72,7 +72,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = DEVICE_LOCALE,
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY_1,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
             isCreatedByDropIn = false,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
@@ -118,7 +118,7 @@ internal class IssuerListComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             viewType = IssuerListViewType.SPINNER_VIEW,
             hideIssuerLogos = true,
@@ -130,6 +130,31 @@ internal class IssuerListComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Test
+    fun `when setSubmitButtonVisible is set to false in issuers list configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+        ) {
+            val issuerListConfiguration = TestIssuerListConfiguration.Builder(shopperLocale, environment, clientKey)
+                .setSubmitButtonVisible(false)
+                .build()
+            addConfiguration(TEST_CONFIGURATION_KEY, issuerListConfiguration)
+        }
+
+        val dropInOverrideParams = DropInOverrideParams(Amount("CAD", 123L), null)
+        val params = issuerListComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = dropInOverrideParams,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+            hideIssuerLogosDefaultValue = false,
+        )
+
+        assertEquals(true, params.isSubmitButtonVisible)
     }
 
     @ParameterizedTest
@@ -261,7 +286,7 @@ internal class IssuerListComponentParamsMapperTest {
         shopperLocale: Locale = DEVICE_LOCALE,
         environment: Environment = Environment.TEST,
         clientKey: String = TEST_CLIENT_KEY_1,
-        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL),
+        analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,

@@ -53,24 +53,13 @@ internal class DefaultGenericActionDelegateTest(
     @Mock private val activity: Activity,
     @Mock private val actionDelegateProvider: ActionDelegateProvider,
 ) {
+
     private lateinit var genericActionDelegate: DefaultGenericActionDelegate
     private lateinit var testDelegate: TestActionDelegate
 
     @BeforeEach
     fun beforeEach() {
-        val configuration = CheckoutConfiguration(
-            shopperLocale = Locale.US,
-            environment = Environment.TEST,
-            clientKey = TEST_CLIENT_KEY,
-        )
-        genericActionDelegate = DefaultGenericActionDelegate(
-            ActionObserverRepository(),
-            SavedStateHandle(),
-            configuration,
-            GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            actionDelegateProvider,
-        )
+        genericActionDelegate = createDelegate()
         whenever(activity.application) doReturn Application()
 
         testDelegate = TestActionDelegate()
@@ -230,6 +219,39 @@ internal class DefaultGenericActionDelegateTest(
 
         assertEquals(adyen3DS2Delegate, genericActionDelegate.delegate)
         assertTrue(adyen3DS2Delegate.handleActionCalled)
+    }
+
+    @Test
+    fun `when process died during handling action, then handleIntent should restore state and continue`() {
+        val savedStateHandle = SavedStateHandle().apply {
+            set(DefaultGenericActionDelegate.ACTION_KEY, RedirectAction())
+        }
+        genericActionDelegate = createDelegate(savedStateHandle)
+        genericActionDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        genericActionDelegate.handleIntent(Intent())
+
+        assertTrue(testDelegate.handleIntentCalled)
+    }
+
+    private fun createDelegate(
+        savedStateHandle: SavedStateHandle = SavedStateHandle()
+    ): DefaultGenericActionDelegate {
+        val configuration = CheckoutConfiguration(
+            shopperLocale = Locale.US,
+            environment = Environment.TEST,
+            clientKey = TEST_CLIENT_KEY,
+        )
+
+        return DefaultGenericActionDelegate(
+            observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
+            checkoutConfiguration = configuration,
+            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
+                .mapToParams(configuration, Locale.US, null, null),
+            actionDelegateProvider = actionDelegateProvider,
+            application = Application(),
+        )
     }
 
     companion object {

@@ -21,13 +21,17 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-          cache: 'gradle'
-      
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      
+
       - name: Gradle check
-        run: ./gradlew check --no-daemon
+        run: ./gradlew check
 
       # TODO: add more tests or rely on check_release workflow?
 
@@ -42,7 +46,7 @@ jobs:
 
       # Packages and publishes to Maven Central
       - name: Publish to Maven Central
-        run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace --no-daemon
+        run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}

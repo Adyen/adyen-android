@@ -28,6 +28,7 @@ import com.adyen.checkout.components.core.action.AwaitAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.DefaultActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.StatusService
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
@@ -42,6 +43,7 @@ import com.adyen.checkout.core.internal.util.LocaleProvider
 class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
+    private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
 ) : ActionComponentProvider<AwaitComponent, AwaitConfiguration, AwaitDelegate> {
@@ -62,11 +64,13 @@ constructor(
             val awaitDelegate = getDelegate(checkoutConfiguration, savedStateHandle, application)
             AwaitComponent(
                 awaitDelegate,
-                DefaultActionComponentEventHandler(callback),
+                DefaultActionComponentEventHandler(),
             )
         }
         return ViewModelProvider(viewModelStoreOwner, awaitFactory)[key, AwaitComponent::class.java].also { component ->
-            component.observe(lifecycleOwner, component.actionComponentEventHandler::onActionComponentEvent)
+            component.observe(lifecycleOwner) {
+                component.actionComponentEventHandler.onActionComponentEvent(it, callback)
+            }
         }
     }
 
@@ -88,9 +92,11 @@ constructor(
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
+            savedStateHandle = savedStateHandle,
             componentParams = componentParams,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
+            analyticsManager = analyticsManager,
         )
     }
 

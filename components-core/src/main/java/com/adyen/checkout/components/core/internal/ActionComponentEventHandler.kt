@@ -9,8 +9,9 @@
 package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.ActionComponentCallback
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponentEventHandler {
-    fun onActionComponentEvent(event: ActionComponentEvent)
+    fun onActionComponentEvent(event: ActionComponentEvent, actionComponentCallback: ActionComponentCallback)
 }
