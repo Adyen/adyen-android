@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Εισαγάγετε μια σωστή εικονική διεύθυνση πληρωμής</string>
     <string name="checkout_upi_qr_generation">Δημιουργήστε τον κωδικό QR που μπορείτε να λάβετε ή τραβήξτε ένα στιγμιότυπο και ανεβάστε το στην εφαρμογή UPI για να ολοκληρώσετε την πληρωμή.</string>
     <string name="checkout_upi_continue">Συνέχεια</string>
+    <string name="checkout_upi_app_tab_title">Πληρώστε με οποιαδήποτε εφαρμογή UPI</string>
+    <string name="checkout_upi_app_manual_input">Εισαγωγή αναγνωριστικού UPI</string>
+    <string name="checkout_upi_app_other_upi">Άλλο UPI</string>
+    <string name="checkout_upi_other_tab_title">Άλλες επιλογές UPI</string>
 
 </resources>

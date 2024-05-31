@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Zadajte správnu adresu pre virtuálnu platbu</string>
     <string name="checkout_upi_qr_generation">Vygenerujte kód QR. Ten si môžete stiahnuť alebo môžete urobiť snímku obrazovky a nahrať ju do aplikácie UPI na dokončenie platby.</string>
     <string name="checkout_upi_continue">Pokračovať</string>
+    <string name="checkout_upi_app_tab_title">Plaťte pomocou ľubovoľnej aplikácie UPI</string>
+    <string name="checkout_upi_app_manual_input">Zadajte UPI ID</string>
+    <string name="checkout_upi_app_other_upi">Iné UPI</string>
+    <string name="checkout_upi_other_tab_title">Ďalšie možnosti UPI</string>
 
 </resources>

@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">أدخل عنوان دفع افتراضي صحيح</string>
     <string name="checkout_upi_qr_generation">أنشئ رمز الاستجابة السريعة الذي يمكنك تنزيله أو خذ لقطة شاشة له وقم بتحميله على تطبيق UPI لإكمال الدفع.</string>
     <string name="checkout_upi_continue">متابعة</string>
+    <string name="checkout_upi_app_tab_title">ادفع عن طريق أي تطبيق من تطبيقات واجهة المدفوعات الموحدة (UPI)</string>
+    <string name="checkout_upi_app_manual_input">أدخل معرف UPI</string>
+    <string name="checkout_upi_app_other_upi">خيارات UPI الأخرى</string>
+    <string name="checkout_upi_other_tab_title">خيارات UPI الأخرى</string>
 
 </resources>

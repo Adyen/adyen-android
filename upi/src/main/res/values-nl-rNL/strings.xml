@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Voer een correct virtueel betalingsadres in</string>
     <string name="checkout_upi_qr_generation">Genereer de QR-code. U kunt deze downloaden of er een schermafbeelding van maken en deze uploaden naar de UPI-app om de betaling te voltooien.</string>
     <string name="checkout_upi_continue">Doorgaan</string>
+    <string name="checkout_upi_app_tab_title">Betaal via elke UPI-app</string>
+    <string name="checkout_upi_app_manual_input">UPI-ID invoeren</string>
+    <string name="checkout_upi_app_other_upi">Andere UPI</string>
+    <string name="checkout_upi_other_tab_title">Andere UPI-opties</string>
 
 </resources>

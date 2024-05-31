@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Введите правильный адрес виртуальных платежей</string>
     <string name="checkout_upi_qr_generation">Сгенерируйте загружаемый QR-код или снимок экрана и отправьте его в приложение UPI, чтобы завершить оплату.</string>
     <string name="checkout_upi_continue">Продолжить</string>
+    <string name="checkout_upi_app_tab_title">Оплата любым приложением UPI</string>
+    <string name="checkout_upi_app_manual_input">Введите идентификатор UPI</string>
+    <string name="checkout_upi_app_other_upi">Другие UPI</string>
+    <string name="checkout_upi_other_tab_title">Другие варианты UPI</string>
 
 </resources>

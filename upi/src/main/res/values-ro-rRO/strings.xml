@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Introduceți o adresă de plată virtuală corectă</string>
     <string name="checkout_upi_qr_generation">Generați codul QR pe care îl puteți descărca sau pe care îl puteți reda într-o captură de ecran și încărcați-l în aplicația UPI pentru a finaliza plata.</string>
     <string name="checkout_upi_continue">Continuare</string>
+    <string name="checkout_upi_app_tab_title">Plătiți cu orice aplicație UPI</string>
+    <string name="checkout_upi_app_manual_input">Completați identificatorul UPI</string>
+    <string name="checkout_upi_app_other_upi">Alte UPI</string>
+    <string name="checkout_upi_other_tab_title">Alte opțiuni UPI</string>
 
 </resources>

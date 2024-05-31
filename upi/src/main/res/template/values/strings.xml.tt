@@ -12,12 +12,13 @@
     <string name="checkout_upi_vpa_validation">%%upi.vpa.validationMessage%%</string>
     <string name="checkout_upi_qr_generation">%%upi.qrcode.generationMessage%%</string>
     <string name="checkout_upi_continue">%%continue%%</string>
+    <string name="checkout_upi_app_tab_title">%%upi.first.tabTitle%%</string>
+    <string name="checkout_upi_app_manual_input">%%upi.mode.enterUpiId%%</string>
+    <string name="checkout_upi_app_other_upi">%%upi.mode.otherUpi%%</string>
+    <string name="checkout_upi_other_tab_title">%%upi.second.tabTitle%%</string>
 
     <!-- Untranslatable strings -->
-    <string name="checkout_upi_collect" translatable="false">Pay with any UPI</string>
-    <string name="checkout_upi_collect_generic_app" translatable="false">Other UPI</string>
-    <string name="checkout_upi_collect_manual_input" translatable="false">Enter UPI ID</string>
-    <string name="checkout_upi_collect_manual_input_hint" translatable="false">UPI ID</string>
+    <string name="checkout_upi_app_manual_input_hint" translatable="false">UPI ID</string>
     <string name="checkout_upi_vpa" translatable="false">VPA</string>
     <string name="checkout_upi_vpa_full" translatable="false">Virtual Payment Address</string>
     <string name="checkout_upi_qr_code" translatable="false">QR code</string>

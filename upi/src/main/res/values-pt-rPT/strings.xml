@@ -12,5 +12,9 @@
     <string name="checkout_upi_vpa_validation">Insira um endereço de pagamento virtual correto</string>
     <string name="checkout_upi_qr_generation">Crie o código QR que pode descarregar ou capturar e carregá-lo na aplicação UPI para concluir o pagamento.</string>
     <string name="checkout_upi_continue">Continuar</string>
+    <string name="checkout_upi_app_tab_title">Pague com qualquer aplicação UPI</string>
+    <string name="checkout_upi_app_manual_input">Introduza o ID da aplicação UPI</string>
+    <string name="checkout_upi_app_other_upi">Outras UPI</string>
+    <string name="checkout_upi_other_tab_title">Outras opções UPI</string>
 
 </resources>
