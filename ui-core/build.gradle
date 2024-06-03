@@ -42,6 +42,7 @@ dependencies {
 
     // Dependencies
     implementation libraries.androidx.appcompat
+    api libraries.androidx.autofill
     api libraries.androidx.constraintlayout
     implementation libraries.androidx.recyclerview
     api libraries.material
