@@ -34,7 +34,7 @@ ext {
     sonarqube_version = '5.0.0.4638'
 
     // Android Dependencies
-    annotation_version = "1.7.1"
+    annotation_version = "1.8.0"
     appcompat_version = "1.6.1"
     browser_version = "1.8.0"
     coroutines_version = "1.8.0"
