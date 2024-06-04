@@ -35,15 +35,15 @@ internal sealed class UPIIntentItem {
     }
 
     data object GenericApp : UPIIntentItem() {
-        override fun areItemsTheSame(newItem: UPIIntentItem) = true
-        override fun areContentsTheSame(newItem: UPIIntentItem) = true
+        override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is GenericApp
+        override fun areContentsTheSame(newItem: UPIIntentItem) = newItem is GenericApp
         override fun getChangePayload(newItem: UPIIntentItem) = null
     }
 
     data class ManualInput(
         @StringRes val errorMessageResource: Int?
     ) : UPIIntentItem() {
-        override fun areItemsTheSame(newItem: UPIIntentItem) = true
+        override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is ManualInput
         override fun areContentsTheSame(newItem: UPIIntentItem) =
             newItem is ManualInput &&
                 errorMessageResource == newItem.errorMessageResource

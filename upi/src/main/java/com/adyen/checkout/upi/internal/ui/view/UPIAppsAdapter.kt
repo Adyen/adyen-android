@@ -66,7 +66,7 @@ internal class UPIAppsAdapter(
         val item = getItem(position)
         bind(
             item = item,
-            isChecked = item == selectedItem,
+            isChecked = selectedItem?.areItemsTheSame(item) ?: false,
         )
         setOnClickListener(::onItemClicked)
     }
