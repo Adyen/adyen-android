@@ -9,11 +9,13 @@
 package com.adyen.checkout.upi.internal.ui.view
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.autofill.HintConstants
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -217,6 +219,9 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     private fun initVpaInput(delegate: UPIDelegate, localizedContext: Context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.editTextVpa.setAutofillHints(HintConstants.AUTOFILL_HINT_UPI_VPA)
+        }
         binding.editTextVpa.setOnChangeListener { editable ->
             delegate.updateInputData { vpaVirtualPaymentAddress = editable.toString() }
             binding.textInputLayoutVpa.hideError()
