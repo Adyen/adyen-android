@@ -456,6 +456,41 @@ internal class DefaultBoletoDelegateTest(
     }
 
     @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createBoletoDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createBoletoDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    @Nested
+    inner class SubmitButtonEnableTest {
+
+        @Test
+        fun `when shouldEnableSubmitButton is called, then true is returned`() {
+            assertTrue(delegate.shouldEnableSubmitButton())
+        }
+    }
+
+    @Nested
     inner class SubmitHandlerTest {
         @Test
         fun `when delegate is initialized then submit handler event is initialized`() = runTest {

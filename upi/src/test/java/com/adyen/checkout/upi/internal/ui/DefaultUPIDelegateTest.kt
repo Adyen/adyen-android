@@ -28,6 +28,7 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponentState
+import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.getUPIConfiguration
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
@@ -407,6 +408,74 @@ internal class DefaultUPIDelegateTest(
     }
 
     @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createUPIDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createUPIDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    @Nested
+    inner class SubmitButtonEnableTest {
+
+        @Test
+        fun `when selected mode is INTENT and there is no selected upi intent item, then submit button should not be enabled`() {
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+                selectedUPIIntentItem = null
+            }
+
+            assertFalse(delegate.shouldEnableSubmitButton())
+        }
+
+        @Test
+        fun `when selected mode is INTENT and there is selected upi intent item, then submit button should be enabled`() {
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+                selectedUPIIntentItem = UPIIntentItem.GenericApp
+            }
+
+            assertTrue(delegate.shouldEnableSubmitButton())
+        }
+
+        @Test
+        fun `when selected mode is VPA, then submit button should be enabled`() {
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.VPA
+            }
+
+            assertTrue(delegate.shouldEnableSubmitButton())
+        }
+
+        @Test
+        fun `when selected mode is QR, then submit button should be enabled`() {
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.QR
+            }
+
+            assertTrue(delegate.shouldEnableSubmitButton())
+        }
+    }
+
+    @Nested
     inner class SubmitHandlerTest {
 
         @Test
@@ -484,13 +553,14 @@ internal class DefaultUPIDelegateTest(
 
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
+        configuration: UPIConfiguration.Builder.() -> Unit = {}
     ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        upi()
+        upi(configuration)
     }
 
     private fun createUPIDelegate(

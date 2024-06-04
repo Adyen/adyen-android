@@ -54,6 +54,7 @@ class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
                 }
                 resetUIState()
             }
+            uiEventChannel.trySend(PaymentComponentUIEvent.StateUpdated)
         }.launchIn(coroutineScope)
     }
 

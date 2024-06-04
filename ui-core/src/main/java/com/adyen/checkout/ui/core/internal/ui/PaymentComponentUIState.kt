@@ -33,6 +33,8 @@ sealed class PaymentComponentUIState {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class PaymentComponentUIEvent {
+abstract class PaymentComponentUIEvent {
     object InvalidUI : PaymentComponentUIEvent()
+
+    object StateUpdated : PaymentComponentUIEvent()
 }

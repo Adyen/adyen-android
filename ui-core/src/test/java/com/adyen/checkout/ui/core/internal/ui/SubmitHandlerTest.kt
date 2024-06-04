@@ -60,6 +60,17 @@ internal class SubmitHandlerTest {
 
                 assertEquals(expected, submitHandler.submitFlow.first())
             }
+
+        @Test
+        fun `component state flow gets updated, then StateUpdated state should be emitted`() = runTest {
+            val componentStateFlow = MutableStateFlow(createComponentState())
+            submitHandler = createSubmitHandler()
+            submitHandler.initialize(CoroutineScope(UnconfinedTestDispatcher()), componentStateFlow)
+
+            componentStateFlow.tryEmit(createComponentState())
+
+            assertEquals(PaymentComponentUIEvent.StateUpdated, submitHandler.uiEventFlow.first())
+        }
     }
 
     @Nested
