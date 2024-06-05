@@ -177,6 +177,7 @@ ext {
             "org.mockito:mockito-android:$mockito_version",
             "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
         ],
+        mockWebServer   : "com.squareup.okhttp3:mockwebserver:$okhttp_version",
         robolectric     : "org.robolectric:robolectric:$robolectric_version"
     ]
 }
