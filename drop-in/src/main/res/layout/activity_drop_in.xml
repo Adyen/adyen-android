@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2019 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,12 +6,11 @@
   ~ Created by caiof on 21/3/2019.
   -->
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DropInActivity"
+    tools:context=".internal.ui.DropInActivity"
     tools:ignore="MergeRootFrame">
 
 </FrameLayout>
