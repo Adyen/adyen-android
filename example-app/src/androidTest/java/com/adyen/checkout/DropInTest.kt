@@ -8,40 +8,18 @@
 
 package com.adyen.checkout
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.adyen.checkout.example.ui.main.MainActivity
 import com.adyen.checkout.robot.onDropIn
 import com.adyen.checkout.robot.onMain
-import com.adyen.checkout.rule.IdlingDispatcherRule
-import com.adyen.checkout.server.CheckoutMockWebServer
-import dagger.hilt.android.testing.HiltAndroidRule
+import com.adyen.checkout.rule.CheckoutTestRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.After
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
 internal class DropInTest {
 
-    @get:Rule(order = 0)
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule(order = 1)
-    var activityRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
-
-    @get:Rule(order = 2)
-    var dispatcherRule = IdlingDispatcherRule()
-
-    @Before
-    fun before() {
-        CheckoutMockWebServer.start()
-    }
-
-    @After
-    fun after() {
-        CheckoutMockWebServer.stop()
-    }
+    @get:Rule
+    var checkoutTestRule = CheckoutTestRule(this)
 
     @Test
     fun whenDropInIsOpened_thenItIsDisplayed() {
