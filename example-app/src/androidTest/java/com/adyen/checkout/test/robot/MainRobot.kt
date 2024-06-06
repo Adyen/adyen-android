@@ -6,7 +6,7 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.robot
+package com.adyen.checkout.test.robot
 
 import com.adevinta.android.barista.assertion.BaristaVisibilityAssertions.assertDisplayed
 import com.adevinta.android.barista.interaction.BaristaCheckboxInteractions.check

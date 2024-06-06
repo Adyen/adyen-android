@@ -6,11 +6,11 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout
+package com.adyen.checkout.dropin
 
-import com.adyen.checkout.robot.onDropIn
-import com.adyen.checkout.robot.onMain
-import com.adyen.checkout.rule.CheckoutTestRule
+import com.adyen.checkout.test.robot.onDropIn
+import com.adyen.checkout.test.robot.onMain
+import com.adyen.checkout.test.rule.CheckoutTestRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test

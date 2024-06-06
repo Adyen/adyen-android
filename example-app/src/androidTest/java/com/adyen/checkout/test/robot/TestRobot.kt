@@ -6,7 +6,7 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.robot
+package com.adyen.checkout.test.robot
 
 internal interface TestRobot {
 

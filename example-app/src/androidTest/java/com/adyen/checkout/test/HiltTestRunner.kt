@@ -6,7 +6,7 @@
  * Created by oscars on 19/4/2024.
  */
 
-package com.adyen.checkout
+package com.adyen.checkout.test
 
 import android.app.Application
 import android.content.Context

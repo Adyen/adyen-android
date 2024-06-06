@@ -6,11 +6,11 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.rule
+package com.adyen.checkout.test.rule
 
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
-import com.adyen.checkout.util.IdlingResourceDispatcher
+import com.adyen.checkout.test.util.IdlingResourceDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.junit.rules.TestRule
