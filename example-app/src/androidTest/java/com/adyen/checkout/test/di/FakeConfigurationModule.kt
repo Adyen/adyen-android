@@ -6,11 +6,11 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.di
+package com.adyen.checkout.test.di
 
 import com.adyen.checkout.example.di.ConfigurationModule
 import com.adyen.checkout.example.ui.configuration.ConfigurationProvider
-import com.adyen.checkout.fake.FakeCheckoutConfigurationProvider
+import com.adyen.checkout.test.fake.FakeCheckoutConfigurationProvider
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.components.SingletonComponent

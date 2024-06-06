@@ -6,17 +6,17 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.server.service
+package com.adyen.checkout.test.server.service
 
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 
-internal class MockSessionService : MockBackendService(
-    "/v1/sessions/.*/setup",
+internal class MockPublicKeyService : MockBackendService(
+    "/v1/clientKeys/.*",
     useRegex = true,
 ) {
 
     override fun handleRequest(request: RecordedRequest): MockResponse {
-        return createJsonResponse("sessions_setup_response.json")
+        return createJsonResponse("public_key_response.json")
     }
 }

@@ -3,13 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 5/6/2024.
+ * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.util
+package com.adyen.checkout.test.util
 
 import androidx.test.platform.app.InstrumentationRegistry
-import dagger.hilt.android.testing.HiltTestApplication
 import java.io.InputStreamReader
 
 internal object JsonFileReader {

@@ -3,16 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 5/6/2024.
+ * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.server
+package com.adyen.checkout.test.server
 
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.server.service.MockCheckoutService
-import com.adyen.checkout.server.service.MockPublicKeyService
-import com.adyen.checkout.server.service.MockSessionService
+import com.adyen.checkout.test.server.service.MockCheckoutService
+import com.adyen.checkout.test.server.service.MockPublicKeyService
+import com.adyen.checkout.test.server.service.MockSessionService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest

@@ -6,7 +6,7 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.rule
+package com.adyen.checkout.test.rule
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.adyen.checkout.example.ui.main.MainActivity
@@ -32,9 +32,9 @@ class CheckoutTestRule(
          * - Rules after ActivityScenarioRule will be executed after the activity is launched
          */
         RuleChain
-        .outerRule(hiltRule)
-        .around(MockServerRule())
-        .around(IdlingDispatcherRule())
-        .around(activityRule)
-        .apply(base, description)
+            .outerRule(hiltRule)
+            .around(MockServerRule())
+            .around(IdlingDispatcherRule())
+            .around(activityRule)
+            .apply(base, description)
 }

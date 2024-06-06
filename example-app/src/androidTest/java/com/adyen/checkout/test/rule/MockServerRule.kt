@@ -6,9 +6,9 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.rule
+package com.adyen.checkout.test.rule
 
-import com.adyen.checkout.server.CheckoutMockWebServer
+import com.adyen.checkout.test.server.CheckoutMockWebServer
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement

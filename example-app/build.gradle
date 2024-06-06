@@ -42,7 +42,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner 'com.adyen.checkout.HiltTestRunner'
+        testInstrumentationRunner 'com.adyen.checkout.test.HiltTestRunner'
     }
 
     testOptions {

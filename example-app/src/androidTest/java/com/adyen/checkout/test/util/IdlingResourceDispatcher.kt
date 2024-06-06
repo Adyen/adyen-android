@@ -6,7 +6,7 @@
  * Created by oscars on 6/6/2024.
  */
 
-package com.adyen.checkout.util
+package com.adyen.checkout.test.util
 
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.coroutines.CoroutineDispatcher
