@@ -29,4 +29,12 @@ internal abstract class MockBackendService(
     }
 
     abstract fun handleRequest(request: RecordedRequest): MockResponse
+
+    companion object {
+
+        fun createJsonResponse(fileName: String) = MockResponse()
+            .setResponseCode(HTTP_OK)
+            .setHeader("Content-Type", "application/json")
+            .setBody(JsonFileReader(fileName))
+    }
 }
