@@ -112,6 +112,7 @@ dependencies {
     androidTestImplementation testLibraries.barista
     androidTestImplementation testLibraries.espresso
     androidTestImplementation testLibraries.hilt
+    androidTestImplementation testLibraries.kotlinCoroutines
     androidTestImplementation testLibraries.mockWebServer
 
     kspAndroidTest testLibraries.hiltCompiler

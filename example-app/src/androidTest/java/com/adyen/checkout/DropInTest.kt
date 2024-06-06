@@ -12,6 +12,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.adyen.checkout.example.ui.main.MainActivity
 import com.adyen.checkout.robot.onDropIn
 import com.adyen.checkout.robot.onMain
+import com.adyen.checkout.rule.IdlingDispatcherRule
 import com.adyen.checkout.server.CheckoutMockWebServer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -28,6 +29,9 @@ internal class DropInTest {
 
     @get:Rule(order = 1)
     var activityRule: ActivityScenarioRule<MainActivity> = ActivityScenarioRule(MainActivity::class.java)
+
+    @get:Rule(order = 2)
+    var dispatcherRule = IdlingDispatcherRule()
 
     @Before
     fun before() {
