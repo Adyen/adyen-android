@@ -10,7 +10,7 @@ package com.adyen.checkout.server
 
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.server.service.MockBackendService
+import com.adyen.checkout.server.service.MockCheckoutService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
@@ -19,7 +19,9 @@ import java.net.HttpURLConnection.HTTP_NOT_FOUND
 
 internal class DelegatingBackendDispatcher : Dispatcher() {
 
-    private val delegates = listOf<MockBackendService>()
+    private val delegates = listOf(
+        MockCheckoutService(),
+    )
 
     override fun dispatch(request: RecordedRequest): MockResponse = try {
         val service = delegates.firstOrNull { it.canHandleRequest(request) }
