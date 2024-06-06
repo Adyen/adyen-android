@@ -65,6 +65,12 @@ internal class PaymentMethodListDialogFragment :
     private var paymentMethodAdapter: PaymentMethodAdapter? = null
     private var component: PaymentComponent? = null
 
+    private val navigationSource: NavigationSource
+        get() = when {
+            dropInViewModel.shouldShowPreselectedStored() -> NavigationSource.PRESELECTED_PAYMENT_METHOD
+            else -> NavigationSource.NO_SOURCE
+        }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         adyenLog(AdyenLogLevel.DEBUG) { "onAttach" }
@@ -80,8 +86,25 @@ internal class PaymentMethodListDialogFragment :
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
+        initToolbar()
         initPaymentMethodsRecyclerView()
         initObservers()
+    }
+
+    private fun initToolbar() {
+        binding.bottomSheetToolbar.setOnButtonClickListener {
+            performBackAction()
+        }
+
+        updateToolbarMode()
+    }
+
+    private fun updateToolbarMode() {
+        val toolbarMode = when (navigationSource) {
+            NavigationSource.PRESELECTED_PAYMENT_METHOD -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+        }
+        binding.bottomSheetToolbar.setMode(toolbarMode)
     }
 
     private fun initPaymentMethodsRecyclerView() {
@@ -144,11 +167,12 @@ internal class PaymentMethodListDialogFragment :
         _binding = null
     }
 
-    override fun onBackPressed(): Boolean {
-        if (dropInViewModel.shouldShowPreselectedStored()) {
-            protocol.showPreselectedDialog()
-        } else {
-            protocol.terminateDropIn()
+    override fun onBackPressed() = performBackAction()
+
+    private fun performBackAction(): Boolean {
+        when (navigationSource) {
+            NavigationSource.PRESELECTED_PAYMENT_METHOD -> protocol.showPreselectedDialog()
+            NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
         }
         return true
     }
@@ -238,6 +262,7 @@ internal class PaymentMethodListDialogFragment :
 
     fun removeStoredPaymentMethod(id: String) {
         paymentMethodsListViewModel.removePaymentMethodWithId(id)
+        updateToolbarMode()
     }
 
     private fun showCancelOrderAlert() {
@@ -260,5 +285,10 @@ internal class PaymentMethodListDialogFragment :
                 it.collapseUnderlay()
             }
         }
+    }
+
+    internal enum class NavigationSource {
+        PRESELECTED_PAYMENT_METHOD,
+        NO_SOURCE,
     }
 }

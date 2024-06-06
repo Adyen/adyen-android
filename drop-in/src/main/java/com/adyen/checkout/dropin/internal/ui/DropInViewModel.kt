@@ -321,6 +321,7 @@ internal class DropInViewModel(
             shopperLocale = dropInParams.shopperLocale,
             brand = giftCardComponentState.data.paymentMethod?.brand.orEmpty(),
             lastFourDigits = giftCardComponentState.lastFourDigits.orEmpty(),
+            paymentMethodName = giftCardComponentState.paymentMethodName.orEmpty(),
         )
     }
 

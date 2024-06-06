@@ -19,7 +19,6 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -39,11 +38,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
-        binding.header.text = if (isStoredPayment) {
-            storedPaymentMethod.name
-        } else {
-            paymentMethod.name
-        }
+        initToolbar()
 
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
@@ -52,7 +47,6 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         if (cardComponent.isConfirmationRequired()) {
-            setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.cardView.requestFocus()
         }
 
@@ -65,6 +59,20 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
             .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        val title = if (isStoredPayment) {
+            storedPaymentMethod.name
+        } else {
+            paymentMethod.name
+        }
+        setTitle(title)
+        setMode(toolbarMode)
+
+        setOnButtonClickListener {
+            onBackPressed()
+        }
+    }
+
     override fun onQueryChanged(query: String) {
         protocol.onAddressLookupQuery(query)
     }
@@ -73,11 +81,10 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         return protocol.onAddressLookupCompletion(lookupAddress)
     }
 
-    override fun onBackPressed(): Boolean {
-        if (cardComponent.handleBackPress()) {
-            return true
-        }
-        return super.onBackPressed()
+    override fun onBackPressed() = if (cardComponent.handleBackPress()) {
+        true
+    } else {
+        super.onBackPressed()
     }
 
     override fun onDestroyView() {

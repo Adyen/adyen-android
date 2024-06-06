@@ -19,5 +19,6 @@ internal data class GiftCardPaymentConfirmationData(
     val remainingBalance: Amount,
     val shopperLocale: Locale,
     val brand: String,
-    val lastFourDigits: String
+    val lastFourDigits: String,
+    val paymentMethodName: String,
 ) : Parcelable

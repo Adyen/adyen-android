@@ -68,6 +68,7 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
         initView()
+        initToolbar()
         observeState()
         observeEvents()
         loadComponent()
@@ -90,8 +91,6 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun initView() {
-        binding.paymentMethodsListHeader.paymentMethodHeaderTitle.setText(R.string.store_payment_methods_header)
-
         val isRemovingStoredPaymentMethodsEnabled =
             dropInViewModel.dropInParams.isRemovingStoredPaymentMethodsEnabled
         binding.storedPaymentMethodItem.swipeToRevealLayout.setDragLocked(!isRemovingStoredPaymentMethodsEnabled)
@@ -107,6 +106,17 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
 
         binding.changePaymentMethodButton.setOnClickListener {
             protocol.showPaymentMethodsDialog()
+        }
+    }
+
+    private fun initToolbar() {
+        binding.bottomSheetHeader.text = getString(R.string.store_payment_methods_header)
+
+        with(binding.bottomSheetToolbar) {
+            setOnButtonClickListener {
+                performBackAction()
+            }
+            setMode(DropInBottomSheetToolbarMode.CLOSE_BUTTON)
         }
     }
 
@@ -223,6 +233,13 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dialog.dismiss()
             }
             .show()
+    }
+
+    override fun onBackPressed() = performBackAction()
+
+    private fun performBackAction(): Boolean {
+        protocol.terminateDropIn()
+        return true
     }
 
     override fun onDestroyView() {

@@ -11,13 +11,36 @@
     <!-- Override 3DS2 Theme to match Checkout theme -->
     <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
-    <style name="AdyenCheckout.BottomSheetIndicator">
-        <item name="android:layout_width">@dimen/indicator_width</item>
-        <item name="android:layout_height">@dimen/indicator_height</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:layout_marginTop">@dimen/standard_half_margin</item>
+    <style name="AdyenCheckout.BottomSheetToolbar">
+        <item name="android:layout_marginStart">@dimen/standard_half_margin</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
-        <item name="android:background">@drawable/bottom_sheet_indicator</item>
+    </style>
+
+    <style name="AdyenCheckout.Toolbar" />
+
+    <style name="AdyenCheckout.Toolbar.Navigation">
+        <item name="android:tint">?attr/colorControlNormal</item>
+        <item name="android:paddingStart">@dimen/standard_half_margin</item>
+        <item name="android:paddingEnd">@dimen/standard_half_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.Toolbar.Navigation.Back" parent="AdyenCheckout.Toolbar.Navigation">
+        <item name="srcCompat">@drawable/ic_back</item>
+    </style>
+
+    <style name="AdyenCheckout.Toolbar.Navigation.Close" parent="AdyenCheckout.Toolbar.Navigation">
+        <item name="srcCompat">@drawable/ic_close</item>
+    </style>
+
+    <style name="AdyenCheckout.Toolbar.HeaderTitle">
+        <item name="android:paddingStart">@dimen/standard_half_margin</item>
+        <item name="android:paddingEnd">@dimen/standard_half_margin</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textIsSelectable">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="AdyenCheckout.TextAppearance.HeaderTitle">
@@ -31,11 +54,6 @@
         <item name="android:textIsSelectable">false</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="AdyenCheckout.TextAppearance.HeaderTitle.Card">
-        <item name="android:paddingStart">0dp</item>
-        <item name="android:paddingLeft">0dp</item>
     </style>
 
     <style name="AdyenCheckout.TextAppearance.ButtonSubtext">

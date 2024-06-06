@@ -13,8 +13,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/bottom_sheet_indicator"
+    <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
+        android:id="@+id/bottom_sheet_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -24,7 +24,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingTop="@dimen/standard_half_margin"
         android:paddingBottom="@dimen/standard_half_margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:context=".internal.ui.PaymentMethodListDialogFragment"
