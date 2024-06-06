@@ -9,5 +9,7 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Changed
-- Top navigation has been added to Drop-in and dragging gesture has been disabled which caused Drop-in to dismiss.
-- Going back from actions dismisses Drop-in.
+- Drop-in navigation improvements:
+  - Top navigation has been added
+  - Dragging gesture has been disabled which caused Drop-in to dismiss
+  - Going back from actions dismisses Drop-in
