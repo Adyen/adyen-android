@@ -11,6 +11,7 @@ package com.adyen.checkout.server
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.server.service.MockCheckoutService
+import com.adyen.checkout.server.service.MockSessionService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
@@ -21,6 +22,7 @@ internal class DelegatingBackendDispatcher : Dispatcher() {
 
     private val delegates = listOf(
         MockCheckoutService(),
+        MockSessionService(),
     )
 
     override fun dispatch(request: RecordedRequest): MockResponse = try {
