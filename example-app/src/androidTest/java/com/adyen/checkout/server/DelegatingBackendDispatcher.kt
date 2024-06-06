@@ -11,6 +11,7 @@ package com.adyen.checkout.server
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.server.service.MockCheckoutService
+import com.adyen.checkout.server.service.MockPublicKeyService
 import com.adyen.checkout.server.service.MockSessionService
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -22,6 +23,7 @@ internal class DelegatingBackendDispatcher : Dispatcher() {
 
     private val delegates = listOf(
         MockCheckoutService(),
+        MockPublicKeyService(),
         MockSessionService(),
     )
 
