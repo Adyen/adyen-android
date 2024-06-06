@@ -19,7 +19,7 @@ import org.junit.runners.model.Statement
 
 class IdlingDispatcherRule : TestRule {
 
-    override fun apply(base: Statement?, description: Description?): Statement = object : Statement() {
+    override fun apply(base: Statement, description: Description?): Statement = object : Statement() {
         override fun evaluate() {
             // Main dispatcher is not needed as this is not doing background work
             val defaultDispatcher = Dispatchers.Default
@@ -39,7 +39,7 @@ class IdlingDispatcherRule : TestRule {
             overrideDispatchers(defaultIdlingDispatcher, ioIdlingDispatcher)
 
             try {
-                base?.evaluate()
+                base.evaluate()
             } finally {
                 IdlingRegistry.getInstance().apply {
                     unregister(defaultIdlingResource)
