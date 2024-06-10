@@ -33,8 +33,8 @@ internal class GooglePayFragment : Fragment() {
     }
 
     fun initialize(delegate: GooglePayDelegate) {
-        delegate.setPaymentDataLauncher(googlePayLauncher)
         this.delegate = delegate
+        delegate.setPaymentDataLauncher(googlePayLauncher)
     }
 
     override fun onDestroyView() {
