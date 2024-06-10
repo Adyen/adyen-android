@@ -18,7 +18,9 @@ import com.adyen.checkout.twint.action.databinding.ViewTwintActionBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
-internal class TwintActionView internal constructor(
+internal class TwintActionView
+@JvmOverloads
+internal constructor(
     layoutInflater: LayoutInflater,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
