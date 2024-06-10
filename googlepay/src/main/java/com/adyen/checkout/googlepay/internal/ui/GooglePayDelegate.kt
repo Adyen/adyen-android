@@ -29,6 +29,7 @@ internal interface GooglePayDelegate :
 
     val exceptionFlow: Flow<CheckoutException>
 
+    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("startGooglePayScreen()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int)
 
     fun startGooglePayScreen()
