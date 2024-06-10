@@ -18,7 +18,9 @@ import com.adyen.checkout.googlepay.databinding.ViewGooglePayBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
-internal class GooglePayView internal constructor(
+internal class GooglePayView
+@JvmOverloads
+internal constructor(
     layoutInflater: LayoutInflater,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
