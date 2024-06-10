@@ -79,7 +79,9 @@ class GooglePayComponent internal constructor(
      * @param activity    The activity to start the screen and later receive the result.
      * @param requestCode The code that will be returned on the [Activity.onActivityResult]
      */
+    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("startGooglePayScreen()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
+        @Suppress("DEPRECATION")
         googlePayDelegate.startGooglePayScreen(activity, requestCode)
     }
 
@@ -104,6 +106,7 @@ class GooglePayComponent internal constructor(
      * @param resultCode The result code from the [Activity.onActivityResult]
      * @param data       The data intent from the [Activity.onActivityResult]
      */
+    @Deprecated("When using startGooglePayScreen() this method is no longer needed.", ReplaceWith(""))
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         googlePayDelegate.handleActivityResult(resultCode, data)
     }
