@@ -158,12 +158,12 @@ internal class DefaultGooglePayDelegate(
         )
     }
 
+    // TODO remove in v6
     override fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
         val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(componentParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
-        // TODO this forces us to use the deprecated onActivityResult. Look into alternatives when/if Google provides
-        //  any later.
+        @Suppress("DEPRECATION")
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
     }
 
