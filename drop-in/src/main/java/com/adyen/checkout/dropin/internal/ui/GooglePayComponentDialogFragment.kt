@@ -8,15 +8,13 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
@@ -24,16 +22,20 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.databinding.FragmentGooglePayComponentBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class GooglePayComponentDialogFragment :
     DropInBottomSheetDialogFragment(),
     ComponentCallback<GooglePayComponentState> {
+
+    private var _binding: FragmentGooglePayComponentBinding? = null
+    private val binding: FragmentGooglePayComponentBinding get() = requireNotNull(_binding)
 
     private val googlePayViewModel: GooglePayViewModel by viewModels()
 
@@ -44,27 +46,30 @@ internal class GooglePayComponentDialogFragment :
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
         super.onCreate(savedInstanceState)
         arguments?.let {
+            @Suppress("DEPRECATION")
             paymentMethod = it.getParcelable(PAYMENT_METHOD) ?: throw IllegalArgumentException("Payment method is null")
         }
-
-        googlePayViewModel.fragmentLoaded()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         adyenLog(AdyenLogLevel.DEBUG) { "onCreateView" }
-        return inflater.inflate(R.layout.fragment_google_pay_component, container, false)
+        _binding = FragmentGooglePayComponentBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                googlePayViewModel.eventsFlow.collect { handleEvent(it) }
-            }
-        }
-
         loadComponent()
+
+        binding.componentView.attach(component, viewLifecycleOwner)
+
+        googlePayViewModel.onFragmentLoaded()
+
+        googlePayViewModel.eventsFlow
+            .onEach(::handleEvent)
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun loadComponent() {
@@ -102,7 +107,7 @@ internal class GooglePayComponentDialogFragment :
     private fun handleEvent(event: GooglePayFragmentEvent) {
         when (event) {
             is GooglePayFragmentEvent.StartGooglePay -> {
-                component.startGooglePayScreen(requireActivity(), DropInActivity.GOOGLE_PAY_REQUEST_CODE)
+                component.startGooglePayScreen()
             }
         }
     }
@@ -127,8 +132,9 @@ internal class GooglePayComponentDialogFragment :
         return true
     }
 
-    fun handleActivityResult(resultCode: Int, data: Intent?) {
-        component.handleActivityResult(resultCode, data)
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {
