@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-internal class AppDataIdUtilsTest {
+internal class AppDataUtilsTest {
 
     @ParameterizedTest
     @MethodSource("appListSource")

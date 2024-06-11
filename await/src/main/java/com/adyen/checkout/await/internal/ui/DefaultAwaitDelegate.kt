@@ -122,7 +122,6 @@ internal class DefaultAwaitDelegate(
         }
 
         this.action = action
-        paymentDataRepository.paymentData = action.paymentData
 
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
