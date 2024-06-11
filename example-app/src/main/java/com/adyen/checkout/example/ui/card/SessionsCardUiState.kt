@@ -9,7 +9,9 @@
 package com.adyen.checkout.example.ui.card
 
 import androidx.compose.runtime.Immutable
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.compose.ResultState
 
@@ -20,5 +22,7 @@ internal data class SessionsCardUiState(
     val oneTimeMessage: String? = null,
     val componentData: SessionsCardComponentData? = null,
     val action: Action? = null,
+    val addressLookupOptions: List<LookupAddress> = emptyList(),
+    val addressLookupResult: AddressLookupResult? = null,
     val finalResult: ResultState? = null,
 )
