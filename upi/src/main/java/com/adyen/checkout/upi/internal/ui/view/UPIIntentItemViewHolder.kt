@@ -14,7 +14,7 @@ import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
 internal abstract class UPIIntentItemViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    abstract fun bind(item: UPIIntentItem, isChecked: Boolean)
+    abstract fun bind(item: UPIIntentItem)
 
     abstract fun setOnClickListener(onClickListener: (Int) -> Unit)
 }

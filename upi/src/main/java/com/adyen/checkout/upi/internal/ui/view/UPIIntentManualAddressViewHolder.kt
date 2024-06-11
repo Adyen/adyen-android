@@ -32,7 +32,7 @@ internal class UPIIntentManualAddressViewHolder(
         }
     }
 
-    override fun bind(item: UPIIntentItem, isChecked: Boolean) {
+    override fun bind(item: UPIIntentItem) {
         (item as? UPIIntentItem.ManualInput) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
@@ -41,7 +41,7 @@ internal class UPIIntentManualAddressViewHolder(
         val errorMessage = item.errorMessageResource?.let { messageResource ->
             localizedContext.getString(messageResource)
         }
-        bindItem(isChecked, errorMessage)
+        bindItem(item.isSelected, errorMessage)
     }
 
     private fun bindItem(

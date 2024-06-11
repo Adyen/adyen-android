@@ -23,24 +23,50 @@ internal class AppDataIdUtilsTest {
     fun `when mapToPaymentApp is called, then a mapped list is returned`(
         sourceList: List<AppData>,
         environment: Environment,
+        selectedItemId: String?,
         expectedList: List<UPIIntentItem.PaymentApp>
     ) {
-        assertEquals(expectedList, sourceList.mapToPaymentApp(environment))
+        assertEquals(expectedList, sourceList.mapToPaymentApp(environment, selectedItemId))
     }
 
     companion object {
         @JvmStatic
         fun appListSource() = listOf(
-            // sourceList, environment, expectedList
+            // sourceList, environment, selectedItemId, expectedList
             Arguments.arguments(
                 listOf(
                     AppData("id1", "name1"),
                     AppData("id2", "name2"),
                 ),
                 Environment.TEST,
+                "id1",
                 listOf(
-                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST),
-                    UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST),
+                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
+                    UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST, false),
+                ),
+            ),
+            Arguments.arguments(
+                listOf(
+                    AppData("id1", "name1"),
+                    AppData("id2", "name2"),
+                ),
+                Environment.TEST,
+                null,
+                listOf(
+                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, false),
+                    UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST, false),
+                ),
+            ),
+            Arguments.arguments(
+                listOf(
+                    AppData("id1", "name1"),
+                    AppData("id2", "name2"),
+                ),
+                Environment.TEST,
+                null,
+                listOf(
+                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, false),
+                    UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST, false),
                 ),
             ),
             Arguments.arguments(
@@ -49,8 +75,9 @@ internal class AppDataIdUtilsTest {
                     AppData("", ""),
                 ),
                 Environment.TEST,
+                null,
                 listOf(
-                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST),
+                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, false),
                 ),
             ),
             Arguments.arguments(
@@ -60,8 +87,9 @@ internal class AppDataIdUtilsTest {
                     AppData("id3", null),
                 ),
                 Environment.TEST,
+                null,
                 listOf(
-                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST),
+                    UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, false),
                 ),
             ),
             Arguments.arguments(
@@ -73,6 +101,7 @@ internal class AppDataIdUtilsTest {
                     AppData(null, null),
                 ),
                 Environment.TEST,
+                null,
                 listOf<UPIIntentItem.PaymentApp>(),
             ),
         )

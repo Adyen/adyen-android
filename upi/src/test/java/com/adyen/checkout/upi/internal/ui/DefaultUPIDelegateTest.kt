@@ -85,13 +85,13 @@ internal class DefaultUPIDelegateTest(
                 ),
             )
             val intentItemList = listOf(
-                UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST),
+                UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
                 UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST),
-                UPIIntentItem.GenericApp,
+                UPIIntentItem.GenericApp(),
                 UPIIntentItem.ManualInput(null),
             )
             val expectedAvailableModes = listOf(
-                UPIMode.Intent(intentItemList, intentItemList.firstOrNull()),
+                UPIMode.Intent(intentItemList),
                 UPIMode.Qr,
             )
             val delegate = createUPIDelegate(paymentMethod = paymentMethod)
@@ -155,7 +155,7 @@ internal class DefaultUPIDelegateTest(
 
             delegate.updateInputData {
                 selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.GenericApp
+                selectedUPIIntentItem = UPIIntentItem.GenericApp()
             }
 
             assertTrue(outputTestFlow.latestValue.isValid)
@@ -283,7 +283,7 @@ internal class DefaultUPIDelegateTest(
             val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
             val outputData = createOutputData(
                 selectedMode = UPISelectedMode.INTENT,
-                selectedUPIIntentItem = UPIIntentItem.GenericApp,
+                selectedUPIIntentItem = UPIIntentItem.GenericApp(),
             )
 
             delegate.updateComponentState(outputData)
@@ -450,7 +450,7 @@ internal class DefaultUPIDelegateTest(
         fun `when selected mode is INTENT and there is selected upi intent item, then submit button should be enabled`() {
             delegate.updateInputData {
                 selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.GenericApp
+                selectedUPIIntentItem = UPIIntentItem.GenericApp()
             }
 
             assertTrue(delegate.shouldEnableSubmitButton())

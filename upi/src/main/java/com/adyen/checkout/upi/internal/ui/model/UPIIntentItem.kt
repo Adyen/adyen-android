@@ -13,6 +13,8 @@ import com.adyen.checkout.core.Environment
 
 internal sealed class UPIIntentItem {
 
+    abstract val isSelected: Boolean
+
     abstract fun areItemsTheSame(newItem: UPIIntentItem): Boolean
     abstract fun areContentsTheSame(newItem: UPIIntentItem): Boolean
     abstract fun getChangePayload(newItem: UPIIntentItem): Any?
@@ -21,6 +23,7 @@ internal sealed class UPIIntentItem {
         val id: String,
         val name: String,
         val environment: Environment,
+        override val isSelected: Boolean = false
     ) : UPIIntentItem() {
         override fun areItemsTheSame(newItem: UPIIntentItem) =
             newItem is PaymentApp &&
@@ -28,29 +31,32 @@ internal sealed class UPIIntentItem {
 
         override fun areContentsTheSame(newItem: UPIIntentItem) =
             newItem is PaymentApp &&
-                name == newItem.name &&
-                environment == newItem.environment
+                this == newItem
 
         override fun getChangePayload(newItem: UPIIntentItem) = null
     }
 
-    data object GenericApp : UPIIntentItem() {
+    data class GenericApp(
+        override val isSelected: Boolean = false
+    ) : UPIIntentItem() {
         override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is GenericApp
-        override fun areContentsTheSame(newItem: UPIIntentItem) = newItem is GenericApp
+        override fun areContentsTheSame(newItem: UPIIntentItem) =
+            newItem is GenericApp &&
+                this == newItem
+
         override fun getChangePayload(newItem: UPIIntentItem) = null
     }
 
     data class ManualInput(
-        @StringRes val errorMessageResource: Int?
+        @StringRes val errorMessageResource: Int?,
+        override val isSelected: Boolean = false
     ) : UPIIntentItem() {
         override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is ManualInput
         override fun areContentsTheSame(newItem: UPIIntentItem) =
             newItem is ManualInput &&
-                errorMessageResource == newItem.errorMessageResource
+                this == newItem
 
         // This has been implemented to avoid creating a new ViewHolder when the input field has validation error
-        override fun getChangePayload(newItem: UPIIntentItem) =
-            newItem is ManualInput &&
-                errorMessageResource == newItem.errorMessageResource
+        override fun getChangePayload(newItem: UPIIntentItem) = Unit
     }
 }

@@ -159,7 +159,6 @@ internal class UPIView @JvmOverloads constructor(
             recyclerViewUpiIntent.adapter = upiAppsAdapter
         }
         upiAppsAdapter?.submitList(mode.intentItems)
-        upiAppsAdapter?.setSelectedItem(mode.selectedIntentItem)
     }
 
     private fun updateUpiIntentViews(isChecked: Boolean) {

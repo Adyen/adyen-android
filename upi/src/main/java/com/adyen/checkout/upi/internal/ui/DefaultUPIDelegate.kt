@@ -128,8 +128,9 @@ internal class DefaultUPIDelegate(
                 appIds,
                 componentParams.environment,
                 intentVirtualPaymentAddressFieldState,
+                selectedUPIIntentItem,
             )
-            listOf(UPIMode.Intent(intentItemList, selectedUPIIntentItem), UPIMode.Qr)
+            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
         } else {
             listOf(UPIMode.Vpa, UPIMode.Qr)
         }
@@ -147,15 +148,28 @@ internal class DefaultUPIDelegate(
         upiApps: List<AppData>,
         environment: Environment,
         intentVirtualPaymentAddressFieldState: FieldState<String>,
+        selectedUPIIntentItem: UPIIntentItem?
     ): List<UPIIntentItem> {
-        val paymentApps = upiApps.mapToPaymentApp(environment = environment)
+        val paymentApps = upiApps.mapToPaymentApp(
+            environment = environment,
+            selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
+        )
+
+        val genericApp = UPIIntentItem.GenericApp(
+            isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
+        )
+
         val manualInputErrorMessageId =
             getValidationErrorResourceIdOrNull(intentVirtualPaymentAddressFieldState.validation)
+        val manualInput = UPIIntentItem.ManualInput(
+            errorMessageResource = manualInputErrorMessageId,
+            isSelected = selectedUPIIntentItem is UPIIntentItem.ManualInput,
+        )
 
         return mutableListOf<UPIIntentItem>().apply {
             addAll(paymentApps)
-            add(UPIIntentItem.GenericApp)
-            add(UPIIntentItem.ManualInput(manualInputErrorMessageId))
+            add(genericApp)
+            add(manualInput)
         }
     }
 
@@ -211,7 +225,7 @@ internal class DefaultUPIDelegate(
                     PaymentMethodTypes.UPI_INTENT
                 }
 
-                UPIIntentItem.GenericApp -> {
+                is UPIIntentItem.GenericApp -> {
                     PaymentMethodTypes.UPI_INTENT
                 }
 

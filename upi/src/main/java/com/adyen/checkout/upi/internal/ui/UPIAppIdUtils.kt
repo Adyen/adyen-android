@@ -12,11 +12,14 @@ import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-internal fun List<AppData>.mapToPaymentApp(environment: Environment): List<UPIIntentItem.PaymentApp> =
-    mapNotNull { (id, name) ->
-        if (!id.isNullOrEmpty() && !name.isNullOrEmpty()) {
-            UPIIntentItem.PaymentApp(id, name, environment)
-        } else {
-            null
-        }
+internal fun List<AppData>.mapToPaymentApp(
+    environment: Environment,
+    selectedAppId: String?
+): List<UPIIntentItem.PaymentApp> = mapNotNull { (id, name) ->
+    if (!id.isNullOrEmpty() && !name.isNullOrEmpty()) {
+        val isSelected = selectedAppId == id
+        UPIIntentItem.PaymentApp(id, name, environment, isSelected)
+    } else {
+        null
     }
+}

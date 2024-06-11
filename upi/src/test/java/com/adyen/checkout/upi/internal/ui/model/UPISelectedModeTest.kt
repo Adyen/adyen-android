@@ -18,7 +18,7 @@ internal class UPISelectedModeTest {
 
     @ParameterizedTest
     @MethodSource("upiModeSource")
-    fun `when upiMode is Intent, then Intent selected mode is returned`(
+    fun `when selected upiMode is Intent, then Intent selected mode is returned`(
         upiMode: UPIMode,
         selectedMode: UPISelectedMode
     ) {
@@ -30,15 +30,15 @@ internal class UPISelectedModeTest {
         fun upiModeSource() = listOf(
             // upiMode, selectedMode
             Arguments.arguments(
-                UPIMode.Intent(listOf(), UPIIntentItem.PaymentApp("", "", Environment.TEST)),
+                UPIMode.Intent(listOf(UPIIntentItem.PaymentApp("", "", Environment.TEST, true))),
                 UPISelectedMode.INTENT,
             ),
             Arguments.arguments(
-                UPIMode.Intent(listOf(), UPIIntentItem.GenericApp),
+                UPIMode.Intent(listOf(UPIIntentItem.GenericApp(true))),
                 UPISelectedMode.INTENT,
             ),
             Arguments.arguments(
-                UPIMode.Intent(listOf(), UPIIntentItem.ManualInput(null)),
+                UPIMode.Intent(listOf(UPIIntentItem.ManualInput(null, true))),
                 UPISelectedMode.INTENT,
             ),
             Arguments.arguments(

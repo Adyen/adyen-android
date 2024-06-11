@@ -17,13 +17,13 @@ internal class UPIIntentGenericAppViewHolder(
     private val binding: UpiAppGenericBinding,
 ) : UPIIntentItemViewHolder(binding) {
 
-    override fun bind(item: UPIIntentItem, isChecked: Boolean) {
+    override fun bind(item: UPIIntentItem) {
         (item as? UPIIntentItem.GenericApp) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
         }
 
-        bindItem(isChecked)
+        bindItem(item.isSelected)
     }
 
     private fun bindItem(isChecked: Boolean) = with(binding) {

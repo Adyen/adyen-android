@@ -23,8 +23,8 @@ internal class UPIOutputData(
         get() = when (selectedMode) {
             UPISelectedMode.INTENT -> {
                 when (selectedUPIIntentItem) {
-                    is UPIIntentItem.PaymentApp -> true
-                    UPIIntentItem.GenericApp -> true
+                    is UPIIntentItem.PaymentApp,
+                    is UPIIntentItem.GenericApp -> true
                     is UPIIntentItem.ManualInput -> intentVirtualPaymentAddressFieldState.validation.isValid()
                     null -> false
                 }

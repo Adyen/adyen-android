@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.upi.internal.ui.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -29,8 +28,6 @@ internal class UPIAppsAdapter(
     private val onItemClickListener: (UPIIntentItem) -> Unit,
     private val onInputChangeListener: (String) -> Unit,
 ) : ListAdapter<UPIIntentItem, UPIIntentItemViewHolder>(UPIAppsDiffCallback) {
-
-    private var selectedItem: UPIIntentItem? = null
 
     override fun getItemViewType(position: Int) = when (getItem(position)) {
         is UPIIntentItem.PaymentApp -> VIEW_TYPE_PAYMENT_APP.id
@@ -64,21 +61,10 @@ internal class UPIAppsAdapter(
 
     override fun onBindViewHolder(holder: UPIIntentItemViewHolder, position: Int) = with(holder) {
         val item = getItem(position)
-        bind(
-            item = item,
-            isChecked = selectedItem?.areItemsTheSame(item) ?: false,
-        )
-        setOnClickListener(::onItemClicked)
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setSelectedItem(item: UPIIntentItem?) {
-        selectedItem = item
-        notifyDataSetChanged()
-    }
-
-    private fun onItemClicked(itemPosition: Int) {
-        onItemClickListener.invoke(getItem(itemPosition))
+        bind(item)
+        setOnClickListener {
+            onItemClickListener.invoke(item)
+        }
     }
 
     object UPIAppsDiffCallback : DiffUtil.ItemCallback<UPIIntentItem>() {
