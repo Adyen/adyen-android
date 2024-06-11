@@ -10,7 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.App
+import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.OrderRequest
@@ -80,8 +80,8 @@ internal class DefaultUPIDelegateTest(
         fun `intent apps are not present, then availableModes should not contain vpa and qr modes`() = runTest {
             val paymentMethod = PaymentMethod(
                 apps = listOf(
-                    App("id1", "name1"),
-                    App("id2", "name2"),
+                    AppData("id1", "name1"),
+                    AppData("id2", "name2"),
                 ),
             )
             val intentItemList = listOf(

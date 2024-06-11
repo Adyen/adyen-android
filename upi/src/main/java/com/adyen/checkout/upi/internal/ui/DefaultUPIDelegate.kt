@@ -10,7 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.components.core.App
+import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -144,11 +144,11 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createIntentItems(
-        apps: List<App>,
+        upiApps: List<AppData>,
         environment: Environment,
         intentVirtualPaymentAddressFieldState: FieldState<String>,
     ): List<UPIIntentItem> {
-        val paymentApps = apps.mapToPaymentApp(environment = environment)
+        val paymentApps = upiApps.mapToPaymentApp(environment = environment)
         val manualInputErrorMessageId =
             getValidationErrorResourceIdOrNull(intentVirtualPaymentAddressFieldState.validation)
 

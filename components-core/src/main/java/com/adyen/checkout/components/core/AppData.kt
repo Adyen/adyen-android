@@ -16,7 +16,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-data class App(
+data class AppData(
     var id: String? = null,
     var name: String? = null,
 ) : ModelObject() {
@@ -26,20 +26,20 @@ data class App(
         private const val NAME = "name"
 
         @JvmField
-        val SERIALIZER: Serializer<App> = object : Serializer<App> {
-            override fun serialize(modelObject: App): JSONObject {
+        val SERIALIZER: Serializer<AppData> = object : Serializer<AppData> {
+            override fun serialize(modelObject: AppData): JSONObject {
                 return try {
                     JSONObject().apply {
                         putOpt(ID, modelObject.id)
                         putOpt(NAME, modelObject.name)
                     }
                 } catch (e: JSONException) {
-                    throw ModelSerializationException(App::class.java, e)
+                    throw ModelSerializationException(AppData::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject): App {
-                return App(
+            override fun deserialize(jsonObject: JSONObject): AppData {
+                return AppData(
                     id = jsonObject.getStringOrNull(ID),
                     name = jsonObject.getStringOrNull(NAME),
                 )

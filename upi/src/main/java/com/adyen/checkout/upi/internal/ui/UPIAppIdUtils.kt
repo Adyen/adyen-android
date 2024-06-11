@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.upi.internal.ui
 
-import com.adyen.checkout.components.core.App
+import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 
-internal fun List<App>.mapToPaymentApp(environment: Environment): List<UPIIntentItem.PaymentApp> =
+internal fun List<AppData>.mapToPaymentApp(environment: Environment): List<UPIIntentItem.PaymentApp> =
     mapNotNull { (id, name) ->
         if (!id.isNullOrEmpty() && !name.isNullOrEmpty()) {
             UPIIntentItem.PaymentApp(id, name, environment)

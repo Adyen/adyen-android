@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.upi.internal.ui
 
-import com.adyen.checkout.components.core.App
+import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -16,12 +16,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
-internal class UPIAppIdUtilsTest {
+internal class AppDataIdUtilsTest {
 
     @ParameterizedTest
     @MethodSource("appListSource")
     fun `when mapToPaymentApp is called, then a mapped list is returned`(
-        sourceList: List<App>,
+        sourceList: List<AppData>,
         environment: Environment,
         expectedList: List<UPIIntentItem.PaymentApp>
     ) {
@@ -34,8 +34,8 @@ internal class UPIAppIdUtilsTest {
             // sourceList, environment, expectedList
             Arguments.arguments(
                 listOf(
-                    App("id1", "name1"),
-                    App("id2", "name2"),
+                    AppData("id1", "name1"),
+                    AppData("id2", "name2"),
                 ),
                 Environment.TEST,
                 listOf(
@@ -45,8 +45,8 @@ internal class UPIAppIdUtilsTest {
             ),
             Arguments.arguments(
                 listOf(
-                    App("id1", "name1"),
-                    App("", ""),
+                    AppData("id1", "name1"),
+                    AppData("", ""),
                 ),
                 Environment.TEST,
                 listOf(
@@ -55,9 +55,9 @@ internal class UPIAppIdUtilsTest {
             ),
             Arguments.arguments(
                 listOf(
-                    App("id1", "name1"),
-                    App(null, "name2"),
-                    App("id3", null),
+                    AppData("id1", "name1"),
+                    AppData(null, "name2"),
+                    AppData("id3", null),
                 ),
                 Environment.TEST,
                 listOf(
@@ -66,11 +66,11 @@ internal class UPIAppIdUtilsTest {
             ),
             Arguments.arguments(
                 listOf(
-                    App(null, "name1"),
-                    App("id2", null),
-                    App("", "name3"),
-                    App("id4", ""),
-                    App(null, null),
+                    AppData(null, "name1"),
+                    AppData("id2", null),
+                    AppData("", "name3"),
+                    AppData("id4", ""),
+                    AppData(null, null),
                 ),
                 Environment.TEST,
                 listOf<UPIIntentItem.PaymentApp>(),
