@@ -17,10 +17,14 @@ internal class UPIIntentGenericAppViewHolder(
     private val binding: UpiAppGenericBinding,
 ) : UPIIntentItemViewHolder(binding) {
 
-    override fun bind(item: UPIIntentItem) {
+    override fun bind(item: UPIIntentItem, onClickListener: (UPIIntentItem) -> Unit) {
         (item as? UPIIntentItem.GenericApp) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
+        }
+
+        itemView.setOnClickListener {
+            onClickListener.invoke(item)
         }
 
         bindItem(item.isSelected)
@@ -28,12 +32,5 @@ internal class UPIIntentGenericAppViewHolder(
 
     private fun bindItem(isChecked: Boolean) = with(binding) {
         radioButtonUpiApp.isChecked = isChecked
-    }
-
-    override fun setOnClickListener(onClickListener: (Int) -> Unit) {
-        itemView.setOnClickListener {
-            val position = getBindingAdapterPosition()
-            onClickListener.invoke(position)
-        }
     }
 }

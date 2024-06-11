@@ -19,10 +19,14 @@ internal class UPIIntentPaymentAppViewHolder(
     private val paymentMethod: String,
 ) : UPIIntentItemViewHolder(binding) {
 
-    override fun bind(item: UPIIntentItem) {
+    override fun bind(item: UPIIntentItem, onClickListener: (UPIIntentItem) -> Unit) {
         val app = (item as? UPIIntentItem.PaymentApp) ?: run {
             adyenLog(AdyenLogLevel.DEBUG) { "Item type is not recognized, thus the item can not be bound" }
             return
+        }
+
+        itemView.setOnClickListener {
+            onClickListener.invoke(item)
         }
 
         bindItem(
@@ -44,12 +48,5 @@ internal class UPIIntentPaymentAppViewHolder(
             txVariant = paymentMethod,
             txSubVariant = paymentApp.id,
         )
-    }
-
-    override fun setOnClickListener(onClickListener: (Int) -> Unit) {
-        itemView.setOnClickListener {
-            val position = getBindingAdapterPosition()
-            onClickListener.invoke(position)
-        }
     }
 }

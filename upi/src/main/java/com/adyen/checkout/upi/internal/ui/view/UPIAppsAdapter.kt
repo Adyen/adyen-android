@@ -60,11 +60,7 @@ internal class UPIAppsAdapter(
     }
 
     override fun onBindViewHolder(holder: UPIIntentItemViewHolder, position: Int) = with(holder) {
-        val item = getItem(position)
-        bind(item)
-        setOnClickListener {
-            onItemClickListener.invoke(item)
-        }
+        bind(getItem(position), onItemClickListener)
     }
 
     object UPIAppsDiffCallback : DiffUtil.ItemCallback<UPIIntentItem>() {
