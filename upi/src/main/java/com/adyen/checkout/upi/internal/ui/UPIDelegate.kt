@@ -31,7 +31,7 @@ internal interface UPIDelegate :
 
     fun updateInputData(update: UPIInputData.() -> Unit)
 
-    fun updateIntentVirtualPaymentAddress(value: String)
+    fun highlightValidationErrors()
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

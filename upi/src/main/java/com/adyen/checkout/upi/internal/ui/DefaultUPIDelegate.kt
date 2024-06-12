@@ -72,10 +72,6 @@ internal class DefaultUPIDelegate(
 
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
-    // This allows moving validation to the delegate without changing the communication structure between delegate and
-    // the view. After we refactor state handling and validation logic, this can be improved.
-    private var cachedIntentVirtualPaymentAddress: String = ""
-
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
         initializeAnalytics(coroutineScope)
@@ -120,20 +116,9 @@ internal class DefaultUPIDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData() = with(inputData) {
-        val appIds = paymentMethod.apps
+    private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
+        val availableModes = createAvailableModes(this, paymentMethod, includeValidationErrors)
         val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
-        val availableModes = if (!appIds.isNullOrEmpty()) {
-            val intentItemList = createIntentItems(
-                appIds,
-                componentParams.environment,
-                intentVirtualPaymentAddressFieldState,
-                selectedUPIIntentItem,
-            )
-            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
-        } else {
-            listOf(UPIMode.Vpa, UPIMode.Qr)
-        }
 
         UPIOutputData(
             selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
@@ -144,11 +129,36 @@ internal class DefaultUPIDelegate(
         )
     }
 
+    private fun createAvailableModes(
+        inputData: UPIInputData,
+        paymentMethod: PaymentMethod,
+        includeValidation: Boolean
+    ) = with(inputData) {
+        val appIds = paymentMethod.apps
+        if (!appIds.isNullOrEmpty()) {
+            val paymentAddressFieldState = if (includeValidation) {
+                validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+            } else {
+                null
+            }
+            val intentItemList = createIntentItems(
+                appIds,
+                componentParams.environment,
+                selectedUPIIntentItem,
+                paymentAddressFieldState,
+            )
+
+            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
+        } else {
+            listOf(UPIMode.Vpa, UPIMode.Qr)
+        }
+    }
+
     private fun createIntentItems(
         upiApps: List<AppData>,
         environment: Environment,
-        intentVirtualPaymentAddressFieldState: FieldState<String>,
-        selectedUPIIntentItem: UPIIntentItem?
+        selectedUPIIntentItem: UPIIntentItem?,
+        paymentAddressFieldState: FieldState<String>?,
     ): List<UPIIntentItem> {
         val paymentApps = upiApps.mapToPaymentApp(
             environment = environment,
@@ -159,8 +169,9 @@ internal class DefaultUPIDelegate(
             isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
         )
 
-        val manualInputErrorMessageId =
-            getValidationErrorResourceIdOrNull(intentVirtualPaymentAddressFieldState.validation)
+        val manualInputErrorMessageId = paymentAddressFieldState?.let {
+            getValidationErrorResourceIdOrNull(paymentAddressFieldState.validation)
+        }
         val manualInput = UPIIntentItem.ManualInput(
             errorMessageResource = manualInputErrorMessageId,
             isSelected = selectedUPIIntentItem is UPIIntentItem.ManualInput,
@@ -176,10 +187,8 @@ internal class DefaultUPIDelegate(
     private fun getValidationErrorResourceIdOrNull(validation: Validation?): Int? =
         (validation as? Validation.Invalid)?.reason
 
-    private fun validateVirtualPaymentAddress(virtualPaymentAddress: String?): FieldState<String> =
-        if (virtualPaymentAddress == null) {
-            FieldState("", Validation.Valid)
-        } else if (virtualPaymentAddress.isNotBlank()) {
+    private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
+        if (virtualPaymentAddress.isNotBlank()) {
             FieldState(virtualPaymentAddress, Validation.Valid)
         } else {
             FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
@@ -275,15 +284,10 @@ internal class DefaultUPIDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    override fun updateIntentVirtualPaymentAddress(value: String) {
-        cachedIntentVirtualPaymentAddress = value
-
-        // This makes sure that the field validation gets updated for the delegate too and not only for the input field
-        if (inputData.intentVirtualPaymentAddress != null) {
-            updateInputData {
-                intentVirtualPaymentAddress = null
-            }
-        }
+    override fun highlightValidationErrors() {
+        adyenLog(AdyenLogLevel.VERBOSE) { "updating outputData to include validation" }
+        val outputData = createOutputData(includeValidationErrors = true)
+        outputDataChanged(outputData)
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
@@ -295,12 +299,6 @@ internal class DefaultUPIDelegate(
     }
 
     override fun onSubmit() {
-        // This allows moving validation to the delegate without changing the communication structure between delegate
-        // and the view. After we refactor state handling and validation logic, this can be improved.
-        updateInputData {
-            intentVirtualPaymentAddress = cachedIntentVirtualPaymentAddress
-        }
-
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
 

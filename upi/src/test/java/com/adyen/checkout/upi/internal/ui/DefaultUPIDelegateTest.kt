@@ -381,33 +381,6 @@ internal class DefaultUPIDelegateTest(
     }
 
     @Nested
-    inner class VirtualPaymentAddressCacheTest {
-
-        @Test
-        fun `when updateIntentVirtualPaymentAddress is called, then payment address is cleared`() = runTest {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.updateIntentVirtualPaymentAddress("test_address")
-
-            delegate.outputDataFlow.test {
-                assertEquals("", expectMostRecentItem().intentVirtualPaymentAddressFieldState.value)
-            }
-        }
-
-        @Test
-        fun `when onSubmit is called, then payment address is being updated with the cache`() = runTest {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            delegate.updateIntentVirtualPaymentAddress("test_address")
-
-            delegate.onSubmit()
-
-            delegate.outputDataFlow.test {
-                assertEquals("test_address", expectMostRecentItem().intentVirtualPaymentAddressFieldState.value)
-            }
-        }
-    }
-
-    @Nested
     inner class SubmitButtonVisibilityTest {
 
         @Test
@@ -499,6 +472,71 @@ internal class DefaultUPIDelegateTest(
                 delegate.onSubmit()
                 verify(submitHandler).onSubmit(expectMostRecentItem())
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("when highlightValidationErrors is called for ")
+    inner class HighlightValidationErrorsTest {
+
+        @Test
+        fun `invalid payment address, output data includes validation errors`() = runTest {
+            val paymentMethod = PaymentMethod(
+                apps = listOf(
+                    AppData("id1", "name1"),
+                ),
+            )
+            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+                selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
+                intentVirtualPaymentAddress = " "
+            }
+
+            delegate.highlightValidationErrors()
+
+            with(outputTestFlow.latestValue) {
+                assertTrue(
+                    availableModes.any { mode ->
+                        mode is UPIMode.Intent && mode.intentItems.any { item ->
+                            item is UPIIntentItem.ManualInput && item.errorMessageResource != null
+                        }
+                    },
+                )
+            }
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `valid payment address, output data does not include validation errors`() = runTest {
+            val paymentMethod = PaymentMethod(
+                apps = listOf(
+                    AppData("id1", "name1"),
+                ),
+            )
+            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+            delegate.updateInputData {
+                selectedMode = UPISelectedMode.INTENT
+                selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
+                intentVirtualPaymentAddress = "test"
+            }
+
+            delegate.highlightValidationErrors()
+
+            with(outputTestFlow.latestValue) {
+                assertTrue(
+                    availableModes.any { mode ->
+                        mode is UPIMode.Intent && mode.intentItems.any { item ->
+                            item is UPIIntentItem.ManualInput && item.errorMessageResource == null
+                        }
+                    },
+                )
+            }
+
+            outputTestFlow.cancel()
         }
     }
 

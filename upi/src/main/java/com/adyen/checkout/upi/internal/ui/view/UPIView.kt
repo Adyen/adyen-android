@@ -177,7 +177,9 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     private fun onIntentItemInputChanged(value: String) {
-        delegate.updateIntentVirtualPaymentAddress(value)
+        delegate.updateInputData {
+            intentVirtualPaymentAddress = value
+        }
     }
 
     private fun initViewsForVpa(isChecked: Boolean) = with(binding) {
@@ -238,6 +240,8 @@ internal class UPIView @JvmOverloads constructor(
         if (vpaValidation is Validation.Invalid) {
             binding.textInputLayoutVpa.showError(localizedContext.getString(vpaValidation.reason))
         }
+
+        delegate.highlightValidationErrors()
     }
 
     override fun getView(): View = this
