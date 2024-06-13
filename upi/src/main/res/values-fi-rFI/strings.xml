@@ -12,9 +12,7 @@
     <string name="checkout_upi_vpa_validation">Syötä oikea virtuaalinen maksuosoite</string>
     <string name="checkout_upi_qr_generation">Luo QR-koodi, jonka voit ladata tai josta voit ottaa kuvakaappauksen ja lähettää sen UPI-sovellukseen suorittaaksesi maksun loppuun.</string>
     <string name="checkout_upi_continue">Jatka</string>
-    <string name="checkout_upi_app_tab_title">Maksa millä tahansa UPI-sovelluksella</string>
     <string name="checkout_upi_app_manual_input">Syötä UPI-tunnus</string>
     <string name="checkout_upi_app_other_upi">Muu UPI</string>
-    <string name="checkout_upi_other_tab_title">Muita UPI-vaihtoehtoja</string>
 
 </resources>

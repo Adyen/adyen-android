@@ -12,9 +12,7 @@
     <string name="checkout_upi_vpa_validation">Vnesite pravilen virtualni naslov za plačilo</string>
     <string name="checkout_upi_qr_generation">Ustvarite kodo QR, ki jo lahko prenesete ali naredite posnetek zaslona, in jo za dokončanje plačila naložite v aplikacijo UPI.</string>
     <string name="checkout_upi_continue">Nadaljuj</string>
-    <string name="checkout_upi_app_tab_title">Plačajte s poljubno aplikacijo UPI</string>
     <string name="checkout_upi_app_manual_input">Vnesite UPI ID</string>
     <string name="checkout_upi_app_other_upi">Drugi UPI</string>
-    <string name="checkout_upi_other_tab_title">Druge možnosti za UPI</string>
 
 </resources>

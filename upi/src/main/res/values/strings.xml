@@ -12,12 +12,12 @@
     <string name="checkout_upi_vpa_validation">Enter a correct virtual payment address</string>
     <string name="checkout_upi_qr_generation">Generate the QR code that you can download or screenshot and upload it into the UPI app to complete the payment.</string>
     <string name="checkout_upi_continue">Continue</string>
-    <string name="checkout_upi_app_tab_title">Pay by any UPI app</string>
     <string name="checkout_upi_app_manual_input">Enter UPI ID</string>
     <string name="checkout_upi_app_other_upi">Other UPI</string>
-    <string name="checkout_upi_other_tab_title">Other UPI options</string>
 
     <!-- Untranslatable strings -->
+    <string name="checkout_upi_app_tab_title" translatable="false">Pay by any UPI app</string>
+    <string name="checkout_upi_other_tab_title" translatable="false">Other UPI options</string>
     <string name="checkout_upi_app_manual_input_hint" translatable="false">UPI ID</string>
     <string name="checkout_upi_vpa" translatable="false">VPA</string>
     <string name="checkout_upi_vpa_full" translatable="false">Virtual Payment Address</string>
