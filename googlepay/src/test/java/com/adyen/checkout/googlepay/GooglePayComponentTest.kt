@@ -12,21 +12,20 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import app.cash.turbine.test
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.googlepay.internal.ui.GooglePayComponentViewType
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
+import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,10 +35,10 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GooglePayComponentTest(
     @Mock private val googlePayDelegate: GooglePayDelegate,
@@ -52,6 +51,7 @@ internal class GooglePayComponentTest(
 
     @BeforeEach
     fun before() {
+        whenever(googlePayDelegate.viewFlow) doReturn MutableStateFlow(GooglePayComponentViewType)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
         component = GooglePayComponent(
@@ -98,12 +98,32 @@ internal class GooglePayComponentTest(
     }
 
     @Test
-    fun `when component is initialized then view flow should bu null`() = runTest {
-        component.viewFlow.test {
-            assertNull(awaitItem())
-            expectNoEvents()
-        }
+    fun `when component is initialized, then view flow should match google pay delegate view flow`() = runTest {
+        val viewFlow = component.viewFlow.test(testScheduler)
+
+        assertEquals(GooglePayComponentViewType, viewFlow.latestValue)
     }
+
+    @Test
+    fun `when cash app pay delegate view flow emits a value then component view flow should match that value`() =
+        runTest {
+            val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
+            whenever(googlePayDelegate.viewFlow) doReturn delegateViewFlow
+            component = GooglePayComponent(
+                googlePayDelegate,
+                genericActionDelegate,
+                actionHandlingComponent,
+                componentEventHandler,
+            )
+
+            val testViewFlow = component.viewFlow.test(testScheduler)
+
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, testViewFlow.latestValue)
+
+            delegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+
+            assertEquals(TestComponentViewType.VIEW_TYPE_2, testViewFlow.latestValue)
+        }
 
     @Test
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
@@ -116,16 +136,18 @@ internal class GooglePayComponentTest(
             componentEventHandler = componentEventHandler,
         )
 
-        component.viewFlow.test {
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+        val testViewFlow = component.viewFlow.test(testScheduler)
 
-            actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
-            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
+        // this value should match the value of the main delegate and not the action delegate
+        // and in practice the initial value of the action delegate view flow is always null so it should be ignored
+        assertEquals(GooglePayComponentViewType, testViewFlow.latestValue)
 
-            expectNoEvents()
-        }
+        actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+
+        assertEquals(TestComponentViewType.VIEW_TYPE_2, testViewFlow.latestValue)
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `when startGooglePayScreen is called then delegate startGooglePayScreen is called`() {
         val activity = Activity()
@@ -134,11 +156,57 @@ internal class GooglePayComponentTest(
         verify(googlePayDelegate).startGooglePayScreen(activity, requestCode)
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `when handleActivityResult is called then delegate handleActivityResult is called`() {
         val requestCode = 1
         val intent = Intent()
         component.handleActivityResult(requestCode, intent)
         verify(googlePayDelegate).handleActivityResult(requestCode, intent)
+    }
+
+    @Test
+    fun `when submit is called and active delegate is the payment delegate, then delegate onSubmit is called`() {
+        component = GooglePayComponent(
+            googlePayDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
+        whenever(component.delegate).thenReturn(googlePayDelegate)
+
+        component.submit()
+
+        verify(googlePayDelegate).onSubmit()
+    }
+
+    @Test
+    fun `when submit is called and active delegate is the action delegate, then delegate onSubmit is not called`() {
+        component = GooglePayComponent(
+            googlePayDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
+        whenever(component.delegate).thenReturn(genericActionDelegate)
+
+        component.submit()
+
+        verify(googlePayDelegate, never()).onSubmit()
+    }
+
+    @Test
+    fun `when isConfirmationRequired and delegate is default, then delegate is called`() {
+        component = GooglePayComponent(
+            googlePayDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
+        whenever(component.delegate).thenReturn(googlePayDelegate)
+
+        component.isConfirmationRequired()
+
+        verify(googlePayDelegate).isConfirmationRequired()
     }
 }
