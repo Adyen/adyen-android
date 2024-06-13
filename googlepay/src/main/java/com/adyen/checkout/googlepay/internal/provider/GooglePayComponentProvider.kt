@@ -108,13 +108,16 @@ constructor(
                 sessionId = null,
             )
 
+            val paymentsClient =
+                Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
+
             val googlePayDelegate = DefaultGooglePayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
-                application = application,
+                paymentsClient = paymentsClient,
             )
 
             val genericActionDelegate =
@@ -196,13 +199,16 @@ constructor(
                 sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
+            val paymentsClient =
+                Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
+
             val googlePayDelegate = DefaultGooglePayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
-                application = application,
+                paymentsClient = paymentsClient,
             )
 
             val genericActionDelegate =
