@@ -8,5 +8,8 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## New
+- Launch Google Pay with `submit()` to get rid of the deprecated activity result handling.
+
 ## Fixed
 - When using components or when using drop-in and excluding a module, R8 will no longer fail with `[CIRCULAR REFERENCE: com.android.tools.r8.utils.b: Missing class...`
