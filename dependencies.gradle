@@ -32,6 +32,7 @@ ext {
     jacoco_version = '0.8.12'
     ktlint_version = '1.2.1'
     sonarqube_version = '5.0.0.4638'
+    binary_compatibility_validator_version = "0.14.0"
 
     // Android Dependencies
     annotation_version = "1.8.0"
