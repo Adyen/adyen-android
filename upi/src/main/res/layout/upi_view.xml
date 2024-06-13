@@ -58,11 +58,12 @@
         android:id="@+id/recyclerView_upiIntent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:overScrollMode="never"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
-        android:visibility="gone"
+        android:paddingBottom="@dimen/standard_one_half_margin"
         android:descendantFocusability="beforeDescendants"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:overScrollMode="never"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:visibility="visible" />
 

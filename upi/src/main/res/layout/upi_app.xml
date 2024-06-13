@@ -10,14 +10,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_upi_app"
-    style="@style/AdyenCheckout.UPI.RecyclerListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_upi_logo"
         style="@style/AdyenCheckout.UPI.Intent.Icon"
-        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintBottom_toTopOf="@+id/barrier_divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +25,7 @@
         style="@style/AdyenCheckout.UPI.Intent.AppIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintBottom_toTopOf="@+id/barrier_divider"
         app:layout_constraintEnd_toStartOf="@+id/radioButton_upi_app"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/imageView_upi_logo"
@@ -39,9 +38,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        app:layout_constraintBottom_toTopOf="@+id/divider_upi_app"
+        app:layout_constraintBottom_toTopOf="@+id/barrier_divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:barrierMargin="@dimen/standard_half_margin"
+        app:constraint_referenced_ids="imageView_upi_logo, textView_upi_app_name, radioButton_upi_app" />
 
     <View
         android:id="@+id/divider_upi_app"
@@ -50,6 +57,7 @@
         android:layout_height="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barrier_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

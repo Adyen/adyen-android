@@ -10,7 +10,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_upi_manual_address"
-    style="@style/AdyenCheckout.UPI.RecyclerListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -48,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
+        app:barrierMargin="@dimen/standard_half_margin"
         app:constraint_referenced_ids="imageView_upi_logo, textView_upi_app_name, radioButton_upi_manual_address" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -55,7 +55,6 @@
         style="@style/AdyenCheckout.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/divider_upi_manual_address"
         app:layout_constraintEnd_toEndOf="parent"
