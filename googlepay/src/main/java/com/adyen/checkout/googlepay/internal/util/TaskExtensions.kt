@@ -20,7 +20,7 @@ internal suspend fun <T> Task<T>.awaitTask(cancellationTokenSource: Cancellation
     } else {
         suspendCancellableCoroutine { cont ->
             // Run the callback directly to avoid unnecessarily scheduling on the main thread.
-            addOnCompleteListener(DirectExecutor, cont::resume)
+            addOnCompleteListener(DirectExecutor(), cont::resume)
 
             cancellationTokenSource?.let { cancellationSource ->
                 cont.invokeOnCancellation { cancellationSource.cancel() }
@@ -32,7 +32,7 @@ internal suspend fun <T> Task<T>.awaitTask(cancellationTokenSource: Cancellation
 /**
  * An [Executor] that just directly executes the [Runnable].
  */
-private object DirectExecutor : Executor {
+private class DirectExecutor : Executor {
     override fun execute(runnable: Runnable) {
         runnable.run()
     }
