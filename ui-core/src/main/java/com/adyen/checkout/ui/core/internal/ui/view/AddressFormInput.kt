@@ -332,8 +332,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initHouseNumberInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
-            // TODO
-//            setAutofillHints(View.AUTO)
             setText(delegate.addressOutputData.houseNumberOrName.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { houseNumberOrName = it.toString() }
