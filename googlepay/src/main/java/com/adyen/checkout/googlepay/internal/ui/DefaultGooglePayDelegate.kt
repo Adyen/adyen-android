@@ -9,7 +9,6 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -39,6 +38,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
@@ -57,7 +57,7 @@ internal class DefaultGooglePayDelegate(
     private val order: OrderRequest?,
     override val componentParams: GooglePayComponentParams,
     private val analyticsManager: AnalyticsManager,
-    private val application: Application,
+    private val paymentsClient: PaymentsClient,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -166,7 +166,6 @@ internal class DefaultGooglePayDelegate(
 
     override fun onSubmit() {
         adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
-        val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)
         coroutineScope.launch {
