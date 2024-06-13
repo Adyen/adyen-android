@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
-import android.app.Application
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -21,16 +20,25 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
+import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.extensions.test
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.PaymentData
+import com.google.android.gms.wallet.PaymentsClient
+import com.google.android.gms.wallet.contract.ApiTaskResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -40,18 +48,21 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class)
-internal class DefaultGooglePayDelegateTest {
+@ExtendWith(MockitoExtension::class, LoggingExtension::class)
+internal class DefaultGooglePayDelegateTest(
+    @Mock private val paymentsClient: PaymentsClient,
+) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultGooglePayDelegate
-
-    private val paymentData: PaymentData
-        get() = PaymentData.fromJson("{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}")
 
     @BeforeEach
     fun beforeEach() {
@@ -94,7 +105,7 @@ internal class DefaultGooglePayDelegateTest {
         delegate.componentStateFlow.test {
             skipItems(1)
 
-            val paymentData = paymentData
+            val paymentData = TEST_PAYMENT_DATA
 
             delegate.updateComponentState(paymentData)
 
@@ -110,6 +121,18 @@ internal class DefaultGooglePayDelegateTest {
         }
     }
 
+    @Test
+    fun `when onSubmit is called, then event is emitted to start Google Pay`() = runTest {
+        val task = Tasks.forResult(TEST_PAYMENT_DATA)
+        whenever(paymentsClient.loadPaymentData(any())) doReturn task
+        val payEventFlow = delegate.payEventFlow.test(testScheduler)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.onSubmit()
+
+        assertEquals(task, payEventFlow.latestValue)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `when input data is valid then amount is propagated in component state if set`(
@@ -122,7 +145,7 @@ internal class DefaultGooglePayDelegateTest {
         }
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.componentStateFlow.test {
-            delegate.updateComponentState(paymentData)
+            delegate.updateComponentState(TEST_PAYMENT_DATA)
             assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
         }
     }
@@ -149,7 +172,7 @@ internal class DefaultGooglePayDelegateTest {
         fun `when component state updates amd the data is valid, then submit event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.updateComponentState(paymentData)
+            delegate.updateComponentState(TEST_PAYMENT_DATA)
 
             val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
@@ -162,7 +185,7 @@ internal class DefaultGooglePayDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(paymentData)
+                delegate.updateComponentState(TEST_PAYMENT_DATA)
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
@@ -173,6 +196,24 @@ internal class DefaultGooglePayDelegateTest {
             delegate.onCleared()
 
             analyticsManager.assertIsCleared()
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("paymentResultSource")
+    fun `when handling payment result, then success or error is emitted`(
+        result: ApiTaskResult<PaymentData>,
+        isSuccess: Boolean,
+    ) = runTest {
+        val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.handlePaymentResult(result)
+
+        if (isSuccess) {
+            assertEquals(result.result, componentStateFlow.latestValue.paymentData)
+        } else {
+            assertInstanceOf(ComponentException::class.java, exceptionFlow.latestValue)
         }
     }
 
@@ -201,7 +242,7 @@ internal class DefaultGooglePayDelegateTest {
             componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null, paymentMethod),
             analyticsManager = analyticsManager,
-            application = Application(),
+            paymentsClient = paymentsClient,
         )
     }
 
@@ -209,6 +250,8 @@ internal class DefaultGooglePayDelegateTest {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private val TEST_PAYMENT_DATA: PaymentData =
+            PaymentData.fromJson("{\"paymentMethodData\": {\"tokenizationData\": {\"token\": \"test_token\"}}}")
 
         @JvmStatic
         fun amountSource() = listOf(
@@ -217,6 +260,16 @@ internal class DefaultGooglePayDelegateTest {
             arguments(Amount("USD", 0), Amount("USD", 0)),
             arguments(null, Amount("USD", 0)),
             arguments(null, Amount("USD", 0)),
+        )
+
+        @JvmStatic
+        fun paymentResultSource() = listOf(
+            arguments(ApiTaskResult(TEST_PAYMENT_DATA, Status.RESULT_SUCCESS), true),
+            arguments(ApiTaskResult(null, Status.RESULT_SUCCESS), false),
+            arguments(ApiTaskResult(null, Status.RESULT_CANCELED), false),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERNAL_ERROR), false),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERRUPTED), false),
+            arguments(ApiTaskResult(null, Status(AutoResolveHelper.RESULT_ERROR)), false),
         )
     }
 }
