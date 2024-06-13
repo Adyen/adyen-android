@@ -18,6 +18,7 @@
 - For API only merchants, `CardNumberValidator`, `CardExpiryDateValidator` and `CardSecurityCodeValidator` classes are added to make validation functionality for the corresponding fields available to public.
 - For Twint, storing payment details and paying with them is now supported. See the documentation [here](/docs/payment-methods/TWINT.md).
 - You can now use [Adyen Test Cards Android](https://github.com/Adyen/adyen-testcards-android) to prefill test payment method information, making testing your integration easier.
+- Launch Google Pay with `submit()` to get rid of the deprecated activity result handling.
 
 > [!WARNING]
 > For the Twint component integration, you are now required to use `TwintComponent` instead of `InstantPaymentComponent`. See the [documentation](/docs/payment-methods/TWINT.md) to find out the details.
