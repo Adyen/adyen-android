@@ -147,7 +147,7 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         binding.googlePayButton.initialize(buttonOptions)
 
         binding.googlePayButton.setOnClickListener {
-            googlePayComponent?.startGooglePayScreen()
+            googlePayComponent?.submit()
         }
     }
 
@@ -162,7 +162,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         internal val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
-        internal const val ACTIVITY_RESULT_CODE = 1
 
         fun show(fragmentManager: FragmentManager) {
             GooglePayFragment().show(fragmentManager, TAG)
