@@ -11,7 +11,6 @@ package com.adyen.checkout.googlepay.internal.ui
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
@@ -75,7 +74,8 @@ internal class DefaultGooglePayDelegate(
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
-    private lateinit var paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>
+    private val payEventChannel: Channel<Task<PaymentData>> = bufferedChannel()
+    override val payEventFlow: Flow<Task<PaymentData>> = payEventChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -93,10 +93,6 @@ internal class DefaultGooglePayDelegate(
 
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
-    }
-
-    override fun setPaymentDataLauncher(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>) {
-        this.paymentDataLauncher = paymentDataLauncher
     }
 
     private fun onState(state: GooglePayComponentState) {
@@ -158,7 +154,7 @@ internal class DefaultGooglePayDelegate(
         )
     }
 
-    // TODO remove in v6
+    @Deprecated("Deprecated in favor of startGooglePayScreen()", replaceWith = ReplaceWith("startGooglePayScreen()"))
     override fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
         val paymentsClient = Wallet.getPaymentsClient(activity, GooglePayUtils.createWalletOptions(componentParams))
@@ -173,7 +169,7 @@ internal class DefaultGooglePayDelegate(
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)
         coroutineScope.launch {
-            paymentDataLauncher.launch(paymentDataTask.awaitTask())
+            payEventChannel.send(paymentDataTask.awaitTask())
         }
     }
 

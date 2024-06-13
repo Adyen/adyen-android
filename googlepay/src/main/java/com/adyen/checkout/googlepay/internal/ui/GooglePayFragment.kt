@@ -13,8 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.googlepay.databinding.FragmentGooglePayBinding
 import com.google.android.gms.wallet.contract.TaskResultContracts
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class GooglePayFragment : Fragment() {
 
@@ -34,7 +37,9 @@ internal class GooglePayFragment : Fragment() {
 
     fun initialize(delegate: GooglePayDelegate) {
         this.delegate = delegate
-        delegate.setPaymentDataLauncher(googlePayLauncher)
+        delegate.payEventFlow
+            .onEach { googlePayLauncher.launch(it) }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {
