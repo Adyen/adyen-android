@@ -22,6 +22,60 @@ ext {
     checkoutRedirectScheme = "adyencheckout"
 }
 
+apiValidation {
+    ignoredPackages += [
+        "com/adyen/checkout/adyen3ds2/databinding",
+        "com/adyen/checkout/ach/databinding",
+        "com/adyen/checkout/action/databinding",
+        "com/adyen/checkout/action/core/databinding",
+        "com/adyen/checkout/await/databinding",
+        "com/adyen/checkout/bacs/databinding",
+        "com/adyen/checkout/bcmc/databinding",
+        "com/adyen/checkout/blik/databinding",
+        "com/adyen/checkout/boleto/databinding",
+        "com/adyen/checkout/card/databinding",
+        "com/adyen/checkout/cashapppay/databinding",
+        "com/adyen/checkout/core/databinding",
+        "com/adyen/checkout/components/compose/databinding",
+        "com/adyen/checkout/components/core/databinding",
+        "com/adyen/checkout/conveniencestoresjp/databinding",
+        "com/adyen/checkout/cse/databinding",
+        "com/adyen/checkout/dotpay/databinding",
+        "com/adyen/checkout/dropin/databinding",
+        "com/adyen/checkout/dropin/compose/databinding",
+        "com/adyen/checkout/econtext/databinding",
+        "com/adyen/checkout/entercash/databinding",
+        "com/adyen/checkout/eps/databinding",
+        "com/adyen/checkout/giftcard/databinding",
+        "com/adyen/checkout/googlepay/databinding",
+        "com/adyen/checkout/ideal/databinding",
+        "com/adyen/checkout/instant/databinding",
+        "com/adyen/checkout/issuerlist/databinding",
+        "com/adyen/checkout/mbway/databinding",
+        "com/adyen/checkout/molpay/databinding",
+        "com/adyen/checkout/onlinebankingcore/databinding",
+        "com/adyen/checkout/onlinebankingcz/databinding",
+        "com/adyen/checkout/onlinebankingjp/databinding",
+        "com/adyen/checkout/onlinebankingpl/databinding",
+        "com/adyen/checkout/onlinebankingsk/databinding",
+        "com/adyen/checkout/openbanking/databinding",
+        "com/adyen/checkout/paybybank/databinding",
+        "com/adyen/checkout/payeasy/databinding",
+        "com/adyen/checkout/qrcode/databinding",
+        "com/adyen/checkout/redirect/databinding",
+        "com/adyen/checkout/sepa/databinding",
+        "com/adyen/checkout/sessions/core/databinding",
+        "com/adyen/checkout/seveneleven/databinding",
+        "com/adyen/checkout/twint/databinding",
+        "com/adyen/checkout/ui/core/databinding",
+        "com/adyen/checkout/upi/databinding",
+        "com/adyen/checkout/voucher/databinding",
+        "com/adyen/checkout/wechatpay/databinding",
+    ]
+    ignoredProjects += ["example-app", "test-core"]
+    nonPublicMarkers += ["androidx.annotation.RestrictTo"]
+}
+
 subprojects {
     def javaVersion = 11
 
