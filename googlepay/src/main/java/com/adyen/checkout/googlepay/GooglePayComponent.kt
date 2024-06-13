@@ -17,6 +17,7 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ActivityResultHandlingComponent
+import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -26,6 +27,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
@@ -43,6 +45,7 @@ class GooglePayComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent,
     ActivityResultHandlingComponent,
+    ButtonComponent,
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
@@ -79,7 +82,7 @@ class GooglePayComponent internal constructor(
      * @param activity    The activity to start the screen and later receive the result.
      * @param requestCode The code that will be returned on the [Activity.onActivityResult]
      */
-    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("startGooglePayScreen()"))
+    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("submit()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int) {
         @Suppress("DEPRECATION")
         googlePayDelegate.startGooglePayScreen(activity, requestCode)
@@ -88,9 +91,12 @@ class GooglePayComponent internal constructor(
     /**
      * Start the GooglePay screen.
      */
-    fun startGooglePayScreen() {
-        googlePayDelegate.startGooglePayScreen()
+    override fun submit() {
+        (delegate as? ButtonDelegate)?.onSubmit()
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Component is currently not submittable, ignoring." }
     }
+
+    override fun isConfirmationRequired(): Boolean = (delegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
 
     /**
      * Returns some of the parameters required to initialize the [Google Pay button](https://docs.adyen.com/payment-methods/google-pay/android-component/#2-show-the-google-pay-button).
@@ -106,7 +112,7 @@ class GooglePayComponent internal constructor(
      * @param resultCode The result code from the [Activity.onActivityResult]
      * @param data       The data intent from the [Activity.onActivityResult]
      */
-    @Deprecated("When using startGooglePayScreen() this method is no longer needed.", ReplaceWith(""))
+    @Deprecated("When using submit() this method is no longer needed.", ReplaceWith(""))
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         googlePayDelegate.handleActivityResult(resultCode, data)
     }

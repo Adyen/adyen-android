@@ -9,6 +9,7 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -225,6 +226,7 @@ internal class DefaultGooglePayDelegateTest {
             componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null, paymentMethod),
             analyticsManager = analyticsManager,
+            application = Application(),
         )
     }
 

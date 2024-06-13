@@ -110,7 +110,7 @@ private fun SessionsGooglePayContent(
                 AdyenComponent(googlePayComponent)
 
                 PayButton(
-                    onClick = { googlePayComponent.startGooglePayScreen() },
+                    onClick = { googlePayComponent.submit() },
                     allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
                     theme = if (useDarkTheme) ButtonTheme.Light else ButtonTheme.Dark,
                     type = ButtonType.Pay,

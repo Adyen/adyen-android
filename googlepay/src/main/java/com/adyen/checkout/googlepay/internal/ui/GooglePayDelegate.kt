@@ -10,11 +10,11 @@ package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.PaymentData
@@ -23,7 +23,8 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface GooglePayDelegate :
     PaymentComponentDelegate<GooglePayComponentState>,
-    ViewProvidingDelegate {
+    ViewProvidingDelegate,
+    ButtonDelegate {
 
     val componentStateFlow: Flow<GooglePayComponentState>
 
@@ -31,10 +32,8 @@ internal interface GooglePayDelegate :
 
     val payEventFlow: Flow<Task<PaymentData>>
 
-    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("startGooglePayScreen()"))
+    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("onSubmit()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int)
-
-    fun startGooglePayScreen()
 
     fun handleActivityResult(resultCode: Int, data: Intent?)
 
