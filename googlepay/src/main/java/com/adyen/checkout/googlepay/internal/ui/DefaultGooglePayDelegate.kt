@@ -69,7 +69,8 @@ internal class DefaultGooglePayDelegate(
     private val submitChannel: Channel<GooglePayComponentState> = bufferedChannel()
     override val submitFlow: Flow<GooglePayComponentState> = submitChannel.receiveAsFlow()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(GooglePayComponentViewType)
+    private val _viewFlow = MutableStateFlow(GooglePayComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -163,7 +164,7 @@ internal class DefaultGooglePayDelegate(
         AutoResolveHelper.resolveTask(paymentsClient.loadPaymentData(paymentDataRequest), activity, requestCode)
     }
 
-    override fun startGooglePayScreen() {
+    override fun onSubmit() {
         adyenLog(AdyenLogLevel.DEBUG) { "startGooglePayScreen" }
         val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
@@ -254,6 +255,13 @@ internal class DefaultGooglePayDelegate(
         )?.toString().orEmpty()
         return GooglePayButtonParameters(allowedPaymentMethods)
     }
+
+    // Currently, we don't show any button, but we could potentially show the Google Pay button.
+    override fun isConfirmationRequired(): Boolean = false
+
+    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired()
+
+    override fun shouldEnableSubmitButton(): Boolean = shouldShowSubmitButton()
 
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
