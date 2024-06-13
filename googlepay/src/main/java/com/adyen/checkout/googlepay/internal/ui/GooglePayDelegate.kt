@@ -29,6 +29,8 @@ internal interface GooglePayDelegate :
 
     val exceptionFlow: Flow<CheckoutException>
 
+    val payEventFlow: Flow<Task<PaymentData>>
+
     @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("startGooglePayScreen()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int)
 
@@ -39,6 +41,4 @@ internal interface GooglePayDelegate :
     fun getGooglePayButtonParameters(): GooglePayButtonParameters
 
     fun handlePaymentResult(paymentDataTaskResult: ApiTaskResult<PaymentData>)
-
-    fun setPaymentDataLauncher(paymentDataLauncher: ActivityResultLauncher<Task<PaymentData>>)
 }
