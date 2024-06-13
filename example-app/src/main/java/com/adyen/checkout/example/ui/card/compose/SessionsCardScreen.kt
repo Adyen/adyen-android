@@ -41,7 +41,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.ui.card.SessionsCardComponentData
 import com.adyen.checkout.example.ui.card.SessionsCardUiState
@@ -71,6 +74,7 @@ internal fun SessionsCardScreen(
             uiState = uiState,
             onOneTimeMessageConsumed = viewModel::oneTimeMessageConsumed,
             onActionConsumed = viewModel::actionConsumed,
+            addressLookupCallback = viewModel as AddressLookupCallback,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -82,13 +86,23 @@ private fun SessionsCardContent(
     uiState: SessionsCardUiState,
     onOneTimeMessageConsumed: () -> Unit,
     onActionConsumed: () -> Unit,
+    addressLookupCallback: AddressLookupCallback,
     modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        val (checkoutConfiguration, isLoading, oneTimeMessage, componentData, action, finalResult) = uiState
+        val (
+            checkoutConfiguration,
+            isLoading,
+            oneTimeMessage,
+            componentData,
+            action,
+            addressLookupOptions,
+            addressLookupResult,
+            finalResult
+        ) = uiState
 
         if (isLoading) {
             CircularProgressIndicator()
@@ -110,18 +124,25 @@ private fun SessionsCardContent(
                 componentData = componentData,
                 action = action,
                 onActionConsumed = onActionConsumed,
+                addressLookupCallback = addressLookupCallback,
+                addressLookupOptions = addressLookupOptions,
+                addressLookupResult = addressLookupResult,
                 modifier = Modifier.fillMaxSize(),
             )
         }
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun CardComponent(
     checkoutConfiguration: CheckoutConfiguration,
     componentData: SessionsCardComponentData,
     action: Action?,
     onActionConsumed: () -> Unit,
+    addressLookupCallback: AddressLookupCallback,
+    addressLookupOptions: List<LookupAddress>,
+    addressLookupResult: AddressLookupResult?,
     modifier: Modifier = Modifier,
 ) {
     val component = CardComponent.PROVIDER.get(
@@ -131,6 +152,16 @@ private fun CardComponent(
         componentData.callback,
         componentData.hashCode().toString(),
     )
+
+    if (addressLookupOptions.isNotEmpty()) {
+        component.updateAddressLookupOptions(addressLookupOptions)
+    }
+
+    if (addressLookupResult != null) {
+        component.setAddressLookupResult(addressLookupResult)
+    }
+
+    component.setAddressLookupCallback(addressLookupCallback)
 
     // Enables vertical scrolling when the CardView becomes too long.
     Column(modifier.verticalScroll(rememberScrollState())) {

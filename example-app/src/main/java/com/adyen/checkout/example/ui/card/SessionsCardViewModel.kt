@@ -13,13 +13,18 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
@@ -36,6 +41,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,8 +53,9 @@ internal class SessionsCardViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
+    private val addressLookupRepository: AddressLookupRepository,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
-) : ViewModel(), SessionComponentCallback<CardComponentState> {
+) : ViewModel(), SessionComponentCallback<CardComponentState>, AddressLookupCallback {
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
@@ -56,6 +64,21 @@ internal class SessionsCardViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { launchComponent() }
+        addressLookupRepository.addressLookupOptionsFlow
+            .onEach { options ->
+                updateUiState {
+                    it.copy(addressLookupOptions = options)
+                }
+            }.launchIn(viewModelScope)
+
+        addressLookupRepository.addressLookupCompletionFlow
+            .onEach {
+                val result = when (it) {
+                    is AddressLookupCompletionState.Address -> AddressLookupResult.Completed(it.lookupAddress)
+                    is AddressLookupCompletionState.Error -> AddressLookupResult.Error(it.message)
+                }
+                updateUiState { it.copy(addressLookupResult = result) }
+            }.launchIn(viewModelScope)
     }
 
     private suspend fun launchComponent() {
@@ -163,6 +186,15 @@ internal class SessionsCardViewModel @Inject constructor(
 
     fun actionConsumed() {
         updateUiState { it.copy(action = null) }
+    }
+
+    override fun onQueryChanged(query: String) {
+        addressLookupRepository.onQuery(query)
+    }
+
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        return true
     }
 
     private fun updateUiState(block: (SessionsCardUiState) -> SessionsCardUiState) {
