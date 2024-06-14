@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel
@@ -20,6 +21,7 @@ import com.adyen.checkout.googlepay.internal.data.model.PaymentMethodTokenizatio
 import com.adyen.checkout.googlepay.internal.data.model.TokenizationParameters
 import com.adyen.checkout.googlepay.internal.data.model.TransactionInfoModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.threeds2.ThreeDS2Service
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
@@ -147,6 +149,8 @@ internal object GooglePayUtils {
             } catch (e: JSONException) {
                 adyenLog(AdyenLogLevel.ERROR, e) { "Failed to find Google Pay token." }
             }
+
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
         }
     }
 

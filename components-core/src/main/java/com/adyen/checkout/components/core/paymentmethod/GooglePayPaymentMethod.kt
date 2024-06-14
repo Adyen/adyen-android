@@ -19,11 +19,13 @@ class GooglePayPaymentMethod(
     override var checkoutAttemptId: String?,
     var googlePayToken: String? = null,
     var googlePayCardNetwork: String? = null,
+    var threeDS2SdkVersion: String? = null,
 ) : PaymentMethodDetails() {
 
     companion object {
         private const val GOOGLE_PAY_TOKEN = "googlePayToken"
         private const val GOOGLE_PAY_CARD_NETWORK = "googlePayCardNetwork"
+        private const val THREEDS2_SDK_VERSION = "threeDS2SdkVersion"
 
         @JvmField
         val SERIALIZER: Serializer<GooglePayPaymentMethod> = object : Serializer<GooglePayPaymentMethod> {
@@ -34,6 +36,7 @@ class GooglePayPaymentMethod(
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
                         putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
+                        putOpt(THREEDS2_SDK_VERSION, modelObject.threeDS2SdkVersion)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
@@ -45,7 +48,8 @@ class GooglePayPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     googlePayToken = jsonObject.getStringOrNull(GOOGLE_PAY_TOKEN),
-                    googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK)
+                    googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK),
+                    threeDS2SdkVersion = jsonObject.getStringOrNull(THREEDS2_SDK_VERSION),
                 )
             }
         }
