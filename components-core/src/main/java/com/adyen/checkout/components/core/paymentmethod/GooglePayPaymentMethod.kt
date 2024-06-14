@@ -14,7 +14,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-class GooglePayPaymentMethod(
+data class GooglePayPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
     var googlePayToken: String? = null,
