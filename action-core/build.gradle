@@ -33,6 +33,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {

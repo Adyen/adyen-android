@@ -11,7 +11,10 @@ package com.adyen.threeds2;
 /**
  * @noinspection unused
  */
-// Fake ThreeDS2Service that overrides the static instance of the actual library, because it crashes unit tests
+/*
+Fake ThreeDS2Service that overrides the static instance of the actual library, because it crashes unit tests. Do not
+move this class to the 3ds2 module because the tests there depend on the actual ThreeDS2Service from the 3DS2 SDK.
+*/
 public interface ThreeDS2Service {
 
     /**

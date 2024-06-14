@@ -793,7 +793,7 @@ internal class DefaultCardDelegateTest(
                     assertNull(encryptedPassword)
                     assertNull(fundingSource)
                     assertNull(storedPaymentMethodId)
-                    assertEquals(ThreeDS2Service.SDK_VERSION, threeDS2SdkVersion)
+                    assertEquals(ThreeDS2Service.INSTANCE.sdkVersion, threeDS2SdkVersion)
                 }
             }
         }
@@ -897,7 +897,7 @@ internal class DefaultCardDelegateTest(
                     assertEquals(PaymentMethodTypes.SCHEME, type)
                     assertEquals(CardType.VISA.txVariant, brand)
                     assertNull(storedPaymentMethodId)
-                    assertEquals(ThreeDS2Service.SDK_VERSION, threeDS2SdkVersion)
+                    assertEquals(ThreeDS2Service.INSTANCE.sdkVersion, threeDS2SdkVersion)
                 }
             }
         }
