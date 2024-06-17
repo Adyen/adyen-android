@@ -16,7 +16,7 @@ object PaymentMethodTypes {
     const val UNKNOWN = "unknown"
 
     // Type of the payment method as received by the paymentMethods/ API
-    const val ACH = "ach"
+    const val ACH = "achs"
     const val BACS = "directdebit_GB"
     const val BCMC = "bcmc"
     const val BLIK = "blik"
