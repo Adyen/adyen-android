@@ -10,8 +10,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: '0'
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -25,7 +23,13 @@ jobs:
           cache-read-only: true
 
       - name: Check public API
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         run: |
-          ./gradlew apiCheck
+          ./gradlew apiCheck 2> "${{ github.workspace }}/api_changes.txt"
+          sh ./scripts/process_api_changes.sh
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: "${{ github.workspace }}/api_changes.md"
+          comment_tag: api_changes
+          mode: recreate

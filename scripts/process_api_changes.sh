@@ -8,12 +8,10 @@
 # Created by oscars on 14/6/2024.
 #
 
-input_file="build/api_changes.txt"
-output_file="api_changes.md"
+input_file="${GITHUB_WORKSPACE}/api_changes.txt"
+output_file="${GITHUB_WORKSPACE}/api_changes.md"
 
 touch $output_file
-
-#echo '' >> $output_file
 
 should_append=false
 did_change=false
@@ -34,7 +32,8 @@ while read line; do
   then
     should_append=true
     did_change=true
-    split=($line)
+    split=()
+    for i in $line; do split+=($i) ; done
     split_size=${#split[@]}
     last_index=$(( split_size-1))
     title=${split[$last_index]}
