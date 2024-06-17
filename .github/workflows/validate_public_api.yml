@@ -33,3 +33,11 @@ jobs:
           filePath: "${{ github.workspace }}/api_changes.md"
           comment_tag: api_changes
           mode: recreate
+
+      - name: Check if successful
+        run : |
+          if [ -s api_changes.txt ]
+          then
+            # Fail workflow if there are API changes
+            exit 1
+          fi
