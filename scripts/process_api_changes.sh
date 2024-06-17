@@ -11,46 +11,45 @@
 input_file="${GITHUB_WORKSPACE}/api_changes.txt"
 output_file="${GITHUB_WORKSPACE}/api_changes.md"
 
-touch $output_file
+touch "$output_file"
 
 should_append=false
 did_change=false
 
-while read line; do
+while read -r line; do
   if [[ "$line" =~ "You can run :" ]]
   then
     should_append=false
-    echo "\`\`\`" >> $output_file
+    echo "\`\`\`" >> "$output_file"
   fi
 
   if $should_append
   then
-    echo "$line" >> $output_file
+    echo "$line" >> "$output_file"
   fi
 
   if [[ "$line" =~ "> API check failed for project" ]]
   then
     should_append=true
     did_change=true
-    split=()
-    for i in $line; do split+=($i) ; done
-    split_size=${#split[@]}
-    last_index=$(( split_size-1))
-    title=${split[$last_index]}
+    words=($line)
+    words_size=${#words[@]}
+    last_index=$(( words_size-1))
+    title=${words[$last_index]}
     title=${title%?}
-    echo "## $title" >> $output_file
-    echo "\`\`\`" >> $output_file
+    echo "## $title" >> "$output_file"
+    echo "\`\`\`" >> "$output_file"
   fi
 
-done < $input_file
+done < "$input_file"
 
 if $did_change
 then
-  echo "" >> $output_file
-  echo "If these changes are intentional run \`./gradlew apiDump\` and commit the changes." >> $output_file
-  echo "# 🚫 Public API Changes" | cat - $output_file > temp && mv temp $output_file
+  echo "" >> "$output_file"
+  echo "If these changes are intentional run \`./gradlew apiDump\` and commit the changes." >> "$output_file"
+  echo "# 🚫 Public API Changes" | cat - "$output_file" > temp && mv temp "$output_file"
 else
-  echo "" >> $output_file
-  echo "No changes detected!" >> $output_file
-  echo "# ✅ Public API Changes" | cat - $output_file > temp && mv temp $output_file
+  echo "" >> "$output_file"
+  echo "No changes detected!" >> "$output_file"
+  echo "# ✅ Public API Changes" | cat - "$output_file" > temp && mv temp "$output_file"
 fi

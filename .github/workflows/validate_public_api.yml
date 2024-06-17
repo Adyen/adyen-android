@@ -24,8 +24,8 @@ jobs:
 
       - name: Check public API
         run: |
-          ./gradlew apiCheck 2> "${{ github.workspace }}/api_changes.txt"
-          sh ./scripts/process_api_changes.sh
+          ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt"
+          bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v2
