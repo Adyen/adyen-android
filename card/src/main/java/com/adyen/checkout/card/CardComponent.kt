@@ -145,6 +145,10 @@ constructor(
         componentEventHandler.onCleared()
     }
 
+    fun test() {
+
+    }
+
     companion object {
 
         @JvmField
