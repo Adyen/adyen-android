@@ -24,7 +24,7 @@ jobs:
 
       - name: Check public API
         run: |
-          ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt"
+          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
           bash ./scripts/process_api_changes.sh
 
       - name: Comment on PR
