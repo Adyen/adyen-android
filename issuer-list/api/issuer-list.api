@@ -46,7 +46,7 @@ public abstract class com/adyen/checkout/issuerlist/internal/IssuerListConfigura
 	protected fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
-	public final fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
+	public fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
 	protected fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)V
 }
 
