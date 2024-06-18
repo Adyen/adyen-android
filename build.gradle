@@ -12,10 +12,12 @@ plugins {
     id 'org.jetbrains.dokka' version "$dokka_version"
     id 'org.sonarqube' version "$sonarqube_version"
     id 'jacoco'
+    id 'org.jetbrains.kotlinx.binary-compatibility-validator' version "$binary_compatibility_validator_version"
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"
 apply from: "config/gradle/sonarcloud.gradle"
+apply from: "config/gradle/apiValidator.gradle"
 
 ext {
     checkoutRedirectScheme = "adyencheckout"

@@ -23,6 +23,10 @@ jobs:
     uses: ./.github/workflows/run_tests.yml
     needs: assemble
   sonar_cloud:
-     name: SonarCloud
-     uses: ./.github/workflows/sonar_cloud.yml
-     secrets: inherit
+    name: SonarCloud
+    uses: ./.github/workflows/sonar_cloud.yml
+    secrets: inherit
+  validate_public_api:
+    name: Validate public API
+    uses: ./.github/workflows/validate_public_api.yml
+    secrets: inherit
