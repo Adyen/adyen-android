@@ -14,6 +14,7 @@ import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -38,6 +39,7 @@ class IdealComponent internal constructor(
 ) : ViewModel(),
     PaymentComponent,
     ViewableComponent,
+    ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
     @Suppress("ForbiddenComment")
@@ -70,10 +72,10 @@ class IdealComponent internal constructor(
 
     @Suppress("FunctionOnlyReturningConstant")
     @Deprecated("This method is only kept for backwards compatibility and will always return false.", ReplaceWith(""))
-    fun isConfirmationRequired(): Boolean = false
+    override fun isConfirmationRequired(): Boolean = false
 
     @Deprecated("This method is only kept for backwards compatibility and doesn't do anything.", ReplaceWith(""))
-    fun submit() = Unit
+    override fun submit() = Unit
 
     override fun onCleared() {
         super.onCleared()
