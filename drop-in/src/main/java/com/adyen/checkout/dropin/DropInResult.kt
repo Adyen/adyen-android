@@ -36,5 +36,5 @@ sealed class DropInResult {
      *
      * @param result The result of Drop-in, mirrors the value of [DropInServiceResult.Finished.result].
      */
-    class Finished(val result: Any) : DropInResult()
+    class Finished(val result: String) : DropInResult()
 }

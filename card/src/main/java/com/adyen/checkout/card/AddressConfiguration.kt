@@ -13,7 +13,7 @@ sealed class AddressConfiguration : Parcelable {
      * Address Form will be hidden.
      */
     @Parcelize
-    data object None : AddressConfiguration()
+    object None : AddressConfiguration()
 
     /**
      * Only postal code will be shown as part of the card component.

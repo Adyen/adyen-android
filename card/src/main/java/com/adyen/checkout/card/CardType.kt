@@ -58,7 +58,6 @@ enum class CardType(val txVariant: String, private val pattern: Pattern) {
     TROY("troy", Pattern.compile("^(97)(9)\\d*$")),
     UATP("uatp", Pattern.compile("^1[0-9]{0,14}$")),
     VISA("visa", Pattern.compile("^4[0-9]{0,18}$")),
-    TEST("visa", Pattern.compile("^4[0-9]{0,18}$")),
     VISADANKORT("visadankort", Pattern.compile("^(4571)[0-9]{0,12}$"));
 
     /**

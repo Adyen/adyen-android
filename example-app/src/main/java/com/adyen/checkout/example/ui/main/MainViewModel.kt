@@ -254,7 +254,7 @@ internal class MainViewModel @Inject constructor(
             is DropInResult.Finished -> dropInResult.result
             null -> "DropInResult is null"
         }
-        _eventFlow.tryEmit(MainEvent.Toast(message as String))
+        _eventFlow.tryEmit(MainEvent.Toast(message))
     }
 
     fun onDropInResult(sessionDropInResult: SessionDropInResult?) {
