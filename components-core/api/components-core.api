@@ -2420,17 +2420,29 @@ public final class com/adyen/checkout/components/core/paymentmethod/GooglePayPay
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/components/core/paymentmethod/GooglePayPaymentMethod$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/components/core/paymentmethod/GooglePayPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/paymentmethod/GooglePayPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/paymentmethod/GooglePayPaymentMethod;
 	public fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getCheckoutAttemptId ()Ljava/lang/String;
 	public final fun getGooglePayCardNetwork ()Ljava/lang/String;
 	public final fun getGooglePayToken ()Ljava/lang/String;
+	public final fun getThreeDS2SdkVersion ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
 	public fun setCheckoutAttemptId (Ljava/lang/String;)V
 	public final fun setGooglePayCardNetwork (Ljava/lang/String;)V
 	public final fun setGooglePayToken (Ljava/lang/String;)V
+	public final fun setThreeDS2SdkVersion (Ljava/lang/String;)V
 	public fun setType (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
