@@ -1,4 +1,4 @@
-public final class com/adyen/checkout/await/AwaitComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/await/AwaitComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/await/AwaitComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/components/core/internal/provider/ActionComponentProvider;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
@@ -6,6 +6,7 @@ public final class com/adyen/checkout/await/AwaitComponent : androidx/lifecycle/
 	public synthetic fun getDelegate ()Lcom/adyen/checkout/components/core/internal/ui/ComponentDelegate;
 	public fun getViewFlow ()Lkotlinx/coroutines/flow/Flow;
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
+	public fun setOnRedirectListener (Lkotlin/jvm/functions/Function0;)V
 }
 
 public final class com/adyen/checkout/await/AwaitComponent$Companion {
