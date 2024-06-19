@@ -67,6 +67,8 @@ class AdyenComponentView @JvmOverloads constructor(
     private var isInteractionBlocked = false
 
     private var componentView: ComponentView? = null
+    private var buttonDelegate: ButtonDelegate? = null
+    private var buttonView: PayButton? = null
 
     private var attachedComponent = WeakReference<Component?>(null)
 
@@ -131,7 +133,8 @@ class AdyenComponentView @JvmOverloads constructor(
         binding.frameLayoutComponentContainer.addView(componentView.getView())
         componentView.initView(delegate, coroutineScope, localizedContext)
 
-        val buttonDelegate = (delegate as? ButtonDelegate)
+        buttonDelegate = (delegate as? ButtonDelegate)
+        val buttonDelegate = buttonDelegate
         if (buttonDelegate?.isConfirmationRequired() == true) {
             val uiStateDelegate = (delegate as? UIStateDelegate)
             uiStateDelegate?.uiStateFlow?.onEach {
@@ -141,14 +144,15 @@ class AdyenComponentView @JvmOverloads constructor(
             uiStateDelegate?.uiEventFlow?.onEach {
                 when (it) {
                     PaymentComponentUIEvent.InvalidUI -> highlightValidationErrors()
+                    PaymentComponentUIEvent.StateUpdated -> updateViewStates()
                 }
             }?.launchIn(coroutineScope)
 
             binding.frameLayoutButtonContainer.isVisible = buttonDelegate.shouldShowSubmitButton()
-            val buttonView = (viewType as ButtonComponentViewType)
+            buttonView = (viewType as ButtonComponentViewType)
                 .buttonViewProvider.getButton(context)
-            buttonView.setText(viewType, componentParams, localizedContext)
-            buttonView.setOnClickListener {
+            buttonView?.setText(viewType, componentParams, localizedContext)
+            buttonView?.setOnClickListener {
                 buttonDelegate.onSubmit()
             }
             binding.frameLayoutButtonContainer.addView(buttonView)
@@ -177,6 +181,29 @@ class AdyenComponentView @JvmOverloads constructor(
         if (isInteractionBlocked) {
             resetFocus()
             hideKeyboard()
+        } else {
+            updateViewStates()
+        }
+    }
+
+    /**
+     * Highlight and focus on the current validation errors for the user to take action.
+     * If the component doesn't need validation or if everything is already valid, nothing will happen.
+     */
+    fun highlightValidationErrors() {
+        componentView?.highlightValidationErrors()
+    }
+
+    /**
+     * Update view visibility and enabled states when component state is updated.
+     *
+     * This function will be called also when setInteractionBlocked() is called with a `true` value. This case is
+     * necessary, because after interaction block is lifted, views which do not need to be enabled will become enabled
+     * because of the setInteractionBlocked() implementation.
+     */
+    private fun updateViewStates() {
+        buttonDelegate?.shouldEnableSubmitButton()?.let { shouldEnable ->
+            buttonView?.isEnabled = shouldEnable
         }
     }
 
@@ -204,14 +231,6 @@ class AdyenComponentView @JvmOverloads constructor(
             }
         }
         setText(text)
-    }
-
-    /**
-     * Highlight and focus on the current validation errors for the user to take action.
-     * If the component doesn't need validation or if everything is already valid, nothing will happen.
-     */
-    fun highlightValidationErrors() {
-        componentView?.highlightValidationErrors()
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {

@@ -29,10 +29,17 @@ import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.databinding.UpiViewBinding
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
+import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.internal.ui.model.UPISelectedMode
+import com.adyen.checkout.upi.internal.ui.model.mapToSelectedMode
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
 
+@Suppress("TooManyFunctions")
 internal class UPIView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -45,6 +52,8 @@ internal class UPIView @JvmOverloads constructor(
     private lateinit var delegate: UPIDelegate
 
     private lateinit var localizedContext: Context
+
+    private var upiAppsAdapter: UPIAppsAdapter? = null
 
     init {
         orientation = VERTICAL
@@ -59,14 +68,18 @@ internal class UPIView @JvmOverloads constructor(
         this.localizedContext = localizedContext
 
         initLocalizedStrings(localizedContext)
-
-        initPicker(delegate)
+        initModeToggle()
         initVpaInput(delegate, localizedContext)
+        observeDelegate(delegate, coroutineScope)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewModeSelection.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_ModeSelectionTextView,
+            localizedContext,
+        )
+        binding.buttonIntent.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_IntentButton,
             localizedContext,
         )
         binding.buttonVpa.setLocalizedTextFromStyle(
@@ -87,40 +100,125 @@ internal class UPIView @JvmOverloads constructor(
         )
     }
 
-    private fun initPicker(delegate: UPIDelegate) {
-        binding.toggleButtonChoice.check(R.id.button_vpa)
+    private fun initModeToggle() {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
-                R.id.button_vpa -> {
-                    binding.textInputLayoutVpa.isVisible = isChecked
-                    binding.textViewQrCodeDescription.isVisible = !isChecked
-                    binding.editTextVpa.isFocusableInTouchMode = isChecked
-                    binding.editTextVpa.isFocusable = isChecked
-                    if (isChecked) {
-                        binding.editTextVpa.requestFocus()
-                        binding.editTextVpa.showKeyboard()
-                        delegate.updateInputData { mode = UPIMode.VPA }
-                    }
-                }
-
-                R.id.button_qrCode -> {
-                    binding.textInputLayoutVpa.isVisible = !isChecked
-                    binding.textViewQrCodeDescription.isVisible = isChecked
-                    binding.editTextVpa.isFocusableInTouchMode = !isChecked
-                    binding.editTextVpa.isFocusable = !isChecked
-                    if (isChecked) {
-                        binding.editTextVpa.clearFocus()
-                        hideKeyboard()
-                        delegate.updateInputData { mode = UPIMode.QR }
-                    }
-                }
+                R.id.button_intent -> updateUpiIntentViews(isChecked)
+                R.id.button_vpa -> updateUpiVpaViews(isChecked)
+                R.id.button_qrCode -> updateUpiQrCodeViews(isChecked)
             }
+        }
+    }
+
+    private fun observeDelegate(delegate: UPIDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun outputDataChanged(outputData: UPIOutputData) {
+        initPicker(outputData.availableModes, outputData.selectedMode)
+    }
+
+    private fun initPicker(availableModes: List<UPIMode>, selectedMode: UPISelectedMode) {
+        availableModes.forEach { mode ->
+            initViewsForMode(mode = mode, isChecked = mode.mapToSelectedMode() == selectedMode)
+        }
+    }
+
+    private fun initViewsForMode(mode: UPIMode, isChecked: Boolean) {
+        when (mode) {
+            is UPIMode.Intent -> {
+                initViewsForIntent(mode, isChecked)
+            }
+
+            is UPIMode.Vpa -> {
+                initViewsForVpa(isChecked)
+            }
+
+            is UPIMode.Qr -> {
+                initViewsForQr(isChecked)
+            }
+        }
+    }
+
+    private fun initViewsForIntent(mode: UPIMode.Intent, isChecked: Boolean) = with(binding) {
+        buttonIntent.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_intent)
+        }
+
+        if (upiAppsAdapter == null) {
+            upiAppsAdapter = UPIAppsAdapter(
+                context = context,
+                localizedContext = localizedContext,
+                paymentMethod = delegate.getPaymentMethodType(),
+                onItemClickListener = ::onIntentItemClicked,
+                onInputChangeListener = ::onIntentItemInputChanged,
+            )
+            recyclerViewUpiIntent.adapter = upiAppsAdapter
+        }
+        upiAppsAdapter?.submitList(mode.intentItems)
+    }
+
+    private fun updateUpiIntentViews(isChecked: Boolean) {
+        binding.recyclerViewUpiIntent.isVisible = isChecked
+        if (isChecked) {
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
+            delegate.updateInputData { selectedMode = UPISelectedMode.INTENT }
+        }
+    }
+
+    private fun onIntentItemClicked(item: UPIIntentItem) {
+        delegate.updateInputData {
+            selectedUPIIntentItem = item
+        }
+    }
+
+    private fun onIntentItemInputChanged(value: String) {
+        delegate.updateInputData {
+            intentVirtualPaymentAddress = value
+        }
+    }
+
+    private fun initViewsForVpa(isChecked: Boolean) = with(binding) {
+        buttonVpa.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_vpa)
+        }
+    }
+
+    private fun updateUpiVpaViews(isChecked: Boolean) {
+        binding.textInputLayoutVpa.isVisible = isChecked
+        binding.editTextVpa.isFocusableInTouchMode = isChecked
+        binding.editTextVpa.isFocusable = isChecked
+        if (isChecked) {
+            binding.editTextVpa.requestFocus()
+            binding.editTextVpa.showKeyboard()
+            delegate.updateInputData { selectedMode = UPISelectedMode.VPA }
+        }
+    }
+
+    private fun initViewsForQr(isChecked: Boolean) = with(binding) {
+        buttonQrCode.isVisible = true
+        if (isChecked) {
+            toggleButtonChoice.check(R.id.button_qrCode)
+        }
+    }
+
+    private fun updateUpiQrCodeViews(isChecked: Boolean) {
+        binding.textViewQrCodeDescription.isVisible = isChecked
+        if (isChecked) {
+            delegate.updateInputData { selectedMode = UPISelectedMode.QR }
+            binding.editTextVpa.clearFocus()
+            hideKeyboard()
         }
     }
 
     private fun initVpaInput(delegate: UPIDelegate, localizedContext: Context) {
         binding.editTextVpa.setOnChangeListener { editable ->
-            delegate.updateInputData { virtualPaymentAddress = editable.toString() }
+            delegate.updateInputData { vpaVirtualPaymentAddress = editable.toString() }
             binding.textInputLayoutVpa.hideError()
         }
 
@@ -142,6 +240,8 @@ internal class UPIView @JvmOverloads constructor(
         if (vpaValidation is Validation.Invalid) {
             binding.textInputLayoutVpa.showError(localizedContext.getString(vpaValidation.reason))
         }
+
+        delegate.highlightValidationErrors()
     }
 
     override fun getView(): View = this

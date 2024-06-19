@@ -34,6 +34,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -48,11 +49,12 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
-@Suppress("TooManyFunctions")
+@Suppress("LongParameterList", "TooManyFunctions")
 internal class DefaultAwaitDelegate(
     private val observerRepository: ActionObserverRepository,
     override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
+    private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
     private val analyticsManager: AnalyticsManager?,
@@ -88,10 +90,7 @@ internal class DefaultAwaitDelegate(
 
     private fun restoreState() {
         adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        val action: AwaitAction? = action
-        if (action != null) {
-            initState(action)
-        }
+        action?.let { initState(it) }
     }
 
     override fun observe(
@@ -123,6 +122,7 @@ internal class DefaultAwaitDelegate(
         }
 
         this.action = action
+        paymentDataRepository.paymentData = action.paymentData
 
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
@@ -130,12 +130,33 @@ internal class DefaultAwaitDelegate(
         )
         analyticsManager?.trackEvent(event)
 
+        launchAction(action, activity)
         initState(action)
+    }
+
+    private fun launchAction(action: AwaitAction, activity: Activity) {
+        if (shouldLaunchRedirect(action)) {
+            makeRedirect(action, activity)
+        }
+    }
+
+    private fun shouldLaunchRedirect(action: AwaitAction) = !action.url.isNullOrEmpty()
+
+    private fun makeRedirect(action: AwaitAction, activity: Activity) {
+        val url = action.url
+        try {
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+            redirectHandler.launchUriRedirect(activity, url)
+            val paymentData = paymentDataRepository.paymentData
+                ?: throw CheckoutException("Payment data should not be null")
+            startStatusPolling(paymentData, action)
+        } catch (exception: CheckoutException) {
+            emitError(exception)
+        }
     }
 
     private fun initState(action: AwaitAction) {
         val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             emitError(ComponentException("Payment data is null"))
@@ -143,7 +164,10 @@ internal class DefaultAwaitDelegate(
         }
         createOutputData(null, action)
 
-        startStatusPolling(paymentData, action)
+        // Redirect flow starts polling after it launched a redirect
+        if (!shouldLaunchRedirect(action)) {
+            startStatusPolling(paymentData, action)
+        }
     }
 
     private fun startStatusPolling(paymentData: String, action: Action) {
@@ -184,7 +208,8 @@ internal class DefaultAwaitDelegate(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (StatusResponseUtils.isFinalResult(statusResponse) && !payload.isNullOrEmpty()) {
-            emitDetails(payload)
+            val details = createDetails(payload)
+            emitDetails(details)
         } else {
             emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
         }
@@ -212,10 +237,13 @@ internal class DefaultAwaitDelegate(
         clearState()
     }
 
-    private fun emitDetails(payload: String) {
-        val details = createDetails(payload)
+    private fun emitDetails(details: JSONObject) {
         detailsChannel.trySend(createActionComponentData(details))
         clearState()
+    }
+
+    override fun setOnRedirectListener(listener: () -> Unit) {
+        redirectHandler.setOnRedirectListener(listener)
     }
 
     private fun clearState() {

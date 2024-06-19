@@ -62,6 +62,10 @@ public final class com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEven
 	public static final field INSTANCE Lcom/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$InvalidUI;
 }
 
+public final class com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$StateUpdated : com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$StateUpdated;
+}
+
 public final class com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIState$Blocked : com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIState {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/core/internal/ui/PaymentComponentUIState$Blocked;
 }

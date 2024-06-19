@@ -8,9 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">Velg hvordan du vil bruke UPI.</string>
+    <string name="checkout_upi_mode_selection">Hvordan vil du bruke UPI?</string>
     <string name="checkout_upi_vpa_validation">Skriv inn en korrekt virtuell betalingsadresse</string>
     <string name="checkout_upi_qr_generation">Generer QR-koden, som du kan laste ned eller ta et skjermbilde av, og last den opp til UPI-appen for å fullføre betalingen.</string>
     <string name="checkout_upi_continue">Fortsett</string>
+    <string name="checkout_upi_app_manual_input">Angi UPI-ID</string>
+    <string name="checkout_upi_app_other_upi">Andre UPI-alternativer</string>
 
 </resources>

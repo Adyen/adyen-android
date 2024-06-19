@@ -8,9 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">選擇所需的 UPI 使用方式。</string>
+    <string name="checkout_upi_mode_selection">您想如何使用 UPI？</string>
     <string name="checkout_upi_vpa_validation">輸入正確的虛擬付款地址</string>
     <string name="checkout_upi_qr_generation">產生可以下載或擷取螢幕畫面的 QR 代碼，然後將其上傳到 UPI 應用程式以完成付款。</string>
     <string name="checkout_upi_continue">繼續</string>
+    <string name="checkout_upi_app_manual_input">輸入 UPI ID</string>
+    <string name="checkout_upi_app_other_upi">其他 UPI</string>
 
 </resources>

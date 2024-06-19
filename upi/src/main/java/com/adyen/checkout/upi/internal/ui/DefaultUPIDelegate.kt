@@ -10,6 +10,7 @@ package com.adyen.checkout.upi.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.AppData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -19,18 +20,25 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.internal.ui.model.UPIInputData
+import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import com.adyen.checkout.upi.internal.ui.model.UPIMode
 import com.adyen.checkout.upi.internal.ui.model.UPIOutputData
+import com.adyen.checkout.upi.internal.ui.model.UPISelectedMode
+import com.adyen.checkout.upi.internal.ui.model.mapToSelectedMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -108,12 +116,83 @@ internal class DefaultUPIDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData() = with(inputData) {
+    private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
+        val availableModes = createAvailableModes(this, paymentMethod, includeValidationErrors)
+        val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+
         UPIOutputData(
-            mode = mode,
-            virtualPaymentAddress = virtualPaymentAddress,
+            selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
+            selectedUPIIntentItem = selectedUPIIntentItem,
+            availableModes = availableModes,
+            virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
+            intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )
     }
+
+    private fun createAvailableModes(
+        inputData: UPIInputData,
+        paymentMethod: PaymentMethod,
+        includeValidation: Boolean
+    ) = with(inputData) {
+        val appIds = paymentMethod.apps
+        if (!appIds.isNullOrEmpty()) {
+            val paymentAddressFieldState = if (includeValidation) {
+                validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+            } else {
+                null
+            }
+            val intentItemList = createIntentItems(
+                appIds,
+                componentParams.environment,
+                selectedUPIIntentItem,
+                paymentAddressFieldState,
+            )
+
+            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
+        } else {
+            listOf(UPIMode.Vpa, UPIMode.Qr)
+        }
+    }
+
+    private fun createIntentItems(
+        upiApps: List<AppData>,
+        environment: Environment,
+        selectedUPIIntentItem: UPIIntentItem?,
+        paymentAddressFieldState: FieldState<String>?,
+    ): List<UPIIntentItem> {
+        val paymentApps = upiApps.mapToPaymentApp(
+            environment = environment,
+            selectedAppId = (selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id,
+        )
+
+        val genericApp = UPIIntentItem.GenericApp(
+            isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
+        )
+
+        val manualInputErrorMessageId = paymentAddressFieldState?.let {
+            getValidationErrorResourceIdOrNull(paymentAddressFieldState.validation)
+        }
+        val manualInput = UPIIntentItem.ManualInput(
+            errorMessageResource = manualInputErrorMessageId,
+            isSelected = selectedUPIIntentItem is UPIIntentItem.ManualInput,
+        )
+
+        return mutableListOf<UPIIntentItem>().apply {
+            addAll(paymentApps)
+            add(genericApp)
+            add(manualInput)
+        }
+    }
+
+    private fun getValidationErrorResourceIdOrNull(validation: Validation?): Int? =
+        (validation as? Validation.Invalid)?.reason
+
+    private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
+        if (virtualPaymentAddress.isNotBlank()) {
+            FieldState(virtualPaymentAddress, Validation.Valid)
+        } else {
+            FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
+        }
 
     private fun outputDataChanged(outputData: UPIOutputData) {
         _outputDataFlow.tryEmit(outputData)
@@ -129,13 +208,10 @@ internal class DefaultUPIDelegate(
         outputData: UPIOutputData = this.outputData
     ): UPIComponentState {
         val paymentMethod = UPIPaymentMethod(
-            type = if (outputData.mode == UPIMode.VPA) PaymentMethodTypes.UPI_COLLECT else PaymentMethodTypes.UPI_QR,
+            type = getUPIPaymentMethodType(outputData),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            virtualPaymentAddress = if (outputData.mode == UPIMode.VPA) {
-                outputData.virtualPaymentAddressFieldState.value
-            } else {
-                null
-            },
+            appId = getIntentItemAppIdForComponentStateOrNull(outputData),
+            virtualPaymentAddress = getVirtualPaymentAddress(outputData),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -151,8 +227,71 @@ internal class DefaultUPIDelegate(
         )
     }
 
+    private fun getUPIPaymentMethodType(outputData: UPIOutputData) = when (outputData.selectedMode) {
+        UPISelectedMode.INTENT -> {
+            when (outputData.selectedUPIIntentItem) {
+                is UPIIntentItem.PaymentApp -> {
+                    PaymentMethodTypes.UPI_INTENT
+                }
+
+                is UPIIntentItem.GenericApp -> {
+                    PaymentMethodTypes.UPI_INTENT
+                }
+
+                is UPIIntentItem.ManualInput -> {
+                    PaymentMethodTypes.UPI_COLLECT
+                }
+
+                null -> null
+            }
+        }
+
+        UPISelectedMode.QR -> {
+            PaymentMethodTypes.UPI_QR
+        }
+
+        UPISelectedMode.VPA -> {
+            PaymentMethodTypes.UPI_COLLECT
+        }
+    }
+
+    private fun getIntentItemAppIdForComponentStateOrNull(outputData: UPIOutputData) =
+        if (outputData.selectedMode == UPISelectedMode.INTENT) {
+            (outputData.selectedUPIIntentItem as? UPIIntentItem.PaymentApp)?.id
+        } else {
+            null
+        }
+
+    private fun getVirtualPaymentAddress(outputData: UPIOutputData) = when (outputData.selectedMode) {
+        UPISelectedMode.INTENT -> {
+            when (outputData.selectedUPIIntentItem) {
+                is UPIIntentItem.ManualInput -> {
+                    outputData.intentVirtualPaymentAddressFieldState.value
+                }
+
+                else -> null
+            }
+        }
+
+        UPISelectedMode.VPA -> {
+            outputData.virtualPaymentAddressFieldState.value
+        }
+
+        else -> null
+    }
+
     private fun componentStateChanged(componentState: UPIComponentState) {
         _componentStateFlow.tryEmit(componentState)
+    }
+
+    override fun highlightValidationErrors() {
+        adyenLog(AdyenLogLevel.VERBOSE) { "updating outputData to include validation" }
+        val outputData = createOutputData(includeValidationErrors = true)
+        outputDataChanged(outputData)
+    }
+
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
     override fun getPaymentMethodType(): String {
@@ -170,8 +309,10 @@ internal class DefaultUPIDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    override fun shouldEnableSubmitButton(): Boolean = when (outputData.selectedMode) {
+        UPISelectedMode.INTENT -> outputData.selectedUPIIntentItem != null
+        UPISelectedMode.VPA -> true
+        UPISelectedMode.QR -> true
     }
 
     override fun onCleared() {

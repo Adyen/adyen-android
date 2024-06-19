@@ -23,10 +23,20 @@ import kotlinx.coroutines.flow.asFlow
 class TestStatusRepository : StatusRepository {
 
     var pollingResults: List<Result<StatusResponse>> = emptyList()
+    var timesOnPollCalled: Int = 0
 
     override fun poll(paymentData: String, maxPollingDuration: Long): Flow<Result<StatusResponse>> {
+        timesOnPollCalled++
         return pollingResults.asFlow()
     }
 
     override fun refreshStatus(paymentData: String) = Unit
+
+    fun assertPollingStarted() {
+        assert(timesOnPollCalled > 0)
+    }
+
+    fun assertPollingNotStarted() {
+        assert(timesOnPollCalled <= 0)
+    }
 }

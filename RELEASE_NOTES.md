@@ -8,6 +8,9 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## Added
+- UPI now supports `upi_intent` payment apps.
+
 ## Changed
 - Drop-in navigation improvements:
   - Top navigation has been added

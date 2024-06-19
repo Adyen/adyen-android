@@ -30,6 +30,7 @@ data class PaymentMethod(
     var issuers: List<Issuer>? = null,
     var configuration: Configuration? = null,
     var details: List<InputDetail>? = null,
+    var apps: List<AppData>? = null,
 ) : ModelObject() {
 
     companion object {
@@ -43,6 +44,7 @@ data class PaymentMethod(
         private const val BRAND = "brand"
         private const val FUNDING_SOURCE = "fundingSource"
         private const val ISSUERS = "issuers"
+        private const val APPS = "apps"
         private const val CONFIGURATION = "configuration"
 
         // This field is returned in older API versions, only used to retrieve the issuers list
@@ -61,6 +63,7 @@ data class PaymentMethod(
                         putOpt(ISSUERS, serializeOptList(modelObject.issuers, Issuer.SERIALIZER))
                         putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
                         putOpt(DETAILS, serializeOptList(modelObject.details, InputDetail.SERIALIZER))
+                        putOpt(APPS, serializeOptList(modelObject.apps, AppData.SERIALIZER))
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentMethod::class.java, e)
@@ -77,6 +80,7 @@ data class PaymentMethod(
                     issuers = deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER),
                     configuration = deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER),
                     details = deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER),
+                    apps = deserializeOptList(jsonObject.optJSONArray(APPS), AppData.SERIALIZER),
                 )
             }
         }

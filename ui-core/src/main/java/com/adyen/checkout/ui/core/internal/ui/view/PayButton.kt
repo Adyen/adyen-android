@@ -20,6 +20,8 @@ abstract class PayButton(
     defStyleAttr: Int,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
+    abstract override fun setEnabled(enabled: Boolean)
+
     abstract override fun setOnClickListener(listener: OnClickListener?)
 
     abstract fun setText(text: String?)
