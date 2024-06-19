@@ -11,6 +11,10 @@
 ## New
 - UPI now supports `upi_intent` payment apps.
 - The new iDEAL payment flow where the shopper is redirected to the iDEAL payment page to select their bank and authorize the payment.
+- Autofill support for:
+    - Gift cards number and PIN fields
+    - UPI Virtual Payments Address field
+    - Address input fields (improved)
 
 ## Changed
 - Drop-in navigation improvements:

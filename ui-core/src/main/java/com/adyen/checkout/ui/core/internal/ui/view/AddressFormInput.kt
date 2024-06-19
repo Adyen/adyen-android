@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View.OnFocusChangeListener
@@ -16,6 +17,7 @@ import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.autofill.HintConstants
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
@@ -110,6 +112,9 @@ class AddressFormInput @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
 
         autoCompleteTextViewCountry.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_COUNTRY)
+            }
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
@@ -305,6 +310,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initStreetInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutStreet?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextStreet?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_STREET_ADDRESS)
+            }
             setText(delegate.addressOutputData.street.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { street = it.toString() }
@@ -343,6 +351,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initApartmentSuiteInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutApartmentSuite?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextApartmentSuite?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_APT_NUMBER)
+            }
             setText(delegate.addressOutputData.apartmentSuite.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { apartmentSuite = it.toString() }
@@ -361,6 +372,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initPostalCodeInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutPostalCode?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextPostalCode?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_CODE)
+            }
             setText(delegate.addressOutputData.postalCode.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { postalCode = it.toString() }
@@ -380,6 +394,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initCityInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutCity?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextCity?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_LOCALITY)
+            }
             setText(delegate.addressOutputData.city.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { city = it.toString() }
@@ -399,6 +416,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initProvinceTerritoryInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutProvinceTerritory?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextProvinceTerritory?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_REGION)
+            }
             setText(delegate.addressOutputData.stateOrProvince.value)
             setOnChangeListener {
                 delegate.updateAddressInputData { stateOrProvince = it.toString() }
@@ -418,6 +438,9 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initStatesInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutState?.setLocalizedHintFromStyle(it, localizedContext) }
         autoCompleteTextViewState?.apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_REGION)
+            }
             setText(statesAdapter.getItem { it.selected }?.name)
             inputType = 0
             setAdapter(statesAdapter)

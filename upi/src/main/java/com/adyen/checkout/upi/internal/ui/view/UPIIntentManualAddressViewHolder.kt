@@ -9,6 +9,8 @@
 package com.adyen.checkout.upi.internal.ui.view
 
 import android.content.Context
+import android.os.Build
+import androidx.autofill.HintConstants
 import androidx.core.view.doOnAttach
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -29,6 +31,10 @@ internal class UPIIntentManualAddressViewHolder(
     init {
         binding.editTextManualAddress.setOnChangeListener { editable ->
             onInputChangeListener.invoke(editable.toString())
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.editTextManualAddress.setAutofillHints(HintConstants.AUTOFILL_HINT_UPI_VPA)
         }
     }
 
