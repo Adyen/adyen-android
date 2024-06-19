@@ -122,6 +122,7 @@ internal class DefaultAwaitDelegate(
         }
 
         this.action = action
+        paymentDataRepository.paymentData = action.paymentData
 
         val event = GenericEvents.action(
             component = action.paymentMethodType.orEmpty(),
@@ -129,10 +130,13 @@ internal class DefaultAwaitDelegate(
         )
         analyticsManager?.trackEvent(event)
 
+        launchAction(action, activity)
+        initState(action)
+    }
+
+    private fun launchAction(action: AwaitAction, activity: Activity) {
         if (shouldLaunchRedirect(action)) {
             makeRedirect(action, activity)
-        } else {
-            initState(action)
         }
     }
 
@@ -143,7 +147,9 @@ internal class DefaultAwaitDelegate(
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
             redirectHandler.launchUriRedirect(activity, url)
-            initState(action)
+            val paymentData = paymentDataRepository.paymentData
+                ?: throw CheckoutException("Payment data should not be null")
+            startStatusPolling(paymentData, action)
         } catch (exception: CheckoutException) {
             emitError(exception)
         }
@@ -151,7 +157,6 @@ internal class DefaultAwaitDelegate(
 
     private fun initState(action: AwaitAction) {
         val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
         if (paymentData == null) {
             adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
             emitError(ComponentException("Payment data is null"))
@@ -159,7 +164,10 @@ internal class DefaultAwaitDelegate(
         }
         createOutputData(null, action)
 
-        startStatusPolling(paymentData, action)
+        // Redirect flow starts polling after it launched a redirect
+        if (!shouldLaunchRedirect(action)) {
+            startStatusPolling(paymentData, action)
+        }
     }
 
     private fun startStatusPolling(paymentData: String, action: Action) {
