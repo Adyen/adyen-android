@@ -39,47 +39,21 @@ for ((i = 0 ; i < $api_files_size ; i+= 2 )); do
     title=${title%????}
     echo "## $title" >> "$output_file"
 
+    # Open code block
+    echo "\`\`\`diff" >> "$output_file"
+
     diff_index=0
-    is_block_open=false
+    # Dump git diff output
     while read -r line; do
-      # We start at 3, because the first 3 diff lines are not useful.
+      # Skip first 4 lines as they are verbose
       if (( $diff_index > 3 ))
       then
-        # Add subtitle of the class/file name
-        if [[ "$line" =~ "@@" ]]
-        then
-          # Close code block from previous class
-          if $is_block_open
-          then
-            echo "\`\`\`" >> "$output_file"
-          fi
-
-          # Find class/file name by first part with a /
-          parts=($line)
-          for part in ${parts[@]}; do
-            if [[ "$part" == *"/"* ]]
-            then
-              # Get last name from fully qualified class name
-              package_parts=(${part//\// })
-              package_parts_size=${#package_parts[@]}
-              last_index=$(( package_parts_size-1))
-              subtitle=${package_parts[$last_index]}
-              # Add subtitle and open code block
-              echo "#### $subtitle" >> "$output_file"
-              echo "\`\`\`" >> "$output_file"
-              is_block_open=true
-              break
-            fi
-          done
-        # Add diff line
-        else
-          echo "$line" >> "$output_file"
-        fi
+        echo "$line" >> "$output_file"
       fi
       ((diff_index++))
     done <<< "$git_diff"
 
-    # Make sure to close the last code block
+    # Close code block
     echo "\`\`\`" >> "$output_file"
   fi
 done
