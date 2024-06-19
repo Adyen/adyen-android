@@ -28,9 +28,9 @@ data class PaymentMethod(
     var brand: String? = null,
     var fundingSource: String? = null,
     var issuers: List<Issuer>? = null,
-    var apps: List<AppData>? = null,
     var configuration: Configuration? = null,
     var details: List<InputDetail>? = null,
+    var apps: List<AppData>? = null,
 ) : ModelObject() {
 
     companion object {
@@ -61,9 +61,9 @@ data class PaymentMethod(
                         putOpt(BRAND, modelObject.brand)
                         putOpt(FUNDING_SOURCE, modelObject.fundingSource)
                         putOpt(ISSUERS, serializeOptList(modelObject.issuers, Issuer.SERIALIZER))
-                        putOpt(APPS, serializeOptList(modelObject.apps, AppData.SERIALIZER))
                         putOpt(CONFIGURATION, serializeOpt(modelObject.configuration, Configuration.SERIALIZER))
                         putOpt(DETAILS, serializeOptList(modelObject.details, InputDetail.SERIALIZER))
+                        putOpt(APPS, serializeOptList(modelObject.apps, AppData.SERIALIZER))
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentMethod::class.java, e)
@@ -78,9 +78,9 @@ data class PaymentMethod(
                     brand = jsonObject.getStringOrNull(BRAND),
                     fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                     issuers = deserializeOptList(jsonObject.optJSONArray(ISSUERS), Issuer.SERIALIZER),
-                    apps = deserializeOptList(jsonObject.optJSONArray(APPS), AppData.SERIALIZER),
                     configuration = deserializeOpt(jsonObject.optJSONObject(CONFIGURATION), Configuration.SERIALIZER),
                     details = deserializeOptList(jsonObject.optJSONArray(DETAILS), InputDetail.SERIALIZER),
+                    apps = deserializeOptList(jsonObject.optJSONArray(APPS), AppData.SERIALIZER),
                 )
             }
         }

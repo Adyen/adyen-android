@@ -17,8 +17,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class AppData(
-    var id: String? = null,
-    var name: String? = null,
+    val id: String? = null,
+    val name: String? = null,
 ) : ModelObject() {
 
     companion object {
