@@ -31,15 +31,21 @@ class IdealConfiguration private constructor(
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
+    @Deprecated("This configuration option is no longer in use.")
     override val viewType: IssuerListViewType?,
+    @Deprecated("This configuration option is no longer in use.")
     override val isSubmitButtonVisible: Boolean?,
+    @Deprecated("This configuration option is no longer in use.")
     override val hideIssuerLogos: Boolean?,
     override val genericActionConfiguration: GenericActionConfiguration,
 ) : IssuerListConfiguration() {
 
+    // TODO Decouple this configuration from IssuerListConfiguration when we can break the API contract.
+
     /**
      * Builder to create an[IdealConfiguration].
      */
+    @Suppress("DeprecatedCallableAddReplaceWith")
     class Builder : IssuerListBuilder<IdealConfiguration, Builder> {
 
         /**
@@ -84,6 +90,21 @@ class IdealConfiguration private constructor(
             environment: Environment,
             clientKey: String
         ) : super(shopperLocale, environment, clientKey)
+
+        @Deprecated("This configuration option has no effect anymore.")
+        override fun setViewType(viewType: IssuerListViewType): Builder {
+            return this
+        }
+
+        @Deprecated("This configuration option has no effect anymore.")
+        override fun setHideIssuerLogos(hideIssuerLogos: Boolean): Builder {
+            return this
+        }
+
+        @Deprecated("This configuration option has no effect anymore.")
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            return this
+        }
 
         override fun buildInternal(): IdealConfiguration {
             return IdealConfiguration(

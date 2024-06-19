@@ -8,11 +8,19 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
-## Added
+## New
 - UPI now supports `upi_intent` payment apps.
+- The new iDEAL payment flow where the shopper is redirected to the iDEAL payment page to select their bank and authorize the payment.
 
 ## Changed
 - Drop-in navigation improvements:
   - Top navigation has been added
   - Dragging gesture has been disabled which caused Drop-in to dismiss
   - Going back from actions dismisses Drop-in
+
+## Deprecated
+- For `IdealComponent`:
+  - `isConfirmationRequired()` can be removed.
+  - `submit()` can be removed.
+- When configuring iDEAL:
+  - `setViewType`, `setHideIssuerLogos` and `setSubmitButtonVisible` can be removed.
