@@ -7,6 +7,12 @@
   "packageRules" : [
     {
       "matchPackagePatterns": [
+        "org.jetbrains.kotlinx:kotlinx-coroutines.*"
+      ],
+      "groupName": "Kotlin Coroutines"
+    },
+    {
+      "matchPackagePatterns": [
         "androidx.compose.compiler:compiler",
         "com.google.devtools.ksp",
         "org.jetbrains.kotlin.*"
