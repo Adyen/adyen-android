@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
+import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityCardBinding
@@ -30,6 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback {
 
@@ -123,8 +125,8 @@ class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback
             is CardEvent.PaymentResult -> onPaymentResult(event.result)
             is CardEvent.AdditionalAction -> onAction(event.action)
             is CardEvent.AddressLookup -> onAddressLookup(event.options)
-            is CardEvent.AddressLookupCompleted -> {}
-            is CardEvent.AddressLookupError -> {}
+            is CardEvent.AddressLookupCompleted -> onAddressLookupCompleted(event.lookupAddress)
+            is CardEvent.AddressLookupError -> onAddressLookupError(event.message)
         }
     }
 
@@ -144,6 +146,20 @@ class SessionsCardTakenOverActivity : AppCompatActivity(), AddressLookupCallback
     override fun onQueryChanged(query: String) {
         Log.d(TAG, "On address lookup query changed: $query")
         cardViewModel.onAddressLookupQueryChanged(query)
+    }
+
+    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
+        Log.d(TAG, "On address lookup completion: $lookupAddress")
+        cardViewModel.onAddressLookupCompletion(lookupAddress)
+        return true
+    }
+
+    private fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Completed(lookupAddress))
+    }
+
+    private fun onAddressLookupError(message: String) {
+        cardComponent?.setAddressLookupResult(AddressLookupResult.Error(message))
     }
 
     override fun onDestroy() {

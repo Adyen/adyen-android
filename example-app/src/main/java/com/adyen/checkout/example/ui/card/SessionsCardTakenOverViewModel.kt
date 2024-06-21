@@ -18,11 +18,13 @@ import com.adyen.checkout.card.CardType
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
+import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.repositories.AddressLookupCompletionState
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -41,7 +43,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -69,8 +70,6 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     private val _events = MutableSharedFlow<CardEvent>()
     val events: Flow<CardEvent> = _events
 
-    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
-
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
     private var isFlowTakenOver: Boolean
@@ -81,18 +80,19 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
 
     init {
         viewModelScope.launch { launchComponent() }
-        addressLookupQueryFlow
-            .filterNotNull()
-            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
-            .onEach { query ->
-                val options = if (query == "empty") {
-                    emptyList()
-                } else {
-                    addressLookupRepository.getAddressLookupOptions()
-                }
+        addressLookupRepository.addressLookupOptionsFlow
+            .onEach { options ->
                 _events.emit(CardEvent.AddressLookup(options))
-            }
-            .launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
+
+        addressLookupRepository.addressLookupCompletionFlow
+            .onEach {
+                val event = when (it) {
+                    is AddressLookupCompletionState.Address -> CardEvent.AddressLookupCompleted(it.lookupAddress)
+                    is AddressLookupCompletionState.Error -> CardEvent.AddressLookupError(it.message)
+                }
+                _events.emit(event)
+            }.launchIn(viewModelScope)
     }
 
     private suspend fun launchComponent() {
@@ -241,15 +241,15 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     }
 
     fun onAddressLookupQueryChanged(query: String) {
-        viewModelScope.launch {
-            addressLookupQueryFlow.emit(query)
-        }
+        addressLookupRepository.onQuery(query)
+    }
+
+    fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
+        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
     }
 
     companion object {
         private val TAG = getLogTag()
         private const val IS_SESSIONS_FLOW_TAKEN_OVER_KEY = "IS_SESSIONS_FLOW_TAKEN_OVER_KEY"
-
-        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
     }
 }

@@ -812,6 +812,8 @@ class DefaultCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    override fun shouldEnableSubmitButton(): Boolean = true
+
     override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
         onBinValueListener = listener
     }

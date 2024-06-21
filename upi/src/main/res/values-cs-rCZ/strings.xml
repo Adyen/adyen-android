@@ -8,9 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_upi_mode_selection">Vyberte si, jak chcete platební aplikaci UPI používat.</string>
+    <string name="checkout_upi_mode_selection">Jak chcete použít rozhraní UPI?</string>
     <string name="checkout_upi_vpa_validation">Zadejte správnou adresu pro virtuální platby</string>
     <string name="checkout_upi_qr_generation">Vygenerujte QR kód, který si můžete stáhnout nebo vyfotit na obrazovku a nahrajte jej do aplikace UPI, abyste mohli dokončit platbu.</string>
     <string name="checkout_upi_continue">Pokračovat</string>
+    <string name="checkout_upi_app_manual_input">Zadejte UPI ID</string>
+    <string name="checkout_upi_app_other_upi">Jiné UPI</string>
 
 </resources>

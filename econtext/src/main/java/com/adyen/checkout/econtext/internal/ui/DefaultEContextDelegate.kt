@@ -226,6 +226,8 @@ internal class DefaultEContextDelegate<
         return isConfirmationRequired() && componentParams.isSubmitButtonVisible
     }
 
+    override fun shouldEnableSubmitButton(): Boolean = true
+
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }

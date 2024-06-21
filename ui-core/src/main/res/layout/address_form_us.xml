@@ -22,7 +22,6 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_street"
             style="@style/AdyenCheckout.AddressInput"
-            android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_apartmentSuite"
             android:nextFocusForward="@id/editText_apartmentSuite" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -36,7 +35,6 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_apartmentSuite"
             style="@style/AdyenCheckout.ApartmentSuiteInput"
-            android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_city"
             android:nextFocusForward="@id/editText_city" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -50,7 +48,6 @@
         <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_city"
             style="@style/AdyenCheckout.CityInput"
-            android:autofillHints="postalAddress"
             android:nextFocusDown="@id/editText_postalCode"
             android:nextFocusForward="@id/editText_postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +71,6 @@
                 style="@style/AdyenCheckout.DropdownTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="postalAddress"
                 android:dropDownAnchor="@id/textInputLayout_state" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -87,8 +83,7 @@
 
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_postalCode"
-                style="@style/AdyenCheckout.ZipCodeInput"
-                android:autofillHints="postalCode" />
+                style="@style/AdyenCheckout.ZipCodeInput" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

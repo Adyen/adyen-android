@@ -62,7 +62,7 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
          *
          * @param viewType an enum with the view type options.
          */
-        fun setViewType(viewType: IssuerListViewType): IssuerListBuilderT {
+        open fun setViewType(viewType: IssuerListViewType): IssuerListBuilderT {
             this.viewType = viewType
             @Suppress("UNCHECKED_CAST")
             return this as IssuerListBuilderT

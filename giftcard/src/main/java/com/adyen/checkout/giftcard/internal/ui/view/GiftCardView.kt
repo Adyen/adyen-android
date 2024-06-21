@@ -8,12 +8,14 @@
 package com.adyen.checkout.giftcard.internal.ui.view
 
 import android.content.Context
+import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.autofill.HintConstants
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.AdyenLogLevel
@@ -51,6 +53,10 @@ internal class GiftCardView @JvmOverloads constructor(
         orientation = VERTICAL
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.editTextGiftcardPin.setAutofillHints(HintConstants.AUTOFILL_HINT_GIFT_CARD_PIN)
+        }
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {

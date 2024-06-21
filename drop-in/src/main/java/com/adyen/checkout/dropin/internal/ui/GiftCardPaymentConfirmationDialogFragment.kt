@@ -27,6 +27,12 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
     private var _binding: FragmentGiftCardPaymentConfirmationBinding? = null
     private val binding: FragmentGiftCardPaymentConfirmationBinding get() = requireNotNull(_binding)
 
+    private val navigationSource: NavigationSource
+        get() = when {
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> NavigationSource.NO_SOURCE
+            else -> NavigationSource.PAYMENT_METHOD_LIST
+        }
+
     private lateinit var giftCardPaymentConfirmationData: GiftCardPaymentConfirmationData
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,11 +72,25 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
             performBackAction()
         }
 
+        initToolbar()
         initRecyclerView()
 
         binding.payButton.setOnClickListener {
             protocol.requestPartialPayment()
         }
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(giftCardPaymentConfirmationData.paymentMethodName)
+        setOnButtonClickListener {
+            performBackAction()
+        }
+
+        val toolbarMode = when (navigationSource) {
+            NavigationSource.PAYMENT_METHOD_LIST -> DropInBottomSheetToolbarMode.BACK_BUTTON
+            NavigationSource.NO_SOURCE -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+        }
+        setMode(toolbarMode)
     }
 
     private fun initRecyclerView() {
@@ -100,15 +120,12 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
         }
     }
 
-    override fun onBackPressed(): Boolean {
-        return performBackAction()
-    }
+    override fun onBackPressed() = performBackAction()
 
     private fun performBackAction(): Boolean {
-        if (dropInViewModel.shouldSkipToSinglePaymentMethod()) {
-            protocol.terminateDropIn()
-        } else {
-            protocol.showPaymentMethodsDialog()
+        when (navigationSource) {
+            NavigationSource.PAYMENT_METHOD_LIST -> protocol.showPaymentMethodsDialog()
+            NavigationSource.NO_SOURCE -> protocol.terminateDropIn()
         }
         return true
     }
@@ -129,5 +146,10 @@ internal class GiftCardPaymentConfirmationDialogFragment : DropInBottomSheetDial
                     putParcelable(GIFT_CARD_DATA, data)
                 }
             }
+    }
+
+    internal enum class NavigationSource {
+        PAYMENT_METHOD_LIST,
+        NO_SOURCE,
     }
 }

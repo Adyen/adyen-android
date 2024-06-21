@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.blik.internal.ui
 
+import app.cash.turbine.test
 import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.BlikConfiguration
 import com.adyen.checkout.blik.blik
@@ -27,12 +28,16 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -48,6 +53,68 @@ class StoredBlikDelegateTest(
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
         delegate = createStoredBlikDelegate()
+    }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when submit button is configured to be hidden, then it should not show`() {
+            delegate = createStoredBlikDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `when submit button is configured to be visible, then it should show`() {
+            delegate = createStoredBlikDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    @Nested
+    inner class SubmitButtonEnableTest {
+
+        @Test
+        fun `when shouldEnableSubmitButton is called, then true is returned`() {
+            assertTrue(delegate.shouldEnableSubmitButton())
+        }
+    }
+
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
+
+        @Test
+        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+            delegate.componentStateFlow.test {
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.onSubmit()
+                verify(submitHandler).onSubmit(expectMostRecentItem())
+            }
+        }
     }
 
     @Nested

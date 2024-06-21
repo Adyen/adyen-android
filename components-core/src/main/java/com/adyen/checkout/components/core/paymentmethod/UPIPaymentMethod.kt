@@ -19,9 +19,11 @@ data class UPIPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
     var virtualPaymentAddress: String?,
+    var appId: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
+        private const val APP_ID = "appId"
         private const val VIRTUAL_PAYMENT_ADDRESS = "virtualPaymentAddress"
 
         @JvmField
@@ -32,6 +34,7 @@ data class UPIPaymentMethod(
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(VIRTUAL_PAYMENT_ADDRESS, modelObject.virtualPaymentAddress)
+                        putOpt(APP_ID, modelObject.appId)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(UPIPaymentMethod::class.java, e)
@@ -43,6 +46,7 @@ data class UPIPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     virtualPaymentAddress = jsonObject.getStringOrNull(VIRTUAL_PAYMENT_ADDRESS),
+                    appId = jsonObject.getStringOrNull(APP_ID),
                 )
             }
         }

@@ -39,6 +39,7 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 
 class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -89,11 +90,13 @@ constructor(
         val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
+        val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         return DefaultAwaitDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             componentParams = componentParams,
+            redirectHandler = redirectHandler,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
             analyticsManager = analyticsManager,
@@ -133,6 +136,7 @@ constructor(
             PaymentMethodTypes.BLIK,
             PaymentMethodTypes.MB_WAY,
             PaymentMethodTypes.UPI_COLLECT,
+            PaymentMethodTypes.UPI_INTENT,
         )
     }
 }

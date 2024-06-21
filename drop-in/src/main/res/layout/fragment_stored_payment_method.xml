@@ -1,31 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
   ~ Created by caiof on 1/12/2020.
   -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/standard_half_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/standard_half_margin">
 
-    <include
-        android:id="@+id/bottom_sheet_indicator"
-        layout="@layout/bottom_sheet_indicator"
+    <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
+        android:id="@+id/bottom_sheet_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
-    <include
-        android:id="@+id/payment_methods_list_header"
-        layout="@layout/payment_methods_list_header"
+    <TextView
+        android:id="@+id/bottom_sheet_header"
+        style="@style/AdyenCheckout.Toolbar.HeaderTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/store_payment_methods_header"/>
+        android:layout_margin="@dimen/standard_half_margin"
+        tools:text="@string/store_payment_methods_header" />
 
     <include
         android:id="@+id/stored_payment_method_item"
@@ -37,7 +35,7 @@
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
-        android:text="@string/continue_button"/>
+        android:text="@string/continue_button" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
@@ -49,8 +47,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_payment_method_button"
+        style="@style/AdyenCheckout.Button.Secondary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/AdyenCheckout.Button.Secondary"
         android:text="@string/change_payment_method" />
 </LinearLayout>

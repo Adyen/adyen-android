@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.await.internal.ui.model.AwaitOutputData
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
+import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
@@ -22,4 +23,5 @@ interface AwaitDelegate :
     DetailsEmittingDelegate,
     ViewableDelegate<AwaitOutputData>,
     StatusPollingDelegate,
-    ViewProvidingDelegate
+    ViewProvidingDelegate,
+    RedirectableDelegate

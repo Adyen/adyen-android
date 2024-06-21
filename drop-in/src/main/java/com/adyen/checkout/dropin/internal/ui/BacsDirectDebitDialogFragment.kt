@@ -30,8 +30,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
 
     private val bacsDirectDebitComponent: BacsDirectDebitComponent by lazy { component as BacsDirectDebitComponent }
 
-    companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java)
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentBacsDirectDebitComponentBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,14 +38,22 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
-        binding.header.text = paymentMethod.name
+
+        initToolbar()
 
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
         if (bacsDirectDebitComponent.isConfirmationRequired()) {
-            setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
             binding.bacsView.requestFocus()
         }
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(paymentMethod.name)
+        setOnButtonClickListener {
+            onBackPressed()
+        }
+        setMode(toolbarMode)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -57,12 +63,10 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         return dialog
     }
 
-    override fun onBackPressed(): Boolean {
-        return if (bacsDirectDebitComponent.handleBackPress()) {
-            true
-        } else {
-            super.onBackPressed()
-        }
+    override fun onBackPressed() = if (bacsDirectDebitComponent.handleBackPress()) {
+        true
+    } else {
+        super.onBackPressed()
     }
 
     private fun setDialogToFullScreen(dialog: Dialog) {
@@ -70,12 +74,18 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
             val bottomSheetDialog = dialog as BottomSheetDialog
             val bottomSheet =
                 bottomSheetDialog.findViewById<FrameLayout>(MaterialR.id.design_bottom_sheet)
-            val layoutParams = bottomSheet?.layoutParams
-            val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
-            behavior?.isDraggable = false
-            layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
-            bottomSheet?.layoutParams = layoutParams
-            behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+
+            bottomSheet?.let {
+                val layoutParams = it.layoutParams
+                layoutParams?.height = WindowManager.LayoutParams.MATCH_PARENT
+                it.layoutParams = layoutParams
+
+                BottomSheetBehavior.from(it).apply {
+                    state = BottomSheetBehavior.STATE_EXPANDED
+                    isHideable = false
+                    isDraggable = false
+                }
+            }
         }
     }
 
@@ -83,4 +93,6 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         _binding = null
         super.onDestroyView()
     }
+
+    companion object : BaseCompanion<BacsDirectDebitDialogFragment>(BacsDirectDebitDialogFragment::class.java)
 }

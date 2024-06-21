@@ -1,0 +1,43 @@
+name: Validate public API
+
+on:
+  workflow_call
+
+jobs:
+  validate_public_api:
+    name: Validate public API
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          cache-read-only: true
+
+      - name: Check public API
+        run: |
+          ( ./gradlew apiCheck --continue 2> "${{ github.workspace }}/api_changes.txt" ) || true
+          bash ./scripts/process_api_changes.sh
+
+      - name: Comment on PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: "${{ github.workspace }}/api_changes.md"
+          comment_tag: api_changes
+          mode: recreate
+
+      - name: Check if successful
+        run : |
+          if [ -s api_changes.txt ]
+          then
+            # Fail workflow if there are API changes
+            exit 1
+          fi

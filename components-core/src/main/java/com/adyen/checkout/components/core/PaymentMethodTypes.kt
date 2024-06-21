@@ -47,6 +47,7 @@ object PaymentMethodTypes {
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
     const val UPI = "upi"
+    const val UPI_INTENT = "upi_intent"
     const val UPI_COLLECT = "upi_collect"
     const val UPI_QR = "upi_qr"
 
@@ -132,8 +133,6 @@ object PaymentMethodTypes {
         SEPA,
         TWINT,
         UPI,
-        UPI_COLLECT,
-        UPI_QR,
         WECHAT_PAY_SDK,
     )
 
@@ -173,5 +172,8 @@ object PaymentMethodTypes {
         WECHAT_PAY_MINI_PROGRAM,
         WECHAT_PAY_QR,
         WECHAT_PAY_WEB,
+        UPI_INTENT,
+        UPI_COLLECT,
+        UPI_QR,
     )
 }

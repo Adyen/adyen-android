@@ -188,6 +188,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = outputData.isValid,
             isReady = false,
             lastFourDigits = null,
+            paymentMethodName = null,
             giftCardAction = GiftCardAction.Idle,
         )
 
@@ -197,6 +198,7 @@ internal class DefaultGiftCardDelegate(
                 isInputValid = false,
                 isReady = true,
                 lastFourDigits = null,
+                paymentMethodName = null,
                 giftCardAction = GiftCardAction.Idle,
             )
         }
@@ -206,6 +208,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = false,
             isReady = true,
             lastFourDigits = null,
+            paymentMethodName = null,
             giftCardAction = GiftCardAction.Idle,
         )
 
@@ -230,6 +233,7 @@ internal class DefaultGiftCardDelegate(
             isInputValid = true,
             isReady = true,
             lastFourDigits = lastDigits,
+            paymentMethodName = paymentMethod.name,
             giftCardAction = GiftCardAction.CheckBalance,
         )
     }
@@ -267,6 +271,8 @@ internal class DefaultGiftCardDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    override fun shouldEnableSubmitButton(): Boolean = true
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)

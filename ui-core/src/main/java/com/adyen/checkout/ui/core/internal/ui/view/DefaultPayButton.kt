@@ -21,6 +21,10 @@ internal class DefaultPayButton @JvmOverloads constructor(
 
     private val binding = DefaultPayButtonViewBinding.inflate(LayoutInflater.from(context), this)
 
+    override fun setEnabled(enabled: Boolean) {
+        binding.payButton.isEnabled = enabled
+    }
+
     override fun setOnClickListener(listener: OnClickListener?) {
         binding.payButton.setOnClickListener(listener)
     }

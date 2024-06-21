@@ -31,5 +31,7 @@ internal interface UPIDelegate :
 
     fun updateInputData(update: UPIInputData.() -> Unit)
 
+    fun highlightValidationErrors()
+
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

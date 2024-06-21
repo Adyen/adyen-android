@@ -34,15 +34,12 @@ import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
+import com.adyen.checkout.example.repositories.AddressLookupCompletionState
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -57,7 +54,6 @@ import javax.inject.Inject
  * [onOrderRequest] and [onOrderCancel] and it handles the stored payment method removal flow by
  * implementing [onRemoveStoredPaymentMethod].
  */
-@OptIn(FlowPreview::class)
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
 class ExampleAdvancedDropInService : DropInService() {
@@ -71,19 +67,26 @@ class ExampleAdvancedDropInService : DropInService() {
     @Inject
     lateinit var addressLookupRepository: AddressLookupRepository
 
-    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
-
-    init {
-        addressLookupQueryFlow
-            .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
-            .filterNotNull()
-            .onEach { query ->
-                val options = if (query == "empty") {
-                    emptyList()
-                } else {
-                    addressLookupRepository.getAddressLookupOptions()
-                }
+    override fun onCreate() {
+        super.onCreate()
+        addressLookupRepository.addressLookupOptionsFlow
+            .onEach { options ->
                 sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
+            }.launchIn(this)
+
+        addressLookupRepository.addressLookupCompletionFlow
+            .onEach {
+                val result = when (it) {
+                    is AddressLookupCompletionState.Address -> {
+                        AddressLookupDropInServiceResult.LookupComplete(it.lookupAddress)
+                    }
+                    is AddressLookupCompletionState.Error -> AddressLookupDropInServiceResult.Error(
+                        errorDialog = ErrorDialog(
+                            message = it.message,
+                        ),
+                    )
+                }
+                sendAddressLookupResult(result)
             }.launchIn(this)
     }
 
@@ -403,18 +406,17 @@ class ExampleAdvancedDropInService : DropInService() {
 
     override fun onAddressLookupQueryChanged(query: String) {
         Log.d(TAG, "On address lookup query: $query")
-        addressLookupQueryFlow.tryEmit(query)
+        addressLookupRepository.onQuery(query)
     }
 
     override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
         Log.d(TAG, "On address lookup query completion: $lookupAddress")
-        return false
+        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        return true
     }
 
     companion object {
         private val TAG = getLogTag()
         private const val RESULT_REFUSED = "refused"
-
-        private const val ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION = 300L
     }
 }

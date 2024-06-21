@@ -20,7 +20,6 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -35,7 +34,8 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
-        binding.header.text = paymentMethod.name
+
+        initToolbar()
 
         try {
             attachComponent(component)
@@ -44,12 +44,19 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
         }
     }
 
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(paymentMethod.name)
+        setOnButtonClickListener {
+            onBackPressed()
+        }
+        setMode(toolbarMode)
+    }
+
     private fun attachComponent(component: PaymentComponent) {
         if (component is ViewableComponent) {
             binding.componentView.attach(component, viewLifecycleOwner)
 
             if ((component as? ButtonComponent)?.isConfirmationRequired() == true) {
-                setInitViewState(BottomSheetBehavior.STATE_EXPANDED)
                 binding.componentView.requestFocus()
             }
         }

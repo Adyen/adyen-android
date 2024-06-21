@@ -18,10 +18,12 @@ class AwaitAction(
     override var type: String? = null,
     override var paymentData: String? = null,
     override var paymentMethodType: String? = null,
+    var url: String? = null,
 ) : Action() {
 
     companion object {
         const val ACTION_TYPE = ActionTypes.AWAIT
+        private const val URL = "url"
 
         @JvmField
         val SERIALIZER: Serializer<AwaitAction> = object : Serializer<AwaitAction> {
@@ -31,6 +33,7 @@ class AwaitAction(
                         putOpt(TYPE, modelObject.type)
                         putOpt(PAYMENT_DATA, modelObject.paymentData)
                         putOpt(PAYMENT_METHOD_TYPE, modelObject.paymentMethodType)
+                        putOpt(URL, modelObject.url)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(RedirectAction::class.java, e)
@@ -42,6 +45,7 @@ class AwaitAction(
                     type = jsonObject.getStringOrNull(TYPE),
                     paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                     paymentMethodType = jsonObject.getStringOrNull(PAYMENT_METHOD_TYPE),
+                    url = jsonObject.getStringOrNull(URL),
                 )
             }
         }
