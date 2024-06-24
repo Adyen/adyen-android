@@ -19,7 +19,7 @@ ext {
     version_name = "5.5.0"
 
     // Build Script
-    android_gradle_plugin_version = '8.3.2'
+    android_gradle_plugin_version = '8.4.1'
     kotlin_version = '1.9.24'
     ksp_version = '1.9.24-1.0.20'
     detekt_gradle_plugin_version = "1.23.6"
