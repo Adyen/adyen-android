@@ -65,7 +65,7 @@ public final class com/adyen/checkout/googlepay/GooglePayButtonParameters {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ActivityResultHandlingComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/googlepay/GooglePayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ActivityResultHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/googlepay/GooglePayComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/googlepay/internal/provider/GooglePayComponentProvider;
@@ -76,9 +76,11 @@ public final class com/adyen/checkout/googlepay/GooglePayComponent : androidx/li
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
 	public fun handleActivityResult (ILandroid/content/Intent;)V
 	public fun handleIntent (Landroid/content/Intent;)V
+	public fun isConfirmationRequired ()Z
 	public fun setInteractionBlocked (Z)V
 	public fun setOnRedirectListener (Lkotlin/jvm/functions/Function0;)V
 	public final fun startGooglePayScreen (Landroid/app/Activity;I)V
+	public fun submit ()V
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayComponent$Companion {
