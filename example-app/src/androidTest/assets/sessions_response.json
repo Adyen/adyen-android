@@ -1,0 +1,43 @@
+{
+  "amount" : {
+    "currency" : "EUR",
+    "value" : 1337
+  },
+  "authenticationData" : {
+    "attemptAuthentication" : "always",
+    "threeDSRequestData" : {
+      "nativeThreeDS" : "preferred"
+    }
+  },
+  "channel" : "Android",
+  "countryCode" : "NL",
+  "expiresAt" : "2024-06-05T16:27:48+02:00",
+  "id" : "CSB0C8F0236F487105",
+  "lineItems" : [
+    {
+      "amountExcludingTax" : 100,
+      "amountIncludingTax" : 100,
+      "description" : "Coffee",
+      "id" : "1717594066496",
+      "quantity" : 2,
+      "taxAmount" : 0,
+      "taxCategory" : "Low",
+      "taxPercentage" : 0
+    }
+  ],
+  "merchantAccount" : "TestMerchantCheckout",
+  "recurringProcessingModel" : "Subscription",
+  "reference" : "android-test-components_1717594066497",
+  "returnUrl" : "adyencheckout:\/\/com.adyen.checkout.example",
+  "shopperEmail" : "",
+  "shopperIP" : "142.12.31.22",
+  "shopperLocale" : "en-US",
+  "shopperReference" : "test-android-components",
+  "showInstallmentAmount" : false,
+  "showRemovePaymentMethodButton" : true,
+  "splitCardFundingSources" : false,
+  "storePaymentMethodMode" : "askForConsent",
+  "threeDSAuthenticationOnly" : false,
+  "mode" : "embedded",
+  "sessionData" : "Ab02b4c0!BQABAgBE0IYldLlPrH34SYYyEx0dSnNuCbvnT1qo3F6J+pZqAydHpR\/DCqsmqaFL6fI8SREvHZX9ofDeHxgz2MlpKxBlqWFwz1w5\/nwfQVNbPgpXyYFnQv4I3SlXU2akUq6V1tzRcDEEuD8w29wyn3wpX+VXQKVObF98CB7b4Ood1N45MyCyRaoyOZhnYB1Sldn9+3pDvCk1xOLsQi\/wRL2FcBTBuwhIb10SgXTxoEXjXwtmhpYs09\/XRcsRE22smSDNFNrG9z5B3ZseJrVvnCf8nC0THHfC8wtESigHL7onUNYCVfnLG71B0IPsIykqq8wxjdTJqSqhRlVl1+Rc3f99IRjokM6HBEarPLndZi7VjV53zZCOeAG8TxZTWFT1aCTxH4fsNmW\/ntiDaFRfDXeTgavB99H6orD808RSkF1L9u\/a62Jfq9+CUkzGIV77cuJHhJzGuTdCL5rmNzJBxiJclMaeEq68zpdg3eHj1bwMdKQ8jOZ7FEG19jLJQUtjG2NejbiSdjOQBWJwWvFnuHbD+sOf9X5Ask9nb\/qjHNgXONDTpMHO7Km5vIoBDTzSZKuxc9EXKw8fACxmqjnlyLRA0OhM07pnDoeSIVkO53xGUr3C7KXnOKScj+1aYIHC2G6+2crfuXc0oSoxOERGTrie3RoCGaY59angiMud3wEAmGn\/JQyi0Q19AD7EDWfebNkASnsia2V5IjoiQUYwQUFBMTAzQ0E1MzdFQUVEODdDMjRERDUzOTA5QjgwQTc4QTkyM0UzODIzRDY4REFDQzk0QjlGRjgzMDVEQyJ9RTQG\/9vJd8g1y6GvceA9zDmq72L2k8hlYyyN\/DVDQNucnxOU824ZzomPnGloqwr6aKTBmsVmrp6Dy6fF3FiOxc2KSlOsYTEOl7frv5oBH8BHAPt8XZyCMBeGPcRwoTP4wUptwo\/cOmo4fcY2yEp+XsClTGkPfqAjjTpiFx4XrcL3EX2P058WYozS7BJqhh3FWJ51\/OoSPWJzro+ssbbPv3v9WyTD4gh1FqKeWp4harAoAQhPeYQQcWKWQWjGR0gInSSmJgU2mhwPW+IomgihsRDXXQWDf4NHd\/P3KorMz4oinKT5Snn0j1ygKOYkB1cPP56h0vi1t8iXboPC+5HMPgdrGpl+W+\/XKRjC6iSx2qhEylqV\/ULpoQlbQz22aNa6XPDCVPDRiXdNvN+IeBCmEUl6MuqQAGfhBpp56MGea4THQ2nT6pAp7eAt1EgoNFPYVgVOnkKQK4Skt5KnOlRQB8yFxJrnsYtpAocM0y+nLw+bbkkhL0B2bR8TPRN4VuWock7yqN9aoHLpncXn2ub5V9preoav6\/6jyCwLphAk60l1IPjnQTFUhmVefIFBL4aJ90JU8fJ8Kalyg3mDG0cH3GZOIaeMDeolCjE6KbGTGV34O5calXn+3mhzPZlcZiCAFo3CPGsT+rOu8kF66Ka9h3ti\/0B+cMVRuJ\/PnX1Krf3ku9uBKNHGQ+DwgUEL2ze\/rNg4xZX+\/HNFQv6TfqAU7CLnSuTCO2h+93EomTAHoM6AjrHSs97LARaOt4j3bEIiv4A+BhZfNx6OaRq8EWP9AqpU\/ZxehJts21chBFM+5IcV\/2gzl5v6OhLJUW7Vr3PcQF4+c0jCuSdgulMhZn\/7+9+Y2ayv8olCHWaBcO6Ce+c4kunOQjupwSI865o81WUvGPHfQ3BgAOYAGxYdP\/R2AD5rGV5tEVoIyly6VdrHohEmxzYQdcPmLFchWyXsGueyw\/D4W6p\/CeW8DyfmZnrnXiBgNfmHwo0JHAorcEK3XE13FTDXud4p7DXxBjHyDHAkiMM2thOunro4HnmT\/RwXJgtPlB5O42edLMKA6wplz5jh+dulUiQhBvwBYxjClR+fXTG7X9x+HULtgX2TcAHNG6y8YButEjVt50mCwGWtyS0oTAgrGT9jxnUc5ecsniyqDbuy2Be89CGk\/Hoxa4BQ0+HbKHWO0QWYkrvvITVS\/xkdw+dD1VRkxRtK1WbtIojWaNlvU2oi6pgszo0vVx2fBupsKNZyITNbLu50\/DxffBuYh9jS"
+}

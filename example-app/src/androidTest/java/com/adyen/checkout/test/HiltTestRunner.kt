@@ -6,11 +6,13 @@
  * Created by oscars on 19/4/2024.
  */
 
-package com.adyen.checkout
+package com.adyen.checkout.test
 
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.AdyenLogger
 import dagger.hilt.android.testing.HiltTestApplication
 
 // This class is used from build.gradle
@@ -18,6 +20,7 @@ import dagger.hilt.android.testing.HiltTestApplication
 class HiltTestRunner : AndroidJUnitRunner() {
 
     override fun newApplication(cl: ClassLoader?, name: String?, context: Context?): Application {
+        AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
         return super.newApplication(cl, HiltTestApplication::class.java.name, context)
     }
 }

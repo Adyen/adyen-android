@@ -1,0 +1,273 @@
+{
+  "amount" : {
+    "currency" : "EUR",
+    "value" : 1337
+  },
+  "countryCode" : "NL",
+  "expiresAt" : "2024-06-05T16:27:48+02:00",
+  "id" : "CSB0C8F0236F487105",
+  "returnUrl" : "adyencheckout:\/\/com.adyen.checkout.example",
+  "shopperLocale" : "en-US",
+  "configuration" : {
+    "enableStoreDetails" : true,
+    "showInstallmentAmount" : false,
+    "showRemovePaymentMethodButton" : true
+  },
+  "paymentMethods" : {
+    "paymentMethods" : [
+      {
+        "issuers" : [
+          {
+            "id" : "1164",
+            "name" : "SNS"
+          },
+          {
+            "id" : "1121",
+            "name" : "Test Issuer"
+          },
+          {
+            "id" : "1154",
+            "name" : "Test Issuer 5"
+          },
+          {
+            "id" : "1165",
+            "name" : "iDeal Test Issuer"
+          },
+          {
+            "id" : "1153",
+            "name" : "Test Issuer 4"
+          },
+          {
+            "id" : "1152",
+            "name" : "Test Issuer 3"
+          },
+          {
+            "id" : "1163",
+            "name" : "Ideal bridge test issuer"
+          },
+          {
+            "id" : "1151",
+            "name" : "Test Issuer 2"
+          },
+          {
+            "id" : "1162",
+            "name" : "Test Issuer Cancelled"
+          },
+          {
+            "id" : "1161",
+            "name" : "Test Issuer Pending"
+          },
+          {
+            "id" : "1160",
+            "name" : "Test Issuer Refused"
+          },
+          {
+            "id" : "1159",
+            "name" : "Test Issuer 10"
+          },
+          {
+            "id" : "1158",
+            "name" : "Test Issuer 9"
+          },
+          {
+            "id" : "1157",
+            "name" : "Test Issuer 8"
+          },
+          {
+            "id" : "1156",
+            "name" : "Test Issuer 7"
+          },
+          {
+            "id" : "1155",
+            "name" : "Test Issuer 6"
+          }
+        ],
+        "name" : "iDEAL",
+        "type" : "ideal"
+      },
+      {
+        "brands" : [
+          "mc",
+          "visa",
+          "bijcard",
+          "amex",
+          "maestro",
+          "accel",
+          "cup",
+          "diners",
+          "discover",
+          "hipercard",
+          "jcb",
+          "nyce",
+          "pulse",
+          "sodexo",
+          "star",
+          "vale_refeicao",
+          "vale_refeicao_prepaid"
+        ],
+        "configuration" : {
+          "mcDpaId" : "6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1_dpa2",
+          "visaSrcInitiatorId" : "B9SECVKIQX2SOBQ6J9X721dVBBKHhJJl1nxxVbemHGn5oB6S8",
+          "mcSrcClientId" : "6d41d4d6-45b1-42c3-a5d0-a28c0e69d4b1",
+          "visaSrciDpaId" : "8e6e347c-254e-863f-0e6a-196bf2d9df02"
+        },
+        "name" : "Credit Card",
+        "type" : "scheme"
+      },
+      {
+        "configuration" : {
+          "merchantId" : "M6TNAESZ5FGNN",
+          "intent" : "authorize"
+        },
+        "name" : "PayPal",
+        "type" : "paypal"
+      },
+      {
+        "name" : "Riverty Invoice",
+        "type" : "afterpay_default"
+      },
+      {
+        "name" : "SEPA Direct Debit",
+        "type" : "sepadirectdebit"
+      },
+      {
+        "name" : "Paysafecard",
+        "type" : "paysafecard"
+      },
+      {
+        "name" : "AliPay",
+        "type" : "alipay_wap"
+      },
+      {
+        "name" : "Android Pay",
+        "type" : "androidpay"
+      },
+      {
+        "name" : "c_cash",
+        "type" : "c_cash"
+      },
+      {
+        "name" : "Alfamart",
+        "type" : "doku_alfamart"
+      },
+      {
+        "brand" : "genericgiftcard",
+        "name" : "Generic GiftCard",
+        "type" : "giftcard"
+      },
+      {
+        "brand" : "givex",
+        "name" : "Givex",
+        "type" : "giftcard"
+      },
+      {
+        "configuration" : {
+          "merchantId" : "50",
+          "gatewayMerchantId" : "TestMerchantCheckout"
+        },
+        "name" : "Google Pay",
+        "type" : "googlepay"
+      },
+      {
+        "name" : "Pay over time with Klarna.",
+        "type" : "klarna_account"
+      },
+      {
+        "name" : "Pay by Invoice for Businesses",
+        "type" : "klarna_b2b"
+      },
+      {
+        "name" : "Up Titre-Restaurant",
+        "type" : "mealVoucher_FR_groupeup"
+      },
+      {
+        "name" : "Bimpli (ex Apetiz) Titre-Restaurant",
+        "type" : "mealVoucher_FR_natixis"
+      },
+      {
+        "name" : "Sodexo Titre-Restaurant",
+        "type" : "mealVoucher_FR_sodexo"
+      },
+      {
+        "brand" : "plastix",
+        "name" : "Plastix",
+        "type" : "giftcard"
+      },
+      {
+        "name" : "UnionPay",
+        "type" : "unionpay"
+      },
+      {
+        "name" : "UPI Collect",
+        "type" : "upi_collect"
+      },
+      {
+        "name" : "WeChat Pay",
+        "type" : "wechatpayMiniProgram"
+      },
+      {
+        "name" : "WeChat Pay",
+        "type" : "wechatpayQR"
+      },
+      {
+        "name" : "WeChat Pay",
+        "type" : "wechatpaySDK"
+      },
+      {
+        "name" : "WeChat Pay",
+        "type" : "wechatpayWeb"
+      },
+      {
+        "name" : "Pay later with Klarna.",
+        "type" : "klarna"
+      },
+      {
+        "configuration" : {
+          "merchantId" : "A3SKIS53IXYBBU",
+          "storeId" : "amzn1.application-oa2-client.4cedd73b56134e5ea57aaf487bf5c77e",
+          "region" : "UK",
+          "publicKeyId" : "AG77NIXPURMDUC3DOC5WQPPH"
+        },
+        "name" : "Amazon Pay",
+        "type" : "amazonpay"
+      },
+      {
+        "brand" : "monizze_eco",
+        "name" : "Monizze Eco Card",
+        "type" : "giftcard"
+      },
+      {
+        "brand" : "monizze_gift",
+        "name" : "Monizze Gift Card",
+        "type" : "giftcard"
+      },
+      {
+        "brand" : "monizze_mealvoucher",
+        "name" : "Monizze Meal Voucher",
+        "type" : "giftcard"
+      }
+    ],
+    "storedPaymentMethods" : [
+      {
+        "brand" : "mc",
+        "expiryMonth" : "03",
+        "expiryYear" : "30",
+        "holderName" : "Checkout Shopper PlaceHolder",
+        "id" : "B8DH7GX5G9QKTH65",
+        "lastFour" : "5454",
+        "name" : "MasterCard",
+        "supportedRecurringProcessingModels" : [
+          "Subscription",
+          "UnscheduledCardOnFile",
+          "CardOnFile"
+        ],
+        "supportedShopperInteractions" : [
+          "ContAuth",
+          "Ecommerce"
+        ],
+        "type" : "scheme"
+      }
+    ]
+  },
+  "sessionData" : "Ab02b4c0!BQABAgBtv\/cy5Dv8Bc8dZ6wG6NfbNNec1RGytpRl+MBuvumeAmv8Vybv7Bi+jdzFps3wogC02fd3rXL3RcYrE6ksxJMM\/u61FnbT6q3lehlUuKtec91HTpSw0LTZD128T5Y9p0cfG4xpB1rDphVwtuJT8NbTUNKC45yVM40JyY30pvn0ZqO9TjE66jN\/QyCe4FVjEDtkd5FBIqvmWO2KWcwjamfgGJ2VWb\/LPflJttDCSVrf6ye9odnWs+RL0B1m+3Fze96bOFsyBz85r30LtM3cSw8TIA3VEmx+1b+jc6qIDsAQfcWdk8q\/WnF6zBdAU0HEWdZbVA3dw9UKt6+B0eeYH41Ag4Upb3gWIsNVpHHdRVh3S72aVxWJE0tOY1jt7AD1fe3wporLR6OxFaVdj2hsrBmOKy9YqZr5MKDRN5V3NbdrVue6gfhYGfkGwVs2vKFnR+L4T8j0P4gJczamLT11y8KRS4ACVxkBuUgE56bbvg+aj0lipQhgC11EdD6kcvYqEY96qxz4qzVAHvM6cXBHYGcHXQHihhTLrV9DnIH97q+bKT9GoI409n1qtyiY\/XMZd0YeqeHp7C57MEUQaEN1BTXwkgfh8rTgPmzNJfqOdnj9tIe8MWtu7ftB60nFGrz6NVorADVdCbtNoh6\/UXLSjvGjzRGb6B+nTx2\/1fmT5FUtQQyaN325pvUfDqSNMsgASnsia2V5IjoiQUYwQUFBMTAzQ0E1MzdFQUVEODdDMjRERDUzOTA5QjgwQTc4QTkyM0UzODIzRDY4REFDQzk0QjlGRjgzMDVEQyJ9ZrcTuv9Sz+HIzNPSVi93Y1V\/qqOVLsUlnZZgizZHKD4JMyzvTUhpmxDSsF+O\/wFnCgEr6MLZi8Pyjb+6yl7+CSz3xPONGSbaL69koTQsj6TmCdG+ZEJx+nOROE6InKfHJgIM7vItaDCXsq6Ynm5cebMhH9DzR9595j1uEybTaAoYVMeyd177tSSbd1W4opmIYUg9WalEfR9GTp8teYlaZYN1Pn8kTKer6tJGTujHO0d1Sz7uK26PFIVFMNvesQI08+\/EkYxyHwiTwtDlAoSsWaGWbXY8TYyo+IPWRwOCktv72iYEJgLkotRuEs6wTFLZ2sM6rz8Kd9lBfYtfFSlMaZy3hLUaTON4sx0\/IlJduXYPn2wEpiPPmIBMgndmhTGXxmebnNiGHKowRM7nG0pglTlgbac00OxrjKsW41KNIlFu7ig42PMB4NjekjoTXX4LhWjFf935X6hKcomPpthPrPoApoiOmLqdfbrev8CeQOsvkTCdOHRRLBFvDL9FQ4FHCl20e3g7\/GqkoJvcwBuxsjlJyZHILztRpUkIhErgL9jrhizTWz3zgEETQAoNVAFZXFdp0IS\/UmPCJ12y5ChmAnsKpkn8ppABBQuRcT7PbdeId+5+Plnq0BnYMDBxIEgfhxe2LYV\/FHzA6SshEuVpoAjg1Jf5HqNKXDwJGVbh5Ka2L\/6HXB1WiFrKMLA3M5SfXTCMPfhjZleNB7Yzrb\/ZmtR9eia7s3ntf6+7\/VDGkclZFy6wJf\/XsebJuiKCV07DkJK7zY5b\/ETOBurZ8GnT06YP6DNYquIsZ1+lzQEI6lTLrEUaTWEExqBfihr4eKUa8CXgqicQ1gnfB5d9JG0LEIA9p1udEe8MAsnNgfMmRvMzfOoZ7ZJ4ScUMdGR\/QnfnX8bA5UlpW7MA0rWEbjUI5TvNYXIUWZbRwom7znc+USJc8\/OpJJ9owIuxdj8zk1GpvcKTyRQojXuV+1ZPXzdRoBiSuJlS6RV91qiUgoaamt5uUU3ZlDeA\/bTyfx6tWO0S8RUtKCIae7xt\/AFfIzGN3xUkX3hBstV9qu07Cvx4llxnuKbk9X29L24Rvp2pT2ARVgD6cqB+HKRCYBvc0I\/+ctGp+kbhJ6CnWfvtDyhF228NYxOFYwpsovSkd7nZypUFLcJoMd\/7ZPPkcbC1kPRhIREUN9KeKW0lOPy7yaeDbflGqNjg6MHidFMkJuJq0cE30L5+RiL95EtCkxCCLP43vgYogBoDVoT7HblyHQL8\/Wwql7Re"
+}

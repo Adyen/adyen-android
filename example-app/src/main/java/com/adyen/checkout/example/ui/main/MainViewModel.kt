@@ -21,7 +21,7 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
-import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
+import com.adyen.checkout.example.ui.configuration.ConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
@@ -40,7 +40,7 @@ internal class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
+    private val checkoutConfigurationProvider: ConfigurationProvider,
 ) : ViewModel() {
 
     private val lifecycleResumed: MutableSharedFlow<Unit> = MutableSharedFlow()
