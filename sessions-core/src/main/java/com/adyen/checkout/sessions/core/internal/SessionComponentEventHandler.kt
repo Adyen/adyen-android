@@ -65,6 +65,11 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
                 sessionComponentCallback,
             )
 
+            is PaymentComponentEvent.AvailabilityResult -> onAvailabilityResult(
+                event.isAvailable,
+                sessionComponentCallback,
+            )
+
             is PaymentComponentEvent.Submit -> onPaymentsCallRequested(event.state, sessionComponentCallback)
         }
     }
@@ -146,6 +151,13 @@ class SessionComponentEventHandler<T : PaymentComponentState<*>>(
         sessionComponentCallback: SessionComponentCallback<T>
     ) {
         sessionComponentCallback.onPermissionRequest(requiredPermission, permissionCallback)
+    }
+
+    private fun onAvailabilityResult(
+        isAvailable: Boolean,
+        sessionComponentCallback: SessionComponentCallback<T>,
+    ) {
+        sessionComponentCallback.onAvailabilityResult(isAvailable)
     }
 
     private fun onComponentError(error: ComponentError, sessionComponentCallback: SessionComponentCallback<T>) {

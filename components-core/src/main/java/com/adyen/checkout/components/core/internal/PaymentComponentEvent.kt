@@ -37,4 +37,8 @@ sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out P
     class Submit<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()
+
+    class AvailabilityResult<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+        val isAvailable: Boolean,
+    ) : PaymentComponentEvent<ComponentStateT>()
 }

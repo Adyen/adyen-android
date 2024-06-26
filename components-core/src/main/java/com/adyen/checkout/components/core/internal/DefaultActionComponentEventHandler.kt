@@ -25,6 +25,10 @@ class DefaultActionComponentEventHandler : ActionComponentEventHandler {
                 event.requiredPermission,
                 event.permissionCallback,
             )
+
+            is ActionComponentEvent.AvailabilityResult -> actionComponentCallback.onAvailabilityResult(
+                event.isAvailable,
+            )
         }
     }
 }

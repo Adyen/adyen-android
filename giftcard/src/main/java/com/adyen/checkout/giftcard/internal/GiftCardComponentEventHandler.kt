@@ -38,6 +38,8 @@ internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardCom
                 event.permissionCallback,
             )
 
+            is PaymentComponentEvent.AvailabilityResult -> callback.onAvailabilityResult(event.isAvailable)
+
             is PaymentComponentEvent.Submit -> {
                 when (event.state.giftCardAction) {
                     is GiftCardAction.CheckBalance -> {
