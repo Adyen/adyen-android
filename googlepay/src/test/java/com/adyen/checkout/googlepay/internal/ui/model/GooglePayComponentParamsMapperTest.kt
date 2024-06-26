@@ -111,9 +111,10 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
+            amount = amount,
+            isSubmitButtonVisible = false,
             gatewayMerchantId = "MERCHANT_ACCOUNT",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
-            amount = amount,
             totalPriceStatus = "STATUS",
             countryCode = "ZZ",
             merchantInfo = merchantInfo,
@@ -148,6 +149,7 @@ internal class GooglePayComponentParamsMapperTest {
             googlePay {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+                setSubmitButtonVisible(true)
                 setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
             }
         }
@@ -172,6 +174,7 @@ internal class GooglePayComponentParamsMapperTest {
                 currency = "CAD",
                 value = 123L,
             ),
+            isSubmitButtonVisible = true,
         )
 
         assertEquals(expected, params)
@@ -524,9 +527,10 @@ internal class GooglePayComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
+        amount: Amount? = null,
+        isSubmitButtonVisible: Boolean = false,
         gatewayMerchantId: String = TEST_GATEWAY_MERCHANT_ID,
         googlePayEnvironment: Int = WalletConstants.ENVIRONMENT_TEST,
-        amount: Amount? = null,
         totalPriceStatus: String = "FINAL",
         countryCode: String? = null,
         merchantInfo: MerchantInfo? = null,
@@ -550,9 +554,10 @@ internal class GooglePayComponentParamsMapperTest {
             isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
         ),
+        amount = amount ?: Amount("USD", 0),
+        isSubmitButtonVisible = isSubmitButtonVisible,
         gatewayMerchantId = gatewayMerchantId,
         googlePayEnvironment = googlePayEnvironment,
-        amount = amount ?: Amount("USD", 0),
         totalPriceStatus = totalPriceStatus,
         countryCode = countryCode,
         merchantInfo = merchantInfo,
