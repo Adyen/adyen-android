@@ -147,6 +147,7 @@ class AdyenComponentView @JvmOverloads constructor(
             binding.frameLayoutButtonContainer.isVisible = buttonDelegate.shouldShowSubmitButton()
             val buttonView = (viewType as ButtonComponentViewType)
                 .buttonViewProvider.getButton(context)
+            buttonView.initialize(buttonDelegate)
             buttonView.setText(viewType, componentParams, localizedContext)
             buttonView.setOnClickListener {
                 buttonDelegate.onSubmit()

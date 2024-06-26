@@ -10,9 +10,12 @@ package com.adyen.checkout.googlepay.internal.ui
 
 import android.content.Context
 import android.view.LayoutInflater
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonViewProvider
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 
 internal object GooglePayViewProvider : ViewProvider {
 
@@ -33,6 +36,14 @@ internal object GooglePayViewProvider : ViewProvider {
     }
 }
 
-internal object GooglePayComponentViewType : ComponentViewType {
+internal class GooglePayButtonViewProvider : ButtonViewProvider {
+    override fun getButton(context: Context): PayButton = GooglePayButtonView(context)
+}
+
+internal object GooglePayComponentViewType : ButtonComponentViewType {
+    override val buttonViewProvider: ButtonViewProvider get() = GooglePayButtonViewProvider()
+
     override val viewProvider: ViewProvider = GooglePayViewProvider
+
+    override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

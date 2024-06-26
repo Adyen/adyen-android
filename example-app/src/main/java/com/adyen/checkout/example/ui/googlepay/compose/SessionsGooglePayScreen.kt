@@ -35,13 +35,9 @@ import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.google.pay.button.ButtonTheme
-import com.google.pay.button.ButtonType
-import com.google.pay.button.PayButton
 
 @Composable
 internal fun SessionsGooglePayScreen(
-    useDarkTheme: Boolean,
     googlePayState: SessionsGooglePayState,
     eventsState: SessionsGooglePayEvents,
     onBackPressed: () -> Unit,
@@ -62,7 +58,6 @@ internal fun SessionsGooglePayScreen(
         SessionsGooglePayContent(
             googlePayState = googlePayState,
             googlePayEvents = eventsState,
-            useDarkTheme = useDarkTheme,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -73,7 +68,6 @@ internal fun SessionsGooglePayScreen(
 private fun SessionsGooglePayContent(
     googlePayState: SessionsGooglePayState,
     googlePayEvents: SessionsGooglePayEvents,
-    useDarkTheme: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalContext.current as Activity
@@ -108,13 +102,6 @@ private fun SessionsGooglePayContent(
 
             is SessionsGooglePayState.ShowButton -> {
                 AdyenComponent(googlePayComponent)
-
-                PayButton(
-                    onClick = { googlePayComponent.submit() },
-                    allowedPaymentMethods = googlePayComponent.getGooglePayButtonParameters().allowedPaymentMethods,
-                    theme = if (useDarkTheme) ButtonTheme.Light else ButtonTheme.Dark,
-                    type = ButtonType.Pay,
-                )
             }
 
             is SessionsGooglePayState.FinalResult -> {
