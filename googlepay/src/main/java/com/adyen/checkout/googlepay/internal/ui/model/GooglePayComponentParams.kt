@@ -9,6 +9,7 @@
 package com.adyen.checkout.googlepay.internal.ui.model
 
 import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.googlepay.BillingAddressParameters
@@ -18,6 +19,7 @@ import com.adyen.checkout.googlepay.ShippingAddressParameters
 internal data class GooglePayComponentParams(
     private val commonComponentParams: CommonComponentParams,
     override val amount: Amount,
+    override val isSubmitButtonVisible: Boolean,
     val gatewayMerchantId: String,
     val googlePayEnvironment: Int,
     val totalPriceStatus: String,
@@ -34,4 +36,4 @@ internal data class GooglePayComponentParams(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
-) : ComponentParams by commonComponentParams
+) : ComponentParams by commonComponentParams, ButtonParams
