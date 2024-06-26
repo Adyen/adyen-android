@@ -53,6 +53,7 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.wallet.Wallet
@@ -112,6 +113,7 @@ constructor(
                 Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
 
             val googlePayDelegate = DefaultGooglePayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
@@ -203,6 +205,7 @@ constructor(
                 Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
 
             val googlePayDelegate = DefaultGooglePayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,

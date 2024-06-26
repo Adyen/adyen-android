@@ -20,12 +20,14 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wallet.AutoResolveHelper
@@ -58,6 +60,7 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultGooglePayDelegateTest(
+    @Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
     @Mock private val paymentsClient: PaymentsClient,
 ) {
 
@@ -66,6 +69,7 @@ internal class DefaultGooglePayDelegateTest(
 
     @BeforeEach
     fun beforeEach() {
+        whenever(paymentsClient.loadPaymentData(any())) doReturn Tasks.forResult(TEST_PAYMENT_DATA)
         analyticsManager = TestAnalyticsManager()
         delegate = createGooglePayDelegate()
     }
@@ -181,16 +185,6 @@ internal class DefaultGooglePayDelegateTest(
         }
 
         @Test
-        fun `when component state updates amd the data is valid, then submit event is tracked`() {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            delegate.updateComponentState(TEST_PAYMENT_DATA)
-
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
-        }
-
-        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
@@ -201,6 +195,18 @@ internal class DefaultGooglePayDelegateTest(
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
+        }
+
+        @Test
+        fun `when payment is successful and the data is valid, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.updateComponentState(TEST_PAYMENT_DATA)
+
+            val result = ApiTaskResult(TEST_PAYMENT_DATA, Status.RESULT_SUCCESS)
+            delegate.handlePaymentResult(result)
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test
@@ -248,6 +254,7 @@ internal class DefaultGooglePayDelegateTest(
         ),
     ): DefaultGooglePayDelegate {
         return DefaultGooglePayDelegate(
+            submitHandler = submitHandler,
             observerRepository = PaymentObserverRepository(),
             paymentMethod = PaymentMethod(type = TEST_PAYMENT_METHOD_TYPE),
             order = TEST_ORDER,

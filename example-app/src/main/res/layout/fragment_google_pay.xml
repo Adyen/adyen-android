@@ -8,25 +8,12 @@
 
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <com.google.android.gms.wallet.button.PayButton
-            android:id="@+id/google_pay_button"
-            style="@style/GooglePayButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/primary_button_height"
-            android:layout_margin="@dimen/standard_margin"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
 
         <com.adyen.checkout.ui.core.AdyenComponentView
             android:id="@+id/component_view"

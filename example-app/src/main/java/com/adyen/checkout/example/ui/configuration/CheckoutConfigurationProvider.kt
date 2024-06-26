@@ -89,6 +89,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             }
 
             googlePay {
+                setSubmitButtonVisible(true)
                 setCountryCode(keyValueStorage.getCountry())
             }
 
