@@ -114,6 +114,8 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 paymentsClient = paymentsClient,
+                application = application,
+                googlePayAvailabilityCheck = GooglePayAvailabilityCheck(),
             )
 
             val genericActionDelegate =
@@ -205,6 +207,8 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 paymentsClient = paymentsClient,
+                application = application,
+                googlePayAvailabilityCheck = GooglePayAvailabilityCheck(),
             )
 
             val genericActionDelegate =

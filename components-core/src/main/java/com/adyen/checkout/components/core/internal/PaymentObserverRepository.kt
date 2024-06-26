@@ -30,6 +30,7 @@ class PaymentObserverRepository(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
         callback: (PaymentComponentEvent<T>) -> Unit,
+        availabilityFlow: Flow<Boolean>? = null,
     ) {
         with(observerContainer) {
             removeObservers()
@@ -44,6 +45,10 @@ class PaymentObserverRepository(
 
             submitFlow.observe(lifecycleOwner, coroutineScope) {
                 callback(PaymentComponentEvent.Submit(it))
+            }
+
+            availabilityFlow?.observe(lifecycleOwner, coroutineScope) {
+                callback(PaymentComponentEvent.AvailabilityResult(it))
             }
         }
     }
