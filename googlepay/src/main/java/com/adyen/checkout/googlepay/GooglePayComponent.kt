@@ -96,6 +96,10 @@ class GooglePayComponent internal constructor(
             ?: adyenLog(AdyenLogLevel.ERROR) { "Component is currently not submittable, ignoring." }
     }
 
+    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        adyenLog(AdyenLogLevel.WARN) { "Interaction with GooglePayComponent can't be blocked" }
+    }
+
     override fun isConfirmationRequired(): Boolean = (delegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
 
     /**
@@ -115,10 +119,6 @@ class GooglePayComponent internal constructor(
     @Deprecated("When using submit() this method is no longer needed.", ReplaceWith(""))
     override fun handleActivityResult(resultCode: Int, data: Intent?) {
         googlePayDelegate.handleActivityResult(resultCode, data)
-    }
-
-    override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        adyenLog(AdyenLogLevel.WARN) { "Interaction with GooglePayComponent can't be blocked" }
     }
 
     override fun onCleared() {
