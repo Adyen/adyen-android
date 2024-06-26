@@ -60,6 +60,7 @@ internal class GooglePayComponentParamsMapper(
         return GooglePayComponentParams(
             commonComponentParams = commonComponentParams,
             amount = commonComponentParams.amount ?: DEFAULT_AMOUNT,
+            isSubmitButtonVisible = googlePayConfiguration?.isSubmitButtonVisible ?: false,
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
