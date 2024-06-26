@@ -115,7 +115,7 @@ internal class GooglePayViewModel @Inject constructor(
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
         viewModelScope.launch {
             if (isAvailable) {
-                _viewState.emit(GooglePayViewState.ShowButton)
+                _viewState.emit(GooglePayViewState.ShowComponent)
             } else {
                 _viewState.emit(GooglePayViewState.Error(R.string.google_pay_unavailable_error))
             }

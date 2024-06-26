@@ -46,7 +46,6 @@ class SessionsGooglePayActivity : AppCompatActivity() {
             val isDarkTheme = uiThemeRepository.isDarkTheme()
             ExampleTheme(isDarkTheme) {
                 SessionsGooglePayScreen(
-                    useDarkTheme = isDarkTheme,
                     onBackPressed = { onBackPressedDispatcher.onBackPressed() },
                     googlePayState = googlePayState,
                     eventsState = eventsState,
