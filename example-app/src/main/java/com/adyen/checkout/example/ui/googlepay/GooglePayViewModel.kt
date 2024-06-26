@@ -8,17 +8,13 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
-import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -44,13 +40,11 @@ import com.adyen.checkout.ui.core.R as UICoreR
 @HiltViewModel
 internal class GooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val application: Application,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
-    ComponentCallback<GooglePayComponentState>,
-    ComponentAvailableCallback {
+    ComponentCallback<GooglePayComponentState> {
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
@@ -95,23 +89,9 @@ internal class GooglePayViewModel @Inject constructor(
                 this@GooglePayViewModel,
             ),
         )
-
-        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
     }
 
-    private fun checkGooglePayAvailability(
-        paymentMethod: PaymentMethod,
-        checkoutConfiguration: CheckoutConfiguration,
-    ) {
-        GooglePayComponent.PROVIDER.isAvailable(
-            application = application,
-            paymentMethod = paymentMethod,
-            checkoutConfiguration = checkoutConfiguration,
-            callback = this,
-        )
-    }
-
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
+    override fun onAvailabilityResult(isAvailable: Boolean) {
         viewModelScope.launch {
             if (isAvailable) {
                 _viewState.emit(GooglePayViewState.ShowButton)

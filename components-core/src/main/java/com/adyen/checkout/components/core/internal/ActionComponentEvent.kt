@@ -18,11 +18,15 @@ import com.adyen.checkout.core.PermissionHandlerCallback
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class ActionComponentEvent : ComponentEvent {
     class ActionDetails(val data: ActionComponentData) : ActionComponentEvent()
+
     class Error(val error: ComponentError) : ActionComponentEvent()
+
     class PermissionRequest(
         val requiredPermission: String,
         val permissionCallback: PermissionHandlerCallback
     ) : ActionComponentEvent()
+
+    class AvailabilityResult(val isAvailable: Boolean) : ActionComponentEvent()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -42,9 +46,13 @@ fun <T> ((PaymentComponentEvent<T>) -> Unit).toActionCallback(): (ActionComponen
                 this(
                     PaymentComponentEvent.PermissionRequest(
                         actionComponentEvent.requiredPermission,
-                        actionComponentEvent.permissionCallback
-                    )
+                        actionComponentEvent.permissionCallback,
+                    ),
                 )
+            }
+
+            is ActionComponentEvent.AvailabilityResult -> {
+                this(PaymentComponentEvent.AvailabilityResult(actionComponentEvent.isAvailable))
             }
         }
     }

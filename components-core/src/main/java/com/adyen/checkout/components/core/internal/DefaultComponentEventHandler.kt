@@ -39,6 +39,8 @@ class DefaultComponentEventHandler<T : PaymentComponentState<*>> : ComponentEven
                 event.requiredPermission,
                 event.permissionCallback,
             )
+
+            is PaymentComponentEvent.AvailabilityResult -> callback.onAvailabilityResult(event.isAvailable)
         }
     }
 }

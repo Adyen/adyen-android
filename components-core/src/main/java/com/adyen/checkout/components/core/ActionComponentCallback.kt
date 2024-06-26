@@ -53,4 +53,11 @@ interface ActionComponentCallback {
         // To be optionally overridden
         permissionCallback.onPermissionRequestNotHandled(requiredPermission)
     }
+
+    /**
+     * Should be overridden for components that require additional availability checks, like Google Pay and WeChat pay.
+     *
+     * @param isAvailable If the payment method is available or not.
+     */
+    fun onAvailabilityResult(isAvailable: Boolean) = Unit
 }

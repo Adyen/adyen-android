@@ -74,6 +74,11 @@ class SessionsGiftCardComponentEventHandler(
                 sessionComponentCallback,
             )
 
+            is PaymentComponentEvent.AvailabilityResult -> onAvailabilityResult(
+                event.isAvailable,
+                sessionComponentCallback,
+            )
+
             is PaymentComponentEvent.Submit -> {
                 when (event.state.giftCardAction) {
                     GiftCardAction.CheckBalance -> {
@@ -216,6 +221,13 @@ class SessionsGiftCardComponentEventHandler(
         sessionComponentCallback: SessionsGiftCardComponentCallback
     ) {
         sessionComponentCallback.onPermissionRequest(requiredPermission, permissionCallback)
+    }
+
+    private fun onAvailabilityResult(
+        isAvailable: Boolean,
+        sessionComponentCallback: SessionsGiftCardComponentCallback,
+    ) {
+        sessionComponentCallback.onAvailabilityResult(isAvailable)
     }
 
     private fun onComponentError(

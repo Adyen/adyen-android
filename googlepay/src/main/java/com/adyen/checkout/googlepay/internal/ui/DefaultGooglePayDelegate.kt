@@ -9,6 +9,7 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -57,6 +58,8 @@ internal class DefaultGooglePayDelegate(
     override val componentParams: GooglePayComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val paymentsClient: PaymentsClient,
+    private val application: Application,
+    private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -77,6 +80,9 @@ internal class DefaultGooglePayDelegate(
     private val payEventChannel: Channel<Task<PaymentData>> = bufferedChannel()
     override val payEventFlow: Flow<Task<PaymentData>> = payEventChannel.receiveAsFlow()
 
+    private val availabilityChannel: Channel<Boolean> = bufferedChannel()
+    override val availabilityFlow: Flow<Boolean> = availabilityChannel.receiveAsFlow()
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
@@ -85,6 +91,8 @@ internal class DefaultGooglePayDelegate(
         componentStateFlow.onEach {
             onState(it)
         }.launchIn(coroutineScope)
+
+        checkAvailability()
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -116,6 +124,7 @@ internal class DefaultGooglePayDelegate(
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback,
+            availabilityFlow = availabilityFlow,
         )
     }
 
@@ -152,6 +161,16 @@ internal class DefaultGooglePayDelegate(
             isReady = true,
             paymentData = paymentData,
         )
+    }
+
+    override fun checkAvailability() {
+        googlePayAvailabilityCheck(
+            application,
+            componentParams,
+            paymentsClient,
+        ) { isAvailable ->
+            availabilityChannel.trySend(isAvailable)
+        }
     }
 
     @Deprecated("Deprecated in favor of startGooglePayScreen()", replaceWith = ReplaceWith("startGooglePayScreen()"))

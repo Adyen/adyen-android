@@ -60,6 +60,13 @@ interface SessionComponentCallback<T : PaymentComponentState<*>> : BaseComponent
      */
     fun onStateChanged(state: T) = Unit
 
+    /**
+     * Should be overridden for components that require additional availability checks, like Google Pay and WeChat pay.
+     *
+     * @param isAvailable If the payment method is available or not.
+     */
+    fun onAvailabilityResult(isAvailable: Boolean) = Unit
+
     // API events
 
     /**
