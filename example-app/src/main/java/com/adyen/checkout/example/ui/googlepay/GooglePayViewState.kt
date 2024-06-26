@@ -14,8 +14,6 @@ internal sealed class GooglePayViewState {
 
     data object Loading : GooglePayViewState()
 
-    data object ShowButton : GooglePayViewState()
-
     data object ShowComponent : GooglePayViewState()
 
     data class Error(@StringRes val message: Int) : GooglePayViewState()

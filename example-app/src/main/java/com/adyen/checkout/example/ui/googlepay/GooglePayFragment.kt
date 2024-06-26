@@ -24,8 +24,6 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
-import com.google.android.gms.wallet.button.ButtonConstants.ButtonType
-import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -88,8 +86,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         this.googlePayComponent = googlePayComponent
 
         binding.componentView.attach(googlePayComponent, viewLifecycleOwner)
-
-        loadGooglePayButton()
     }
 
     private fun onViewState(state: GooglePayViewState) {
@@ -99,28 +95,18 @@ class GooglePayFragment : BottomSheetDialogFragment() {
                 binding.errorView.text = getString(state.message)
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = false
             }
 
             GooglePayViewState.Loading -> {
                 binding.errorView.isVisible = false
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = true
-                binding.googlePayButton.isVisible = false
-            }
-
-            GooglePayViewState.ShowButton -> {
-                binding.errorView.isVisible = false
-                binding.componentView.isVisible = false
-                binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = true
             }
 
             GooglePayViewState.ShowComponent -> {
                 binding.errorView.isVisible = false
                 binding.componentView.isVisible = true
                 binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = false
             }
         }
     }
@@ -135,20 +121,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
     private fun onPaymentResult(result: String) {
         Toast.makeText(requireContext(), result, Toast.LENGTH_SHORT).show()
         dismiss()
-    }
-
-    private fun loadGooglePayButton() {
-        val allowedPaymentMethods = googlePayComponent?.getGooglePayButtonParameters()?.allowedPaymentMethods.orEmpty()
-        val buttonOptions = ButtonOptions
-            .newBuilder()
-            .setButtonType(ButtonType.PAY)
-            .setAllowedPaymentMethods(allowedPaymentMethods)
-            .build()
-        binding.googlePayButton.initialize(buttonOptions)
-
-        binding.googlePayButton.setOnClickListener {
-            googlePayComponent?.submit()
-        }
     }
 
     override fun onDestroyView() {
