@@ -104,9 +104,9 @@ public final class com/adyen/checkout/googlepay/GooglePayComponentState : com/ad
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/adyen/checkout/components/core/internal/Configuration {
+public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Ljava/lang/String;Ljava/lang/Integer;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Ljava/util/List;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/BillingAddressParameters;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Ljava/util/List;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/BillingAddressParameters;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun describeContents ()I
 	public final fun getAllowedAuthMethods ()Ljava/util/List;
 	public final fun getAllowedCardNetworks ()Ljava/util/List;
@@ -129,10 +129,11 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/ady
 	public final fun isEmailRequired ()Ljava/lang/Boolean;
 	public final fun isExistingPaymentMethodRequired ()Ljava/lang/Boolean;
 	public final fun isShippingAddressRequired ()Ljava/lang/Boolean;
+	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder {
+public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
@@ -154,6 +155,8 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Builder :
 	public final fun setMerchantInfo (Lcom/adyen/checkout/googlepay/MerchantInfo;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setShippingAddressParameters (Lcom/adyen/checkout/googlepay/ShippingAddressParameters;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setShippingAddressRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
+	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setTotalPriceStatus (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 }
 

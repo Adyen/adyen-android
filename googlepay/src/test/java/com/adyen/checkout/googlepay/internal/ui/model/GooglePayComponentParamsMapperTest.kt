@@ -174,7 +174,7 @@ internal class GooglePayComponentParamsMapperTest {
                 currency = "CAD",
                 value = 123L,
             ),
-            isSubmitButtonVisible = true,
+            isSubmitButtonVisible = false,
         )
 
         assertEquals(expected, params)
