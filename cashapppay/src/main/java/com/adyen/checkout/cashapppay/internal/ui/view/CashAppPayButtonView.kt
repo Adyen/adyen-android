@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.adyen.checkout.cashapppay.databinding.CashAppPayButtonViewBinding
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 
 internal class CashAppPayButtonView @JvmOverloads constructor(
@@ -21,6 +22,8 @@ internal class CashAppPayButtonView @JvmOverloads constructor(
 ) : PayButton(context, attrs, defStyleAttr) {
 
     private val binding = CashAppPayButtonViewBinding.inflate(LayoutInflater.from(context), this)
+
+    override fun initialize(delegate: ButtonDelegate) = Unit
 
     override fun setEnabled(enabled: Boolean) {
         binding.payButton.isEnabled = enabled
