@@ -18,11 +18,11 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
+import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.google.android.gms.wallet.PaymentData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -97,13 +97,25 @@ internal class DefaultGooglePayDelegateTest {
 
             delegate.updateComponentState(paymentData)
 
-            with(awaitItem()) {
-                assertTrue(data.paymentMethod is GooglePayPaymentMethod)
+            val componentState = awaitItem()
+
+            with(componentState) {
                 assertTrue(isInputValid)
                 assertTrue(isReady)
                 assertEquals(paymentData, paymentData)
-                assertEquals(TEST_ORDER, data.order)
             }
+
+            val paymentComponentData = componentState.data
+            with(paymentComponentData) {
+                assertEquals(TEST_ORDER, order)
+            }
+
+            val expectedPaymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
+                paymentData = paymentData,
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                checkoutAttemptId = null,
+            )
+            assertEquals(expectedPaymentMethod, paymentComponentData.paymentMethod)
 
             cancelAndIgnoreRemainingEvents()
         }
