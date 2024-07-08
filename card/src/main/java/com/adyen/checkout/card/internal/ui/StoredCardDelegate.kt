@@ -419,8 +419,6 @@ internal class StoredCardDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun shouldEnableSubmitButton(): Boolean = true
-
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         // no ops
     }

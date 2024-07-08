@@ -178,8 +178,6 @@ internal class DefaultIssuerListDelegate<
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun shouldEnableSubmitButton(): Boolean = true
-
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }

@@ -373,8 +373,6 @@ internal class DefaultACHDirectDebitDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun shouldEnableSubmitButton(): Boolean = true
-
     companion object {
         private const val ENCRYPTION_KEY_FOR_BANK_ACCOUNT_NUMBER = "bankAccountNumber"
         private const val ENCRYPTION_KEY_FOR_BANK_LOCATION_ID = "bankLocationId"

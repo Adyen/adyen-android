@@ -407,48 +407,6 @@ internal class DefaultUPIDelegateTest(
     }
 
     @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when selected mode is INTENT and there is no selected upi intent item, then submit button should not be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = null
-            }
-
-            assertFalse(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is INTENT and there is selected upi intent item, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.GenericApp()
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is VPA, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.VPA
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is QR, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.QR
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-    }
-
-    @Nested
     inner class SubmitHandlerTest {
 
         @Test

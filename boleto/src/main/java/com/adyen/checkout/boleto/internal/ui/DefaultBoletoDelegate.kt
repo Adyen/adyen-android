@@ -303,8 +303,6 @@ internal class DefaultBoletoDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun shouldEnableSubmitButton(): Boolean = true
-
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)

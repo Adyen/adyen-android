@@ -309,12 +309,6 @@ internal class DefaultUPIDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
-    override fun shouldEnableSubmitButton(): Boolean = when (outputData.selectedMode) {
-        UPISelectedMode.INTENT -> outputData.selectedUPIIntentItem != null
-        UPISelectedMode.VPA -> true
-        UPISelectedMode.QR -> true
-    }
-
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
