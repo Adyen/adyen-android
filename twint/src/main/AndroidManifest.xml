@@ -1,14 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!--  This is copied from the Twint AAR. Please check if this needs to be updated when you
-    update the Twint JAR  -->
-    <queries>
-        <intent>
-            <action android:name="ch.twint.action.TWINT_PAYMENT" />
-        </intent>
-        <intent>
-            <action android:name="ch.twint.action.TWINT_UOF_REGISTRATION" />
-        </intent>
-    </queries>
-
-</manifest>
+<manifest />
