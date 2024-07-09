@@ -11,7 +11,7 @@ public final class com/adyen/checkout/twint/TwintActionComponent : androidx/life
 	public static final field PROVIDER Lcom/adyen/checkout/twint/internal/provider/TwintActionComponentProvider;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public synthetic fun getDelegate ()Lcom/adyen/checkout/components/core/internal/ui/ComponentDelegate;
-	public fun getDelegate ()Lcom/adyen/checkout/twint/internal/ui/TwintDelegate;
+	public fun getDelegate ()Lcom/adyen/checkout/twint/internal/ui/TwintActionDelegate;
 	public fun getViewFlow ()Lkotlinx/coroutines/flow/Flow;
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
 }
@@ -67,7 +67,7 @@ public final class com/adyen/checkout/twint/internal/provider/TwintActionCompone
 	public synthetic fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
 	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/twint/TwintActionConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/twint/TwintActionComponent;
 	public synthetic fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/components/core/internal/ui/ActionDelegate;
-	public fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/twint/internal/ui/TwintDelegate;
+	public fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/twint/internal/ui/TwintActionDelegate;
 	public fun getSupportedActionTypes ()Ljava/util/List;
 	public fun providesDetails (Lcom/adyen/checkout/components/core/action/Action;)Z
 }
