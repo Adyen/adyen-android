@@ -34,6 +34,14 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="AdyenCheckout.UPI.NoAppSelectedTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_upi_no_app_selected</item>
+        <item name="android:textColor">@color/textColorNote</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:padding">@dimen/standard_half_margin</item>
+        <item name="android:background">@drawable/warning_disclaimer_background</item>
+    </style>
+
     <style name="AdyenCheckout.UPI.VPAEditText" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_upi_vpa_full</item>
         <item name="android:maxLines">1</item>

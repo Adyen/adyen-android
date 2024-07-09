@@ -14,5 +14,6 @@
     <string name="checkout_upi_continue">Pokračovať</string>
     <string name="checkout_upi_app_manual_input">Zadajte UPI ID</string>
     <string name="checkout_upi_app_other_upi">Iné UPI</string>
+    <string name="checkout_upi_no_app_selected">Pokračujte výberom spôsobu platby</string>
 
 </resources>

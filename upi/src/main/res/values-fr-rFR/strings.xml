@@ -14,5 +14,6 @@
     <string name="checkout_upi_continue">Continuer</string>
     <string name="checkout_upi_app_manual_input">Entrez l\'identifiant UPI</string>
     <string name="checkout_upi_app_other_upi">Autres UPI</string>
+    <string name="checkout_upi_no_app_selected">Sélectionnez un mode de paiement pour continuer</string>
 
 </resources>

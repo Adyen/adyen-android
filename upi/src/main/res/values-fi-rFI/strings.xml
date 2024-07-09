@@ -14,5 +14,6 @@
     <string name="checkout_upi_continue">Jatka</string>
     <string name="checkout_upi_app_manual_input">Syötä UPI-tunnus</string>
     <string name="checkout_upi_app_other_upi">Muu UPI</string>
+    <string name="checkout_upi_no_app_selected">Jatka valitsemalla maksutapa</string>
 
 </resources>
