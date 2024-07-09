@@ -25,7 +25,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
-import com.adyen.checkout.twint.internal.ui.TwintActionDelegate
+import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import org.junit.jupiter.api.Assertions.assertInstanceOf

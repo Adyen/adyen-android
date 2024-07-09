@@ -23,7 +23,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.twint.TwintActionConfiguration
+import com.adyen.checkout.twint.action.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
