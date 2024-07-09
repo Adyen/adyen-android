@@ -308,7 +308,10 @@ internal class DefaultTwintActionDelegateTest {
             arguments(
                 TwintPayResult.TW_B_SUCCESS,
                 TwintTestResult.Success(
-                    ActionComponentData(null, JSONObject().put(DefaultTwintActionDelegate.PAYLOAD_DETAILS_KEY, TEST_PAYLOAD)),
+                    ActionComponentData(
+                        paymentData = null,
+                        details = JSONObject().put(DefaultTwintActionDelegate.PAYLOAD_DETAILS_KEY, TEST_PAYLOAD),
+                    ),
                 ),
             ),
             arguments(
