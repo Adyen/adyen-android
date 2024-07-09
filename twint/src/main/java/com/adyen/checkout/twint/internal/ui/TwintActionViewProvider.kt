@@ -14,13 +14,13 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
 
-internal object TwintViewProvider : ViewProvider {
+internal object TwintActionViewProvider : ViewProvider {
 
     override fun getView(
         viewType: ComponentViewType,
         context: Context,
     ): ComponentView = when (viewType) {
-        TwintComponentViewType -> TwintView(context)
+        TwintActionComponentViewType -> TwintActionView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 
@@ -28,11 +28,11 @@ internal object TwintViewProvider : ViewProvider {
         viewType: ComponentViewType,
         layoutInflater: LayoutInflater
     ): ComponentView = when (viewType) {
-        TwintComponentViewType -> TwintView(layoutInflater)
+        TwintActionComponentViewType -> TwintActionView(layoutInflater)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
 
-internal object TwintComponentViewType : ComponentViewType {
-    override val viewProvider: ViewProvider = TwintViewProvider
+internal object TwintActionComponentViewType : ComponentViewType {
+    override val viewProvider: ViewProvider = TwintActionViewProvider
 }
