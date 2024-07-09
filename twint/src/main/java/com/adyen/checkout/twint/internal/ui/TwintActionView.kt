@@ -14,11 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.twint.databinding.ViewTwintBinding
+import com.adyen.checkout.twint.databinding.ViewTwintActionBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
-internal class TwintView internal constructor(
+internal class TwintActionView internal constructor(
     layoutInflater: LayoutInflater,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -31,18 +31,23 @@ internal class TwintView internal constructor(
         defStyleAttr: Int = 0
     ) : this(LayoutInflater.from(context), attrs, defStyleAttr)
 
-    private var binding = ViewTwintBinding.inflate(layoutInflater, this)
+    private var binding = ViewTwintActionBinding.inflate(layoutInflater, this)
 
-    private var delegate: TwintDelegate? = null
+    private var delegate: TwintActionDelegate? = null
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        require(delegate is TwintDelegate) { "Unsupported delegate type" }
+        require(delegate is TwintActionDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         initializeFragment(delegate, coroutineScope, localizedContext)
     }
 
-    private fun initializeFragment(delegate: TwintDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        binding.fragmentContainer.getFragment<TwintFragment?>()?.initialize(delegate, coroutineScope, localizedContext)
+    private fun initializeFragment(
+        delegate: TwintActionDelegate,
+        coroutineScope: CoroutineScope,
+        localizedContext: Context
+    ) {
+        binding.fragmentContainer.getFragment<TwintActionFragment?>()
+            ?.initialize(delegate, coroutineScope, localizedContext)
     }
 
     override fun highlightValidationErrors() = Unit
