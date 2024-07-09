@@ -31,6 +31,6 @@
     <string name="checkout_permission_not_granted">Povolení se neuděluje</string>
     <string name="checkout_rationale_title_storage_permission">Požádat o povolení úložiště</string>
     <string name="checkout_rationale_message_storage_permission">Chcete-li tento obrázek uložit do vašeho zařízení, musíte povolit oprávnění k uložení</string>
-    <string name="checkout_stored_payment_confirmation_message">Potvrdit platbu</string>
+    <string name="checkout_stored_payment_confirmation_message">Potvrdit platbu %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Zrušit</string>
 </resources>

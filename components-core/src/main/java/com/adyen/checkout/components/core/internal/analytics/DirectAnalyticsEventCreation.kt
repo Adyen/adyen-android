@@ -13,4 +13,5 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @RequiresOptIn("Avoid using AnalyticsEvent directly")
 @Target(AnnotationTarget.CONSTRUCTOR)
+@Retention(AnnotationRetention.BINARY)
 annotation class DirectAnalyticsEventCreation

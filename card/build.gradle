@@ -48,15 +48,13 @@ dependencies {
     api project(':ui-core')
     api project(':sessions-core')
 
-    // If 3DS2 SDK is present.
-    compileOnly libraries.adyen3ds2
-
     // Dependencies
     implementation libraries.material
 
     //Tests
     testImplementation project(':test-core')
     testImplementation testFixtures(project(':components-core'))
+    testImplementation testFixtures(project(':action-core'))
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
     testImplementation testLibraries.kotlinCoroutines
