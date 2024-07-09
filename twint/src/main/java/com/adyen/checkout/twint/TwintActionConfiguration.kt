@@ -10,4 +10,8 @@ package com.adyen.checkout.twint
 
 import com.adyen.checkout.twint.action.TwintActionConfiguration
 
+@Deprecated(
+    "This class has been moved to a new package",
+    ReplaceWith("TwintActionConfiguration", "com.adyen.checkout.twint.action.TwintActionConfiguration"),
+)
 typealias TwintActionConfiguration = TwintActionConfiguration
