@@ -19,33 +19,33 @@ import ch.twint.payment.sdk.Twint
 import ch.twint.payment.sdk.TwintPayResult
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.twint.databinding.FragmentTwintBinding
+import com.adyen.checkout.twint.databinding.FragmentTwintActionBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-internal class TwintFragment : Fragment() {
+internal class TwintActionFragment : Fragment() {
 
-    private var _binding: FragmentTwintBinding? = null
-    private val binding: FragmentTwintBinding get() = requireNotNull(_binding)
+    private var _binding: FragmentTwintActionBinding? = null
+    private val binding: FragmentTwintActionBinding get() = requireNotNull(_binding)
 
-    private var twintDelegate: TwintDelegate? = null
+    private var twintActionDelegate: TwintActionDelegate? = null
 
     private var twint: Twint? = Twint(this, ::onTwintResult)
 
     private var queuedTwintResult: TwintPayResult? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentTwintBinding.inflate(inflater, container, false)
+        _binding = FragmentTwintActionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    fun initialize(delegate: TwintDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
+    fun initialize(delegate: TwintActionDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         adyenLog(AdyenLogLevel.DEBUG) { "initialize" }
 
         binding.paymentInProgressView.initView(delegate, coroutineScope, localizedContext)
 
-        twintDelegate = delegate
+        twintActionDelegate = delegate
         delegate.payEventFlow
             .onEach { twint?.payWithCode(it) }
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -58,7 +58,7 @@ internal class TwintFragment : Fragment() {
 
     private fun onTwintResult(result: TwintPayResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult" }
-        twintDelegate
+        twintActionDelegate
             ?.handleTwintResult(result)
             ?.also {
                 adyenLog(AdyenLogLevel.DEBUG) { "onTwintResult: clearing queue" }

@@ -48,14 +48,14 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
-internal class DefaultTwintDelegate(
+internal class DefaultTwintActionDelegate(
     private val observerRepository: ActionObserverRepository,
     override val savedStateHandle: SavedStateHandle,
     override val componentParams: GenericComponentParams,
     private val paymentDataRepository: PaymentDataRepository,
     private val statusRepository: StatusRepository,
     private val analyticsManager: AnalyticsManager?,
-) : TwintDelegate, SavedStateHandleContainer {
+) : TwintActionDelegate, SavedStateHandleContainer {
 
     private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
     override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
@@ -63,7 +63,7 @@ internal class DefaultTwintDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(TwintActionComponentViewType)
 
     // Not used for Twint action
     override val timerFlow: Flow<TimerData> = flow {}
