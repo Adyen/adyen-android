@@ -71,8 +71,8 @@ dependencies {
     // Checkout
     implementation project(':drop-in')
     implementation project(':components-compose')
-//    implementation "com.adyen.checkout:drop-in:5.5.0"
-//    implementation "com.adyen.checkout:components-compose:5.5.0"
+//    implementation "com.adyen.checkout:drop-in:5.6.0"
+//    implementation "com.adyen.checkout:components-compose:5.6.0"
 
     // Dependencies
     implementation libraries.kotlinCoroutines
