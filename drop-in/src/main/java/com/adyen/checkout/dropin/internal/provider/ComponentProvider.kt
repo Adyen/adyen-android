@@ -97,6 +97,9 @@ import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
+import com.adyen.checkout.twint.TwintComponent
+import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.internal.provider.TwintComponentProvider
 import com.adyen.checkout.upi.UPIComponent
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
@@ -407,6 +410,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<SevenElevenComponentState>,
+            )
+        }
+
+        checkCompileOnly { TwintComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            TwintComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<TwintComponentState>,
             )
         }
 
