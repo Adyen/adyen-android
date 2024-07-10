@@ -16,6 +16,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.internal.ui.model.TwintComponentParams
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -28,7 +30,7 @@ internal class DefaultTwintDelegate(
     private val analyticsManager: AnalyticsManager,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
-    override val componentParams: ComponentParams,
+    override val componentParams: TwintComponentParams,
 ) : TwintDelegate, ButtonDelegate {
 
     // TODO
