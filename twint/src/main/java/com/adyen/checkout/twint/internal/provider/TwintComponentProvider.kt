@@ -50,6 +50,7 @@ import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.TwintConfiguration
 import com.adyen.checkout.twint.internal.ui.DefaultTwintDelegate
 import com.adyen.checkout.twint.internal.ui.TwintDelegate
+import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
 import com.adyen.checkout.twint.toCheckoutConfiguration
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
@@ -87,7 +88,7 @@ constructor(
         assertSupported(paymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = CommonComponentParamsMapper().mapToParams(
+            val componentParams = TwintComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
@@ -95,7 +96,7 @@ constructor(
             )
 
             val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
-                componentParams = componentParams.commonComponentParams,
+                componentParams = componentParams,
                 application = application,
                 source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
                 sessionId = null,
@@ -106,7 +107,7 @@ constructor(
                 analyticsManager = analyticsManager,
                 paymentMethod = paymentMethod,
                 order = order,
-                componentParams = componentParams.commonComponentParams,
+                componentParams = componentParams,
             )
 
             createComponent(
@@ -164,17 +165,17 @@ constructor(
         assertSupported(paymentMethod)
 
         val viewModelFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            val componentParams = CommonComponentParamsMapper().mapToParams(
+            val componentParams = TwintComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
                 componentSessionParams = SessionParamsFactory.create(checkoutSession),
             )
 
-            val httpClient = HttpClientFactory.getHttpClient(componentParams.commonComponentParams.environment)
+            val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
 
             val analyticsManager = analyticsManager ?: AnalyticsManagerFactory().provide(
-                componentParams = componentParams.commonComponentParams,
+                componentParams = componentParams,
                 application = application,
                 source = AnalyticsSource.PaymentComponent(paymentMethod.type.orEmpty()),
                 sessionId = checkoutSession.sessionSetupResponse.id,
@@ -185,14 +186,14 @@ constructor(
                 analyticsManager = analyticsManager,
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
-                componentParams = componentParams.commonComponentParams,
+                componentParams = componentParams,
             )
 
             val sessionComponentEventHandler = createSessionComponentEventHandler(
                 savedStateHandle = savedStateHandle,
                 checkoutSession = checkoutSession,
                 httpClient = httpClient,
-                componentParams = componentParams.commonComponentParams,
+                componentParams = componentParams,
             )
 
             createComponent(
