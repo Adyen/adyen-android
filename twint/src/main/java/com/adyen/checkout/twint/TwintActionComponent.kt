@@ -19,13 +19,13 @@ import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.twint.internal.provider.TwintActionComponentProvider
-import com.adyen.checkout.twint.internal.ui.TwintDelegate
+import com.adyen.checkout.twint.internal.ui.TwintActionDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 class TwintActionComponent internal constructor(
-    override val delegate: TwintDelegate,
+    override val delegate: TwintActionDelegate,
     internal val actionComponentEventHandler: ActionComponentEventHandler,
 ) : ViewModel(),
     ActionComponent,

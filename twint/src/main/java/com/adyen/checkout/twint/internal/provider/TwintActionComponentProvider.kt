@@ -36,8 +36,8 @@ import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.twint.TwintActionComponent
 import com.adyen.checkout.twint.TwintActionConfiguration
-import com.adyen.checkout.twint.internal.ui.DefaultTwintDelegate
-import com.adyen.checkout.twint.internal.ui.TwintDelegate
+import com.adyen.checkout.twint.internal.ui.DefaultTwintActionDelegate
+import com.adyen.checkout.twint.internal.ui.TwintActionDelegate
 import com.adyen.checkout.twint.toCheckoutConfiguration
 
 class TwintActionComponentProvider
@@ -46,7 +46,7 @@ constructor(
     private val analyticsManager: AnalyticsManager? = null,
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val localeProvider: LocaleProvider = LocaleProvider(),
-) : ActionComponentProvider<TwintActionComponent, TwintActionConfiguration, TwintDelegate> {
+) : ActionComponentProvider<TwintActionComponent, TwintActionConfiguration, TwintActionDelegate> {
 
     override fun get(
         savedStateRegistryOwner: SavedStateRegistryOwner,
@@ -77,7 +77,7 @@ constructor(
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
         application: Application,
-    ): TwintDelegate {
+    ): TwintActionDelegate {
         val componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = localeProvider.getLocale(application),
@@ -89,7 +89,7 @@ constructor(
         val statusService = StatusService(httpClient)
         val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
 
-        return DefaultTwintDelegate(
+        return DefaultTwintActionDelegate(
             observerRepository = ActionObserverRepository(),
             savedStateHandle = savedStateHandle,
             componentParams = componentParams,
