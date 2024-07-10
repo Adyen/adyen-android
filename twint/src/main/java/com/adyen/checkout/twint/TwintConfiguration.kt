@@ -27,7 +27,9 @@ import java.util.Locale
  * Configuration class for the [TwintComponent].
  */
 @Parcelize
-class TwintConfiguration private constructor(
+class TwintConfiguration
+@Suppress("LongParameterList")
+private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
     override val clientKey: String,
