@@ -12,18 +12,16 @@
     <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
     <style name="AdyenCheckout.BottomSheetToolbar">
-        <item name="android:layout_marginStart">@dimen/standard_half_margin</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
-        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
     </style>
 
     <style name="AdyenCheckout.Toolbar" />
 
     <style name="AdyenCheckout.Toolbar.Navigation">
         <item name="android:tint">?attr/colorControlNormal</item>
-        <item name="android:paddingStart">@dimen/standard_half_margin</item>
-        <item name="android:paddingEnd">@dimen/standard_half_margin</item>
+        <item name="android:padding">@dimen/standard_margin</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
     </style>
 
     <style name="AdyenCheckout.Toolbar.Navigation.Back" parent="AdyenCheckout.Toolbar.Navigation">
