@@ -23,7 +23,7 @@ internal class TwintView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        // TODO: Initialize view
+        // TODO Initialize view
     }
 
     override fun highlightValidationErrors() = Unit
