@@ -49,8 +49,7 @@ internal class DefaultTwintDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<TwintComponentState> = _componentStateFlow
 
-    // TODO
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<TwintComponentState> = submitHandler.submitFlow
