@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.DefaultComponentEventHandler
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
@@ -105,6 +106,7 @@ constructor(
             val twintDelegate = DefaultTwintDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsManager = analyticsManager,
+                observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
@@ -184,6 +186,7 @@ constructor(
             val cashAppPayDelegate = DefaultTwintDelegate(
                 submitHandler = SubmitHandler(savedStateHandle),
                 analyticsManager = analyticsManager,
+                observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
