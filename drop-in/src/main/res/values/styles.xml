@@ -26,10 +26,12 @@
 
     <style name="AdyenCheckout.Toolbar.Navigation.Back" parent="AdyenCheckout.Toolbar.Navigation">
         <item name="srcCompat">@drawable/ic_back</item>
+        <item name="android:contentDescription">@string/checkout_back</item>
     </style>
 
     <style name="AdyenCheckout.Toolbar.Navigation.Close" parent="AdyenCheckout.Toolbar.Navigation">
         <item name="srcCompat">@drawable/ic_close</item>
+        <item name="android:contentDescription">@string/checkout_close</item>
     </style>
 
     <style name="AdyenCheckout.Toolbar.HeaderTitle">
