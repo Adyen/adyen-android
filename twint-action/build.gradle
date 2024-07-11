@@ -12,14 +12,14 @@ plugins {
     id 'kotlin-parcelize'
 }
 
-ext.mavenArtifactId = "twint"
-ext.mavenArtifactName = "Adyen checkout Twint component"
-ext.mavenArtifactDescription = "Adyen checkout Twint component client for Adyen's Checkout API."
+ext.mavenArtifactId = "twint-action"
+ext.mavenArtifactName = "Adyen checkout Twint action component"
+ext.mavenArtifactDescription = "Adyen checkout Twint action component client for Adyen's Checkout API."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    namespace 'com.adyen.checkout.twint'
+    namespace 'com.adyen.checkout.twint.action'
     compileSdkVersion compile_sdk_version
 
     defaultConfig {
@@ -39,7 +39,10 @@ android {
 
 dependencies {
     // Checkout
-    api project(':twint-action')
+    api project(':ui-core')
+
+    // Dependencies
+    implementation files('libs/TwintSdk-android-8.0.0.jar')
 
     //Tests
     testImplementation project(':test-core')

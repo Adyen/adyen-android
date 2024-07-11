@@ -6,7 +6,7 @@
  * Created by oscars on 7/5/2024.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,7 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.twint.databinding.ViewTwintActionBinding
+import com.adyen.checkout.twint.action.databinding.ViewTwintActionBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 

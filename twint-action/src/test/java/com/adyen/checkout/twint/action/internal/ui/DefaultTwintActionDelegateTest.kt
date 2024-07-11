@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 21/11/2023.
+ * Created by oscars on 9/7/2024.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import android.app.Activity
 import androidx.lifecycle.SavedStateHandle

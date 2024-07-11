@@ -1,4 +1,12 @@
-package com.adyen.checkout.twint
+/*
+ * Copyright (c) 2024 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 9/7/2024.
+ */
+
+package com.adyen.checkout.twint.action
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration

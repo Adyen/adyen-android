@@ -6,7 +6,7 @@
  * Created by oscars on 31/10/2023.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import android.content.Context
 import android.view.LayoutInflater

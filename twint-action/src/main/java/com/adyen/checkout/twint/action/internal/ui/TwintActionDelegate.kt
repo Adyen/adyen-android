@@ -6,7 +6,7 @@
  * Created by oscars on 18/10/2023.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import androidx.annotation.RestrictTo
 import ch.twint.payment.sdk.TwintPayResult

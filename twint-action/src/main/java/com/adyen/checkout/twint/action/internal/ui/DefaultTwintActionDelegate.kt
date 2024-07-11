@@ -6,7 +6,7 @@
  * Created by oscars on 20/10/2023.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import android.app.Activity
 import androidx.annotation.VisibleForTesting

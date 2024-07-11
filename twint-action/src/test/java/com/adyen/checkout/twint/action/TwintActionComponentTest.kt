@@ -1,4 +1,12 @@
-package com.adyen.checkout.twint
+/*
+ * Copyright (c) 2024 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 9/7/2024.
+ */
+
+package com.adyen.checkout.twint.action
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
@@ -10,10 +18,9 @@ import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.twint.internal.ui.TwintActionComponentViewType
-import com.adyen.checkout.twint.internal.ui.TwintActionDelegate
+import com.adyen.checkout.twint.action.internal.ui.TwintActionComponentViewType
+import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,7 +34,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class TwintActionComponentTest(
     @Mock private val twintActionDelegate: TwintActionDelegate,

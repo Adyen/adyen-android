@@ -6,7 +6,7 @@
  * Created by oscars on 20/10/2023.
  */
 
-package com.adyen.checkout.twint.internal.provider
+package com.adyen.checkout.twint.action.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -34,11 +34,11 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
-import com.adyen.checkout.twint.TwintActionComponent
-import com.adyen.checkout.twint.TwintActionConfiguration
-import com.adyen.checkout.twint.internal.ui.DefaultTwintActionDelegate
-import com.adyen.checkout.twint.internal.ui.TwintActionDelegate
-import com.adyen.checkout.twint.toCheckoutConfiguration
+import com.adyen.checkout.twint.action.TwintActionComponent
+import com.adyen.checkout.twint.action.TwintActionConfiguration
+import com.adyen.checkout.twint.action.internal.ui.DefaultTwintActionDelegate
+import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
+import com.adyen.checkout.twint.action.toCheckoutConfiguration
 
 class TwintActionComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -6,7 +6,7 @@
  * Created by oscars on 7/5/2024.
  */
 
-package com.adyen.checkout.twint.internal.ui
+package com.adyen.checkout.twint.action.internal.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -19,7 +19,7 @@ import ch.twint.payment.sdk.Twint
 import ch.twint.payment.sdk.TwintPayResult
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.twint.databinding.FragmentTwintActionBinding
+import com.adyen.checkout.twint.action.databinding.FragmentTwintActionBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

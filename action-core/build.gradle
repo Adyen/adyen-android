@@ -45,14 +45,14 @@ dependencies {
     api project(':await')
     api project(':qr-code')
     api project(':redirect')
-    compileOnly project(':twint')
+    compileOnly project(':twint-action')
     api project(':voucher')
     compileOnly project(':wechatpay')
 
     //Tests
     testImplementation project(':3ds2')
     testImplementation project(':test-core')
-    testImplementation project(':twint')
+    testImplementation project(':twint-action')
     testImplementation project(':wechatpay')
     testImplementation testFixtures(project(':components-core'))
     testImplementation testLibraries.json
