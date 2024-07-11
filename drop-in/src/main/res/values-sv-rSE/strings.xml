@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">För att kunna spara bilden på din enhet måste du aktivera lagringsbehörighet</string>
     <string name="checkout_stored_payment_confirmation_message">Bekräfta %s-betalning</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Avbryt</string>
+    <string name="checkout_close">Stäng</string>
+    <string name="checkout_back">Tillbaka</string>
+
 </resources>

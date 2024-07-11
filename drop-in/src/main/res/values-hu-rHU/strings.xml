@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Ahhoz, hogy a képet el tudja menteni a készülékére, hozzáférési engedélyt kell adnia a tárhelyhez</string>
     <string name="checkout_stored_payment_confirmation_message">%s használatával történő fizetés jóváhagyása</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Mégse</string>
+    <string name="checkout_close">Bezárás</string>
+    <string name="checkout_back">Vissza</string>
+
 </resources>

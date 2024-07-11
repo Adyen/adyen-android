@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">この画像をデバイスに保存するには、ストレージ権限を有効にする必要があります</string>
     <string name="checkout_stored_payment_confirmation_message">%sのお支払いをご確認下さい</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">キャンセル</string>
+    <string name="checkout_close">終了</string>
+    <string name="checkout_back">戻る</string>
+
 </resources>

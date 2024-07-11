@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Για να αποθηκεύσετε αυτήν την εικόνα στη συσκευή σας, πρέπει να εκχωρήσετε δικαίωμα για τον χώρο αποθήκευσης</string>
     <string name="checkout_stored_payment_confirmation_message">Επιβεβαίωση πληρωμής μέσω %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Άκυρο</string>
+    <string name="checkout_close">Κλείσιμο</string>
+    <string name="checkout_back">Πίσω</string>
+
 </resources>

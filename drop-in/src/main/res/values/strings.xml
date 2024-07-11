@@ -33,6 +33,9 @@
     <string name="checkout_rationale_message_storage_permission">In order to save this image to your device, you need to enable storage permission</string>
     <string name="checkout_stored_payment_confirmation_message">Confirm %s payment</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancel</string>
+    <string name="checkout_close">Close</string>
+    <string name="checkout_back">Back</string>
+
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
     <string name="last_four_digits_format" translatable="false">•••• %s</string>

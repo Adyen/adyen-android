@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">For at kunne gemme dette billede på din enhed skal du aktivere lagringstilladelse</string>
     <string name="checkout_stored_payment_confirmation_message">Bekræft %s-betaling</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuller</string>
+    <string name="checkout_close">Luk</string>
+    <string name="checkout_back">Tilbage</string>
+
 </resources>

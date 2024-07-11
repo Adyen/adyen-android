@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">必須啟用儲存空間權限，才能將此影像儲存到您的裝置</string>
     <string name="checkout_stored_payment_confirmation_message">確認 %s 付款</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
+    <string name="checkout_close">關閉</string>
+    <string name="checkout_back">返回</string>
+
 </resources>
