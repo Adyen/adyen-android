@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Kaardi number</string>
+    <string name="checkout_card_holder_hint">Nimi kaardil</string>
+    <string name="checkout_card_expiry_date_hint">Aegumise kuupäev</string>
+    <string name="checkout_card_expiry_date_optional_hint">Aegumiskuupäev (valikuline)</string>
+    <string name="checkout_card_security_code_hint">Turvakood</string>
+    <string name="checkout_card_security_code_optional_hint">Turvakood (valikuline)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kaardiomaniku sünnikuupäev (AAKKPP) või ettevõtte registreerimisnumber (10 numbrit)</string>
+    <string name="checkout_kcp_tax_number_hint">Ettevõtte registreerimisnumber (10 numbrit)</string>
+    <string name="checkout_kcp_password_hint">Kaardi parooli esimesed 2 numbrit</string>
+
+    <string name="checkout_card_number_not_valid">Vale kaardinumber</string>
+    <string name="checkout_expiry_date_not_valid">Vale aegumiskuupäev</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Sisestage õige aegumiskuupäev</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Sisestage õige aegumiskuupäev</string>
+    <string name="checkout_security_code_not_valid">Vale CVC/CVV vorming</string>
+    <string name="checkout_holder_name_not_valid">Omaniku nimi on vale</string>
+    <string name="checkout_social_security_number_not_valid">Vale sisend</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Vale kaardiomaniku sünnikuupäev või ettevõtte registreerimisnumber</string>
+    <string name="checkout_kcp_password_invalid">Vale parool</string>
+    <string name="checkout_card_postal_not_valid">Sisestatud andmed on vales vormingus.</string>
+    <string name="checkout_card_brand_not_supported">Sisestatud kaardi kaubamärki ei toetata</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">Kaubamärki %s ei toetata</string>
+
+    <string name="checkout_card_installments_title">Osamaksete arv</string>
+    <string name="checkout_card_installments_option_regular">%s kuud</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$s x %2$s</string>
+    <string name="checkout_card_installments_option_one_time">Ühekordne makse</string>
+    <string name="checkout_card_installments_option_revolving">Vaba tagasimakse</string>
+
+    <string name="store_payment_method">Salvesta mu järgmise makse jaoks</string>
+</resources>

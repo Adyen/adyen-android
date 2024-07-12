@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Compte bancari</string>
+    <string name="checkout_ach_bank_account_holder_name">Nom del titular del compte</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">El nom del titular del compte no és vàlid</string>
+    <string name="checkout_ach_bank_account_number">Número de compte</string>
+    <string name="checkout_ach_bank_account_number_invalid">El número de compte no és vàlid</string>
+    <string name="checkout_ach_bank_account_location">Número d\'encaminament ABA</string>
+    <string name="checkout_ach_bank_account_location_invalid">El número d\'encaminament ABA no és vàlid</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Desa\'l per al meu proper pagament</string>
+
+</resources>

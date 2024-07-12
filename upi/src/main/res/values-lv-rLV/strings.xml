@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">Kā vēlaties izmantot UPI?</string>
+    <string name="checkout_upi_vpa_validation">Ievadiet pareizu virtuālo maksājumu adresi</string>
+    <string name="checkout_upi_qr_generation">Lai pabeigtu maksājumu, ģenerējiet QR kodu, kuru varat lejupielādēt vai saglabāt kā ekrānuzņēmumu, un augšupielādējiet to UPI lietotnē.</string>
+    <string name="checkout_upi_continue">Turpināt</string>
+    <string name="checkout_upi_app_manual_input">Ievadiet UPI ID</string>
+    <string name="checkout_upi_app_other_upi">Citi UPI</string>
+    <string name="checkout_upi_no_app_selected">Lai turpinātu, atlasiet maksājuma veidu</string>
+
+</resources>

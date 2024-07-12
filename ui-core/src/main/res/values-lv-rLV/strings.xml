@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Maksāt</string>
+    <string name="pay_button_with_value">Maksāt %s</string>
+    <string name="confirm_preauthorization">Apstipriniet iepriekšēju autorizāciju</string>
+
+    <string name="error_dialog_title">Kļūda</string>
+    <string name="error_dialog_button">Labi</string>
+    <string name="component_error">Kaut kas nav pareizi.</string>
+
+    <string name="paymentInProgressView_title">Maksājuma process joprojām ir aktīvs</string>
+    <string name="paymentInProgressView_loadingText">Gaidām pabeigšanu…</string>
+    <string name="paymentInProgressView_cancelButton">Atcelt</string>
+
+    <string name="checkout_address_form_field_not_valid">Nederīga ievade</string>
+    <string name="checkout_social_security_number_not_valid">Nederīga ievade</string>
+
+    <string name="checkout_address_form_billing_address_title">Norēķinu adrese</string>
+    <string name="checkout_address_form_street_hint">Iela</string>
+    <string name="checkout_address_form_address_hint">Adrese</string>
+    <string name="checkout_address_form_house_number_hint">Mājas numurs</string>
+    <string name="checkout_address_form_apartment_suite_hint">Apartaments/dzīvoklis</string>
+    <string name="checkout_address_form_city_hint">Pilsēta</string>
+    <string name="checkout_address_form_country_hint">Valsts/reģions</string>
+    <string name="checkout_address_form_states_hint">Valsts</string>
+    <string name="checkout_address_postal_code_hint">Pasta indekss</string>
+    <string name="checkout_address_form_zip_code_hint">Pasta indekss</string>
+    <string name="checkout_address_form_province_territory_hint">Apgabals vai teritorija</string>
+    <string name="checkout_address_form_city_town_hint">Pilsēta/ciems</string>
+
+    <string name="checkout_address_form_street_hint_optional">Iela (pēc izvēles)</string>
+    <string name="checkout_address_form_address_hint_optional">Adrese (pēc izvēles)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Mājas numurs (pēc izvēles)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Apartaments/dzīvoklis (pēc izvēles)</string>
+    <string name="checkout_address_form_city_hint_optional"> Pilsēta (pēc izvēles)</string>
+    <string name="checkout_address_form_country_hint_optional">Valsts/reģions (pēc izvēles)</string>
+    <string name="checkout_address_form_states_hint_optional">Valsts (pēc izvēles)</string>
+    <string name="checkout_address_postal_code_hint_optional">Pasta indekss (pēc izvēles)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Pasta indekss (pēc izvēles)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Apgabals vai teritorija (pēc izvēles)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Pilsēta/ciems (pēc izvēles)</string>
+
+    <string name="checkout_address_lookup_hint">Meklējiet savu adresi</string>
+    <string name="checkout_address_lookup_initial">Nevarat atrast savu adresi?</string>
+    <string name="checkout_address_lookup_initial_description">Jūs varat jebkurā laikā #ievadīt savu adresi manuāli#</string>
+    <string name="checkout_address_lookup_empty">Rezultāti nav atrasti</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' nekam neatbilst, mēģiniet vēlreiz vai izmantojiet #manuālu adreses ievadi#.</string>
+    <string name="checkout_address_lookup_enter_manually">Ievadiet adresi manuāli</string>
+    <string name="checkout_address_lookup_submit">Izmantot šo adresi</string>
+    <string name="checkout_address_lookup_validation_empty">Nepieciešama adrese</string>
+</resources>

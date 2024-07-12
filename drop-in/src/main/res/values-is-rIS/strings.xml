@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="payment_methods_header">Greiðslumátar</string>
+    <string name="payment_failed">Villa við greiðslusendingu. Reyndu aftur.</string>
+    <string name="action_failed">Villa kom upp við vinnslu á greiðslunni þinni. Reyndu aftur seinna.</string>
+    <string name="time_out_error">Beiðni rann út á tíma. Reyndu aftur.</string>
+    <string name="unknown_error">Óþekkt villa kom upp</string>
+    <string name="store_payment_methods_header">Greiðslumátarnir þínir</string>
+    <string name="other_payment_methods">Veldu annan máta</string>
+    <string name="continue_button">Halda áfram</string>
+    <string name="change_payment_method">Breyta greiðslumáta</string>
+    <string name="checkout_giftcard_error_zero_balance">Þetta gjafakort hefur enga innistæðu</string>
+    <string name="checkout_giftcard_error_currency">Gjafakort gilda aðeins í þeim gjaldmiðli sem þau voru gefin út í</string>
+    <string name="checkout_giftcard_remaining_balance_text">Eftirstöðvar verða %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Veldu greiðslumáta fyrir útistandandi %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Gjafakorti bætt við</string>
+    <string name="checkout_giftcard_remove_button">Fjarlægja</string>
+    <string name="checkout_giftcard_max_transaction_limit">Hám. %s leyfð fyrir hverja færslu á þessu gjafakorti</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Staðfesta að kort hafi verið fjarlægt</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Fjarlægja gjafakort sem bætt var við?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Já, fjarlægja</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Hætta við</string>
+    <string name="checkout_remove_stored_payment_method_body">Fjarlægja geymdan greiðslumáta</string>
+    <string name="checkout_permission_not_granted">Leyfi er ekki veitt</string>
+    <string name="checkout_rationale_title_storage_permission">Biðja um geymsluleyfi</string>
+    <string name="checkout_rationale_message_storage_permission">Til að vista þessa mynd í tækinu þínu þarftu að virkja geymsluheimild</string>
+    <string name="checkout_stored_payment_confirmation_message">Staðfesta %s greiðslu</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Hætta við</string>
+</resources>

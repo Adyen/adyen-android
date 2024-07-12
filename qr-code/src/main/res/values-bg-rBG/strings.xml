@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Копирайте кода, след това отворете приложението с регистрирания ключ PIX, изберете „Плащане с PIX“ и поставете кода там.</string>
+    <string name="checkout_qr_code_upi">Направете снимка на екрана, за да я качите в приложението UPI, или сканирайте QR кода с предпочитаното от Вас приложение UPI, за да завършите плащането.</string>
+    <string name="checkout_qr_code_copy_button">Копиране на кода</string>
+    <string name="checkout_qr_code_timer_text">Имате %s за плащане</string>
+    <string name="checkout_qr_code_copied_toast">Код, копиран в клипборда</string>
+    <string name="checkout_qr_code_duit_now">Направете екранна снимка или запазете QR кода, отворете банковото си приложение и качете QR кода, за да проверите подробностите и да завършите плащането.</string>
+    <string name="checkout_qr_code_prompt_pay">Направете екранна снимка или запазете QR кода, отворете банковото си приложение и качете QR кода, за да проверите подробностите и да завършите плащането.</string>
+    <string name="checkout_qr_code_pay_now">Направете екранна снимка или запазете QR кода, отворете банковото си приложение и качете QR кода, за да проверите подробностите и да завършите плащането.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Този QR код е валиден за %s</string>
+    <string name="checkout_qr_code_save_button">Запазване като изображение</string>
+    <string name="checkout_qr_code_download_image_succeeded">Изтеглянето на изображението бе успешно</string>
+    <string name="checkout_qr_code_download_image_failed">Изтеглянето на изображението не бе успешно</string>
+    <string name="checkout_qr_code_permission_denied">Разрешението не е дадено</string>
+</resources>

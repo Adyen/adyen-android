@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Pangakonto omaniku nimi</string>
+    <string name="bacs_account_number_hint">Pangakonto number</string>
+    <string name="bacs_sort_code_hint">Sortimiskood</string>
+    <string name="bacs_shopper_email_hint">E-posti aadress</string>
+
+    <string name="bacs_holder_name_invalid">Vale pangakonto omaniku nimi</string>
+    <string name="bacs_account_number_invalid">Vale pangakonto number</string>
+    <string name="bacs_sort_code_invalid">Vale sortimiskood</string>
+    <string name="bacs_shopper_email_invalid">Vale e-posti aadress</string>
+
+    <string name="bacs_consent_account">Kinnitan, et konto on minu nimel ja olen ainus allkirjaõiguslik isik, kes peab sellel kontol otsekorralduse kinnitama.</string>
+    <string name="bacs_consent_amount">Nõustun, et ülaltoodud summa võetakse minu pangakontolt maha.</string>
+    <string name="bacs_consent_amount_specified">Nõustun, et %s võetakse minu pangakontolt maha.</string>
+    <string name="bacs_consent_invalid">See väli nõuab teie tegevust</string>
+
+    <string name="bacs_continue">Jätka</string>
+    <string name="bacs_confirm_and_pay">Kinnita ja maksa</string>
+</resources>

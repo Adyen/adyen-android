@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Nom</string>
+    <string name="checkout_econtext_last_name_hint">Cognom</string>
+    <string name="checkout_econtext_phone_number_hint">Número de telèfon</string>
+    <string name="checkout_econtext_shopper_email_hint">Adreça de correu electrònic</string>
+
+    <string name="checkout_econtext_first_name_invalid">Introduïu el vostre nom</string>
+    <string name="checkout_econtext_last_name_invalid">Introduïu el vostre cognom</string>
+    <string name="checkout_econtext_phone_number_invalid">El número de telèfon no és vàlid</string>
+    <string name="checkout_econtext_shopper_email_invalid">L\'adreça electrònica no és vàlida</string>
+</resources>

@@ -1,0 +1,12 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 28/8/2022.
+  -->
+
+<resources>
+    <string name="checkout_online_banking_terms_and_conditions_text" formatted="false">Með því að halda áfram samþykkir þú %#skilmálana%#</string>
+    <string name="checkout_online_banking_hint">Veldu bankann þinn</string>
+</resources>

@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Kartes numurs</string>
+    <string name="checkout_card_holder_hint">Vārds uz kartes</string>
+    <string name="checkout_card_expiry_date_hint">Derīguma termiņš</string>
+    <string name="checkout_card_expiry_date_optional_hint">Derīguma termiņš (pēc izvēles)</string>
+    <string name="checkout_card_security_code_hint">Drošības kods</string>
+    <string name="checkout_card_security_code_optional_hint">Drošības kods (pēc izvēles)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kartes īpašnieka dzimšanas datums (GGMMDD) vai uzņēmuma reģistrācijas numurs (10 cipari)</string>
+    <string name="checkout_kcp_tax_number_hint">Uzņēmuma reģistrācijas numurs (10 cipari)</string>
+    <string name="checkout_kcp_password_hint">Kartes paroles pirmie 2 cipari</string>
+
+    <string name="checkout_card_number_not_valid">Nederīgs kartes numurs</string>
+    <string name="checkout_expiry_date_not_valid">Nederīgs derīguma termiņš</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Ievadiet derīgu derīguma termiņu</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Ievadiet derīgu derīguma termiņu</string>
+    <string name="checkout_security_code_not_valid">Nederīgs CVC/CVV formāts</string>
+    <string name="checkout_holder_name_not_valid">Īpašnieka vārds nav derīgs</string>
+    <string name="checkout_social_security_number_not_valid">Nederīga ievade</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Nederīgs kartes īpašnieka dzimšanas datums vai uzņēmuma reģistrācijas numurs</string>
+    <string name="checkout_kcp_password_invalid">Nederīga parole</string>
+    <string name="checkout_card_postal_not_valid">Ievades formāts nav derīgs.</string>
+    <string name="checkout_card_brand_not_supported">Ievadītais kartes zīmols netiek atbalstīts</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s netiek atbalstīts</string>
+
+    <string name="checkout_card_installments_title">Iemaksu skaits</string>
+    <string name="checkout_card_installments_option_regular">%s mēneši</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
+    <string name="checkout_card_installments_option_one_time">Vienreizējs maksājums</string>
+    <string name="checkout_card_installments_option_revolving">Atkārtots maksājums</string>
+
+    <string name="store_payment_method">Saglabāt manam nākamajam maksājumam</string>
+</resources>

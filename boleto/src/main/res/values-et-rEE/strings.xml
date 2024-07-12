@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 3/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Isiklikud andmed</string>
+    <string name="checkout_boleto_first_name">Eesnimi</string>
+    <string name="checkout_boleto_last_name">Perekonnanimi</string>
+    <string name="checkout_boleto_send_email_copy">Saada koopia minu e-posti aadressile</string>
+    <string name="checkout_boleto_email">E-posti aadress</string>
+    <string name="checkout_boleto_generate_btn_label">Loo Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Sisestage oma eesnimi</string>
+    <string name="checkout_boleto_last_name_invalid">Sisestage oma perekonnanimi</string>
+    <string name="checkout_boleto_email_invalid">Vale e-posti aadress</string>
+</resources>

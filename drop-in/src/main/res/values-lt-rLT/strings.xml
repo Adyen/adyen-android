@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="payment_methods_header">Mokėjimo būdai</string>
+    <string name="payment_failed">Klaida siunčiant mokėjimą. Bandykite dar kartą.</string>
+    <string name="action_failed">Apdorojant jūsų mokėjimą įvyko klaida. Bandykite dar kartą vėliau.</string>
+    <string name="time_out_error">Baigėsi užklausai skirtas laikas. Bandykite dar kartą.</string>
+    <string name="unknown_error">Įvyko nežinoma klaida</string>
+    <string name="store_payment_methods_header">Jūsų mokėjimo būdai</string>
+    <string name="other_payment_methods">Pasirinkite kitą būdą</string>
+    <string name="continue_button">Tęsti</string>
+    <string name="change_payment_method">Keisti mokėjimo būdą</string>
+    <string name="checkout_giftcard_error_zero_balance">Šios dovanų kortelės likutis yra nulinis</string>
+    <string name="checkout_giftcard_error_currency">Dovanų kortelės galioja tik ta valiuta, kuria jos buvo išduotos</string>
+    <string name="checkout_giftcard_remaining_balance_text">Likęs likutis bus %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Pasirinkite mokėjimo būdą likusiam %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Pridėta dovanų kortelė</string>
+    <string name="checkout_giftcard_remove_button">Pašalinti</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maks. Vienai šios dovanų kortelės operacijai leidžiama %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Patvirtinkite kortelės išėmimą</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Pašalinti pridėtas dovanų korteles?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Taip, pašalinti</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Atšaukti</string>
+    <string name="checkout_remove_stored_payment_method_body">Pašalinti išsaugotą mokėjimo būdą</string>
+    <string name="checkout_permission_not_granted">Leidimas nesuteiktas</string>
+    <string name="checkout_rationale_title_storage_permission">Prašyti leidimo išsaugoti</string>
+    <string name="checkout_rationale_message_storage_permission">Norėdami išsaugoti šį vaizdą savo įrenginyje, turite įjungti leidimą išsaugoti</string>
+    <string name="checkout_stored_payment_confirmation_message">Patvirtinti %s mokėjimą</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Atšaukti</string>
+</resources>

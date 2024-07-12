@@ -1,0 +1,36 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="payment_methods_header">Makseviisid</string>
+    <string name="payment_failed">Tõrge makse saatmisel. Proovige uuesti.</string>
+    <string name="action_failed">Teie makse töötlemisel ilmnes tõrge. Proovige hiljem uuesti.</string>
+    <string name="time_out_error">Päring aegus. Proovige uuesti.</string>
+    <string name="unknown_error">Ilmnes tundmatu tõrge</string>
+    <string name="store_payment_methods_header">Teie makseviisid</string>
+    <string name="other_payment_methods">Valige muu meetod</string>
+    <string name="continue_button">Jätka</string>
+    <string name="change_payment_method">Muuda makseviisi</string>
+    <string name="checkout_giftcard_error_zero_balance">Selle kinkekaardi jääk on null</string>
+    <string name="checkout_giftcard_error_currency">Kinkekaardid kehtivad ainult valuutas, milles need väljastati</string>
+    <string name="checkout_giftcard_remaining_balance_text">Jääk on %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Valige makseviis ülejäänud %s jaoks</string>
+    <string name="checkout_giftcard_payment_methods_header">Lisatud kinkekaart</string>
+    <string name="checkout_giftcard_remove_button">Eemalda</string>
+    <string name="checkout_giftcard_max_transaction_limit">Selle kinkekaardi limiit tehingu kohta on %s</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">Kinnita kaardi eemaldamine</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">Kas eemaldada lisatud kinkekaardid?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Jah, eemalda</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Katkesta</string>
+    <string name="checkout_remove_stored_payment_method_body">Eemalda salvestatud makseviis</string>
+    <string name="checkout_permission_not_granted">Luba ei antud</string>
+    <string name="checkout_rationale_title_storage_permission">Salvestusruumi loa taotlemine</string>
+    <string name="checkout_rationale_message_storage_permission">Et seda pilti oma seadmesse salvestada, peate andma salvestamiseks loa</string>
+    <string name="checkout_stored_payment_confirmation_message">Kinnitage makse (%s)</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Katkesta</string>
+</resources>
