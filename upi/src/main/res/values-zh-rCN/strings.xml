@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">输入 UPI ID</string>
     <string name="checkout_upi_app_other_upi">其他 UPI</string>
     <string name="checkout_upi_no_app_selected">选择支付方式继续</string>
-
 </resources>

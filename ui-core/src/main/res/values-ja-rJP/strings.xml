@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">住所を手動で入力してください</string>
     <string name="checkout_address_lookup_submit">この住所を使用する</string>
     <string name="checkout_address_lookup_validation_empty">住所が必要です</string>
-
 </resources>

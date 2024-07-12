@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">Zadejte adresu ručně</string>
     <string name="checkout_address_lookup_submit">Použijte tuto adresu</string>
     <string name="checkout_address_lookup_validation_empty">Požadovaná adresa</string>
-
 </resources>

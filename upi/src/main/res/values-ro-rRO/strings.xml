@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Completați identificatorul UPI</string>
     <string name="checkout_upi_app_other_upi">Alte UPI</string>
     <string name="checkout_upi_no_app_selected">Selectați o metodă de plată pentru a continua</string>
-
 </resources>

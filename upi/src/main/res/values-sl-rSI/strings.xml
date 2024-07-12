@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Vnesite UPI ID</string>
     <string name="checkout_upi_app_other_upi">Drugi UPI</string>
     <string name="checkout_upi_no_app_selected">Za nadaljevanje izberite način plačila</string>
-
 </resources>

@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">수동으로 주소 입력</string>
     <string name="checkout_address_lookup_submit">이 주소 사용</string>
     <string name="checkout_address_lookup_validation_empty">주소 필수</string>
-
 </resources>

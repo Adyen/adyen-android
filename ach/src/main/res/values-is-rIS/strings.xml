@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">ABA-bankanúmer</string>
     <string name="checkout_ach_bank_account_location_invalid">Ógilt ABA-bankanúmer</string>
     <string name="checkout_ach_store_payment_method_switch_text">Spara fyrir næstu greiðslu</string>
-
 </resources>

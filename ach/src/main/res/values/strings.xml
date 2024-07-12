@@ -15,7 +15,6 @@
     <string name="checkout_ach_bank_account_location">ABA routing number</string>
     <string name="checkout_ach_bank_account_location_invalid">Invalid ABA routing number</string>
     <string name="checkout_ach_store_payment_method_switch_text">Save for my next payment</string>
-
     <!-- Untranslatable strings -->
     <string name="checkout_ach_bank_account_number_4digit" translatable="false">•••• %s</string>
 </resources>

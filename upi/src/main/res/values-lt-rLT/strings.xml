@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Įveskite UPI ID</string>
     <string name="checkout_upi_app_other_upi">Kitos UPI</string>
     <string name="checkout_upi_no_app_selected">Norėdami tęsti, pasirinkite mokėjimo metodą</string>
-
 </resources>

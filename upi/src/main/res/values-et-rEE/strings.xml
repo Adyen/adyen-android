@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Sisestage UPI ID</string>
     <string name="checkout_upi_app_other_upi">Muu UPI</string>
     <string name="checkout_upi_no_app_selected">Jätkamiseks valige makseviis</string>
-
 </resources>

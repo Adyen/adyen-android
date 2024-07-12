@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">ABA pangakood</string>
     <string name="checkout_ach_bank_account_location_invalid">Vale ABA pangakood</string>
     <string name="checkout_ach_store_payment_method_switch_text">Salvesta mu järgmise makse jaoks</string>
-
 </resources>

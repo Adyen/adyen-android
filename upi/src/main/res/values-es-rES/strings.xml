@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Introduzca el ID de la UPI</string>
     <string name="checkout_upi_app_other_upi">Otras UPI</string>
     <string name="checkout_upi_no_app_selected">Selecciona un método de pago para continuar</string>
-
 </resources>

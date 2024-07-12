@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Εισαγωγή αναγνωριστικού UPI</string>
     <string name="checkout_upi_app_other_upi">Άλλο UPI</string>
     <string name="checkout_upi_no_app_selected">Επιλέξτε μια μέθοδο πληρωμής για να συνεχίσετε</string>
-
 </resources>

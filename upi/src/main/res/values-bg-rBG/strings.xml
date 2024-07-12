@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Въведете UPI ID</string>
     <string name="checkout_upi_app_other_upi">Други UPI</string>
     <string name="checkout_upi_no_app_selected">Изберете метод на плащане, за да продължите</string>
-
 </resources>
