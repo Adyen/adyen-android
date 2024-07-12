@@ -35,5 +35,4 @@
     <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
     <string name="checkout_close">關閉</string>
     <string name="checkout_back">返回</string>
-
 </resources>
