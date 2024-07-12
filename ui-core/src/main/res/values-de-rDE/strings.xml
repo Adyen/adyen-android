@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="pay_button">Zahlen</string>
+    <string name="pay_button">Zahle</string>
     <string name="pay_button_with_value">%s zahlen</string>
     <string name="confirm_preauthorization">Vorautorisierung bestätigen</string>
 
