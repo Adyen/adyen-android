@@ -42,7 +42,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner 'com.adyen.checkout.HiltTestRunner'
+        testInstrumentationRunner 'com.adyen.checkout.test.HiltTestRunner'
     }
 
     testOptions {
@@ -112,6 +112,8 @@ dependencies {
     androidTestImplementation testLibraries.barista
     androidTestImplementation testLibraries.espresso
     androidTestImplementation testLibraries.hilt
+    androidTestImplementation testLibraries.kotlinCoroutines
+    androidTestImplementation testLibraries.mockWebServer
 
     kspAndroidTest testLibraries.hiltCompiler
 }

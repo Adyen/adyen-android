@@ -34,7 +34,7 @@ import javax.inject.Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     @ApplicationContext private val context: Context,
-) {
+) : ConfigurationProvider {
 
     private val shopperLocale: Locale?
         get() {
@@ -48,7 +48,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    val checkoutConfig: CheckoutConfiguration
+    override val checkoutConfig: CheckoutConfiguration
         get() = CheckoutConfiguration(
             environment = environment,
             clientKey = clientKey,
