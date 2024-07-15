@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Če želite to sliko shraniti v napravo, morate omogočiti dovoljenje za shranjevanje</string>
     <string name="checkout_stored_payment_confirmation_message">Potrdite plačilo: %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Prekliči</string>
+    <string name="checkout_close">Zapri</string>
+    <string name="checkout_back">Nazaj</string>
+
 </resources>

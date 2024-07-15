@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Um dieses Bild auf Ihrem Gerät zu speichern, müssen Sie uns Speicherberechtigung erteilen.</string>
     <string name="checkout_stored_payment_confirmation_message">Bestätige %s Zahlung</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Abbrechen</string>
+    <string name="checkout_close">Schließen</string>
+    <string name="checkout_back">Zurück</string>
+
 </resources>

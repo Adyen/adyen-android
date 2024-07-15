@@ -33,6 +33,9 @@
     <string name="checkout_rationale_message_storage_permission">%%storagePermission.rationaleMsg%%</string>
     <string name="checkout_stored_payment_confirmation_message">%%oneClick.confirmationAlert.title%%</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">%%cancelButton%%</string>
+    <string name="checkout_close">%%close%%</string>
+    <string name="checkout_back">%%backButton%%</string>
+
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
     <string name="last_four_digits_format" translatable="false">•••• %s</string>

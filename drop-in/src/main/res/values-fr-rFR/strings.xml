@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Pour enregistrer cette image sur votre appareil, vous devez activer l\'autorisation de stockage</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmer paiement de %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuler</string>
+    <string name="checkout_close">Fermer</string>
+    <string name="checkout_back">Retour</string>
+
 </resources>

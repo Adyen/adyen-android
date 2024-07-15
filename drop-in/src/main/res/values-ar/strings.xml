@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">من أجل حفظ هذه الصورة على جهازك، تحتاج إلى تمكين إذن التخزين</string>
     <string name="checkout_stored_payment_confirmation_message">تأكيد الدفع باستخدام %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">إلغاء</string>
+    <string name="checkout_close">إغلاق</string>
+    <string name="checkout_back">العودة</string>
+
 </resources>

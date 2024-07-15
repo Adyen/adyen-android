@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Ak chcete tento obrázok uložiť do zariadenia, musíte zapnúť povolenie na ukladanie</string>
     <string name="checkout_stored_payment_confirmation_message">Potvrďte platbu pomocou %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Zrušiť</string>
+    <string name="checkout_close">Zavrieť</string>
+    <string name="checkout_back">Späť</string>
+
 </resources>

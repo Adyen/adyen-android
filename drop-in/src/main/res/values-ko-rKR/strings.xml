@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">이 이미지를 장치에 저장하려면 저장 권한을 활성화해야 합니다.</string>
     <string name="checkout_stored_payment_confirmation_message">%s 결제 확인</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">취소</string>
+    <string name="checkout_close">닫기</string>
+    <string name="checkout_back">뒤로</string>
+
 </resources>

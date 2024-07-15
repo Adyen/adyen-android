@@ -33,4 +33,7 @@
     <string name="checkout_rationale_message_storage_permission">Om deze afbeelding op te slaan op uw apparaat, moet u toestemming voor opslag inschakelen</string>
     <string name="checkout_stored_payment_confirmation_message">Bevestig %s betaling</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuleer</string>
+    <string name="checkout_close">Sluiten</string>
+    <string name="checkout_back">Terug</string>
+
 </resources>
