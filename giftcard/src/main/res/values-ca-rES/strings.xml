@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 9/9/2021.
+  -->
+
+<resources>
+    <string name="checkout_giftcard_number_hint">Número de targeta</string>
+    <string name="checkout_giftcard_pin_hint">Pin</string>
+    <string name="checkout_giftcard_number_not_valid">El número de targeta no és correcte</string>
+    <string name="checkout_giftcard_pin_not_valid">Entrada incorrecta</string>
+    <string name="checkout_giftcard_redeem_button">Redimir</string>
+</resources>

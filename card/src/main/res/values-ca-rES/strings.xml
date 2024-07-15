@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Número de targeta</string>
+    <string name="checkout_card_holder_hint">Nom a la targeta</string>
+    <string name="checkout_card_expiry_date_hint">Data de caducitat</string>
+    <string name="checkout_card_expiry_date_optional_hint">Data de caducitat (opcional)</string>
+    <string name="checkout_card_security_code_hint">Codi de seguretat</string>
+    <string name="checkout_card_security_code_optional_hint">Codi de seguretat (opcional)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de naixement del titular de la targeta (AAMMDD) o número de registre corporatiu (10 dígits)</string>
+    <string name="checkout_kcp_tax_number_hint">Número de registre corporatiu (10 dígits)</string>
+    <string name="checkout_kcp_password_hint">Els 2 primers dígits de la contrasenya de la targeta</string>
+
+    <string name="checkout_card_number_not_valid">El número de targeta no és correcte</string>
+    <string name="checkout_expiry_date_not_valid">La data de caducitat no és vàlida</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Introduïu una data de caducitat vàlida</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Introduïu una data de caducitat vàlida</string>
+    <string name="checkout_security_code_not_valid">El format del CVC/CVV no és vàlid</string>
+    <string name="checkout_holder_name_not_valid">El nom del titular no és vàlid</string>
+    <string name="checkout_social_security_number_not_valid">Entrada incorrecta</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">La data de naixement del titular de la targeta o el número de registre corporatiu no són vàlids</string>
+    <string name="checkout_kcp_password_invalid">La contrasenya no és vàlida</string>
+    <string name="checkout_card_postal_not_valid">El format d\'entrada no és vàlid.</string>
+    <string name="checkout_card_brand_not_supported">La marca de la targeta introduïda no és compatible</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">%s no és compatible</string>
+
+    <string name="checkout_card_installments_title">Nombre de quotes</string>
+    <string name="checkout_card_installments_option_regular">%s mesos</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
+    <string name="checkout_card_installments_option_one_time">Pagament únic</string>
+    <string name="checkout_card_installments_option_revolving">Pagament rotatiu</string>
+
+    <string name="store_payment_method">Desa\'l per al meu proper pagament</string>
+</resources>

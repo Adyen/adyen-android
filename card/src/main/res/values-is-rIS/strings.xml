@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Kortanúmer</string>
+    <string name="checkout_card_holder_hint">Nafn á korti</string>
+    <string name="checkout_card_expiry_date_hint">Gildisdadgur</string>
+    <string name="checkout_card_expiry_date_optional_hint">Gildisdagur (valfrjálst)</string>
+    <string name="checkout_card_security_code_hint">Öryggiskóði</string>
+    <string name="checkout_card_security_code_optional_hint">Öryggiskóði (valfrjálst)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Fæðingardagur korthafa (ÁÁMMDD) eða skráningarnúmer fyrirtækis (10 tölustafir)</string>
+    <string name="checkout_kcp_tax_number_hint">Skráningarnúmer fyrirtækis (10 tölustafir)</string>
+    <string name="checkout_kcp_password_hint">Fyrstu 2 tölustafirnir í aðgangsorði kortsins</string>
+
+    <string name="checkout_card_number_not_valid">Ógilt kortanúmer</string>
+    <string name="checkout_expiry_date_not_valid">Ógildur gildisdagur</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Sláðu inn gildan gildisdag</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Sláðu inn gildan gildisdag</string>
+    <string name="checkout_security_code_not_valid">Ógilt CVC- / CVV-snið</string>
+    <string name="checkout_holder_name_not_valid">Ógilt nafn reikningshafa</string>
+    <string name="checkout_social_security_number_not_valid">Ógilt inntak</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Ógildur fæðingardagur korthafa eða skráningarnúmer fyrirtækis</string>
+    <string name="checkout_kcp_password_invalid">Ógilt aðgangsorð</string>
+    <string name="checkout_card_postal_not_valid">Inntakssnið er ekki gilt.</string>
+    <string name="checkout_card_brand_not_supported">Ekki er stuðningur við innslegið kortamerki</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">Ekki er stuðningur við %s</string>
+
+    <string name="checkout_card_installments_title">Fjöldi afborgana</string>
+    <string name="checkout_card_installments_option_regular">%s mánuðir</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
+    <string name="checkout_card_installments_option_one_time">Eingreiðsla</string>
+    <string name="checkout_card_installments_option_revolving">Veltigreiðsla</string>
+
+    <string name="store_payment_method">Spara fyrir næstu greiðslu</string>
+</resources>

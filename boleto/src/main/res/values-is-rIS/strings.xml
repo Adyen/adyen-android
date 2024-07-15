@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 3/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Persónulegar upplýsingar</string>
+    <string name="checkout_boleto_first_name">Fornafn</string>
+    <string name="checkout_boleto_last_name">Eftirnafn</string>
+    <string name="checkout_boleto_send_email_copy">Senda afrit á netfangið mitt</string>
+    <string name="checkout_boleto_email">Netfang</string>
+    <string name="checkout_boleto_generate_btn_label">Búa til Boleto</string>
+
+    <string name="checkout_boleto_first_name_invalid">Sláðu inn fornafn</string>
+    <string name="checkout_boleto_last_name_invalid">Sláðu inn eftirnafn</string>
+    <string name="checkout_boleto_email_invalid">Ógilt netfang</string>
+</resources>

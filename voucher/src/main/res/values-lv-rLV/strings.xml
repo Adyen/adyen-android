@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Lejupielādējiet sava tiešā debeta instrukcijas (DDI/pilnvaras)</string>
+    <string name="checkout_voucher_introduction">Paldies par pirkumu, lūdzu, izmantojiet šo kuponu, lai pabeigtu maksājumu.</string>
+    <string name="checkout_voucher_introduction_econtext">Paldies par pirkumu. Lūdzu, izmantojiet tālāk norādīto informāciju, lai pabeigtu maksājumu.</string>
+    <string name="checkout_voucher_payment_reference">Maksājuma atsauce</string>
+    <string name="checkout_voucher_expiration_entity">Vienība</string>
+    <string name="checkout_voucher_expiration_date">Derīguma termiņš</string>
+    <string name="checkout_voucher_shopper_reference">Pircēja atsauce</string>
+    <string name="checkout_voucher_phone_number">Tālruņa numurs</string>
+    <string name="checkout_voucher_collection_institution_number">Iekasēšanas iestādes numurs</string>
+    <string name="checkout_voucher_read_instructions">Lūdzu, izlasiet instrukcijas.</string>
+    <string name="checkout_voucher_copy_code">Kopēt kodu</string>
+    <string name="checkout_voucher_copied_toast">Kods ir nokopēts starpliktuvē</string>
+    <string name="checkout_voucher_download_pdf">Lejupielādēt PDF</string>
+    <string name="checkout_voucher_save_image">Saglabāt kā attēlu</string>
+    <string name="checkout_voucher_image_saved"> Attēls ir saglabāts jūsu ierīcē</string>
+    <string name="checkout_voucher_image_failed"> Neizdevās saglabāt attēlu</string>
+    <string name="checkout_voucher_finish">Pabeigt</string>
+    <string name="checkout_voucher_permission_denied">Atļauja nav piešķirta</string>
+</resources>

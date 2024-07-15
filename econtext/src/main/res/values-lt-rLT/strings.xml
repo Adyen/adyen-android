@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Vardas</string>
+    <string name="checkout_econtext_last_name_hint">Pavardė</string>
+    <string name="checkout_econtext_phone_number_hint">Telefono numeris</string>
+    <string name="checkout_econtext_shopper_email_hint">El. pašto adresas</string>
+
+    <string name="checkout_econtext_first_name_invalid">Įveskite savo vardą</string>
+    <string name="checkout_econtext_last_name_invalid">Įveskite savo pavardę</string>
+    <string name="checkout_econtext_phone_number_invalid">Netinkamas telefono numeris</string>
+    <string name="checkout_econtext_shopper_email_invalid">Netinkamas el. pašto adresas</string>
+</resources>

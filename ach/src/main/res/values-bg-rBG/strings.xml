@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Банкова сметка</string>
+    <string name="checkout_ach_bank_account_holder_name">Име на притежателя на сметката</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Невалидно име на притежател на сметката</string>
+    <string name="checkout_ach_bank_account_number">Номер на сметка</string>
+    <string name="checkout_ach_bank_account_number_invalid">Невалиден номер на сметка</string>
+    <string name="checkout_ach_bank_account_location">ABA маршрутизиращ номер</string>
+    <string name="checkout_ach_bank_account_location_invalid">Невалиден маршрутизиращ номер на ABA</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Запазване за следващото ми плащане</string>
+
+</resources>
