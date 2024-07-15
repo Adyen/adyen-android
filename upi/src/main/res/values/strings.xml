@@ -14,6 +14,7 @@
     <string name="checkout_upi_continue">Continue</string>
     <string name="checkout_upi_app_manual_input">Enter UPI ID</string>
     <string name="checkout_upi_app_other_upi">Other UPI</string>
+    <string name="checkout_upi_no_app_selected">Select a payment method to continue</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_upi_app_tab_title" translatable="false">Pay by any UPI app</string>

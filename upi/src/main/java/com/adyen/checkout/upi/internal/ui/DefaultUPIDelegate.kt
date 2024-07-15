@@ -119,11 +119,15 @@ internal class DefaultUPIDelegate(
     private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
         val availableModes = createAvailableModes(this, paymentMethod, includeValidationErrors)
         val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+        val selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode()
+        val showNoSelectedUPIIntentItemError =
+            shouldShowNoSelectedUPIIntentItemError(selectedMode, selectedUPIIntentItem, includeValidationErrors)
 
         UPIOutputData(
-            selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode(),
-            selectedUPIIntentItem = selectedUPIIntentItem,
             availableModes = availableModes,
+            selectedMode = selectedMode,
+            selectedUPIIntentItem = selectedUPIIntentItem,
+            showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
             intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )
@@ -193,6 +197,16 @@ internal class DefaultUPIDelegate(
         } else {
             FieldState(virtualPaymentAddress, Validation.Invalid(R.string.checkout_upi_vpa_validation))
         }
+
+    private fun shouldShowNoSelectedUPIIntentItemError(
+        selectedMode: UPISelectedMode,
+        selectedUPIIntentItem: UPIIntentItem?,
+        includeValidationErrors: Boolean,
+    ) = if (includeValidationErrors) {
+        selectedMode == UPISelectedMode.INTENT && selectedUPIIntentItem == null
+    } else {
+        false
+    }
 
     private fun outputDataChanged(outputData: UPIOutputData) {
         _outputDataFlow.tryEmit(outputData)
@@ -308,12 +322,6 @@ internal class DefaultUPIDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
-
-    override fun shouldEnableSubmitButton(): Boolean = when (outputData.selectedMode) {
-        UPISelectedMode.INTENT -> outputData.selectedUPIIntentItem != null
-        UPISelectedMode.VPA -> true
-        UPISelectedMode.QR -> true
-    }
 
     override fun onCleared() {
         removeObserver()

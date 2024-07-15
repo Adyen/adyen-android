@@ -16,13 +16,4 @@ interface ButtonDelegate {
     fun isConfirmationRequired(): Boolean
 
     fun shouldShowSubmitButton(): Boolean
-
-    /**
-     * Indicates whether the submit button should be enabled. For some components, the submit button
-     * is enabled after user interaction. Each component delegate defines what this means in the
-     * context of its specific implementation.
-     *
-     * This function gets called every time there is a change in the component state.
-     */
-    fun shouldEnableSubmitButton(): Boolean
 }
