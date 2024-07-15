@@ -33,4 +33,6 @@
     <string name="checkout_rationale_message_storage_permission">Lai saglabātu šo attēlu savā ierīcē, jums jāiespējo glabāšanas atļauja</string>
     <string name="checkout_stored_payment_confirmation_message">Apstipriniet %s maksājumu</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Atcelt</string>
+    <string name="checkout_close">Aizvērt</string>
+    <string name="checkout_back">Atpakaļ</string>
 </resources>

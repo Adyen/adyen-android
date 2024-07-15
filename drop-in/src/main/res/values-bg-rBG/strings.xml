@@ -33,4 +33,6 @@
     <string name="checkout_rationale_message_storage_permission">За да запазите това изображение на вашето устройство, трябва да активирате разрешение за съхранение</string>
     <string name="checkout_stored_payment_confirmation_message">Потвърди %s плащането</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Отказ</string>
+    <string name="checkout_close">Затвори</string>
+    <string name="checkout_back">Назад</string>
 </resources>
