@@ -7,5 +7,5 @@
   -->
 
 <resources>
-    <string name="twint_store_payment_method">Save for my next payment</string>
+    <string name="twint_store_payment_method">保存以便下次支付使用</string>
 </resources>
