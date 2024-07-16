@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.twint.internal.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -91,10 +92,27 @@ internal class DefaultTwintDelegate(
         observerRepository.removeObservers()
     }
 
+    override fun updateInputData(update: TwintInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
+    }
+
+    private fun onInputDataChanged() {
+        outputData = createOutputData()
+        updateComponentState(outputData)
+    }
+
     private fun createOutputData(): TwintOutputData {
         return TwintOutputData(
             isStorePaymentSelected = inputData.isStorePaymentSelected,
         )
+    }
+
+    @VisibleForTesting
+    internal fun updateComponentState(outputData: TwintOutputData) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
     }
 
     private fun createComponentState(
