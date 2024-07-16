@@ -47,6 +47,7 @@ include ':3ds2',
         ':instant',
         ':issuer-list',
         ':mbway',
+        ':mealvoucher',
         ':molpay',
         ':online-banking-core',
         ':online-banking-cz',
@@ -67,4 +68,3 @@ include ':3ds2',
         ':upi',
         ':voucher',
         ':wechatpay'
-
