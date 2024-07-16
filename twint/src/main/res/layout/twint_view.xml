@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 15/7/2024.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_storePaymentMethod"
+        style="@style/AdyenCheckout.Twint.StorePaymentSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</merge>
