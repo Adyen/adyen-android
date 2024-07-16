@@ -3,17 +3,20 @@ package com.adyen.checkout.twint.internal.ui
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.TwintConfiguration
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
+import com.adyen.checkout.twint.internal.ui.model.TwintOutputData
 import com.adyen.checkout.twint.twint
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +31,9 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
@@ -65,6 +71,35 @@ internal class DefaultTwintDelegateTest(
 
             verify(submitHandler).onSubmit(any())
         }
+    }
+
+    @Test
+    fun `when input data changes, then component state is created`() = runTest {
+        delegate = createDefaultTwintDelegate(
+            createCheckoutConfiguration(Amount("USD", 10L)),
+        )
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.updateInputData {
+            isStorePaymentSelected = true
+        }
+
+        val expected = TwintComponentState(
+            data = PaymentComponentData(
+                paymentMethod = GenericPaymentMethod(
+                    type = TEST_PAYMENT_METHOD_TYPE,
+                    checkoutAttemptId = null,
+                    subtype = "sdk",
+                ),
+                order = TEST_ORDER,
+                amount = Amount("USD", 10L),
+                storePaymentMethod = true,
+            ),
+            isInputValid = true,
+            isReady = true,
+        )
+        assertEquals(expected, testFlow.latestValue)
     }
 
     @Nested
@@ -140,6 +175,90 @@ internal class DefaultTwintDelegateTest(
             // Called once on initialization, but shouldn't be called by onSubmit
             verify(submitHandler, times(1)).onSubmit(any())
         }
+
+        @Test
+        fun `the component does require confirmation, then the submit handler should be called`() = runTest {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 0L)) {
+                    setShowStorePaymentField(true)
+                },
+            )
+            delegate.initialize(this)
+
+            delegate.onSubmit()
+
+            // Called once on initialization, but shouldn't be called by onSubmit
+            verify(submitHandler, times(1)).onSubmit(any())
+        }
+
+        @Test
+        fun `the user doesn't want to store and the component is not configured to store, then we don't store the pm`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 100L)) {
+                        setShowStorePaymentField(true)
+                        setStorePaymentMethod(false)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.onSubmit()
+
+                assertEquals(false, componentStateFlow.latestValue.data.storePaymentMethod)
+            }
+
+        @Test
+        fun `the user wants to store, then we store the pm`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(true)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { isStorePaymentSelected = true }
+
+                delegate.onSubmit()
+
+                assertEquals(true, componentStateFlow.latestValue.data.storePaymentMethod)
+            }
+
+        @Test
+        fun `the component is configured to store, then we store the pm`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(false)
+                        setStorePaymentMethod(true)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                delegate.onSubmit()
+
+                assertEquals(true, componentStateFlow.latestValue.data.storePaymentMethod)
+            }
+    }
+
+    @ParameterizedTest
+    @MethodSource("amountSource")
+    fun `when updating component state, then amount is propagated in component state if set`(
+        configurationValue: Amount?,
+        expectedComponentStateValue: Amount?,
+    ) = runTest {
+        if (configurationValue != null) {
+            val configuration = createCheckoutConfiguration(configurationValue)
+            delegate = createDefaultTwintDelegate(configuration = configuration)
+        }
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.updateComponentState(TwintOutputData(false))
+
+        assertEquals(expectedComponentStateValue, testFlow.latestValue.data.amount)
     }
 
     @Nested
@@ -257,5 +376,14 @@ internal class DefaultTwintDelegateTest(
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+
+        @JvmStatic
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(null, null),
+            arguments(null, null),
+        )
     }
 }

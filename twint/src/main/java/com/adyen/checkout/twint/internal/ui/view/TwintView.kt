@@ -60,7 +60,7 @@ internal class TwintView @JvmOverloads constructor(
         binding.switchStorePaymentMethod.isVisible =
             (delegate.componentParams as TwintComponentParams).showStorePaymentField
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            // TODO Update input data
+            delegate.updateInputData { isStorePaymentSelected = isChecked }
         }
     }
 
