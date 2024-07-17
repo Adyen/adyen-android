@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">Εισαγάγετε τη διεύθυνση μη αυτόματα</string>
     <string name="checkout_address_lookup_submit">Χρησιμοποιήστε αυτήν τη διεύθυνση</string>
     <string name="checkout_address_lookup_validation_empty">Απαιτείται διεύθυνση</string>
-
 </resources>

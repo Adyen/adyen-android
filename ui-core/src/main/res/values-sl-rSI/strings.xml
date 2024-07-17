@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">Naslov vnesite ročno</string>
     <string name="checkout_address_lookup_submit">Uporabite ta naslov</string>
     <string name="checkout_address_lookup_validation_empty">Naslov je obvezen</string>
-
 </resources>

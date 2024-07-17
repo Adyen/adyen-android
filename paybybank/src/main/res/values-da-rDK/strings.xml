@@ -8,6 +8,6 @@
   -->
 
 <resources>
-    <string name="checkout_pay_by_bank_search">Søg …</string>
-    <string name="checkout_pay_by_bank_no_banks_found">Ingen banker fundet med din søgeforespørgsel …</string>
+    <string name="checkout_pay_by_bank_search">Søg…</string>
+    <string name="checkout_pay_by_bank_no_banks_found">Ingen banker fundet med din søgeforespørgsel…</string>
 </resources>

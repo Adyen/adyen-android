@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">ABA маршрутизиращ номер</string>
     <string name="checkout_ach_bank_account_location_invalid">Невалиден маршрутизиращ номер на ABA</string>
     <string name="checkout_ach_store_payment_method_switch_text">Запазване за следващото ми плащане</string>
-
 </resources>

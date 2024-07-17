@@ -35,5 +35,4 @@
     <string name="checkout_stored_payment_confirmation_cancel_button">Annuleer</string>
     <string name="checkout_close">Sluiten</string>
     <string name="checkout_back">Terug</string>
-
 </resources>

@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Introduïu el PIN d\'UPI</string>
     <string name="checkout_upi_app_other_upi">Altres UPI</string>
     <string name="checkout_upi_no_app_selected">Seleccioneu una forma de pagament per continuar</string>
-
 </resources>

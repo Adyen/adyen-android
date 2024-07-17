@@ -33,4 +33,6 @@
     <string name="checkout_rationale_message_storage_permission">Per desar aquesta imatge al vostre dispositiu, heu d\'activar el permís d\'emmagatzematge</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmació del pagament de %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancel·la</string>
+    <string name="checkout_close">Tanca</string>
+    <string name="checkout_back">Tornar</string>
 </resources>

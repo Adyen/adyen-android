@@ -35,5 +35,4 @@
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancelar</string>
     <string name="checkout_close">Cerrar</string>
     <string name="checkout_back">Atrás</string>
-
 </resources>

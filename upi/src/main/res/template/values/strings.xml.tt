@@ -15,7 +15,6 @@
     <string name="checkout_upi_app_manual_input">%%upi.mode.enterUpiId%%</string>
     <string name="checkout_upi_app_other_upi">%%upi.mode.otherUpi%%</string>
     <string name="checkout_upi_no_app_selected">%%upi.error.noAppSelected%%</string>
-
     <!-- Untranslatable strings -->
     <string name="checkout_upi_app_tab_title" translatable="false">Pay by any UPI app</string>
     <string name="checkout_upi_other_tab_title" translatable="false">Other UPI options</string>

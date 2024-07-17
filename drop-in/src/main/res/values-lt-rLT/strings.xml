@@ -33,4 +33,6 @@
     <string name="checkout_rationale_message_storage_permission">Norėdami išsaugoti šį vaizdą savo įrenginyje, turite įjungti leidimą išsaugoti</string>
     <string name="checkout_stored_payment_confirmation_message">Patvirtinti %s mokėjimą</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Atšaukti</string>
+    <string name="checkout_close">Uždaryti</string>
+    <string name="checkout_back">Atgal</string>
 </resources>

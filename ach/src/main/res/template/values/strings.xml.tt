@@ -15,7 +15,6 @@
     <string name="checkout_ach_bank_account_location">%%ach.accountLocationField.title%%</string>
     <string name="checkout_ach_bank_account_location_invalid">%%ach.accountLocationField.invalid%%</string>
     <string name="checkout_ach_store_payment_method_switch_text">%%storeDetails%%</string>
-
     <!-- Untranslatable strings -->
     <string name="checkout_ach_bank_account_number_4digit" translatable="false">•••• %s</string>
 </resources>

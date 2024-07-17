@@ -33,4 +33,6 @@
     <string name="checkout_rationale_message_storage_permission">Et seda pilti oma seadmesse salvestada, peate andma salvestamiseks loa</string>
     <string name="checkout_stored_payment_confirmation_message">Kinnitage makse (%s)</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Katkesta</string>
+    <string name="checkout_close">Sulge</string>
+    <string name="checkout_back">Tagasi</string>
 </resources>

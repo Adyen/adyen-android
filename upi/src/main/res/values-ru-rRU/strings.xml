@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Введите идентификатор UPI</string>
     <string name="checkout_upi_app_other_upi">Другие UPI</string>
     <string name="checkout_upi_no_app_selected">Для продолжения выберите способ оплаты</string>
-
 </resources>

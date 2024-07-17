@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">Número d\'encaminament ABA</string>
     <string name="checkout_ach_bank_account_location_invalid">El número d\'encaminament ABA no és vàlid</string>
     <string name="checkout_ach_store_payment_method_switch_text">Desa\'l per al meu proper pagament</string>
-
 </resources>

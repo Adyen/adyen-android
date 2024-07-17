@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">ABA maršruto numeris</string>
     <string name="checkout_ach_bank_account_location_invalid">Neteisingas ABA maršruto numeris</string>
     <string name="checkout_ach_store_payment_method_switch_text">Išsaugoti kitam mokėjimui</string>
-
 </resources>

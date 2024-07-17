@@ -15,5 +15,4 @@
     <string name="checkout_upi_app_manual_input">Sláðu inn UPI-auðkenni</string>
     <string name="checkout_upi_app_other_upi">Annað UPI</string>
     <string name="checkout_upi_no_app_selected">Veldu greiðslumáta til að halda áfram</string>
-
 </resources>

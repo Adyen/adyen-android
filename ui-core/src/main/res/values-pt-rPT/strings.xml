@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">Introduza o endereço manualmente</string>
     <string name="checkout_address_lookup_submit">Utilize este endereço</string>
     <string name="checkout_address_lookup_validation_empty">Endereço necessário</string>
-
 </resources>

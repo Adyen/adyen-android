@@ -15,5 +15,4 @@
     <string name="checkout_ach_bank_account_location">ABA maršrutēšanas numurs</string>
     <string name="checkout_ach_bank_account_location_invalid">Nederīgs ABA maršrutēšanas numurs</string>
     <string name="checkout_ach_store_payment_method_switch_text">Saglabāt manam nākamajam maksājumam</string>
-
 </resources>
