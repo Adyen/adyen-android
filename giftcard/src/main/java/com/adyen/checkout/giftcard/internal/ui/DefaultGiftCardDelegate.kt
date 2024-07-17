@@ -68,6 +68,7 @@ class DefaultGiftCardDelegate(
     override val componentParams: GiftCardComponentParams,
     private val cardEncryptor: BaseCardEncryptor,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
+    componentViewType: GiftCardComponentViewType
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -83,7 +84,7 @@ class DefaultGiftCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(componentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<GiftCardComponentState> = submitHandler.submitFlow
