@@ -63,6 +63,7 @@ dependencies {
     api project(':ideal')
     api project(":instant")
     api project(':mbway')
+    api project(':mealvoucher')
     api project(':molpay')
     api project(':online-banking-cz')
     api project(':online-banking-jp')

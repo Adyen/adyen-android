@@ -9,6 +9,7 @@
 package com.adyen.checkout.giftcard.internal.ui
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.internal.ui.view.GiftCardView
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -23,13 +24,14 @@ internal object GiftCardViewProvider : ViewProvider {
         context: Context,
     ): ComponentView {
         return when (viewType) {
-            GiftCardComponentViewType -> GiftCardView(context)
+            is GiftCardComponentViewType -> GiftCardView(context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
 }
 
-internal object GiftCardComponentViewType : ButtonComponentViewType {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+open class GiftCardComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider = GiftCardViewProvider
     override val buttonTextResId: Int = R.string.checkout_giftcard_redeem_button
 }
