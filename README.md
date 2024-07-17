@@ -71,9 +71,7 @@ For development and testing purposes the project is accompanied by a test app. S
 
 ## Support
 
-If you have a feature request, or spotted a bug or a technical problem, [create an issue here][github.newIssue].
-
-For other questions, [contact our support team][adyen.support].
+If you have a feature request, or spotted a bug or a technical problem, [create an issue here][github.newIssue]. For other questions, contact our Support Team via [Customer Area][adyen.support] or via email: support@adyen.com
 
 ## Analytics and data tracking
 
@@ -114,7 +112,7 @@ This repository is available under the [MIT license](LICENSE).
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
 [migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
-[adyen.support]: https://www.adyen.help/hc/en-us/requests/new
+[adyen.support]: https://ca-live.adyen.com/ca/ca/contactUs/support.shtml
 [analytics.firstVersion]: https://github.com/Adyen/adyen-android/releases/tag/5.0.0
 [docs.analytics]: https://docs.adyen.com/online-payments/analytics-and-data-tracking
 [contributing.guidelines]: https://github.com/Adyen/.github/blob/main/CONTRIBUTING.md
