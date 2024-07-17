@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard.internal.ui
 
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.Amount
@@ -57,7 +58,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-internal class DefaultGiftCardDelegate(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultGiftCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,

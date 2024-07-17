@@ -893,6 +893,9 @@ public final class com/adyen/checkout/components/core/PaymentMethodTypes {
 	public static final field IDEAL Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/components/core/PaymentMethodTypes;
 	public static final field MB_WAY Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_GROUPEUP Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_NATIXIS Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_SODEXO Ljava/lang/String;
 	public static final field MOLPAY_MALAYSIA Ljava/lang/String;
 	public static final field MOLPAY_THAILAND Ljava/lang/String;
 	public static final field MOLPAY_VIETNAM Ljava/lang/String;
