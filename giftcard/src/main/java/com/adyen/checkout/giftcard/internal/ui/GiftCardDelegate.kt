@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard.internal.ui
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
@@ -20,7 +21,8 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-internal interface GiftCardDelegate :
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface GiftCardDelegate :
     PaymentComponentDelegate<GiftCardComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,

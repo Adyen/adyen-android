@@ -1,5 +1,6 @@
 package com.adyen.checkout.giftcard.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.ComponentError
@@ -19,7 +20,8 @@ import java.lang.ref.WeakReference
  * propagated to the merchants.
  */
 @Suppress("TooManyFunctions")
-internal class SessionsGiftCardComponentCallbackWrapper(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SessionsGiftCardComponentCallbackWrapper(
     component: GiftCardComponent,
     private val componentCallback: SessionsGiftCardComponentCallback,
 ) : SessionsGiftCardComponentCallback {

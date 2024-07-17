@@ -69,7 +69,7 @@ public final class com/adyen/checkout/giftcard/GiftCardAction$SendPayment$Creato
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/giftcard/GiftCardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public class com/adyen/checkout/giftcard/GiftCardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/giftcard/GiftCardComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/giftcard/internal/provider/GiftCardComponentProvider;
@@ -79,6 +79,7 @@ public final class com/adyen/checkout/giftcard/GiftCardComponent : androidx/life
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
 	public fun handleIntent (Landroid/content/Intent;)V
 	public fun isConfirmationRequired ()Z
+	protected fun onCleared ()V
 	public final fun resolveBalanceResult (Lcom/adyen/checkout/components/core/BalanceResult;)V
 	public final fun resolveOrderResponse (Lcom/adyen/checkout/components/core/OrderResponse;)V
 	public fun setInteractionBlocked (Z)V
@@ -219,6 +220,9 @@ public final class com/adyen/checkout/giftcard/internal/provider/GiftCardCompone
 	public synthetic fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Landroid/app/Application;Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/giftcard/GiftCardConfiguration;Landroid/app/Application;Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/giftcard/GiftCardComponent;
 	public fun isPaymentMethodSupported (Lcom/adyen/checkout/components/core/PaymentMethod;)Z
+}
+
+public final class com/adyen/checkout/giftcard/internal/ui/DefaultGiftCardDelegate$Companion {
 }
 
 public final class com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus$FullPayment : com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus {

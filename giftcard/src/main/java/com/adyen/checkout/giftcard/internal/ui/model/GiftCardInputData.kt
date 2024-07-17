@@ -8,9 +8,11 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 
-internal data class GiftCardInputData(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class GiftCardInputData(
     var cardNumber: String = "",
     var pin: String = ""
 ) : InputData
