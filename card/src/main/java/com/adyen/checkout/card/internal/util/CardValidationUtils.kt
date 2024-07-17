@@ -14,11 +14,11 @@ import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -100,12 +100,12 @@ object CardValidationUtils {
                     isInMinMonthRange && isInMaxYearRange -> FieldState(expiryDate, Validation.Valid)
                     !isInMaxYearRange -> FieldState(
                         expiryDate,
-                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future),
                     )
 
                     !isInMinMonthRange -> FieldState(
                         expiryDate,
-                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old),
                     )
 
                     else -> invalidState

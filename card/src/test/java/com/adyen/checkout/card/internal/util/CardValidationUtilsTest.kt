@@ -13,10 +13,10 @@ import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -35,7 +35,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = true,
-                isBrandSupported = true
+                isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.VALID, validation)
         }
@@ -46,7 +46,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = true,
-                isBrandSupported = true
+                isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.VALID, validation)
         }
@@ -57,7 +57,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = true,
-                isBrandSupported = true
+                isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.VALID, validation)
         }
@@ -69,7 +69,7 @@ internal class CardValidationUtilsTest {
                 number = number,
                 enableLuhnCheck = true,
                 // set to false to make sure INVALID_ILLEGAL_CHARACTERS is checked before INVALID_UNSUPPORTED_BRAND
-                isBrandSupported = false
+                isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_ILLEGAL_CHARACTERS, validation)
         }
@@ -81,7 +81,7 @@ internal class CardValidationUtilsTest {
                 number = number,
                 enableLuhnCheck = true,
                 // set to false to make sure INVALID_ILLEGAL_CHARACTERS is checked before INVALID_UNSUPPORTED_BRAND
-                isBrandSupported = false
+                isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_ILLEGAL_CHARACTERS, validation)
         }
@@ -93,7 +93,7 @@ internal class CardValidationUtilsTest {
                 number = number,
                 enableLuhnCheck = true,
                 // set to false to make sure INVALID_TOO_SHORT is checked before INVALID_UNSUPPORTED_BRAND
-                isBrandSupported = false
+                isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_TOO_SHORT, validation)
         }
@@ -105,7 +105,7 @@ internal class CardValidationUtilsTest {
                 number = number,
                 enableLuhnCheck = true,
                 // set to false to make sure INVALID_TOO_LONG is checked before INVALID_UNSUPPORTED_BRAND
-                isBrandSupported = false
+                isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_TOO_LONG, validation)
         }
@@ -116,7 +116,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = true,
-                isBrandSupported = false
+                isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_UNSUPPORTED_BRAND, validation)
         }
@@ -127,7 +127,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = true,
-                isBrandSupported = true
+                isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.INVALID_LUHN_CHECK, validation)
         }
@@ -138,7 +138,7 @@ internal class CardValidationUtilsTest {
             val validation = CardValidationUtils.validateCardNumber(
                 number = number,
                 enableLuhnCheck = false,
-                isBrandSupported = true
+                isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.VALID, validation)
         }
@@ -155,7 +155,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -167,7 +167,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_far_in_future
             assertEquals(FieldState(expiryDate, Validation.Invalid(expectedInvalidReason)), actual)
@@ -180,7 +180,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -194,7 +194,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -208,7 +208,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -222,7 +222,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
             assertEquals(FieldState(expiryDate, Validation.Invalid(expectedInvalidReason)), actual)
@@ -235,7 +235,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -247,7 +247,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -259,7 +259,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -271,7 +271,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
@@ -283,7 +283,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
             assertEquals(FieldState(expiryDate, Validation.Invalid(expectedInvalidReason)), actual)
@@ -296,7 +296,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
             assertEquals(FieldState(expiryDate, Validation.Invalid(expectedInvalidReason)), actual)
@@ -309,7 +309,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateExpiryDate(
                 expiryDate = expiryDate,
                 fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                calendar = mockCalendarInstance
+                calendar = mockCalendarInstance,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
             assertEquals(FieldState(expiryDate, Validation.Invalid(expectedInvalidReason)), actual)
@@ -397,7 +397,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(),
-                InputFieldUIState.REQUIRED
+                InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -408,7 +408,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
-                cvcUIState = InputFieldUIState.REQUIRED
+                cvcUIState = InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -419,7 +419,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
-                cvcUIState = InputFieldUIState.REQUIRED
+                cvcUIState = InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -438,7 +438,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-                cvcUIState = InputFieldUIState.REQUIRED
+                cvcUIState = InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -449,7 +449,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-                cvcUIState = InputFieldUIState.OPTIONAL
+                cvcUIState = InputFieldUIState.OPTIONAL,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -460,7 +460,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN
+                cvcUIState = InputFieldUIState.HIDDEN,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -471,7 +471,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-                InputFieldUIState.REQUIRED
+                InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -482,7 +482,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-                InputFieldUIState.OPTIONAL
+                InputFieldUIState.OPTIONAL,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -493,7 +493,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN
+                cvcUIState = InputFieldUIState.HIDDEN,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -504,7 +504,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-                cvcUIState = InputFieldUIState.REQUIRED
+                cvcUIState = InputFieldUIState.REQUIRED,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -515,7 +515,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-                cvcUIState = InputFieldUIState.OPTIONAL
+                cvcUIState = InputFieldUIState.OPTIONAL,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -526,7 +526,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN
+                cvcUIState = InputFieldUIState.HIDDEN,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
