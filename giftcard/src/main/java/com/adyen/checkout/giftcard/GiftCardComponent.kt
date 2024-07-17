@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.giftcard
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,7 +36,9 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.GIFTCARD] payment method.
  */
-class GiftCardComponent internal constructor(
+open class GiftCardComponent
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     private val giftCardDelegate: GiftCardDelegate,
     private val genericActionDelegate: GenericActionDelegate,
     private val actionHandlingComponent: DefaultActionHandlingComponent,
@@ -60,7 +63,8 @@ class GiftCardComponent internal constructor(
         componentEventHandler.initialize(viewModelScope)
     }
 
-    internal fun observe(
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<GiftCardComponentState>) -> Unit
     ) {
