@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardInputData(
