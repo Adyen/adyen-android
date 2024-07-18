@@ -15,6 +15,18 @@ public final class com/adyen/checkout/mealvoucher/MealVoucherComponent : com/ady
 public final class com/adyen/checkout/mealvoucher/MealVoucherComponent$Companion {
 }
 
+public final class com/adyen/checkout/mealvoucher/databinding/MealVoucherViewBinding : androidx/viewbinding/ViewBinding {
+	public final field editTextMealVoucherCardNumber Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput;
+	public final field editTextMealVoucherExpiryDate Lcom/adyen/checkout/ui/core/internal/ui/view/ExpiryDateInput;
+	public final field editTextMealVoucherSecurityCode Lcom/adyen/checkout/ui/core/internal/ui/view/SecurityCodeInput;
+	public final field textInputLayoutMealVoucherCardNumber Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutMealVoucherExpiryDate Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutMealVoucherSecurityCode Lcom/google/android/material/textfield/TextInputLayout;
+	public static fun bind (Landroid/view/View;)Lcom/adyen/checkout/mealvoucher/databinding/MealVoucherViewBinding;
+	public fun getRoot ()Landroid/view/View;
+	public static fun inflate (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Lcom/adyen/checkout/mealvoucher/databinding/MealVoucherViewBinding;
+}
+
 public final class com/adyen/checkout/mealvoucher/internal/provider/MealVoucherComponentProvider : com/adyen/checkout/components/core/internal/provider/PaymentComponentProvider, com/adyen/checkout/sessions/core/internal/provider/SessionPaymentComponentProvider {
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/giftcard/GiftCardComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/mealvoucher/MealVoucherComponent;
