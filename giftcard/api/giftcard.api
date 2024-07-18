@@ -225,6 +225,35 @@ public final class com/adyen/checkout/giftcard/internal/provider/GiftCardCompone
 public final class com/adyen/checkout/giftcard/internal/ui/DefaultGiftCardDelegate$Companion {
 }
 
+public final class com/adyen/checkout/giftcard/internal/ui/model/GiftCardComponentParams : com/adyen/checkout/components/core/internal/ui/model/ButtonParams, com/adyen/checkout/components/core/internal/ui/model/ComponentParams {
+	public fun <init> (Lcom/adyen/checkout/components/core/internal/ui/model/CommonComponentParams;ZZ)V
+	public final fun component2 ()Z
+	public final fun component3 ()Z
+	public final fun copy (Lcom/adyen/checkout/components/core/internal/ui/model/CommonComponentParams;ZZ)Lcom/adyen/checkout/giftcard/internal/ui/model/GiftCardComponentParams;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/giftcard/internal/ui/model/GiftCardComponentParams;Lcom/adyen/checkout/components/core/internal/ui/model/CommonComponentParams;ZZILjava/lang/Object;)Lcom/adyen/checkout/giftcard/internal/ui/model/GiftCardComponentParams;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
+	public fun getAnalyticsParams ()Lcom/adyen/checkout/components/core/internal/ui/model/AnalyticsParams;
+	public fun getClientKey ()Ljava/lang/String;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public fun getShopperLocale ()Ljava/util/Locale;
+	public fun hashCode ()I
+	public fun isCreatedByDropIn ()Z
+	public final fun isPinRequired ()Z
+	public fun isSubmitButtonVisible ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
+	public static final field Companion Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion;
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun getRawValue ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion {
+}
+
 public final class com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus$FullPayment : com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus {
 	public fun <init> (Lcom/adyen/checkout/components/core/Amount;Lcom/adyen/checkout/components/core/Amount;)V
 	public final fun getAmountPaid ()Lcom/adyen/checkout/components/core/Amount;
