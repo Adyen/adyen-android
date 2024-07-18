@@ -27,10 +27,10 @@ internal object KcpValidationUtils {
     fun validateKcpBirthDateOrTaxNumber(birthDateOrTaxNumber: String): FieldState<String> {
         val inputLength = birthDateOrTaxNumber.length
         val validation = when {
-            inputLength == KCP_BIRTH_DATE_LENGTH && DateUtils.matchesFormat(
-                birthDateOrTaxNumber,
-                KCP_BIRTH_DATE_FORMAT
-            ) -> Validation.Valid
+            inputLength == KCP_BIRTH_DATE_LENGTH &&
+                DateUtils.matchesFormat(birthDateOrTaxNumber, KCP_BIRTH_DATE_FORMAT)
+            -> Validation.Valid
+
             inputLength == KCP_TAX_NUMBER_LENGTH -> Validation.Valid
             else -> Validation.Invalid(R.string.checkout_kcp_birth_date_or_tax_number_invalid)
         }
