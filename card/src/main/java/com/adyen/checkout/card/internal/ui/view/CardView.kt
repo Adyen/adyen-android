@@ -45,6 +45,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle

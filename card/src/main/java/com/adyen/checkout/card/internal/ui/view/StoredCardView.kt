@@ -29,6 +29,7 @@ import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
