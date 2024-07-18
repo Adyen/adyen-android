@@ -199,8 +199,10 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
 
         override fun onLongPress(e: MotionEvent) {
             val isUnderlayHidden = mainView.right == rectMainNotDragged.right
-            val didHitMainView = e.x >= mainView.left && e.x <= mainView.right &&
-                e.y >= mainView.top && e.y <= mainView.bottom
+            val didHitMainView = e.x >= mainView.left &&
+                e.x <= mainView.right &&
+                e.y >= mainView.top &&
+                e.y <= mainView.bottom
             if (isUnderlayHidden && didHitMainView && !isDragLocked) {
                 expandUnderlay()
             }
@@ -208,8 +210,10 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
 
         override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
             val isUnderlayHidden = mainView.right == rectMainNotDragged.right
-            val didHitMainView = e.x >= mainView.left && e.x <= mainView.right &&
-                e.y >= mainView.top && e.y <= mainView.bottom
+            val didHitMainView = e.x >= mainView.left &&
+                e.x <= mainView.right &&
+                e.y >= mainView.top &&
+                e.y <= mainView.bottom
             return if (didHitMainView) {
                 if (isUnderlayHidden) {
                     onMainClickListener?.onClick()
@@ -377,8 +381,10 @@ class AdyenSwipeToRevealLayout @JvmOverloads constructor(
         calculateDragDistance(ev)
 
         val isIdle = dragHelper.viewDragState == ViewDragHelper.STATE_IDLE && isDragging
-        val canPerformClickOnUnderlay = ev.x >= mainView.right && ev.x <= mainView.left &&
-            ev.y >= mainView.top && ev.y <= mainView.bottom &&
+        val canPerformClickOnUnderlay = ev.x >= mainView.right &&
+            ev.x <= mainView.left &&
+            ev.y >= mainView.top &&
+            ev.y <= mainView.bottom &&
             dragDistance < dragHelper.touchSlop
         val isSettling = dragHelper.viewDragState == ViewDragHelper.STATE_SETTLING
 
