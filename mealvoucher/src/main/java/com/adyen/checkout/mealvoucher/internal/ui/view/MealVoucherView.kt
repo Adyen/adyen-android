@@ -9,12 +9,26 @@
 package com.adyen.checkout.mealvoucher.internal.ui.view
 
 import android.content.Context
+import android.text.Editable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
+import com.adyen.checkout.mealvoucher.R
+import com.adyen.checkout.mealvoucher.databinding.MealVoucherViewBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.hideError
+import com.adyen.checkout.ui.core.internal.util.isVisible
+import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class MealVoucherView @JvmOverloads constructor(
     context: Context,
@@ -28,15 +42,129 @@ internal class MealVoucherView @JvmOverloads constructor(
     ),
     ComponentView {
 
+    private val binding: MealVoucherViewBinding = MealVoucherViewBinding.inflate(LayoutInflater.from(context), this)
+
+    private lateinit var localizedContext: Context
+
+    private lateinit var giftCardDelegate: GiftCardDelegate
+
+    init {
+        orientation = VERTICAL
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
+        setPadding(padding, padding, padding, 0)
+
+        // TODO Support autofill if necessary
+    }
+
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
-        TODO("Not yet implemented")
+        require(delegate is GiftCardDelegate) { "Unsupported delegate type" }
+        giftCardDelegate = delegate
+
+        this.localizedContext = localizedContext
+        initCardNumberField(localizedContext)
+        initExpiryDateField(localizedContext)
+        initSecurityCodeField(localizedContext)
+    }
+
+    private fun initCardNumberField(localizedContext: Context) {
+        binding.textInputLayoutMealVoucherCardNumber.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_MealVoucher_CardNumberInput,
+            localizedContext,
+        )
+
+        binding.editTextMealVoucherCardNumber.setOnChangeListener {
+            giftCardDelegate.updateInputData { cardNumber = binding.editTextMealVoucherCardNumber.rawValue }
+            binding.textInputLayoutMealVoucherCardNumber.hideError()
+        }
+
+        binding.editTextMealVoucherCardNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
+            if (hasFocus) {
+                binding.textInputLayoutMealVoucherCardNumber.hideError()
+            } else if (cardNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutMealVoucherCardNumber.showError(
+                    localizedContext.getString(cardNumberValidation.reason)
+                )
+            }
+        }
+    }
+
+    private fun initExpiryDateField(localizedContext: Context) {
+        binding.textInputLayoutMealVoucherExpiryDate.setLocalizedHintFromStyle(
+            R.style.AdyenCheckout_MealVoucher_ExpiryDateInput,
+            localizedContext,
+        )
+
+        binding.editTextMealVoucherExpiryDate.setOnChangeListener {
+            val date = binding.editTextMealVoucherExpiryDate.date
+            giftCardDelegate.updateInputData {
+                // TODO Update expiry date
+            }
+            binding.textInputLayoutMealVoucherExpiryDate.hideError()
+        }
+
+        binding.editTextMealVoucherExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            // TODO Get validation from outputData
+            if (hasFocus) {
+                binding.textInputLayoutMealVoucherExpiryDate.hideError()
+            } else {
+                // TODO Check if validation is invalid and show error
+            }
+        }
+    }
+
+    private fun initSecurityCodeField(localizedContext: Context) {
+        if (giftCardDelegate.isPinRequired()) {
+            binding.textInputLayoutMealVoucherSecurityCode.setLocalizedHintFromStyle(
+                R.style.AdyenCheckout_MealVoucher_SecurityCodeInput,
+                localizedContext,
+            )
+
+            binding.editTextMealVoucherSecurityCode.setOnChangeListener { editable: Editable ->
+                giftCardDelegate.updateInputData { pin = editable.toString() }
+                binding.textInputLayoutMealVoucherSecurityCode.hideError()
+            }
+
+            binding.editTextMealVoucherSecurityCode.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val securityCodeValidation = giftCardDelegate.outputData.pinFieldState.validation
+                if (hasFocus) {
+                    binding.textInputLayoutMealVoucherSecurityCode.hideError()
+                } else if (securityCodeValidation is Validation.Invalid) {
+                    binding.textInputLayoutMealVoucherSecurityCode.showError(
+                        localizedContext.getString(
+                            securityCodeValidation.reason,
+                        ),
+                    )
+                }
+            }
+        } else {
+            binding.textInputLayoutMealVoucherSecurityCode.isVisible = false
+        }
     }
 
     override fun highlightValidationErrors() {
-        TODO("Not yet implemented")
+        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
+        val outputData = giftCardDelegate.outputData
+        var isErrorFocused = false
+        val cardNumberValidation = outputData.numberFieldState.validation
+        if (cardNumberValidation is Validation.Invalid) {
+            isErrorFocused = true
+            binding.textInputLayoutMealVoucherCardNumber.requestFocus()
+            binding.textInputLayoutMealVoucherCardNumber.showError(
+                localizedContext.getString(cardNumberValidation.reason),
+            )
+        }
+        // TODO Add expiry date validation
+        val securityCodeValidation = outputData.pinFieldState.validation
+        if (securityCodeValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                binding.textInputLayoutMealVoucherSecurityCode.requestFocus()
+            }
+            binding.textInputLayoutMealVoucherSecurityCode.showError(
+                localizedContext.getString(securityCodeValidation.reason),
+            )
+        }
     }
 
-    override fun getView(): View {
-        TODO("Not yet implemented")
-    }
+    override fun getView(): View = this
 }
