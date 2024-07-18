@@ -21,12 +21,11 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 /**
  * Input that support formatting for card number.
  */
-open class CardNumberInput @JvmOverloads constructor(
+class CardNumberInput @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    AdyenTextInputEditText(context, attrs, defStyleAttr) {
+) : AdyenTextInputEditText(context, attrs, defStyleAttr) {
 
     private var isAmexCard = false
     override val rawValue: String
