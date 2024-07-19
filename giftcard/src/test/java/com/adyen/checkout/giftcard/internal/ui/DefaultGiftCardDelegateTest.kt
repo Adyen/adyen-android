@@ -434,6 +434,7 @@ internal class DefaultGiftCardDelegateTest(
         cardEncryptor = cardEncryptor,
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        componentViewType = GiftCardComponentViewType(),
     )
 
     private fun createCheckoutConfiguration(
