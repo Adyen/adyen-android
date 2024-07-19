@@ -1,25 +1,17 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 18/7/2022.
+ * Created by josephj on 19/7/2024.
  */
 
-package com.adyen.checkout.cse.internal.test
+package com.adyen.checkout.cse.internal
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
-import com.adyen.checkout.cse.internal.BaseCardEncryptor
 
-/**
- * Test implementation of [BaseCardEncryptor]. This class should never be used in not test code as it does not do
- * any encryption!
- */
-// TODO move to test fixtures once it becomes supported on Android
-@RestrictTo(RestrictTo.Scope.TESTS)
 class TestCardEncryptor : BaseCardEncryptor {
 
     var shouldThrowException = false
