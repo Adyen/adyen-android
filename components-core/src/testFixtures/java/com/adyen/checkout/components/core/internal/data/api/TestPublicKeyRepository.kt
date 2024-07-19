@@ -1,23 +1,16 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 5/8/2022.
+ * Created by josephj on 19/7/2024.
  */
 
-package com.adyen.checkout.components.core.internal.test
+package com.adyen.checkout.components.core.internal.data.api
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.core.Environment
 import java.io.IOException
 
-/**
- * Test implementation of [PublicKeyRepository]. This class should never be used except in test code.
- */
-// TODO move to test fixtures once it becomes supported on Android
-@RestrictTo(RestrictTo.Scope.TESTS)
 class TestPublicKeyRepository : PublicKeyRepository {
 
     var shouldReturnError = false
