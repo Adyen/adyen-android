@@ -38,7 +38,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
+import com.adyen.checkout.ui.core.internal.TestRedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
