@@ -8,13 +8,11 @@
 
 package com.adyen.checkout.test
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.AdyenLogger
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
-@RestrictTo(RestrictTo.Scope.TESTS, RestrictTo.Scope.LIBRARY_GROUP)
 class LoggingExtension : BeforeAllCallback, AfterAllCallback {
 
     override fun beforeAll(context: ExtensionContext?) {
