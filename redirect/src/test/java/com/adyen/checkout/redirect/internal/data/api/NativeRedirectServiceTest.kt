@@ -2,7 +2,6 @@ package com.adyen.checkout.redirect.internal.data.api
 
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,7 +10,6 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.verify
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
 internal class NativeRedirectServiceTest(
     @Mock private val httpClient: HttpClient

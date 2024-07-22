@@ -10,14 +10,12 @@ package com.adyen.checkout.ui.core.internal.util
 
 import app.cash.turbine.test
 import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class FlowExtensionsTest {
 
     @Test
