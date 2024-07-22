@@ -37,15 +37,6 @@ public final class com/adyen/checkout/ui/core/internal/exception/PermissionReque
 	public fun <init> (Ljava/lang/String;)V
 }
 
-public final class com/adyen/checkout/ui/core/internal/test/TestAddressRepository$Companion {
-	public final fun getCOUNTRIES ()Ljava/util/List;
-	public final fun getSTATES ()Ljava/util/List;
-}
-
-public final class com/adyen/checkout/ui/core/internal/test/TestRedirectHandler$Companion {
-	public final fun getREDIRECT_RESULT ()Lorg/json/JSONObject;
-}
-
 public final class com/adyen/checkout/ui/core/internal/ui/AddressFormUIState$Companion {
 	public final fun fromAddressParams (Lcom/adyen/checkout/ui/core/internal/ui/model/AddressParams;)Lcom/adyen/checkout/ui/core/internal/ui/AddressFormUIState;
 }
