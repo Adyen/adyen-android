@@ -24,14 +24,17 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {
-    implementation project(':checkout-core')
-    implementation libraries.androidx.lifecycle
-
-    implementation testLibraries.junit5
-    implementation testLibraries.kotlinCoroutines
+    testFixturesImplementation project(':checkout-core')
+    testFixturesImplementation libraries.androidx.lifecycle
+    testFixturesImplementation testLibraries.junit5
+    testFixturesImplementation testLibraries.kotlinCoroutines
 }
 
 // Disable test tasks, because this module only contains test utils.

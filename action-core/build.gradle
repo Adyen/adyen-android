@@ -51,7 +51,7 @@ dependencies {
 
     //Tests
     testImplementation project(':3ds2')
-    testImplementation project(':test-core')
+    testImplementation testFixtures(project(':test-core'))
     testImplementation project(':twint')
     testImplementation project(':wechatpay')
     testImplementation testFixtures(project(':components-core'))
