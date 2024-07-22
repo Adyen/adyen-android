@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.AdyenLogger
 import com.adyen.checkout.core.internal.util.Logger
-import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 import kotlinx.coroutines.CoroutineScope

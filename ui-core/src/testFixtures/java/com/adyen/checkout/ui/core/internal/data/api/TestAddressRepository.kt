@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 21/2/2023.
+ * Created by josephj on 22/7/2024.
  */
 
-package com.adyen.checkout.ui.core.internal.test
+package com.adyen.checkout.ui.core.internal.data.api
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -17,18 +15,19 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import java.util.Locale
 
 /**
- * Test implementation of [AddressRepository]. This class should never be used except in test code.
+ * Test implementation of [AddressRepository].
  */
-@RestrictTo(RestrictTo.Scope.TESTS)
 class TestAddressRepository : AddressRepository {
 
     // will emit an empty list
     var shouldReturnError = false
 
-    private val _statesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
+    private val _statesFlow: MutableSharedFlow<List<AddressItem>> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     override val statesFlow: Flow<List<AddressItem>> = _statesFlow
 
-    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> = MutableSharedFlow(extraBufferCapacity = 1)
+    private val _countriesFlow: MutableSharedFlow<List<AddressItem>> =
+        MutableSharedFlow(extraBufferCapacity = 1)
     override val countriesFlow: Flow<List<AddressItem>> = _countriesFlow
 
     override fun getStateList(
