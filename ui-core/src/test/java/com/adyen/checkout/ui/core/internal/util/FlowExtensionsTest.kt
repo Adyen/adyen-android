@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.core.internal.util
 
 import app.cash.turbine.test
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

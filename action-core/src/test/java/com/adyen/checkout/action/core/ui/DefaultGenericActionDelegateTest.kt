@@ -29,7 +29,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
