@@ -15,6 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
+@Suppress("LongParameterList")
 class GiftCardPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,

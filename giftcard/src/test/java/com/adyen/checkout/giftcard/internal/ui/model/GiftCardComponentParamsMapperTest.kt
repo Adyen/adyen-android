@@ -232,6 +232,7 @@ internal class GiftCardComponentParamsMapperTest {
             ),
             isSubmitButtonVisible = isSubmitButtonVisible,
             isPinRequired = isPinRequired,
+            isExpiryDateRequired = false
         )
     }
 
