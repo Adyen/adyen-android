@@ -18,4 +18,5 @@ data class GiftCardComponentParams(
     private val commonComponentParams: CommonComponentParams,
     override val isSubmitButtonVisible: Boolean,
     val isPinRequired: Boolean,
+    val isExpiryDateRequired: Boolean,
 ) : ComponentParams by commonComponentParams, ButtonParams
