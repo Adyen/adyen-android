@@ -19,6 +19,8 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
@@ -34,6 +36,7 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -455,6 +458,8 @@ internal class DefaultGiftCardDelegateTest(
     ) = GiftCardOutputData(
         numberFieldState = GiftCardNumberUtils.validateInputField(number),
         pinFieldState = GiftCardPinUtils.validateInputField(pin),
+        // expiry date is valid since it doesn't apply to gift cards
+        expiryDateFieldState = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
     )
 
     companion object {
@@ -462,6 +467,7 @@ internal class DefaultGiftCardDelegateTest(
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
+        private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
 
         @JvmStatic
         fun amountSource() = listOf(
