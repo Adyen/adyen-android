@@ -28,6 +28,6 @@ internal object MealVoucherViewProvider : ViewProvider {
 internal object MealVoucherComponentViewType : GiftCardComponentViewType() {
     override val viewProvider: ViewProvider = MealVoucherViewProvider
 
-    // TODO update button text if necessary
+    // TODO Add the Redeem text also in meal voucher module
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
 }

@@ -10,9 +10,11 @@ package com.adyen.checkout.giftcard.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.InputData
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class GiftCardInputData(
     var cardNumber: String = "",
-    var pin: String = ""
+    var pin: String = "",
+    var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
 ) : InputData

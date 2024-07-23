@@ -50,6 +50,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -166,15 +167,25 @@ class DefaultGiftCardDelegate(
     private fun createOutputData() = GiftCardOutputData(
         numberFieldState = GiftCardNumberUtils.validateInputField(inputData.cardNumber),
         pinFieldState = getPinFieldState(inputData.pin),
+        expiryDateFieldState = getExpiryDateFieldState(inputData.expiryDate),
     )
 
-    private fun getPinFieldState(pin: String): FieldState<String> {
-        return if (isPinRequired()) {
-            GiftCardPinUtils.validateInputField(pin)
-        } else {
-            FieldState(pin, Validation.Valid)
-        }
+    private fun getPinFieldState(pin: String) = if (isPinRequired()) {
+        GiftCardPinUtils.validateInputField(pin)
+    } else {
+        FieldState(pin, Validation.Valid)
     }
+
+    override fun isPinRequired(): Boolean = componentParams.isPinRequired
+
+    private fun getExpiryDateFieldState(expiryDate: ExpiryDate) = if (isExpiryDateRequired()) {
+        // TODO Implement validation
+        FieldState(expiryDate, Validation.Valid)
+    } else {
+        FieldState(expiryDate, Validation.Valid)
+    }
+
+    private fun isExpiryDateRequired() = componentParams.isExpiryDateRequired
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: GiftCardOutputData) {
@@ -220,6 +231,8 @@ class DefaultGiftCardDelegate(
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
+            encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             brand = paymentMethod.brand,
         )
 
@@ -255,9 +268,19 @@ class DefaultGiftCardDelegate(
     ): EncryptedCard? = try {
         val unencryptedCard = UnencryptedCard.Builder().run {
             setNumber(outputData.numberFieldState.value)
+
             if (componentParams.isPinRequired) {
                 setCvc(outputData.pinFieldState.value)
             }
+
+            val expiryDateResult = outputData.expiryDateFieldState.value
+            if (componentParams.isExpiryDateRequired && expiryDateResult != ExpiryDate.EMPTY_DATE) {
+                setExpiryDate(
+                    expiryMonth = expiryDateResult.expiryMonth.toString(),
+                    expiryYear = expiryDateResult.expiryYear.toString(),
+                )
+            }
+
             build()
         }
 
@@ -353,8 +376,6 @@ class DefaultGiftCardDelegate(
         _componentStateFlow.tryEmit(updatedState)
         submitHandler.onSubmit(updatedState)
     }
-
-    override fun isPinRequired(): Boolean = componentParams.isPinRequired
 
     override fun onCleared() {
         removeObserver()
