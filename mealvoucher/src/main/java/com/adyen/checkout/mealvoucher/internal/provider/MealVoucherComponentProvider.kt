@@ -38,7 +38,6 @@ import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
-import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.toCheckoutConfiguration
 import com.adyen.checkout.mealvoucher.MealVoucherComponent
 import com.adyen.checkout.mealvoucher.MealVoucherComponentCallback
@@ -46,6 +45,7 @@ import com.adyen.checkout.mealvoucher.MealVoucherComponentState
 import com.adyen.checkout.mealvoucher.MealVoucherConfiguration
 import com.adyen.checkout.mealvoucher.SessionsMealVoucherComponentCallback
 import com.adyen.checkout.mealvoucher.internal.ui.MealVoucherComponentViewType
+import com.adyen.checkout.mealvoucher.internal.ui.model.MealVoucherComponentParamsMapper
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -91,8 +91,7 @@ constructor(
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            // TODO check if we need meal voucher component params mapper
-            val componentParams = GiftCardComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = MealVoucherComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,
@@ -184,8 +183,7 @@ constructor(
 
         val cardEncryptor = CardEncryptorFactory.provide()
         val giftCardFactory = viewModelFactory(savedStateRegistryOwner, null) { savedStateHandle ->
-            // TODO check if we need meal voucher component params mapper
-            val componentParams = GiftCardComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            val componentParams = MealVoucherComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
                 checkoutConfiguration = checkoutConfiguration,
                 deviceLocale = localeProvider.getLocale(application),
                 dropInOverrideParams = dropInOverrideParams,

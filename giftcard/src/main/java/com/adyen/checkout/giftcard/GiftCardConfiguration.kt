@@ -147,7 +147,9 @@ fun CheckoutConfiguration.giftCard(
     return this
 }
 
-internal fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
+// TODO revert RestrictTo annotation after implementing MealVoucherConfiguration class.
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
     return getConfiguration(PaymentMethodTypes.GIFTCARD)
 }
 

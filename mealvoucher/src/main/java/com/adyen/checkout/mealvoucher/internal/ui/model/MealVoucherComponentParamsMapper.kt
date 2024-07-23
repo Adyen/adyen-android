@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 22/11/2023.
+ * Created by ararat on 23/7/2024.
  */
 
-package com.adyen.checkout.giftcard.internal.ui.model
+package com.adyen.checkout.mealvoucher.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -14,10 +14,11 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.giftcard.getGiftCardConfiguration
+import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GiftCardComponentParamsMapper(
+class MealVoucherComponentParamsMapper(
     private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
@@ -34,13 +35,15 @@ class GiftCardComponentParamsMapper(
             componentSessionParams,
         )
         val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
+        // TODO Change this to getMealVoucherConfiguration()
         val giftCardConfiguration = checkoutConfiguration.getGiftCardConfiguration()
         return GiftCardComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
                 ?: giftCardConfiguration?.isSubmitButtonVisible ?: true,
+            // TODO Check if we need a config for pin required or not for Meal voucher
             isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
-            isExpiryDateRequired = false,
+            isExpiryDateRequired = true,
         )
     }
 }
