@@ -9,9 +9,6 @@
 package com.adyen.checkout.giftcard.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.giftcard.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object GiftCardNumberUtils {
@@ -41,15 +38,14 @@ object GiftCardNumberUtils {
         return text.replace(DIGIT_SEPARATOR.toString(), "")
     }
 
-    fun validateInputField(giftCardNumber: String): FieldState<String> {
+    // TODO Add tests
+    fun validateInputField(giftCardNumber: String): GiftCardNumberValidationResult {
         val rawInput = getRawValue(giftCardNumber)
-        val validation = when {
-            rawInput.length < MINIMUM_GIFT_CARD_NUMBER_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_number_not_valid)
-            rawInput.length > MAXIMUM_GIFT_CARD_NUMBER_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_number_not_valid)
-            else -> Validation.Valid
+
+        return when {
+            rawInput.length < MINIMUM_GIFT_CARD_NUMBER_LENGTH -> GiftCardNumberValidationResult.INVALID
+            rawInput.length > MAXIMUM_GIFT_CARD_NUMBER_LENGTH -> GiftCardNumberValidationResult.INVALID
+            else -> GiftCardNumberValidationResult.VALID
         }
-        return FieldState(rawInput, validation)
     }
 }
