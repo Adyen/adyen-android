@@ -98,17 +98,21 @@ internal class MealVoucherView @JvmOverloads constructor(
         binding.editTextMealVoucherExpiryDate.setOnChangeListener {
             val date = binding.editTextMealVoucherExpiryDate.date
             giftCardDelegate.updateInputData {
-                // TODO Update expiry date
+                expiryDate = date
             }
             binding.textInputLayoutMealVoucherExpiryDate.hideError()
         }
 
         binding.editTextMealVoucherExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            // TODO Get validation from outputData
+            val expiryDateValidation = giftCardDelegate.outputData.expiryDateFieldState.validation
             if (hasFocus) {
                 binding.textInputLayoutMealVoucherExpiryDate.hideError()
-            } else {
-                // TODO Check if validation is invalid and show error
+            } else if (expiryDateValidation is Validation.Invalid) {
+                binding.textInputLayoutMealVoucherExpiryDate.showError(
+                    localizedContext.getString(
+                        expiryDateValidation.reason,
+                    ),
+                )
             }
         }
     }
@@ -146,6 +150,7 @@ internal class MealVoucherView @JvmOverloads constructor(
         adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
         val outputData = giftCardDelegate.outputData
         var isErrorFocused = false
+
         val cardNumberValidation = outputData.numberFieldState.validation
         if (cardNumberValidation is Validation.Invalid) {
             isErrorFocused = true
@@ -154,7 +159,17 @@ internal class MealVoucherView @JvmOverloads constructor(
                 localizedContext.getString(cardNumberValidation.reason),
             )
         }
-        // TODO Add expiry date validation
+
+        val expiryDateValidation = outputData.expiryDateFieldState.validation
+        if (expiryDateValidation is Validation.Invalid) {
+            if (!isErrorFocused) {
+                binding.textInputLayoutMealVoucherExpiryDate.requestFocus()
+            }
+            binding.textInputLayoutMealVoucherExpiryDate.showError(
+                localizedContext.getString(expiryDateValidation.reason),
+            )
+        }
+
         val securityCodeValidation = outputData.pinFieldState.validation
         if (securityCodeValidation is Validation.Invalid) {
             if (!isErrorFocused) {
