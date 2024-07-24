@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.giftcard.internal.util
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.giftcard.R
 
-internal object GiftCardPinUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object GiftCardPinUtils {
 
     private const val MINIMUM_GIFT_CARD_PIN_LENGTH = 3
     private const val MAXIMUM_GIFT_CARD_PIN_LENGTH = 10
