@@ -10,6 +10,8 @@ package com.adyen.checkout.mealvoucher.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardNumberValidationResult
 import com.adyen.checkout.mealvoucher.R
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
@@ -19,6 +21,18 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 
 internal object MealVoucherValidationUtils {
+
+    fun validateNumber(number: String): FieldState<String> {
+        val validation = GiftCardNumberUtils.validateInputField(number)
+
+        return when (validation) {
+            GiftCardNumberValidationResult.VALID -> FieldState(number, Validation.Valid)
+            GiftCardNumberValidationResult.INVALID -> FieldState(
+                number,
+                Validation.Invalid(R.string.checkout_meal_voucher_number_not_valid),
+            )
+        }
+    }
 
     fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
