@@ -12,6 +12,8 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberValidationResult
+import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardPinValidationResult
 import com.adyen.checkout.mealvoucher.R
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
@@ -30,6 +32,18 @@ internal object MealVoucherValidationUtils {
             GiftCardNumberValidationResult.INVALID -> FieldState(
                 number,
                 Validation.Invalid(R.string.checkout_meal_voucher_number_not_valid),
+            )
+        }
+    }
+
+    fun validatePin(pin: String): FieldState<String> {
+        val validation = GiftCardPinUtils.validateInputField(pin)
+
+        return when (validation) {
+            GiftCardPinValidationResult.VALID -> FieldState(pin, Validation.Valid)
+            GiftCardPinValidationResult.INVALID -> FieldState(
+                pin,
+                Validation.Invalid(R.string.checkout_meal_voucher_pin_not_valid),
             )
         }
     }
