@@ -43,8 +43,7 @@ import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
-import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
-import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardValidator
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -69,7 +68,8 @@ class DefaultGiftCardDelegate(
     override val componentParams: GiftCardComponentParams,
     private val cardEncryptor: BaseCardEncryptor,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
-    componentViewType: GiftCardComponentViewType
+    private val validator: GiftCardValidator,
+    componentViewType: GiftCardComponentViewType,
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -165,13 +165,13 @@ class DefaultGiftCardDelegate(
     }
 
     private fun createOutputData() = GiftCardOutputData(
-        numberFieldState = GiftCardNumberUtils.validateInputField(inputData.cardNumber),
+        numberFieldState = validator.validateNumber(inputData.cardNumber),
         pinFieldState = getPinFieldState(inputData.pin),
         expiryDateFieldState = getExpiryDateFieldState(inputData.expiryDate),
     )
 
     private fun getPinFieldState(pin: String) = if (isPinRequired()) {
-        GiftCardPinUtils.validateInputField(pin)
+        validator.validatePin(pin)
     } else {
         FieldState(pin, Validation.Valid)
     }
@@ -179,8 +179,7 @@ class DefaultGiftCardDelegate(
     override fun isPinRequired(): Boolean = componentParams.isPinRequired
 
     private fun getExpiryDateFieldState(expiryDate: ExpiryDate) = if (isExpiryDateRequired()) {
-        // TODO Implement validation
-        FieldState(expiryDate, Validation.Valid)
+        validator.validateExpiryDate(expiryDate)
     } else {
         FieldState(expiryDate, Validation.Valid)
     }

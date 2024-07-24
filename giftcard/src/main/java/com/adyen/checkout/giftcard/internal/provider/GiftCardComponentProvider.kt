@@ -44,6 +44,7 @@ import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandle
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
+import com.adyen.checkout.giftcard.internal.util.DefaultGiftCardValidator
 import com.adyen.checkout.giftcard.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
@@ -115,6 +116,7 @@ constructor(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                validator = DefaultGiftCardValidator(),
                 componentViewType = GiftCardComponentViewType(),
             )
 
@@ -207,6 +209,7 @@ constructor(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                validator = DefaultGiftCardValidator(),
                 componentViewType = GiftCardComponentViewType(),
             )
 

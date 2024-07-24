@@ -46,6 +46,7 @@ import com.adyen.checkout.mealvoucher.MealVoucherConfiguration
 import com.adyen.checkout.mealvoucher.SessionsMealVoucherComponentCallback
 import com.adyen.checkout.mealvoucher.internal.ui.MealVoucherComponentViewType
 import com.adyen.checkout.mealvoucher.internal.ui.model.MealVoucherComponentParamsMapper
+import com.adyen.checkout.mealvoucher.internal.util.MealVoucherValidator
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -117,6 +118,7 @@ constructor(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                validator = MealVoucherValidator(),
                 componentViewType = MealVoucherComponentViewType,
             )
 
@@ -209,6 +211,7 @@ constructor(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
+                validator = MealVoucherValidator(),
                 componentViewType = MealVoucherComponentViewType,
             )
 
