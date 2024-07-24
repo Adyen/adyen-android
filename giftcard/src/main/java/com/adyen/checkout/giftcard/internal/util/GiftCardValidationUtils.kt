@@ -27,6 +27,18 @@ internal object GiftCardValidationUtils {
         }
     }
 
+    fun validatePin(pin: String): FieldState<String> {
+        val validation = GiftCardPinUtils.validateInputField(pin)
+
+        return when (validation) {
+            GiftCardPinValidationResult.VALID -> FieldState(pin, Validation.Valid)
+            GiftCardPinValidationResult.INVALID -> FieldState(
+                pin,
+                Validation.Invalid(R.string.checkout_giftcard_pin_not_valid),
+            )
+        }
+    }
+
     fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
         return FieldState(expiryDate, Validation.Valid)
     }

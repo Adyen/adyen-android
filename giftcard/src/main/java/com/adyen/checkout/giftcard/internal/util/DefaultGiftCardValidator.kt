@@ -17,7 +17,7 @@ internal class DefaultGiftCardValidator : GiftCardValidator {
     }
 
     override fun validatePin(pin: String): FieldState<String> {
-        return GiftCardPinUtils.validateInputField(pin)
+        return GiftCardValidationUtils.validatePin(pin)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
