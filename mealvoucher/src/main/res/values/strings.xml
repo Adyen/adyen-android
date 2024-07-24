@@ -13,6 +13,7 @@
     <string name="checkout_meal_voucher_security_code_hint" translatable="false">Security code</string>
 
     <string name="checkout_meal_voucher_number_not_valid" translatable="false">Invalid card number</string>
+    <string name="checkout_meal_voucher_pin_not_valid" translatable="false">Invalid security code</string>
 
     <string name="checkout_meal_voucher_expiry_date_not_valid" translatable="false">Invalid expiry date</string>
     <string name="checkout_meal_voucher_expiry_date_not_valid_too_old" translatable="false">Card too old</string>
