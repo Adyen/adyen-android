@@ -225,6 +225,16 @@ public final class com/adyen/checkout/giftcard/internal/provider/GiftCardCompone
 public final class com/adyen/checkout/giftcard/internal/ui/DefaultGiftCardDelegate$Companion {
 }
 
+public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
+	public static final field Companion Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion;
+	public fun <init> (Landroid/content/Context;)V
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public fun getRawValue ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion {
+}
+
 public final class com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus$FullPayment : com/adyen/checkout/giftcard/internal/util/GiftCardBalanceStatus {
 	public fun <init> (Lcom/adyen/checkout/components/core/Amount;Lcom/adyen/checkout/components/core/Amount;)V
 	public final fun getAmountPaid ()Lcom/adyen/checkout/components/core/Amount;

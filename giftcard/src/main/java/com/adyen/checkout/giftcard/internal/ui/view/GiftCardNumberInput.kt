@@ -14,6 +14,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 import androidx.autofill.HintConstants
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.DIGIT_SEPARATOR
@@ -21,7 +22,9 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAXIMUM_GIF
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAX_DIGIT_SEPARATOR_COUNT
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 
-internal class GiftCardNumberInput(
+class GiftCardNumberInput
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
