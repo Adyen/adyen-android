@@ -137,6 +137,12 @@ object PaymentMethodTypes {
     )
 
     // Payment methods that do not need a payment component, but only an action component
+    @Suppress("unused")
+    @Deprecated(
+        """
+        This list is no longer relevant nor maintained. To check which payment methods are supported by the 
+        InstantPayComponent use InstantPayComponent.PROVIDER.isPaymentMethodSupported.""",
+    )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = listOf(
         DUIT_NOW,
         PAY_NOW,

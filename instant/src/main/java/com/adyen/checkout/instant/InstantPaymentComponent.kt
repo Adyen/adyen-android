@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -74,5 +75,21 @@ class InstantPaymentComponent internal constructor(
 
         @JvmField
         val PROVIDER = InstantPaymentComponentProvider()
+
+        /**
+         * These are the payment method types known to be supported by the [InstantPaymentComponent]. There are
+         * payment method types that are not listed here that are actually supported. See
+         * [InstantPaymentComponentProvider.isPaymentMethodSupported] for more details.
+         */
+        @JvmField
+        val PAYMENT_METHOD_TYPES = listOf(
+            PaymentMethodTypes.DUIT_NOW,
+            PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.PIX,
+            PaymentMethodTypes.PROMPT_PAY,
+            PaymentMethodTypes.TWINT,
+            PaymentMethodTypes.WECHAT_PAY_SDK,
+            PaymentMethodTypes.MULTIBANCO,
+        )
     }
 }
