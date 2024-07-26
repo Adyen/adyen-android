@@ -32,6 +32,7 @@ public final class com/adyen/checkout/instant/InstantComponentState : com/adyen/
 
 public final class com/adyen/checkout/instant/InstantPaymentComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/instant/InstantPaymentComponent$Companion;
+	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/instant/internal/provider/InstantPaymentComponentProvider;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public fun getDelegate ()Lcom/adyen/checkout/components/core/internal/ui/ComponentDelegate;

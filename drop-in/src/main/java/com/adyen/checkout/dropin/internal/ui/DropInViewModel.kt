@@ -149,6 +149,7 @@ internal class DropInViewModel(
         return getStoredPaymentMethods().firstOrNull { it.id == id } ?: StoredPaymentMethod()
     }
 
+    @Suppress("ReturnCount")
     fun shouldSkipToSinglePaymentMethod(): Boolean {
         if (!dropInParams.skipListWhenSinglePaymentMethod) return false
 
@@ -157,8 +158,8 @@ internal class DropInViewModel(
 
         val firstPaymentMethod = getPaymentMethods().firstOrNull() ?: return false
 
-        val paymentMethodHasComponent = !SKIP_TO_SINGLE_PM_BLOCK_LIST.contains(firstPaymentMethod.type)
-            && PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod.type)
+        val paymentMethodHasComponent = !SKIP_TO_SINGLE_PM_BLOCK_LIST.contains(firstPaymentMethod.type) &&
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod.type)
 
         return noStored && singlePm && paymentMethodHasComponent
     }
