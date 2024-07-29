@@ -50,7 +50,8 @@ class TestAnalyticsManager : AnalyticsManager {
 
     private fun areEventsEqual(expected: AnalyticsEvent, actual: AnalyticsEvent): Boolean {
         val re = ReflectionEquals(
-            expected, // Exclude these field as they are generated at runtime
+            expected,
+            // Exclude these fields as they are generated at runtime
             "id",
             "timestamp",
         )

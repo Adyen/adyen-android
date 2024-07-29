@@ -12,9 +12,7 @@ import androidx.lifecycle.ViewModel
 
 /**
  * Invokes the [ViewModel.onCleared] method. This method is protected, so we can only call it with reflection.
- *
- * Should only be used in tests.
-// */
+ */
 fun ViewModel.invokeOnCleared() {
     var clazz: Class<*> = javaClass
     while (clazz.declaredMethods.toList().none { it.name == "onCleared" }) {

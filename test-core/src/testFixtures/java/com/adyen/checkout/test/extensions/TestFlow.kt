@@ -20,8 +20,6 @@ import kotlin.coroutines.CoroutineContext
 
 /**
  * Collects the values of a flow into a list.
- *
- * Should only be used in tests.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestFlow<T> internal constructor(flow: Flow<T>, testScheduler: TestCoroutineScheduler) : CoroutineScope {
