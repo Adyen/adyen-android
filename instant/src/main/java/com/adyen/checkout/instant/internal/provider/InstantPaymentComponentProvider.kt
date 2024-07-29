@@ -10,6 +10,7 @@ package com.adyen.checkout.instant.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -267,9 +268,23 @@ constructor(
     override fun isPaymentMethodSupported(paymentMethod: PaymentMethod): Boolean {
         return when {
             PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
-            InstantPaymentComponent.PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> true
+            EXPLICITLY_SUPPORTED_PAYMENT_METHOD_TYPES.contains(paymentMethod.type) -> true
             PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(paymentMethod.type) -> false
             else -> true
         }
+    }
+
+    companion object {
+
+        @VisibleForTesting
+        internal val EXPLICITLY_SUPPORTED_PAYMENT_METHOD_TYPES = listOf(
+            PaymentMethodTypes.DUIT_NOW,
+            PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.PIX,
+            PaymentMethodTypes.PROMPT_PAY,
+            PaymentMethodTypes.TWINT,
+            PaymentMethodTypes.WECHAT_PAY_SDK,
+            PaymentMethodTypes.MULTIBANCO,
+        )
     }
 }

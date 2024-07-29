@@ -2,7 +2,6 @@ package com.adyen.checkout.instant.internal.provider
 
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
-import com.adyen.checkout.instant.InstantPaymentComponent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
@@ -39,7 +38,8 @@ internal class InstantPaymentComponentProviderTest {
             ) +
                 // Only action only payment methods are supported
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.map {
-                    val isSupported = InstantPaymentComponent.PAYMENT_METHOD_TYPES.contains(it)
+                    val isSupported =
+                        InstantPaymentComponentProvider.EXPLICITLY_SUPPORTED_PAYMENT_METHOD_TYPES.contains(it)
                     arguments(it, isSupported)
                 } +
                 // Unsupported payment methods are not supported
