@@ -43,8 +43,9 @@ dependencies {
     implementation libraries.wechat
 
     //Tests
-    testImplementation project(':test-core')
+    testImplementation testFixtures(project(':test-core'))
     testImplementation testFixtures(project(':components-core'))
+    testImplementation testFixtures(project(':ui-core'))
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito

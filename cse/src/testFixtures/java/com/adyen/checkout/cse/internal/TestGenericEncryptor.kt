@@ -1,23 +1,15 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 10/8/2022.
+ * Created by josephj on 19/7/2024.
  */
 
-package com.adyen.checkout.cse.internal.test
+package com.adyen.checkout.cse.internal
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 
-/**
- * Test implementation of [BaseGenericEncryptor]. This class should never be used in not test code as it does not do
- * any encryption!
- */
-// TODO move to test fixtures once it becomes supported on Android
-@RestrictTo(RestrictTo.Scope.TESTS)
 class TestGenericEncryptor : BaseGenericEncryptor {
 
     var shouldThrowException = false

@@ -22,6 +22,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    testFixtures {
+        enable = true
+    }
 }
 
 dependencies {
@@ -33,4 +37,7 @@ dependencies {
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
     testImplementation testLibraries.jose4j
+
+    testFixturesImplementation testLibraries.junit5
+    testFixturesImplementation testLibraries.mockito
 }

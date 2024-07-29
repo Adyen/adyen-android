@@ -39,7 +39,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -47,7 +47,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.test.TestCardEncryptor
+import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler

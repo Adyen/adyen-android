@@ -1933,9 +1933,6 @@ public final class com/adyen/checkout/components/core/internal/provider/StoredPa
 	public static synthetic fun get$default (Lcom/adyen/checkout/components/core/internal/provider/StoredPaymentComponentProvider;Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/StoredPaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 }
 
-public final class com/adyen/checkout/components/core/internal/test/TestPublicKeyRepository$Companion {
-}
-
 public final class com/adyen/checkout/components/core/internal/ui/model/Validation$Invalid : com/adyen/checkout/components/core/internal/ui/model/Validation {
 	public fun <init> (IZ)V
 	public synthetic fun <init> (IZILkotlin/jvm/internal/DefaultConstructorMarker;)V

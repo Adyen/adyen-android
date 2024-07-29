@@ -23,7 +23,7 @@ import com.adyen.checkout.econtext.internal.ui.EContextDelegate
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions

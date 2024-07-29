@@ -1,25 +1,21 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 21/2/2023.
+ * Created by josephj on 22/7/2024.
  */
 
-package com.adyen.checkout.ui.core.internal.test
+package com.adyen.checkout.ui.core.internal
 
 import android.content.Context
 import android.net.Uri
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.ui.core.internal.RedirectHandler
 import org.json.JSONObject
 
 /**
- * Test implementation of [RedirectHandler]. This class should never be used except in test code.
+ * Test implementation of [RedirectHandler].
  */
-// TODO move to test fixtures once it becomes supported on Android
-@RestrictTo(RestrictTo.Scope.TESTS)
 class TestRedirectHandler : RedirectHandler {
 
     var exception: ComponentException? = null

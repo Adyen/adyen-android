@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
+import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
-import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
@@ -40,8 +40,8 @@ import com.adyen.checkout.qrcode.qrCode
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.RedirectHandler
+import com.adyen.checkout.ui.core.internal.TestRedirectHandler
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
-import com.adyen.checkout.ui.core.internal.test.TestRedirectHandler
 import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
