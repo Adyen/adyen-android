@@ -44,8 +44,8 @@ import com.adyen.checkout.mealvoucher.MealVoucherComponentCallback
 import com.adyen.checkout.mealvoucher.MealVoucherComponentState
 import com.adyen.checkout.mealvoucher.MealVoucherConfiguration
 import com.adyen.checkout.mealvoucher.SessionsMealVoucherComponentCallback
-import com.adyen.checkout.mealvoucher.internal.ui.MealVoucherComponentViewType
 import com.adyen.checkout.mealvoucher.internal.ui.model.MealVoucherComponentParamsMapper
+import com.adyen.checkout.mealvoucher.internal.ui.protocol.MealVoucherProtocol
 import com.adyen.checkout.mealvoucher.internal.util.MealVoucherValidator
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
@@ -119,7 +119,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = MealVoucherValidator(),
-                componentViewType = MealVoucherComponentViewType,
+                protocol = MealVoucherProtocol(),
             )
 
             val genericActionDelegate =
@@ -212,7 +212,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = MealVoucherValidator(),
-                componentViewType = MealVoucherComponentViewType,
+                protocol = MealVoucherProtocol(),
             )
 
             val genericActionDelegate =
