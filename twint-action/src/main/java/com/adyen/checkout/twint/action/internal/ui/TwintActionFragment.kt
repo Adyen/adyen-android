@@ -59,7 +59,7 @@ internal class TwintActionFragment : Fragment() {
     private fun onPayEvent(event: TwintFlowType) {
         when (event) {
             is TwintFlowType.Recurring -> twint?.registerForUOF(event.token)
-            is TwintFlowType.Regular -> twint?.payWithCode(event.token)
+            is TwintFlowType.OneTime -> twint?.payWithCode(event.token)
         }
     }
 
