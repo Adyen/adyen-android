@@ -13,7 +13,9 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class TwintFlowType {
 
-    data class Regular(val token: String) : TwintFlowType()
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    data class OneTime(val token: String) : TwintFlowType()
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Recurring(val token: String) : TwintFlowType()
 }
