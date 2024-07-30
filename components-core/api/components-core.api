@@ -1394,14 +1394,16 @@ public final class com/adyen/checkout/components/core/action/TwintSdkData : com/
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/components/core/action/TwintSdkData$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
-	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Z)V
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/action/TwintSdkData;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
+	public final fun component2 ()Z
+	public final fun copy (Ljava/lang/String;Z)Lcom/adyen/checkout/components/core/action/TwintSdkData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/action/TwintSdkData;Ljava/lang/String;ZILjava/lang/Object;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
 	public fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getToken ()Ljava/lang/String;
 	public fun hashCode ()I
+	public final fun isStored ()Z
 	public fun toString ()Ljava/lang/String;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
