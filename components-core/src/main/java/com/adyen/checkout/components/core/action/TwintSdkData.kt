@@ -16,11 +16,13 @@ import org.json.JSONObject
 @Parcelize
 data class TwintSdkData(
     val token: String,
+    val isStored: Boolean,
 ) : SdkData() {
 
     companion object {
 
         private const val TOKEN = "token"
+        private const val IS_STORED = "isStored"
 
         @JvmField
         val SERIALIZER: Serializer<TwintSdkData> = object : Serializer<TwintSdkData> {
@@ -28,6 +30,7 @@ data class TwintSdkData(
                 return try {
                     JSONObject().apply {
                         putOpt(TOKEN, modelObject.token)
+                        putOpt(IS_STORED, modelObject.isStored)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(TwintSdkData::class.java, e)
@@ -38,6 +41,7 @@ data class TwintSdkData(
                 return try {
                     TwintSdkData(
                         token = jsonObject.getString(TOKEN),
+                        isStored = jsonObject.optBoolean(IS_STORED),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(TwintSdkData::class.java, e)
