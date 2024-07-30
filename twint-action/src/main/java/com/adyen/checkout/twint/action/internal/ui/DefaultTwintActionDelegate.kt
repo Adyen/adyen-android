@@ -68,8 +68,8 @@ internal class DefaultTwintActionDelegate(
     // Not used for Twint action
     override val timerFlow: Flow<TimerData> = flow {}
 
-    private val payEventChannel: Channel<String> = bufferedChannel()
-    override val payEventFlow: Flow<String> = payEventChannel.receiveAsFlow()
+    private val payEventChannel: Channel<TwintFlowType> = bufferedChannel()
+    override val payEventFlow: Flow<TwintFlowType> = payEventChannel.receiveAsFlow()
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -148,7 +148,12 @@ internal class DefaultTwintActionDelegate(
     }
 
     private fun launchAction(sdkData: TwintSdkData) {
-        payEventChannel.trySend(sdkData.token)
+        val flowType = if (sdkData.isStored) {
+            TwintFlowType.Recurring(sdkData.token)
+        } else {
+            TwintFlowType.Regular(sdkData.token)
+        }
+        payEventChannel.trySend(flowType)
     }
 
     override fun handleTwintResult(result: TwintPayResult) {

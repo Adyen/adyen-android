@@ -47,12 +47,19 @@ internal class TwintActionFragment : Fragment() {
 
         twintActionDelegate = delegate
         delegate.payEventFlow
-            .onEach { twint?.payWithCode(it) }
+            .onEach(::onPayEvent)
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
         queuedTwintResult?.let {
             adyenLog(AdyenLogLevel.DEBUG) { "initialize: executing queue" }
             onTwintResult(it)
+        }
+    }
+
+    private fun onPayEvent(event: TwintFlowType) {
+        when (event) {
+            is TwintFlowType.Recurring -> twint?.registerForUOF(event.token)
+            is TwintFlowType.Regular -> twint?.payWithCode(event.token)
         }
     }
 
