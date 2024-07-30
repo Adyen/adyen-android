@@ -66,14 +66,32 @@ internal class DefaultTwintActionDelegateTest {
         delegate = createDelegate()
     }
 
-    @Test
-    fun `when handling action successfully, then a pay event should be emitted`() = runTest {
-        val payEventFlow = delegate.payEventFlow.test(testScheduler)
-        val action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token"))
+    @Nested
+    inner class PayEventTest {
 
-        delegate.handleAction(action, Activity())
+        @Test
+        fun `when handling action successfully and is not stored, then a regular pay event should be emitted`() =
+            runTest {
+                val payEventFlow = delegate.payEventFlow.test(testScheduler)
+                val action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false))
 
-        assertEquals(action.sdkData?.token, payEventFlow.latestValue)
+                delegate.handleAction(action, Activity())
+
+                val expected = TwintFlowType.Regular(action.sdkData?.token!!)
+                assertEquals(expected, payEventFlow.latestValue)
+            }
+
+        @Test
+        fun `when handling action successfully and is stored, then a recurring pay event should be emitted`() =
+            runTest {
+                val payEventFlow = delegate.payEventFlow.test(testScheduler)
+                val action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", true))
+
+                delegate.handleAction(action, Activity())
+
+                val expected = TwintFlowType.Recurring(action.sdkData?.token!!)
+                assertEquals(expected, payEventFlow.latestValue)
+            }
     }
 
     @ParameterizedTest
@@ -95,7 +113,10 @@ internal class DefaultTwintActionDelegateTest {
         )
         val detailsFlow = delegate.detailsFlow.test(testScheduler)
         val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
-        delegate.handleAction(SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")), Activity())
+        delegate.handleAction(
+            SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
+            Activity(),
+        )
 
         delegate.handleTwintResult(result)
 
@@ -134,7 +155,7 @@ internal class DefaultTwintActionDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
             delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
+                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
                 activity = Activity(),
             )
 
@@ -152,7 +173,7 @@ internal class DefaultTwintActionDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
             delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
+                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
                 activity = Activity(),
             )
 
@@ -175,7 +196,7 @@ internal class DefaultTwintActionDelegateTest {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
             delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
+                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
                 activity = Activity(),
             )
 
@@ -200,7 +221,7 @@ internal class DefaultTwintActionDelegateTest {
         val savedStateHandle = SavedStateHandle().apply {
             set(
                 DefaultTwintActionDelegate.ACTION_KEY,
-                SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
+                SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false)),
             )
             set(DefaultTwintActionDelegate.IS_POLLING_KEY, true)
         }
@@ -229,7 +250,10 @@ internal class DefaultTwintActionDelegateTest {
     @Test
     fun `when an error is emitted, then state is cleared`() = runTest {
         val savedStateHandle = SavedStateHandle().apply {
-            set(DefaultTwintActionDelegate.ACTION_KEY, SdkAction(paymentData = "test", sdkData = TwintSdkData("token")))
+            set(
+                DefaultTwintActionDelegate.ACTION_KEY,
+                SdkAction(paymentData = "test", sdkData = TwintSdkData("token", false)),
+            )
         }
         delegate = createDelegate(savedStateHandle)
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -252,7 +276,7 @@ internal class DefaultTwintActionDelegateTest {
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 type = TEST_ACTION_TYPE,
                 paymentData = TEST_PAYMENT_DATA,
-                sdkData = TwintSdkData("token"),
+                sdkData = TwintSdkData("token", false),
             )
 
             delegate.handleAction(action, Activity())
@@ -296,7 +320,7 @@ internal class DefaultTwintActionDelegateTest {
                 "SDK Data is null or of wrong type",
             ),
             arguments(SdkAction<WeChatPaySdkData>(paymentData = "something"), "SDK Data is null or of wrong type"),
-            arguments(SdkAction(paymentData = null, sdkData = TwintSdkData("")), "Payment data is null"),
+            arguments(SdkAction(paymentData = null, sdkData = TwintSdkData("", false)), "Payment data is null"),
             arguments(
                 SdkAction<TwintSdkData>(paymentData = "something", sdkData = null),
                 "SDK Data is null or of wrong type",
