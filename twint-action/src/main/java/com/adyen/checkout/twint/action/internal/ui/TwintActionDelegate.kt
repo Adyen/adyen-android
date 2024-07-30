@@ -23,7 +23,7 @@ interface TwintActionDelegate :
     StatusPollingDelegate,
     ViewProvidingDelegate {
 
-    val payEventFlow: Flow<String>
+    val payEventFlow: Flow<TwintFlowType>
 
     fun handleTwintResult(result: TwintPayResult)
 }
