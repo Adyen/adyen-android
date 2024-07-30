@@ -30,6 +30,7 @@ import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.ui.protocol.DefaultGiftCardProtocol
 import com.adyen.checkout.giftcard.internal.util.DefaultGiftCardValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -437,7 +438,7 @@ internal class DefaultGiftCardDelegateTest(
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
         validator = DefaultGiftCardValidator(),
-        componentViewType = GiftCardComponentViewType(),
+        protocol = DefaultGiftCardProtocol(),
     )
 
     private fun createCheckoutConfiguration(
