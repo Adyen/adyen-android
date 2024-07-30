@@ -12,12 +12,14 @@ internal class TwintSdkDataTest {
     fun `when serializing, then all fields should be serialized correctly`() {
         val request = TwintSdkData(
             token = "testToken",
+            isStored = true,
         )
 
         val actual = TwintSdkData.SERIALIZER.serialize(request)
 
         val expected = JSONObject()
             .put("token", "testToken")
+            .put("isStored", true)
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -26,11 +28,13 @@ internal class TwintSdkDataTest {
     fun `when deserializing, then all fields should be deserializing correctly`() {
         val response = JSONObject()
             .put("token", "testToken")
+            .put("isStored", true)
 
         val actual = TwintSdkData.SERIALIZER.deserialize(response)
 
         val expected = TwintSdkData(
             token = "testToken",
+            isStored = true,
         )
 
         assertEquals(expected, actual)
