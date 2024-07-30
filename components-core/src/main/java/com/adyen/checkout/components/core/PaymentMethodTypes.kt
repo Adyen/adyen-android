@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.components.core
 
+import androidx.annotation.RestrictTo
+
 /**
  * Helper class with a list of all the currently supported Payment Methods on Components and Drop-In.
  */
@@ -93,6 +95,10 @@ object PaymentMethodTypes {
     const val WECHAT_PAY_MINI_PROGRAM = "wechatpayMiniProgram"
     const val WECHAT_PAY_QR = "wechatpayQR"
     const val WECHAT_PAY_WEB = "wechatpayWeb"
+
+    // Non-public payment method types only for internal use
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    const val MEAL_VOUCHER_FR = "mealVoucher_FR"
 
     // List of all payment method types.
     val SUPPORTED_PAYMENT_METHODS: List<String> = listOf(
