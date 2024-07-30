@@ -70,14 +70,14 @@ internal class DefaultTwintActionDelegateTest {
     inner class PayEventTest {
 
         @Test
-        fun `when handling action successfully and is not stored, then a regular pay event should be emitted`() =
+        fun `when handling action successfully and is not stored, then a one time pay event should be emitted`() =
             runTest {
                 val payEventFlow = delegate.payEventFlow.test(testScheduler)
                 val action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token", false))
 
                 delegate.handleAction(action, Activity())
 
-                val expected = TwintFlowType.Regular(action.sdkData?.token!!)
+                val expected = TwintFlowType.OneTime(action.sdkData?.token!!)
                 assertEquals(expected, payEventFlow.latestValue)
             }
 

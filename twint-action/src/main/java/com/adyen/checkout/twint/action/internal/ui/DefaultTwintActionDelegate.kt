@@ -151,7 +151,7 @@ internal class DefaultTwintActionDelegate(
         val flowType = if (sdkData.isStored) {
             TwintFlowType.Recurring(sdkData.token)
         } else {
-            TwintFlowType.Regular(sdkData.token)
+            TwintFlowType.OneTime(sdkData.token)
         }
         payEventChannel.trySend(flowType)
     }
