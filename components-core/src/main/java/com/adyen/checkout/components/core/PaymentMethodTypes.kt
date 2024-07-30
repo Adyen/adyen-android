@@ -39,6 +39,7 @@ object PaymentMethodTypes {
     const val MEAL_VOUCHER_FR_GROUPEUP = "mealVoucher_FR_groupeup"
     const val MEAL_VOUCHER_FR_NATIXIS = "mealVoucher_FR_natixis"
     const val MEAL_VOUCHER_FR_SODEXO = "mealVoucher_FR_sodexo"
+    const val MEAL_VOUCHER_FR = "mealVoucher_FR"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
     const val MOLPAY_VIETNAM = "molpay_ebanking_VN"
