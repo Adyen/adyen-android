@@ -26,7 +26,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -41,6 +40,7 @@ import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.ui.protocol.GiftCardProtocol
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardValidator
@@ -69,7 +69,7 @@ class DefaultGiftCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
     private val validator: GiftCardValidator,
-    componentViewType: GiftCardComponentViewType,
+    private val protocol: GiftCardProtocol
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -85,7 +85,7 @@ class DefaultGiftCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(componentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(protocol.getComponentViewType())
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<GiftCardComponentState> = submitHandler.submitFlow
@@ -225,14 +225,10 @@ class DefaultGiftCardDelegate(
             giftCardAction = GiftCardAction.Idle,
         )
 
-        val giftCardPaymentMethod = GiftCardPaymentMethod(
-            type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE,
+        val giftCardPaymentMethod = protocol.createPaymentMethod(
+            paymentMethod = paymentMethod,
+            encryptedCard = encryptedCard,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            encryptedCardNumber = encryptedCard.encryptedCardNumber,
-            encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
-            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
-            encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
-            brand = paymentMethod.brand,
         )
 
         val lastDigits = outputData.numberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
