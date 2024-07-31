@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 31/7/2024.
+  -->
+
+<resources>
+    <string name="checkout_meal_voucher_card_number_hint">Número do cartão</string>
+    <string name="checkout_meal_voucher_expiry_date_hint">Data de validade</string>
+    <string name="checkout_meal_voucher_security_code_hint">Código de segurança</string>
+
+    <string name="checkout_meal_voucher_number_not_valid">Digite um número de cartão correto</string>
+    <string name="checkout_meal_voucher_pin_not_valid">Digite um código de segurança correto</string>
+
+    <string name="checkout_meal_voucher_expiry_date_not_valid">Digite uma data de validade correta</string>
+    <string name="checkout_meal_voucher_expiry_date_not_valid_too_old">Digite uma data de validade correta</string>
+    <string name="checkout_meal_voucher_expiry_date_not_valid_too_far_in_future">Digite uma data de validade correta</string>
+</resources>
