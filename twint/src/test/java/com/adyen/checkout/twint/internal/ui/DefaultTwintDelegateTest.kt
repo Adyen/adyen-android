@@ -9,7 +9,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
@@ -87,7 +87,7 @@ internal class DefaultTwintDelegateTest(
 
         val expected = TwintComponentState(
             data = PaymentComponentData(
-                paymentMethod = GenericPaymentMethod(
+                paymentMethod = TwintPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
                     checkoutAttemptId = null,
                     subtype = "sdk",
