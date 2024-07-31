@@ -162,6 +162,16 @@ internal fun getComponentFor(
             )
         }
 
+        checkCompileOnly { TwintComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            TwintComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<TwintComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
         else -> {
             throw CheckoutException("Unable to find stored component for type - ${storedPaymentMethod.type}")
         }
