@@ -59,6 +59,7 @@ import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
 import com.adyen.checkout.twint.toCheckoutConfiguration
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
+@Suppress("TooManyFunctions")
 class TwintComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(

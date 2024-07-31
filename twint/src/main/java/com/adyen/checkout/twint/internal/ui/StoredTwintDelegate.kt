@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 
+@Suppress("unused")
 internal class StoredTwintDelegate(
     private val analyticsManager: AnalyticsManager,
     private val observerRepository: PaymentObserverRepository,
