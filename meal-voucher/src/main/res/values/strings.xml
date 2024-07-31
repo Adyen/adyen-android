@@ -3,19 +3,18 @@
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
   ~
-  ~ Created by ararat on 17/7/2024.
+  ~ Created by ozgur on 31/7/2024.
   -->
 
-<!-- TODO Sync translations -->
 <resources>
-    <string name="checkout_meal_voucher_card_number_hint" translatable="false">Card number</string>
-    <string name="checkout_meal_voucher_expiry_date_hint" translatable="false">Expiry date</string>
-    <string name="checkout_meal_voucher_security_code_hint" translatable="false">Security code</string>
+    <string name="checkout_meal_voucher_card_number_hint">Card number</string>
+    <string name="checkout_meal_voucher_expiry_date_hint">Expiry date</string>
+    <string name="checkout_meal_voucher_security_code_hint">Security code</string>
 
-    <string name="checkout_meal_voucher_number_not_valid" translatable="false">Invalid card number</string>
-    <string name="checkout_meal_voucher_pin_not_valid" translatable="false">Invalid security code</string>
+    <string name="checkout_meal_voucher_number_not_valid">Enter a correct card number</string>
+    <string name="checkout_meal_voucher_pin_not_valid">Enter a correct security code</string>
 
-    <string name="checkout_meal_voucher_expiry_date_not_valid" translatable="false">Invalid expiry date</string>
-    <string name="checkout_meal_voucher_expiry_date_not_valid_too_old" translatable="false">Card too old</string>
-    <string name="checkout_meal_voucher_expiry_date_not_valid_too_far_in_future" translatable="false">Date too far in the future</string>
+    <string name="checkout_meal_voucher_expiry_date_not_valid">Enter a correct expiry date</string>
+    <string name="checkout_meal_voucher_expiry_date_not_valid_too_old">Enter a correct expiry date</string>
+    <string name="checkout_meal_voucher_expiry_date_not_valid_too_far_in_future">Enter a correct expiry date</string>
 </resources>
