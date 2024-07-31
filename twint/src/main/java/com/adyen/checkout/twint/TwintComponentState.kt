@@ -10,13 +10,13 @@ package com.adyen.checkout.twint
 
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
+import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 
 /**
  * Represents the state of [TwintComponentState]
  */
 data class TwintComponentState(
-    override val data: PaymentComponentData<GenericPaymentMethod>,
+    override val data: PaymentComponentData<TwintPaymentMethod>,
     override val isInputValid: Boolean,
     override val isReady: Boolean,
-) : PaymentComponentState<GenericPaymentMethod>
+) : PaymentComponentState<TwintPaymentMethod>
