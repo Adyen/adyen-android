@@ -82,6 +82,8 @@ abstract class PaymentMethodDetails : ModelObject() {
                 PaymentMethodTypes.MOLPAY_THAILAND,
                 PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayPaymentMethod.SERIALIZER
 
+                PaymentMethodTypes.TWINT -> TwintPaymentMethod.SERIALIZER
+
                 PaymentMethodTypes.UPI,
                 PaymentMethodTypes.UPI_COLLECT,
                 PaymentMethodTypes.UPI_QR,
