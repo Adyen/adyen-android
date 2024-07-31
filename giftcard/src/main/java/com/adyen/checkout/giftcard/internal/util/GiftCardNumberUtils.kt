@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.giftcard.internal.util
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.giftcard.R
 
-internal object GiftCardNumberUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object GiftCardNumberUtils {
 
     private const val CARD_NUMBER_MASK_GROUP_LENGTH = 4
     const val DIGIT_SEPARATOR = ' '

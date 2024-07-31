@@ -30,6 +30,7 @@ import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.util.DefaultGiftCardValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
@@ -437,6 +438,7 @@ internal class DefaultGiftCardDelegateTest(
         cardEncryptor = cardEncryptor,
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        validator = DefaultGiftCardValidator(),
         componentViewType = GiftCardComponentViewType(),
     )
 
