@@ -38,7 +38,7 @@ jobs:
 
       # Deploy to GitHub Pages
       - name: Deploy GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.6.1
+        uses: JamesIves/github-pages-deploy-action@v4.6.3
         with:
           BRANCH: gh-pages
           FOLDER: build/docs/
