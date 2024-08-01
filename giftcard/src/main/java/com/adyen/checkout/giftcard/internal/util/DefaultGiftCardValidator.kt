@@ -9,19 +9,18 @@
 package com.adyen.checkout.giftcard.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 
 internal class DefaultGiftCardValidator : GiftCardValidator {
     override fun validateNumber(number: String): FieldState<String> {
-        return GiftCardNumberUtils.validateInputField(number)
+        return GiftCardValidationUtils.validateNumber(number)
     }
 
     override fun validatePin(pin: String): FieldState<String> {
-        return GiftCardPinUtils.validateInputField(pin)
+        return GiftCardValidationUtils.validatePin(pin)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return FieldState(expiryDate, Validation.Valid)
+        return GiftCardValidationUtils.validateExpiryDate(expiryDate)
     }
 }

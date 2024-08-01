@@ -9,19 +9,17 @@
 package com.adyen.checkout.mealvoucher.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
-import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardValidator
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 
 internal class MealVoucherValidator : GiftCardValidator {
 
     override fun validateNumber(number: String): FieldState<String> {
-        return GiftCardNumberUtils.validateInputField(number)
+        return MealVoucherValidationUtils.validateNumber(number)
     }
 
     override fun validatePin(pin: String): FieldState<String> {
-        return GiftCardPinUtils.validateInputField(pin)
+        return MealVoucherValidationUtils.validatePin(pin)
     }
 
     override fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
