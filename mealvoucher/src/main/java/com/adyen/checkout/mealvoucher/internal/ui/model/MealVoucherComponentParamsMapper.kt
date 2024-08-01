@@ -13,8 +13,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.giftcard.getGiftCardConfiguration
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
+import com.adyen.checkout.mealvoucher.getMealVoucherConfiguration
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -35,14 +35,12 @@ class MealVoucherComponentParamsMapper(
             componentSessionParams,
         )
         val commonComponentParams = commonComponentParamsMapperData.commonComponentParams
-        // TODO Change this to getMealVoucherConfiguration()
-        val giftCardConfiguration = checkoutConfiguration.getGiftCardConfiguration()
+        val mealVoucherConfiguration = checkoutConfiguration.getMealVoucherConfiguration()
         return GiftCardComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: giftCardConfiguration?.isSubmitButtonVisible ?: true,
-            // TODO Check if we need a config for pin required or not for Meal voucher
-            isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
+                ?: mealVoucherConfiguration?.isSubmitButtonVisible ?: true,
+            isPinRequired = mealVoucherConfiguration?.isSecurityCodeRequired ?: true,
             isExpiryDateRequired = true,
         )
     }
