@@ -38,7 +38,6 @@ import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
-import com.adyen.checkout.giftcard.toCheckoutConfiguration
 import com.adyen.checkout.mealvoucher.MealVoucherComponent
 import com.adyen.checkout.mealvoucher.MealVoucherComponentCallback
 import com.adyen.checkout.mealvoucher.MealVoucherComponentState
@@ -47,6 +46,7 @@ import com.adyen.checkout.mealvoucher.SessionsMealVoucherComponentCallback
 import com.adyen.checkout.mealvoucher.internal.ui.model.MealVoucherComponentParamsMapper
 import com.adyen.checkout.mealvoucher.internal.ui.protocol.MealVoucherProtocol
 import com.adyen.checkout.mealvoucher.internal.util.MealVoucherValidator
+import com.adyen.checkout.mealvoucher.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.internal.SessionInteractor
 import com.adyen.checkout.sessions.core.internal.SessionSavedStateHandleContainer
@@ -58,8 +58,6 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 
 class MealVoucherComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-// TODO remove suppress annotation
-@Suppress("UnusedPrivateProperty")
 constructor(
     private val dropInOverrideParams: DropInOverrideParams? = null,
     private val analyticsManager: AnalyticsManager? = null,
