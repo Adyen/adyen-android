@@ -102,7 +102,11 @@ internal class DefaultCashAppPayDelegateTest(
             )
             delegate.initialize(this)
 
-            verify(cashAppPay).createCustomerRequest(paymentActions = any(), redirectUri = anyOrNull())
+            verify(cashAppPay).createCustomerRequest(
+                paymentActions = any(),
+                redirectUri = anyOrNull(),
+                referenceId = anyOrNull(),
+            )
         }
     }
 
@@ -333,7 +337,11 @@ internal class DefaultCashAppPayDelegateTest(
                 delegate.onSubmit()
 
                 // Called once on initialization, but shouldn't be called by onSubmit
-                verify(cashAppPay, times(1)).createCustomerRequest(paymentActions = any(), redirectUri = anyOrNull())
+                verify(cashAppPay, times(1)).createCustomerRequest(
+                    paymentActions = any(),
+                    redirectUri = anyOrNull(),
+                    referenceId = anyOrNull(),
+                )
             }
     }
 
