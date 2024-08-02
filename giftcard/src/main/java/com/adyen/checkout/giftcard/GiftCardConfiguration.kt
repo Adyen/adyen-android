@@ -8,7 +8,6 @@
 package com.adyen.checkout.giftcard
 
 import android.content.Context
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.components.core.Amount
@@ -147,15 +146,11 @@ fun CheckoutConfiguration.giftCard(
     return this
 }
 
-// TODO revert RestrictTo annotation after implementing MealVoucherConfiguration class.
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
+internal fun CheckoutConfiguration.getGiftCardConfiguration(): GiftCardConfiguration? {
     return getConfiguration(PaymentMethodTypes.GIFTCARD)
 }
 
-// TODO revert RestrictTo annotation after implementing MealVoucherConfiguration class.
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun GiftCardConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
+internal fun GiftCardConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
     return CheckoutConfiguration(
         shopperLocale = shopperLocale,
         environment = environment,
