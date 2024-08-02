@@ -84,6 +84,7 @@ dependencies {
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
+    testImplementation testFixtures(project(':components-core'))
     testImplementation testLibraries.androidx.lifecycle
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5

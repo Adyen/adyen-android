@@ -38,7 +38,8 @@ internal class InstantPaymentComponentProviderTest {
             ) +
                 // Only action only payment methods are supported
                 PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.map {
-                    val isSupported = PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(it)
+                    val isSupported =
+                        InstantPaymentComponentProvider.EXPLICITLY_SUPPORTED_PAYMENT_METHOD_TYPES.contains(it)
                     arguments(it, isSupported)
                 } +
                 // Unsupported payment methods are not supported

@@ -39,12 +39,10 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationData
 import com.adyen.checkout.dropin.internal.ui.model.OrderModel
-import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -151,20 +149,17 @@ internal class DropInViewModel(
         return getStoredPaymentMethods().firstOrNull { it.id == id } ?: StoredPaymentMethod()
     }
 
+    @Suppress("ReturnCount")
     fun shouldSkipToSinglePaymentMethod(): Boolean {
         if (!dropInParams.skipListWhenSinglePaymentMethod) return false
 
         val noStored = getStoredPaymentMethods().isEmpty()
         val singlePm = getPaymentMethods().size == 1
 
-        val firstPaymentMethod = getPaymentMethods().firstOrNull()
+        val firstPaymentMethod = getPaymentMethods().firstOrNull() ?: return false
 
-        val paymentMethodHasComponent = firstPaymentMethod?.let {
-            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(it.type) &&
-                // google pay is supported, is not action only but does not have a UI component inside our code
-                !checkCompileOnly { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) } &&
-                !PaymentMethodTypes.SUPPORTED_ACTION_ONLY_PAYMENT_METHODS.contains(it.type)
-        } ?: false
+        val paymentMethodHasComponent = !SKIP_TO_SINGLE_PM_BLOCK_LIST.contains(firstPaymentMethod.type) &&
+            PaymentMethodTypes.SUPPORTED_PAYMENT_METHODS.contains(firstPaymentMethod.type)
 
         return noStored && singlePm && paymentMethodHasComponent
     }
@@ -474,5 +469,22 @@ internal class DropInViewModel(
     override fun onCleared() {
         super.onCleared()
         analyticsManager.clear(this)
+    }
+
+    companion object {
+
+        // These payment methods are either action only or have no UI.
+        private val SKIP_TO_SINGLE_PM_BLOCK_LIST = listOf(
+            PaymentMethodTypes.DUIT_NOW,
+            PaymentMethodTypes.GOOGLE_PAY,
+            PaymentMethodTypes.GOOGLE_PAY_LEGACY,
+            PaymentMethodTypes.IDEAL,
+            PaymentMethodTypes.MULTIBANCO,
+            PaymentMethodTypes.PAY_NOW,
+            PaymentMethodTypes.PIX,
+            PaymentMethodTypes.PROMPT_PAY,
+            PaymentMethodTypes.TWINT,
+            PaymentMethodTypes.WECHAT_PAY_SDK,
+        )
     }
 }
