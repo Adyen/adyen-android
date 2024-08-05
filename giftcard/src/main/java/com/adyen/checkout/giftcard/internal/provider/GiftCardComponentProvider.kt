@@ -42,8 +42,8 @@ import com.adyen.checkout.giftcard.internal.GiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentCallbackWrapper
 import com.adyen.checkout.giftcard.internal.SessionsGiftCardComponentEventHandler
 import com.adyen.checkout.giftcard.internal.ui.DefaultGiftCardDelegate
-import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParamsMapper
+import com.adyen.checkout.giftcard.internal.ui.protocol.DefaultGiftCardProtocol
 import com.adyen.checkout.giftcard.internal.util.DefaultGiftCardValidator
 import com.adyen.checkout.giftcard.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -117,7 +117,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = DefaultGiftCardValidator(),
-                componentViewType = GiftCardComponentViewType(),
+                protocol = DefaultGiftCardProtocol(),
             )
 
             val genericActionDelegate =
@@ -210,7 +210,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = DefaultGiftCardValidator(),
-                componentViewType = GiftCardComponentViewType(),
+                protocol = DefaultGiftCardProtocol(),
             )
 
             val genericActionDelegate =
