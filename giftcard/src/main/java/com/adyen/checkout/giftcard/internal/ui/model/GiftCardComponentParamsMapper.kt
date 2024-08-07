@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.giftcard.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -16,8 +15,7 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.giftcard.getGiftCardConfiguration
 import java.util.Locale
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class GiftCardComponentParamsMapper(
+internal class GiftCardComponentParamsMapper(
     private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
