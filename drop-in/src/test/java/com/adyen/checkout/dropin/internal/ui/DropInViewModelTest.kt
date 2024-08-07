@@ -40,6 +40,20 @@ internal class DropInViewModelTest(
     }
 
     @ParameterizedTest
+    @MethodSource("getPaymentMethodsSource")
+    fun `when getPaymentMethods is called, then ignored payment methods are missing`(
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        expectedPaymentMethodsList: List<PaymentMethod>,
+    ) {
+        whenever(bundleHandler.paymentMethodsApiResponse) doReturn paymentMethodsApiResponse
+        viewModel = createDropInViewModel()
+
+        val result = viewModel.getPaymentMethods()
+
+        assertEquals(expectedPaymentMethodsList, result)
+    }
+
+    @ParameterizedTest
     @MethodSource("shouldSkipToSinglePaymentMethodSource")
     fun `when payment methods response contains, then should skip to component`(
         skipListWhenSinglePaymentMethodConfig: Boolean,
@@ -79,6 +93,106 @@ internal class DropInViewModelTest(
     )
 
     companion object {
+
+        @JvmStatic
+        fun getPaymentMethodsSource() = listOf(
+            // paymentMethodsApiResponse, expectedPaymentMethodsList
+            // Single non-ignored payment method
+            arguments(
+                PaymentMethodsApiResponse(paymentMethods = listOf(PaymentMethod(PaymentMethodTypes.SCHEME))),
+                listOf(PaymentMethod(PaymentMethodTypes.SCHEME)),
+            ),
+
+            // Stored payment methods
+            arguments(
+                PaymentMethodsApiResponse(
+                    storedPaymentMethods = listOf(
+                        StoredPaymentMethod(PaymentMethodTypes.SCHEME),
+                        StoredPaymentMethod(PaymentMethodTypes.TWINT),
+                    ),
+                ),
+                listOf<PaymentMethod>(),
+            ),
+
+            // Single non-ignored payment method with stored payment methods
+            arguments(
+                PaymentMethodsApiResponse(
+                    paymentMethods = listOf(PaymentMethod(PaymentMethodTypes.SCHEME)),
+                    storedPaymentMethods = listOf(StoredPaymentMethod(PaymentMethodTypes.TWINT)),
+                ),
+                listOf(PaymentMethod(PaymentMethodTypes.SCHEME)),
+            ),
+
+            // Multiple non-ignored payment methods
+            arguments(
+                PaymentMethodsApiResponse(
+                    paymentMethods = listOf(
+                        PaymentMethod(PaymentMethodTypes.SCHEME),
+                        PaymentMethod(PaymentMethodTypes.UPI),
+                    ),
+                ),
+                listOf(
+                    PaymentMethod(PaymentMethodTypes.SCHEME),
+                    PaymentMethod(PaymentMethodTypes.UPI),
+                ),
+            ),
+
+            // Single ignored payment method
+            arguments(
+                PaymentMethodsApiResponse(paymentMethods = listOf(PaymentMethod(PaymentMethodTypes.UPI_QR))),
+                listOf<PaymentMethod>(),
+            ),
+            arguments(
+                PaymentMethodsApiResponse(paymentMethods = listOf(PaymentMethod(PaymentMethodTypes.UPI_INTENT))),
+                listOf<PaymentMethod>(),
+            ),
+            arguments(
+                PaymentMethodsApiResponse(paymentMethods = listOf(PaymentMethod(PaymentMethodTypes.UPI_COLLECT))),
+                listOf<PaymentMethod>(),
+            ),
+
+            // Multiple ignored payment methods
+            arguments(
+                PaymentMethodsApiResponse(
+                    paymentMethods = listOf(
+                        PaymentMethod(PaymentMethodTypes.UPI_QR),
+                        PaymentMethod(PaymentMethodTypes.UPI_INTENT),
+                        PaymentMethod(PaymentMethodTypes.UPI_COLLECT),
+                    ),
+                ),
+                listOf<PaymentMethod>(),
+            ),
+
+            // Multiple ignored payment methods with stored payment methods
+            arguments(
+                PaymentMethodsApiResponse(
+                    paymentMethods = listOf(
+                        PaymentMethod(PaymentMethodTypes.UPI_QR),
+                        PaymentMethod(PaymentMethodTypes.UPI_INTENT),
+                        PaymentMethod(PaymentMethodTypes.UPI_COLLECT),
+                    ),
+                    storedPaymentMethods = listOf(StoredPaymentMethod(PaymentMethodTypes.TWINT)),
+                ),
+                listOf<PaymentMethod>(),
+            ),
+
+            // Multiple payment methods, but partially ignored
+            arguments(
+                PaymentMethodsApiResponse(
+                    paymentMethods = listOf(
+                        PaymentMethod(PaymentMethodTypes.SCHEME),
+                        PaymentMethod(PaymentMethodTypes.UPI_INTENT),
+                        PaymentMethod(PaymentMethodTypes.UPI),
+                        PaymentMethod(PaymentMethodTypes.UPI_COLLECT),
+                    ),
+                    storedPaymentMethods = listOf(StoredPaymentMethod(PaymentMethodTypes.TWINT)),
+                ),
+                listOf(
+                    PaymentMethod(PaymentMethodTypes.SCHEME),
+                    PaymentMethod(PaymentMethodTypes.UPI),
+                ),
+            ),
+        )
 
         @JvmStatic
         fun shouldSkipToSinglePaymentMethodSource() = listOf(
