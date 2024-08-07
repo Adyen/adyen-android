@@ -127,7 +127,9 @@ internal class DropInViewModel(
     val addressLookupCompleteFlow: Flow<AddressLookupResult> = _addressLookupCompleteFlow.receiveAsFlow()
 
     fun getPaymentMethods(): List<PaymentMethod> {
-        return paymentMethodsApiResponse.paymentMethods.orEmpty()
+        return paymentMethodsApiResponse.paymentMethods?.filterNot { paymentMethod ->
+            IGNORED_PAYMENT_METHODS.any { it == paymentMethod.type }
+        }.orEmpty()
     }
 
     fun getStoredPaymentMethods(): List<StoredPaymentMethod> {
@@ -485,6 +487,12 @@ internal class DropInViewModel(
             PaymentMethodTypes.PROMPT_PAY,
             PaymentMethodTypes.TWINT,
             PaymentMethodTypes.WECHAT_PAY_SDK,
+        )
+
+        private val IGNORED_PAYMENT_METHODS = listOf(
+            PaymentMethodTypes.UPI_INTENT,
+            PaymentMethodTypes.UPI_COLLECT,
+            PaymentMethodTypes.UPI_QR,
         )
     }
 }
