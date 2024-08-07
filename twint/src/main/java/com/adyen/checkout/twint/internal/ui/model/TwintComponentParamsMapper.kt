@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.twint.internal.ui.model
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -56,6 +57,7 @@ internal class TwintComponentParamsMapper(
                 ?: twintConfiguration?.isSubmitButtonVisible ?: true,
             showStorePaymentField = getShowStorePaymentField(sessionParams, twintConfiguration),
             storePaymentMethod = twintConfiguration?.storePaymentMethod ?: false,
+            actionHandlingMethod = twintConfiguration?.actionHandlingMethod ?: ActionHandlingMethod.PREFER_NATIVE,
         )
     }
 
