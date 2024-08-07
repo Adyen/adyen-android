@@ -105,7 +105,8 @@ class DefaultCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val genericEncryptor: BaseGenericEncryptor,
     private val submitHandler: SubmitHandler<CardComponentState>,
-    private val addressLookupDelegate: AddressLookupDelegate
+    private val addressLookupDelegate: AddressLookupDelegate,
+    private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
     private val inputData: CardInputData = CardInputData()
@@ -176,7 +177,10 @@ class DefaultCardDelegate(
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
 
-        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        val event = GenericEvents.rendered(
+            component = paymentMethod.type.orEmpty(),
+            configData = cardConfigDataGenerator.generate(configuration = componentParams, isStored = false),
+        )
         analyticsManager.trackEvent(event)
     }
 

@@ -77,6 +77,7 @@ internal class StoredCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
+    private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
@@ -159,6 +160,7 @@ internal class StoredCardDelegate(
         val event = GenericEvents.rendered(
             component = storedPaymentMethod.type.orEmpty(),
             isStoredPaymentMethod = true,
+            configData = cardConfigDataGenerator.generate(configuration = componentParams, isStored = true)
         )
         analyticsManager.trackEvent(event)
     }
