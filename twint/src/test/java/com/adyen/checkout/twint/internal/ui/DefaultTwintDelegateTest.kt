@@ -1,5 +1,6 @@
 package com.adyen.checkout.twint.internal.ui
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
@@ -25,6 +26,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -100,6 +102,38 @@ internal class DefaultTwintDelegateTest(
             isReady = true,
         )
         assertEquals(expected, testFlow.latestValue)
+    }
+
+    @Nested
+    @DisplayName("when actions should be handled with ")
+    inner class ActionHandlingMethodTest {
+
+        @Test
+        fun `SDK, then sub type is set in payment method`() = runTest {
+            val configuration = createCheckoutConfiguration {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
+            }
+            delegate = createDefaultTwintDelegate(configuration)
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val actual = componentStateFlow.latestValue.data.paymentMethod?.subtype
+            assertEquals(DefaultTwintDelegate.SDK_SUBTYPE, actual)
+        }
+
+        @Test
+        fun `WEB, then sub type is not set in payment method`() = runTest {
+            val configuration = createCheckoutConfiguration {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
+            }
+            delegate = createDefaultTwintDelegate(configuration)
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertNull(componentStateFlow.latestValue.data.paymentMethod?.subtype)
+        }
     }
 
     @Nested

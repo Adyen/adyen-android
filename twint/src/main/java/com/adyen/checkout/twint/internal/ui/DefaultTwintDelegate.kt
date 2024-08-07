@@ -10,6 +10,7 @@ package com.adyen.checkout.twint.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -121,7 +122,7 @@ internal class DefaultTwintDelegate(
         val paymentMethod = TwintPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            subtype = SDK_SUBTYPE,
+            subtype = getSubtype(),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -136,6 +137,13 @@ internal class DefaultTwintDelegate(
             isInputValid = outputData.isValid,
             isReady = true,
         )
+    }
+
+    private fun getSubtype(): String? {
+        return when (componentParams.actionHandlingMethod) {
+            ActionHandlingMethod.PREFER_NATIVE -> SDK_SUBTYPE
+            ActionHandlingMethod.PREFER_WEB -> null
+        }
     }
 
     private fun shouldStorePaymentMethod(): Boolean = when {
@@ -179,6 +187,7 @@ internal class DefaultTwintDelegate(
     }
 
     companion object {
-        private const val SDK_SUBTYPE = "sdk"
+        @VisibleForTesting
+        internal const val SDK_SUBTYPE = "sdk"
     }
 }
