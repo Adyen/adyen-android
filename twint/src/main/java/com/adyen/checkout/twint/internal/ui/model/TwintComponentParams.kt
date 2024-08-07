@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.twint.internal.ui.model
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
@@ -17,4 +18,5 @@ internal data class TwintComponentParams(
     override val isSubmitButtonVisible: Boolean,
     val showStorePaymentField: Boolean,
     val storePaymentMethod: Boolean,
+    val actionHandlingMethod: ActionHandlingMethod,
 ) : ComponentParams by commonComponentParams, ButtonParams

@@ -11,6 +11,7 @@ package com.adyen.checkout.twint
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -39,6 +40,7 @@ private constructor(
     val genericActionConfiguration: GenericActionConfiguration,
     val showStorePaymentField: Boolean?,
     val storePaymentMethod: Boolean?,
+    val actionHandlingMethod: ActionHandlingMethod?,
 ) : Configuration, ButtonConfiguration {
 
     class Builder :
@@ -48,6 +50,7 @@ private constructor(
         private var isSubmitButtonVisible: Boolean? = null
         private var showStorePaymentField: Boolean? = null
         private var storePaymentMethod: Boolean? = null
+        private var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -126,6 +129,16 @@ private constructor(
         }
 
         /**
+         * Sets the method used to handle actions. See [ActionHandlingMethod] for the available options.
+         *
+         * Default is [ActionHandlingMethod.PREFER_NATIVE].
+         */
+        fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
+            this.actionHandlingMethod = actionHandlingMethod
+            return this
+        }
+
+        /**
          * Sets if submit button will be visible or not.
          *
          * Default is true.
@@ -147,6 +160,7 @@ private constructor(
             genericActionConfiguration = genericActionConfigurationBuilder.build(),
             showStorePaymentField = showStorePaymentField,
             storePaymentMethod = storePaymentMethod,
+            actionHandlingMethod = actionHandlingMethod,
         )
     }
 }
