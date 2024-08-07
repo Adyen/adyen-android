@@ -100,12 +100,12 @@ object CardValidationUtils {
                     isInMinMonthRange && isInMaxYearRange -> FieldState(expiryDate, Validation.Valid)
                     !isInMaxYearRange -> FieldState(
                         expiryDate,
-                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future),
                     )
 
                     !isInMinMonthRange -> FieldState(
                         expiryDate,
-                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+                        Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old),
                     )
 
                     else -> invalidState
