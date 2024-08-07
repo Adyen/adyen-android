@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.mealvoucher.internal.ui.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -17,8 +16,7 @@ import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import com.adyen.checkout.mealvoucher.getMealVoucherConfiguration
 import java.util.Locale
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class MealVoucherComponentParamsMapper(
+internal class MealVoucherComponentParamsMapper(
     private val commonComponentParamsMapper: CommonComponentParamsMapper,
 ) {
 
