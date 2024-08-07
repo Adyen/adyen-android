@@ -12,6 +12,6 @@ import com.adyen.checkout.components.core.ActionHandlingMethod
 
 @Deprecated(
     "This class has been moved to a new package",
-    ReplaceWith("TwintActionConfiguration", "com.adyen.checkout.components.core.ActionHandlingMethod"),
+    ReplaceWith("ActionHandlingMethod", "com.adyen.checkout.components.core.ActionHandlingMethod"),
 )
 typealias ActionHandlingMethod = ActionHandlingMethod
