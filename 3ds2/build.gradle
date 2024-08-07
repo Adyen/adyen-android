@@ -42,6 +42,7 @@ dependencies {
 
     // Dependencies
     api libraries.adyen3ds2
+    api libraries.adyenDelegatedAuthentication
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
