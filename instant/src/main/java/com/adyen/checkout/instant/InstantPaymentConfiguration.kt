@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMar
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
+import com.adyen.checkout.components.core.ActionHandlingMethod as CoreActionHandlingMethod
 
 /**
  * Configuration class for the [InstantPaymentComponent].
@@ -33,7 +34,7 @@ private constructor(
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
-    val actionHandlingMethod: ActionHandlingMethod?,
+    val actionHandlingMethod: CoreActionHandlingMethod?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -42,7 +43,7 @@ private constructor(
      */
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
-        private var actionHandlingMethod: ActionHandlingMethod? = null
+        private var actionHandlingMethod: CoreActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -92,7 +93,7 @@ private constructor(
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
-        fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
+        fun setActionHandlingMethod(actionHandlingMethod: CoreActionHandlingMethod): Builder {
             this.actionHandlingMethod = actionHandlingMethod
             return this
         }
