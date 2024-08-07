@@ -92,6 +92,8 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -101,6 +103,7 @@ import java.util.Locale
 internal class DefaultCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>,
     @Mock private val addressLookupDelegate: AddressLookupDelegate,
+    @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -121,6 +124,7 @@ internal class DefaultCardDelegateTest(
         analyticsManager = TestAnalyticsManager()
 
         whenever(addressLookupDelegate.addressLookupSubmitFlow).thenReturn(MutableStateFlow(AddressInputModel()))
+        whenever(cardConfigDataGenerator.generate(any(), any())) doReturn emptyMap()
 
         delegate = createCardDelegate()
     }
@@ -1047,7 +1051,10 @@ internal class DefaultCardDelegateTest(
         fun `when delegate is initialized, then render event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.SCHEME)
+            val expectedEvent = GenericEvents.rendered(
+                component = PaymentMethodTypes.SCHEME,
+                configData = emptyMap(),
+            )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
@@ -1266,6 +1273,7 @@ internal class DefaultCardDelegateTest(
             analyticsManager = analyticsManager,
             submitHandler = submitHandler,
             addressLookupDelegate = addressLookupDelegate,
+            cardConfigDataGenerator = cardConfigDataGenerator,
         )
     }
 
