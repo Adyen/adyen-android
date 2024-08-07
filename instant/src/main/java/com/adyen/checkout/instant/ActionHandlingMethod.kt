@@ -8,19 +8,10 @@
 
 package com.adyen.checkout.instant
 
-/**
- * Used in [InstantPaymentConfiguration.Builder.setActionHandlingMethod] to set the method used to handle actions.
- */
-enum class ActionHandlingMethod {
-    /**
-     * The action will be handled in a native way (e.g. using a SDK). **If** there is no way to handle the action
-     * natively, then a fallback method will be used (e.g. a web flow).
-     */
-    PREFER_NATIVE,
+import com.adyen.checkout.components.core.ActionHandlingMethod
 
-    /**
-     * The action will be handled with a web flow. **If** there is no way to handle the action with a web flow, then
-     * native method will be used.
-     */
-    PREFER_WEB,
-}
+@Deprecated(
+    "This class has been moved to a new package",
+    ReplaceWith("TwintActionConfiguration", "com.adyen.checkout.components.core.ActionHandlingMethod"),
+)
+typealias ActionHandlingMethod = ActionHandlingMethod
