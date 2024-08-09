@@ -1,5 +1,6 @@
 package com.adyen.checkout.instant
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -8,7 +9,6 @@ import com.adyen.checkout.core.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale
-import com.adyen.checkout.components.core.ActionHandlingMethod as CoreActionHandlingMethod
 
 internal class InstantPaymentConfigurationTest {
 
@@ -22,7 +22,7 @@ internal class InstantPaymentConfigurationTest {
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
         ) {
             instantPayment("paypal") {
-                setActionHandlingMethod(CoreActionHandlingMethod.PREFER_WEB)
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
         }
 
@@ -35,7 +35,7 @@ internal class InstantPaymentConfigurationTest {
         )
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
-            .setActionHandlingMethod(CoreActionHandlingMethod.PREFER_WEB)
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         assertEquals(expected.shopperLocale, actual?.shopperLocale)
@@ -55,7 +55,7 @@ internal class InstantPaymentConfigurationTest {
         )
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
-            .setActionHandlingMethod(CoreActionHandlingMethod.PREFER_WEB)
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         val actual = config.toCheckoutConfiguration()
@@ -68,7 +68,7 @@ internal class InstantPaymentConfigurationTest {
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
         ) {
             instantPayment {
-                setActionHandlingMethod(CoreActionHandlingMethod.PREFER_WEB)
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
         }
 

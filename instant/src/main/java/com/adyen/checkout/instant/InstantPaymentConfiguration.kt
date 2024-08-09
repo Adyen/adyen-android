@@ -12,6 +12,7 @@ import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -20,7 +21,6 @@ import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMar
 import com.adyen.checkout.core.Environment
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
-import com.adyen.checkout.components.core.ActionHandlingMethod as CoreActionHandlingMethod
 
 /**
  * Configuration class for the [InstantPaymentComponent].
@@ -34,7 +34,7 @@ private constructor(
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
-    val actionHandlingMethod: CoreActionHandlingMethod?,
+    val actionHandlingMethod: ActionHandlingMethod?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
@@ -43,7 +43,7 @@ private constructor(
      */
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
-        private var actionHandlingMethod: CoreActionHandlingMethod? = null
+        private var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -93,7 +93,7 @@ private constructor(
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
-        fun setActionHandlingMethod(actionHandlingMethod: CoreActionHandlingMethod): Builder {
+        fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
             this.actionHandlingMethod = actionHandlingMethod
             return this
         }
