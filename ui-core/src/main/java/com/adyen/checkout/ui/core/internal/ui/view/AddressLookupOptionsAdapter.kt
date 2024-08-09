@@ -10,6 +10,7 @@ package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RestrictTo
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -56,6 +57,7 @@ internal class AddressLookupOptionsAdapter(
     }
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class LookupOption(
     val lookupAddress: LookupAddress,
     val isLoading: Boolean = false
