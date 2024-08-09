@@ -1,5 +1,6 @@
 package com.adyen.checkout.twint.internal.ui.model
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -26,7 +27,7 @@ internal class TwintComponentParamsMapperTest {
     private val twintComponentParamsMapper = TwintComponentParamsMapper(CommonComponentParamsMapper())
 
     @Test
-    fun `when drop-in override params are null and custom configuration fields are null then all fields should match`() {
+    fun `when drop-in override params are null and custom configuration fields are null, then all fields should match`() {
         val configuration = createCheckoutConfiguration()
 
         val params = twintComponentParamsMapper.mapToParams(
@@ -42,7 +43,7 @@ internal class TwintComponentParamsMapperTest {
     }
 
     @Test
-    fun `when drop-in override params are null and custom configuration fields are set then all fields should match`() {
+    fun `when drop-in override params are null and custom configuration fields are set, then all fields should match`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.FRANCE,
             environment = Environment.APSE,
@@ -52,6 +53,7 @@ internal class TwintComponentParamsMapperTest {
                 setShowStorePaymentField(false)
                 setStorePaymentMethod(true)
                 setSubmitButtonVisible(false)
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
         }
 
@@ -70,13 +72,14 @@ internal class TwintComponentParamsMapperTest {
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
             showStorePaymentField = false,
             storePaymentMethod = true,
+            actionHandlingMethod = ActionHandlingMethod.PREFER_WEB,
         )
 
         assertEquals(expected, params)
     }
 
     @Test
-    fun `when drop-in override params are set then they should override custom configuration fields`() {
+    fun `when drop-in override params are set, then they should override custom configuration fields`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -118,7 +121,7 @@ internal class TwintComponentParamsMapperTest {
     }
 
     @Test
-    fun `when setSubmitButtonVisible is set to false in twint configuration and drop-in override params are set then card component params should have isSubmitButtonVisible true`() {
+    fun `when setSubmitButtonVisible is set to false in twint configuration and drop-in override params are set, then card component params should have isSubmitButtonVisible true`() {
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
@@ -266,6 +269,7 @@ internal class TwintComponentParamsMapperTest {
         isSubmitButtonVisible: Boolean = true,
         showStorePaymentField: Boolean = true,
         storePaymentMethod: Boolean = false,
+        actionHandlingMethod: ActionHandlingMethod = ActionHandlingMethod.PREFER_NATIVE,
     ) = TwintComponentParams(
         commonComponentParams = CommonComponentParams(
             shopperLocale = shopperLocale,
@@ -278,6 +282,7 @@ internal class TwintComponentParamsMapperTest {
         isSubmitButtonVisible = isSubmitButtonVisible,
         showStorePaymentField = showStorePaymentField,
         storePaymentMethod = storePaymentMethod,
+        actionHandlingMethod = actionHandlingMethod,
     )
 
     private fun createCheckoutConfiguration(

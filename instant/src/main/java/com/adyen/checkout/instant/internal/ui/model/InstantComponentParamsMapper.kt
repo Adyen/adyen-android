@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.instant.internal.ui.model
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.getInstantPaymentConfiguration
 import java.util.Locale
 

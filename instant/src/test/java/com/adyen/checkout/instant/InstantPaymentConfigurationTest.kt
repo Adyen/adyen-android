@@ -1,5 +1,6 @@
 package com.adyen.checkout.instant
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

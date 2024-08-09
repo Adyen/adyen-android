@@ -1,5 +1,6 @@
 package com.adyen.checkout.twint
 
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -24,6 +25,7 @@ internal class TwintConfigurationTest {
                 setShowStorePaymentField(true)
                 setStorePaymentMethod(true)
                 setSubmitButtonVisible(false)
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
         }
 
@@ -39,6 +41,7 @@ internal class TwintConfigurationTest {
             .setShowStorePaymentField(true)
             .setStorePaymentMethod(true)
             .setSubmitButtonVisible(false)
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         assertEquals(expected.shopperLocale, actual?.shopperLocale)
@@ -63,6 +66,7 @@ internal class TwintConfigurationTest {
             .setShowStorePaymentField(true)
             .setStorePaymentMethod(true)
             .setSubmitButtonVisible(false)
+            .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
 
         val actual = config.toCheckoutConfiguration()
@@ -73,7 +77,11 @@ internal class TwintConfigurationTest {
             clientKey = TEST_CLIENT_KEY,
             amount = Amount("EUR", 123L),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
-        )
+        ) {
+            twint {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
+            }
+        }
 
         assertEquals(expected.shopperLocale, actual.shopperLocale)
         assertEquals(expected.environment, actual.environment)
@@ -90,6 +98,7 @@ internal class TwintConfigurationTest {
         assertEquals(config.showStorePaymentField, actualTwintConfig?.showStorePaymentField)
         assertEquals(config.storePaymentMethod, actualTwintConfig?.storePaymentMethod)
         assertEquals(config.isSubmitButtonVisible, actualTwintConfig?.isSubmitButtonVisible)
+        assertEquals(config.actionHandlingMethod, actualTwintConfig?.actionHandlingMethod)
     }
 
     companion object {
