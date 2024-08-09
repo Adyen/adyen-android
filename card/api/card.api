@@ -638,15 +638,3 @@ public final class com/adyen/checkout/card/internal/ui/view/SecurityCodeInput : 
 public final class com/adyen/checkout/card/internal/ui/view/SecurityCodeInput$Companion {
 }
 
-public final class com/adyen/checkout/card/internal/util/CardNumberValidation : java/lang/Enum {
-	public static final field INVALID_ILLEGAL_CHARACTERS Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static final field INVALID_LUHN_CHECK Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static final field INVALID_TOO_LONG Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static final field INVALID_TOO_SHORT Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static final field INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static final field VALID Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-	public static fun values ()[Lcom/adyen/checkout/card/internal/util/CardNumberValidation;
-}
-

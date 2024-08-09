@@ -185,6 +185,7 @@ object CardValidationUtils {
     }
 }
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardNumberValidation {
     VALID,
     INVALID_ILLEGAL_CHARACTERS,

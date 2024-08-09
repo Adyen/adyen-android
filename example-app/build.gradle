@@ -107,6 +107,8 @@ dependencies {
     // Tests
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
+    testImplementation testLibraries.konsist
+
 
     androidTestImplementation testLibraries.androidTest
     androidTestImplementation testLibraries.barista
