@@ -41,6 +41,6 @@ internal class ActionComponentViewModel(
     }
 }
 
-enum class ActionComponentFragmentEvent {
+internal enum class ActionComponentFragmentEvent {
     HANDLE_ACTION
 }
