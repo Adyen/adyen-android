@@ -12,10 +12,12 @@ import com.android.tools.lint.client.api.IssueRegistry
 import com.android.tools.lint.detector.api.CURRENT_API
 import com.android.tools.lint.detector.api.Issue
 
-class LintIssueRegistry : IssueRegistry() {
+@Suppress("unused")
+internal class LintIssueRegistry : IssueRegistry() {
 
     override val api: Int = CURRENT_API
 
-    override val issues: List<Issue>
-        get() = TODO("Not yet implemented")
+    override val issues: List<Issue> = listOf(
+        OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE,
+    )
 }
