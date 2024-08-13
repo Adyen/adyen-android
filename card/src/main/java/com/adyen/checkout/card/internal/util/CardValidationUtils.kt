@@ -87,7 +87,9 @@ object CardValidationUtils {
         fieldPolicy: Brand.FieldPolicy?,
         calendar: Calendar
     ): FieldState<ExpiryDate> {
-        val expiryDateValidation = ExpiryDateValidationUtils.validateExpiryDateInternal(expiryDate, calendar)
+        // TODO move ExpiryDateValidationUtils.validateExpiryDate call
+        //  to validateExpiryDate(ExpiryDate,Brand.FieldPolicy?) for better testability, then update test
+        val expiryDateValidation = ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)
 
         return when (expiryDateValidation) {
             ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
