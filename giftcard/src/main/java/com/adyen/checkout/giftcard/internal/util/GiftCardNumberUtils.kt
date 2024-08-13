@@ -38,7 +38,6 @@ object GiftCardNumberUtils {
         return text.replace(DIGIT_SEPARATOR.toString(), "")
     }
 
-    // TODO Add tests
     fun validateInputField(giftCardNumber: String): GiftCardNumberValidationResult {
         val rawInput = getRawValue(giftCardNumber)
 
