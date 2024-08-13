@@ -1,5 +1,6 @@
 package com.adyen.checkout.card
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -12,6 +13,7 @@ sealed class AddressConfiguration : Parcelable {
     /**
      * Address Form will be hidden.
      */
+    @SuppressLint("ObjectInPublicSealedClass")
     @Parcelize
     object None : AddressConfiguration()
 
