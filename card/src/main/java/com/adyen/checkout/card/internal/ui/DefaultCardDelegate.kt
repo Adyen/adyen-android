@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -37,6 +38,7 @@ import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
+import com.adyen.checkout.components.core.DelegatedAuthenticationData
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
@@ -76,6 +78,8 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
+import com.adyen.delegatedauthentication.AvailabilityResult
+import com.adyen.delegatedauthentication.DelegatedAuthentication
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -147,6 +151,8 @@ class DefaultCardDelegate(
     private var onBinValueListener: ((binValue: String) -> Unit)? = null
     private var onBinLookupListener: ((data: List<BinLookupData>) -> Unit)? = null
 
+    private var sdkOutput: String? = null
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
 
@@ -170,6 +176,21 @@ class DefaultCardDelegate(
                 updateOutputData()
             }
             .launchIn(coroutineScope)
+    }
+
+    override fun initializeDelegatedAuthentication(context: Context) {
+        coroutineScope.launch {
+            val availability = DelegatedAuthentication.getAvailability(context)
+            sdkOutput = when (availability) {
+                is AvailabilityResult.Available -> {
+                    availability.sdkOutput
+                }
+
+                AvailabilityResult.Unavailable -> {
+                    null
+                }
+            }
+        }
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -778,6 +799,12 @@ class DefaultCardDelegate(
             if (isInstallmentsRequired(stateOutputData)) {
                 installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
             }
+//            if (sdkOutput != null) {
+//                delegatedAuthenticationData = DelegatedAuthenticationData(
+//                    sdkOutput = sdkOutput,
+//                    delegatedAuthenticationRequested = true
+//                )
+//            }
         }
     }
 

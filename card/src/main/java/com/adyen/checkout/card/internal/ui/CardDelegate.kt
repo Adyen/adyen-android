@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
@@ -58,4 +59,6 @@ interface CardDelegate :
     fun handleBackPress(): Boolean
 
     fun startAddressLookup()
+
+    fun initializeDelegatedAuthentication(context: Context)
 }

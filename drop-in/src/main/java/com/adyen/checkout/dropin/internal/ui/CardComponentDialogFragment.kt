@@ -40,6 +40,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
 
         initToolbar()
 
+        cardComponent.initializeDelegatedAuthentication(requireContext())
         cardComponent.setOnBinValueListener(protocol::onBinValue)
         cardComponent.setOnBinLookupListener(protocol::onBinLookup)
         cardComponent.setAddressLookupCallback(this)

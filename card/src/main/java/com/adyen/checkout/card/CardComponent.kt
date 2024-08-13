@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card
 
+import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -67,6 +68,10 @@ constructor(
         cardDelegate.initialize(viewModelScope)
         genericActionDelegate.initialize(viewModelScope)
         componentEventHandler.initialize(viewModelScope)
+    }
+
+    fun initializeDelegatedAuthentication(context: Context) {
+        cardDelegate.initializeDelegatedAuthentication(context)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
@@ -144,6 +145,10 @@ internal class StoredCardDelegate(
             // trigger submission as soon as state is ready
             componentStateFlow.onEach { onState(it) }.launchIn(coroutineScope)
         }
+    }
+
+    override fun initializeDelegatedAuthentication(context: Context) {
+        TODO("Not yet implemented")
     }
 
     private fun onState(cardComponentState: CardComponentState) {

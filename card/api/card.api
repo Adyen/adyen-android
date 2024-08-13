@@ -199,6 +199,7 @@ public class com/adyen/checkout/card/CardComponent : androidx/lifecycle/ViewMode
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
 	public final fun handleBackPress ()Z
 	public fun handleIntent (Landroid/content/Intent;)V
+	public final fun initializeDelegatedAuthentication (Landroid/content/Context;)V
 	public fun isConfirmationRequired ()Z
 	protected fun onCleared ()V
 	public fun setAddressLookupCallback (Lcom/adyen/checkout/components/core/AddressLookupCallback;)V
