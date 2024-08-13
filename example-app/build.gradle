@@ -118,4 +118,8 @@ dependencies {
     androidTestImplementation testLibraries.mockWebServer
 
     kspAndroidTest testLibraries.hiltCompiler
+
+    // Custom lint rules
+    compileOnly testLibraries.lintApi
+    testImplementation testLibraries.lintTests
 }
