@@ -54,7 +54,7 @@ internal object MealVoucherValidationUtils {
 
     @VisibleForTesting
     internal fun validateExpiryDate(expiryDate: ExpiryDate, calendar: Calendar): FieldState<ExpiryDate> {
-        return when (ExpiryDateValidationUtils.validateExpiryDateInternal(expiryDate, calendar)) {
+        return when (ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)) {
             ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
             ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
                 expiryDate,
