@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2024 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 13/8/2024.
+ */
+
+plugins {
+    id 'kotlin'
+}
+
+java {
+    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_11
+}
+
+kotlin {
+    jvmToolchain(11)
+}
+
+dependencies {
+    compileOnly testLibraries.lintApi
+
+    testImplementation testLibraries.junit5
+    testImplementation testLibraries.lint
+    testImplementation testLibraries.lintTests
+}
+
+jar {
+    manifest {
+        attributes('Lint-Registry-v2': 'com.adyen.checkout.lint.LintIssueRegistry')
+    }
+}
