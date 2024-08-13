@@ -128,6 +128,30 @@ internal class ObjectInPublicSealedClassTest {
             .expectClean()
     }
 
+    @Test
+    fun whenPublicSealedClassHasCompanionObjectSubclass_thenIssueShouldNotBeDetected() {
+        lint()
+            .files(
+                kotlin(
+                    """
+                    package test
+
+                    sealed class PublicSealedClass1 {
+                        data class Sub1(val test: String) : PublicSealedClass1()
+                        data class Sub2(val test: String) : PublicSealedClass1()
+                        companion object {
+                            private const val TEST = "test"
+                        }
+                    }
+                    """,
+                ).indented(),
+            )
+            .issues(OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE)
+            .allowMissingSdk()
+            .run()
+            .expectClean()
+    }
+
     companion object {
 
         private val RESTRICT_TO_STUB = kotlin(

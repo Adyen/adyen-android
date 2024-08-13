@@ -27,7 +27,7 @@ internal val OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE = Issue.create(
     explanation = """
         If later a (optional) parameter would be needed for this object, then it would have to be changed to a class.
         This would break the public contract.
-    """,
+    """.trimIndent().replace(Regex("(\n*)\n"), "$1"),
     implementation = Implementation(ObjectInPublicSealedClassDetector::class.java, Scope.JAVA_FILE_SCOPE),
     category = Category.CUSTOM_LINT_CHECKS,
     priority = 7,
@@ -43,6 +43,8 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
     override fun createUastHandler(context: JavaContext) = object : UElementHandler() {
         override fun visitClass(node: UClass) {
             if (!isPublic(node)) return
+
+            if (isCompanionObject(node)) return
 
             val parentClass = (node.uastParent as? UClass) ?: return
 
@@ -74,6 +76,10 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
             return node.visibility == UastVisibility.PUBLIC
                 && !node.modifierList?.text.orEmpty().contains("internal", ignoreCase = true)
                 && !node.hasAnnotation("androidx.annotation.RestrictTo")
+        }
+
+        private fun isCompanionObject(node: UClass): Boolean {
+            return node.modifierList?.text == "companion"
         }
 
         private fun isSealed(node: UClass): Boolean {
