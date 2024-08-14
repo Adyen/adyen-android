@@ -18,6 +18,7 @@ internal class LintIssueRegistry : IssueRegistry() {
     override val api: Int = CURRENT_API
 
     override val issues: List<Issue> = listOf(
+        NOT_ADYEN_LOG_ISSUE,
         OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE,
     )
 }
