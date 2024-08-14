@@ -11,8 +11,7 @@
     <!-- Override 3DS2 Theme to match Checkout theme -->
     <style name="ThreeDS2Theme" parent="AdyenCheckout" tools:ignore="PrivateResource" />
 
-    <style name="AdyenCheckout.BottomSheetToolbar">
-    </style>
+    <style name="AdyenCheckout.BottomSheetToolbar"></style>
 
     <style name="AdyenCheckout.Toolbar" />
 
@@ -89,6 +88,23 @@
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textIsSelectable">false</item>
         <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AdyenCheckout.DropIn" />
+
+    <style name="AdyenCheckout.DropIn.GenericAction" />
+
+    <style name="AdyenCheckout.DropIn.GenericAction.Button" parent="AdyenCheckout.Button.Colored">
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:text">@string/checkout_voucher_finish</item>
+    </style>
+
+    <style name="AdyenCheckout.DropIn.ContinueButton" parent="AdyenCheckout.Button.Colored">
+        <item name="android:text">@string/continue_button</item>
+    </style>
+
+    <style name="AdyenCheckout.DropIn.ChangePaymentMethodButton" parent="AdyenCheckout.Button.Secondary">
+        <item name="android:text">@string/change_payment_method</item>
     </style>
 
 </resources>

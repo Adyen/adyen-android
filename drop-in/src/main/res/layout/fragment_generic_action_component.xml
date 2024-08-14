@@ -34,10 +34,8 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_finish"
-                style="@style/AdyenCheckout.Button.Colored"
+                style="@style/AdyenCheckout.DropIn.GenericAction.Button"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="@dimen/standard_margin"
-                android:text="@string/checkout_voucher_finish"
                 android:visibility="gone"
                 tools:visibility="visible" />
 

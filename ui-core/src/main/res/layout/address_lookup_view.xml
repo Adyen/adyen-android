@@ -30,43 +30,30 @@
 
     <TextView
         android:id="@+id/textView_error"
-        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        style="@style/AdyenCheckout.AddressLookup.Empty.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/standard_half_margin"
-        android:gravity="center"
-        android:text="@string/checkout_address_lookup_empty"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView_manualEntryError"
+        style="@style/AdyenCheckout.AddressLookup.Empty.Description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/checkout_address_lookup_empty_description"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/textView_initialDisclaimer"
-        style="@style/AdyenCheckout.TextAppearance.Secondary"
+        style="@style/AdyenCheckout.AddressLookup.InitialDisclaimer.Title"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/standard_half_margin"
-        android:gravity="center"
-        android:text="@string/checkout_address_lookup_initial" />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/textView_manualEntryInitial"
+        style="@style/AdyenCheckout.AddressLookup.InitialDisclaimer.Description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/checkout_address_lookup_initial_description"
         android:visibility="gone" />
-
 
     <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"
