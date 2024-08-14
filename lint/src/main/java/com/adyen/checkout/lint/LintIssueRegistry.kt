@@ -20,5 +20,6 @@ internal class LintIssueRegistry : IssueRegistry() {
     override val issues: List<Issue> = listOf(
         NOT_ADYEN_LOG_ISSUE,
         OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE,
+        TEXT_IN_LAYOUT_XML_ISSUE,
     )
 }
