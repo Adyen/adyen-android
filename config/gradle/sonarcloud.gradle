@@ -21,6 +21,12 @@ project(":example-app") {
     }
 }
 
+project(":lint") {
+    sonar {
+        skipProject = true
+    }
+}
+
 project(":test-core") {
     sonar {
         skipProject = true
