@@ -20,7 +20,7 @@ import org.w3c.dom.Attr
 
 internal val TEXT_IN_LAYOUT_XML_ISSUE = Issue.create(
     id = "TextInLayoutXml",
-    briefDescription = "android:text should not be used directly",
+    briefDescription = "Text should not be set directly",
     explanation = """
         Text should be defined in a style, so that merchants can easily override it.
     """.trimIndent().replace(Regex("(\n*)\n"), "$1"),
@@ -35,6 +35,7 @@ internal class TextInLayoutXmlDetector : LayoutDetector() {
 
     override fun getApplicableAttributes(): Collection<String> = listOf(
         SdkConstants.ATTR_TEXT,
+        SdkConstants.ATTR_HINT,
     )
 
     override fun visitAttribute(context: XmlContext, attribute: Attr) {

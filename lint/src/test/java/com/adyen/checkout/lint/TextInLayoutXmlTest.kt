@@ -25,6 +25,17 @@ internal class TextInLayoutXmlTest {
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="test" />
+                            
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayout"
+                            style="@style/AdyenCheckout.TextInputLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            
+                            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+                                android:id="@+id/editText"
+                                android:hint="hint" />
+                        </com.google.android.material.textfield.TextInputLayout>
                     
                     </LinearLayout>
                     """.trimIndent(),
@@ -38,7 +49,10 @@ internal class TextInLayoutXmlTest {
                 res/layout/some_view.xml:12: Error: Text should be defined in a style [TextInLayoutXml]
                         android:text="test" />
                         ~~~~~~~~~~~~~~~~~~~
-                1 errors, 0 warnings
+                res/layout/some_view.xml:22: Error: Text should be defined in a style [TextInLayoutXml]
+                            android:hint="hint" />
+                            ~~~~~~~~~~~~~~~~~~~
+                2 errors, 0 warnings
                 """,
             )
     }
