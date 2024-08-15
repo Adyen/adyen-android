@@ -78,6 +78,27 @@ internal class ObjectInPublicSealedClassTest {
                     }
                     """,
                 ).indented(),
+
+                kotlin(
+                    """
+                    package test
+
+                    sealed class PublicSealedClass3
+                    data object Sub1 : PublicSealedClass3()
+                    data class Sub2(val test: String) : PublicSealedClass3()
+                    """,
+                ).indented(),
+
+                kotlin(
+                    """
+                    package test
+
+                    sealed interface PublicSealedInterface {
+                        data object Sub1 : PublicSealedInterface()
+                        data class Sub2(val test: String) : PublicSealedInterface()
+                    }
+                    """,
+                ).indented(),
             )
             .issues(OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE)
             .allowMissingSdk()
@@ -90,7 +111,13 @@ internal class ObjectInPublicSealedClassTest {
                 src/test/PublicSealedClass2.kt:4: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
                     object Sub1 : PublicSealedClass2()
                     ~~~~~~
-                2 errors, 0 warnings
+                src/test/PublicSealedClass3.kt:4: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
+                data object Sub1 : PublicSealedClass3()
+                     ~~~~~~
+                src/test/PublicSealedInterface.kt:4: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
+                    data object Sub1 : PublicSealedInterface()
+                         ~~~~~~
+                4 errors, 0 warnings
                 """,
             )
             .expectFixDiffs(
@@ -103,6 +130,14 @@ internal class ObjectInPublicSealedClassTest {
                 @@ -4 +4
                 -     object Sub1 : PublicSealedClass2()
                 +     class Sub1 : PublicSealedClass2()
+                Fix for src/test/PublicSealedClass3.kt line 4: Replace with class:
+                @@ -4 +4
+                - data object Sub1 : PublicSealedClass3()
+                + data class Sub1 : PublicSealedClass3()
+                Fix for src/test/PublicSealedInterface.kt line 4: Replace with class:
+                @@ -4 +4
+                -     data object Sub1 : PublicSealedInterface()
+                +     data class Sub1 : PublicSealedInterface()
                 """,
             )
     }

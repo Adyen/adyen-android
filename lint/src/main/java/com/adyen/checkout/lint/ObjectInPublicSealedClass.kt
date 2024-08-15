@@ -19,7 +19,6 @@ import com.android.tools.lint.detector.api.Severity
 import org.jetbrains.kotlin.psi.KtObjectDeclaration
 import org.jetbrains.uast.UClass
 import org.jetbrains.uast.UElement
-import org.jetbrains.uast.UastVisibility
 
 internal val OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE = Issue.create(
     id = "ObjectInPublicSealedClass",
@@ -46,9 +45,7 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
 
             if (isCompanionObject(node)) return
 
-            val parentClass = (node.uastParent as? UClass) ?: return
-
-            if (!isSealed(parentClass)) return
+            if (!hasSealedParent(node)) return
 
             if (isObject(node)) {
                 val psiText = node.sourcePsi?.text.orEmpty()
@@ -73,17 +70,15 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
                 return isPublic(parent)
             }
 
-            return node.visibility == UastVisibility.PUBLIC
-                && !node.modifierList?.text.orEmpty().contains("internal", ignoreCase = true)
-                && !node.hasAnnotation("androidx.annotation.RestrictTo")
+            return context.evaluator.isPublic(node) && !node.hasAnnotation("androidx.annotation.RestrictTo")
         }
 
         private fun isCompanionObject(node: UClass): Boolean {
-            return node.modifierList?.text == "companion"
+            return context.evaluator.isCompanion(node)
         }
 
-        private fun isSealed(node: UClass): Boolean {
-            return node.modifierList?.text.orEmpty().contains("sealed", ignoreCase = true)
+        private fun hasSealedParent(node: UClass): Boolean {
+            return node.supers.any { context.evaluator.isSealed(it) }
         }
 
         private fun isObject(node: UClass): Boolean {
