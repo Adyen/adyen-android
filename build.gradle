@@ -53,6 +53,12 @@ subprojects {
         }
     }
 
+    plugins.withType(com.android.build.gradle.LibraryPlugin).configureEach {
+        dependencies {
+            lintChecks project(':lint')
+        }
+    }
+
     plugins.withType(org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper).configureEach {
         kotlin {
             jvmToolchain(javaVersion)

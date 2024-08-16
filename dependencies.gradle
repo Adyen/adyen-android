@@ -78,6 +78,7 @@ ext {
     jose4j_version = '0.9.6'
     junit_jupiter_version = "5.10.3"
     konsist_version = "0.15.1"
+    lint_version = "31.5.1"
     mockito_kotlin_version = "5.4.0"
     mockito_version = "5.12.0"
     robolectric_version = "4.13"
@@ -171,6 +172,9 @@ ext {
             "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version",
             "app.cash.turbine:turbine:$turbine_version"
         ],
+        lint            : "com.android.tools.lint:lint:$lint_version",
+        lintApi         : "com.android.tools.lint:lint-api:$lint_version",
+        lintTests       : "com.android.tools.lint:lint-tests:$lint_version",
         mockito         : [
             "org.mockito:mockito-junit-jupiter:$mockito_version",
             "org.mockito.kotlin:mockito-kotlin:$mockito_kotlin_version"
