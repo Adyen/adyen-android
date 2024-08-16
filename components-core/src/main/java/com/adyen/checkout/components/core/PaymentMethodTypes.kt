@@ -36,7 +36,6 @@ object PaymentMethodTypes {
     const val GOOGLE_PAY_LEGACY = "paywithgoogle"
     const val IDEAL = "ideal"
     const val MB_WAY = "mbway"
-    const val MEAL_VOUCHER_FR = "mealVoucher_FR" // not a txVariant, only to be used for /payments call
     const val MEAL_VOUCHER_FR_GROUPEUP = "mealVoucher_FR_groupeup"
     const val MEAL_VOUCHER_FR_NATIXIS = "mealVoucher_FR_natixis"
     const val MEAL_VOUCHER_FR_SODEXO = "mealVoucher_FR_sodexo"
