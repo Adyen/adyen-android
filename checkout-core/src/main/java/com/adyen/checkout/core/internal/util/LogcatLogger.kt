@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.internal.util
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import com.adyen.checkout.core.AdyenLogLevel
@@ -59,6 +60,7 @@ internal class LogcatLogger : AdyenLogger {
         }
     }
 
+    @SuppressLint("NotAdyenLog")
     private fun logToLogcat(
         priority: Int,
         tag: String,
