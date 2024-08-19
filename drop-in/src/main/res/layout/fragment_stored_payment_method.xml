@@ -33,9 +33,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/payButton"
-        style="@style/AdyenCheckout.Button.Colored"
-        android:layout_width="match_parent"
-        android:text="@string/continue_button" />
+        style="@style/AdyenCheckout.DropIn.ContinueButton"
+        android:layout_width="match_parent" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
@@ -47,8 +46,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_payment_method_button"
-        style="@style/AdyenCheckout.Button.Secondary"
+        style="@style/AdyenCheckout.DropIn.ChangePaymentMethodButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/change_payment_method" />
+        android:layout_height="wrap_content" />
 </LinearLayout>
