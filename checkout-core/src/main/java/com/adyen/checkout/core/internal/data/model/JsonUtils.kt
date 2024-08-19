@@ -5,6 +5,8 @@
  *
  * Created by caiof on 17/12/2020.
  */
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.core.internal.data.model
 
 import androidx.annotation.RestrictTo
@@ -98,7 +100,7 @@ private fun JSONObject.toMap(): Map<String, String> {
     val map = mutableMapOf<String, String>()
 
     val iterator = keys()
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
         val key = iterator.next()
         val value = this[key]
 
