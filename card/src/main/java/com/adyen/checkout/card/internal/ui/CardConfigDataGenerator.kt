@@ -23,23 +23,29 @@ class CardConfigDataGenerator {
         configuration: CardComponentParams,
         isStored: Boolean,
     ): Map<String, String> {
-        return mapOf(
-            // TODO Check if we need to send null or empty list
-            "billingAddressAllowedCountries" to ((configuration.addressParams as? AddressParams.FullAddress)
-                ?.supportedCountryCodes?.joinToString(",") ?: ""),
-            "billingAddressMode" to getBillingAddressMode(configuration.addressParams),
-            "billingAddressRequired" to (configuration.addressParams !is AddressParams.None).toString(),
-            "brands" to configuration.supportedCardBrands.joinToString(",") { it.txVariant },
-            "enableStoreDetails" to configuration.isStorePaymentFieldVisible.toString(),
-            "hasHolderName" to configuration.isHolderNameRequired.toString(),
-            "hasInstallmentOptions" to (configuration.installmentParams != null).toString(),
-            "hideCVC" to getHideCVC(configuration, isStored),
-            "holderNameRequired" to configuration.isHolderNameRequired.toString(),
-            "showInstallmentAmounts" to (configuration.installmentParams?.showInstallmentAmount ?: false).toString(),
-            "showKCPType" to getShowKCPType(configuration.kcpAuthVisibility),
-            "showPayButton" to configuration.isSubmitButtonVisible.toString(),
-            "socialSecurityNumberMode" to getSocialSecurityNumberMode(configuration.socialSecurityNumberVisibility),
-        )
+        return buildMap {
+            if (configuration.addressParams is AddressParams.FullAddress) {
+                val countryList = configuration.addressParams.supportedCountryCodes.joinToString(",")
+                put("billingAddressAllowedCountries", countryList)
+            }
+
+            put("billingAddressMode", getBillingAddressMode(configuration.addressParams))
+            put("billingAddressRequired", (configuration.addressParams !is AddressParams.None).toString())
+            put("brands", configuration.supportedCardBrands.joinToString(",") { it.txVariant })
+            put("enableStoreDetails", configuration.isStorePaymentFieldVisible.toString())
+            put("hasHolderName", configuration.isHolderNameRequired.toString())
+            put("hasInstallmentOptions", (configuration.installmentParams != null).toString())
+            put("hideCVC", getHideCVC(configuration, isStored))
+            put("holderNameRequired", configuration.isHolderNameRequired.toString())
+
+            if (configuration.installmentParams != null) {
+                put("showInstallmentAmounts", configuration.installmentParams.showInstallmentAmount.toString())
+            }
+
+            put("showKCPType", getShowKCPType(configuration.kcpAuthVisibility))
+            put("showPayButton", configuration.isSubmitButtonVisible.toString())
+            put("socialSecurityNumberMode", getSocialSecurityNumberMode(configuration.socialSecurityNumberVisibility))
+        }
     }
 
     private fun getBillingAddressMode(addressParams: AddressParams): String {
