@@ -13,9 +13,9 @@ internal class GiftCardNumberUtilsTest {
         giftCardNumber: String,
         expectedFormattedNumber: String,
     ) {
-        val actualResult = GiftCardNumberUtils.formatInput(giftCardNumber)
+        val actual = GiftCardNumberUtils.formatInput(giftCardNumber)
 
-        assertEquals(expectedFormattedNumber, actualResult)
+        assertEquals(expectedFormattedNumber, actual)
     }
 
     @ParameterizedTest
@@ -24,9 +24,9 @@ internal class GiftCardNumberUtilsTest {
         giftCardNumber: String,
         expectedRawValue: String,
     ) {
-        val actualResult = GiftCardNumberUtils.getRawValue(giftCardNumber)
+        val actual = GiftCardNumberUtils.getRawValue(giftCardNumber)
 
-        assertEquals(expectedRawValue, actualResult)
+        assertEquals(expectedRawValue, actual)
     }
 
     @ParameterizedTest
@@ -35,9 +35,9 @@ internal class GiftCardNumberUtilsTest {
         giftCardNumber: String,
         expectedValidationResult: GiftCardNumberValidationResult
     ) {
-        val actualResult = GiftCardNumberUtils.validateInputField(giftCardNumber)
+        val actual = GiftCardNumberUtils.validateInputField(giftCardNumber)
 
-        assertEquals(expectedValidationResult, actualResult)
+        assertEquals(expectedValidationResult, actual)
     }
 
     companion object {
