@@ -16,7 +16,6 @@ object GiftCardPinUtils {
     private const val MINIMUM_GIFT_CARD_PIN_LENGTH = 3
     private const val MAXIMUM_GIFT_CARD_PIN_LENGTH = 10
 
-    // TODO Add tests
     fun validateInputField(giftCardPin: String) = when {
         giftCardPin.length < MINIMUM_GIFT_CARD_PIN_LENGTH -> GiftCardPinValidationResult.INVALID
         giftCardPin.length > MAXIMUM_GIFT_CARD_PIN_LENGTH -> GiftCardPinValidationResult.INVALID
