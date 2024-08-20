@@ -11,9 +11,9 @@ package com.adyen.checkout.ui.core.internal.util
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class ExpiryDateValidationResult {
-    VALID,
-    INVALID_TOO_FAR_IN_THE_FUTURE,
-    INVALID_TOO_OLD,
-    INVALID_EXPIRY_DATE
+sealed class ExpiryDateValidationResult {
+    class Valid : ExpiryDateValidationResult()
+    class InvalidTooFarInTheFuture : ExpiryDateValidationResult()
+    class InvalidTooOld : ExpiryDateValidationResult()
+    data class InvalidExpiryDate(val isDateFormatInvalid: Boolean) : ExpiryDateValidationResult()
 }

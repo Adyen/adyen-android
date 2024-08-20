@@ -55,18 +55,18 @@ internal object MealVoucherValidationUtils {
     @VisibleForTesting
     internal fun validateExpiryDate(expiryDate: ExpiryDate, calendar: Calendar): FieldState<ExpiryDate> {
         return when (ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)) {
-            ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
-            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
+            is ExpiryDateValidationResult.Valid -> FieldState(expiryDate, Validation.Valid)
+            is ExpiryDateValidationResult.InvalidTooFarInTheFuture -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_expiry_date_not_valid_too_far_in_future),
             )
 
-            ExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
+            is ExpiryDateValidationResult.InvalidTooOld -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_expiry_date_not_valid_too_old),
             )
 
-            ExpiryDateValidationResult.INVALID_EXPIRY_DATE -> FieldState(
+            is ExpiryDateValidationResult.InvalidExpiryDate -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_expiry_date_not_valid),
             )

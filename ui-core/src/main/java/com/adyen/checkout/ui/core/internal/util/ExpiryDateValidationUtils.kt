@@ -30,14 +30,17 @@ object ExpiryDateValidationUtils {
 
             when {
                 // higher than maxPast and lower than maxFuture
-                isInMinMonthRange && isInMaxYearRange -> ExpiryDateValidationResult.VALID
-                !isInMaxYearRange -> ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE
+                isInMinMonthRange && isInMaxYearRange -> ExpiryDateValidationResult.Valid()
+                !isInMaxYearRange -> ExpiryDateValidationResult.InvalidTooFarInTheFuture()
                 // Too old (!isInMinMonthRange)
-                else -> ExpiryDateValidationResult.INVALID_TOO_OLD
+                else -> ExpiryDateValidationResult.InvalidTooOld()
             }
         }
 
-        else -> ExpiryDateValidationResult.INVALID_EXPIRY_DATE
+        else -> {
+            val isDateFormatInvalid = expiryDate == ExpiryDate.INVALID_DATE
+            ExpiryDateValidationResult.InvalidExpiryDate(isDateFormatInvalid = isDateFormatInvalid)
+        }
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
