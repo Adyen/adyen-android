@@ -21,7 +21,6 @@ import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationUtils
-import java.util.Calendar
 import java.util.GregorianCalendar
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -77,21 +76,20 @@ object CardValidationUtils {
     /**
      * Validate Expiry Date.
      */
-    fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
-        return validateExpiryDate(expiryDate, fieldPolicy, GregorianCalendar.getInstance())
+    internal fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
+        val expiryDateValidation =
+            ExpiryDateValidationUtils.validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
+
+        return validateExpiryDate(expiryDate, fieldPolicy, expiryDateValidation)
     }
 
     @VisibleForTesting
     internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         fieldPolicy: Brand.FieldPolicy?,
-        calendar: Calendar
+        expiryDateValidationResult: ExpiryDateValidationResult,
     ): FieldState<ExpiryDate> {
-        // TODO move ExpiryDateValidationUtils.validateExpiryDate call
-        //  to validateExpiryDate(ExpiryDate,Brand.FieldPolicy?) for better testability, then update test
-        val expiryDateValidation = ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)
-
-        return when (expiryDateValidation) {
+        return when (expiryDateValidationResult) {
             ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
             ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
                 expiryDate,
