@@ -121,6 +121,7 @@ object PaymentMethodTypes {
         MOLPAY_MALAYSIA,
         MOLPAY_THAILAND,
         MOLPAY_VIETNAM,
+        MULTIBANCO,
         ONLINE_BANKING_CZ,
         ONLINE_BANKING_PL,
         ONLINE_BANKING_SK,
@@ -133,8 +134,8 @@ object PaymentMethodTypes {
         SEPA,
         TWINT,
         UPI,
-        UPI_INTENT,
         UPI_COLLECT,
+        UPI_INTENT,
         UPI_QR,
         WECHAT_PAY_SDK,
     )
