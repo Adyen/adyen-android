@@ -21,6 +21,12 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
+        <activity android:name=".ui.settings.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+
         <!-- We have to handle deep links to fragments with this activity. -->
         <activity
             android:name=".ui.main.MainActivity"
