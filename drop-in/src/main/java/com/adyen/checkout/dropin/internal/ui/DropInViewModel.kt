@@ -492,6 +492,7 @@ internal class DropInViewModel(
             PaymentMethodTypes.GOOGLE_PAY_LEGACY,
             PaymentMethodTypes.IDEAL,
             PaymentMethodTypes.MULTIBANCO,
+            PaymentMethodTypes.PAY_BY_BANK,
             PaymentMethodTypes.PAY_NOW,
             PaymentMethodTypes.PIX,
             PaymentMethodTypes.PROMPT_PAY,
