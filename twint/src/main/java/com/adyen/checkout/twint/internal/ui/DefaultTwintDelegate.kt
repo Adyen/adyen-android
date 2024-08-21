@@ -146,13 +146,8 @@ internal class DefaultTwintDelegate(
         }
     }
 
-    private fun shouldStorePaymentMethod(): Boolean = when {
-        // Shopper is presented with store switch and selected it
-        componentParams.showStorePaymentField && outputData.isStorePaymentSelected -> true
-        // Shopper is not presented with store switch and configuration indicates storing the payment method
-        !componentParams.showStorePaymentField && componentParams.storePaymentMethod -> true
-        else -> false
-    }
+    private fun shouldStorePaymentMethod(): Boolean =
+        componentParams.showStorePaymentField && outputData.isStorePaymentSelected
 
     override fun onSubmit() {
         if (isConfirmationRequired()) {

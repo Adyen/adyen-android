@@ -17,6 +17,5 @@ internal data class TwintComponentParams(
     private val commonComponentParams: CommonComponentParams,
     override val isSubmitButtonVisible: Boolean,
     val showStorePaymentField: Boolean,
-    val storePaymentMethod: Boolean,
     val actionHandlingMethod: ActionHandlingMethod,
 ) : ComponentParams by commonComponentParams, ButtonParams

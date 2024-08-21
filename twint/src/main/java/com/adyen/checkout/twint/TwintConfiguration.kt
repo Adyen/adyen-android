@@ -39,7 +39,6 @@ private constructor(
     override val isSubmitButtonVisible: Boolean?,
     val genericActionConfiguration: GenericActionConfiguration,
     val showStorePaymentField: Boolean?,
-    val storePaymentMethod: Boolean?,
     val actionHandlingMethod: ActionHandlingMethod?,
 ) : Configuration, ButtonConfiguration {
 
@@ -49,7 +48,6 @@ private constructor(
 
         private var isSubmitButtonVisible: Boolean? = null
         private var showStorePaymentField: Boolean? = null
-        private var storePaymentMethod: Boolean? = null
         private var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
@@ -113,22 +111,6 @@ private constructor(
         }
 
         /**
-         * Set if the shopper's account should be stored, when the store payment method switch is not presented to the
-         * shopper.
-         *
-         * Only applicable if [showStorePaymentField] is false.
-         *
-         * Default is false.
-         *
-         * @param storePaymentMethod [Boolean]
-         * @return [TwintConfiguration.Builder]
-         */
-        fun setStorePaymentMethod(storePaymentMethod: Boolean): Builder {
-            this.storePaymentMethod = storePaymentMethod
-            return this
-        }
-
-        /**
          * Sets the method used to handle actions. See [ActionHandlingMethod] for the available options.
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
@@ -159,7 +141,6 @@ private constructor(
             amount = amount,
             genericActionConfiguration = genericActionConfigurationBuilder.build(),
             showStorePaymentField = showStorePaymentField,
-            storePaymentMethod = storePaymentMethod,
             actionHandlingMethod = actionHandlingMethod,
         )
     }

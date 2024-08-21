@@ -42,7 +42,7 @@ public final class com/adyen/checkout/twint/TwintComponentState : com/adyen/chec
 
 public final class com/adyen/checkout/twint/TwintConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/components/core/ActionHandlingMethod;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Lcom/adyen/checkout/components/core/ActionHandlingMethod;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun describeContents ()I
 	public final fun getActionHandlingMethod ()Lcom/adyen/checkout/components/core/ActionHandlingMethod;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
@@ -52,7 +52,6 @@ public final class com/adyen/checkout/twint/TwintConfiguration : com/adyen/check
 	public final fun getGenericActionConfiguration ()Lcom/adyen/checkout/action/core/GenericActionConfiguration;
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public final fun getShowStorePaymentField ()Ljava/lang/Boolean;
-	public final fun getStorePaymentMethod ()Ljava/lang/Boolean;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -64,7 +63,6 @@ public final class com/adyen/checkout/twint/TwintConfiguration$Builder : com/ady
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public final fun setActionHandlingMethod (Lcom/adyen/checkout/components/core/ActionHandlingMethod;)Lcom/adyen/checkout/twint/TwintConfiguration$Builder;
 	public final fun setShowStorePaymentField (Z)Lcom/adyen/checkout/twint/TwintConfiguration$Builder;
-	public final fun setStorePaymentMethod (Z)Lcom/adyen/checkout/twint/TwintConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/twint/TwintConfiguration$Builder;
 }

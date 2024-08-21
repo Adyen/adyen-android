@@ -56,7 +56,6 @@ internal class TwintComponentParamsMapper(
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
                 ?: twintConfiguration?.isSubmitButtonVisible ?: true,
             showStorePaymentField = getShowStorePaymentField(sessionParams, twintConfiguration),
-            storePaymentMethod = twintConfiguration?.storePaymentMethod ?: false,
             actionHandlingMethod = twintConfiguration?.actionHandlingMethod ?: ActionHandlingMethod.PREFER_NATIVE,
         )
     }

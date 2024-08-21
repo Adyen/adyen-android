@@ -23,7 +23,6 @@ internal class TwintConfigurationTest {
         ) {
             twint {
                 setShowStorePaymentField(true)
-                setStorePaymentMethod(true)
                 setSubmitButtonVisible(false)
                 setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
@@ -39,7 +38,6 @@ internal class TwintConfigurationTest {
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             .setShowStorePaymentField(true)
-            .setStorePaymentMethod(true)
             .setSubmitButtonVisible(false)
             .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
@@ -50,7 +48,6 @@ internal class TwintConfigurationTest {
         assertEquals(expected.amount, actual?.amount)
         assertEquals(expected.analyticsConfiguration, actual?.analyticsConfiguration)
         assertEquals(expected.showStorePaymentField, actual?.showStorePaymentField)
-        assertEquals(expected.storePaymentMethod, actual?.storePaymentMethod)
         assertEquals(expected.isSubmitButtonVisible, actual?.isSubmitButtonVisible)
     }
 
@@ -64,7 +61,6 @@ internal class TwintConfigurationTest {
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             .setShowStorePaymentField(true)
-            .setStorePaymentMethod(true)
             .setSubmitButtonVisible(false)
             .setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             .build()
@@ -96,7 +92,6 @@ internal class TwintConfigurationTest {
         assertEquals(config.amount, actualTwintConfig?.amount)
         assertEquals(config.analyticsConfiguration, actualTwintConfig?.analyticsConfiguration)
         assertEquals(config.showStorePaymentField, actualTwintConfig?.showStorePaymentField)
-        assertEquals(config.storePaymentMethod, actualTwintConfig?.storePaymentMethod)
         assertEquals(config.isSubmitButtonVisible, actualTwintConfig?.isSubmitButtonVisible)
         assertEquals(config.actionHandlingMethod, actualTwintConfig?.actionHandlingMethod)
     }

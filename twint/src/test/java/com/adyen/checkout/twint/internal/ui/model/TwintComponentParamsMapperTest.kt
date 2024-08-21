@@ -51,7 +51,6 @@ internal class TwintComponentParamsMapperTest {
         ) {
             twint {
                 setShowStorePaymentField(false)
-                setStorePaymentMethod(true)
                 setSubmitButtonVisible(false)
                 setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
@@ -71,7 +70,6 @@ internal class TwintComponentParamsMapperTest {
             clientKey = TEST_CLIENT_KEY_2,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
             showStorePaymentField = false,
-            storePaymentMethod = true,
             actionHandlingMethod = ActionHandlingMethod.PREFER_WEB,
         )
 
@@ -268,7 +266,6 @@ internal class TwintComponentParamsMapperTest {
         amount: Amount? = null,
         isSubmitButtonVisible: Boolean = true,
         showStorePaymentField: Boolean = true,
-        storePaymentMethod: Boolean = false,
         actionHandlingMethod: ActionHandlingMethod = ActionHandlingMethod.PREFER_NATIVE,
     ) = TwintComponentParams(
         commonComponentParams = CommonComponentParams(
@@ -281,7 +278,6 @@ internal class TwintComponentParamsMapperTest {
         ),
         isSubmitButtonVisible = isSubmitButtonVisible,
         showStorePaymentField = showStorePaymentField,
-        storePaymentMethod = storePaymentMethod,
         actionHandlingMethod = actionHandlingMethod,
     )
 

@@ -190,7 +190,6 @@ internal class DefaultTwintDelegateTest(
             delegate = createDefaultTwintDelegate(
                 createCheckoutConfiguration(Amount("USD", 0L)) {
                     setShowStorePaymentField(false)
-                    setStorePaymentMethod(true)
                 },
             )
             delegate.initialize(this)
@@ -217,16 +216,16 @@ internal class DefaultTwintDelegateTest(
         }
 
         @Test
-        fun `the user doesn't want to store and the component is not configured to store, then we don't store the pm`() =
+        fun `the user doesn't want to store, then we don't store the pm`() =
             runTest {
                 delegate = createDefaultTwintDelegate(
                     createCheckoutConfiguration(Amount("USD", 100L)) {
                         setShowStorePaymentField(true)
-                        setStorePaymentMethod(false)
                     },
                 )
                 val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { isStorePaymentSelected = false }
 
                 delegate.onSubmit()
 
@@ -244,23 +243,6 @@ internal class DefaultTwintDelegateTest(
                 val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
                 delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
                 delegate.updateInputData { isStorePaymentSelected = true }
-
-                delegate.onSubmit()
-
-                assertEquals(true, componentStateFlow.latestValue.data.storePaymentMethod)
-            }
-
-        @Test
-        fun `the component is configured to store, then we store the pm`() =
-            runTest {
-                delegate = createDefaultTwintDelegate(
-                    createCheckoutConfiguration(Amount("USD", 0L)) {
-                        setShowStorePaymentField(false)
-                        setStorePaymentMethod(true)
-                    },
-                )
-                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
-                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
                 delegate.onSubmit()
 
