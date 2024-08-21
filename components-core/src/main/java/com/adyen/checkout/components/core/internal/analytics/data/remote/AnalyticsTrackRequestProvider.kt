@@ -39,6 +39,7 @@ internal class AnalyticsTrackRequestProvider {
         issuer = issuer,
         validationErrorCode = validationErrorCode,
         validationErrorMessage = validationErrorMessage,
+        configData = configData,
     )
 
     private fun AnalyticsEvent.Log.mapToTrackEvent() = AnalyticsTrackLog(

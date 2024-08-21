@@ -21,6 +21,7 @@ internal class AnalyticsTrackInfoTest {
             issuer = "ing",
             validationErrorCode = "418",
             validationErrorMessage = "I'm a teapot",
+            mapOf("test" to "something"),
         )
 
         val actual = AnalyticsTrackInfo.SERIALIZER.serialize(request)
@@ -36,6 +37,11 @@ internal class AnalyticsTrackInfoTest {
             .put("issuer", "ing")
             .put("validationErrorCode", "418")
             .put("validationErrorMessage", "I'm a teapot")
+            .put(
+                "configData",
+                JSONObject()
+                    .put("test", "something"),
+            )
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -53,6 +59,11 @@ internal class AnalyticsTrackInfoTest {
             .put("issuer", "ing")
             .put("validationErrorCode", "418")
             .put("validationErrorMessage", "I'm a teapot")
+            .put(
+                "configData",
+                JSONObject()
+                    .put("test", "something"),
+            )
 
         val actual = AnalyticsTrackInfo.SERIALIZER.deserialize(response)
 
@@ -67,6 +78,7 @@ internal class AnalyticsTrackInfoTest {
             issuer = "ing",
             validationErrorCode = "418",
             validationErrorMessage = "I'm a teapot",
+            mapOf("test" to "something"),
         )
 
         assertEquals(expected, actual)

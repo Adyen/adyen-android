@@ -72,13 +72,17 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<CardComponentState>
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>,
+    @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -92,6 +96,8 @@ internal class StoredCardDelegateTest(
         publicKeyRepository = TestPublicKeyRepository()
         analyticsManager = TestAnalyticsManager()
         delegate = createCardDelegate()
+
+        whenever(cardConfigDataGenerator.generate(any(), any())) doReturn emptyMap()
     }
 
     @Test
@@ -435,7 +441,11 @@ internal class StoredCardDelegateTest(
         fun `when delegate is initialized, then render event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.SCHEME, isStoredPaymentMethod = true)
+            val expectedEvent = GenericEvents.rendered(
+                component = PaymentMethodTypes.SCHEME,
+                isStoredPaymentMethod = true,
+                configData = emptyMap(),
+            )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
@@ -500,6 +510,7 @@ internal class StoredCardDelegateTest(
             analyticsManager = analyticsManager,
             submitHandler = submitHandler,
             order = order,
+            cardConfigDataGenerator = cardConfigDataGenerator,
         )
     }
 

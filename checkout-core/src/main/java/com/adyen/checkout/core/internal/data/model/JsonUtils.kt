@@ -5,6 +5,8 @@
  *
  * Created by caiof on 17/12/2020.
  */
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.core.internal.data.model
 
 import androidx.annotation.RestrictTo
@@ -83,6 +85,27 @@ inline fun <reified T : ModelObject> JSONObject.jsonToMap(
             if (value is JSONObject) {
                 map[key] = ModelUtils.deserializeOpt(value, modelSerializer)
             }
+        }
+    }
+
+    return map
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.getMapOrNull(key: String): Map<String, String>? {
+    return if (has(key)) getJSONObject(key).toMap() else null
+}
+
+private fun JSONObject.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+
+    val iterator = keys()
+    while (iterator.hasNext()) {
+        val key = iterator.next()
+        val value = this[key]
+
+        if (value is String) {
+            map[key] = value
         }
     }
 

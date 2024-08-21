@@ -20,6 +20,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
+import com.adyen.checkout.card.internal.ui.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
@@ -158,6 +159,7 @@ constructor(
                     addressRepository = DefaultAddressRepository(AddressService(httpClient)),
                     shopperLocale = componentParams.shopperLocale,
                 ),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =
@@ -268,6 +270,7 @@ constructor(
                     addressRepository = DefaultAddressRepository(AddressService(httpClient)),
                     shopperLocale = componentParams.shopperLocale,
                 ),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =
@@ -381,6 +384,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =
@@ -477,6 +481,7 @@ constructor(
                 cardEncryptor = cardEncryptor,
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =
