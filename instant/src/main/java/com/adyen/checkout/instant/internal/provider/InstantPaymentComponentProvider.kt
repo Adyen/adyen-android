@@ -279,13 +279,12 @@ constructor(
         @VisibleForTesting
         internal val EXPLICITLY_SUPPORTED_PAYMENT_METHOD_TYPES = listOf(
             PaymentMethodTypes.DUIT_NOW,
-            PaymentMethodTypes.IDEAL,
-            PaymentMethodTypes.MULTIBANCO,
             PaymentMethodTypes.PAY_NOW,
             PaymentMethodTypes.PIX,
             PaymentMethodTypes.PROMPT_PAY,
             PaymentMethodTypes.TWINT,
             PaymentMethodTypes.WECHAT_PAY_SDK,
+            PaymentMethodTypes.MULTIBANCO,
         )
     }
 }
