@@ -15,5 +15,6 @@ enum class ExpiryDateValidationResult {
     VALID,
     INVALID_TOO_FAR_IN_THE_FUTURE,
     INVALID_TOO_OLD,
-    INVALID_EXPIRY_DATE
+    INVALID_DATE_FORMAT,
+    INVALID_OTHER_REASON,
 }
