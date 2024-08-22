@@ -66,7 +66,8 @@ internal object MealVoucherValidationUtils {
                 Validation.Invalid(R.string.checkout_meal_voucher_expiry_date_not_valid_too_old),
             )
 
-            ExpiryDateValidationResult.INVALID_EXPIRY_DATE -> FieldState(
+            ExpiryDateValidationResult.INVALID_DATE_FORMAT,
+            ExpiryDateValidationResult.INVALID_OTHER_REASON -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_expiry_date_not_valid),
             )

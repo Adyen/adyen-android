@@ -37,7 +37,9 @@ object ExpiryDateValidationUtils {
             }
         }
 
-        else -> ExpiryDateValidationResult.INVALID_EXPIRY_DATE
+        expiryDate == ExpiryDate.INVALID_DATE -> ExpiryDateValidationResult.INVALID_DATE_FORMAT
+
+        else -> ExpiryDateValidationResult.INVALID_OTHER_REASON
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
