@@ -21,6 +21,7 @@ import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationUtils
+import java.util.Calendar
 import java.util.GregorianCalendar
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -76,37 +77,40 @@ object CardValidationUtils {
     /**
      * Validate Expiry Date.
      */
-    internal fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
-        val expiryDateValidation =
-            ExpiryDateValidationUtils.validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
-
-        return validateExpiryDate(expiryDate, fieldPolicy, expiryDateValidation)
-    }
-
-    @VisibleForTesting
     internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         fieldPolicy: Brand.FieldPolicy?,
-        expiryDateValidationResult: ExpiryDateValidationResult,
+        calendar: Calendar = GregorianCalendar.getInstance()
     ): FieldState<ExpiryDate> {
+        val expiryDateValidationResult =
+            ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)
+        val validation = generateExpiryDateValidation(fieldPolicy, expiryDateValidationResult)
+
+        return FieldState(expiryDate, validation)
+    }
+
+    @VisibleForTesting
+    internal fun generateExpiryDateValidation(
+        fieldPolicy: Brand.FieldPolicy?,
+        expiryDateValidationResult: ExpiryDateValidationResult,
+    ): Validation {
         return when (expiryDateValidationResult) {
-            ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
-            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future),
-            )
+            ExpiryDateValidationResult.VALID -> Validation.Valid
 
-            ExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old),
-            )
+            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
 
-            ExpiryDateValidationResult.INVALID_EXPIRY_DATE ->
-                if (fieldPolicy?.isRequired() == false && expiryDate != ExpiryDate.INVALID_DATE) {
-                    FieldState(expiryDate, Validation.Valid)
-                } else {
-                    FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
-                }
+            ExpiryDateValidationResult.INVALID_TOO_OLD ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+
+            ExpiryDateValidationResult.INVALID_DATE_FORMAT ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+
+            ExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
+                Validation.Valid
+            } else {
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+            }
         }
     }
 
