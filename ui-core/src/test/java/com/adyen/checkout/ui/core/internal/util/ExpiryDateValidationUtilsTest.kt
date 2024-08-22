@@ -16,7 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import java.util.Calendar
 import java.util.GregorianCalendar
 
-class ExpiryDateValidationUtilsTest {
+internal class ExpiryDateValidationUtilsTest {
 
     @ParameterizedTest
     @MethodSource("expiryDateValidationSource")
@@ -38,12 +38,12 @@ class ExpiryDateValidationUtilsTest {
             arguments(
                 ExpiryDate.EMPTY_DATE,
                 GregorianCalendar.getInstance(),
-                ExpiryDateValidationResult.INVALID_EXPIRY_DATE,
+                ExpiryDateValidationResult.INVALID_OTHER_REASON,
             ),
             arguments(
                 ExpiryDate.INVALID_DATE,
                 GregorianCalendar.getInstance(),
-                ExpiryDateValidationResult.INVALID_EXPIRY_DATE,
+                ExpiryDateValidationResult.INVALID_DATE_FORMAT,
             ),
             // Date 30 years in future
             arguments(
