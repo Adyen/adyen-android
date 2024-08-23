@@ -301,6 +301,11 @@ internal class DropInViewModelTest(
             ),
             arguments(
                 true,
+                createPayPaymentMethodsApiResponse(listOf(PaymentMethodTypes.PAY_BY_BANK)),
+                false,
+            ),
+            arguments(
+                true,
                 createPayPaymentMethodsApiResponse(listOf(PaymentMethodTypes.PAY_NOW)),
                 false,
             ),
