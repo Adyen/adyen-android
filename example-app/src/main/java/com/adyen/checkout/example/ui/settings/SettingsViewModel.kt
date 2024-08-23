@@ -23,6 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
+    private val settingsUIMapper: SettingsUIMapper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUIState(emptyList()))
@@ -32,20 +33,10 @@ internal class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             updateUIState {
                 SettingsUIState(
-                    settingsItems = getSettingsItems(),
+                    settingsItems = settingsUIMapper.getSettingsItems(),
                 )
             }
         }
-    }
-
-    private fun getSettingsItems(): List<SettingsItem> {
-        val merchantSetting = SettingsItem.Text(
-            titleResId = R.string.merchant_account_title,
-            subtitle = keyValueStorage.getMerchantAccount(),
-        )
-        return listOf(
-            merchantSetting,
-        )
     }
 
 

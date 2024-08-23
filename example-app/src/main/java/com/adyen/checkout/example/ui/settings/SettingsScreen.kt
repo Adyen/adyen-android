@@ -101,6 +101,7 @@ private fun TextSettingsItem(
             .fillMaxWidth()
             .padding(horizontal = ExampleTheme.dimensions.grid_2, vertical = ExampleTheme.dimensions.grid_1),
     ) {
+        // TODO: create separate style
         Text(
             text = stringResource(id = settingsItem.titleResId),
             style = MaterialTheme.typography.bodyLarge,
