@@ -11,6 +11,7 @@
 package com.adyen.checkout.example.ui.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -86,6 +88,7 @@ private fun SettingsItemsList(
         items(items = settingsItems) { settingsItem ->
             when (settingsItem) {
                 is SettingsItem.Text -> TextSettingsItem(settingsItem)
+                is SettingsItem.Switch -> SwitchSettingsItem(settingsItem)
             }
         }
     }
@@ -99,7 +102,7 @@ private fun TextSettingsItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = ExampleTheme.dimensions.grid_2, vertical = ExampleTheme.dimensions.grid_1),
+            .padding(horizontal = ExampleTheme.dimensions.grid_4, vertical = ExampleTheme.dimensions.grid_1_5),
     ) {
         // TODO: create separate style
         Text(
@@ -116,6 +119,31 @@ private fun TextSettingsItem(
     }
 }
 
+@Composable
+private fun SwitchSettingsItem(
+    settingsItem: SettingsItem.Switch,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = ExampleTheme.dimensions.grid_4, vertical = ExampleTheme.dimensions.grid_1_5),
+    ) {
+        // TODO: create separate style
+        Text(
+            text = stringResource(id = settingsItem.titleResId),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+            modifier = Modifier.weight(1f),
+        )
+
+        Switch(
+            checked = settingsItem.checked,
+            onCheckedChange = null, // TODO: implement
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenPreview() {
@@ -124,6 +152,10 @@ private fun SettingsScreenPreview() {
             uiState = SettingsUIState(
                 listOf(
                     SettingsItem.Text(R.string.shopper_reference_title, "shopper_reference_123"),
+                    SettingsItem.Text(R.string.amount_value_title, "1337"),
+                    SettingsItem.Switch(R.string.card_installment_show_amount_title, true),
+                    SettingsItem.Text(R.string.card_address_form_title, "Full address"),
+                    SettingsItem.Switch(R.string.remove_stored_payment_method_title, false),
                 ),
             ),
         )

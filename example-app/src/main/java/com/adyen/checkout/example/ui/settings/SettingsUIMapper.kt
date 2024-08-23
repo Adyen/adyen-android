@@ -36,6 +36,9 @@ internal class SettingsUIMapper @Inject constructor(
             getShopperEmail(),
             getAddressMode(),
             getInstallmentOptionsMode(),
+            getInstallmentAmountShown(),
+            getSplitCardFundingSources(),
+            getRemoveStoredPaymentMethodEnabled(),
             getInstantPaymentMethodType(),
             getAnalyticsLevel(),
             getDisplayTheme(),
@@ -137,6 +140,27 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             titleResId = R.string.card_installment_options_mode_title,
             subtitle = displayValue,
+        )
+    }
+
+    private fun getInstallmentAmountShown(): SettingsItem {
+        return SettingsItem.Switch(
+            titleResId = R.string.card_installment_show_amount_title,
+            checked = keyValueStorage.isInstallmentAmountShown(),
+        )
+    }
+
+    private fun getSplitCardFundingSources(): SettingsItem {
+        return SettingsItem.Switch(
+            titleResId = R.string.split_card_funding_sources_title,
+            checked = keyValueStorage.isSplitCardFundingSources(),
+        )
+    }
+
+    private fun getRemoveStoredPaymentMethodEnabled(): SettingsItem {
+        return SettingsItem.Switch(
+            titleResId = R.string.remove_stored_payment_method_title,
+            checked = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
         )
     }
 

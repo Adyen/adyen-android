@@ -15,4 +15,9 @@ internal sealed interface SettingsItem {
         @StringRes val titleResId: Int,
         val subtitle: String,
     ) : SettingsItem
+
+    class Switch(
+        @StringRes val titleResId: Int,
+        val checked: Boolean,
+    ) : SettingsItem
 }
