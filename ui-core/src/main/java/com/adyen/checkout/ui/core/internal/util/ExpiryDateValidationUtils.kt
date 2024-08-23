@@ -20,7 +20,7 @@ object ExpiryDateValidationUtils {
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
 
-    fun validateExpiryDateInternal(
+    fun validateExpiryDate(
         expiryDate: ExpiryDate,
         calendar: Calendar
     ) = when {
@@ -37,7 +37,9 @@ object ExpiryDateValidationUtils {
             }
         }
 
-        else -> ExpiryDateValidationResult.INVALID_EXPIRY_DATE
+        expiryDate == ExpiryDate.INVALID_DATE -> ExpiryDateValidationResult.INVALID_DATE_FORMAT
+
+        else -> ExpiryDateValidationResult.INVALID_OTHER_REASON
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {

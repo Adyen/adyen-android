@@ -77,36 +77,40 @@ object CardValidationUtils {
     /**
      * Validate Expiry Date.
      */
-    fun validateExpiryDate(expiryDate: ExpiryDate, fieldPolicy: Brand.FieldPolicy?): FieldState<ExpiryDate> {
-        return validateExpiryDate(expiryDate, fieldPolicy, GregorianCalendar.getInstance())
-    }
-
-    @VisibleForTesting
     internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         fieldPolicy: Brand.FieldPolicy?,
-        calendar: Calendar
+        calendar: Calendar = GregorianCalendar.getInstance()
     ): FieldState<ExpiryDate> {
-        val expiryDateValidation = ExpiryDateValidationUtils.validateExpiryDateInternal(expiryDate, calendar)
+        val expiryDateValidationResult =
+            ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)
+        val validation = generateExpiryDateValidation(fieldPolicy, expiryDateValidationResult)
 
-        return when (expiryDateValidation) {
-            ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
-            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future),
-            )
+        return FieldState(expiryDate, validation)
+    }
 
-            ExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old),
-            )
+    @VisibleForTesting
+    internal fun generateExpiryDateValidation(
+        fieldPolicy: Brand.FieldPolicy?,
+        expiryDateValidationResult: ExpiryDateValidationResult,
+    ): Validation {
+        return when (expiryDateValidationResult) {
+            ExpiryDateValidationResult.VALID -> Validation.Valid
 
-            ExpiryDateValidationResult.INVALID_EXPIRY_DATE ->
-                if (fieldPolicy?.isRequired() == false && expiryDate != ExpiryDate.INVALID_DATE) {
-                    FieldState(expiryDate, Validation.Valid)
-                } else {
-                    FieldState(expiryDate, Validation.Invalid(R.string.checkout_expiry_date_not_valid))
-                }
+            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
+
+            ExpiryDateValidationResult.INVALID_TOO_OLD ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+
+            ExpiryDateValidationResult.INVALID_DATE_FORMAT ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+
+            ExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
+                Validation.Valid
+            } else {
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+            }
         }
     }
 
