@@ -3,14 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 21/8/2024.
+ * Created by josephj on 23/8/2024.
  */
 
 package com.adyen.checkout.example.ui.settings
 
-import androidx.compose.runtime.Immutable
+import androidx.annotation.StringRes
 
-@Immutable
-internal data class SettingsUIState(
-    val settingsCategories: List<SettingsCategory>,
+internal data class SettingsCategory (
+    @StringRes val titleResId: Int,
+    val settingsItems: List<SettingsItem>,
 )

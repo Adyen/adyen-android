@@ -10,6 +10,7 @@
 
 package com.adyen.checkout.example.ui.settings
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -72,23 +74,38 @@ private fun SettingsScreen(
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
-        settingsItems = uiState.settingsItems,
+        settingsCategories = uiState.settingsCategories,
         modifier = modifier,
     )
 }
 
 @Composable
 private fun SettingsItemsList(
-    settingsItems: List<SettingsItem>,
+    settingsCategories: List<SettingsCategory>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
     ) {
-        items(items = settingsItems) { settingsItem ->
-            when (settingsItem) {
-                is SettingsItem.Text -> TextSettingsItem(settingsItem)
-                is SettingsItem.Switch -> SwitchSettingsItem(settingsItem)
+        settingsCategories.forEachIndexed { index, category ->
+            item {
+                SettingsCategoryHeader(title = stringResource(id = category.titleResId))
+            }
+
+            items(items = category.settingsItems) { settingsItem ->
+                when (settingsItem) {
+                    is SettingsItem.Text -> {
+                        TextSettingsItem(settingsItem)
+                    }
+
+                    is SettingsItem.Switch -> SwitchSettingsItem(settingsItem)
+                }
+            }
+
+            if (index != settingsCategories.size - 1) {
+                item {
+                    SettingsDivider()
+                }
             }
         }
     }
@@ -102,7 +119,12 @@ private fun TextSettingsItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = ExampleTheme.dimensions.grid_4, vertical = ExampleTheme.dimensions.grid_1_5),
+            .padding(
+                start = ExampleTheme.dimensions.grid_4,
+                end = ExampleTheme.dimensions.grid_2,
+                top = ExampleTheme.dimensions.grid_2,
+                bottom = ExampleTheme.dimensions.grid_2,
+            ),
     ) {
         // TODO: create separate style
         Text(
@@ -127,14 +149,19 @@ private fun SwitchSettingsItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = ExampleTheme.dimensions.grid_4, vertical = ExampleTheme.dimensions.grid_1_5),
+            .padding(
+                start = ExampleTheme.dimensions.grid_4,
+                end = ExampleTheme.dimensions.grid_2,
+                top = ExampleTheme.dimensions.grid_2,
+                bottom = ExampleTheme.dimensions.grid_2,
+            ),
     ) {
         // TODO: create separate style
         Text(
             text = stringResource(id = settingsItem.titleResId),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(1f),
+            modifier = modifier.weight(1f),
         )
 
         Switch(
@@ -144,6 +171,41 @@ private fun SwitchSettingsItem(
     }
 }
 
+@Composable
+fun SettingsCategoryHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .padding(
+                start = ExampleTheme.dimensions.grid_4,
+                end = ExampleTheme.dimensions.grid_2,
+                top = ExampleTheme.dimensions.grid_2,
+            )
+            .fillMaxWidth(),
+    ) {
+        Text(
+            title,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+    }
+}
+
+@Composable
+fun SettingsDivider(
+    modifier: Modifier = Modifier,
+) {
+    HorizontalDivider(
+        modifier = modifier
+            .padding(
+                bottom = ExampleTheme.dimensions.grid_1,
+            ),
+        color = MaterialTheme.colorScheme.outlineVariant,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenPreview() {
@@ -151,11 +213,26 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             uiState = SettingsUIState(
                 listOf(
-                    SettingsItem.Text(R.string.shopper_reference_title, "shopper_reference_123"),
-                    SettingsItem.Text(R.string.amount_value_title, "1337"),
-                    SettingsItem.Switch(R.string.card_installment_show_amount_title, true),
-                    SettingsItem.Text(R.string.card_address_form_title, "Full address"),
-                    SettingsItem.Switch(R.string.remove_stored_payment_method_title, false),
+                    SettingsCategory(
+                        R.string.merchant_information,
+                        listOf(
+                            SettingsItem.Text(R.string.shopper_reference_title, "shopper_reference_123"),
+                        ),
+                    ),
+                    SettingsCategory(
+                        R.string.shopper_information,
+                        listOf(
+                            SettingsItem.Text(R.string.amount_value_title, "1337"),
+                            SettingsItem.Switch(R.string.card_installment_show_amount_title, true),
+                        ),
+                    ),
+                    SettingsCategory(
+                        R.string.other_payment_methods_settings_title,
+                        listOf(
+                            SettingsItem.Text(R.string.card_address_form_title, "Full address"),
+                            SettingsItem.Switch(R.string.remove_stored_payment_method_title, false),
+                        ),
+                    ),
                 ),
             ),
         )

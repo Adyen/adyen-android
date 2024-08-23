@@ -23,25 +23,59 @@ internal class SettingsUIMapper @Inject constructor(
     private val nightThemeRepository: NightThemeRepository,
 ) : ViewModel() {
 
-    fun getSettingsItems(): List<SettingsItem> {
-        // TODO: add categories
+    fun getSettingsCategories(): List<SettingsCategory> {
         return listOf(
-            getMerchantAccount(),
-            getAmount(),
-            getCurrency(),
-            getThreeDSMode(),
-            getShopperReference(),
-            getCountry(),
-            getShopperLocale(),
-            getShopperEmail(),
-            getAddressMode(),
-            getInstallmentOptionsMode(),
-            getInstallmentAmountShown(),
-            getSplitCardFundingSources(),
-            getRemoveStoredPaymentMethodEnabled(),
-            getInstantPaymentMethodType(),
-            getAnalyticsLevel(),
-            getDisplayTheme(),
+            SettingsCategory(
+                R.string.merchant_information,
+                listOf(
+                    getMerchantAccount(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.payment_information,
+                listOf(
+                    getAmount(),
+                    getCurrency(),
+                    getThreeDSMode(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.shopper_information,
+                listOf(
+                    getShopperReference(),
+                    getCountry(),
+                    getShopperLocale(),
+                    getShopperEmail(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.card_settings_title,
+                listOf(
+                    getAddressMode(),
+                    getInstallmentOptionsMode(),
+                    getInstallmentAmountShown(),
+                    getSplitCardFundingSources(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.other_payment_methods_settings_title,
+                listOf(
+                    getRemoveStoredPaymentMethodEnabled(),
+                    getInstantPaymentMethodType(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.analytics_title,
+                listOf(
+                    getAnalyticsLevel(),
+                ),
+            ),
+            SettingsCategory(
+                R.string.app_title,
+                listOf(
+                    getDisplayTheme(),
+                ),
+            ),
         )
     }
 

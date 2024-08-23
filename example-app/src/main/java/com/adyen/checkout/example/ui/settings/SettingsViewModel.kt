@@ -33,7 +33,7 @@ internal class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             updateUIState {
                 SettingsUIState(
-                    settingsItems = settingsUIMapper.getSettingsItems(),
+                    settingsCategories = settingsUIMapper.getSettingsCategories(),
                 )
             }
         }
