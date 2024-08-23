@@ -5,6 +5,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
@@ -14,6 +15,8 @@ import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.test.LoggingExtension
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -29,14 +32,17 @@ import java.util.Locale
 internal class DropInViewModelTest(
     @Mock private val bundleHandler: DropInSavedStateHandleContainer,
     @Mock private val orderStatusRepository: OrderStatusRepository,
+    @Mock private val dropInConfigDataGenerator: DropInConfigDataGenerator,
 ) {
 
+    private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var viewModel: DropInViewModel
 
     @BeforeEach
     fun beforeEach() {
         whenever(bundleHandler.checkoutConfiguration) doReturn mock()
         whenever(bundleHandler.serviceComponentName) doReturn mock()
+        analyticsManager = TestAnalyticsManager()
     }
 
     @ParameterizedTest
@@ -68,13 +74,40 @@ internal class DropInViewModelTest(
         assertEquals(expected, result)
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when drop-in is created, then analytics is initialized`() {
+            viewModel = createDropInViewModel()
+
+            viewModel.onCreated(false)
+
+            analyticsManager.assertIsInitialized()
+        }
+
+        @Test
+        fun `when drop-in is created, then render event is tracked`() {
+            viewModel = createDropInViewModel()
+
+            viewModel.onCreated(false)
+
+            val expected = GenericEvents.rendered(
+                component = "dropin",
+                configData = emptyMap(),
+            )
+            analyticsManager.assertLastEventEquals(expected)
+        }
+    }
+
     private fun createDropInViewModel(
         dropInParams: DropInParams = createDropInParams(),
     ) = DropInViewModel(
         bundleHandler = bundleHandler,
         orderStatusRepository = orderStatusRepository,
-        analyticsManager = TestAnalyticsManager(),
+        analyticsManager = analyticsManager,
         initialDropInParams = dropInParams,
+        dropInConfigDataGenerator = dropInConfigDataGenerator,
     )
 
     private fun createDropInParams(
