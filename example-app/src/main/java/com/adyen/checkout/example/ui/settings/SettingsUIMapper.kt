@@ -8,13 +8,8 @@
 
 package com.adyen.checkout.example.ui.settings
 
-import androidx.lifecycle.ViewModel
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.R
-import com.adyen.checkout.example.data.storage.CardAddressMode
-import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import javax.inject.Inject
 
@@ -106,12 +101,8 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getThreeDSMode(): SettingsItem {
         val threeDSMode = keyValueStorage.getThreeDSMode()
 
-        // TODO: localisation
-        val displayValue = when (threeDSMode) {
-            ThreeDSMode.PREFER_NATIVE -> "Prefer native"
-            ThreeDSMode.REDIRECT -> "Redirect"
-            ThreeDSMode.DISABLED -> "Disabled"
-        }
+        val displayValue = requireNotNull(SettingsLists.threeDSModes[threeDSMode])
+
         return SettingsItem.Text(
             identifier = SettingsIdentifier.THREE_DS_MODE,
             titleResId = R.string.threeds_mode_title,
@@ -153,14 +144,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getAddressMode(): SettingsItem {
         val cardAddressMode = keyValueStorage.getCardAddressMode()
-
-        // TODO: localisation
-        val displayValue = when (cardAddressMode) {
-            CardAddressMode.NONE -> "None"
-            CardAddressMode.POSTAL_CODE -> "Postal code"
-            CardAddressMode.FULL_ADDRESS -> "Full address"
-            CardAddressMode.LOOKUP -> "Lookup"
-        }
+        val displayValue = requireNotNull(SettingsLists.cardAddressModes[cardAddressMode])
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ADDRESS_MODE,
@@ -171,14 +155,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getInstallmentOptionsMode(): SettingsItem {
         val installmentOptionsMode = keyValueStorage.getInstallmentOptionsMode()
-
-        // TODO: localisation
-        val displayValue = when (installmentOptionsMode) {
-            CardInstallmentOptionsMode.NONE -> "None"
-            CardInstallmentOptionsMode.DEFAULT -> "Default installment options"
-            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> "Default installment options with revolving"
-            CardInstallmentOptionsMode.CARD_BASED_VISA -> "Card based installment options (VISA)"
-        }
+        val displayValue = requireNotNull(SettingsLists.cardInstallmentOptionsModes[installmentOptionsMode])
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.INSTALLMENTS_MODE,
@@ -221,12 +198,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getAnalyticsLevel(): SettingsItem {
         val analyticsLevel = keyValueStorage.getAnalyticsLevel()
-
-        // TODO: localisation
-        val displayValue = when (analyticsLevel) {
-            AnalyticsLevel.ALL -> "All"
-            AnalyticsLevel.NONE -> "None"
-        }
+        val displayValue = requireNotNull(SettingsLists.analyticsLevels[analyticsLevel])
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ANALYTICS_LEVEL,

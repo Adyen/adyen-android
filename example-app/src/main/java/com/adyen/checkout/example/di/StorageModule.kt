@@ -14,6 +14,8 @@ import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.ui.settings.SettingsEditor
+import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ object StorageModule {
 
     @Provides
     fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
+
+    @Provides
+    internal fun provideSettingsEditor(
+        keyValueStorage: KeyValueStorage,
+        nightThemeRepository: DefaultNightThemeRepository,
+    ): SettingsEditor = SettingsEditor(keyValueStorage, nightThemeRepository)
 }
