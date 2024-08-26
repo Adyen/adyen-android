@@ -10,7 +10,6 @@ package com.adyen.checkout.example.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,8 +38,11 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-
     private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {
         _uiState.update(block)
+    }
+
+    fun onItemClicked(item: SettingsItem) {
+        // TODO: implement
     }
 }

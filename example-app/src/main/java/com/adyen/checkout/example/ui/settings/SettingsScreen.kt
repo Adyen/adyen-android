@@ -10,6 +10,7 @@
 
 package com.adyen.checkout.example.ui.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -63,6 +64,7 @@ internal fun SettingsScreen(
         val uiState by viewModel.uiState.collectAsState()
         SettingsScreen(
             uiState = uiState,
+            onItemClicked = viewModel::onItemClicked,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -71,10 +73,12 @@ internal fun SettingsScreen(
 @Composable
 private fun SettingsScreen(
     uiState: SettingsUIState,
+    onItemClicked: (SettingsItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
         settingsCategories = uiState.settingsCategories,
+        onItemClicked = onItemClicked,
         modifier = modifier,
     )
 }
@@ -82,6 +86,7 @@ private fun SettingsScreen(
 @Composable
 private fun SettingsItemsList(
     settingsCategories: List<SettingsCategory>,
+    onItemClicked: (SettingsItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -95,7 +100,7 @@ private fun SettingsItemsList(
             items(items = category.settingsItems) { settingsItem ->
                 when (settingsItem) {
                     is SettingsItem.Text -> {
-                        TextSettingsItem(settingsItem)
+                        TextSettingsItem(settingsItem, onItemClicked)
                     }
 
                     is SettingsItem.Switch -> SwitchSettingsItem(settingsItem)
@@ -114,11 +119,13 @@ private fun SettingsItemsList(
 @Composable
 private fun TextSettingsItem(
     settingsItem: SettingsItem.Text,
+    onItemClicked: (SettingsItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onItemClicked(settingsItem) }
             .padding(
                 start = ExampleTheme.dimensions.grid_4,
                 end = ExampleTheme.dimensions.grid_2,
@@ -255,6 +262,7 @@ private fun SettingsScreenPreview() {
                     ),
                 ),
             ),
+            onItemClicked = {},
         )
     }
 }
