@@ -8,15 +8,30 @@
 
 package com.adyen.checkout.example.ui.settings
 
-internal sealed interface EditSettingsData {
+import androidx.annotation.StringRes
+
+internal sealed class EditSettingsData(
+    open val identifier: SettingsIdentifier,
+) {
     // TODO: add validation for numbers, emails, etc
-    class Text(val text: String) : EditSettingsData
-    class SingleSelectList(val items: List<Item>) : EditSettingsData {
+    class Text(
+        override val identifier: SettingsIdentifier,
+        @StringRes val title: Int,
+        val text: String,
+    ) : EditSettingsData(identifier)
+
+    class SingleSelectList(
+        override val identifier: SettingsIdentifier,
+        val items: List<Item>
+    ) : EditSettingsData(identifier) {
         data class Item(
             val text: String,
             val value: String,
         )
     }
 
-    class Switch(val selected: Boolean) : EditSettingsData
+    class Switch(
+        override val identifier: SettingsIdentifier,
+        val selected: Boolean
+    ) : EditSettingsData(identifier)
 }

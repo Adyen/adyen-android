@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.settings
 
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.ui.theme.NightThemeRepository
 import javax.inject.Inject
@@ -19,44 +20,74 @@ internal class SettingsEditor @Inject constructor(
     fun getEditSettingsData(settingsItem: SettingsItem): EditSettingsData {
         return when (settingsItem.identifier) {
             SettingsIdentifier.MERCHANT_ACCOUNT -> {
-                EditSettingsData.Text(keyValueStorage.getMerchantAccount())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.merchant_account_title,
+                    text = keyValueStorage.getMerchantAccount(),
+                )
             }
 
             SettingsIdentifier.AMOUNT -> {
-                EditSettingsData.Text(keyValueStorage.getAmount().value.toString())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.amount_value_title,
+                    text = keyValueStorage.getAmount().value.toString(),
+                )
             }
 
             SettingsIdentifier.CURRENCY -> {
-                EditSettingsData.Text(keyValueStorage.getAmount().currency.orEmpty())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.currency_title,
+                    text = keyValueStorage.getAmount().currency.orEmpty(),
+                )
             }
 
             SettingsIdentifier.THREE_DS_MODE -> {
                 EditSettingsData.SingleSelectList(
-                    SettingsLists.threeDSModes.entries.map {
+                    identifier = settingsItem.identifier,
+                    items = SettingsLists.threeDSModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
             }
 
             SettingsIdentifier.SHOPPER_REFERENCE -> {
-                EditSettingsData.Text(keyValueStorage.getShopperReference())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.shopper_reference_title,
+                    text = keyValueStorage.getShopperReference(),
+                )
             }
 
             SettingsIdentifier.COUNTRY -> {
-                EditSettingsData.Text(keyValueStorage.getCountry())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.shopper_country_title,
+                    text = keyValueStorage.getCountry(),
+                )
             }
 
             SettingsIdentifier.SHOPPER_LOCALE -> {
-                EditSettingsData.Text(keyValueStorage.getShopperLocale().orEmpty())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.shopper_locale_title,
+                    text = keyValueStorage.getShopperLocale().orEmpty(),
+                )
             }
 
             SettingsIdentifier.SHOPPER_EMAIL -> {
-                EditSettingsData.Text(keyValueStorage.getShopperEmail())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.shopper_email_title,
+                    text = keyValueStorage.getShopperEmail(),
+                )
             }
 
             SettingsIdentifier.ADDRESS_MODE -> {
                 EditSettingsData.SingleSelectList(
-                    SettingsLists.cardAddressModes.entries.map {
+                    identifier = settingsItem.identifier,
+                    items = SettingsLists.cardAddressModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
@@ -64,30 +95,45 @@ internal class SettingsEditor @Inject constructor(
 
             SettingsIdentifier.INSTALLMENTS_MODE -> {
                 EditSettingsData.SingleSelectList(
-                    SettingsLists.cardInstallmentOptionsModes.entries.map {
+                    identifier = settingsItem.identifier,
+                    items = SettingsLists.cardInstallmentOptionsModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
             }
 
             SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT -> {
-                EditSettingsData.Switch(keyValueStorage.isInstallmentAmountShown())
+                EditSettingsData.Switch(
+                    identifier = settingsItem.identifier,
+                    selected = keyValueStorage.isInstallmentAmountShown(),
+                )
             }
 
             SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES -> {
-                EditSettingsData.Switch(keyValueStorage.isSplitCardFundingSources())
+                EditSettingsData.Switch(
+                    identifier = settingsItem.identifier,
+                    selected = keyValueStorage.isSplitCardFundingSources(),
+                )
             }
 
             SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
-                EditSettingsData.Switch(keyValueStorage.isRemoveStoredPaymentMethodEnabled())
+                EditSettingsData.Switch(
+                    identifier = settingsItem.identifier,
+                    selected = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
+                )
             }
 
             SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE -> {
-                EditSettingsData.Text(keyValueStorage.getInstantPaymentMethodType())
+                EditSettingsData.Text(
+                    identifier = settingsItem.identifier,
+                    title = R.string.instant_payment_method_type_title,
+                    text = keyValueStorage.getInstantPaymentMethodType(),
+                )
             }
 
             SettingsIdentifier.ANALYTICS_LEVEL -> {
                 EditSettingsData.SingleSelectList(
+                    settingsItem.identifier,
                     SettingsLists.analyticsLevels.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -96,11 +142,16 @@ internal class SettingsEditor @Inject constructor(
 
             SettingsIdentifier.DISPLAY_THEME -> {
                 EditSettingsData.SingleSelectList(
-                    SettingsLists.displayThemes.entries.map {
+                    identifier = settingsItem.identifier,
+                    items = SettingsLists.displayThemes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
             }
         }
+    }
+
+    fun editSetting(identifier: SettingsIdentifier, newValue: String) {
+        // TODO: implement
     }
 }

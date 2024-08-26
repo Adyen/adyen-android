@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.ui.compose.TextFieldDialog
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
@@ -66,6 +67,7 @@ internal fun SettingsScreen(
             uiState = uiState,
             onItemClicked = viewModel::onItemClicked,
             onEditSettingConsumed = viewModel::onEditSettingConsumed,
+            onSettingChanged = viewModel::onSettingChanged,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -76,6 +78,7 @@ private fun SettingsScreen(
     uiState: SettingsUIState,
     onItemClicked: (SettingsItem) -> Unit,
     onEditSettingConsumed: () -> Unit,
+    onSettingChanged: (EditSettingsData, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
@@ -85,8 +88,16 @@ private fun SettingsScreen(
     )
 
     if (uiState.settingToEdit != null) {
-        // TODO: implement
-        onEditSettingConsumed()
+        EditSettingDialog(
+            settingToEdit = uiState.settingToEdit,
+            onSettingChanged = {
+                onSettingChanged(uiState.settingToEdit, it)
+                onEditSettingConsumed()
+            },
+            onDismiss = {
+                onEditSettingConsumed()
+            },
+        )
     }
 }
 
@@ -220,6 +231,42 @@ fun SettingsDivider(
     )
 }
 
+@Composable
+private fun EditSettingDialog(
+    settingToEdit: EditSettingsData,
+    onSettingChanged: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    when (settingToEdit) {
+        is EditSettingsData.Text -> {
+            EditSettingDialog(
+                settingToEdit = settingToEdit,
+                onConfirm = onSettingChanged,
+                onDismiss = onDismiss,
+            )
+        }
+
+        is EditSettingsData.SingleSelectList -> TODO()
+        is EditSettingsData.Switch -> {
+            // ignored, switch does not need extra UI to be displayed
+        }
+    }
+}
+
+@Composable
+private fun EditSettingDialog(
+    settingToEdit: EditSettingsData.Text,
+    onConfirm: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    TextFieldDialog(
+        title = stringResource(id = settingToEdit.title),
+        content = settingToEdit.text,
+        onConfirm = onConfirm,
+        onDismiss = onDismiss,
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun SettingsScreenPreview() {
@@ -271,6 +318,7 @@ private fun SettingsScreenPreview() {
             ),
             onItemClicked = {},
             onEditSettingConsumed = {},
+            onSettingChanged = { _, _ -> },
         )
     }
 }
