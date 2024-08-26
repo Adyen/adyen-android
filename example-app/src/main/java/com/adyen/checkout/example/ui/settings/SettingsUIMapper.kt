@@ -21,7 +21,7 @@ import javax.inject.Inject
 internal class SettingsUIMapper @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val nightThemeRepository: NightThemeRepository,
-) : ViewModel() {
+) {
 
     fun getSettingsCategories(): List<SettingsCategory> {
         return listOf(
@@ -81,6 +81,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getMerchantAccount(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
             titleResId = R.string.merchant_account_title,
             subtitle = keyValueStorage.getMerchantAccount(),
         )
@@ -88,6 +89,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getAmount(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.AMOUNT,
             titleResId = R.string.amount_value_title,
             subtitle = keyValueStorage.getAmount().value.toString(),
         )
@@ -95,8 +97,9 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getCurrency(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.CURRENCY,
             titleResId = R.string.currency_title,
-            subtitle = keyValueStorage.getAmount().currency.toString(),
+            subtitle = keyValueStorage.getAmount().currency ?: "Not set", // TODO: localisation
         )
     }
 
@@ -110,6 +113,7 @@ internal class SettingsUIMapper @Inject constructor(
             ThreeDSMode.DISABLED -> "Disabled"
         }
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.THREE_DS_MODE,
             titleResId = R.string.threeds_mode_title,
             subtitle = displayValue,
         )
@@ -117,6 +121,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getShopperReference(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.SHOPPER_REFERENCE,
             titleResId = R.string.shopper_reference_title,
             subtitle = keyValueStorage.getShopperReference(),
         )
@@ -124,6 +129,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getCountry(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.COUNTRY,
             titleResId = R.string.shopper_country_title,
             subtitle = keyValueStorage.getCountry(),
         )
@@ -131,6 +137,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getShopperLocale(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.SHOPPER_LOCALE,
             titleResId = R.string.shopper_locale_title,
             subtitle = keyValueStorage.getShopperLocale() ?: "Not set", // TODO: localisation
         )
@@ -138,6 +145,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getShopperEmail(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.SHOPPER_EMAIL,
             titleResId = R.string.shopper_email_title,
             subtitle = keyValueStorage.getShopperEmail(), // TODO: fix empty/null default values
         )
@@ -155,6 +163,7 @@ internal class SettingsUIMapper @Inject constructor(
         }
 
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.ADDRESS_MODE,
             titleResId = R.string.card_address_form_title,
             subtitle = displayValue,
         )
@@ -172,6 +181,7 @@ internal class SettingsUIMapper @Inject constructor(
         }
 
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.INSTALLMENTS_MODE,
             titleResId = R.string.card_installment_options_mode_title,
             subtitle = displayValue,
         )
@@ -179,6 +189,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getInstallmentAmountShown(): SettingsItem {
         return SettingsItem.Switch(
+            identifier = SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
             titleResId = R.string.card_installment_show_amount_title,
             checked = keyValueStorage.isInstallmentAmountShown(),
         )
@@ -186,6 +197,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getSplitCardFundingSources(): SettingsItem {
         return SettingsItem.Switch(
+            identifier = SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
             titleResId = R.string.split_card_funding_sources_title,
             checked = keyValueStorage.isSplitCardFundingSources(),
         )
@@ -193,6 +205,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getRemoveStoredPaymentMethodEnabled(): SettingsItem {
         return SettingsItem.Switch(
+            identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
             titleResId = R.string.remove_stored_payment_method_title,
             checked = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
         )
@@ -200,6 +213,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getInstantPaymentMethodType(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE,
             titleResId = R.string.instant_payment_method_type_title,
             subtitle = keyValueStorage.getInstantPaymentMethodType(),
         )
@@ -215,6 +229,7 @@ internal class SettingsUIMapper @Inject constructor(
         }
 
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.ANALYTICS_LEVEL,
             titleResId = R.string.analytics_level_title,
             subtitle = displayValue,
         )
@@ -222,6 +237,7 @@ internal class SettingsUIMapper @Inject constructor(
 
     private fun getDisplayTheme(): SettingsItem {
         return SettingsItem.Text(
+            identifier = SettingsIdentifier.DISPLAY_THEME,
             titleResId = R.string.analytics_level_title,
             subtitle = nightThemeRepository.theme.preferenceValue,
         )

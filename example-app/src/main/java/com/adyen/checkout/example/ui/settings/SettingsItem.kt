@@ -10,14 +10,23 @@ package com.adyen.checkout.example.ui.settings
 
 import androidx.annotation.StringRes
 
-internal sealed interface SettingsItem {
+internal sealed class SettingsItem(
+    open val identifier: SettingsIdentifier,
+    @StringRes open val titleResId: Int,
+) {
     class Text(
-        @StringRes val titleResId: Int,
+        override val identifier: SettingsIdentifier,
+        @StringRes override val titleResId: Int,
         val subtitle: String,
-    ) : SettingsItem
+    ) : SettingsItem(
+        identifier, titleResId,
+    )
 
     class Switch(
-        @StringRes val titleResId: Int,
+        override val identifier: SettingsIdentifier,
+        @StringRes override val titleResId: Int,
         val checked: Boolean,
-    ) : SettingsItem
+    ) : SettingsItem(
+        identifier, titleResId,
+    )
 }

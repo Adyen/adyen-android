@@ -216,21 +216,41 @@ private fun SettingsScreenPreview() {
                     SettingsCategory(
                         R.string.merchant_information,
                         listOf(
-                            SettingsItem.Text(R.string.shopper_reference_title, "shopper_reference_123"),
+                            SettingsItem.Text(
+                                identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
+                                titleResId = R.string.shopper_reference_title,
+                                subtitle = "shopper_reference_123",
+                            ),
                         ),
                     ),
                     SettingsCategory(
                         R.string.shopper_information,
                         listOf(
-                            SettingsItem.Text(R.string.amount_value_title, "1337"),
-                            SettingsItem.Switch(R.string.card_installment_show_amount_title, true),
+                            SettingsItem.Text(
+                                identifier = SettingsIdentifier.AMOUNT,
+                                titleResId = R.string.amount_value_title,
+                                subtitle = "1337",
+                            ),
+                            SettingsItem.Switch(
+                                identifier = SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
+                                titleResId = R.string.card_installment_show_amount_title,
+                                checked = true,
+                            ),
                         ),
                     ),
                     SettingsCategory(
                         R.string.other_payment_methods_settings_title,
                         listOf(
-                            SettingsItem.Text(R.string.card_address_form_title, "Full address"),
-                            SettingsItem.Switch(R.string.remove_stored_payment_method_title, false),
+                            SettingsItem.Text(
+                                identifier = SettingsIdentifier.ADDRESS_MODE,
+                                titleResId = R.string.card_address_form_title,
+                                subtitle = "Full address",
+                            ),
+                            SettingsItem.Switch(
+                                identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
+                                titleResId = R.string.remove_stored_payment_method_title,
+                                checked = false,
+                            ),
                         ),
                     ),
                 ),
