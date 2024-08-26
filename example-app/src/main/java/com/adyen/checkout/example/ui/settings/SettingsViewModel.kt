@@ -23,6 +23,7 @@ import javax.inject.Inject
 internal class SettingsViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val settingsUIMapper: SettingsUIMapper,
+    private val settingsEditor: SettingsEditor,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUIState(emptyList()))
@@ -31,18 +32,31 @@ internal class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             updateUIState {
-                SettingsUIState(
+                it.copy(
                     settingsCategories = settingsUIMapper.getSettingsCategories(),
                 )
             }
         }
     }
 
-    private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {
-        _uiState.update(block)
+    fun onItemClicked(item: SettingsItem) {
+        val editSettingsData = settingsEditor.getEditSettingsData(item)
+        updateUIState {
+            it.copy(
+                settingToEdit = editSettingsData,
+            )
+        }
     }
 
-    fun onItemClicked(item: SettingsItem) {
-        // TODO: implement
+    fun onEditSettingConsumed() {
+        updateUIState {
+            it.copy(
+                settingToEdit = null,
+            )
+        }
+    }
+
+    private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {
+        _uiState.update(block)
     }
 }

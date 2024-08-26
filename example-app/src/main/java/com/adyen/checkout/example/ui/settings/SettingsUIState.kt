@@ -13,4 +13,5 @@ import androidx.compose.runtime.Immutable
 @Immutable
 internal data class SettingsUIState(
     val settingsCategories: List<SettingsCategory>,
+    val settingToEdit: EditSettingsData? = null,
 )

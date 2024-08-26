@@ -65,6 +65,7 @@ internal fun SettingsScreen(
         SettingsScreen(
             uiState = uiState,
             onItemClicked = viewModel::onItemClicked,
+            onEditSettingConsumed = viewModel::onEditSettingConsumed,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -74,6 +75,7 @@ internal fun SettingsScreen(
 private fun SettingsScreen(
     uiState: SettingsUIState,
     onItemClicked: (SettingsItem) -> Unit,
+    onEditSettingConsumed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
@@ -81,6 +83,11 @@ private fun SettingsScreen(
         onItemClicked = onItemClicked,
         modifier = modifier,
     )
+
+    if (uiState.settingToEdit != null) {
+        // TODO: implement
+        onEditSettingConsumed()
+    }
 }
 
 @Composable
@@ -263,6 +270,7 @@ private fun SettingsScreenPreview() {
                 ),
             ),
             onItemClicked = {},
+            onEditSettingConsumed = {},
         )
     }
 }
