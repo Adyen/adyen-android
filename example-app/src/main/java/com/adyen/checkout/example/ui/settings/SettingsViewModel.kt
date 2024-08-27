@@ -56,8 +56,12 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onSettingChanged(editSettingsData: EditSettingsData, newValue: String) {
+    fun onTextSettingChanged(editSettingsData: EditSettingsData, newValue: String) {
         settingsEditor.editSetting(editSettingsData.identifier, newValue)
+    }
+
+    fun onListSettingChanged(editSettingsData: EditSettingsData, selectedItem: EditSettingsData.SingleSelectList.Item) {
+        settingsEditor.editSetting(editSettingsData.identifier, selectedItem)
     }
 
     private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {

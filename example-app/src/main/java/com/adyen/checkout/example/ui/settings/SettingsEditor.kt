@@ -22,7 +22,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.MERCHANT_ACCOUNT -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.merchant_account_title,
+                    titleResId = R.string.merchant_account_title,
                     text = keyValueStorage.getMerchantAccount(),
                 )
             }
@@ -30,7 +30,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.AMOUNT -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.amount_value_title,
+                    titleResId = R.string.amount_value_title,
                     text = keyValueStorage.getAmount().value.toString(),
                 )
             }
@@ -38,7 +38,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.CURRENCY -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.currency_title,
+                    titleResId = R.string.currency_title,
                     text = keyValueStorage.getAmount().currency.orEmpty(),
                 )
             }
@@ -46,6 +46,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.THREE_DS_MODE -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
+                    titleResId = R.string.threeds_mode_title,
                     items = SettingsLists.threeDSModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -55,7 +56,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.SHOPPER_REFERENCE -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.shopper_reference_title,
+                    titleResId = R.string.shopper_reference_title,
                     text = keyValueStorage.getShopperReference(),
                 )
             }
@@ -63,7 +64,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.COUNTRY -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.shopper_country_title,
+                    titleResId = R.string.shopper_country_title,
                     text = keyValueStorage.getCountry(),
                 )
             }
@@ -71,7 +72,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.SHOPPER_LOCALE -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.shopper_locale_title,
+                    titleResId = R.string.shopper_locale_title,
                     text = keyValueStorage.getShopperLocale().orEmpty(),
                 )
             }
@@ -79,7 +80,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.SHOPPER_EMAIL -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.shopper_email_title,
+                    titleResId = R.string.shopper_email_title,
                     text = keyValueStorage.getShopperEmail(),
                 )
             }
@@ -87,6 +88,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.ADDRESS_MODE -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
+                    titleResId = R.string.card_address_form_title,
                     items = SettingsLists.cardAddressModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -96,6 +98,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.INSTALLMENTS_MODE -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
+                    titleResId = R.string.card_installment_options_mode_title,
                     items = SettingsLists.cardInstallmentOptionsModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -105,7 +108,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
-                    title = R.string.instant_payment_method_type_title,
+                    titleResId = R.string.instant_payment_method_type_title,
                     text = keyValueStorage.getInstantPaymentMethodType(),
                 )
             }
@@ -113,6 +116,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.ANALYTICS_LEVEL -> {
                 EditSettingsData.SingleSelectList(
                     settingsItem.identifier,
+                    titleResId = R.string.analytics_level_title,
                     SettingsLists.analyticsLevels.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -122,6 +126,7 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.DISPLAY_THEME -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
+                    titleResId = R.string.analytics_level_title,
                     items = SettingsLists.displayThemes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
@@ -137,6 +142,10 @@ internal class SettingsEditor @Inject constructor(
     }
 
     fun editSetting(identifier: SettingsIdentifier, newValue: String) {
+        // TODO: implement
+    }
+
+    fun editSetting(identifier: SettingsIdentifier, newValue: EditSettingsData.SingleSelectList.Item) {
         // TODO: implement
     }
 }

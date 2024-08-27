@@ -16,12 +16,13 @@ internal sealed class EditSettingsData(
     // TODO: add validation for numbers, emails, etc
     class Text(
         override val identifier: SettingsIdentifier,
-        @StringRes val title: Int,
+        @StringRes val titleResId: Int,
         val text: String,
     ) : EditSettingsData(identifier)
 
     class SingleSelectList(
         override val identifier: SettingsIdentifier,
+        @StringRes val titleResId: Int,
         val items: List<Item>
     ) : EditSettingsData(identifier) {
         data class Item(

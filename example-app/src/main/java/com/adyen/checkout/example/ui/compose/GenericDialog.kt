@@ -31,32 +31,36 @@ import com.adyen.checkout.example.ui.theme.ExampleTheme
 @Composable
 fun GenericDialog(
     modifier: Modifier = Modifier,
-    title: @Composable () -> Unit,
-    content: @Composable () -> Unit,
-    dismissButton: @Composable () -> Unit,
-    confirmButton: @Composable () -> Unit,
+    title: (@Composable () -> Unit)?,
+    content: (@Composable () -> Unit)?,
+    dismissButton: (@Composable () -> Unit)?,
+    confirmButton: (@Composable () -> Unit)?,
     onDismiss: () -> Unit,
 ) {
     Dialog(onDismiss) {
         Surface(
+            modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
-            shadowElevation = 2.dp,
+            shadowElevation = 1.dp,
         ) {
             Column {
-                Column(modifier.padding(ExampleTheme.dimensions.grid_4)) {
-                    title()
-                    Spacer(modifier.size(ExampleTheme.dimensions.grid_2))
-                    content()
+                Column(Modifier.padding(ExampleTheme.dimensions.grid_2)) {
+                    title?.invoke()
+                    if (title != null && content != null) {
+                        Spacer(Modifier.size(ExampleTheme.dimensions.grid_2))
+                    }
+                    content?.invoke()
                 }
-                Spacer(Modifier.size(ExampleTheme.dimensions.grid_0_5))
-                Row(
-                    Modifier
-                        .padding(ExampleTheme.dimensions.grid_1)
-                        .fillMaxWidth(),
-                    Arrangement.spacedBy(ExampleTheme.dimensions.grid_1, Alignment.End),
-                ) {
-                    dismissButton()
-                    confirmButton()
+                if (dismissButton != null || confirmButton != null) {
+                    Row(
+                        Modifier
+                            .padding(ExampleTheme.dimensions.grid_1)
+                            .fillMaxWidth(),
+                        Arrangement.spacedBy(ExampleTheme.dimensions.grid_1, Alignment.End),
+                    ) {
+                        dismissButton?.invoke()
+                        confirmButton?.invoke()
+                    }
                 }
             }
         }

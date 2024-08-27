@@ -41,6 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.ui.compose.GenericDialog
 import com.adyen.checkout.example.ui.compose.TextFieldDialog
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
@@ -67,7 +68,8 @@ internal fun SettingsScreen(
             uiState = uiState,
             onItemClicked = viewModel::onItemClicked,
             onEditSettingConsumed = viewModel::onEditSettingConsumed,
-            onSettingChanged = viewModel::onSettingChanged,
+            onTextSettingChanged = viewModel::onTextSettingChanged,
+            onListSettingChanged = viewModel::onListSettingChanged,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -78,7 +80,8 @@ private fun SettingsScreen(
     uiState: SettingsUIState,
     onItemClicked: (SettingsItem) -> Unit,
     onEditSettingConsumed: () -> Unit,
-    onSettingChanged: (EditSettingsData, String) -> Unit,
+    onTextSettingChanged: (EditSettingsData, String) -> Unit,
+    onListSettingChanged: (EditSettingsData, EditSettingsData.SingleSelectList.Item) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
@@ -90,8 +93,12 @@ private fun SettingsScreen(
     if (uiState.settingToEdit != null) {
         EditSettingDialog(
             settingToEdit = uiState.settingToEdit,
-            onSettingChanged = {
-                onSettingChanged(uiState.settingToEdit, it)
+            onTextSettingChanged = {
+                onTextSettingChanged(uiState.settingToEdit, it)
+                onEditSettingConsumed()
+            },
+            onListSettingChanged = {
+                onListSettingChanged(uiState.settingToEdit, it)
                 onEditSettingConsumed()
             },
             onDismiss = {
@@ -234,35 +241,74 @@ fun SettingsDivider(
 @Composable
 private fun EditSettingDialog(
     settingToEdit: EditSettingsData,
-    onSettingChanged: (String) -> Unit,
+    onTextSettingChanged: (String) -> Unit,
+    onListSettingChanged: (EditSettingsData.SingleSelectList.Item) -> Unit,
     onDismiss: () -> Unit,
 ) {
     when (settingToEdit) {
         is EditSettingsData.Text -> {
-            EditSettingDialog(
+            EditSettingTextFieldDialog(
                 settingToEdit = settingToEdit,
-                onConfirm = onSettingChanged,
+                onConfirm = onTextSettingChanged,
                 onDismiss = onDismiss,
             )
         }
 
-        is EditSettingsData.SingleSelectList -> TODO()
-        is EditSettingsData.Switch -> {
-            // ignored, switch does not need extra UI to be displayed
+        is EditSettingsData.SingleSelectList -> {
+            EditSettingListFieldDialog(
+                settingToEdit = settingToEdit,
+                onConfirm = onListSettingChanged,
+                onDismiss = onDismiss,
+            )
         }
     }
 }
 
 @Composable
-private fun EditSettingDialog(
+private fun EditSettingTextFieldDialog(
     settingToEdit: EditSettingsData.Text,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     TextFieldDialog(
-        title = stringResource(id = settingToEdit.title),
+        title = stringResource(id = settingToEdit.titleResId),
         content = settingToEdit.text,
         onConfirm = onConfirm,
+        onDismiss = onDismiss,
+    )
+}
+
+@Composable
+private fun EditSettingListFieldDialog(
+    settingToEdit: EditSettingsData.SingleSelectList,
+    onConfirm: (EditSettingsData.SingleSelectList.Item) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    GenericDialog(
+        title = {
+            Text(
+                text = stringResource(id = settingToEdit.titleResId),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        },
+        content = {
+            LazyColumn {
+                items(settingToEdit.items) { item ->
+                    Text(
+                        modifier = Modifier
+                            .clickable { onConfirm(item) }
+                            .padding(vertical = ExampleTheme.dimensions.grid_2)
+                            .fillMaxWidth(),
+                        text = item.text,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
+        },
+        confirmButton = null,
+        dismissButton = null,
         onDismiss = onDismiss,
     )
 }
@@ -318,7 +364,8 @@ private fun SettingsScreenPreview() {
             ),
             onItemClicked = {},
             onEditSettingConsumed = {},
-            onSettingChanged = { _, _ -> },
+            onTextSettingChanged = { _, _ -> },
+            onListSettingChanged = { _, _ -> },
         )
     }
 }
