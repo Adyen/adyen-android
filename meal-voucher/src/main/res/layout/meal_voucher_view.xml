@@ -55,7 +55,7 @@
             android:layout_marginStart="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
+            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_mealVoucherSecurityCode"
                 style="@style/AdyenCheckout.MealVoucher.SecurityCodeInput" />
         </com.google.android.material.textfield.TextInputLayout>
