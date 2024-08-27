@@ -23,7 +23,7 @@
     <style name="AdyenCheckout.MealVoucher.SecurityCodeInput" parent="AdyenCheckout.TextInputEditText">
         <item name="android:hint">@string/checkout_meal_voucher_security_code_hint</item>
         <item name="android:inputType">number</item>
-        <item name="android:maxLength">4</item>
+        <item name="android:maxLength">10</item>
     </style>
 
 </resources>
