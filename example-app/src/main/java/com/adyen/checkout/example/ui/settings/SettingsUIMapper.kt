@@ -138,7 +138,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_EMAIL,
             titleResId = R.string.shopper_email_title,
-            subtitle = keyValueStorage.getShopperEmail(), // TODO: fix empty/null default values
+            subtitle = keyValueStorage.getShopperEmail() ?: "Not set", // TODO: localisation
         )
     }
 
@@ -210,7 +210,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getDisplayTheme(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.DISPLAY_THEME,
-            titleResId = R.string.analytics_level_title,
+            titleResId = R.string.night_theme_title,
             subtitle = nightThemeRepository.theme.preferenceValue,
         )
     }

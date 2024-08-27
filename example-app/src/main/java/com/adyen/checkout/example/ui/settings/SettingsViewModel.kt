@@ -10,7 +10,6 @@ package com.adyen.checkout.example.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.example.data.storage.KeyValueStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SettingsViewModel @Inject constructor(
-    private val keyValueStorage: KeyValueStorage,
     private val settingsUIMapper: SettingsUIMapper,
     private val settingsEditor: SettingsEditor,
 ) : ViewModel() {
@@ -30,13 +28,7 @@ internal class SettingsViewModel @Inject constructor(
     val uiState: StateFlow<SettingsUIState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            updateUIState {
-                it.copy(
-                    settingsCategories = settingsUIMapper.getSettingsCategories(),
-                )
-            }
-        }
+        fetchSettings()
     }
 
     fun onItemClicked(item: SettingsItem) {
@@ -58,14 +50,27 @@ internal class SettingsViewModel @Inject constructor(
 
     fun onTextSettingChanged(identifier: SettingsIdentifier, newValue: String) {
         settingsEditor.editSetting(identifier, newValue)
+        fetchSettings()
     }
 
     fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingsData.SingleSelectList.Item) {
         settingsEditor.editSetting(identifier, selectedItem)
+        fetchSettings()
     }
 
     fun onSwitchSettingChanged(identifier: SettingsIdentifier, newValue: Boolean) {
         settingsEditor.editSetting(identifier, newValue)
+        fetchSettings()
+    }
+
+    private fun fetchSettings() {
+        viewModelScope.launch {
+            updateUIState {
+                it.copy(
+                    settingsCategories = settingsUIMapper.getSettingsCategories(),
+                )
+            }
+        }
     }
 
     private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {
