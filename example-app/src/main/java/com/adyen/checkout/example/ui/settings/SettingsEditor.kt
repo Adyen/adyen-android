@@ -102,27 +102,6 @@ internal class SettingsEditor @Inject constructor(
                 )
             }
 
-            SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT -> {
-                EditSettingsData.Switch(
-                    identifier = settingsItem.identifier,
-                    selected = keyValueStorage.isInstallmentAmountShown(),
-                )
-            }
-
-            SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES -> {
-                EditSettingsData.Switch(
-                    identifier = settingsItem.identifier,
-                    selected = keyValueStorage.isSplitCardFundingSources(),
-                )
-            }
-
-            SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
-                EditSettingsData.Switch(
-                    identifier = settingsItem.identifier,
-                    selected = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
-                )
-            }
-
             SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE -> {
                 EditSettingsData.Text(
                     identifier = settingsItem.identifier,
@@ -147,6 +126,12 @@ internal class SettingsEditor @Inject constructor(
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
+            }
+
+            SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
+            SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
+            SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
+                error("Edit mode is not applicable with boolean settings")
             }
         }
     }

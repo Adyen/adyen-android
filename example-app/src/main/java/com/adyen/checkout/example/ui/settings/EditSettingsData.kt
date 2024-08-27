@@ -29,9 +29,4 @@ internal sealed class EditSettingsData(
             val value: String,
         )
     }
-
-    class Switch(
-        override val identifier: SettingsIdentifier,
-        val selected: Boolean
-    ) : EditSettingsData(identifier)
 }
