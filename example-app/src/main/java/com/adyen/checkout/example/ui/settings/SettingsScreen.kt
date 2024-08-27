@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,6 +71,7 @@ internal fun SettingsScreen(
             onEditSettingConsumed = viewModel::onEditSettingConsumed,
             onTextSettingChanged = viewModel::onTextSettingChanged,
             onListSettingChanged = viewModel::onListSettingChanged,
+            onSwitchSettingChanged = viewModel::onSwitchSettingChanged,
             modifier = Modifier.padding(innerPadding),
         )
     }
@@ -80,13 +82,15 @@ private fun SettingsScreen(
     uiState: SettingsUIState,
     onItemClicked: (SettingsItem) -> Unit,
     onEditSettingConsumed: () -> Unit,
-    onTextSettingChanged: (EditSettingsData, String) -> Unit,
-    onListSettingChanged: (EditSettingsData, EditSettingsData.SingleSelectList.Item) -> Unit,
+    onTextSettingChanged: (SettingsIdentifier, String) -> Unit,
+    onListSettingChanged: (SettingsIdentifier, EditSettingsData.SingleSelectList.Item) -> Unit,
+    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     SettingsItemsList(
         settingsCategories = uiState.settingsCategories,
         onItemClicked = onItemClicked,
+        onSwitchSettingChanged = onSwitchSettingChanged,
         modifier = modifier,
     )
 
@@ -94,11 +98,11 @@ private fun SettingsScreen(
         EditSettingDialog(
             settingToEdit = uiState.settingToEdit,
             onTextSettingChanged = {
-                onTextSettingChanged(uiState.settingToEdit, it)
+                onTextSettingChanged(uiState.settingToEdit.identifier, it)
                 onEditSettingConsumed()
             },
             onListSettingChanged = {
-                onListSettingChanged(uiState.settingToEdit, it)
+                onListSettingChanged(uiState.settingToEdit.identifier, it)
                 onEditSettingConsumed()
             },
             onDismiss = {
@@ -112,6 +116,7 @@ private fun SettingsScreen(
 private fun SettingsItemsList(
     settingsCategories: List<SettingsCategory>,
     onItemClicked: (SettingsItem) -> Unit,
+    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -128,7 +133,7 @@ private fun SettingsItemsList(
                         TextSettingsItem(settingsItem, onItemClicked)
                     }
 
-                    is SettingsItem.Switch -> SwitchSettingsItem(settingsItem)
+                    is SettingsItem.Switch -> SwitchSettingsItem(settingsItem, onSwitchSettingChanged)
                 }
             }
 
@@ -176,17 +181,22 @@ private fun TextSettingsItem(
 @Composable
 private fun SwitchSettingsItem(
     settingsItem: SettingsItem.Switch,
+    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable {
+                onSwitchSettingChanged(settingsItem.identifier, !settingsItem.checked)
+            }
             .padding(
                 start = ExampleTheme.dimensions.grid_4,
                 end = ExampleTheme.dimensions.grid_2,
                 top = ExampleTheme.dimensions.grid_2,
                 bottom = ExampleTheme.dimensions.grid_2,
             ),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // TODO: create separate style
         Text(
@@ -198,7 +208,7 @@ private fun SwitchSettingsItem(
 
         Switch(
             checked = settingsItem.checked,
-            onCheckedChange = null, // TODO: implement
+            onCheckedChange = null,
         )
     }
 }
@@ -366,6 +376,7 @@ private fun SettingsScreenPreview() {
             onEditSettingConsumed = {},
             onTextSettingChanged = { _, _ -> },
             onListSettingChanged = { _, _ -> },
+            onSwitchSettingChanged = { _, _ -> },
         )
     }
 }

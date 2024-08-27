@@ -56,12 +56,16 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onTextSettingChanged(editSettingsData: EditSettingsData, newValue: String) {
-        settingsEditor.editSetting(editSettingsData.identifier, newValue)
+    fun onTextSettingChanged(identifier: SettingsIdentifier, newValue: String) {
+        settingsEditor.editSetting(identifier, newValue)
     }
 
-    fun onListSettingChanged(editSettingsData: EditSettingsData, selectedItem: EditSettingsData.SingleSelectList.Item) {
-        settingsEditor.editSetting(editSettingsData.identifier, selectedItem)
+    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingsData.SingleSelectList.Item) {
+        settingsEditor.editSetting(identifier, selectedItem)
+    }
+
+    fun onSwitchSettingChanged(identifier: SettingsIdentifier, newValue: Boolean) {
+        settingsEditor.editSetting(identifier, newValue)
     }
 
     private fun updateUIState(block: (SettingsUIState) -> SettingsUIState) {

@@ -148,4 +148,8 @@ internal class SettingsEditor @Inject constructor(
     fun editSetting(identifier: SettingsIdentifier, newValue: EditSettingsData.SingleSelectList.Item) {
         // TODO: implement
     }
+
+    fun editSetting(identifier: SettingsIdentifier, newValue: Boolean) {
+        // TODO: implement
+    }
 }
