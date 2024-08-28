@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.compose
 
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,8 +25,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.text.isDigitsOnly
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
@@ -35,6 +38,7 @@ fun TextFieldDialog(
     content: String,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
+    allowNumbersOnly: Boolean = false,
 ) {
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(content, TextRange(content.length)))
@@ -51,11 +55,25 @@ fun TextFieldDialog(
             )
         },
         content = {
-            OutlinedTextField(
-                modifier = Modifier.focusRequester(focusRequester),
-                value = textFieldValue,
-                onValueChange = { textFieldValue = it },
-            )
+            val textFieldModifier = Modifier.focusRequester(focusRequester)
+            if (!allowNumbersOnly) {
+                OutlinedTextField(
+                    modifier = textFieldModifier,
+                    value = textFieldValue,
+                    onValueChange = { textFieldValue = it },
+                )
+            } else {
+                OutlinedTextField(
+                    modifier = textFieldModifier,
+                    value = textFieldValue,
+                    onValueChange = {
+                        if (it.text.isDigitsOnly()) {
+                            textFieldValue = it
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                )
+            }
 
             DisposableEffect(Unit) {
                 focusRequester.requestFocus()

@@ -37,6 +37,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.amount_value_title,
                     text = keyValueStorage.getAmount().value.toString(),
+                    inputType = EditSettingsData.Text.InputType.INTEGER,
                 )
             }
 

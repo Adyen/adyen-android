@@ -280,11 +280,17 @@ private fun EditSettingTextFieldDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val allowNumbersOnly = when (settingToEdit.inputType) {
+        EditSettingsData.Text.InputType.STRING -> false
+        EditSettingsData.Text.InputType.INTEGER -> true
+    }
+
     TextFieldDialog(
         title = stringResource(id = settingToEdit.titleResId),
         content = settingToEdit.text,
         onConfirm = onConfirm,
         onDismiss = onDismiss,
+        allowNumbersOnly = allowNumbersOnly,
     )
 }
 

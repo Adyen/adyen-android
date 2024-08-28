@@ -13,12 +13,16 @@ import androidx.annotation.StringRes
 internal sealed class EditSettingsData(
     open val identifier: SettingsIdentifier,
 ) {
-    // TODO: add validation for numbers, emails, etc
     class Text(
         override val identifier: SettingsIdentifier,
         @StringRes val titleResId: Int,
         val text: String,
-    ) : EditSettingsData(identifier)
+        val inputType: InputType = InputType.STRING,
+    ) : EditSettingsData(identifier){
+        enum class InputType{
+            STRING, INTEGER
+        }
+    }
 
     class SingleSelectList(
         override val identifier: SettingsIdentifier,
