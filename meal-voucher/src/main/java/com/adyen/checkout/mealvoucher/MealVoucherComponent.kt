@@ -26,7 +26,6 @@ class MealVoucherComponent internal constructor(
         @JvmField
         val PROVIDER = MealVoucherComponentProvider()
 
-        // TODO update it to correct txVariants
         @JvmField
         val PAYMENT_METHOD_TYPES = listOf(
             PaymentMethodTypes.MEAL_VOUCHER_FR_GROUPEUP,
