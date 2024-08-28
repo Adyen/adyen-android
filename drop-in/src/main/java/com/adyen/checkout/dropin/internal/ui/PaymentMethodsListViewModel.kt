@@ -125,6 +125,7 @@ internal class PaymentMethodsListViewModel(
                 add(PaymentMethodHeader(PaymentMethodHeader.TYPE_GIFT_CARD_HEADER))
                 addAll(giftCardsList)
             }
+            val hasGiftCards = giftCardsList.isNotEmpty()
             // payment notes
             order?.remainingAmount?.let { remainingAmount ->
                 val value = CurrencyUtils.formatAmount(remainingAmount, dropInParams.shopperLocale)
@@ -145,11 +146,15 @@ internal class PaymentMethodsListViewModel(
             if (paymentMethodsList.isNotEmpty()) {
                 val headerType = if (hasStoredPaymentMethods) {
                     PaymentMethodHeader.TYPE_REGULAR_HEADER_WITH_STORED
-                } else {
+                } else if (hasGiftCards) {
                     PaymentMethodHeader.TYPE_REGULAR_HEADER_WITHOUT_STORED
+                } else {
+                    null
                 }
 
-                add(PaymentMethodHeader(headerType))
+                headerType?.let {
+                    add(PaymentMethodHeader(it))
+                }
                 addAll(paymentMethodsList)
             }
         }
