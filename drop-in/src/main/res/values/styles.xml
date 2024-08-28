@@ -51,6 +51,19 @@
         <item name="android:paddingRight">@dimen/standard_margin</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textIsSelectable">false</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AdyenCheckout.TextAppearance.HeaderLabel">
+        <item name="android:paddingStart">@dimen/standard_margin</item>
+        <item name="android:paddingLeft">@dimen/standard_margin</item>
+        <item name="android:paddingTop">@dimen/standard_half_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_half_margin</item>
+        <item name="android:paddingEnd">@dimen/standard_margin</item>
+        <item name="android:paddingRight">@dimen/standard_margin</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textIsSelectable">false</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:alpha">0.5</item>

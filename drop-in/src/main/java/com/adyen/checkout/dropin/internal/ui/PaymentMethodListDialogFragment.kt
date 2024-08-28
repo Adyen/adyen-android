@@ -95,8 +95,8 @@ internal class PaymentMethodListDialogFragment :
         binding.bottomSheetToolbar.setOnButtonClickListener {
             performBackAction()
         }
-
         updateToolbarMode()
+        binding.bottomSheetToolbar.setTitle(getString(R.string.payment_methods_header))
     }
 
     private fun updateToolbarMode() {
