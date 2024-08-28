@@ -9,12 +9,14 @@
 package com.adyen.checkout.mealvoucher.internal.ui.view
 
 import android.content.Context
+import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
+import androidx.autofill.HintConstants
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.AdyenLogLevel
@@ -53,7 +55,9 @@ internal class MealVoucherView @JvmOverloads constructor(
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
 
-        // TODO Support autofill if necessary
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.editTextMealVoucherSecurityCode.setAutofillHints(HintConstants.AUTOFILL_HINT_GIFT_CARD_PIN)
+        }
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -83,7 +87,7 @@ internal class MealVoucherView @JvmOverloads constructor(
                 binding.textInputLayoutMealVoucherCardNumber.hideError()
             } else if (cardNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutMealVoucherCardNumber.showError(
-                    localizedContext.getString(cardNumberValidation.reason)
+                    localizedContext.getString(cardNumberValidation.reason),
                 )
             }
         }
