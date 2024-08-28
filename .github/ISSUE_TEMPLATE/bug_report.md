@@ -2,7 +2,7 @@
 name: Bug report
 about: Use this template to report any issues or bugs you encounter while using our SDK.
 title: ''
-labels: 'bug report'
+labels: 'Bug report'
 assignees: ''
 
 ---

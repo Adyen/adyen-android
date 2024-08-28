@@ -2,7 +2,7 @@
 name: Ask a question
 about: Use this template to ask general questions about our SDK.
 title: ''
-labels: 'question'
+labels: 'Question'
 assignees: ''
 
 ---

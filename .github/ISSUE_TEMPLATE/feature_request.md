@@ -2,7 +2,7 @@
 name: Feature request
 about: Use this template to submit a feature request for our SDK.
 title: ''
-labels: 'enhancement'
+labels: 'Enhancement'
 assignees: ''
 
 ---
