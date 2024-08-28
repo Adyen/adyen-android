@@ -14,11 +14,4 @@
         android:icon="@drawable/ic_settings"
         android:title="@string/settings"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/settingsNew"
-        android:icon="@drawable/ic_settings"
-        android:iconTint="#880000"
-        android:title="@string/settings"
-        app:showAsAction="always" />
 </menu>

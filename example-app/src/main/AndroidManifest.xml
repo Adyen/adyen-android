@@ -15,12 +15,6 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
-        <activity android:name=".ui.configuration.ConfigurationActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.main.MainActivity" />
-        </activity>
-
         <activity android:name=".ui.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
