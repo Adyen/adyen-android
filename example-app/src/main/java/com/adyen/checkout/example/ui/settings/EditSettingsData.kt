@@ -30,7 +30,7 @@ internal sealed class EditSettingsData(
         val items: List<Item>
     ) : EditSettingsData(identifier) {
         data class Item(
-            val text: String,
+            @StringRes val textResId: Int,
             val value: String,
         )
     }

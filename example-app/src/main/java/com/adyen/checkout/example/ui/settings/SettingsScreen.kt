@@ -44,6 +44,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.ui.compose.GenericDialog
 import com.adyen.checkout.example.ui.compose.TextFieldDialog
+import com.adyen.checkout.example.ui.compose.UIText
+import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
@@ -171,7 +173,7 @@ private fun TextSettingsItem(
         )
 
         Text(
-            text = settingsItem.subtitle,
+            text = stringFromUIText(uiText = settingsItem.subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -316,7 +318,7 @@ private fun EditSettingListFieldDialog(
                             .clickable { onConfirm(item) }
                             .padding(vertical = ExampleTheme.dimensions.grid_2)
                             .fillMaxWidth(),
-                        text = item.text,
+                        text = stringResource(id = item.textResId),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )
@@ -342,7 +344,7 @@ private fun SettingsScreenPreview() {
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
                                 titleResId = R.string.settings_title_shopper_reference,
-                                subtitle = "shopper_reference_123",
+                                subtitle = UIText.String("shopper_reference_123"),
                             ),
                         ),
                     ),
@@ -352,7 +354,7 @@ private fun SettingsScreenPreview() {
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.AMOUNT,
                                 titleResId = R.string.settings_title_amount,
-                                subtitle = "1337",
+                                subtitle = UIText.String("1337"),
                             ),
                             SettingsItem.Switch(
                                 identifier = SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
@@ -367,7 +369,7 @@ private fun SettingsScreenPreview() {
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.ADDRESS_MODE,
                                 titleResId = R.string.settings_title_address_mode,
-                                subtitle = "Full address",
+                                subtitle = UIText.String("Full address"),
                             ),
                             SettingsItem.Switch(
                                 identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,

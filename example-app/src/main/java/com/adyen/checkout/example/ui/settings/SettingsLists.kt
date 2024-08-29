@@ -9,52 +9,52 @@
 package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.theme.UITheme
 
-// TODO: localisation
 internal object SettingsLists {
 
     val threeDSModes = ThreeDSMode.entries.associateWith {
         when (it) {
-            ThreeDSMode.PREFER_NATIVE -> "Prefer native"
-            ThreeDSMode.REDIRECT -> "Redirect"
-            ThreeDSMode.DISABLED -> "Disabled"
+            ThreeDSMode.PREFER_NATIVE -> R.string.settings_list_threeds_mode_prefer_native
+            ThreeDSMode.REDIRECT -> R.string.settings_list_threeds_mode_redirect
+            ThreeDSMode.DISABLED -> R.string.settings_list_threeds_mode_disabled
         }
     }
 
     val cardAddressModes = CardAddressMode.entries.associateWith {
         when (it) {
-            CardAddressMode.NONE -> "None"
-            CardAddressMode.POSTAL_CODE -> "Postal code"
-            CardAddressMode.FULL_ADDRESS -> "Full address"
-            CardAddressMode.LOOKUP -> "Lookup"
+            CardAddressMode.NONE -> R.string.settings_list_card_address_none
+            CardAddressMode.POSTAL_CODE -> R.string.settings_list_card_address_postal_code
+            CardAddressMode.FULL_ADDRESS -> R.string.settings_list_card_address_full_address
+            CardAddressMode.LOOKUP -> R.string.settings_list_card_address_lookup
         }
     }
 
     val cardInstallmentOptionsModes = CardInstallmentOptionsMode.entries.associateWith {
         when (it) {
-            CardInstallmentOptionsMode.NONE -> "None"
-            CardInstallmentOptionsMode.DEFAULT -> "Default installment options"
-            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> "Default installment options with revolving"
-            CardInstallmentOptionsMode.CARD_BASED_VISA -> "Card based installment options (VISA)"
+            CardInstallmentOptionsMode.NONE -> R.string.settings_list_installment_option_none
+            CardInstallmentOptionsMode.DEFAULT -> R.string.settings_list_installment_option_default
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> R.string.settings_list_installment_option_default_revolving
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> R.string.settings_list_installment_option_card_based
         }
     }
 
     val analyticsLevels = AnalyticsLevel.entries.associateWith {
         when (it) {
-            AnalyticsLevel.ALL -> "All"
-            AnalyticsLevel.NONE -> "None"
+            AnalyticsLevel.ALL -> R.string.settings_list_analytics_level_all
+            AnalyticsLevel.NONE -> R.string.settings_list_analytics_level_none
         }
     }
 
     val uiThemes = UITheme.entries.associateWith {
         when (it) {
-            UITheme.LIGHT -> "Light"
-            UITheme.DARK -> "Dark"
-            UITheme.SYSTEM -> "System"
+            UITheme.LIGHT -> R.string.settings_list_ui_theme_light
+            UITheme.DARK -> R.string.settings_list_ui_theme_dark
+            UITheme.SYSTEM -> R.string.settings_list_ui_theme_system
         }
     }
 }

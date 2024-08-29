@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
 
@@ -78,7 +79,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
             titleResId = R.string.settings_title_merchant_account,
-            subtitle = keyValueStorage.getMerchantAccount(),
+            subtitle = UIText.String(keyValueStorage.getMerchantAccount()),
         )
     }
 
@@ -86,27 +87,30 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.AMOUNT,
             titleResId = R.string.settings_title_amount,
-            subtitle = keyValueStorage.getAmount().value.toString(),
+            subtitle = UIText.String(keyValueStorage.getAmount().value.toString()),
         )
     }
 
     private fun getCurrency(): SettingsItem {
+        val subtitle = keyValueStorage.getAmount().currency?.let {
+            UIText.String(it)
+        } ?: UIText.Resource(R.string.settings_null_value_placeholder)
+
         return SettingsItem.Text(
             identifier = SettingsIdentifier.CURRENCY,
             titleResId = R.string.settings_title_currency,
-            subtitle = keyValueStorage.getAmount().currency ?: "Not set", // TODO: localisation
+            subtitle = subtitle,
         )
     }
 
     private fun getThreeDSMode(): SettingsItem {
         val threeDSMode = keyValueStorage.getThreeDSMode()
-
         val displayValue = requireNotNull(SettingsLists.threeDSModes[threeDSMode])
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.THREE_DS_MODE,
             titleResId = R.string.settings_title_threeds_mode,
-            subtitle = displayValue,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 
@@ -114,7 +118,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_REFERENCE,
             titleResId = R.string.settings_title_shopper_reference,
-            subtitle = keyValueStorage.getShopperReference(),
+            subtitle = UIText.String(keyValueStorage.getShopperReference()),
         )
     }
 
@@ -122,23 +126,31 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.COUNTRY,
             titleResId = R.string.settings_title_country,
-            subtitle = keyValueStorage.getCountry(),
+            subtitle = UIText.String(keyValueStorage.getCountry()),
         )
     }
 
     private fun getShopperLocale(): SettingsItem {
+        val subtitle = keyValueStorage.getShopperLocale()?.let {
+            UIText.String(it)
+        } ?: UIText.Resource(R.string.settings_null_value_placeholder)
+
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_LOCALE,
             titleResId = R.string.settings_title_shopper_locale,
-            subtitle = keyValueStorage.getShopperLocale() ?: "Not set", // TODO: localisation
+            subtitle = subtitle,
         )
     }
 
     private fun getShopperEmail(): SettingsItem {
+        val subtitle = keyValueStorage.getShopperEmail()?.let {
+            UIText.String(it)
+        } ?: UIText.Resource(R.string.settings_null_value_placeholder)
+
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_EMAIL,
             titleResId = R.string.settings_title_shopper_email,
-            subtitle = keyValueStorage.getShopperEmail() ?: "Not set", // TODO: localisation
+            subtitle = subtitle,
         )
     }
 
@@ -149,7 +161,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ADDRESS_MODE,
             titleResId = R.string.settings_title_address_mode,
-            subtitle = displayValue,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 
@@ -160,7 +172,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.INSTALLMENTS_MODE,
             titleResId = R.string.settings_title_card_installment_options_mode,
-            subtitle = displayValue,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 
@@ -192,7 +204,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE,
             titleResId = R.string.settings_title_instant_payment_method_type,
-            subtitle = keyValueStorage.getInstantPaymentMethodType(),
+            subtitle = UIText.String(keyValueStorage.getInstantPaymentMethodType()),
         )
     }
 
@@ -203,7 +215,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ANALYTICS_LEVEL,
             titleResId = R.string.settings_title_analytics_level,
-            subtitle = displayValue,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 
@@ -213,7 +225,7 @@ internal class SettingsUIMapper @Inject constructor(
         return SettingsItem.Text(
             identifier = SettingsIdentifier.UI_THEME,
             titleResId = R.string.settings_title_ui_theme,
-            subtitle = displayValue,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 }

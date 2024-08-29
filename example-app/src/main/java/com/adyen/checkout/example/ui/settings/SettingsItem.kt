@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.ui.settings
 
 import androidx.annotation.StringRes
+import com.adyen.checkout.example.ui.compose.UIText
 
 internal sealed class SettingsItem(
     open val identifier: SettingsIdentifier,
@@ -17,7 +18,7 @@ internal sealed class SettingsItem(
     class Text(
         override val identifier: SettingsIdentifier,
         @StringRes override val titleResId: Int,
-        val subtitle: String,
+        val subtitle: UIText,
     ) : SettingsItem(
         identifier, titleResId,
     )

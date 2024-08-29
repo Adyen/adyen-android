@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
     <string name="settings_screen_title">Settings</string>
+    <string name="settings_null_value_placeholder">Not set</string>
+
     <string name="settings_category_merchant_information">Merchant Information</string>
     <string name="settings_category_card">Card</string>
     <string name="settings_category_other_payment_methods">Other payment methods</string>
@@ -8,6 +10,7 @@
     <string name="settings_category_app">App</string>
     <string name="settings_category_shopper_information">Shopper Information</string>
     <string name="settings_category_payment_information">Payment Information</string>
+
     <string name="settings_title_merchant_account">Merchant Account</string>
     <string name="settings_title_shopper_reference">Shopper Reference</string>
     <string name="settings_title_threeds_mode">3D Secure</string>
@@ -24,5 +27,26 @@
     <string name="settings_title_ui_theme">Theme</string>
     <string name="settings_title_currency">Currency</string>
     <string name="settings_title_amount">Amount (minor units)</string>
+
+    <string name="settings_list_card_address_none">None</string>
+    <string name="settings_list_card_address_postal_code">Postal code</string>
+    <string name="settings_list_card_address_full_address">Full address</string>
+    <string name="settings_list_card_address_lookup">Lookup</string>
+
+    <string name="settings_list_installment_option_none">None</string>
+    <string name="settings_list_installment_option_default">Default installment options</string>
+    <string name="settings_list_installment_option_default_revolving">Default installment options with revolving</string>
+    <string name="settings_list_installment_option_card_based">Card based installment options (VISA)</string>
+
+    <string name="settings_list_analytics_level_all">All</string>
+    <string name="settings_list_analytics_level_none">None</string>
+
+    <string name="settings_list_threeds_mode_prefer_native">Prefer native</string>
+    <string name="settings_list_threeds_mode_redirect">Redirect</string>
+    <string name="settings_list_threeds_mode_disabled">Disabled</string>
+
+    <string name="settings_list_ui_theme_light">Light</string>
+    <string name="settings_list_ui_theme_dark">Dark</string>
+    <string name="settings_list_ui_theme_system">System</string>
 
 </resources>
