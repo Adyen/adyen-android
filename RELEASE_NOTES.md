@@ -14,3 +14,9 @@
 ## Improved
 - For UPI Intent an error message will be shown when "Continue" button is pressed without selecting any UPI option.
 - For drop-in, improved accessibility of back/close button in the navigation bar.
+
+## Changed
+- Dependency versions:
+  | Name                                                                                                   | Version                       |
+  |--------------------------------------------------------------------------------------------------------|-------------------------------|
+  | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.20)                          | **2.2.20**                    |
