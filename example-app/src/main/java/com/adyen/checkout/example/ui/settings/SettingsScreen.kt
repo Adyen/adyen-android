@@ -55,7 +55,7 @@ internal fun SettingsScreen(
         modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.settings)) },
+                title = { Text(text = stringResource(id = R.string.settings_screen_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -337,41 +337,41 @@ private fun SettingsScreenPreview() {
             uiState = SettingsUIState(
                 listOf(
                     SettingsCategory(
-                        R.string.merchant_information,
+                        R.string.settings_category_merchant_information,
                         listOf(
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
-                                titleResId = R.string.shopper_reference_title,
+                                titleResId = R.string.settings_title_shopper_reference,
                                 subtitle = "shopper_reference_123",
                             ),
                         ),
                     ),
                     SettingsCategory(
-                        R.string.shopper_information,
+                        R.string.settings_category_shopper_information,
                         listOf(
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.AMOUNT,
-                                titleResId = R.string.amount_value_title,
+                                titleResId = R.string.settings_title_amount,
                                 subtitle = "1337",
                             ),
                             SettingsItem.Switch(
                                 identifier = SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
-                                titleResId = R.string.card_installment_show_amount_title,
+                                titleResId = R.string.settings_title_card_installment_show_amount,
                                 checked = true,
                             ),
                         ),
                     ),
                     SettingsCategory(
-                        R.string.other_payment_methods_settings_title,
+                        R.string.settings_category_other_payment_methods,
                         listOf(
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.ADDRESS_MODE,
-                                titleResId = R.string.card_address_form_title,
+                                titleResId = R.string.settings_title_address_mode,
                                 subtitle = "Full address",
                             ),
                             SettingsItem.Switch(
                                 identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
-                                titleResId = R.string.remove_stored_payment_method_title,
+                                titleResId = R.string.settings_title_remove_stored_payment_method,
                                 checked = false,
                             ),
                         ),

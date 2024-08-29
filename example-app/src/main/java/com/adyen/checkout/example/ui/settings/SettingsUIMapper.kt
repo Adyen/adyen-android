@@ -21,13 +21,13 @@ internal class SettingsUIMapper @Inject constructor(
     fun getSettingsCategories(): List<SettingsCategory> {
         return listOf(
             SettingsCategory(
-                R.string.merchant_information,
+                R.string.settings_category_merchant_information,
                 listOf(
                     getMerchantAccount(),
                 ),
             ),
             SettingsCategory(
-                R.string.payment_information,
+                R.string.settings_category_payment_information,
                 listOf(
                     getAmount(),
                     getCurrency(),
@@ -35,7 +35,7 @@ internal class SettingsUIMapper @Inject constructor(
                 ),
             ),
             SettingsCategory(
-                R.string.shopper_information,
+                R.string.settings_category_shopper_information,
                 listOf(
                     getShopperReference(),
                     getCountry(),
@@ -44,7 +44,7 @@ internal class SettingsUIMapper @Inject constructor(
                 ),
             ),
             SettingsCategory(
-                R.string.card_settings_title,
+                R.string.settings_category_card,
                 listOf(
                     getAddressMode(),
                     getInstallmentOptionsMode(),
@@ -53,20 +53,20 @@ internal class SettingsUIMapper @Inject constructor(
                 ),
             ),
             SettingsCategory(
-                R.string.other_payment_methods_settings_title,
+                R.string.settings_category_other_payment_methods,
                 listOf(
                     getRemoveStoredPaymentMethodEnabled(),
                     getInstantPaymentMethodType(),
                 ),
             ),
             SettingsCategory(
-                R.string.analytics_title,
+                R.string.settings_category_analytics,
                 listOf(
                     getAnalyticsLevel(),
                 ),
             ),
             SettingsCategory(
-                R.string.app_title,
+                R.string.settings_category_app,
                 listOf(
                     getUITheme(),
                 ),
@@ -77,7 +77,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getMerchantAccount(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
-            titleResId = R.string.merchant_account_title,
+            titleResId = R.string.settings_title_merchant_account,
             subtitle = keyValueStorage.getMerchantAccount(),
         )
     }
@@ -85,7 +85,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getAmount(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.AMOUNT,
-            titleResId = R.string.amount_value_title,
+            titleResId = R.string.settings_title_amount,
             subtitle = keyValueStorage.getAmount().value.toString(),
         )
     }
@@ -93,7 +93,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getCurrency(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.CURRENCY,
-            titleResId = R.string.currency_title,
+            titleResId = R.string.settings_title_currency,
             subtitle = keyValueStorage.getAmount().currency ?: "Not set", // TODO: localisation
         )
     }
@@ -105,7 +105,7 @@ internal class SettingsUIMapper @Inject constructor(
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.THREE_DS_MODE,
-            titleResId = R.string.threeds_mode_title,
+            titleResId = R.string.settings_title_threeds_mode,
             subtitle = displayValue,
         )
     }
@@ -113,7 +113,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getShopperReference(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_REFERENCE,
-            titleResId = R.string.shopper_reference_title,
+            titleResId = R.string.settings_title_shopper_reference,
             subtitle = keyValueStorage.getShopperReference(),
         )
     }
@@ -121,7 +121,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getCountry(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.COUNTRY,
-            titleResId = R.string.shopper_country_title,
+            titleResId = R.string.settings_title_country,
             subtitle = keyValueStorage.getCountry(),
         )
     }
@@ -129,7 +129,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getShopperLocale(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_LOCALE,
-            titleResId = R.string.shopper_locale_title,
+            titleResId = R.string.settings_title_shopper_locale,
             subtitle = keyValueStorage.getShopperLocale() ?: "Not set", // TODO: localisation
         )
     }
@@ -137,7 +137,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getShopperEmail(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_EMAIL,
-            titleResId = R.string.shopper_email_title,
+            titleResId = R.string.settings_title_shopper_email,
             subtitle = keyValueStorage.getShopperEmail() ?: "Not set", // TODO: localisation
         )
     }
@@ -148,7 +148,7 @@ internal class SettingsUIMapper @Inject constructor(
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ADDRESS_MODE,
-            titleResId = R.string.card_address_form_title,
+            titleResId = R.string.settings_title_address_mode,
             subtitle = displayValue,
         )
     }
@@ -159,7 +159,7 @@ internal class SettingsUIMapper @Inject constructor(
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.INSTALLMENTS_MODE,
-            titleResId = R.string.card_installment_options_mode_title,
+            titleResId = R.string.settings_title_card_installment_options_mode,
             subtitle = displayValue,
         )
     }
@@ -167,7 +167,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getInstallmentAmountShown(): SettingsItem {
         return SettingsItem.Switch(
             identifier = SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
-            titleResId = R.string.card_installment_show_amount_title,
+            titleResId = R.string.settings_title_card_installment_show_amount,
             checked = keyValueStorage.isInstallmentAmountShown(),
         )
     }
@@ -175,7 +175,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getSplitCardFundingSources(): SettingsItem {
         return SettingsItem.Switch(
             identifier = SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
-            titleResId = R.string.split_card_funding_sources_title,
+            titleResId = R.string.settings_title_split_card_funding_sources,
             checked = keyValueStorage.isSplitCardFundingSources(),
         )
     }
@@ -183,7 +183,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getRemoveStoredPaymentMethodEnabled(): SettingsItem {
         return SettingsItem.Switch(
             identifier = SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD,
-            titleResId = R.string.remove_stored_payment_method_title,
+            titleResId = R.string.settings_title_remove_stored_payment_method,
             checked = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
         )
     }
@@ -191,7 +191,7 @@ internal class SettingsUIMapper @Inject constructor(
     private fun getInstantPaymentMethodType(): SettingsItem {
         return SettingsItem.Text(
             identifier = SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE,
-            titleResId = R.string.instant_payment_method_type_title,
+            titleResId = R.string.settings_title_instant_payment_method_type,
             subtitle = keyValueStorage.getInstantPaymentMethodType(),
         )
     }
@@ -202,7 +202,7 @@ internal class SettingsUIMapper @Inject constructor(
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.ANALYTICS_LEVEL,
-            titleResId = R.string.analytics_level_title,
+            titleResId = R.string.settings_title_analytics_level,
             subtitle = displayValue,
         )
     }
@@ -212,7 +212,7 @@ internal class SettingsUIMapper @Inject constructor(
         val displayValue = requireNotNull(SettingsLists.uiThemes[theme])
         return SettingsItem.Text(
             identifier = SettingsIdentifier.UI_THEME,
-            titleResId = R.string.ui_theme_title,
+            titleResId = R.string.settings_title_ui_theme,
             subtitle = displayValue,
         )
     }

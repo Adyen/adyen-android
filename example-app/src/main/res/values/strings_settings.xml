@@ -1,0 +1,28 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_category_merchant_information">Merchant Information</string>
+    <string name="settings_category_card">Card</string>
+    <string name="settings_category_other_payment_methods">Other payment methods</string>
+    <string name="settings_category_analytics">Analytics</string>
+    <string name="settings_category_app">App</string>
+    <string name="settings_category_shopper_information">Shopper Information</string>
+    <string name="settings_category_payment_information">Payment Information</string>
+    <string name="settings_title_merchant_account">Merchant Account</string>
+    <string name="settings_title_shopper_reference">Shopper Reference</string>
+    <string name="settings_title_threeds_mode">3D Secure</string>
+    <string name="settings_title_country">Country/region</string>
+    <string name="settings_title_shopper_locale">Shopper Locale</string>
+    <string name="settings_title_shopper_email">Shopper Email</string>
+    <string name="settings_title_split_card_funding_sources">Split Card Funding Sources</string>
+    <string name="settings_title_card_installment_options_mode">Installment options</string>
+    <string name="settings_title_card_installment_show_amount">Show installment amount</string>
+    <string name="settings_title_address_mode">Address mode</string>
+    <string name="settings_title_remove_stored_payment_method">Remove stored payment method</string>
+    <string name="settings_title_instant_payment_method_type">Instant Payment Method Type</string>
+    <string name="settings_title_analytics_level">Level</string>
+    <string name="settings_title_ui_theme">Theme</string>
+    <string name="settings_title_currency">Currency</string>
+    <string name="settings_title_amount">Amount (minor units)</string>
+
+</resources>
