@@ -32,65 +32,30 @@
 
     <string name="settings">Settings</string>
     <string name="merchant_information">Merchant Information</string>
-    <string name="merchant_account_key">merchant_account</string>
     <string name="merchant_account_title">Merchant Account</string>
     <string name="card_settings_title">Card</string>
     <string name="other_payment_methods_settings_title">Other payment methods</string>
     <string name="analytics_title">Analytics</string>
     <string name="app_title">App</string>
-
     <string name="shopper_information">Shopper Information</string>
-    <string name="shopper_reference_key">shopper_reference</string>
     <string name="shopper_reference_title">Shopper Reference</string>
-    <string name="threeds_mode_key">threeds_mode</string>
     <string name="threeds_mode_title">3D Secure</string>
-    <string name="shopper_country_key">shopper_country</string>
     <string name="shopper_country_title">Country/region</string>
-    <string name="shopper_locale_key">shopper_locale</string>
     <string name="shopper_locale_title">Shopper Locale</string>
-    <string name="shopper_email_key">shopper_email</string>
     <string name="shopper_email_title">Shopper Email</string>
-    <string name="split_card_funding_sources_key">split_card_funding_sources</string>
     <string name="split_card_funding_sources_title">Split Card Funding Sources</string>
-    <string name="card_address_form_mode_key">card_address_form_mode</string>
     <string name="card_installment_options_mode_title">Installment options</string>
-    <string name="card_installment_options_mode_key">card_installment_options_mode</string>
-    <string name="card_installment_show_amount_key">card_installment_show_amount</string>
     <string name="card_installment_show_amount_title">Show installment amount</string>
     <string name="card_address_form_title">Address mode</string>
-    <string name="remove_stored_payment_method_key">remove_stored_payment_method</string>
     <string name="remove_stored_payment_method_title">Remove stored payment method</string>
-    <string name="instant_payment_method_type_key">instant_payment_method_type</string>
     <string name="instant_payment_method_type_title">Instant Payment Method Type</string>
-    <string name="use_sessions_key">use_sessions</string>
-    <string name="analytics_level_key">analytics_level</string>
     <string name="analytics_level_title">Level</string>
-
     <string name="night_theme_title">Theme</string>
-    <!-- Should be same as DefaultNightThemeRepository.PREF_KEY_NIGHT_THEME -->
-    <string name="night_theme_key">night_theme_key</string>
     <string name="night_theme_day">Light</string>
     <string name="night_theme_night">Dark</string>
     <string name="night_theme_system">System</string>
-
     <string name="payment_information">Payment Information</string>
-    <string name="currency_key">amount_currency</string>
     <string name="currency_title">Currency</string>
-    <string name="amount_value_key">amount_value</string>
     <string name="amount_value_title">Amount (minor units)</string>
-
-    <string name="preferences_default_country">NL</string>
-    <string name="preferences_default_amount_value">1337</string>
-    <string name="preferences_default_amount_currency">EUR</string>
-    <string name="preferences_default_threeds_mode">PREFER_NATIVE</string>
-    <string name="preferences_default_split_card_funding_sources">false</string>
-    <string name="preferences_default_address_form_mode">NONE</string>
-    <string name="preferences_default_installment_options_mode">NONE</string>
-    <string name="preferences_default_installment_amount_shown">false</string>
-    <string name="preferences_default_remove_stored_payment_method">true</string>
-    <string name="preferences_default_instant_payment_method">wechatpaySDK</string>
-    <string name="preferences_default_use_sessions">true</string>
-    <string name="preferences_default_analytics_level">ALL</string>
-    <string name="preferences_default_shopper_reference">test-android-components</string>
 
 </resources>

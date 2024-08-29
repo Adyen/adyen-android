@@ -14,6 +14,7 @@ import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.SharedPreferencesManager
 import com.adyen.checkout.example.ui.settings.SettingsEditor
 import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
 import dagger.Module
@@ -30,8 +31,12 @@ object StorageModule {
         PreferenceManager.getDefaultSharedPreferences(appContext)
 
     @Provides
-    fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =
-        DefaultKeyValueStorage(appContext, sharedPreferences)
+    fun provideSharedPreferencesManager(sharedPreferences: SharedPreferences): SharedPreferencesManager =
+        SharedPreferencesManager(sharedPreferences)
+
+    @Provides
+    fun provideKeyValueStorage(sharedPreferencesManager: SharedPreferencesManager): KeyValueStorage =
+        DefaultKeyValueStorage(sharedPreferencesManager)
 
     @Provides
     fun provideAssetManager(appContext: Application): AssetManager = appContext.assets

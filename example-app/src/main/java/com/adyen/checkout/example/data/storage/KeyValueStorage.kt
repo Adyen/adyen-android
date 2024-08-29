@@ -8,15 +8,24 @@
 
 package com.adyen.checkout.example.data.storage
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.core.content.edit
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.example.BuildConfig
-import com.adyen.checkout.example.R
-import com.adyen.checkout.example.extensions.getBoolean
-import com.adyen.checkout.example.extensions.getString
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.AMOUNT
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.ANALYTICS_LEVEL
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_ADDRESS_FORM_MODE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTALLMENT_OPTIONS_MODE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTALLMENT_SHOW_AMOUNT
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CURRENCY
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.INSTANT_PAYMENT_METHOD_TYPE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.MERCHANT_ACCOUNT
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.REMOVE_STORED_PAYMENT_METHOD
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_COUNTRY
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_EMAIL
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_LOCALE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_REFERENCE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SPLIT_CARD_FUNDING_SOURCES
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.THREEDS_MODE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.USE_SESSIONS
 
 @Suppress("TooManyFunctions")
 interface KeyValueStorage {
@@ -55,232 +64,133 @@ interface KeyValueStorage {
 
 @Suppress("TooManyFunctions")
 internal class DefaultKeyValueStorage(
-    private val appContext: Context,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferencesManager: SharedPreferencesManager
 ) : KeyValueStorage {
 
     override fun getShopperReference(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.shopper_reference_key,
-            defaultStringRes = R.string.preferences_default_shopper_reference,
-        )
+        return sharedPreferencesManager.getString(SHOPPER_REFERENCE)
     }
 
     override fun setShopperReference(shopperReference: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.shopper_reference_key), shopperReference)
-        }
+        sharedPreferencesManager.putString(SHOPPER_REFERENCE, shopperReference)
     }
 
     override fun getAmount(): Amount {
         return Amount(
-            currency = sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.currency_key,
-                defaultStringRes = R.string.preferences_default_amount_currency,
-            ),
-            value = sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.amount_value_key,
-                defaultStringRes = R.string.preferences_default_amount_value,
-            ).toLong(),
+            value = sharedPreferencesManager.getLong(AMOUNT),
+            currency = sharedPreferencesManager.getString(CURRENCY),
         )
     }
 
     override fun setAmount(amount: Long?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.amount_value_key), amount?.toString())
-        }
+        sharedPreferencesManager.putLong(AMOUNT, amount)
     }
 
     override fun setCurrency(currency: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.currency_key), currency)
-        }
+        sharedPreferencesManager.putString(CURRENCY, currency)
     }
 
     override fun getCountry(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.shopper_country_key,
-            defaultStringRes = R.string.preferences_default_country,
-        )
+        return sharedPreferencesManager.getString(SHOPPER_COUNTRY)
     }
 
     override fun setCountry(country: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.shopper_country_key), country)
-        }
+        sharedPreferencesManager.putString(SHOPPER_COUNTRY, country)
     }
 
     override fun getShopperLocale(): String? {
-        return sharedPreferences.getString(appContext.getString(R.string.shopper_locale_key), null)
+        return sharedPreferencesManager.getStringNullable(SHOPPER_LOCALE)
     }
 
     override fun setShopperLocale(shopperLocale: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.shopper_locale_key), shopperLocale)
-        }
+        sharedPreferencesManager.putString(SHOPPER_LOCALE, shopperLocale)
     }
 
     override fun getThreeDSMode(): ThreeDSMode {
-        return ThreeDSMode.valueOf(
-            sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.threeds_mode_key,
-                defaultStringRes = R.string.preferences_default_threeds_mode,
-            ),
-        )
+        return sharedPreferencesManager.getEnum(THREEDS_MODE)
     }
 
     override fun setThreeDSMode(threeDSMode: ThreeDSMode) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.threeds_mode_key), threeDSMode.toString())
-        }
+        sharedPreferencesManager.putEnum(THREEDS_MODE, threeDSMode)
     }
 
     override fun getShopperEmail(): String? {
-        return sharedPreferences.getString(appContext.getString(R.string.shopper_email_key), null)
+        return sharedPreferencesManager.getStringNullable(SHOPPER_EMAIL)
     }
 
     override fun setShopperEmail(shopperEmail: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.shopper_email_key), shopperEmail)
-        }
+        sharedPreferencesManager.putString(SHOPPER_EMAIL, shopperEmail)
     }
 
     override fun getMerchantAccount(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.merchant_account_key,
-            defaultValue = BuildConfig.MERCHANT_ACCOUNT,
-        )
+        return sharedPreferencesManager.getString(MERCHANT_ACCOUNT)
     }
 
     override fun setMerchantAccount(merchantAccount: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.merchant_account_key), merchantAccount)
-        }
+        sharedPreferencesManager.putString(MERCHANT_ACCOUNT, merchantAccount)
     }
 
     override fun isSplitCardFundingSources(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.split_card_funding_sources_key,
-            defaultStringRes = R.string.preferences_default_split_card_funding_sources,
-        )
+        return sharedPreferencesManager.getBoolean(SPLIT_CARD_FUNDING_SOURCES)
     }
 
     override fun setSplitCardFundingSources(isSplitCardFundingSources: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(appContext.getString(R.string.split_card_funding_sources_key), isSplitCardFundingSources)
-        }
+        sharedPreferencesManager.putBoolean(SPLIT_CARD_FUNDING_SOURCES, isSplitCardFundingSources)
     }
 
     override fun getCardAddressMode(): CardAddressMode {
-        return CardAddressMode.valueOf(
-            sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.card_address_form_mode_key,
-                defaultStringRes = R.string.preferences_default_address_form_mode,
-            ),
-        )
+        return sharedPreferencesManager.getEnum(CARD_ADDRESS_FORM_MODE)
     }
 
     override fun setCardAddressMode(cardAddressMode: CardAddressMode) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.card_address_form_mode_key), cardAddressMode.toString())
-        }
+        sharedPreferencesManager.putEnum(CARD_ADDRESS_FORM_MODE, cardAddressMode)
     }
 
-    override fun isRemoveStoredPaymentMethodEnabled() = sharedPreferences.getBoolean(
-        appContext = appContext,
-        stringRes = R.string.remove_stored_payment_method_key,
-        defaultStringRes = R.string.preferences_default_remove_stored_payment_method,
-    )
+    override fun isRemoveStoredPaymentMethodEnabled(): Boolean {
+        return sharedPreferencesManager.getBoolean(REMOVE_STORED_PAYMENT_METHOD)
+    }
 
     override fun setRemoveStoredPaymentMethodEnabled(isRemoveStoredPaymentMethodEnabled: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(
-                appContext.getString(R.string.remove_stored_payment_method_key),
-                isRemoveStoredPaymentMethodEnabled,
-            )
-        }
+        sharedPreferencesManager.putBoolean(REMOVE_STORED_PAYMENT_METHOD, isRemoveStoredPaymentMethodEnabled)
     }
 
     override fun getInstantPaymentMethodType(): String {
-        return sharedPreferences.getString(
-            appContext = appContext,
-            stringRes = R.string.instant_payment_method_type_key,
-            defaultStringRes = R.string.preferences_default_instant_payment_method,
-        )
+        return sharedPreferencesManager.getString(INSTANT_PAYMENT_METHOD_TYPE)
     }
 
     override fun setInstantPaymentMethodType(instantPaymentMethodType: String?) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.instant_payment_method_type_key), instantPaymentMethodType)
-        }
+        sharedPreferencesManager.putString(INSTANT_PAYMENT_METHOD_TYPE, instantPaymentMethodType)
     }
 
     override fun getInstallmentOptionsMode(): CardInstallmentOptionsMode {
-        return CardInstallmentOptionsMode.valueOf(
-            sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.card_installment_options_mode_key,
-                defaultStringRes = R.string.preferences_default_installment_options_mode,
-            ),
-        )
+        return sharedPreferencesManager.getEnum(CARD_INSTALLMENT_OPTIONS_MODE)
     }
 
     override fun setInstallmentOptionsMode(cardInstallmentOptionsMode: CardInstallmentOptionsMode) {
-        sharedPreferences.edit {
-            putString(
-                appContext.getString(R.string.card_installment_options_mode_key),
-                cardInstallmentOptionsMode.toString(),
-            )
-        }
+        sharedPreferencesManager.putEnum(CARD_INSTALLMENT_OPTIONS_MODE, cardInstallmentOptionsMode)
     }
 
-    override fun isInstallmentAmountShown() = sharedPreferences.getBoolean(
-        appContext = appContext,
-        stringRes = R.string.card_installment_show_amount_key,
-        defaultStringRes = R.string.preferences_default_installment_amount_shown,
-    )
+    override fun isInstallmentAmountShown(): Boolean {
+        return sharedPreferencesManager.getBoolean(CARD_INSTALLMENT_SHOW_AMOUNT)
+    }
 
     override fun setInstallmentAmountShown(isInstallmentAmountShown: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(appContext.getString(R.string.card_installment_show_amount_key), isInstallmentAmountShown)
-        }
+        sharedPreferencesManager.putBoolean(CARD_INSTALLMENT_SHOW_AMOUNT, isInstallmentAmountShown)
     }
 
     override fun useSessions(): Boolean {
-        return sharedPreferences.getBoolean(
-            appContext = appContext,
-            stringRes = R.string.use_sessions_key,
-            defaultStringRes = R.string.preferences_default_use_sessions,
-        )
+        return sharedPreferencesManager.getBoolean(USE_SESSIONS)
     }
 
     override fun setUseSessions(useSessions: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(appContext.getString(R.string.use_sessions_key), useSessions)
-        }
+        sharedPreferencesManager.putBoolean(USE_SESSIONS, useSessions)
     }
 
     override fun getAnalyticsLevel(): AnalyticsLevel {
-        return AnalyticsLevel.valueOf(
-            sharedPreferences.getString(
-                appContext = appContext,
-                stringRes = R.string.analytics_level_key,
-                defaultStringRes = R.string.preferences_default_analytics_level,
-            ),
-        )
+        return sharedPreferencesManager.getEnum(ANALYTICS_LEVEL)
     }
 
     override fun setAnalyticsLevel(analyticsLevel: AnalyticsLevel) {
-        sharedPreferences.edit {
-            putString(appContext.getString(R.string.analytics_level_key), analyticsLevel.toString())
-        }
+        sharedPreferencesManager.putEnum(ANALYTICS_LEVEL, analyticsLevel)
     }
 }
