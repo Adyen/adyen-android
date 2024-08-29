@@ -13,7 +13,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.adyen.checkout.example.ui.theme.ExampleTheme
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class SettingsActivity : AppCompatActivity() {
 
     @Inject
-    internal lateinit var nightThemeRepository: NightThemeRepository
+    internal lateinit var uiThemeRepository: UIThemeRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            val isDarkTheme = nightThemeRepository.isDarkTheme()
+            val isDarkTheme = uiThemeRepository.isDarkTheme()
             ExampleTheme(isDarkTheme) {
                 SettingsScreen(onBackPressed = { onBackPressedDispatcher.onBackPressed() })
             }

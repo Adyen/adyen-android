@@ -10,6 +10,7 @@ package com.adyen.checkout.example.data.storage
 
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.example.ui.theme.UITheme
 
 enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
     SHOPPER_REFERENCE(key = "shopper_reference", defaultValue = "test-android-components"),
@@ -31,4 +32,5 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
     CARD_INSTALLMENT_SHOW_AMOUNT(key = "card_installment_show_amount", defaultValue = false),
     USE_SESSIONS(key = "use_sessions", defaultValue = true),
     ANALYTICS_LEVEL(key = "analytics_level", defaultValue = AnalyticsLevel.ALL),
+    UI_THEME(key = "ui_theme", defaultValue = UITheme.SYSTEM),
 }

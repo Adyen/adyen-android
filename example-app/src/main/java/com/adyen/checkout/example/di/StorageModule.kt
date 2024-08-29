@@ -16,7 +16,7 @@ import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SharedPreferencesManager
 import com.adyen.checkout.example.ui.settings.SettingsEditor
-import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
+import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +44,6 @@ object StorageModule {
     @Provides
     internal fun provideSettingsEditor(
         keyValueStorage: KeyValueStorage,
-        nightThemeRepository: DefaultNightThemeRepository,
-    ): SettingsEditor = SettingsEditor(keyValueStorage, nightThemeRepository)
+        uiThemeRepository: DefaultUIThemeRepository,
+    ): SettingsEditor = SettingsEditor(keyValueStorage, uiThemeRepository)
 }

@@ -10,7 +10,7 @@ package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.ui.settings.SettingsUIMapper
-import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
+import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ object MapperModule {
     @Provides
     internal fun provideSettingsUIMapper(
         keyValueStorage: KeyValueStorage,
-        nightThemeRepository: DefaultNightThemeRepository,
-    ): SettingsUIMapper = SettingsUIMapper(keyValueStorage, nightThemeRepository)
+        uiThemeRepository: DefaultUIThemeRepository,
+    ): SettingsUIMapper = SettingsUIMapper(keyValueStorage, uiThemeRepository)
 }

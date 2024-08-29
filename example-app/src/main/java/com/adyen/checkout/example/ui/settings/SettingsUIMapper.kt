@@ -10,12 +10,12 @@ package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
 
 internal class SettingsUIMapper @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
-    private val nightThemeRepository: NightThemeRepository,
+    private val uiThemeRepository: UIThemeRepository,
 ) {
 
     fun getSettingsCategories(): List<SettingsCategory> {
@@ -68,7 +68,7 @@ internal class SettingsUIMapper @Inject constructor(
             SettingsCategory(
                 R.string.app_title,
                 listOf(
-                    getDisplayTheme(),
+                    getUITheme(),
                 ),
             ),
         )
@@ -207,11 +207,13 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
-    private fun getDisplayTheme(): SettingsItem {
+    private fun getUITheme(): SettingsItem {
+        val theme = uiThemeRepository.theme
+        val displayValue = requireNotNull(SettingsLists.uiThemes[theme])
         return SettingsItem.Text(
-            identifier = SettingsIdentifier.DISPLAY_THEME,
-            titleResId = R.string.night_theme_title,
-            subtitle = nightThemeRepository.theme.preferenceValue,
+            identifier = SettingsIdentifier.UI_THEME,
+            titleResId = R.string.ui_theme_title,
+            subtitle = displayValue,
         )
     }
 }

@@ -15,7 +15,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.adyen.checkout.example.ui.theme.ExampleTheme
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,7 +24,7 @@ import javax.inject.Inject
 class SessionsGooglePayActivity : AppCompatActivity() {
 
     @Inject
-    internal lateinit var nightThemeRepository: NightThemeRepository
+    internal lateinit var uiThemeRepository: UIThemeRepository
 
     private val sessionsGooglePayViewModel: SessionsGooglePayViewModel by viewModels()
 
@@ -39,7 +39,7 @@ class SessionsGooglePayActivity : AppCompatActivity() {
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
         setContent {
-            val isDarkTheme = nightThemeRepository.isDarkTheme()
+            val isDarkTheme = uiThemeRepository.isDarkTheme()
             ExampleTheme(isDarkTheme) {
                 SessionsGooglePayScreen(
                     useDarkTheme = isDarkTheme,

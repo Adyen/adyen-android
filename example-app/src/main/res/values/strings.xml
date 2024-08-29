@@ -50,7 +50,7 @@
     <string name="remove_stored_payment_method_title">Remove stored payment method</string>
     <string name="instant_payment_method_type_title">Instant Payment Method Type</string>
     <string name="analytics_level_title">Level</string>
-    <string name="night_theme_title">Theme</string>
+    <string name="ui_theme_title">Theme</string>
     <string name="night_theme_day">Light</string>
     <string name="night_theme_night">Dark</string>
     <string name="night_theme_system">System</string>

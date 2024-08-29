@@ -14,13 +14,13 @@ import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.ThreeDSMode
-import com.adyen.checkout.example.ui.theme.NightTheme
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.UITheme
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
 
 internal class SettingsEditor @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
-    private val nightThemeRepository: NightThemeRepository,
+    private val uiThemeRepository: UIThemeRepository,
 ) {
     fun getEditSettingsData(settingsItem: SettingsItem): EditSettingsData {
         return when (settingsItem.identifier) {
@@ -121,19 +121,19 @@ internal class SettingsEditor @Inject constructor(
 
             SettingsIdentifier.ANALYTICS_LEVEL -> {
                 EditSettingsData.SingleSelectList(
-                    settingsItem.identifier,
+                    identifier = settingsItem.identifier,
                     titleResId = R.string.analytics_level_title,
-                    SettingsLists.analyticsLevels.entries.map {
+                    items = SettingsLists.analyticsLevels.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
             }
 
-            SettingsIdentifier.DISPLAY_THEME -> {
+            SettingsIdentifier.UI_THEME -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
-                    titleResId = R.string.night_theme_title,
-                    items = SettingsLists.displayThemes.entries.map {
+                    titleResId = R.string.ui_theme_title,
+                    items = SettingsLists.uiThemes.entries.map {
                         EditSettingsData.SingleSelectList.Item(text = it.value, value = it.key.toString())
                     },
                 )
@@ -208,9 +208,9 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setAnalyticsLevel(analyticsLevel)
             }
 
-            SettingsIdentifier.DISPLAY_THEME -> {
-                val nightTheme = NightTheme.valueOf(newValue.value)
-                nightThemeRepository.theme = nightTheme
+            SettingsIdentifier.UI_THEME -> {
+                val uiTheme = UITheme.valueOf(newValue.value)
+                uiThemeRepository.theme = uiTheme
             }
 
             else -> error("This edit mode is only supported wth boolean type settings")

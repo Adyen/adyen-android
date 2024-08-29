@@ -11,7 +11,7 @@ package com.adyen.checkout.example
 import android.app.Application
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CheckoutExampleApplication : Application() {
 
     @Inject
-    internal lateinit var nightThemeRepository: NightThemeRepository
+    internal lateinit var uiThemeRepository: UIThemeRepository
 
     init {
         AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
@@ -27,6 +27,6 @@ class CheckoutExampleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        nightThemeRepository.initialize()
+        uiThemeRepository.initialize()
     }
 }

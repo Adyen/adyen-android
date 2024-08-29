@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.ThreeDSMode
-import com.adyen.checkout.example.ui.theme.NightTheme
+import com.adyen.checkout.example.ui.theme.UITheme
 
 // TODO: localisation
 internal object SettingsLists {
@@ -50,7 +50,11 @@ internal object SettingsLists {
         }
     }
 
-    val displayThemes = NightTheme.entries.associateWith {
-        it.preferenceValue
+    val uiThemes = UITheme.entries.associateWith {
+        when (it) {
+            UITheme.LIGHT -> "Light"
+            UITheme.DARK -> "Dark"
+            UITheme.SYSTEM -> "System"
+        }
     }
 }

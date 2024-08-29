@@ -24,5 +24,5 @@ internal enum class SettingsIdentifier {
     REMOVE_STORED_PAYMENT_METHOD,
     INSTANT_PAYMENT_METHOD_TYPE,
     ANALYTICS_LEVEL,
-    DISPLAY_THEME,
+    UI_THEME,
 }
