@@ -22,42 +22,36 @@ internal class SettingsUIMapper @Inject constructor(
     fun getSettingsCategories(): List<SettingsCategory> {
         return listOf(
             SettingsCategory(
-                R.string.settings_category_merchant_information,
-                listOf(
-                    getMerchantAccount(),
-                ),
-            ),
-            SettingsCategory(
-                R.string.settings_category_payment_information,
+                R.string.settings_category_integration_parameters,
                 listOf(
                     getAmount(),
                     getCurrency(),
-                    getThreeDSMode(),
+                    getCountry(),
+                    getMerchantAccount(),
                 ),
             ),
             SettingsCategory(
                 R.string.settings_category_shopper_information,
                 listOf(
-                    getShopperReference(),
-                    getCountry(),
                     getShopperLocale(),
+                    getShopperReference(),
                     getShopperEmail(),
                 ),
             ),
             SettingsCategory(
                 R.string.settings_category_card,
                 listOf(
+                    getThreeDSMode(),
                     getAddressMode(),
                     getInstallmentOptionsMode(),
                     getInstallmentAmountShown(),
-                    getSplitCardFundingSources(),
                 ),
             ),
             SettingsCategory(
-                R.string.settings_category_other_payment_methods,
+                R.string.settings_category_drop_in,
                 listOf(
                     getRemoveStoredPaymentMethodEnabled(),
-                    getInstantPaymentMethodType(),
+                    getSplitCardFundingSources(),
                 ),
             ),
             SettingsCategory(
@@ -69,6 +63,7 @@ internal class SettingsUIMapper @Inject constructor(
             SettingsCategory(
                 R.string.settings_category_app,
                 listOf(
+                    getInstantPaymentMethodType(),
                     getUITheme(),
                 ),
             ),

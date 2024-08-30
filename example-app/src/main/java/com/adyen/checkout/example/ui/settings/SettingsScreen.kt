@@ -339,7 +339,7 @@ private fun SettingsScreenPreview() {
             uiState = SettingsUIState(
                 listOf(
                     SettingsCategory(
-                        R.string.settings_category_merchant_information,
+                        R.string.settings_category_integration_parameters,
                         listOf(
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.MERCHANT_ACCOUNT,
@@ -364,7 +364,7 @@ private fun SettingsScreenPreview() {
                         ),
                     ),
                     SettingsCategory(
-                        R.string.settings_category_other_payment_methods,
+                        R.string.settings_category_card,
                         listOf(
                             SettingsItem.Text(
                                 identifier = SettingsIdentifier.ADDRESS_MODE,
