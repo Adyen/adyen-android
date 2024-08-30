@@ -39,6 +39,7 @@ fun TextFieldDialog(
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
     allowNumbersOnly: Boolean = false,
+    placeholder: String? = null,
 ) {
     var textFieldValue by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(content, TextRange(content.length)))
@@ -56,24 +57,31 @@ fun TextFieldDialog(
         },
         content = {
             val textFieldModifier = Modifier.focusRequester(focusRequester)
-            if (!allowNumbersOnly) {
-                OutlinedTextField(
-                    modifier = textFieldModifier,
-                    value = textFieldValue,
-                    onValueChange = { textFieldValue = it },
-                )
-            } else {
-                OutlinedTextField(
-                    modifier = textFieldModifier,
-                    value = textFieldValue,
-                    onValueChange = {
-                        if (it.text.isDigitsOnly()) {
-                            textFieldValue = it
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                )
+
+            val onValueChange: (TextFieldValue) -> Unit = onValueChange@{
+                if (allowNumbersOnly && !it.text.isDigitsOnly()) {
+                    return@onValueChange
+                }
+                textFieldValue = it
             }
+
+            val keyboardOptions = if (allowNumbersOnly) {
+                KeyboardOptions(keyboardType = KeyboardType.Number)
+            } else {
+                KeyboardOptions.Default
+            }
+
+            val placeholderBlock: @Composable (() -> Unit)? = placeholder?.let {
+                { Text(text = placeholder) }
+            }
+
+            OutlinedTextField(
+                modifier = textFieldModifier,
+                value = textFieldValue,
+                onValueChange = onValueChange,
+                keyboardOptions = keyboardOptions,
+                placeholder = placeholderBlock,
+            )
 
             DisposableEffect(Unit) {
                 focusRequester.requestFocus()

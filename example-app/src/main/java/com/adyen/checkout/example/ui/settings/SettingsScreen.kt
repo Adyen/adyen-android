@@ -287,12 +287,15 @@ private fun EditSettingTextFieldDialog(
         EditSettingsData.Text.InputType.INTEGER -> true
     }
 
+    val placeholder = settingToEdit.placeholder?.let { stringFromUIText(uiText = it) }
+
     TextFieldDialog(
         title = stringResource(id = settingToEdit.titleResId),
         content = settingToEdit.text,
         onConfirm = onConfirm,
         onDismiss = onDismiss,
         allowNumbersOnly = allowNumbersOnly,
+        placeholder = placeholder,
     )
 }
 

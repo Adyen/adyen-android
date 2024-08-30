@@ -17,14 +17,14 @@ import androidx.compose.ui.res.stringResource
  */
 internal sealed interface UIText {
     data class String(val value: kotlin.String) : UIText
-    data class Resource(@StringRes val stringResId: Int) : UIText
+    class Resource(@StringRes val stringResId: Int, vararg val formatArgs: Any) : UIText
 
 }
 
 @Composable
 internal fun stringFromUIText(uiText: UIText): String {
     return when (uiText) {
-        is UIText.Resource -> stringResource(id = uiText.stringResId)
+        is UIText.Resource -> stringResource(id = uiText.stringResId, formatArgs = uiText.formatArgs)
         is UIText.String -> uiText.value
     }
 }

@@ -2,6 +2,8 @@
 
     <string name="settings_screen_title">Settings</string>
     <string name="settings_null_value_placeholder">Not set</string>
+    <string name="settings_default_value">Default: %1$s</string>
+    <string name="settings_format_helper_locale">Format: en-us</string>
 
     <string name="settings_category_integration_parameters">Integration parameters</string>
     <string name="settings_category_card">Cards</string>

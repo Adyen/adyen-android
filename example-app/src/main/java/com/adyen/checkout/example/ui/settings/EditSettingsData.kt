@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.ui.settings
 
 import androidx.annotation.StringRes
+import com.adyen.checkout.example.ui.compose.UIText
 
 internal sealed class EditSettingsData(
     open val identifier: SettingsIdentifier,
@@ -18,8 +19,9 @@ internal sealed class EditSettingsData(
         @StringRes val titleResId: Int,
         val text: String,
         val inputType: InputType = InputType.STRING,
-    ) : EditSettingsData(identifier){
-        enum class InputType{
+        val placeholder: UIText? = null,
+    ) : EditSettingsData(identifier) {
+        enum class InputType {
             STRING, INTEGER
         }
     }

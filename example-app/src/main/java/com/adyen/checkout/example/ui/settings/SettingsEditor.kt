@@ -13,7 +13,9 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.data.storage.ThreeDSMode
+import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
@@ -29,6 +31,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_merchant_account,
                     text = keyValueStorage.getMerchantAccount(),
+                    placeholder = defaultValueText(SettingsDefaults.MERCHANT_ACCOUNT),
                 )
             }
 
@@ -38,6 +41,7 @@ internal class SettingsEditor @Inject constructor(
                     titleResId = R.string.settings_title_amount,
                     text = keyValueStorage.getAmount().value.toString(),
                     inputType = EditSettingsData.Text.InputType.INTEGER,
+                    placeholder = defaultValueText(SettingsDefaults.AMOUNT.toString()),
                 )
             }
 
@@ -46,6 +50,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_currency,
                     text = keyValueStorage.getAmount().currency.orEmpty(),
+                    placeholder = defaultValueText(SettingsDefaults.CURRENCY),
                 )
             }
 
@@ -64,6 +69,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_shopper_reference,
                     text = keyValueStorage.getShopperReference(),
+                    placeholder = defaultValueText(SettingsDefaults.SHOPPER_REFERENCE),
                 )
             }
 
@@ -72,6 +78,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_country,
                     text = keyValueStorage.getCountry(),
+                    placeholder = defaultValueText(SettingsDefaults.SHOPPER_COUNTRY),
                 )
             }
 
@@ -80,6 +87,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_shopper_locale,
                     text = keyValueStorage.getShopperLocale().orEmpty(),
+                    placeholder = UIText.Resource(R.string.settings_format_helper_locale),
                 )
             }
 
@@ -116,6 +124,7 @@ internal class SettingsEditor @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_instant_payment_method_type,
                     text = keyValueStorage.getInstantPaymentMethodType(),
+                    placeholder = defaultValueText(SettingsDefaults.INSTANT_PAYMENT_METHOD_TYPE),
                 )
             }
 
@@ -215,6 +224,10 @@ internal class SettingsEditor @Inject constructor(
 
             else -> error("This edit mode is only supported wth boolean type settings")
         }
+    }
+
+    private fun defaultValueText(defaultValue: String): UIText.Resource {
+        return UIText.Resource(R.string.settings_default_value, defaultValue)
     }
 
     fun editSetting(identifier: SettingsIdentifier, newValue: Boolean) {
