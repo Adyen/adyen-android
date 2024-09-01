@@ -35,7 +35,7 @@ ext {
     binary_compatibility_validator_version = "0.16.0"
 
     // Android Dependencies
-    annotation_version = "1.8.0"
+    annotation_version = "1.8.2"
     appcompat_version = "1.7.0"
     autofill_version = "1.3.0-alpha01"
     browser_version = "1.8.0"
