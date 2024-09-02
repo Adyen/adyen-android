@@ -72,7 +72,8 @@ constructor(
         genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
-    internal fun removeObserver() {
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun removeObserver() {
         giftCardDelegate.removeObserver()
         genericActionDelegate.removeObserver()
     }
