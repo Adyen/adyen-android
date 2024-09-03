@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 sealed interface UIText {
     data class String(val value: kotlin.String) : UIText
     class Resource(@StringRes val stringResId: Int, vararg val formatArgs: Any) : UIText
-
 }
 
 @Composable

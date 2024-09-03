@@ -20,7 +20,8 @@ internal sealed class SettingsItem(
         @StringRes override val titleResId: Int,
         val subtitle: UIText,
     ) : SettingsItem(
-        identifier, titleResId,
+        identifier,
+        titleResId,
     )
 
     class Switch(
@@ -28,6 +29,7 @@ internal sealed class SettingsItem(
         @StringRes override val titleResId: Int,
         val checked: Boolean,
     ) : SettingsItem(
-        identifier, titleResId,
+        identifier,
+        titleResId,
     )
 }

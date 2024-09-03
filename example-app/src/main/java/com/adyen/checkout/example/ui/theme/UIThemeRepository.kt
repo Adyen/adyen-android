@@ -80,5 +80,5 @@ enum class UITheme(
 ) {
     LIGHT(AppCompatDelegate.MODE_NIGHT_NO),
     DARK(AppCompatDelegate.MODE_NIGHT_YES),
-    SYSTEM(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+    SYSTEM(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM),
 }

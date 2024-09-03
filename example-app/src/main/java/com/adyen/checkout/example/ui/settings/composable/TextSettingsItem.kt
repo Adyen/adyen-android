@@ -37,7 +37,6 @@ internal fun TextSettingsItem(
             .clickable { onItemClicked(settingsItem) }
             .padding(ExampleTheme.dimensions.grid_2),
     ) {
-        // TODO: create separate style
         Text(
             text = stringResource(id = settingsItem.titleResId),
             style = MaterialTheme.typography.bodyLarge,

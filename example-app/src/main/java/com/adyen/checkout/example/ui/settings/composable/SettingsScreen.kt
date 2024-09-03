@@ -77,6 +77,7 @@ internal fun SettingsScreen(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun SettingsScreen(
     uiState: SettingsUIState,

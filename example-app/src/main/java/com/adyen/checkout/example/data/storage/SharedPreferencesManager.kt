@@ -74,5 +74,4 @@ class SharedPreferencesManager(
             putString(entry.key, value.toString())
         }
     }
-
 }

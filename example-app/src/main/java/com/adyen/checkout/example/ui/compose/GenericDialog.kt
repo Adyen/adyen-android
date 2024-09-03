@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
+@Suppress("LongParameterList")
 @Composable
 fun GenericDialog(
     modifier: Modifier = Modifier,

@@ -22,7 +22,8 @@ internal sealed class EditSettingsData(
         val placeholder: UIText? = null,
     ) : EditSettingsData(identifier) {
         enum class InputType {
-            STRING, INTEGER
+            STRING,
+            INTEGER,
         }
     }
 

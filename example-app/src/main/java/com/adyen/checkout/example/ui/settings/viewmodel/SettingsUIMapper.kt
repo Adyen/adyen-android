@@ -24,6 +24,7 @@ import com.adyen.checkout.example.ui.settings.model.SettingsLists
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 internal class SettingsUIMapper @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val uiThemeRepository: UIThemeRepository,
@@ -252,6 +253,7 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     fun getEditSettingsData(settingsItem: SettingsItem): EditSettingsData {
         return when (settingsItem.identifier) {
             SettingsIdentifier.MERCHANT_ACCOUNT -> {

@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.text.isDigitsOnly
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
+@Suppress("LongParameterList")
 @Composable
 fun TextFieldDialog(
     modifier: Modifier = Modifier,
@@ -72,7 +73,9 @@ fun TextFieldDialog(
             }
 
             val placeholderBlock: @Composable (() -> Unit)? = placeholder?.let {
-                { Text(text = placeholder) }
+                {
+                    Text(text = placeholder)
+                }
             }
 
             OutlinedTextField(
@@ -114,4 +117,3 @@ fun EditTextDialogPreview() {
         )
     }
 }
-

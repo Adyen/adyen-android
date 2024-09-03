@@ -40,7 +40,6 @@ internal fun SwitchSettingsItem(
             .padding(ExampleTheme.dimensions.grid_2),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // TODO: create separate style
         Text(
             text = stringResource(id = settingsItem.titleResId),
             style = MaterialTheme.typography.bodyLarge,

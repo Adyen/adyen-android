@@ -39,5 +39,4 @@ object MapperModule {
         localeProvider = localeProvider,
         integrationRegionUIMapper = integrationRegionUIMapper,
     )
-
 }

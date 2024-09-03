@@ -37,10 +37,21 @@ internal object SettingsLists {
 
     val cardInstallmentOptionsModes = CardInstallmentOptionsMode.entries.associateWith {
         when (it) {
-            CardInstallmentOptionsMode.NONE -> R.string.settings_list_installment_option_none
-            CardInstallmentOptionsMode.DEFAULT -> R.string.settings_list_installment_option_default
-            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> R.string.settings_list_installment_option_default_revolving
-            CardInstallmentOptionsMode.CARD_BASED_VISA -> R.string.settings_list_installment_option_card_based
+            CardInstallmentOptionsMode.NONE -> {
+                R.string.settings_list_installment_option_none
+            }
+
+            CardInstallmentOptionsMode.DEFAULT -> {
+                R.string.settings_list_installment_option_default
+            }
+
+            CardInstallmentOptionsMode.DEFAULT_WITH_REVOLVING -> {
+                R.string.settings_list_installment_option_default_revolving
+            }
+
+            CardInstallmentOptionsMode.CARD_BASED_VISA -> {
+                R.string.settings_list_installment_option_card_based
+            }
         }
     }
 

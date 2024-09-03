@@ -10,7 +10,7 @@ package com.adyen.checkout.example.ui.settings.model
 
 import androidx.annotation.StringRes
 
-internal data class SettingsCategory (
+internal data class SettingsCategory(
     @StringRes val titleResId: Int,
     val settingsItems: List<SettingsItem>,
 )
