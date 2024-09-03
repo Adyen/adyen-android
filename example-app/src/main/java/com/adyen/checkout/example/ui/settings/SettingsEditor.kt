@@ -9,14 +9,11 @@
 package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.data.storage.ThreeDSMode
-import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
@@ -25,147 +22,6 @@ internal class SettingsEditor @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val uiThemeRepository: UIThemeRepository,
 ) {
-    fun getEditSettingsData(settingsItem: SettingsItem): EditSettingsData {
-        return when (settingsItem.identifier) {
-            SettingsIdentifier.MERCHANT_ACCOUNT -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_merchant_account,
-                    text = keyValueStorage.getMerchantAccount(),
-                    placeholder = defaultValueText(SettingsDefaults.MERCHANT_ACCOUNT),
-                )
-            }
-
-            SettingsIdentifier.AMOUNT -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_amount,
-                    text = keyValueStorage.getAmount().value.toString(),
-                    inputType = EditSettingsData.Text.InputType.INTEGER,
-                    placeholder = defaultValueText(SettingsDefaults.AMOUNT.toString()),
-                )
-            }
-
-            SettingsIdentifier.CURRENCY -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_currency,
-                    text = keyValueStorage.getAmount().currency.orEmpty(),
-                    placeholder = defaultValueText(SettingsDefaults.CURRENCY),
-                )
-            }
-
-            SettingsIdentifier.THREE_DS_MODE -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_threeds_mode,
-                    items = SettingsLists.threeDSModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.SHOPPER_REFERENCE -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_shopper_reference,
-                    text = keyValueStorage.getShopperReference(),
-                    placeholder = defaultValueText(SettingsDefaults.SHOPPER_REFERENCE),
-                )
-            }
-
-            SettingsIdentifier.COUNTRY -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_country,
-                    text = keyValueStorage.getCountry(),
-                    placeholder = defaultValueText(SettingsDefaults.SHOPPER_COUNTRY),
-                )
-            }
-
-            SettingsIdentifier.SHOPPER_LOCALE -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_shopper_locale,
-                    text = keyValueStorage.getShopperLocale().orEmpty(),
-                    placeholder = UIText.Resource(R.string.settings_format_helper_locale),
-                )
-            }
-
-            SettingsIdentifier.SHOPPER_EMAIL -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_shopper_email,
-                    text = keyValueStorage.getShopperEmail().orEmpty(),
-                )
-            }
-
-            SettingsIdentifier.ADDRESS_MODE -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_address_mode,
-                    items = SettingsLists.cardAddressModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.INSTALLMENTS_MODE -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_card_installment_options_mode,
-                    items = SettingsLists.cardInstallmentOptionsModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_instant_payment_method_type,
-                    text = keyValueStorage.getInstantPaymentMethodType(),
-                    placeholder = defaultValueText(SettingsDefaults.INSTANT_PAYMENT_METHOD_TYPE),
-                )
-            }
-
-            SettingsIdentifier.ANALYTICS_LEVEL -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_analytics_level,
-                    items = SettingsLists.analyticsLevels.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.UI_THEME -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_ui_theme,
-                    items = SettingsLists.uiThemes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.INTEGRATION_FLOW -> {
-                EditSettingsData.SingleSelectList(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_integration_flow,
-                    items = SettingsLists.integrationFlows.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
-                    },
-                )
-            }
-
-            SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
-            SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
-            SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
-                error("Edit mode is not applicable with boolean settings")
-            }
-        }
-    }
 
     fun editSetting(identifier: SettingsIdentifier, newValue: String) {
         val formattedValue = newValue.ifBlank { null }
@@ -240,10 +96,6 @@ internal class SettingsEditor @Inject constructor(
 
             else -> error("This edit mode is only supported wth boolean type settings")
         }
-    }
-
-    private fun defaultValueText(defaultValue: String): UIText.Resource {
-        return UIText.Resource(R.string.settings_default_value, defaultValue)
     }
 
     fun editSetting(identifier: SettingsIdentifier, newValue: Boolean) {

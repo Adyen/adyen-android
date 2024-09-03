@@ -32,7 +32,7 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: SettingsItem) {
-        val editSettingsData = settingsEditor.getEditSettingsData(item)
+        val editSettingsData = settingsUIMapper.getEditSettingsData(item)
         updateUIState {
             it.copy(
                 settingToEdit = editSettingsData,
