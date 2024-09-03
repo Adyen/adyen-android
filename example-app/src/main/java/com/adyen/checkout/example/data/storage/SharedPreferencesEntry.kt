@@ -65,9 +65,9 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
         key = "card_installment_show_amount",
         defaultValue = SettingsDefaults.CARD_INSTALLMENT_SHOW_AMOUNT,
     ),
-    USE_SESSIONS(
-        key = "use_sessions",
-        defaultValue = SettingsDefaults.USE_SESSIONS,
+    INTEGRATION_FLOW(
+        key = "integration_flow",
+        defaultValue = SettingsDefaults.INTEGRATION_FLOW,
     ),
     ANALYTICS_LEVEL(
         key = "analytics_level",

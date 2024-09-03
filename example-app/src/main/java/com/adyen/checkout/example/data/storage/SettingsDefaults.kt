@@ -27,7 +27,7 @@ object SettingsDefaults {
     const val INSTANT_PAYMENT_METHOD_TYPE: String = "wechatpaySDK"
     val CARD_INSTALLMENT_OPTIONS_MODE: CardInstallmentOptionsMode = CardInstallmentOptionsMode.NONE
     const val CARD_INSTALLMENT_SHOW_AMOUNT: Boolean = false
-    const val USE_SESSIONS: Boolean = true
+    val INTEGRATION_FLOW: IntegrationFlow = IntegrationFlow.SESSIONS
     val ANALYTICS_LEVEL: AnalyticsLevel = AnalyticsLevel.ALL
     val UI_THEME: UITheme = UITheme.SYSTEM
 }

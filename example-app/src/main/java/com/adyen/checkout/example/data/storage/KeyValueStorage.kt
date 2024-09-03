@@ -17,6 +17,7 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTA
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTALLMENT_SHOW_AMOUNT
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CURRENCY
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.INSTANT_PAYMENT_METHOD_TYPE
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.INTEGRATION_FLOW
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.MERCHANT_ACCOUNT
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.REMOVE_STORED_PAYMENT_METHOD
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_COUNTRY
@@ -25,7 +26,6 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_LO
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_REFERENCE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SPLIT_CARD_FUNDING_SOURCES
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.THREEDS_MODE
-import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.USE_SESSIONS
 
 @Suppress("TooManyFunctions")
 interface KeyValueStorage {
@@ -56,8 +56,8 @@ interface KeyValueStorage {
     fun setInstallmentOptionsMode(cardInstallmentOptionsMode: CardInstallmentOptionsMode)
     fun isInstallmentAmountShown(): Boolean
     fun setInstallmentAmountShown(isInstallmentAmountShown: Boolean)
-    fun useSessions(): Boolean
-    fun setUseSessions(useSessions: Boolean)
+    fun getIntegrationFlow(): IntegrationFlow
+    fun setIntegrationFlow(integrationFlow: IntegrationFlow)
     fun getAnalyticsLevel(): AnalyticsLevel
     fun setAnalyticsLevel(analyticsLevel: AnalyticsLevel)
 }
@@ -178,12 +178,12 @@ internal class DefaultKeyValueStorage(
         sharedPreferencesManager.putBoolean(CARD_INSTALLMENT_SHOW_AMOUNT, isInstallmentAmountShown)
     }
 
-    override fun useSessions(): Boolean {
-        return sharedPreferencesManager.getBoolean(USE_SESSIONS)
+    override fun getIntegrationFlow(): IntegrationFlow {
+        return sharedPreferencesManager.getEnum(INTEGRATION_FLOW)
     }
 
-    override fun setUseSessions(useSessions: Boolean) {
-        sharedPreferencesManager.putBoolean(USE_SESSIONS, useSessions)
+    override fun setIntegrationFlow(integrationFlow: IntegrationFlow) {
+        sharedPreferencesManager.putEnum(INTEGRATION_FLOW, integrationFlow)
     }
 
     override fun getAnalyticsLevel(): AnalyticsLevel {

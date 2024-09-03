@@ -25,4 +25,5 @@ internal enum class SettingsIdentifier {
     INSTANT_PAYMENT_METHOD_TYPE,
     ANALYTICS_LEVEL,
     UI_THEME,
+    INTEGRATION_FLOW,
 }

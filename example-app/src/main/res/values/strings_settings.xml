@@ -28,6 +28,7 @@
     <string name="settings_title_ui_theme">Theme</string>
     <string name="settings_title_currency">Currency</string>
     <string name="settings_title_amount">Amount (minor units)</string>
+    <string name="settings_title_integration_flow">Integration flow</string>
 
     <string name="settings_list_card_address_none">None</string>
     <string name="settings_list_card_address_postal_code">Postal code</string>
@@ -49,5 +50,8 @@
     <string name="settings_list_ui_theme_light">Light</string>
     <string name="settings_list_ui_theme_dark">Dark</string>
     <string name="settings_list_ui_theme_system">System</string>
+
+    <string name="settings_list_integration_flow_sessions">Sessions</string>
+    <string name="settings_list_integration_flow_advanced">Advanced</string>
 
 </resources>

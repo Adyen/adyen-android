@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
+import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.data.storage.ThreeDSMode
@@ -148,6 +149,16 @@ internal class SettingsEditor @Inject constructor(
                 )
             }
 
+            SettingsIdentifier.INTEGRATION_FLOW -> {
+                EditSettingsData.SingleSelectList(
+                    identifier = settingsItem.identifier,
+                    titleResId = R.string.settings_title_integration_flow,
+                    items = SettingsLists.integrationFlows.entries.map {
+                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                    },
+                )
+            }
+
             SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT,
             SettingsIdentifier.SPLIT_CARD_FUNDING_SOURCES,
             SettingsIdentifier.REMOVE_STORED_PAYMENT_METHOD -> {
@@ -220,6 +231,11 @@ internal class SettingsEditor @Inject constructor(
             SettingsIdentifier.UI_THEME -> {
                 val uiTheme = UITheme.valueOf(newValue.value)
                 uiThemeRepository.theme = uiTheme
+            }
+
+            SettingsIdentifier.INTEGRATION_FLOW -> {
+                val integrationFlow = IntegrationFlow.valueOf(newValue.value)
+                keyValueStorage.setIntegrationFlow(integrationFlow)
             }
 
             else -> error("This edit mode is only supported wth boolean type settings")

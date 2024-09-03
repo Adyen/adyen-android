@@ -27,6 +27,7 @@ internal class SettingsUIMapper @Inject constructor(
                     getAmount(),
                     getCurrency(),
                     getCountry(),
+                    getIntegrationFlow(),
                     getMerchantAccount(),
                 ),
             ),
@@ -122,6 +123,17 @@ internal class SettingsUIMapper @Inject constructor(
             identifier = SettingsIdentifier.COUNTRY,
             titleResId = R.string.settings_title_country,
             subtitle = UIText.String(keyValueStorage.getCountry()),
+        )
+    }
+
+    private fun getIntegrationFlow(): SettingsItem {
+        val integrationFlow = keyValueStorage.getIntegrationFlow()
+        val displayValue = requireNotNull(SettingsLists.integrationFlows[integrationFlow])
+
+        return SettingsItem.Text(
+            identifier = SettingsIdentifier.INTEGRATION_FLOW,
+            titleResId = R.string.settings_title_integration_flow,
+            subtitle = UIText.Resource(displayValue),
         )
     }
 

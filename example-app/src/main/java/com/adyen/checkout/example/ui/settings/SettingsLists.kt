@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
+import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.theme.UITheme
 
@@ -55,6 +56,13 @@ internal object SettingsLists {
             UITheme.LIGHT -> R.string.settings_list_ui_theme_light
             UITheme.DARK -> R.string.settings_list_ui_theme_dark
             UITheme.SYSTEM -> R.string.settings_list_ui_theme_system
+        }
+    }
+
+    val integrationFlows = IntegrationFlow.entries.associateWith {
+        when (it) {
+            IntegrationFlow.SESSIONS -> R.string.settings_list_integration_flow_sessions
+            IntegrationFlow.ADVANCED -> R.string.settings_list_integration_flow_advanced
         }
     }
 }
