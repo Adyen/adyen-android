@@ -10,6 +10,7 @@ package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.provider.LocaleProvider
+import com.adyen.checkout.example.ui.settings.IntegrationRegionUIMapper
 import com.adyen.checkout.example.ui.settings.SettingsUIMapper
 import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
@@ -22,9 +23,21 @@ import dagger.hilt.components.SingletonComponent
 object MapperModule {
 
     @Provides
+    internal fun provideIntegrationRegionUIMapper(
+        localeProvider: LocaleProvider,
+    ): IntegrationRegionUIMapper = IntegrationRegionUIMapper(localeProvider)
+
+    @Provides
     internal fun provideSettingsUIMapper(
         keyValueStorage: KeyValueStorage,
         uiThemeRepository: DefaultUIThemeRepository,
         localeProvider: LocaleProvider,
-    ): SettingsUIMapper = SettingsUIMapper(keyValueStorage, uiThemeRepository, localeProvider)
+        integrationRegionUIMapper: IntegrationRegionUIMapper,
+    ): SettingsUIMapper = SettingsUIMapper(
+        keyValueStorage = keyValueStorage,
+        uiThemeRepository = uiThemeRepository,
+        localeProvider = localeProvider,
+        integrationRegionUIMapper = integrationRegionUIMapper,
+    )
+
 }

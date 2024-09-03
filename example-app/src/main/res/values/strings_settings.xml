@@ -6,6 +6,7 @@
     <string name="settings_format_helper_locale">Format: en-us</string>
     <string name="settings_shopper_locale_advanced_flow_placeholder">Device locale (%1$s)</string>
     <string name="settings_shopper_locale_sessions_flow_placeholder">Default sessions locale</string>
+    <string name="settings_integration_region_display_value">%1$s (%2$s - %3$s)</string>
 
     <string name="settings_category_integration_parameters">Integration parameters</string>
     <string name="settings_category_card">Cards</string>
@@ -17,7 +18,7 @@
     <string name="settings_title_merchant_account">Merchant account</string>
     <string name="settings_title_shopper_reference">Shopper reference</string>
     <string name="settings_title_threeds_mode">3D Secure</string>
-    <string name="settings_title_country">Country/region</string>
+    <string name="settings_title_integration_region">Country/region - Currency</string>
     <string name="settings_title_shopper_locale">Shopper locale</string>
     <string name="settings_title_shopper_email">Shopper email</string>
     <string name="settings_title_split_card_funding_sources">Split card funding sources</string>
@@ -28,7 +29,6 @@
     <string name="settings_title_instant_payment_method_type">Instant payment method type</string>
     <string name="settings_title_analytics_level">Level</string>
     <string name="settings_title_ui_theme">Theme</string>
-    <string name="settings_title_currency">Currency</string>
     <string name="settings_title_amount">Amount (minor units)</string>
     <string name="settings_title_integration_flow">Integration flow</string>
 

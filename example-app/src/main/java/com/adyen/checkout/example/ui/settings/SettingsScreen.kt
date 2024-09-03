@@ -321,7 +321,7 @@ private fun EditSettingListFieldDialog(
                             .clickable { onConfirm(item) }
                             .padding(vertical = ExampleTheme.dimensions.grid_2)
                             .fillMaxWidth(),
-                        text = stringResource(id = item.textResId),
+                        text = stringFromUIText(uiText = item.text),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                     )

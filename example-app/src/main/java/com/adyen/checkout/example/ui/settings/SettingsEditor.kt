@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
+import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.theme.UITheme
@@ -34,16 +35,8 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setAmount(formattedValue?.toLong())
             }
 
-            SettingsIdentifier.CURRENCY -> {
-                keyValueStorage.setCurrency(formattedValue)
-            }
-
             SettingsIdentifier.SHOPPER_REFERENCE -> {
                 keyValueStorage.setShopperReference(formattedValue)
-            }
-
-            SettingsIdentifier.COUNTRY -> {
-                keyValueStorage.setCountry(formattedValue)
             }
 
             SettingsIdentifier.SHOPPER_LOCALE -> {
@@ -58,7 +51,7 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setInstantPaymentMethodType(formattedValue)
             }
 
-            else -> error("This edit mode is only supported wth text type settings")
+            else -> error("This edit mode is only supported with text type settings")
         }
     }
 
@@ -94,7 +87,13 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setIntegrationFlow(integrationFlow)
             }
 
-            else -> error("This edit mode is only supported wth boolean type settings")
+            SettingsIdentifier.INTEGRATION_REGION -> {
+                val integrationRegion = IntegrationRegion.valueOf(newValue.value)
+                keyValueStorage.setCountry(integrationRegion.countryCode)
+                keyValueStorage.setCurrency(integrationRegion.currency)
+            }
+
+            else -> error("This edit mode is only supported with list type settings")
         }
     }
 
@@ -112,7 +111,7 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setRemoveStoredPaymentMethodEnabled(newValue)
             }
 
-            else -> error("This edit mode is only supported wth boolean type settings")
+            else -> error("This edit mode is only supported with boolean type settings")
         }
     }
 }

@@ -11,10 +11,9 @@ package com.adyen.checkout.example.ui.settings
 internal enum class SettingsIdentifier {
     MERCHANT_ACCOUNT,
     AMOUNT,
-    CURRENCY,
     THREE_DS_MODE,
     SHOPPER_REFERENCE,
-    COUNTRY,
+    INTEGRATION_REGION,
     SHOPPER_LOCALE,
     SHOPPER_EMAIL,
     ADDRESS_MODE,

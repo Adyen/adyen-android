@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.IntegrationFlow
+import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.provider.LocaleProvider
@@ -21,6 +22,7 @@ internal class SettingsUIMapper @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val uiThemeRepository: UIThemeRepository,
     private val localeProvider: LocaleProvider,
+    private val integrationRegionUIMapper: IntegrationRegionUIMapper,
 ) {
 
     fun getSettingsCategories(): List<SettingsCategory> {
@@ -29,8 +31,7 @@ internal class SettingsUIMapper @Inject constructor(
                 R.string.settings_category_integration_parameters,
                 listOf(
                     getAmount(),
-                    getCurrency(),
-                    getCountry(),
+                    getIntegrationRegion(),
                     getIntegrationFlow(),
                     getMerchantAccount(),
                 ),
@@ -91,18 +92,6 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
-    private fun getCurrency(): SettingsItem {
-        val subtitle = keyValueStorage.getAmount().currency?.let {
-            UIText.String(it)
-        } ?: UIText.Resource(R.string.settings_null_value_placeholder)
-
-        return SettingsItem.Text(
-            identifier = SettingsIdentifier.CURRENCY,
-            titleResId = R.string.settings_title_currency,
-            subtitle = subtitle,
-        )
-    }
-
     private fun getThreeDSMode(): SettingsItem {
         val threeDSMode = keyValueStorage.getThreeDSMode()
         val displayValue = requireNotNull(SettingsLists.threeDSModes[threeDSMode])
@@ -122,11 +111,14 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
-    private fun getCountry(): SettingsItem {
+    private fun getIntegrationRegion(): SettingsItem {
+        val country = keyValueStorage.getCountry()
+        val integrationRegion = IntegrationRegion.valueOf(country)
+        val displayValue = integrationRegionUIMapper.getIntegrationRegionDisplayData(integrationRegion).uiText
         return SettingsItem.Text(
-            identifier = SettingsIdentifier.COUNTRY,
-            titleResId = R.string.settings_title_country,
-            subtitle = UIText.String(keyValueStorage.getCountry()),
+            identifier = SettingsIdentifier.INTEGRATION_REGION,
+            titleResId = R.string.settings_title_integration_region,
+            subtitle = displayValue,
         )
     }
 
@@ -275,21 +267,15 @@ internal class SettingsUIMapper @Inject constructor(
                 )
             }
 
-            SettingsIdentifier.CURRENCY -> {
-                EditSettingsData.Text(
-                    identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_currency,
-                    text = keyValueStorage.getAmount().currency.orEmpty(),
-                    placeholder = defaultValueText(SettingsDefaults.CURRENCY),
-                )
-            }
-
             SettingsIdentifier.THREE_DS_MODE -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_threeds_mode,
                     items = SettingsLists.threeDSModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
@@ -303,12 +289,22 @@ internal class SettingsUIMapper @Inject constructor(
                 )
             }
 
-            SettingsIdentifier.COUNTRY -> {
-                EditSettingsData.Text(
+            SettingsIdentifier.INTEGRATION_REGION -> {
+                val items = IntegrationRegion.entries.map { integrationRegion ->
+                    integrationRegionUIMapper.getIntegrationRegionDisplayData(integrationRegion)
+                }
+                    .sortedBy { it.localizedCountryName }
+                    .map { integrationRegion ->
+                        EditSettingsData.SingleSelectList.Item(
+                            text = integrationRegion.uiText,
+                            value = integrationRegion.integrationRegion.countryCode,
+                        )
+                    }
+
+                EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_country,
-                    text = keyValueStorage.getCountry(),
-                    placeholder = defaultValueText(SettingsDefaults.SHOPPER_COUNTRY),
+                    titleResId = R.string.settings_title_integration_region,
+                    items = items,
                 )
             }
 
@@ -334,7 +330,10 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_address_mode,
                     items = SettingsLists.cardAddressModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
@@ -344,7 +343,10 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_card_installment_options_mode,
                     items = SettingsLists.cardInstallmentOptionsModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
@@ -363,7 +365,10 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_analytics_level,
                     items = SettingsLists.analyticsLevels.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
@@ -373,7 +378,10 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_ui_theme,
                     items = SettingsLists.uiThemes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
@@ -383,7 +391,10 @@ internal class SettingsUIMapper @Inject constructor(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_integration_flow,
                     items = SettingsLists.integrationFlows.entries.map {
-                        EditSettingsData.SingleSelectList.Item(textResId = it.value, value = it.key.toString())
+                        EditSettingsData.SingleSelectList.Item(
+                            text = UIText.Resource(it.value),
+                            value = it.key.toString(),
+                        )
                     },
                 )
             }
