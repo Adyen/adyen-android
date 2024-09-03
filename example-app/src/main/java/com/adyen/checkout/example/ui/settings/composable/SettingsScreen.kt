@@ -10,10 +10,7 @@
 
 package com.adyen.checkout.example.ui.settings.composable
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,22 +27,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
-import com.adyen.checkout.example.ui.compose.GenericDialog
-import com.adyen.checkout.example.ui.compose.TextFieldDialog
 import com.adyen.checkout.example.ui.compose.UIText
-import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.settings.model.EditSettingsData
 import com.adyen.checkout.example.ui.settings.model.SettingsCategory
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
@@ -155,73 +147,6 @@ private fun SettingsItemsList(
 }
 
 @Composable
-private fun TextSettingsItem(
-    settingsItem: SettingsItem.Text,
-    onItemClicked: (SettingsItem) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onItemClicked(settingsItem) }
-            .padding(
-                start = ExampleTheme.dimensions.grid_4,
-                end = ExampleTheme.dimensions.grid_2,
-                top = ExampleTheme.dimensions.grid_2,
-                bottom = ExampleTheme.dimensions.grid_2,
-            ),
-    ) {
-        // TODO: create separate style
-        Text(
-            text = stringResource(id = settingsItem.titleResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-
-        Text(
-            text = stringFromUIText(uiText = settingsItem.subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-@Composable
-private fun SwitchSettingsItem(
-    settingsItem: SettingsItem.Switch,
-    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                onSwitchSettingChanged(settingsItem.identifier, !settingsItem.checked)
-            }
-            .padding(
-                start = ExampleTheme.dimensions.grid_4,
-                end = ExampleTheme.dimensions.grid_2,
-                top = ExampleTheme.dimensions.grid_2,
-                bottom = ExampleTheme.dimensions.grid_2,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        // TODO: create separate style
-        Text(
-            text = stringResource(id = settingsItem.titleResId),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = modifier.weight(1f),
-        )
-
-        Switch(
-            checked = settingsItem.checked,
-            onCheckedChange = null,
-        )
-    }
-}
-
-@Composable
 fun SettingsCategoryHeader(
     title: String,
     modifier: Modifier = Modifier,
@@ -229,7 +154,7 @@ fun SettingsCategoryHeader(
     Box(
         modifier = modifier
             .padding(
-                start = ExampleTheme.dimensions.grid_4,
+                start = ExampleTheme.dimensions.grid_2,
                 end = ExampleTheme.dimensions.grid_2,
                 top = ExampleTheme.dimensions.grid_2,
             )
@@ -280,64 +205,6 @@ private fun EditSettingDialog(
             )
         }
     }
-}
-
-@Composable
-private fun EditSettingTextFieldDialog(
-    settingToEdit: EditSettingsData.Text,
-    onConfirm: (String) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    val allowNumbersOnly = when (settingToEdit.inputType) {
-        EditSettingsData.Text.InputType.STRING -> false
-        EditSettingsData.Text.InputType.INTEGER -> true
-    }
-
-    val placeholder = settingToEdit.placeholder?.let { stringFromUIText(uiText = it) }
-
-    TextFieldDialog(
-        title = stringResource(id = settingToEdit.titleResId),
-        content = settingToEdit.text,
-        onConfirm = onConfirm,
-        onDismiss = onDismiss,
-        allowNumbersOnly = allowNumbersOnly,
-        placeholder = placeholder,
-    )
-}
-
-@Composable
-private fun EditSettingListFieldDialog(
-    settingToEdit: EditSettingsData.SingleSelectList,
-    onConfirm: (EditSettingsData.SingleSelectList.Item) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    GenericDialog(
-        title = {
-            Text(
-                text = stringResource(id = settingToEdit.titleResId),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        },
-        content = {
-            LazyColumn {
-                items(settingToEdit.items) { item ->
-                    Text(
-                        modifier = Modifier
-                            .clickable { onConfirm(item) }
-                            .padding(vertical = ExampleTheme.dimensions.grid_2)
-                            .fillMaxWidth(),
-                        text = stringFromUIText(uiText = item.text),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                }
-            }
-        },
-        confirmButton = null,
-        dismissButton = null,
-        onDismiss = onDismiss,
-    )
 }
 
 @Preview(showBackground = true)
