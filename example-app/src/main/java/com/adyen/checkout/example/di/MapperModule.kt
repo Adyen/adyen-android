@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.provider.LocaleProvider
 import com.adyen.checkout.example.ui.settings.SettingsUIMapper
 import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
@@ -24,5 +25,6 @@ object MapperModule {
     internal fun provideSettingsUIMapper(
         keyValueStorage: KeyValueStorage,
         uiThemeRepository: DefaultUIThemeRepository,
-    ): SettingsUIMapper = SettingsUIMapper(keyValueStorage, uiThemeRepository)
+        localeProvider: LocaleProvider,
+    ): SettingsUIMapper = SettingsUIMapper(keyValueStorage, uiThemeRepository, localeProvider)
 }

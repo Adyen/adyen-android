@@ -4,6 +4,8 @@
     <string name="settings_null_value_placeholder">Not set</string>
     <string name="settings_default_value">Default: %1$s</string>
     <string name="settings_format_helper_locale">Format: en-us</string>
+    <string name="settings_shopper_locale_advanced_flow_placeholder">Device locale (%1$s)</string>
+    <string name="settings_shopper_locale_sessions_flow_placeholder">Default sessions locale</string>
 
     <string name="settings_category_integration_parameters">Integration parameters</string>
     <string name="settings_category_card">Cards</string>

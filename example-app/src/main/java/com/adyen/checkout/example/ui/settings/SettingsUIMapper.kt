@@ -9,7 +9,9 @@
 package com.adyen.checkout.example.ui.settings
 
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.provider.LocaleProvider
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
@@ -17,6 +19,7 @@ import javax.inject.Inject
 internal class SettingsUIMapper @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     private val uiThemeRepository: UIThemeRepository,
+    private val localeProvider: LocaleProvider,
 ) {
 
     fun getSettingsCategories(): List<SettingsCategory> {
@@ -138,9 +141,23 @@ internal class SettingsUIMapper @Inject constructor(
     }
 
     private fun getShopperLocale(): SettingsItem {
-        val subtitle = keyValueStorage.getShopperLocale()?.let {
-            UIText.String(it)
-        } ?: UIText.Resource(R.string.settings_null_value_placeholder)
+        val shopperLocale = keyValueStorage.getShopperLocale()
+        val subtitle = if (shopperLocale != null) {
+            UIText.String(shopperLocale)
+        } else {
+            when (keyValueStorage.getIntegrationFlow()) {
+                IntegrationFlow.SESSIONS -> {
+                    UIText.Resource(R.string.settings_shopper_locale_sessions_flow_placeholder)
+                }
+
+                IntegrationFlow.ADVANCED -> {
+                    UIText.Resource(
+                        R.string.settings_shopper_locale_advanced_flow_placeholder,
+                        localeProvider.locale.toLanguageTag(),
+                    )
+                }
+            }
+        }
 
         return SettingsItem.Text(
             identifier = SettingsIdentifier.SHOPPER_LOCALE,
