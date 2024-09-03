@@ -10,8 +10,8 @@ package com.adyen.checkout.example.di
 
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.provider.LocaleProvider
-import com.adyen.checkout.example.ui.settings.IntegrationRegionUIMapper
-import com.adyen.checkout.example.ui.settings.SettingsUIMapper
+import com.adyen.checkout.example.ui.settings.model.IntegrationRegionUIMapper
+import com.adyen.checkout.example.ui.settings.viewmodel.SettingsUIMapper
 import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
 import dagger.Provides

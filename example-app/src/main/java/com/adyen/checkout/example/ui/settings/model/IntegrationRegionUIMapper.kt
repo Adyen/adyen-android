@@ -6,7 +6,7 @@
  * Created by josephj on 3/9/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.model
 
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.IntegrationRegion

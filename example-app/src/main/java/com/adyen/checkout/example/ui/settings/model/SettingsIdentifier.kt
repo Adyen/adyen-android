@@ -6,7 +6,7 @@
  * Created by josephj on 26/8/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.model
 
 internal enum class SettingsIdentifier {
     MERCHANT_ACCOUNT,

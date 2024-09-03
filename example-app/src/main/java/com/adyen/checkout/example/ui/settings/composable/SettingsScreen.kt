@@ -3,12 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 21/8/2024.
+ * Created by josephj on 3/9/2024.
  */
 
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -46,6 +46,12 @@ import com.adyen.checkout.example.ui.compose.GenericDialog
 import com.adyen.checkout.example.ui.compose.TextFieldDialog
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.compose.stringFromUIText
+import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.SettingsCategory
+import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
+import com.adyen.checkout.example.ui.settings.model.SettingsItem
+import com.adyen.checkout.example.ui.settings.model.SettingsUIState
+import com.adyen.checkout.example.ui.settings.viewmodel.SettingsViewModel
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable

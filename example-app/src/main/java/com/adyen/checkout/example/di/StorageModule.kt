@@ -15,7 +15,7 @@ import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SharedPreferencesManager
-import com.adyen.checkout.example.ui.settings.SettingsEditor
+import com.adyen.checkout.example.ui.settings.viewmodel.SettingsEditor
 import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
 import dagger.Module
 import dagger.Provides

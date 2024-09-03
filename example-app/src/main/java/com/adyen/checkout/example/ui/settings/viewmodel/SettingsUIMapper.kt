@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 23/8/2024.
+ * Created by josephj on 3/9/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.viewmodel
 
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.IntegrationFlow
@@ -15,6 +15,12 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.provider.LocaleProvider
 import com.adyen.checkout.example.ui.compose.UIText
+import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.IntegrationRegionUIMapper
+import com.adyen.checkout.example.ui.settings.model.SettingsCategory
+import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
+import com.adyen.checkout.example.ui.settings.model.SettingsItem
+import com.adyen.checkout.example.ui.settings.model.SettingsLists
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject
 

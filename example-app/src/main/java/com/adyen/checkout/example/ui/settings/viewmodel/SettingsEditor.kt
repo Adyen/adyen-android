@@ -6,7 +6,7 @@
  * Created by josephj on 26/8/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.viewmodel
 
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.data.storage.CardAddressMode
@@ -15,6 +15,8 @@ import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.ThreeDSMode
+import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import javax.inject.Inject

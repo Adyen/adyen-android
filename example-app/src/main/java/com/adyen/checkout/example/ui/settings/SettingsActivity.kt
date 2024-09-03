@@ -12,6 +12,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import com.adyen.checkout.example.ui.settings.composable.SettingsScreen
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.AndroidEntryPoint

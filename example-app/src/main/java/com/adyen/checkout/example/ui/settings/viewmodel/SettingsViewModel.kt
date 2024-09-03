@@ -3,13 +3,17 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 21/8/2024.
+ * Created by josephj on 3/9/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
+import com.adyen.checkout.example.ui.settings.model.SettingsItem
+import com.adyen.checkout.example.ui.settings.model.SettingsUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

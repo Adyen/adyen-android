@@ -6,7 +6,7 @@
  * Created by josephj on 26/8/2024.
  */
 
-package com.adyen.checkout.example.ui.settings
+package com.adyen.checkout.example.ui.settings.model
 
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.R
