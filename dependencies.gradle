@@ -78,7 +78,7 @@ ext {
     jose4j_version = '0.9.6'
     junit_jupiter_version = "5.10.3"
     konsist_version = "0.15.1"
-    lint_version = "31.5.1"
+    lint_version = "31.5.2"
     mockito_kotlin_version = "5.4.0"
     mockito_version = "5.12.0"
     robolectric_version = "4.13"
