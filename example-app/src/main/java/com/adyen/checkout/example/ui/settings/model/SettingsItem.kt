@@ -15,7 +15,7 @@ internal sealed class SettingsItem(
     open val identifier: SettingsIdentifier,
     @StringRes open val titleResId: Int,
 ) {
-    class Text(
+    data class Text(
         override val identifier: SettingsIdentifier,
         @StringRes override val titleResId: Int,
         val subtitle: UIText,
@@ -24,7 +24,7 @@ internal sealed class SettingsItem(
         titleResId,
     )
 
-    class Switch(
+    data class Switch(
         override val identifier: SettingsIdentifier,
         @StringRes override val titleResId: Int,
         val checked: Boolean,

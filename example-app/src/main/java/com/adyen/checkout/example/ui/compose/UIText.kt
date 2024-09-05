@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.res.stringResource
 
 /**
@@ -17,6 +18,8 @@ import androidx.compose.ui.res.stringResource
  */
 sealed interface UIText {
     data class String(val value: kotlin.String) : UIText
+
+    @Immutable
     class Resource(@StringRes val stringResId: Int, vararg val formatArgs: Any) : UIText
 }
 

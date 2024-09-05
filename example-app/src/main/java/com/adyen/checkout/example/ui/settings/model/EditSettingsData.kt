@@ -14,7 +14,7 @@ import com.adyen.checkout.example.ui.compose.UIText
 internal sealed class EditSettingsData(
     open val identifier: SettingsIdentifier,
 ) {
-    class Text(
+    data class Text(
         override val identifier: SettingsIdentifier,
         @StringRes val titleResId: Int,
         val text: String,
@@ -27,7 +27,7 @@ internal sealed class EditSettingsData(
         }
     }
 
-    class SingleSelectList(
+    data class SingleSelectList(
         override val identifier: SettingsIdentifier,
         @StringRes val titleResId: Int,
         val items: List<Item>
