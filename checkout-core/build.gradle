@@ -7,9 +7,9 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
 }
 
 ext.mavenArtifactId = "checkout-core"
@@ -20,11 +20,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.core'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -33,14 +33,14 @@ android {
 
 dependencies {
     // Dependencies
-    api libraries.androidx.annotation
-    api libraries.kotlinCoroutines
-    implementation libraries.okhttp
-    api libraries.parcelize
+    api libs.androidx.annotation
+    api libs.bundles.kotlin.coroutines
+    implementation libs.okhttp
+    api libs.parcelize
 
     //Tests
-    testImplementation testLibraries.json
-    testImplementation testLibraries.junit5
-    androidTestImplementation testLibraries.androidTest
-    androidTestImplementation testLibraries.espresso
+    testImplementation libs.json
+    testImplementation libs.bundles.junit
+    androidTestImplementation libs.bundles.androidx.test
+    androidTestImplementation libs.bundles.espresso
 }

@@ -7,6 +7,7 @@ pluginManagement {
 }
 
 plugins {
+    // this has to be declared here directly because settings.gradle cannot reference version catalogs
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 

@@ -6,6 +6,8 @@
  * Created by josephj on 15/2/2021.
  */
 
+// cannot reference the plugins declared in the version catalogs here because it requires the use of the `plugins` block instead of the `apply plugin` command
+// the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
 apply plugin: "org.jetbrains.dokka"
 
 tasks.named("dokkaHtmlMultiModule") {
