@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 31/7/2024.
+  -->
+
+<resources>
+    <string name="checkout_meal_voucher_fr_card_number_hint">信用卡號碼</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_hint">到期日期</string>
+    <string name="checkout_meal_voucher_fr_security_code_hint">安全碼</string>
+
+    <string name="checkout_meal_voucher_fr_number_not_valid">請輸入正確的卡號</string>
+    <string name="checkout_meal_voucher_fr_pin_not_valid">請輸入正確的安全碼</string>
+
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid">請輸入正確的到期日</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_old">請輸入正確的到期日</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future">請輸入正確的到期日</string>
+</resources>
