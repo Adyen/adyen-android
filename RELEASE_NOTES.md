@@ -30,3 +30,6 @@
   | Previous                                 | Now                                      |
   |------------------------------------------|------------------------------------------|
   | AdyenCheckout.TextAppearance.HeaderTitle | AdyenCheckout.TextAppearance.HeaderLabel |
+
+## Fixed
+- When `setInteractionBlocked(Boolean)` is called with `true`, it does not block the cancel button in `PaymentInProgressView` anymore.  

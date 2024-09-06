@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.core
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -59,12 +58,6 @@ class AdyenComponentView @JvmOverloads constructor(
         LayoutInflater.from(context),
         this,
     )
-
-    /**
-     * Indicates if user interaction is blocked.
-     */
-    @Volatile
-    private var isInteractionBlocked = false
 
     private var componentView: ComponentView? = null
 
@@ -170,8 +163,6 @@ class AdyenComponentView @JvmOverloads constructor(
     }
 
     private fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        this.isInteractionBlocked = isInteractionBlocked
-
         binding.frameLayoutButtonContainer.children.forEach { it.isEnabled = !isInteractionBlocked }
 
         if (isInteractionBlocked) {
@@ -212,10 +203,5 @@ class AdyenComponentView @JvmOverloads constructor(
      */
     fun highlightValidationErrors() {
         componentView?.highlightValidationErrors()
-    }
-
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        if (isInteractionBlocked) return true
-        return super.onInterceptTouchEvent(ev)
     }
 }
