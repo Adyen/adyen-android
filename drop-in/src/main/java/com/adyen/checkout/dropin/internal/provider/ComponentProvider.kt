@@ -67,9 +67,9 @@ import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvi
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
-import com.adyen.checkout.mealvoucher.MealVoucherComponent
-import com.adyen.checkout.mealvoucher.MealVoucherComponentCallback
-import com.adyen.checkout.mealvoucher.internal.provider.MealVoucherComponentProvider
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponent
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponentCallback
+import com.adyen.checkout.mealvoucherfr.internal.provider.MealVoucherFRComponentProvider
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
@@ -336,12 +336,12 @@ internal fun getComponentFor(
             )
         }
 
-        checkCompileOnly { MealVoucherComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            MealVoucherComponentProvider(dropInOverrideParams, analyticsManager).get(
+        checkCompileOnly { MealVoucherFRComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            MealVoucherFRComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
-                callback = componentCallback as MealVoucherComponentCallback,
+                callback = componentCallback as MealVoucherFRComponentCallback,
             )
         }
 

@@ -26,7 +26,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.instant.instantPayment
-import com.adyen.checkout.mealvoucher.mealVoucher
+import com.adyen.checkout.mealvoucherfr.mealVoucherFR
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -84,7 +84,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setPinRequired(true)
             }
 
-            mealVoucher {
+            mealVoucherFR {
                 setSecurityCodeRequired(true)
             }
 

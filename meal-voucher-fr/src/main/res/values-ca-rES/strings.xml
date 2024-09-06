@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 31/7/2024.
+  -->
+
+<resources>
+    <string name="checkout_meal_voucher_fr_card_number_hint">Número de targeta</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_hint">Data de caducitat</string>
+    <string name="checkout_meal_voucher_fr_security_code_hint">Codi de seguretat</string>
+
+    <string name="checkout_meal_voucher_fr_number_not_valid">Introduïu un número de targeta correcte</string>
+    <string name="checkout_meal_voucher_fr_pin_not_valid">Introduïu un codi de seguretat correcte</string>
+
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid">Introduïu una data de caducitat correcta</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_old">Introduïu una data de caducitat correcta</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future">Introduïu una data de caducitat correcta</string>
+</resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 17/7/2024.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.MealVoucherFR" />
+
+    <style name="AdyenCheckout.MealVoucherFR.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_meal_voucher_fr_card_number_hint</item>
+    </style>
+
+    <style name="AdyenCheckout.MealVoucherFR.ExpiryDateInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_meal_voucher_fr_expiry_date_hint</item>
+        <item name="android:inputType">date</item>
+        <item name="android:maxLength">7</item>
+    </style>
+
+    <style name="AdyenCheckout.MealVoucherFR.SecurityCodeInput" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_meal_voucher_fr_security_code_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">10</item>
+    </style>
+
+</resources>

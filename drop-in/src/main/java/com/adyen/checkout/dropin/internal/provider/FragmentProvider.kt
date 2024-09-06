@@ -21,7 +21,7 @@ import com.adyen.checkout.dropin.internal.ui.GooglePayComponentDialogFragment
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.googlepay.GooglePayComponent
-import com.adyen.checkout.mealvoucher.MealVoucherComponent
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponent
 
 internal fun getFragmentForStoredPaymentMethod(
     storedPaymentMethod: StoredPaymentMethod,
@@ -50,7 +50,7 @@ internal fun getFragmentForPaymentMethod(paymentMethod: PaymentMethod): DropInBo
 
         checkCompileOnly {
             GiftCardComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) ||
-                MealVoucherComponent.PROVIDER.isPaymentMethodSupported(paymentMethod)
+                MealVoucherFRComponent.PROVIDER.isPaymentMethodSupported(paymentMethod)
         } -> {
             GiftCardComponentDialogFragment.newInstance(paymentMethod)
         }
