@@ -594,10 +594,6 @@ public final class com/adyen/checkout/card/internal/ui/model/InstallmentOptionPa
 
 public final class com/adyen/checkout/card/internal/ui/view/CardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
 	public static final field Companion Lcom/adyen/checkout/card/internal/ui/view/CardNumberInput$Companion;
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;I)V
-	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getRawValue ()Ljava/lang/String;
 	public final fun setAmexCardFormat (Z)V
 }

@@ -10,8 +10,12 @@ package com.adyen.checkout.ui.core.internal.ui.view
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 
-class SecurityCodeInput @JvmOverloads constructor(
+class SecurityCodeInput
+@JvmOverloads
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

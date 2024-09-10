@@ -227,8 +227,6 @@ public final class com/adyen/checkout/giftcard/internal/ui/DefaultGiftCardDelega
 
 public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
 	public static final field Companion Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion;
-	public fun <init> (Landroid/content/Context;)V
-	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
 	public fun getRawValue ()Ljava/lang/String;
 }
 

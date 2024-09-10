@@ -23,16 +23,13 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAX_DIGIT_S
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 
 class GiftCardNumberInput
+@JvmOverloads
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AdyenTextInputEditText(context, attrs, defStyleAttr) {
-
-    constructor(context: Context) : this(context, null, 0)
-
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     init {
         enforceMaxInputLength(MAXIMUM_GIFT_CARD_NUMBER_LENGTH + MAX_DIGIT_SEPARATOR_COUNT)
