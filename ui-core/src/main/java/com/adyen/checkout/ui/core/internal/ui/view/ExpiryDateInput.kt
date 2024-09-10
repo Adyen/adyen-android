@@ -11,6 +11,7 @@ import android.content.Context
 import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -21,7 +22,10 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 
-class ExpiryDateInput @JvmOverloads constructor(
+class ExpiryDateInput
+@JvmOverloads
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
