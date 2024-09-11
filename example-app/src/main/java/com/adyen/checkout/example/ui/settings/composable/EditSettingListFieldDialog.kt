@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.ui.compose.GenericDialog
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.compose.stringFromUIText
@@ -76,9 +77,9 @@ private fun EditSettingListFieldDialogPreview() {
                 identifier = SettingsIdentifier.THREE_DS_MODE,
                 titleResId = R.string.settings_title_threeds_mode,
                 items = listOf(
-                    EditSettingDialogData.SingleSelectList.Item(UIText.String("First item"), "first_item"),
-                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Second item"), "second_item"),
-                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Third item"), "third_item"),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("First item"), ThreeDSMode.PREFER_NATIVE),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Second item"), ThreeDSMode.DISABLED),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Third item"), ThreeDSMode.REDIRECT),
                 ),
             ),
             onConfirm = {},

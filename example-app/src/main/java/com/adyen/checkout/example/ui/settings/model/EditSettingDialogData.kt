@@ -34,7 +34,7 @@ internal sealed class EditSettingDialogData(
     ) : EditSettingDialogData(identifier) {
         data class Item(
             val text: UIText,
-            val value: String,
+            val value: Enum<*>,
         )
     }
 }

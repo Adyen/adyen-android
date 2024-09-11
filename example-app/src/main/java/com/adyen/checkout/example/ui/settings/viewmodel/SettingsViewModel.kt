@@ -9,8 +9,7 @@
 package com.adyen.checkout.example.ui.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
-import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
+import com.adyen.checkout.example.ui.settings.model.EditSettingData
 import com.adyen.checkout.example.ui.settings.model.SettingsItem
 import com.adyen.checkout.example.ui.settings.model.SettingsUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,21 +41,9 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onTextSettingChanged(identifier: SettingsIdentifier, newValue: String) {
+    fun onSettingEdited(editSettingData: EditSettingData) {
         onEditSettingDismissed()
-        settingsEditor.editSetting(identifier, newValue)
-        fetchSettings()
-    }
-
-    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingDialogData.SingleSelectList.Item) {
-        onEditSettingDismissed()
-        settingsEditor.editSetting(identifier, selectedItem)
-        fetchSettings()
-    }
-
-    fun onSwitchSettingChanged(identifier: SettingsIdentifier, newValue: Boolean) {
-        onEditSettingDismissed()
-        settingsEditor.editSetting(identifier, newValue)
+        settingsEditor.editSetting(editSettingData)
         fetchSettings()
     }
 

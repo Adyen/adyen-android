@@ -15,7 +15,7 @@ import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.ThreeDSMode
-import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
+import com.adyen.checkout.example.ui.settings.model.EditSettingData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
@@ -26,7 +26,15 @@ internal class SettingsEditor @Inject constructor(
     private val uiThemeRepository: UIThemeRepository,
 ) {
 
-    fun editSetting(identifier: SettingsIdentifier, newValue: String) {
+    fun editSetting(editSettingData: EditSettingData) {
+        when (editSettingData) {
+            is EditSettingData.Text -> editSetting(editSettingData.identifier, editSettingData.value)
+            is EditSettingData.ListItem -> editSetting(editSettingData.identifier, editSettingData.value)
+            is EditSettingData.Switch -> editSetting(editSettingData.identifier, editSettingData.value)
+        }
+    }
+
+    private fun editSetting(identifier: SettingsIdentifier, newValue: String) {
         val formattedValue = newValue.ifBlank { null }
         when (identifier) {
             SettingsIdentifier.MERCHANT_ACCOUNT -> {
@@ -57,40 +65,40 @@ internal class SettingsEditor @Inject constructor(
         }
     }
 
-    fun editSetting(identifier: SettingsIdentifier, newValue: EditSettingDialogData.SingleSelectList.Item) {
+    private fun editSetting(identifier: SettingsIdentifier, newValue: Enum<*>) {
         when (identifier) {
             SettingsIdentifier.THREE_DS_MODE -> {
-                val threeDSMode = ThreeDSMode.valueOf(newValue.value)
+                val threeDSMode = newValue as ThreeDSMode
                 keyValueStorage.setThreeDSMode(threeDSMode)
             }
 
             SettingsIdentifier.ADDRESS_MODE -> {
-                val cardAddressMode = CardAddressMode.valueOf(newValue.value)
+                val cardAddressMode = newValue as CardAddressMode
                 keyValueStorage.setCardAddressMode(cardAddressMode)
             }
 
             SettingsIdentifier.INSTALLMENTS_MODE -> {
-                val cardInstallmentOptionsMode = CardInstallmentOptionsMode.valueOf(newValue.value)
+                val cardInstallmentOptionsMode = newValue as CardInstallmentOptionsMode
                 keyValueStorage.setInstallmentOptionsMode(cardInstallmentOptionsMode)
             }
 
             SettingsIdentifier.ANALYTICS_MODE -> {
-                val analyticsMode = AnalyticsMode.valueOf(newValue.value)
+                val analyticsMode = newValue as AnalyticsMode
                 keyValueStorage.setAnalyticsMode(analyticsMode)
             }
 
             SettingsIdentifier.UI_THEME -> {
-                val uiTheme = UITheme.valueOf(newValue.value)
+                val uiTheme = newValue as UITheme
                 uiThemeRepository.theme = uiTheme
             }
 
             SettingsIdentifier.INTEGRATION_FLOW -> {
-                val integrationFlow = IntegrationFlow.valueOf(newValue.value)
+                val integrationFlow = newValue as IntegrationFlow
                 keyValueStorage.setIntegrationFlow(integrationFlow)
             }
 
             SettingsIdentifier.INTEGRATION_REGION -> {
-                val integrationRegion = IntegrationRegion.valueOf(newValue.value)
+                val integrationRegion = newValue as IntegrationRegion
                 keyValueStorage.setCountry(integrationRegion.countryCode)
                 keyValueStorage.setCurrency(integrationRegion.currency)
             }
@@ -99,7 +107,7 @@ internal class SettingsEditor @Inject constructor(
         }
     }
 
-    fun editSetting(identifier: SettingsIdentifier, newValue: Boolean) {
+    private fun editSetting(identifier: SettingsIdentifier, newValue: Boolean) {
         when (identifier) {
             SettingsIdentifier.SHOW_INSTALLMENT_AMOUNT -> {
                 keyValueStorage.setInstallmentAmountShown(newValue)

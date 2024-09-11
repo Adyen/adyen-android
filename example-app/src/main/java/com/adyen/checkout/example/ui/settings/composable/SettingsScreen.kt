@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.ui.compose.UIText
+import com.adyen.checkout.example.ui.settings.model.EditSettingData
 import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsCategory
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
@@ -53,22 +54,17 @@ internal fun SettingsScreen(
         onBackPressed = onBackPressed,
         onTextSettingClicked = viewModel::onItemClicked,
         onEditSettingDismissed = viewModel::onEditSettingDismissed,
-        onTextSettingChanged = viewModel::onTextSettingChanged,
-        onListSettingChanged = viewModel::onListSettingChanged,
-        onSwitchSettingChanged = viewModel::onSwitchSettingChanged,
+        onSettingEdited = viewModel::onSettingEdited,
     )
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun SettingsScreen(
     uiState: SettingsUIState,
     onBackPressed: () -> Unit,
     onTextSettingClicked: (SettingsItem) -> Unit,
     onEditSettingDismissed: () -> Unit,
-    onTextSettingChanged: (SettingsIdentifier, String) -> Unit,
-    onListSettingChanged: (SettingsIdentifier, EditSettingDialogData.SingleSelectList.Item) -> Unit,
-    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
+    onSettingEdited: (EditSettingData) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -86,17 +82,19 @@ private fun SettingsScreen(
             modifier = Modifier.padding(innerPadding),
             settingsCategories = uiState.settingsCategories,
             onTextSettingClicked = onTextSettingClicked,
-            onSwitchSettingChanged = onSwitchSettingChanged,
+            onSwitchSettingChanged = { identifier, newValue ->
+                onSettingEdited(EditSettingData.Switch(identifier, newValue))
+            },
         )
 
         if (uiState.editSettingDialogData != null) {
             EditSettingDialog(
                 settingToEdit = uiState.editSettingDialogData,
                 onTextSettingChanged = {
-                    onTextSettingChanged(uiState.editSettingDialogData.identifier, it)
+                    onSettingEdited(EditSettingData.Text(uiState.editSettingDialogData.identifier, it))
                 },
                 onListSettingChanged = {
-                    onListSettingChanged(uiState.editSettingDialogData.identifier, it)
+                    onSettingEdited(EditSettingData.ListItem(uiState.editSettingDialogData.identifier, it.value))
                 },
                 onDismiss = {
                     onEditSettingDismissed()
@@ -250,9 +248,7 @@ private fun SettingsScreenPreview() {
             onBackPressed = {},
             onTextSettingClicked = {},
             onEditSettingDismissed = {},
-            onTextSettingChanged = { _, _ -> },
-            onListSettingChanged = { _, _ -> },
-            onSwitchSettingChanged = { _, _ -> },
+            onSettingEdited = { },
         )
     }
 }

@@ -282,7 +282,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.threeDSModes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
@@ -305,7 +305,7 @@ internal class SettingsUIMapper @Inject constructor(
                     .map { integrationRegion ->
                         EditSettingDialogData.SingleSelectList.Item(
                             text = integrationRegion.uiText,
-                            value = integrationRegion.integrationRegion.countryCode,
+                            value = integrationRegion.integrationRegion,
                         )
                     }
 
@@ -340,7 +340,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.cardAddressModes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
@@ -353,7 +353,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.cardInstallmentOptionsModes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
@@ -375,7 +375,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.analyticsModes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
@@ -388,7 +388,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.uiThemes.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
@@ -401,7 +401,7 @@ internal class SettingsUIMapper @Inject constructor(
                     items = SettingsLists.integrationFlows.entries.map {
                         EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
-                            value = it.key.toString(),
+                            value = it.key,
                         )
                     },
                 )
