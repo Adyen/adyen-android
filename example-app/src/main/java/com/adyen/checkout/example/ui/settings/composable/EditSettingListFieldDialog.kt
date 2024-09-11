@@ -23,14 +23,14 @@ import com.adyen.checkout.example.R
 import com.adyen.checkout.example.ui.compose.GenericDialog
 import com.adyen.checkout.example.ui.compose.UIText
 import com.adyen.checkout.example.ui.compose.stringFromUIText
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
 internal fun EditSettingListFieldDialog(
-    settingToEdit: EditSettingsData.SingleSelectList,
-    onConfirm: (EditSettingsData.SingleSelectList.Item) -> Unit,
+    settingToEdit: EditSettingDialogData.SingleSelectList,
+    onConfirm: (EditSettingDialogData.SingleSelectList.Item) -> Unit,
     onDismiss: () -> Unit,
 ) {
     GenericDialog(
@@ -72,13 +72,13 @@ internal fun EditSettingListFieldDialog(
 private fun EditSettingListFieldDialogPreview() {
     ExampleTheme {
         EditSettingListFieldDialog(
-            settingToEdit = EditSettingsData.SingleSelectList(
+            settingToEdit = EditSettingDialogData.SingleSelectList(
                 identifier = SettingsIdentifier.THREE_DS_MODE,
                 titleResId = R.string.settings_title_threeds_mode,
                 items = listOf(
-                    EditSettingsData.SingleSelectList.Item(UIText.String("First item"), "first_item"),
-                    EditSettingsData.SingleSelectList.Item(UIText.String("Second item"), "second_item"),
-                    EditSettingsData.SingleSelectList.Item(UIText.String("Third item"), "third_item"),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("First item"), "first_item"),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Second item"), "second_item"),
+                    EditSettingDialogData.SingleSelectList.Item(UIText.String("Third item"), "third_item"),
                 ),
             ),
             onConfirm = {},

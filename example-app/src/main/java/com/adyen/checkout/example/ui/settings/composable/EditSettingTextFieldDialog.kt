@@ -14,19 +14,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.ui.compose.TextFieldDialog
 import com.adyen.checkout.example.ui.compose.stringFromUIText
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 
 @Composable
 internal fun EditSettingTextFieldDialog(
-    settingToEdit: EditSettingsData.Text,
+    settingToEdit: EditSettingDialogData.Text,
     onConfirm: (String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val allowNumbersOnly = when (settingToEdit.inputType) {
-        EditSettingsData.Text.InputType.STRING -> false
-        EditSettingsData.Text.InputType.INTEGER -> true
+        EditSettingDialogData.Text.InputType.STRING -> false
+        EditSettingDialogData.Text.InputType.INTEGER -> true
     }
 
     val placeholder = settingToEdit.placeholder?.let { stringFromUIText(uiText = it) }
@@ -46,7 +46,7 @@ internal fun EditSettingTextFieldDialog(
 private fun EditSettingTextFieldDialogPreview() {
     ExampleTheme {
         EditSettingTextFieldDialog(
-            settingToEdit = EditSettingsData.Text(
+            settingToEdit = EditSettingDialogData.Text(
                 identifier = SettingsIdentifier.SHOPPER_LOCALE,
                 titleResId = R.string.settings_title_shopper_locale,
                 text = "nl-NL",

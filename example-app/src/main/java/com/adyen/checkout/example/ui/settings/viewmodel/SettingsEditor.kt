@@ -15,7 +15,7 @@ import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.IntegrationRegion
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.ThreeDSMode
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.theme.UITheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
@@ -57,7 +57,7 @@ internal class SettingsEditor @Inject constructor(
         }
     }
 
-    fun editSetting(identifier: SettingsIdentifier, newValue: EditSettingsData.SingleSelectList.Item) {
+    fun editSetting(identifier: SettingsIdentifier, newValue: EditSettingDialogData.SingleSelectList.Item) {
         when (identifier) {
             SettingsIdentifier.THREE_DS_MODE -> {
                 val threeDSMode = ThreeDSMode.valueOf(newValue.value)

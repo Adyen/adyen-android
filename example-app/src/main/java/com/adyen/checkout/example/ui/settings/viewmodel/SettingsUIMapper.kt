@@ -15,7 +15,7 @@ import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.data.storage.SettingsDefaults
 import com.adyen.checkout.example.provider.LocaleProvider
 import com.adyen.checkout.example.ui.compose.UIText
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.IntegrationRegionUIMapper
 import com.adyen.checkout.example.ui.settings.model.SettingsCategory
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
@@ -254,10 +254,10 @@ internal class SettingsUIMapper @Inject constructor(
     }
 
     @Suppress("LongMethod", "CyclomaticComplexMethod")
-    fun getEditSettingsData(settingsItem: SettingsItem): EditSettingsData {
+    fun getEditSettingDialogData(settingsItem: SettingsItem): EditSettingDialogData {
         return when (settingsItem.identifier) {
             SettingsIdentifier.MERCHANT_ACCOUNT -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_merchant_account,
                     text = keyValueStorage.getMerchantAccount(),
@@ -266,21 +266,21 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.AMOUNT -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_amount,
                     text = keyValueStorage.getAmount().value.toString(),
-                    inputType = EditSettingsData.Text.InputType.INTEGER,
+                    inputType = EditSettingDialogData.Text.InputType.INTEGER,
                     placeholder = defaultValueText(SettingsDefaults.AMOUNT.toString()),
                 )
             }
 
             SettingsIdentifier.THREE_DS_MODE -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_threeds_mode,
                     items = SettingsLists.threeDSModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )
@@ -289,7 +289,7 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.SHOPPER_REFERENCE -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_shopper_reference,
                     text = keyValueStorage.getShopperReference(),
@@ -303,13 +303,13 @@ internal class SettingsUIMapper @Inject constructor(
                 }
                     .sortedBy { it.localizedCountryName }
                     .map { integrationRegion ->
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = integrationRegion.uiText,
                             value = integrationRegion.integrationRegion.countryCode,
                         )
                     }
 
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_integration_region,
                     items = items,
@@ -317,7 +317,7 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.SHOPPER_LOCALE -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_shopper_locale,
                     text = keyValueStorage.getShopperLocale().orEmpty(),
@@ -326,7 +326,7 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.SHOPPER_EMAIL -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_shopper_email,
                     text = keyValueStorage.getShopperEmail().orEmpty(),
@@ -334,11 +334,11 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.ADDRESS_MODE -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_address_mode,
                     items = SettingsLists.cardAddressModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )
@@ -347,11 +347,11 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.INSTALLMENTS_MODE -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_card_installment_options_mode,
                     items = SettingsLists.cardInstallmentOptionsModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )
@@ -360,7 +360,7 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.INSTANT_PAYMENT_METHOD_TYPE -> {
-                EditSettingsData.Text(
+                EditSettingDialogData.Text(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_instant_payment_method_type,
                     text = keyValueStorage.getInstantPaymentMethodType(),
@@ -369,11 +369,11 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.ANALYTICS_MODE -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_analytics_mode,
                     items = SettingsLists.analyticsModes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )
@@ -382,11 +382,11 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.UI_THEME -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_ui_theme,
                     items = SettingsLists.uiThemes.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )
@@ -395,11 +395,11 @@ internal class SettingsUIMapper @Inject constructor(
             }
 
             SettingsIdentifier.INTEGRATION_FLOW -> {
-                EditSettingsData.SingleSelectList(
+                EditSettingDialogData.SingleSelectList(
                     identifier = settingsItem.identifier,
                     titleResId = R.string.settings_title_integration_flow,
                     items = SettingsLists.integrationFlows.entries.map {
-                        EditSettingsData.SingleSelectList.Item(
+                        EditSettingDialogData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),
                         )

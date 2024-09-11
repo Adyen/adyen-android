@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.ui.compose.UIText
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsCategory
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.settings.model.SettingsItem
@@ -67,7 +67,7 @@ private fun SettingsScreen(
     onTextSettingClicked: (SettingsItem) -> Unit,
     onEditSettingDismissed: () -> Unit,
     onTextSettingChanged: (SettingsIdentifier, String) -> Unit,
-    onListSettingChanged: (SettingsIdentifier, EditSettingsData.SingleSelectList.Item) -> Unit,
+    onListSettingChanged: (SettingsIdentifier, EditSettingDialogData.SingleSelectList.Item) -> Unit,
     onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
 ) {
     Scaffold(
@@ -89,14 +89,14 @@ private fun SettingsScreen(
             onSwitchSettingChanged = onSwitchSettingChanged,
         )
 
-        if (uiState.settingToEdit != null) {
+        if (uiState.editSettingDialogData != null) {
             EditSettingDialog(
-                settingToEdit = uiState.settingToEdit,
+                settingToEdit = uiState.editSettingDialogData,
                 onTextSettingChanged = {
-                    onTextSettingChanged(uiState.settingToEdit.identifier, it)
+                    onTextSettingChanged(uiState.editSettingDialogData.identifier, it)
                 },
                 onListSettingChanged = {
-                    onListSettingChanged(uiState.settingToEdit.identifier, it)
+                    onListSettingChanged(uiState.editSettingDialogData.identifier, it)
                 },
                 onDismiss = {
                     onEditSettingDismissed()
@@ -174,13 +174,13 @@ fun SettingsDivider(
 
 @Composable
 private fun EditSettingDialog(
-    settingToEdit: EditSettingsData,
+    settingToEdit: EditSettingDialogData,
     onTextSettingChanged: (String) -> Unit,
-    onListSettingChanged: (EditSettingsData.SingleSelectList.Item) -> Unit,
+    onListSettingChanged: (EditSettingDialogData.SingleSelectList.Item) -> Unit,
     onDismiss: () -> Unit,
 ) {
     when (settingToEdit) {
-        is EditSettingsData.Text -> {
+        is EditSettingDialogData.Text -> {
             EditSettingTextFieldDialog(
                 settingToEdit = settingToEdit,
                 onConfirm = onTextSettingChanged,
@@ -188,7 +188,7 @@ private fun EditSettingDialog(
             )
         }
 
-        is EditSettingsData.SingleSelectList -> {
+        is EditSettingDialogData.SingleSelectList -> {
             EditSettingListFieldDialog(
                 settingToEdit = settingToEdit,
                 onConfirm = onListSettingChanged,

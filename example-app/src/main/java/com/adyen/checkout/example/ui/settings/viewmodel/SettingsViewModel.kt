@@ -9,7 +9,7 @@
 package com.adyen.checkout.example.ui.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.example.ui.settings.model.EditSettingsData
+import com.adyen.checkout.example.ui.settings.model.EditSettingDialogData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.settings.model.SettingsItem
 import com.adyen.checkout.example.ui.settings.model.SettingsUIState
@@ -34,10 +34,10 @@ internal class SettingsViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: SettingsItem) {
-        val editSettingsData = settingsUIMapper.getEditSettingsData(item)
+        val editSettingDialogData = settingsUIMapper.getEditSettingDialogData(item)
         updateUIState {
             it.copy(
-                settingToEdit = editSettingsData,
+                editSettingDialogData = editSettingDialogData,
             )
         }
     }
@@ -48,7 +48,7 @@ internal class SettingsViewModel @Inject constructor(
         fetchSettings()
     }
 
-    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingsData.SingleSelectList.Item) {
+    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingDialogData.SingleSelectList.Item) {
         onEditSettingDismissed()
         settingsEditor.editSetting(identifier, selectedItem)
         fetchSettings()
@@ -63,7 +63,7 @@ internal class SettingsViewModel @Inject constructor(
     fun onEditSettingDismissed() {
         updateUIState {
             it.copy(
-                settingToEdit = null,
+                editSettingDialogData = null,
             )
         }
     }
