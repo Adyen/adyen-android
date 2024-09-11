@@ -10,10 +10,13 @@ package com.adyen.checkout.example.provider
 
 import android.content.Context
 import android.os.Build
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 
-internal class LocaleProvider @Inject constructor(private val context: Context) {
+internal class LocaleProvider @Inject constructor(
+    @ApplicationContext private val context: Context
+) {
 
     val locale: Locale by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

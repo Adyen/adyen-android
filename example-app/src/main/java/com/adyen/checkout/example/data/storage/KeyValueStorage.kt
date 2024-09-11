@@ -26,6 +26,7 @@ import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_LO
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SHOPPER_REFERENCE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.SPLIT_CARD_FUNDING_SOURCES
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.THREEDS_MODE
+import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 interface KeyValueStorage {
@@ -63,7 +64,7 @@ interface KeyValueStorage {
 }
 
 @Suppress("TooManyFunctions")
-internal class DefaultKeyValueStorage(
+internal class DefaultKeyValueStorage @Inject constructor(
     private val sharedPreferencesManager: SharedPreferencesManager
 ) : KeyValueStorage {
 

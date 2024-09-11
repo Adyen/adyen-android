@@ -10,9 +10,10 @@ package com.adyen.checkout.example.data.storage
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import javax.inject.Inject
 
-class SharedPreferencesManager(
-    val sharedPreferences: SharedPreferences
+class SharedPreferencesManager @Inject constructor(
+    internal val sharedPreferences: SharedPreferences
 ) {
 
     fun getString(entry: SharedPreferencesEntry): String {
@@ -43,7 +44,7 @@ class SharedPreferencesManager(
         return sharedPreferences.getString(entry.key, null)?.toLong() ?: entry.defaultValue
     }
 
-    inline fun <reified T : Enum<T>> getEnum(entry: SharedPreferencesEntry): T {
+    internal inline fun <reified T : Enum<T>> getEnum(entry: SharedPreferencesEntry): T {
         if (entry.defaultValue !is T) {
             error("Preference does not match the required type")
         }

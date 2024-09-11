@@ -14,9 +14,7 @@ import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.data.storage.SharedPreferencesManager
-import com.adyen.checkout.example.ui.settings.viewmodel.SettingsEditor
-import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,26 +22,18 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object StorageModule {
+internal abstract class StorageModule {
 
-    @Provides
-    fun provideSharedPreferences(appContext: Application): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(appContext)
+    @Binds
+    abstract fun bindKeyValueStorage(defaultKeyValueStorage: DefaultKeyValueStorage): KeyValueStorage
 
-    @Provides
-    fun provideSharedPreferencesManager(sharedPreferences: SharedPreferences): SharedPreferencesManager =
-        SharedPreferencesManager(sharedPreferences)
+    companion object {
 
-    @Provides
-    fun provideKeyValueStorage(sharedPreferencesManager: SharedPreferencesManager): KeyValueStorage =
-        DefaultKeyValueStorage(sharedPreferencesManager)
+        @Provides
+        fun provideSharedPreferences(appContext: Application): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(appContext)
 
-    @Provides
-    fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
-
-    @Provides
-    internal fun provideSettingsEditor(
-        keyValueStorage: KeyValueStorage,
-        uiThemeRepository: DefaultUIThemeRepository,
-    ): SettingsEditor = SettingsEditor(keyValueStorage, uiThemeRepository)
+        @Provides
+        fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
+    }
 }
