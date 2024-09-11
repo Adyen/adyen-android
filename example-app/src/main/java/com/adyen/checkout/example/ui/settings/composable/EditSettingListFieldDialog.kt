@@ -36,6 +36,11 @@ internal fun EditSettingListFieldDialog(
     GenericDialog(
         title = {
             Text(
+                modifier = Modifier.padding(
+                    top = ExampleTheme.dimensions.grid_2,
+                    start = ExampleTheme.dimensions.grid_2,
+                    end = ExampleTheme.dimensions.grid_2,
+                ),
                 text = stringResource(id = settingToEdit.titleResId),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -47,7 +52,7 @@ internal fun EditSettingListFieldDialog(
                     Text(
                         modifier = Modifier
                             .clickable { onConfirm(item) }
-                            .padding(vertical = ExampleTheme.dimensions.grid_2)
+                            .padding(ExampleTheme.dimensions.grid_2)
                             .fillMaxWidth(),
                         text = stringFromUIText(uiText = item.text),
                         style = MaterialTheme.typography.bodyLarge,

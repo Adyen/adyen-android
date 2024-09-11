@@ -11,10 +11,8 @@ package com.adyen.checkout.example.ui.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,32 +30,27 @@ import com.adyen.checkout.example.ui.theme.ExampleTheme
 @Composable
 fun GenericDialog(
     modifier: Modifier = Modifier,
-    title: (@Composable () -> Unit)?,
-    content: (@Composable () -> Unit)?,
-    dismissButton: (@Composable () -> Unit)?,
-    confirmButton: (@Composable () -> Unit)?,
+    title: (@Composable () -> Unit)? = null,
+    content: (@Composable () -> Unit)? = null,
+    dismissButton: (@Composable () -> Unit)? = null,
+    confirmButton: (@Composable () -> Unit)? = null,
     onDismiss: () -> Unit,
 ) {
     Dialog(onDismiss) {
         Surface(
-            modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             shadowElevation = 1.dp,
         ) {
-            Column {
-                Column(Modifier.padding(ExampleTheme.dimensions.grid_2)) {
-                    title?.invoke()
-                    if (title != null && content != null) {
-                        Spacer(Modifier.size(ExampleTheme.dimensions.grid_2))
-                    }
-                    content?.invoke()
-                }
+            Column(
+                modifier = modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(ExampleTheme.dimensions.grid_2, Alignment.Top),
+            ) {
+                title?.invoke()
+                content?.invoke()
                 if (dismissButton != null || confirmButton != null) {
                     Row(
-                        Modifier
-                            .padding(ExampleTheme.dimensions.grid_1)
-                            .fillMaxWidth(),
-                        Arrangement.spacedBy(ExampleTheme.dimensions.grid_1, Alignment.End),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(ExampleTheme.dimensions.grid_1, Alignment.End),
                     ) {
                         dismissButton?.invoke()
                         confirmButton?.invoke()
@@ -73,6 +66,7 @@ fun GenericDialog(
 fun GenericDialogPreview() {
     ExampleTheme {
         GenericDialog(
+            modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
             title = { Text("Title") },
             content = { Text("Content") },
             dismissButton = {

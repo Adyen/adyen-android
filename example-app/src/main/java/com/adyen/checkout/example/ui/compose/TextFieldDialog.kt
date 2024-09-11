@@ -8,13 +8,14 @@
 
 package com.adyen.checkout.example.ui.compose
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +49,7 @@ fun TextFieldDialog(
     val focusRequester = remember { FocusRequester() }
 
     GenericDialog(
-        modifier = modifier,
+        modifier = modifier.padding(ExampleTheme.dimensions.grid_2),
         title = {
             Text(
                 text = title,
@@ -57,8 +58,6 @@ fun TextFieldDialog(
             )
         },
         content = {
-            val textFieldModifier = Modifier.focusRequester(focusRequester)
-
             val onValueChange: (TextFieldValue) -> Unit = onValueChange@{
                 if (allowNumbersOnly && !it.text.isDigitsOnly()) {
                     return@onValueChange
@@ -79,16 +78,15 @@ fun TextFieldDialog(
             }
 
             OutlinedTextField(
-                modifier = textFieldModifier,
+                modifier = Modifier.focusRequester(focusRequester),
                 value = textFieldValue,
                 onValueChange = onValueChange,
                 keyboardOptions = keyboardOptions,
                 placeholder = placeholderBlock,
             )
 
-            DisposableEffect(Unit) {
+            LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
-                onDispose {}
             }
         },
         dismissButton = {

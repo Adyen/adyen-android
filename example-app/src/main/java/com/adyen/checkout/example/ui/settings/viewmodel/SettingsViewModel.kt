@@ -9,7 +9,6 @@
 package com.adyen.checkout.example.ui.settings.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.example.ui.settings.model.EditSettingsData
 import com.adyen.checkout.example.ui.settings.model.SettingsIdentifier
 import com.adyen.checkout.example.ui.settings.model.SettingsItem
@@ -19,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +42,25 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onEditSettingConsumed() {
+    fun onTextSettingChanged(identifier: SettingsIdentifier, newValue: String) {
+        onEditSettingDismissed()
+        settingsEditor.editSetting(identifier, newValue)
+        fetchSettings()
+    }
+
+    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingsData.SingleSelectList.Item) {
+        onEditSettingDismissed()
+        settingsEditor.editSetting(identifier, selectedItem)
+        fetchSettings()
+    }
+
+    fun onSwitchSettingChanged(identifier: SettingsIdentifier, newValue: Boolean) {
+        onEditSettingDismissed()
+        settingsEditor.editSetting(identifier, newValue)
+        fetchSettings()
+    }
+
+    fun onEditSettingDismissed() {
         updateUIState {
             it.copy(
                 settingToEdit = null,
@@ -52,28 +68,11 @@ internal class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun onTextSettingChanged(identifier: SettingsIdentifier, newValue: String) {
-        settingsEditor.editSetting(identifier, newValue)
-        fetchSettings()
-    }
-
-    fun onListSettingChanged(identifier: SettingsIdentifier, selectedItem: EditSettingsData.SingleSelectList.Item) {
-        settingsEditor.editSetting(identifier, selectedItem)
-        fetchSettings()
-    }
-
-    fun onSwitchSettingChanged(identifier: SettingsIdentifier, newValue: Boolean) {
-        settingsEditor.editSetting(identifier, newValue)
-        fetchSettings()
-    }
-
     private fun fetchSettings() {
-        viewModelScope.launch {
-            updateUIState {
-                it.copy(
-                    settingsCategories = settingsUIMapper.getSettingsCategories(),
-                )
-            }
+        updateUIState {
+            it.copy(
+                settingsCategories = settingsUIMapper.getSettingsCategories(),
+            )
         }
     }
 

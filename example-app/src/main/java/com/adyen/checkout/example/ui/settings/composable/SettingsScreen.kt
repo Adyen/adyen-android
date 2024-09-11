@@ -10,13 +10,9 @@
 
 package com.adyen.checkout.example.ui.settings.composable
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -51,8 +47,30 @@ internal fun SettingsScreen(
     onBackPressed: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+    SettingsScreen(
+        uiState = uiState,
+        onBackPressed = onBackPressed,
+        onTextSettingClicked = viewModel::onItemClicked,
+        onEditSettingDismissed = viewModel::onEditSettingDismissed,
+        onTextSettingChanged = viewModel::onTextSettingChanged,
+        onListSettingChanged = viewModel::onListSettingChanged,
+        onSwitchSettingChanged = viewModel::onSwitchSettingChanged,
+    )
+}
+
+@Suppress("LongParameterList")
+@Composable
+private fun SettingsScreen(
+    uiState: SettingsUIState,
+    onBackPressed: () -> Unit,
+    onTextSettingClicked: (SettingsItem) -> Unit,
+    onEditSettingDismissed: () -> Unit,
+    onTextSettingChanged: (SettingsIdentifier, String) -> Unit,
+    onListSettingChanged: (SettingsIdentifier, EditSettingsData.SingleSelectList.Item) -> Unit,
+    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
+) {
     Scaffold(
-        modifier = Modifier.windowInsetsPadding(WindowInsets.ime),
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.settings_screen_title)) },
@@ -64,59 +82,34 @@ internal fun SettingsScreen(
             )
         },
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-        SettingsScreen(
-            uiState = uiState,
-            onItemClicked = viewModel::onItemClicked,
-            onEditSettingConsumed = viewModel::onEditSettingConsumed,
-            onTextSettingChanged = viewModel::onTextSettingChanged,
-            onListSettingChanged = viewModel::onListSettingChanged,
-            onSwitchSettingChanged = viewModel::onSwitchSettingChanged,
+        SettingsItemsList(
             modifier = Modifier.padding(innerPadding),
+            settingsCategories = uiState.settingsCategories,
+            onTextSettingClicked = onTextSettingClicked,
+            onSwitchSettingChanged = onSwitchSettingChanged,
         )
-    }
-}
 
-@Suppress("LongParameterList")
-@Composable
-private fun SettingsScreen(
-    uiState: SettingsUIState,
-    onItemClicked: (SettingsItem) -> Unit,
-    onEditSettingConsumed: () -> Unit,
-    onTextSettingChanged: (SettingsIdentifier, String) -> Unit,
-    onListSettingChanged: (SettingsIdentifier, EditSettingsData.SingleSelectList.Item) -> Unit,
-    onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    SettingsItemsList(
-        settingsCategories = uiState.settingsCategories,
-        onItemClicked = onItemClicked,
-        onSwitchSettingChanged = onSwitchSettingChanged,
-        modifier = modifier,
-    )
-
-    if (uiState.settingToEdit != null) {
-        EditSettingDialog(
-            settingToEdit = uiState.settingToEdit,
-            onTextSettingChanged = {
-                onTextSettingChanged(uiState.settingToEdit.identifier, it)
-                onEditSettingConsumed()
-            },
-            onListSettingChanged = {
-                onListSettingChanged(uiState.settingToEdit.identifier, it)
-                onEditSettingConsumed()
-            },
-            onDismiss = {
-                onEditSettingConsumed()
-            },
-        )
+        if (uiState.settingToEdit != null) {
+            EditSettingDialog(
+                settingToEdit = uiState.settingToEdit,
+                onTextSettingChanged = {
+                    onTextSettingChanged(uiState.settingToEdit.identifier, it)
+                },
+                onListSettingChanged = {
+                    onListSettingChanged(uiState.settingToEdit.identifier, it)
+                },
+                onDismiss = {
+                    onEditSettingDismissed()
+                },
+            )
+        }
     }
 }
 
 @Composable
 private fun SettingsItemsList(
     settingsCategories: List<SettingsCategory>,
-    onItemClicked: (SettingsItem) -> Unit,
+    onTextSettingClicked: (SettingsItem) -> Unit,
     onSwitchSettingChanged: (SettingsIdentifier, Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -131,7 +124,7 @@ private fun SettingsItemsList(
             items(items = category.settingsItems) { settingsItem ->
                 when (settingsItem) {
                     is SettingsItem.Text -> {
-                        TextSettingsItem(settingsItem, onItemClicked)
+                        TextSettingsItem(settingsItem, onTextSettingClicked)
                     }
 
                     is SettingsItem.Switch -> SwitchSettingsItem(settingsItem, onSwitchSettingChanged)
@@ -152,7 +145,8 @@ fun SettingsCategoryHeader(
     title: String,
     modifier: Modifier = Modifier,
 ) {
-    Box(
+    Text(
+        text = title,
         modifier = modifier
             .padding(
                 start = ExampleTheme.dimensions.grid_2,
@@ -160,13 +154,9 @@ fun SettingsCategoryHeader(
                 top = ExampleTheme.dimensions.grid_2,
             )
             .fillMaxWidth(),
-    ) {
-        Text(
-            title,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    }
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
+    )
 }
 
 @Composable
@@ -257,8 +247,9 @@ private fun SettingsScreenPreview() {
                     ),
                 ),
             ),
-            onItemClicked = {},
-            onEditSettingConsumed = {},
+            onBackPressed = {},
+            onTextSettingClicked = {},
+            onEditSettingDismissed = {},
             onTextSettingChanged = { _, _ -> },
             onListSettingChanged = { _, _ -> },
             onSwitchSettingChanged = { _, _ -> },
