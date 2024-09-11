@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.ui.settings.model
 
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.R
+import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
@@ -55,10 +55,10 @@ internal object SettingsLists {
         }
     }
 
-    val analyticsLevels = AnalyticsLevel.entries.associateWith {
+    val analyticsModes = AnalyticsMode.entries.associateWith {
         when (it) {
-            AnalyticsLevel.ALL -> R.string.settings_list_analytics_level_all
-            AnalyticsLevel.NONE -> R.string.settings_list_analytics_level_none
+            AnalyticsMode.ALL -> R.string.settings_list_analytics_mode_all
+            AnalyticsMode.NONE -> R.string.settings_list_analytics_mode_none
         }
     }
 

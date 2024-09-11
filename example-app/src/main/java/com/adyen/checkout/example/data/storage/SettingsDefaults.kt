@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.data.storage
 
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.ui.theme.UITheme
 
@@ -28,6 +27,6 @@ object SettingsDefaults {
     val CARD_INSTALLMENT_OPTIONS_MODE: CardInstallmentOptionsMode = CardInstallmentOptionsMode.NONE
     const val CARD_INSTALLMENT_SHOW_AMOUNT: Boolean = false
     val INTEGRATION_FLOW: IntegrationFlow = IntegrationFlow.SESSIONS
-    val ANALYTICS_LEVEL: AnalyticsLevel = AnalyticsLevel.ALL
+    val ANALYTICS_MODE: AnalyticsMode = AnalyticsMode.ALL
     val UI_THEME: UITheme = UITheme.SYSTEM
 }

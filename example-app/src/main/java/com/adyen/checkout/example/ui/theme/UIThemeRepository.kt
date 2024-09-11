@@ -10,6 +10,7 @@ package com.adyen.checkout.example.ui.theme
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.annotation.Keep
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
@@ -75,6 +76,7 @@ internal class DefaultUIThemeRepository @Inject constructor(
     }
 }
 
+@Keep
 enum class UITheme(
     val appCompatMode: Int,
 ) {

@@ -69,9 +69,9 @@ enum class SharedPreferencesEntry(val key: String, val defaultValue: Any?) {
         key = "integration_flow",
         defaultValue = SettingsDefaults.INTEGRATION_FLOW,
     ),
-    ANALYTICS_LEVEL(
-        key = "analytics_level",
-        defaultValue = SettingsDefaults.ANALYTICS_LEVEL,
+    ANALYTICS_MODE(
+        key = "analytics_mode",
+        defaultValue = SettingsDefaults.ANALYTICS_MODE,
     ),
     UI_THEME(
         key = "ui_theme",

@@ -70,7 +70,7 @@ internal class SettingsUIMapper @Inject constructor(
             SettingsCategory(
                 R.string.settings_category_analytics,
                 listOf(
-                    getAnalyticsLevel(),
+                    getAnalyticsMode(),
                 ),
             ),
             SettingsCategory(
@@ -232,13 +232,13 @@ internal class SettingsUIMapper @Inject constructor(
         )
     }
 
-    private fun getAnalyticsLevel(): SettingsItem {
-        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
-        val displayValue = requireNotNull(SettingsLists.analyticsLevels[analyticsLevel])
+    private fun getAnalyticsMode(): SettingsItem {
+        val analyticsMode = keyValueStorage.getAnalyticsMode()
+        val displayValue = requireNotNull(SettingsLists.analyticsModes[analyticsMode])
 
         return SettingsItem.Text(
-            identifier = SettingsIdentifier.ANALYTICS_LEVEL,
-            titleResId = R.string.settings_title_analytics_level,
+            identifier = SettingsIdentifier.ANALYTICS_MODE,
+            titleResId = R.string.settings_title_analytics_mode,
             subtitle = UIText.Resource(displayValue),
         )
     }
@@ -368,11 +368,11 @@ internal class SettingsUIMapper @Inject constructor(
                 )
             }
 
-            SettingsIdentifier.ANALYTICS_LEVEL -> {
+            SettingsIdentifier.ANALYTICS_MODE -> {
                 EditSettingsData.SingleSelectList(
                     identifier = settingsItem.identifier,
-                    titleResId = R.string.settings_title_analytics_level,
-                    items = SettingsLists.analyticsLevels.entries.map {
+                    titleResId = R.string.settings_title_analytics_mode,
+                    items = SettingsLists.analyticsModes.entries.map {
                         EditSettingsData.SingleSelectList.Item(
                             text = UIText.Resource(it.value),
                             value = it.key.toString(),

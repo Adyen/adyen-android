@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.example.data.storage
 
+import androidx.annotation.Keep
+
+@Keep
 enum class IntegrationRegion(val countryCode: String, val currency: String) {
     AU("AU", "AUD"),
     AT("AT", "EUR"),

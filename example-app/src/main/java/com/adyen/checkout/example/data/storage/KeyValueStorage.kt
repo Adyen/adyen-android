@@ -9,9 +9,8 @@
 package com.adyen.checkout.example.data.storage
 
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.AMOUNT
-import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.ANALYTICS_LEVEL
+import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.ANALYTICS_MODE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_ADDRESS_FORM_MODE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTALLMENT_OPTIONS_MODE
 import com.adyen.checkout.example.data.storage.SharedPreferencesEntry.CARD_INSTALLMENT_SHOW_AMOUNT
@@ -59,8 +58,8 @@ interface KeyValueStorage {
     fun setInstallmentAmountShown(isInstallmentAmountShown: Boolean)
     fun getIntegrationFlow(): IntegrationFlow
     fun setIntegrationFlow(integrationFlow: IntegrationFlow)
-    fun getAnalyticsLevel(): AnalyticsLevel
-    fun setAnalyticsLevel(analyticsLevel: AnalyticsLevel)
+    fun getAnalyticsMode(): AnalyticsMode
+    fun setAnalyticsMode(analyticsMode: AnalyticsMode)
 }
 
 @Suppress("TooManyFunctions")
@@ -187,11 +186,11 @@ internal class DefaultKeyValueStorage @Inject constructor(
         sharedPreferencesManager.putEnum(INTEGRATION_FLOW, integrationFlow)
     }
 
-    override fun getAnalyticsLevel(): AnalyticsLevel {
-        return sharedPreferencesManager.getEnum(ANALYTICS_LEVEL)
+    override fun getAnalyticsMode(): AnalyticsMode {
+        return sharedPreferencesManager.getEnum(ANALYTICS_MODE)
     }
 
-    override fun setAnalyticsLevel(analyticsLevel: AnalyticsLevel) {
-        sharedPreferencesManager.putEnum(ANALYTICS_LEVEL, analyticsLevel)
+    override fun setAnalyticsMode(analyticsMode: AnalyticsMode) {
+        sharedPreferencesManager.putEnum(ANALYTICS_MODE, analyticsMode)
     }
 }

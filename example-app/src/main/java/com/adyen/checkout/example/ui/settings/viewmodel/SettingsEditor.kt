@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.settings.viewmodel
 
-import com.adyen.checkout.components.core.AnalyticsLevel
+import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.IntegrationFlow
@@ -74,9 +74,9 @@ internal class SettingsEditor @Inject constructor(
                 keyValueStorage.setInstallmentOptionsMode(cardInstallmentOptionsMode)
             }
 
-            SettingsIdentifier.ANALYTICS_LEVEL -> {
-                val analyticsLevel = AnalyticsLevel.valueOf(newValue.value)
-                keyValueStorage.setAnalyticsLevel(analyticsLevel)
+            SettingsIdentifier.ANALYTICS_MODE -> {
+                val analyticsMode = AnalyticsMode.valueOf(newValue.value)
+                keyValueStorage.setAnalyticsMode(analyticsMode)
             }
 
             SettingsIdentifier.UI_THEME -> {

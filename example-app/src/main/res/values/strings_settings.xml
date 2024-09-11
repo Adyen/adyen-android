@@ -27,7 +27,7 @@
     <string name="settings_title_address_mode">Address mode</string>
     <string name="settings_title_remove_stored_payment_method">Enable removing stored payment methods</string>
     <string name="settings_title_instant_payment_method_type">Instant payment method type</string>
-    <string name="settings_title_analytics_level">Level</string>
+    <string name="settings_title_analytics_mode">Level</string>
     <string name="settings_title_ui_theme">Theme</string>
     <string name="settings_title_amount">Amount (minor units)</string>
     <string name="settings_title_integration_flow">Integration flow</string>
@@ -42,8 +42,8 @@
     <string name="settings_list_installment_option_default_revolving">Default installment options with revolving</string>
     <string name="settings_list_installment_option_card_based">Card based installment options (VISA)</string>
 
-    <string name="settings_list_analytics_level_all">All</string>
-    <string name="settings_list_analytics_level_none">None</string>
+    <string name="settings_list_analytics_mode_all">All</string>
+    <string name="settings_list_analytics_mode_none">None</string>
 
     <string name="settings_list_threeds_mode_prefer_native">Prefer native</string>
     <string name="settings_list_threeds_mode_redirect">Redirect</string>
