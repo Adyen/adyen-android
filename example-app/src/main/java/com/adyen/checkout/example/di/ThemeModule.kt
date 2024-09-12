@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.example.di
 
-import com.adyen.checkout.example.ui.theme.DefaultNightThemeRepository
-import com.adyen.checkout.example.ui.theme.NightThemeRepository
+import com.adyen.checkout.example.ui.theme.DefaultUIThemeRepository
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -20,5 +20,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class ThemeModule {
 
     @Binds
-    internal abstract fun bindNightThemeRepository(repository: DefaultNightThemeRepository): NightThemeRepository
+    internal abstract fun bindUIThemeRepository(repository: DefaultUIThemeRepository): UIThemeRepository
 }

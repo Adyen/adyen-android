@@ -14,6 +14,7 @@ import android.content.res.AssetManager
 import androidx.preference.PreferenceManager
 import com.adyen.checkout.example.data.storage.DefaultKeyValueStorage
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,16 +22,18 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-object StorageModule {
+internal abstract class StorageModule {
 
-    @Provides
-    fun provideSharedPreferences(appContext: Application): SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(appContext)
+    @Binds
+    abstract fun bindKeyValueStorage(defaultKeyValueStorage: DefaultKeyValueStorage): KeyValueStorage
 
-    @Provides
-    fun provideKeyValueStorage(appContext: Application, sharedPreferences: SharedPreferences): KeyValueStorage =
-        DefaultKeyValueStorage(appContext, sharedPreferences)
+    companion object {
 
-    @Provides
-    fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
+        @Provides
+        fun provideSharedPreferences(appContext: Application): SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(appContext)
+
+        @Provides
+        fun provideAssetManager(appContext: Application): AssetManager = appContext.assets
+    }
 }
