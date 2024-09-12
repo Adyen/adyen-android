@@ -140,7 +140,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -240,7 +240,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
