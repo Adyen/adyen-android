@@ -11,7 +11,7 @@
 ## New
 - Added support for 6 more locales: Catalan (ca-ES), Icelandic (is-IS), Bulgarian (bg-BG),
   Estonian (et-EE), Latvian (lv-LV) and Lithuanian (lt-lT).
-- French meal vouchers are now available with the following payment method types: 
+- French meal vouchers are now available with the following payment method types. See the documentation [here](/docs/payment-methods/FRENCH_MEAL_VOUCHER.md).
   - Up. Payment method type: **mealVoucher_FR_groupeup**.
   - Natixis. Payment method type: **mealVoucher_FR_natixis**.
   - Sodexo. Payment method type: **mealVoucher_FR_sodexo**.
