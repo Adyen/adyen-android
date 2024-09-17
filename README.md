@@ -52,9 +52,11 @@ implementation "com.adyen.checkout:card:5.6.0"
 
 The library is available on [Maven Central][mavenRepo].
 
-## UI Customization
+## Additional documentation
 
-[See the UI Customization Guide for more.](docs/UI_CUSTOMIZATION.md)
+* [UI Customization guide][docs.github.uiCustomization]
+
+* [Additional documentation for payment methods][docs.github.paymentMethods]
 
 ## Migrate from v4
 
@@ -111,6 +113,8 @@ This repository is available under the [MIT license](LICENSE).
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key
 [docs.dropIn]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Drop-in
 [docs.components]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Components
+[docs.github.uiCustomization]: docs/UI_CUSTOMIZATION.md
+[docs.github.paymentMethods]: docs/payment-methods
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
 [migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
