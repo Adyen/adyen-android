@@ -260,8 +260,6 @@ internal class DefaultGooglePayDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired()
 
-    override fun shouldEnableSubmitButton(): Boolean = shouldShowSubmitButton()
-
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
