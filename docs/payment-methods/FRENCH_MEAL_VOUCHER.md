@@ -3,7 +3,7 @@ On this page, you can find additional configuration for adding French meal vouch
 
 ## Drop-in
 ### Sessions
-The integration works out of the box for sessions implementation.
+The integration works out of the box for sessions implementation. Check out the integration guide [here](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Drop-in).
 
 ### Advanced
 Follow the [Advanced flow integration guide](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Drop-in) and make sure the Drop-in is configured correctly and supports [partial payments](https://docs.adyen.com/online-payments/partial-payments/).
@@ -14,7 +14,7 @@ To configure Drop-in to create and cancel orders, implement the following method
 |--------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `onBalanceCheck(paymentComponentState: PaymentComponentState<*>)`  | Called when the shopper pays with a meal voucher. Make a [/paymentMethods/balance](https://docs.adyen.com/api-explorer/Checkout/latest/post/paymentMethods/balance) request.                                          |
 | `onOrderRequest()`                                                 | Called when the meal voucher balance is less than the transaction amount. Make an [/orders](https://docs.adyen.com/api-explorer/Checkout/latest/post/orders) request with the amount of the total transaction amount. |
-| `onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean)` | Called when the shopper cancels the meal voucher transaction. Make an [orders/cancel](https://docs.adyen.com/api-explorer/#/CheckoutService/latest/post/orders/cancel) request.                                       |
+| `onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean)` | Called when the shopper cancels the meal voucher transaction. Make an [/orders/cancel](https://docs.adyen.com/api-explorer/#/CheckoutService/latest/post/orders/cancel) request.                                       |
 
 The following example shows how to configure Drop-in for meal vouchers:
 ```Kotlin
@@ -62,44 +62,31 @@ override fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
 }
 ```
 
-### Configurations
-To create the configuration object and pass it when launching Drop-in, please follow the guide [here](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Drop-in#configure).
-
-Additional configurations for French meal vouchers:
-```Kotlin
-CheckoutConfiguration(
-    environment = environment,
-    clientKey = clientKey,
-    ..
-) {
-    mealVoucherFR {
-        setSecurityCodeRequired(true)
-    }
-}
-```
-
-`setSecurityCodeRequired` allows you to specify if the Security code field should be hidden from the Component and not requested by the shopper. Note that this might have implications for the transaction.
-
 ## Components
-Make sure to follow the [Android Components integration guide](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow?platform=Android&integration=Components) and use the following module and component names:
-
-To [import the module](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Components#import) use `meal-voucher-fr`.
-
+Use the following module and component names:
+- To import the module use `meal-voucher-fr`.
 
 ```Groovy
 implementation "com.adyen.checkout:meal-voucher-fr:YOUR_VERSION"
 ```
 
-To [launch and show the Component](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow?platform=Android&integration=Components#launch-and-show) use `MealVoucherFRComponent`.
+- To launch and show the Component use `MealVoucherFRComponent`.
+
 ```Kotlin
 val component = MealVoucherFRComponent.PROVIDER.get(
-    activity = activity,
-    checkoutSession = checkoutSession,
+    activity = activity, // or fragment = fragment
+    checkoutSession = checkoutSession, // Should be passed only for sessions
     paymentMethod = paymentMethod,
     configuration = checkoutConfiguration,
     componentCallback = callback,
 )
 ```
+
+### Sessions
+Make sure to follow the Android Components integration guide for sessions integration [here](https://docs.adyen.com/online-payments/build-your-integration/sessions-flow?platform=Android&integration=Components).
+
+### Advanced
+Make sure to follow the Android Components integration guide for advanced integration [here](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Components).
 
 The `componentCallback` which is passed to the `MealVoucherFRComponent.PROVIDER` requires the following methods to be implemented:
 
@@ -128,8 +115,8 @@ override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
 }
 ```
 
-### Configurations
-To create the configuration object and pass it to the component, please follow the guide [here](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Android&integration=Components#configure).
+## Optional configurations
+
 ```Kotlin
 CheckoutConfiguration(
     environment = environment,
