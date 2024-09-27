@@ -282,7 +282,6 @@ constructor(
             PaymentMethodTypes.PAY_NOW,
             PaymentMethodTypes.PIX,
             PaymentMethodTypes.PROMPT_PAY,
-            PaymentMethodTypes.TWINT,
             PaymentMethodTypes.WECHAT_PAY_SDK,
             PaymentMethodTypes.MULTIBANCO,
         )

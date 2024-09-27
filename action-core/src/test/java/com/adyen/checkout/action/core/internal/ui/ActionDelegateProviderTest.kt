@@ -25,7 +25,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
-import com.adyen.checkout.twint.internal.ui.TwintDelegate
+import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate
 import org.junit.jupiter.api.Assertions.assertInstanceOf
@@ -113,7 +113,10 @@ internal class ActionDelegateProviderTest(
                 SdkAction<WeChatPaySdkData>(paymentMethodType = PaymentMethodTypes.WECHAT_PAY_SDK),
                 WeChatDelegate::class.java,
             ),
-            arguments(SdkAction<TwintSdkData>(paymentMethodType = PaymentMethodTypes.TWINT), TwintDelegate::class.java),
+            arguments(
+                SdkAction<TwintSdkData>(paymentMethodType = PaymentMethodTypes.TWINT),
+                TwintActionDelegate::class.java,
+            ),
         )
     }
 
