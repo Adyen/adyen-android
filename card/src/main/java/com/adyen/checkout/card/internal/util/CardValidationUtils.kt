@@ -18,6 +18,8 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
+import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
+import com.adyen.checkout.core.ui.validation.CardNumberValidator
 import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
 import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationUtils
@@ -27,14 +29,6 @@ import java.util.GregorianCalendar
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CardValidationUtils {
 
-    // Luhn Check
-    private const val RADIX = 10
-    private const val FIVE_DIGIT = 5
-
-    // Card Number
-    private const val MINIMUM_CARD_NUMBER_LENGTH = 12
-    const val MAXIMUM_CARD_NUMBER_LENGTH = 19
-
     // Security Code
     private const val GENERAL_CARD_SECURITY_CODE_SIZE = 3
     private const val AMEX_SECURITY_CODE_SIZE = 4
@@ -43,35 +37,17 @@ object CardValidationUtils {
      * Validate card number.
      */
     fun validateCardNumber(number: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): CardNumberValidation {
-        val normalizedNumber = StringUtil.normalize(number)
-        val length = normalizedNumber.length
-        return when {
-            !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) -> CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> CardNumberValidation.INVALID_TOO_LONG
-            length < MINIMUM_CARD_NUMBER_LENGTH -> CardNumberValidation.INVALID_TOO_SHORT
-            !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
-            enableLuhnCheck && !isLuhnChecksumValid(normalizedNumber) -> CardNumberValidation.INVALID_LUHN_CHECK
-            else -> CardNumberValidation.VALID
-        }
-    }
-
-    @Suppress("MagicNumber")
-    private fun isLuhnChecksumValid(normalizedNumber: String): Boolean {
-        var s1 = 0
-        var s2 = 0
-        val reverse = StringBuffer(normalizedNumber).reverse().toString()
-        for (i in reverse.indices) {
-            val digit = Character.digit(reverse[i], RADIX)
-            if (i % 2 == 0) {
-                s1 += digit
-            } else {
-                s2 += 2 * digit
-                if (digit >= FIVE_DIGIT) {
-                    s2 -= 9
-                }
+        val validation = CardNumberValidator.validateCardNumber(number, enableLuhnCheck)
+        return when (validation) {
+            CardNumberValidationResult.INVALID_ILLEGAL_CHARACTERS -> CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
+            CardNumberValidationResult.INVALID_TOO_LONG -> CardNumberValidation.INVALID_TOO_LONG
+            CardNumberValidationResult.INVALID_TOO_SHORT -> CardNumberValidation.INVALID_TOO_SHORT
+            CardNumberValidationResult.INVALID_LUHN_CHECK -> CardNumberValidation.INVALID_LUHN_CHECK
+            CardNumberValidationResult.VALID -> when {
+                !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
+                else -> CardNumberValidation.VALID
             }
         }
-        return (s1 + s2) % 10 == 0
     }
 
     /**

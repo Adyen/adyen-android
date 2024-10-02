@@ -150,3 +150,20 @@ public final class com/adyen/checkout/core/internal/ui/DefaultImageLoader$Compan
 public abstract interface annotation class com/adyen/checkout/core/internal/util/Logger$LogLevel : java/lang/annotation/Annotation {
 }
 
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult : java/lang/Enum {
+	public static final field INVALID_ILLEGAL_CHARACTERS Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static final field INVALID_LUHN_CHECK Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static final field INVALID_TOO_LONG Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static final field INVALID_TOO_SHORT Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static final field VALID Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+	public static fun values ()[Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidator {
+	public static final field INSTANCE Lcom/adyen/checkout/core/ui/validation/CardNumberValidator;
+	public static final field MAXIMUM_CARD_NUMBER_LENGTH I
+	public final fun validateCardNumber (Ljava/lang/String;Z)Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+}
+

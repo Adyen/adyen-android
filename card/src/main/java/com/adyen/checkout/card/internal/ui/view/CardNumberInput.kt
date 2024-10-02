@@ -16,7 +16,7 @@ import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.util.CardNumberUtils
-import com.adyen.checkout.card.internal.util.CardValidationUtils
+import com.adyen.checkout.core.ui.validation.CardNumberValidator
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 
 /**
@@ -36,7 +36,7 @@ constructor(
         get() = text.toString().replace(DIGIT_SEPARATOR, "")
 
     init {
-        enforceMaxInputLength(CardValidationUtils.MAXIMUM_CARD_NUMBER_LENGTH + MAX_DIGIT_SEPARATOR_COUNT)
+        enforceMaxInputLength(CardNumberValidator.MAXIMUM_CARD_NUMBER_LENGTH + MAX_DIGIT_SEPARATOR_COUNT)
         inputType = InputType.TYPE_CLASS_NUMBER
         keyListener = DigitsKeyListener.getInstance(SUPPORTED_DIGITS + DIGIT_SEPARATOR)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
