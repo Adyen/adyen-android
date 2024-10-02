@@ -1,103 +1,88 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 20/10/2023.
+ * Created by oscars on 10/7/2024.
  */
 
 package com.adyen.checkout.twint.internal.ui
 
-import android.app.Activity
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
-import ch.twint.payment.sdk.TwintPayResult
-import com.adyen.checkout.components.core.ActionComponentData
-import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.action.SdkAction
-import com.adyen.checkout.components.core.action.TwintSdkData
-import com.adyen.checkout.components.core.internal.ActionComponentEvent
-import com.adyen.checkout.components.core.internal.ActionObserverRepository
-import com.adyen.checkout.components.core.internal.PaymentDataRepository
-import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
-import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
+import com.adyen.checkout.components.core.ActionHandlingMethod
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
-import com.adyen.checkout.components.core.internal.data.api.StatusRepository
-import com.adyen.checkout.components.core.internal.data.model.StatusResponse
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.TimerData
-import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
-import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.internal.ui.model.TwintComponentParams
+import com.adyen.checkout.twint.internal.ui.model.TwintInputData
+import com.adyen.checkout.twint.internal.ui.model.TwintOutputData
+import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
-import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 
 @Suppress("TooManyFunctions")
 internal class DefaultTwintDelegate(
-    private val observerRepository: ActionObserverRepository,
-    override val savedStateHandle: SavedStateHandle,
-    override val componentParams: GenericComponentParams,
-    private val paymentDataRepository: PaymentDataRepository,
-    private val statusRepository: StatusRepository,
-    private val analyticsManager: AnalyticsManager?,
-) : TwintDelegate, SavedStateHandleContainer {
+    private val submitHandler: SubmitHandler<TwintComponentState>,
+    private val analyticsManager: AnalyticsManager,
+    private val observerRepository: PaymentObserverRepository,
+    private val paymentMethod: PaymentMethod,
+    private val order: OrderRequest?,
+    override val componentParams: TwintComponentParams,
+) : TwintDelegate, ButtonDelegate {
 
-    private val detailsChannel: Channel<ActionComponentData> = bufferedChannel()
-    override val detailsFlow: Flow<ActionComponentData> = detailsChannel.receiveAsFlow()
+    private val inputData = TwintInputData()
 
-    private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
-    override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
+    private var outputData = createOutputData()
 
-    override val viewFlow: Flow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
+    private val _componentStateFlow = MutableStateFlow(createComponentState())
+    override val componentStateFlow: Flow<TwintComponentState> = _componentStateFlow
 
-    // Not used for Twint action
-    override val timerFlow: Flow<TimerData> = flow {}
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    private val payEventChannel: Channel<String> = bufferedChannel()
-    override val payEventFlow: Flow<String> = payEventChannel.receiveAsFlow()
-
-    private var _coroutineScope: CoroutineScope? = null
-    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
-
-    private var statusPollingJob: Job? = null
-
-    private var action: SdkAction<TwintSdkData>? by SavedStateHandleProperty(ACTION_KEY)
-    private var isPolling: Boolean? by SavedStateHandleProperty(IS_POLLING_KEY)
+    override val submitFlow: Flow<TwintComponentState> = submitHandler.submitFlow
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        _coroutineScope = coroutineScope
-        restoreState()
+        submitHandler.initialize(coroutineScope, componentStateFlow)
+
+        initializeAnalytics(coroutineScope)
+
+        if (!isConfirmationRequired()) {
+            initiatePayment()
+        }
     }
 
-    private fun restoreState() {
-        adyenLog(AdyenLogLevel.DEBUG) { "Restoring state" }
-        action?.let { initState(it) }
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
     }
 
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
-        callback: (ActionComponentEvent) -> Unit
+        callback: (PaymentComponentEvent<TwintComponentState>) -> Unit
     ) {
         observerRepository.addObservers(
-            detailsFlow = detailsFlow,
-            exceptionFlow = exceptionFlow,
-            permissionFlow = null,
+            stateFlow = componentStateFlow,
+            exceptionFlow = null,
+            submitFlow = submitFlow,
             lifecycleOwner = lifecycleOwner,
             coroutineScope = coroutineScope,
             callback = callback,
@@ -108,152 +93,96 @@ internal class DefaultTwintDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun handleAction(action: Action, activity: Activity) {
-        if (action !is SdkAction<*>) {
-            emitError(ComponentException("Unsupported action"))
-            return
-        }
-
-        val sdkData = action.sdkData
-        if (action.sdkData == null || sdkData !is TwintSdkData) {
-            emitError(ComponentException("SDK Data is null or of wrong type"))
-            return
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        this.action = action as SdkAction<TwintSdkData>
-
-        val event = GenericEvents.action(
-            component = action.paymentMethodType.orEmpty(),
-            subType = action.type.orEmpty(),
-        )
-        analyticsManager?.trackEvent(event)
-
-        initState(action)
-        launchAction(sdkData)
+    override fun updateInputData(update: TwintInputData.() -> Unit) {
+        inputData.update()
+        onInputDataChanged()
     }
 
-    private fun initState(action: SdkAction<TwintSdkData>) {
-        val paymentData = action.paymentData
-        paymentDataRepository.paymentData = paymentData
-        if (paymentData == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
-            emitError(ComponentException("Payment data is null"))
-            return
-        }
-
-        if (isPolling == true) {
-            startStatusPolling()
-        }
+    private fun onInputDataChanged() {
+        outputData = createOutputData()
+        updateComponentState(outputData)
     }
 
-    private fun launchAction(sdkData: TwintSdkData) {
-        payEventChannel.trySend(sdkData.token)
-    }
-
-    override fun handleTwintResult(result: TwintPayResult) {
-        when (result) {
-            TwintPayResult.TW_B_SUCCESS -> {
-                startStatusPolling()
-            }
-
-            TwintPayResult.TW_B_ERROR -> {
-                onError(ComponentException("Twint encountered an error."))
-            }
-
-            TwintPayResult.TW_B_APP_NOT_INSTALLED -> {
-                onError(ComponentException("Twint app not installed."))
-            }
-        }
-    }
-
-    private fun startStatusPolling() {
-        isPolling = true
-        statusPollingJob?.cancel()
-
-        val paymentData = paymentDataRepository.paymentData
-        if (paymentData == null) {
-            emitError(ComponentException("PaymentData should not be null."))
-            return
-        }
-
-        statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
-            .onEach { onStatus(it) }
-            .launchIn(coroutineScope)
-    }
-
-    private fun onStatus(result: Result<StatusResponse>) {
-        result.fold(
-            onSuccess = { response ->
-                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
-                onPollingSuccessful(response)
-            },
-            onFailure = {
-                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
-                emitError(ComponentException("Error while polling status.", it))
-            },
+    private fun createOutputData(): TwintOutputData {
+        return TwintOutputData(
+            isStorePaymentSelected = inputData.isStorePaymentSelected,
         )
     }
 
-    private fun onPollingSuccessful(statusResponse: StatusResponse) {
-        val payload = statusResponse.payload
-        // Not authorized status should still call /details so that merchant can get more info
-        if (StatusResponseUtils.isFinalResult(statusResponse)) {
-            if (!payload.isNullOrEmpty()) {
-                emitDetails(payload)
-            } else {
-                emitError(ComponentException("Payload is missing from StatusResponse."))
-            }
-        }
+    @VisibleForTesting
+    internal fun updateComponentState(outputData: TwintOutputData) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
+        val componentState = createComponentState(outputData)
+        _componentStateFlow.tryEmit(componentState)
     }
 
-    private fun createActionComponentData(payload: String): ActionComponentData {
-        return ActionComponentData(
-            details = JSONObject().put(PAYLOAD_DETAILS_KEY, payload),
-            // We don't share paymentData on purpose, so merchant will not use it to build their own polling.
-            paymentData = null,
+    private fun createComponentState(
+        outputData: TwintOutputData = this.outputData
+    ): TwintComponentState {
+        val paymentMethod = TwintPaymentMethod(
+            type = paymentMethod.type,
+            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            subtype = getSubtype(),
+        )
+
+        val paymentComponentData = PaymentComponentData(
+            paymentMethod = paymentMethod,
+            order = order,
+            amount = componentParams.amount,
+            storePaymentMethod = shouldStorePaymentMethod(),
+        )
+
+        return TwintComponentState(
+            data = paymentComponentData,
+            isInputValid = outputData.isValid,
+            isReady = true,
         )
     }
 
-    override fun onError(e: CheckoutException) {
-        emitError(e)
+    private fun getSubtype(): String? {
+        return when (componentParams.actionHandlingMethod) {
+            ActionHandlingMethod.PREFER_NATIVE -> SDK_SUBTYPE
+            ActionHandlingMethod.PREFER_WEB -> null
+        }
     }
 
-    override fun refreshStatus() {
-        if (statusPollingJob == null) return
-        val paymentData = paymentDataRepository.paymentData ?: return
-        statusRepository.refreshStatus(paymentData)
+    private fun shouldStorePaymentMethod(): Boolean =
+        componentParams.showStorePaymentField && outputData.isStorePaymentSelected
+
+    override fun onSubmit() {
+        if (isConfirmationRequired()) {
+            initiatePayment()
+        }
     }
 
-    private fun emitError(e: CheckoutException) {
-        exceptionChannel.trySend(e)
-        clearState()
+    private fun initiatePayment() {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+
+        val state = _componentStateFlow.value
+        submitHandler.onSubmit(state = state)
     }
 
-    private fun emitDetails(payload: String) {
-        detailsChannel.trySend(createActionComponentData(payload))
-        clearState()
+    override fun isConfirmationRequired(): Boolean =
+        _viewFlow.value is ButtonComponentViewType &&
+            componentParams.showStorePaymentField
+
+    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+
+    internal fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
-    private fun clearState() {
-        action = null
-        isPolling = null
-    }
+    override fun getPaymentMethodType(): String =
+        paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
     override fun onCleared() {
         removeObserver()
+        analyticsManager.clear(this)
     }
 
     companion object {
-        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
-
         @VisibleForTesting
-        internal const val ACTION_KEY = "ACTION_KEY"
-
-        @VisibleForTesting
-        internal const val IS_POLLING_KEY = "IS_POLLING_KEY"
-
-        @VisibleForTesting
-        internal const val PAYLOAD_DETAILS_KEY = "payload"
+        internal const val SDK_SUBTYPE = "sdk"
     }
 }

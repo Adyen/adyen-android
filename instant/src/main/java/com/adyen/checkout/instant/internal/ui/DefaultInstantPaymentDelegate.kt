@@ -9,6 +9,7 @@
 package com.adyen.checkout.instant.internal.ui
 
 import androidx.lifecycle.LifecycleOwner
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
@@ -22,7 +23,6 @@ import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.internal.ui.model.InstantComponentParams
 import kotlinx.coroutines.CoroutineScope

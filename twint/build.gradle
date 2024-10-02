@@ -39,10 +39,11 @@ android {
 
 dependencies {
     // Checkout
+    api project(':action-core')
+    api project(':components-core')
+    api project(':sessions-core')
+    api project(':twint-action')
     api project(':ui-core')
-
-    // Dependencies
-    implementation files('libs/TwintSdk-android-8.0.0.jar')
 
     //Tests
     testImplementation testFixtures(project(':test-core'))

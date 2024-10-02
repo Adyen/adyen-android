@@ -60,6 +60,7 @@ ext {
     google_pay_compose_button_version = '1.0.0'
     okhttp_version = "4.12.0"
     play_services_wallet_version = '19.4.0'
+    twint_version = '8.0.0'
     wechat_pay_version = "6.8.0"
 
     // Example app
@@ -139,6 +140,7 @@ ext {
             "com.squareup.retrofit2:retrofit:$retrofit2_version",
             "com.squareup.retrofit2:converter-moshi:$retrofit2_version"
         ],
+        twint           : "ch.twint.payment.sdk:android-sdk:$twint_version",
         wechat          : "com.tencent.mm.opensdk:wechat-sdk-android-without-mta:$wechat_pay_version"
     ]
 

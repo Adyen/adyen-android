@@ -11,6 +11,10 @@
 ## New
 - Added support for 6 more locales: Catalan (ca-ES), Icelandic (is-IS), Bulgarian (bg-BG),
   Estonian (et-EE), Latvian (lv-LV) and Lithuanian (lt-lT).
+- For Twint, storing payment details and paying with them is now supported. See the documentation [here](/docs/payment-methods/TWINT.md).
+
+> [!WARNING]
+> For the Twint component integration, you are now required to use `TwintComponent` instead of `InstantPaymentComponent`. See the [documentation](/docs/payment-methods/TWINT.md) to find out the details.
 
 ## Improved
 - For UPI Intent an error message will be shown when "Continue" button is pressed without selecting
@@ -30,3 +34,4 @@
   | Previous                                 | Now                                      |
   |------------------------------------------|------------------------------------------|
   | AdyenCheckout.TextAppearance.HeaderTitle | AdyenCheckout.TextAppearance.HeaderLabel |
+- `com.adyen.checkout.instant.ActionHandlingMethod` is moved to `com.adyen.checkout.components.core.ActionHandlingMethod`
