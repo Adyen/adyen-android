@@ -45,20 +45,18 @@ internal class DefaultAnalyticsManagerTest(
     inner class InitializeTest {
 
         @Test
-        fun `sending events is disabled, then checkoutAttemptId is anonymous`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+        fun `fetching checkoutAttemptId succeeds, then it is set`() = runTest {
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
 
             analyticsManager.initialize(this@InitializeTest, this)
 
-            assertEquals(
-                DefaultAnalyticsManager.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
-                analyticsManager.getCheckoutAttemptId(),
-            )
-            verify(analyticsRepository, never()).fetchCheckoutAttemptId()
+            assertEquals("test value", analyticsManager.getCheckoutAttemptId())
+            analyticsManager.clear(this@InitializeTest)
         }
 
         @Test
-        fun `fetching checkoutAttemptId succeeds, then it is set`() = runTest {
+        fun `sending events is disabled, then checkoutAttemptId is still set`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
 
             analyticsManager.initialize(this@InitializeTest, this)
