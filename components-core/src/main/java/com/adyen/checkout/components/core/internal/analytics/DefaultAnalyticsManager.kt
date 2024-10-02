@@ -49,13 +49,7 @@ internal class DefaultAnalyticsManager(
         isInitialized = true
 
         ownerReference = owner::class.qualifiedName
-
         _coroutineScope = coroutineScope
-
-        if (cannotSendEvents()) {
-            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
-            return
-        }
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
@@ -141,9 +135,6 @@ internal class DefaultAnalyticsManager(
     }
 
     companion object {
-        @VisibleForTesting
-        internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
-
         @VisibleForTesting
         internal val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
     }
