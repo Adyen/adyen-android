@@ -22,9 +22,7 @@ import android.widget.LinearLayout
 import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
@@ -36,6 +34,8 @@ import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.ui.model.ExpiryDate

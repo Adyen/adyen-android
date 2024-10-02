@@ -11,9 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -40,6 +38,8 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -78,6 +78,7 @@ internal class StoredCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
+    private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
@@ -330,7 +331,8 @@ internal class StoredCardDelegate(
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
         val cvcUiState = makeCvcUIState(detectedCardType.cvcPolicy)
-        return CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
+        val validation = CardValidationUtils.validateSecurityCode(securityCode, detectedCardType)
+        return cardValidationMapper.mapSecurityCodeValidation(securityCode, cvcUiState, validation)
     }
 
     private fun isCvcHidden(): Boolean {

@@ -12,7 +12,6 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
@@ -52,6 +51,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -517,7 +517,8 @@ class DefaultCardDelegate(
         expiryDate: ExpiryDate,
         expiryDatePolicy: Brand.FieldPolicy?
     ): FieldState<ExpiryDate> {
-        return CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
+        val validation = CardValidationUtils.validateExpiryDate(expiryDate)
+        return cardValidationMapper.mapExpiryDateValidation(expiryDate, expiryDatePolicy, validation)
     }
 
     private fun validateSecurityCode(
@@ -525,7 +526,8 @@ class DefaultCardDelegate(
         cardType: DetectedCardType?
     ): FieldState<String> {
         val cvcUIState = makeCvcUIState(cardType)
-        return CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
+        val validation = CardValidationUtils.validateSecurityCode(securityCode, cardType)
+        return cardValidationMapper.mapSecurityCodeValidation(securityCode, cvcUIState, validation)
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {

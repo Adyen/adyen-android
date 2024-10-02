@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
+import com.adyen.checkout.core.CardBrand
 import java.util.Locale
 
 internal class InstallmentsParamsMapper {
@@ -41,7 +41,7 @@ internal class InstallmentsParamsMapper {
             cardBasedOptions = cardBasedOptionsList,
             amount = amount,
             shopperLocale = shopperLocale,
-            showInstallmentAmount = showInstallmentAmount
+            showInstallmentAmount = showInstallmentAmount,
         )
     }
 
@@ -58,14 +58,14 @@ internal class InstallmentsParamsMapper {
             },
             amount = amount,
             shopperLocale = shopperLocale,
-            showInstallmentAmount = installmentConfiguration.showInstallmentAmount
+            showInstallmentAmount = installmentConfiguration.showInstallmentAmount,
         )
     }
 
     private fun InstallmentOptions.DefaultInstallmentOptions?.mapToDefaultInstallmentOptionsParam() =
         InstallmentOptionParams.DefaultInstallmentOptions(
             this?.values ?: emptyList(),
-            this?.includeRevolving ?: false
+            this?.includeRevolving ?: false,
         )
 
     private fun InstallmentOptions.CardBasedInstallmentOptions.mapToCardBasedInstallmentOptionsParams() =
@@ -74,14 +74,14 @@ internal class InstallmentsParamsMapper {
     private fun SessionInstallmentOptionsParams?.mapToDefaultInstallmentOptions() =
         InstallmentOptionParams.DefaultInstallmentOptions(
             values = this?.values ?: emptyList(),
-            includeRevolving = this?.plans?.contains(InstallmentOption.REVOLVING.type) ?: false
+            includeRevolving = this?.plans?.contains(InstallmentOption.REVOLVING.type) ?: false,
         )
 
     private fun SessionInstallmentOptionsParams?.mapToCardBasedInstallmentOptions(txVariant: String) =
         InstallmentOptionParams.CardBasedInstallmentOptions(
             values = this?.values ?: emptyList(),
             includeRevolving = this?.plans?.contains(InstallmentOption.REVOLVING.type) ?: false,
-            cardBrand = CardBrand(txVariant)
+            cardBrand = CardBrand(txVariant),
         )
 
     companion object {

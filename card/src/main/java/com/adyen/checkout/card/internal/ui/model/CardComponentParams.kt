@@ -9,12 +9,12 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -10,10 +10,8 @@ package com.adyen.checkout.card.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -44,6 +42,8 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
@@ -511,6 +511,7 @@ internal class StoredCardDelegateTest(
             submitHandler = submitHandler,
             order = order,
             cardConfigDataGenerator = cardConfigDataGenerator,
+            cardValidationMapper = CardValidationMapper()
         )
     }
 

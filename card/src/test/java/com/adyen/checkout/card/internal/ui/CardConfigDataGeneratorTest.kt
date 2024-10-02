@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
@@ -19,6 +18,7 @@ import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals

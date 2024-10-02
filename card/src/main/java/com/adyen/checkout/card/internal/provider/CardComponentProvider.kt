@@ -385,6 +385,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                cardValidationMapper = CardValidationMapper()
             )
 
             val genericActionDelegate =
@@ -482,6 +483,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                cardValidationMapper = CardValidationMapper()
             )
 
             val genericActionDelegate =

@@ -8,24 +8,23 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import java.util.GregorianCalendar
 
 internal class CardValidationUtilsTest {
+
+    private val cardValidationMapper = CardValidationMapper()
 
     @Nested
     @DisplayName("when validating card number and")
@@ -150,191 +149,210 @@ internal class CardValidationUtilsTest {
     @DisplayName("when validating expiry date and")
     inner class ValidateExpiryDateTest {
 
+        // TODO extract these tests to a CardValidationMapper class
         @Test
         fun `date is valid, then correct fieldState should be returned`() {
             val expiryDate = ExpiryDate(4, 2025) // 04/2025
-            val calendar = GregorianCalendar(2024, 4, 24) // 24/04/2024
-            val actual = CardValidationUtils.validateExpiryDate(
-                expiryDate = expiryDate,
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = calendar,
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.VALID,
             )
 
             assertEquals(FieldState(expiryDate, Validation.Valid), actual)
         }
 
         @Test
-        fun `date is invalid, then correct fieldState should be returned`() {
-            val expiryDate = ExpiryDate(4, 2020) // 04/2020
-            val calendar = GregorianCalendar(2024, 4, 24) // 24/04/2024
-            val actual = CardValidationUtils.validateExpiryDate(
-                expiryDate = expiryDate,
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                calendar = calendar,
-            )
-
-            assertEquals(expiryDate, actual.value)
-            assertTrue(actual.validation is Validation.Invalid)
-        }
-
-        @Test
         fun `date is valid, then result should be valid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                expiryDateValidationResult = CardExpiryDateValidationResult.VALID,
+            val expiryDate = ExpiryDate(4, 2040) // 04/2040
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.VALID,
             )
 
-            assertEquals(Validation.Valid, actual)
+            assertEquals(Validation.Valid, actual.validation)
         }
 
         @Test
         fun `date is too far in the future, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
+            val expiryDate = ExpiryDate(4, 2099) // 04/2099
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_far_in_future
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is too old, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_OLD,
+            val expiryDate = ExpiryDate(4, 2020) // 04/2020
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.INVALID_TOO_OLD,
             )
+
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is valid with field policy optional, then result should be valid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                expiryDateValidationResult = CardExpiryDateValidationResult.VALID,
+            val expiryDate = ExpiryDate(4, 2040) // 04/2040
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.OPTIONAL,
+                CardExpiryDateValidationResult.VALID,
             )
 
-            assertEquals(Validation.Valid, actual)
+            assertEquals(Validation.Valid, actual.validation)
         }
 
         @Test
         fun `date is valid with field policy hidden, then result should be valid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                expiryDateValidationResult = CardExpiryDateValidationResult.VALID,
+            val expiryDate = ExpiryDate(4, 2040) // 04/2040
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.HIDDEN,
+                CardExpiryDateValidationResult.VALID,
             )
 
-            assertEquals(Validation.Valid, actual)
+            assertEquals(Validation.Valid, actual.validation)
         }
 
         @Test
         fun `date is too far in the future with field policy optional, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
+            val expiryDate = ExpiryDate(4, 2099) // 04/2099
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.OPTIONAL,
+                CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
             )
+
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_far_in_future
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is too far in the future with field policy hidden, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
+            val expiryDate = ExpiryDate(4, 2099) // 04/2099
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.HIDDEN,
+                CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
             )
+
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_far_in_future
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is too old with field policy optional, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_OLD,
+            val expiryDate = ExpiryDate(4, 2020) // 04/2020
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.OPTIONAL,
+                CardExpiryDateValidationResult.INVALID_TOO_OLD,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is too old with field policy hidden, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_TOO_OLD,
+            val expiryDate = ExpiryDate(4, 2020) // 04/2020
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.HIDDEN,
+                CardExpiryDateValidationResult.INVALID_TOO_OLD,
             )
+
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid_too_old
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is empty with field policy required, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_OTHER_REASON,
+            val expiryDate = ExpiryDate.EMPTY_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.INVALID_OTHER_REASON,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is empty with field policy optional, then result should be valid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                expiryDateValidationResult = CardExpiryDateValidationResult.VALID,
+            val expiryDate = ExpiryDate.EMPTY_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.OPTIONAL,
+                CardExpiryDateValidationResult.INVALID_OTHER_REASON,
             )
-
-            assertEquals(Validation.Valid, actual)
+            assertEquals(Validation.Valid, actual.validation)
         }
 
         @Test
         fun `date is empty with field policy hidden, then result should be valid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                expiryDateValidationResult = CardExpiryDateValidationResult.VALID,
+            val expiryDate = ExpiryDate.EMPTY_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.HIDDEN,
+                CardExpiryDateValidationResult.INVALID_OTHER_REASON,
             )
 
-            assertEquals(Validation.Valid, actual)
+            assertEquals(Validation.Valid, actual.validation)
         }
 
         @Test
         fun `date is invalid with field policy required, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.REQUIRED,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
+            val expiryDate = ExpiryDate.INVALID_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.REQUIRED,
+                CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is invalid with field policy optional, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.OPTIONAL,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
+            val expiryDate = ExpiryDate.INVALID_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.OPTIONAL,
+                CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
 
         @Test
         fun `date is invalid with field policy hidden, then result should be invalid`() {
-            val actual = CardValidationUtils.generateExpiryDateValidation(
-                fieldPolicy = Brand.FieldPolicy.HIDDEN,
-                expiryDateValidationResult = CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
+            val expiryDate = ExpiryDate.INVALID_DATE
+            val actual = cardValidationMapper.mapExpiryDateValidation(
+                expiryDate,
+                Brand.FieldPolicy.HIDDEN,
+                CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
             )
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid
 
-            assertEquals(Validation.Invalid(expectedInvalidReason), actual)
+            assertEquals(Validation.Invalid(expectedInvalidReason), actual.validation)
         }
     }
 
@@ -343,93 +361,12 @@ internal class CardValidationUtilsTest {
     inner class ValidateSecurityCodeTest {
 
         @Test
-        fun `cvc is empty, then result should be invalid`() {
-            val cvc = ""
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 1 digit, then result should be invalid`() {
-            val cvc = "7"
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 2 digits, then result should be invalid`() {
-            val cvc = "12"
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 3 digits, then result should be valid`() {
-            val cvc = "737"
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Valid), actual)
-        }
-
-        @Test
-        fun `cvc is 4 digits, then result should be invalid`() {
-            val cvc = "8689"
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 6 digits, then result should be invalid`() {
-            val cvc = "457835"
-            val actual = CardValidationUtils.validateSecurityCode(
-                cvc,
-                getDetectedCardType(),
-                InputFieldUIState.REQUIRED,
-            )
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 3 digits with AMEX, then result should be invalid`() {
-            val cvc = "737"
-            val actual = CardValidationUtils.validateSecurityCode(
-                cvc,
-                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
-                cvcUIState = InputFieldUIState.REQUIRED,
-            )
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
-        fun `cvc is 4 digits with AMEX, then result should be valid`() {
-            val cvc = "8689"
-            val actual = CardValidationUtils.validateSecurityCode(
-                cvc,
-                getDetectedCardType(cardBrand = CardBrand(CardType.AMERICAN_EXPRESS)),
-                cvcUIState = InputFieldUIState.REQUIRED,
-            )
-            assertEquals(FieldState(cvc, Validation.Valid), actual)
-        }
-
-        @Test
-        fun `cvc has invalid characters, then result should be invalid`() {
-            val cvc = "1%y"
-            val actual =
-                CardValidationUtils.validateSecurityCode(cvc, getDetectedCardType(), InputFieldUIState.REQUIRED)
-            assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
-        }
-
-        @Test
         fun `cvc is valid with field policy required, then result should be valid`() {
             val cvc = "546"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-                cvcUIState = InputFieldUIState.REQUIRED,
+                InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.VALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -437,10 +374,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is valid with field policy optional, then result should be valid`() {
             val cvc = "345"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-                cvcUIState = InputFieldUIState.OPTIONAL,
+                InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.VALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -448,10 +385,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is valid with field policy hidden, then result should be valid`() {
             val cvc = "156"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.VALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -459,10 +396,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is invalid with field policy required, then result should be invalid`() {
             val cvc = "77"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
                 InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -470,10 +407,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is invalid with field policy optional, then result should be invalid`() {
             val cvc = "9"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
                 InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -481,10 +418,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is invalid with field policy hidden, then result should be valid`() {
             val cvc = "1358"
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -492,10 +429,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is empty with field policy required, then result should be invalid`() {
             val cvc = ""
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.REQUIRED),
-                cvcUIState = InputFieldUIState.REQUIRED,
+                InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Invalid(R.string.checkout_security_code_not_valid)), actual)
         }
@@ -503,10 +440,10 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is empty with field policy optional, then result should be valid`() {
             val cvc = ""
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.OPTIONAL),
-                cvcUIState = InputFieldUIState.OPTIONAL,
+                InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
         }
@@ -514,28 +451,12 @@ internal class CardValidationUtilsTest {
         @Test
         fun `cvc is empty with field policy hidden, then result should be valid`() {
             val cvc = ""
-            val actual = CardValidationUtils.validateSecurityCode(
+            val actual = cardValidationMapper.mapSecurityCodeValidation(
                 cvc,
-                getDetectedCardType(cvcPolicy = Brand.FieldPolicy.HIDDEN),
-                cvcUIState = InputFieldUIState.HIDDEN,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.INVALID,
             )
             assertEquals(FieldState(cvc, Validation.Valid), actual)
-        }
-
-        private fun getDetectedCardType(
-            cardBrand: CardBrand = CardBrand(CardType.VISA),
-            cvcPolicy: Brand.FieldPolicy = Brand.FieldPolicy.REQUIRED,
-        ): DetectedCardType {
-            return DetectedCardType(
-                cardBrand = cardBrand,
-                isReliable = false,
-                enableLuhnCheck = true,
-                cvcPolicy = cvcPolicy,
-                expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-                isSupported = true,
-                panLength = null,
-                paymentMethodVariant = null,
-            )
         }
     }
 }
