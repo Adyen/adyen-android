@@ -147,7 +147,7 @@ constructor(
             val details = redirectHandler.parseRedirectResult(intent.data)
             val nativeRedirectData = paymentDataRepository.nativeRedirectData
             when {
-                nativeRedirectData != null -> {
+                action?.type == ActionTypes.NATIVE_REDIRECT -> {
                     handleNativeRedirect(nativeRedirectData, details)
                 }
 
@@ -167,7 +167,7 @@ constructor(
         )
     }
 
-    private fun handleNativeRedirect(nativeRedirectData: String, details: JSONObject) {
+    private fun handleNativeRedirect(nativeRedirectData: String?, details: JSONObject) {
         coroutineScope.launch {
             val request = NativeRedirectRequest(
                 redirectData = nativeRedirectData,

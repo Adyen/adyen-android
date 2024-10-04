@@ -16,7 +16,7 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class NativeRedirectRequest(
-    val redirectData: String,
+    val redirectData: String?,
     val returnQueryString: String,
 ) : ModelObject() {
 
