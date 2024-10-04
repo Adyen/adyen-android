@@ -150,6 +150,42 @@ public final class com/adyen/checkout/core/internal/ui/DefaultImageLoader$Compan
 public abstract interface annotation class com/adyen/checkout/core/internal/util/Logger$LogLevel : java/lang/annotation/Annotation {
 }
 
+public final class com/adyen/checkout/core/ui/model/ExpiryDate {
+	public static final field Companion Lcom/adyen/checkout/core/ui/model/ExpiryDate$Companion;
+	public static final field EMPTY_DATE Lcom/adyen/checkout/core/ui/model/ExpiryDate;
+	public static final field INVALID_DATE Lcom/adyen/checkout/core/ui/model/ExpiryDate;
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lcom/adyen/checkout/core/ui/model/ExpiryDate;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/ui/model/ExpiryDate;IIILjava/lang/Object;)Lcom/adyen/checkout/core/ui/model/ExpiryDate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiryMonth ()I
+	public final fun getExpiryYear ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/ui/model/ExpiryDate$Companion {
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult : java/lang/Enum {
+	public static final field INVALID_DATE_FORMAT Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static final field INVALID_OTHER_REASON Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static final field INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static final field INVALID_TOO_OLD Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static final field VALID Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public static fun values ()[Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidator {
+	public static final field INSTANCE Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidator;
+	public final fun validateExpiryDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+	public final fun validateExpiryDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;Ljava/util/Calendar;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+}
+
 public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult : java/lang/Enum {
 	public static final field INVALID_ILLEGAL_CHARACTERS Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
 	public static final field INVALID_LUHN_CHECK Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;

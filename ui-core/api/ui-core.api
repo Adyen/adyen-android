@@ -217,9 +217,6 @@ public final class com/adyen/checkout/ui/core/internal/ui/model/AddressParams$Po
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/ui/core/internal/ui/model/ExpiryDate$Companion {
-}
-
 public final class com/adyen/checkout/ui/core/internal/ui/view/AddressFormInput : android/widget/LinearLayout {
 	public fun <init> (Landroid/content/Context;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
@@ -278,8 +275,8 @@ public final class com/adyen/checkout/ui/core/internal/ui/view/ExpiryDateInput :
 	public static final field Companion Lcom/adyen/checkout/ui/core/internal/ui/view/ExpiryDateInput$Companion;
 	public static final field SEPARATOR Ljava/lang/String;
 	public fun afterTextChanged (Landroid/text/Editable;)V
-	public final fun getDate ()Lcom/adyen/checkout/ui/core/internal/ui/model/ExpiryDate;
-	public final fun setDate (Lcom/adyen/checkout/ui/core/internal/ui/model/ExpiryDate;)V
+	public final fun getDate ()Lcom/adyen/checkout/core/ui/model/ExpiryDate;
+	public final fun setDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;)V
 }
 
 public final class com/adyen/checkout/ui/core/internal/ui/view/ExpiryDateInput$Companion {

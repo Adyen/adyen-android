@@ -15,7 +15,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar

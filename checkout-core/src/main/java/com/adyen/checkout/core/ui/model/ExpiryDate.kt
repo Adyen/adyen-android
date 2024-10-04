@@ -3,13 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 17/7/2024.
+ * Created by ozgur on 4/10/2024.
  */
-package com.adyen.checkout.ui.core.internal.ui.model
+package com.adyen.checkout.core.ui.model
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class ExpiryDate(
     val expiryMonth: Int,
     val expiryYear: Int,

@@ -18,11 +18,11 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
+import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.ui.validation.CardExpiryDateValidator
 import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
 import com.adyen.checkout.core.ui.validation.CardNumberValidator
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
-import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
-import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationUtils
 import java.util.Calendar
 import java.util.GregorianCalendar
 
@@ -59,7 +59,7 @@ object CardValidationUtils {
         calendar: Calendar = GregorianCalendar.getInstance()
     ): FieldState<ExpiryDate> {
         val expiryDateValidationResult =
-            ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)
+            CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)
         val validation = generateExpiryDateValidation(fieldPolicy, expiryDateValidationResult)
 
         return FieldState(expiryDate, validation)
@@ -68,21 +68,21 @@ object CardValidationUtils {
     @VisibleForTesting
     internal fun generateExpiryDateValidation(
         fieldPolicy: Brand.FieldPolicy?,
-        expiryDateValidationResult: ExpiryDateValidationResult,
+        expiryDateValidationResult: CardExpiryDateValidationResult,
     ): Validation {
         return when (expiryDateValidationResult) {
-            ExpiryDateValidationResult.VALID -> Validation.Valid
+            CardExpiryDateValidationResult.VALID -> Validation.Valid
 
-            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
+            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
 
-            ExpiryDateValidationResult.INVALID_TOO_OLD ->
+            CardExpiryDateValidationResult.INVALID_TOO_OLD ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
 
-            ExpiryDateValidationResult.INVALID_DATE_FORMAT ->
+            CardExpiryDateValidationResult.INVALID_DATE_FORMAT ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid)
 
-            ExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
+            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
                 Validation.Valid
             } else {
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid)

@@ -10,14 +10,14 @@ package com.adyen.checkout.mealvoucherfr.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.ui.validation.CardExpiryDateValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberValidationResult
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinValidationResult
 import com.adyen.checkout.mealvoucherfr.R
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
-import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationResult
-import com.adyen.checkout.ui.core.internal.util.ExpiryDateValidationUtils
 import org.jetbrains.annotations.VisibleForTesting
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -54,20 +54,20 @@ internal object MealVoucherFRValidationUtils {
 
     @VisibleForTesting
     internal fun validateExpiryDate(expiryDate: ExpiryDate, calendar: Calendar): FieldState<ExpiryDate> {
-        return when (ExpiryDateValidationUtils.validateExpiryDate(expiryDate, calendar)) {
-            ExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
-            ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
+        return when (CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)) {
+            CardExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
+            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future),
             )
 
-            ExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
+            CardExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_old),
             )
 
-            ExpiryDateValidationResult.INVALID_DATE_FORMAT,
-            ExpiryDateValidationResult.INVALID_OTHER_REASON -> FieldState(
+            CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
+            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> FieldState(
                 expiryDate,
                 Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid),
             )

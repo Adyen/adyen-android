@@ -44,6 +44,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -55,7 +56,6 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
@@ -160,7 +160,7 @@ internal class StoredCardDelegate(
         val event = GenericEvents.rendered(
             component = storedPaymentMethod.type.orEmpty(),
             isStoredPaymentMethod = true,
-            configData = cardConfigDataGenerator.generate(configuration = componentParams, isStored = true)
+            configData = cardConfigDataGenerator.generate(configuration = componentParams, isStored = true),
         )
         analyticsManager.trackEvent(event)
     }

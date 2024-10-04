@@ -6,12 +6,9 @@
  * Created by ozgur on 24/7/2024.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.core.ui.validation
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class ExpiryDateValidationResult {
+enum class CardExpiryDateValidationResult {
     VALID,
     INVALID_TOO_FAR_IN_THE_FUTURE,
     INVALID_TOO_OLD,
