@@ -29,6 +29,9 @@
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.20)                          | **2.2.20**                    |
 
+## Fixed
+- JSON deserialization no longer returns the coerced `"null"` string when parsing JSON objects with explicit null values.
+
 ## Deprecated
 - The style for payment method list headers has been changed.
   | Previous                                 | Now                                      |
