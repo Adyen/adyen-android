@@ -30,7 +30,7 @@ internal class DefaultAnalyticsSetupProvider(
             version = AnalyticsPlatformParams.version,
             channel = AnalyticsPlatformParams.channel,
             platform = AnalyticsPlatformParams.platform,
-            locale = shopperLocale.toString(),
+            locale = shopperLocale.toLanguageTag(),
             component = getComponentQueryParameter(source),
             flavor = getFlavorQueryParameter(isCreatedByDropIn),
             deviceBrand = Build.BRAND,
