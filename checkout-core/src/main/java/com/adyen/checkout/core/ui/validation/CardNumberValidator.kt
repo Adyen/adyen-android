@@ -20,6 +20,14 @@ object CardNumberValidator {
     private const val MINIMUM_CARD_NUMBER_LENGTH = 12
     const val MAXIMUM_CARD_NUMBER_LENGTH = 19
 
+    /**
+     * Validate card number.
+     *
+     * @param number Card number.
+     * @param enableLuhnCheck Whether Luhn check will be included in validation check or not.
+     *
+     * @return Validation result.
+     */
     fun validateCardNumber(number: String, enableLuhnCheck: Boolean): CardNumberValidationResult {
         val normalizedNumber = StringUtil.normalize(number)
         val length = normalizedNumber.length

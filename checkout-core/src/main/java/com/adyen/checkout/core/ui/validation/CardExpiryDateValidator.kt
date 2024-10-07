@@ -18,10 +18,25 @@ object CardExpiryDateValidator {
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
 
+    /**
+     * Validate expiry date.
+     *
+     * @param expiryDate Expiry date.
+     *
+     * @return Validation result.
+     */
     fun validateExpiryDate(
         expiryDate: ExpiryDate
     ) = validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
 
+    /**
+     * Validate expiry date.
+     *
+     * @param expiryDate Expiry date.
+     * @param calendar Calendar instance to be used to compare given expiry date.
+     *
+     * @return Validation result.
+     */
     fun validateExpiryDate(
         expiryDate: ExpiryDate,
         calendar: Calendar

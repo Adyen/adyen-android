@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.core.ui.validation
 
+/**
+ * Possible validation results for expiry date validation. (@see [CardExpiryDateValidator.validateExpiryDate]
+ */
 enum class CardExpiryDateValidationResult {
     VALID,
     INVALID_TOO_FAR_IN_THE_FUTURE,

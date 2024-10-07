@@ -18,6 +18,15 @@ object CardSecurityCodeValidator {
     private const val GENERAL_CARD_SECURITY_CODE_SIZE = 3
     private const val AMEX_SECURITY_CODE_SIZE = 4
 
+    /**
+     * Validate security code (CVV/CVC).
+     *
+     * @param securityCode Security code (CVV/CVC).
+     * @param cardBrand Optional card brand parameter to apply specific validation to given security code
+     * for a card brand.
+     *
+     * @return Validation result.
+     */
     fun validateSecurityCode(securityCode: String, cardBrand: CardBrand? = null): CardSecurityCodeValidationResult {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length

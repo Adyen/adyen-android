@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.core.ui.validation
 
+/**
+ * Possible validation results for card number validation. (@see [CardNumberValidator.validateCardNumber]
+ */
 enum class CardNumberValidationResult {
     INVALID_ILLEGAL_CHARACTERS,
     INVALID_TOO_LONG,
