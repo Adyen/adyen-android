@@ -517,8 +517,8 @@ class DefaultCardDelegate(
         expiryDate: ExpiryDate,
         expiryDatePolicy: Brand.FieldPolicy?
     ): FieldState<ExpiryDate> {
-        val validation = CardValidationUtils.validateExpiryDate(expiryDate)
-        return cardValidationMapper.mapExpiryDateValidation(expiryDate, expiryDatePolicy, validation)
+        val validation = CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
+        return cardValidationMapper.mapExpiryDateValidation(expiryDate, validation)
     }
 
     private fun validateSecurityCode(

@@ -10,14 +10,13 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.internal.util.CardExpiryDateValidation
 import com.adyen.checkout.card.internal.util.CardNumberValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -44,26 +43,19 @@ class CardValidationMapper {
 
     fun mapExpiryDateValidation(
         expiryDate: ExpiryDate,
-        fieldPolicy: Brand.FieldPolicy?,
-        validationResult: CardExpiryDateValidationResult
+        validationResult: CardExpiryDateValidation,
     ): FieldState<ExpiryDate> {
         val validation = when (validationResult) {
-            CardExpiryDateValidationResult.VALID -> Validation.Valid
-
-            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
+            CardExpiryDateValidation.VALID -> Validation.Valid
+            CardExpiryDateValidation.VALID_NOT_REQUIRED -> Validation.Valid
+            CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
 
-            CardExpiryDateValidationResult.INVALID_TOO_OLD ->
+            CardExpiryDateValidation.INVALID_TOO_OLD ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
 
-            CardExpiryDateValidationResult.INVALID_DATE_FORMAT ->
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
-
-            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
-                Validation.Valid
-            } else {
-                Validation.Invalid(R.string.checkout_expiry_date_not_valid)
-            }
+            CardExpiryDateValidation.INVALID_DATE_FORMAT -> Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+            CardExpiryDateValidation.INVALID_OTHER_REASON -> Validation.Invalid(R.string.checkout_expiry_date_not_valid)
         }
         return FieldState(expiryDate, validation)
     }

@@ -8,6 +8,8 @@
 package com.adyen.checkout.card.internal.util
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
@@ -44,9 +46,36 @@ object CardValidationUtils {
      */
     internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
+        fieldPolicy: Brand.FieldPolicy?,
         calendar: Calendar = GregorianCalendar.getInstance()
-    ): CardExpiryDateValidationResult {
-        return CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)
+    ): CardExpiryDateValidation {
+        val result = CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)
+        return validateExpiryDate(result, fieldPolicy)
+    }
+
+    @VisibleForTesting
+    internal fun validateExpiryDate(
+        validationResult: CardExpiryDateValidationResult,
+        fieldPolicy: Brand.FieldPolicy?
+    ): CardExpiryDateValidation {
+        return when (validationResult) {
+            CardExpiryDateValidationResult.VALID -> CardExpiryDateValidation.VALID
+
+            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
+                CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE
+
+            CardExpiryDateValidationResult.INVALID_TOO_OLD ->
+                CardExpiryDateValidation.INVALID_TOO_OLD
+
+            CardExpiryDateValidationResult.INVALID_DATE_FORMAT ->
+                CardExpiryDateValidation.INVALID_DATE_FORMAT
+
+            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
+                CardExpiryDateValidation.VALID_NOT_REQUIRED
+            } else {
+                CardExpiryDateValidation.INVALID_OTHER_REASON
+            }
+        }
     }
 
     /**
@@ -68,4 +97,14 @@ enum class CardNumberValidation {
     INVALID_TOO_SHORT,
     INVALID_TOO_LONG,
     INVALID_UNSUPPORTED_BRAND
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardExpiryDateValidation {
+    VALID,
+    VALID_NOT_REQUIRED,
+    INVALID_TOO_FAR_IN_THE_FUTURE,
+    INVALID_TOO_OLD,
+    INVALID_DATE_FORMAT,
+    INVALID_OTHER_REASON,
 }
