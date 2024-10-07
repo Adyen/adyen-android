@@ -29,9 +29,21 @@ object CardValidationUtils {
     /**
      * Validate card number.
      */
-    fun validateCardNumber(number: String, enableLuhnCheck: Boolean, isBrandSupported: Boolean): CardNumberValidation {
+    internal fun validateCardNumber(
+        number: String,
+        enableLuhnCheck: Boolean,
+        isBrandSupported: Boolean
+    ): CardNumberValidation {
         val validation = CardNumberValidator.validateCardNumber(number, enableLuhnCheck)
-        return when (validation) {
+        return validateCardNumber(validation, isBrandSupported)
+    }
+
+    @VisibleForTesting
+    internal fun validateCardNumber(
+        validationResult: CardNumberValidationResult,
+        isBrandSupported: Boolean
+    ): CardNumberValidation {
+        return when (validationResult) {
             CardNumberValidationResult.INVALID_ILLEGAL_CHARACTERS -> CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
             CardNumberValidationResult.INVALID_TOO_LONG -> CardNumberValidation.INVALID_TOO_LONG
             CardNumberValidationResult.INVALID_TOO_SHORT -> CardNumberValidation.INVALID_TOO_SHORT
