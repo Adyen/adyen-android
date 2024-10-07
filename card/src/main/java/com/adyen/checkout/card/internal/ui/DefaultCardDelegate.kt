@@ -526,8 +526,8 @@ class DefaultCardDelegate(
         cardType: DetectedCardType?
     ): FieldState<String> {
         val cvcUIState = makeCvcUIState(cardType)
-        val validation = CardValidationUtils.validateSecurityCode(securityCode, cardType)
-        return cardValidationMapper.mapSecurityCodeValidation(securityCode, cvcUIState, validation)
+        val validation = CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
+        return cardValidationMapper.mapSecurityCodeValidation(securityCode, validation)
     }
 
     private fun validateHolderName(holderName: String): FieldState<String> {

@@ -10,14 +10,13 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.CardExpiryDateValidation
 import com.adyen.checkout.card.internal.util.CardNumberValidation
+import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardValidationMapper {
@@ -62,22 +61,15 @@ class CardValidationMapper {
 
     fun mapSecurityCodeValidation(
         securityCode: String,
-        cvcUIState: InputFieldUIState,
-        validationResult: CardSecurityCodeValidationResult
+        validationResult: CardSecurityCodeValidation
     ): FieldState<String> {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
-        val length = normalizedSecurityCode.length
-        val invalidState = Validation.Invalid(R.string.checkout_security_code_not_valid)
 
-        val validation = when {
-            cvcUIState == InputFieldUIState.HIDDEN -> Validation.Valid
-            cvcUIState == InputFieldUIState.OPTIONAL && length == 0 -> Validation.Valid
-            else -> {
-                when (validationResult) {
-                    CardSecurityCodeValidationResult.INVALID -> invalidState
-                    CardSecurityCodeValidationResult.VALID -> Validation.Valid
-                }
-            }
+        val validation = when (validationResult) {
+            CardSecurityCodeValidation.VALID -> Validation.Valid
+            CardSecurityCodeValidation.VALID_HIDDEN -> Validation.Valid
+            CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY -> Validation.Valid
+            CardSecurityCodeValidation.INVALID -> Validation.Invalid(R.string.checkout_security_code_not_valid)
         }
 
         return FieldState(normalizedSecurityCode, validation)

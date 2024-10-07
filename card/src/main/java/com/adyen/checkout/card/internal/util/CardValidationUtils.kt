@@ -11,6 +11,8 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidator
@@ -83,9 +85,32 @@ object CardValidationUtils {
      */
     internal fun validateSecurityCode(
         securityCode: String,
-        detectedCardType: DetectedCardType?
-    ): CardSecurityCodeValidationResult {
-        return CardSecurityCodeValidator.validateSecurityCode(securityCode, detectedCardType?.cardBrand)
+        detectedCardType: DetectedCardType?,
+        uiState: InputFieldUIState
+    ): CardSecurityCodeValidation {
+        val result = CardSecurityCodeValidator.validateSecurityCode(securityCode, detectedCardType?.cardBrand)
+        return validateSecurityCode(securityCode, uiState, result)
+    }
+
+    @VisibleForTesting
+    internal fun validateSecurityCode(
+        securityCode: String,
+        uiState: InputFieldUIState,
+        validationResult: CardSecurityCodeValidationResult
+    ): CardSecurityCodeValidation {
+        val normalizedSecurityCode = StringUtil.normalize(securityCode)
+        val length = normalizedSecurityCode.length
+
+        return when {
+            uiState == InputFieldUIState.HIDDEN -> CardSecurityCodeValidation.VALID_HIDDEN
+            uiState == InputFieldUIState.OPTIONAL && length == 0 -> CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY
+            else -> {
+                when (validationResult) {
+                    CardSecurityCodeValidationResult.INVALID -> CardSecurityCodeValidation.INVALID
+                    CardSecurityCodeValidationResult.VALID -> CardSecurityCodeValidation.VALID
+                }
+            }
+        }
     }
 }
 
@@ -107,4 +132,12 @@ enum class CardExpiryDateValidation {
     INVALID_TOO_OLD,
     INVALID_DATE_FORMAT,
     INVALID_OTHER_REASON,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardSecurityCodeValidation {
+    VALID,
+    VALID_HIDDEN,
+    VALID_OPTIONAL_EMPTY,
+    INVALID,
 }

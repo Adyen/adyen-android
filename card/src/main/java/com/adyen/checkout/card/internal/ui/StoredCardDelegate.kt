@@ -331,8 +331,8 @@ internal class StoredCardDelegate(
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
         val cvcUiState = makeCvcUIState(detectedCardType.cvcPolicy)
-        val validation = CardValidationUtils.validateSecurityCode(securityCode, detectedCardType)
-        return cardValidationMapper.mapSecurityCodeValidation(securityCode, cvcUiState, validation)
+        val validation = CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
+        return cardValidationMapper.mapSecurityCodeValidation(securityCode, validation)
     }
 
     private fun isCvcHidden(): Boolean {

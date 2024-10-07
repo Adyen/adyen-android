@@ -9,7 +9,9 @@
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.data.model.Brand
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -257,6 +259,108 @@ internal class CardValidationUtilsTest {
             )
 
             assertEquals(CardExpiryDateValidation.INVALID_DATE_FORMAT, actual)
+        }
+    }
+
+    @Nested
+    inner class ValidateSecurityCodeTest {
+        @Test
+        fun `cvc is valid with field policy required, then result should be valid`() {
+            val cvc = "546"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.VALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID, actual)
+        }
+
+        @Test
+        fun `cvc is valid with field policy optional, then result should be valid`() {
+            val cvc = "345"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.VALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID, actual)
+        }
+
+        @Test
+        fun `cvc is valid with field policy hidden, then result should be valid`() {
+            val cvc = "156"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.VALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
+        }
+
+        @Test
+        fun `cvc is invalid with field policy required, then result should be invalid`() {
+            val cvc = "77"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.INVALID, actual)
+        }
+
+        @Test
+        fun `cvc is invalid with field policy optional, then result should be invalid`() {
+            val cvc = "9"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.INVALID, actual)
+        }
+
+        @Test
+        fun `cvc is invalid with field policy hidden, then result should be valid`() {
+            val cvc = "1358"
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
+        }
+
+        @Test
+        fun `cvc is empty with field policy required, then result should be invalid`() {
+            val cvc = ""
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.REQUIRED,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.INVALID, actual)
+        }
+
+        @Test
+        fun `cvc is empty with field policy optional, then result should be valid`() {
+            val cvc = ""
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.OPTIONAL,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY, actual)
+        }
+
+        @Test
+        fun `cvc is empty with field policy hidden, then result should be valid`() {
+            val cvc = ""
+            val actual = CardValidationUtils.validateSecurityCode(
+                cvc,
+                InputFieldUIState.HIDDEN,
+                CardSecurityCodeValidationResult.INVALID,
+            )
+            assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
         }
     }
 }
