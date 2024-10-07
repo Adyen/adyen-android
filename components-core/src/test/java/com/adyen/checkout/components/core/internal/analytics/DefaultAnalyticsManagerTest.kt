@@ -11,7 +11,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -66,12 +65,12 @@ internal class DefaultAnalyticsManagerTest(
         }
 
         @Test
-        fun `fetching checkoutAttemptId fails, then checkoutAttemptId is null`() = runTest {
+        fun `fetching checkoutAttemptId fails, then checkoutAttemptId is failed checkoutAttemptId`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
             analyticsManager.initialize(this@InitializeTest, this)
 
-            assertNull(analyticsManager.getCheckoutAttemptId())
+            assertEquals(DefaultAnalyticsManager.FAILED_CHECKOUT_ATTEMPT_ID, analyticsManager.getCheckoutAttemptId())
         }
 
         @Test
@@ -92,6 +91,16 @@ internal class DefaultAnalyticsManagerTest(
         @Test
         fun `sending events is disabled, then events should not be stored`() = runTest {
             analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+            analyticsManager.initialize(this@TrackEventTest, this)
+
+            analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
+
+            verify(analyticsRepository, never()).storeEvent(any())
+        }
+
+        @Test
+        fun `fetching checkoutAttemptId failed, then events should not be stored`() = runTest {
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
             analyticsManager.initialize(this@TrackEventTest, this)
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
@@ -146,6 +155,36 @@ internal class DefaultAnalyticsManagerTest(
     @Test
     fun `when sending events and checkoutAttemptId is null, then events are not sent`() = runTest {
         whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn null
+        analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
+        val event = AnalyticsEvent.Info(
+            component = "test",
+            shouldForceSend = true,
+        )
+
+        analyticsManager.trackEvent(event)
+
+        verify(analyticsRepository, never()).sendEvents(any())
+        analyticsManager.clear(this@DefaultAnalyticsManagerTest)
+    }
+
+    @Test
+    fun `when sending events and sending events is disabled, then events are not sent`() = runTest {
+        analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+        analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
+        val event = AnalyticsEvent.Info(
+            component = "test",
+            shouldForceSend = true,
+        )
+
+        analyticsManager.trackEvent(event)
+
+        verify(analyticsRepository, never()).sendEvents(any())
+        analyticsManager.clear(this@DefaultAnalyticsManagerTest)
+    }
+
+    @Test
+    fun `when sending events and checkoutAttemptId has failed fetching, then events are not sent`() = runTest {
+        whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
         analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
         val event = AnalyticsEvent.Info(
             component = "test",

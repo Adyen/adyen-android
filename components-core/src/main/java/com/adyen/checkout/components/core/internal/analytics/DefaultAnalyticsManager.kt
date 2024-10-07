@@ -58,7 +58,10 @@ internal class DefaultAnalyticsManager(
                 onSuccess = { attemptId ->
                     checkoutAttemptId = attemptId?.also { startTimer() }
                 },
-                onFailure = { adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." } },
+                onFailure = {
+                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
+                    checkoutAttemptId = FAILED_CHECKOUT_ATTEMPT_ID
+                },
             )
         }
     }
@@ -104,6 +107,11 @@ internal class DefaultAnalyticsManager(
             return
         }
 
+        if (cannotSendEvents()) {
+            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to send events, ignoring." }
+            return
+        }
+
         runSuspendCatching {
             analyticsRepository.sendEvents(checkoutAttemptId)
         }.fold(
@@ -115,7 +123,8 @@ internal class DefaultAnalyticsManager(
     override fun getCheckoutAttemptId(): String? = checkoutAttemptId
 
     private fun cannotSendEvents(): Boolean {
-        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority ||
+            checkoutAttemptId == FAILED_CHECKOUT_ATTEMPT_ID
     }
 
     override fun clear(owner: Any) {
@@ -135,6 +144,9 @@ internal class DefaultAnalyticsManager(
     }
 
     companion object {
+        @VisibleForTesting
+        internal val FAILED_CHECKOUT_ATTEMPT_ID = "fetch-checkoutAttemptId-failed"
+
         @VisibleForTesting
         internal val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds
     }
