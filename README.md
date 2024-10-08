@@ -65,9 +65,11 @@ If you are upgrading from 4.x.x to a current release, check out our [migration g
 If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
 
-## Development
+## Development and testing
 
 For development and testing purposes the project is accompanied by a test app. See [here](example-app/README.md) how to set it up and run it.
+
+To test your integration you could use [Adyen Test Cards Android][adyenTestCardsAndroid]. This will allow you to easily prefill test payment method information.
 
 ## Support
 
@@ -119,3 +121,4 @@ This repository is available under the [MIT license](LICENSE).
 [dokka]: https://adyen.github.io/adyen-android/
 [docs.checkout]: https://docs.adyen.com/online-payments/
 [docs.apiExplorer]: https://docs.adyen.com/api-explorer/
+[adyenTestCardsAndroid]: https://github.com/Adyen/adyen-testcards-android

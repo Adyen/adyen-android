@@ -12,6 +12,7 @@
 - Added support for 6 more locales: Catalan (ca-ES), Icelandic (is-IS), Bulgarian (bg-BG),
   Estonian (et-EE), Latvian (lv-LV) and Lithuanian (lt-lT).
 - For Twint, storing payment details and paying with them is now supported. See the documentation [here](/docs/payment-methods/TWINT.md).
+- You can now use [Adyen Test Cards Android](https://github.com/Adyen/adyen-testcards-android) to prefill test payment method information, making testing your integration easier.
 
 > [!WARNING]
 > For the Twint component integration, you are now required to use `TwintComponent` instead of `InstantPaymentComponent`. See the [documentation](/docs/payment-methods/TWINT.md) to find out the details.
