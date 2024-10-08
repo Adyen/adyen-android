@@ -11,6 +11,8 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,7 +40,7 @@ internal data class IsReadyToPayRequestModel(
                         putOpt(API_VERSION_MINOR, modelObject.apiVersionMinor)
                         putOpt(
                             ALLOWED_PAYMENT_METHODS,
-                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER)
+                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER),
                         )
                         putOpt(EXISTING_PAYMENT_METHOD_REQUIRED, modelObject.isExistingPaymentMethodRequired)
                     }
@@ -48,13 +50,14 @@ internal data class IsReadyToPayRequestModel(
             }
 
             override fun deserialize(jsonObject: JSONObject) = IsReadyToPayRequestModel(
-                apiVersion = jsonObject.optInt(API_VERSION),
-                apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR),
+                apiVersion = jsonObject.getIntOrNull(API_VERSION) ?: 0,
+                apiVersionMinor = jsonObject.getIntOrNull(API_VERSION_MINOR) ?: 0,
                 allowedPaymentMethods = deserializeOptList(
                     jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
-                    GooglePayPaymentMethodModel.SERIALIZER
+                    GooglePayPaymentMethodModel.SERIALIZER,
                 ),
-                isExistingPaymentMethodRequired = jsonObject.optBoolean(EXISTING_PAYMENT_METHOD_REQUIRED)
+                isExistingPaymentMethodRequired = jsonObject.getBooleanOrNull(EXISTING_PAYMENT_METHOD_REQUIRED)
+                    ?: false,
             )
         }
     }

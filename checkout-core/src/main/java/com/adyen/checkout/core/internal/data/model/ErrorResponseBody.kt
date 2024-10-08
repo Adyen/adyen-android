@@ -51,11 +51,11 @@ data class ErrorResponseBody(
             override fun deserialize(jsonObject: JSONObject): ErrorResponseBody {
                 return try {
                     ErrorResponseBody(
-                        status = jsonObject.optInt(STATUS),
-                        errorCode = jsonObject.optString(ERROR_CODE),
-                        message = jsonObject.optString(MESSAGE),
-                        errorType = jsonObject.optString(ERROR_TYPE),
-                        pspReference = jsonObject.optString(PSP_REFERENCE),
+                        status = jsonObject.getIntOrNull(STATUS),
+                        errorCode = jsonObject.getStringOrNull(ERROR_CODE),
+                        message = jsonObject.getStringOrNull(MESSAGE),
+                        errorType = jsonObject.getStringOrNull(ERROR_TYPE),
+                        pspReference = jsonObject.getStringOrNull(PSP_REFERENCE),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(ErrorResponseBody::class.java, e)

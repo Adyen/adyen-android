@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,7 +39,7 @@ internal data class PublicKeyResponse(
             override fun deserialize(jsonObject: JSONObject): PublicKeyResponse {
                 return try {
                     PublicKeyResponse(
-                        publicKey = jsonObject.optString(PUBLIC_KEY)
+                        publicKey = jsonObject.getStringOrNull(PUBLIC_KEY).orEmpty(),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PublicKeyResponse::class.java, e)

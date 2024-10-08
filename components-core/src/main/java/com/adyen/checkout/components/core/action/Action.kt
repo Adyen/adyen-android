@@ -9,6 +9,7 @@ package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import org.json.JSONObject
 
 /**
@@ -41,10 +42,7 @@ abstract class Action : ModelObject() {
             }
 
             override fun deserialize(jsonObject: JSONObject): Action {
-                val actionType = jsonObject.optString(TYPE)
-                if (actionType.isEmpty()) {
-                    throw CheckoutException("Action type not found")
-                }
+                val actionType = jsonObject.getStringOrNull(TYPE) ?: throw CheckoutException("Action type not found")
                 val serializer = getChildSerializer(actionType)
                 return serializer.deserialize(jsonObject)
             }
