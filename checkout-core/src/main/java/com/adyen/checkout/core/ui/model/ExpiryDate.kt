@@ -7,6 +7,12 @@
  */
 package com.adyen.checkout.core.ui.model
 
+/**
+ * Expiry date.
+ *
+ * @param expiryMonth 1 based month value. Valid values are [1-12], 1 being January and 12 being December.
+ * @param expiryYear 4 digit year (i.e. 2024)
+ */
 data class ExpiryDate(
     val expiryMonth: Int,
     val expiryYear: Int,
