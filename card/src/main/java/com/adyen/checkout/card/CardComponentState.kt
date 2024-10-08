@@ -10,7 +10,6 @@ package com.adyen.checkout.card
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.CardBrand
 
 /**
  * Represents the state of [CardComponent].

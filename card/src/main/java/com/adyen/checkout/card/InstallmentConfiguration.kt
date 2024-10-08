@@ -10,7 +10,6 @@ package com.adyen.checkout.card
 
 import android.os.Parcelable
 import com.adyen.checkout.card.internal.util.InstallmentUtils
-import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import kotlinx.parcelize.Parcelize
 
@@ -40,7 +39,7 @@ data class InstallmentConfiguration(
         }
         if (!InstallmentUtils.areInstallmentValuesValid(this)) {
             throw CheckoutException(
-                "Installment Configuration contains invalid values for options. Values must be greater than 1."
+                "Installment Configuration contains invalid values for options. Values must be greater than 1.",
             )
         }
     }

@@ -4,6 +4,8 @@ import android.content.Context
 import com.adyen.checkout.adyen3ds2.adyen3DS2
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.AddressConfiguration
+import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.card
@@ -14,8 +16,6 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig
