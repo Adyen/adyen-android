@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.ui.validation
 
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.internal.ui.model.INVALID_DATE
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
@@ -36,12 +38,12 @@ internal class CardExpiryDateValidatorTest {
         fun expiryDateValidationSource() = listOf(
             // Invalid expiry date
             arguments(
-                ExpiryDate.EMPTY_DATE,
+                EMPTY_DATE,
                 GregorianCalendar.getInstance(),
                 CardExpiryDateValidationResult.INVALID_OTHER_REASON,
             ),
             arguments(
-                ExpiryDate.INVALID_DATE,
+                INVALID_DATE,
                 GregorianCalendar.getInstance(),
                 CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
             ),

@@ -16,13 +16,4 @@ package com.adyen.checkout.core.ui.model
 data class ExpiryDate(
     val expiryMonth: Int,
     val expiryYear: Int,
-) {
-
-    companion object {
-        @JvmField
-        val EMPTY_DATE = ExpiryDate(0, 0)
-
-        @JvmField
-        val INVALID_DATE = ExpiryDate(-1, -1)
-    }
-}
+)

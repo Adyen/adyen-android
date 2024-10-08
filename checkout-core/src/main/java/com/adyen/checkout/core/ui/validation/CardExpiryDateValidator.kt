@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.ui.validation
 
+import com.adyen.checkout.core.internal.ui.model.isEmptyDate
+import com.adyen.checkout.core.internal.ui.model.isInvalidDate
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -54,7 +56,7 @@ object CardExpiryDateValidator {
             }
         }
 
-        expiryDate == ExpiryDate.INVALID_DATE -> CardExpiryDateValidationResult.INVALID_DATE_FORMAT
+        expiryDate.isInvalidDate() -> CardExpiryDateValidationResult.INVALID_DATE_FORMAT
 
         else -> CardExpiryDateValidationResult.INVALID_OTHER_REASON
     }
@@ -75,7 +77,7 @@ object CardExpiryDateValidator {
 
     private fun dateExists(expiryDate: ExpiryDate): Boolean {
         return (
-            expiryDate !== ExpiryDate.EMPTY_DATE &&
+            !expiryDate.isEmptyDate() &&
                 isValidMonth(expiryDate.expiryMonth) &&
                 expiryDate.expiryYear > 0
             )

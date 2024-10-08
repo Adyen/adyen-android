@@ -54,6 +54,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -451,7 +452,7 @@ class DefaultCardDelegate(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
+            if (expiryDateResult != EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
                     expiryYear = expiryDateResult.expiryYear.toString(),

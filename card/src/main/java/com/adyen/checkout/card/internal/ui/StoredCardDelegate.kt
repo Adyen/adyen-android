@@ -42,6 +42,7 @@ import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -284,7 +285,7 @@ internal class StoredCardDelegate(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
+            if (expiryDateResult != EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
                     expiryYear = expiryDateResult.expiryYear.toString(),
@@ -393,7 +394,7 @@ internal class StoredCardDelegate(
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
-            inputData.expiryDate = ExpiryDate.EMPTY_DATE
+            inputData.expiryDate = EMPTY_DATE
         }
 
         onInputDataChanged()
