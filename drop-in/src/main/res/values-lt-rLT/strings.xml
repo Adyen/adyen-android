@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Taikomi</string>
     <string name="checkout_giftcard_remove_button">Pašalinti</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. Vienai šios dovanų kortelės operacijai leidžiama %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Patvirtinkite kortelės išėmimą</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Pašalinti pridėtas dovanų korteles?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Patvirtinkite pašalinimą</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Pašalinti pritaikytus elementus?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Taip, pašalinti</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Atšaukti</string>
     <string name="checkout_remove_stored_payment_method_body">Pašalinti išsaugotą mokėjimo būdą</string>

@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Aplicate</string>
     <string name="checkout_giftcard_remove_button">Ștergere</string>
     <string name="checkout_giftcard_max_transaction_limit">Pentru acest card cadou, suma maximă permisă per tranzacție este de %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirmați eliminarea cardului</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Eliminați cardurile cadou adăugate?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirmați eliminarea</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Eliminați elementele aplicate?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, șterge</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anulare</string>
     <string name="checkout_remove_stored_payment_method_body">Ștergeți metoda de plată memorată</string>

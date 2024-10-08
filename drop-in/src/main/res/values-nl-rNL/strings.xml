@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Toegepast</string>
     <string name="checkout_giftcard_remove_button">Verwijderen</string>
     <string name="checkout_giftcard_max_transaction_limit">Max. %s toegestaan per transactie met deze cadeaubon</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Verwijdering van kaart bevestigen</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Toegevoegde cadeaukaarten verwijderen?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Verwijdering bevestigen</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Toegepaste artikelen verwijderen?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, verwijderen</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuleren</string>
     <string name="checkout_remove_stored_payment_method_body">Opgeslagen betalingsmethode verwijderen</string>

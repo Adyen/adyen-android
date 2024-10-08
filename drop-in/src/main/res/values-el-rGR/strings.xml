@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Εφαρμοσμένες</string>
     <string name="checkout_giftcard_remove_button">Αφαίρεση</string>
     <string name="checkout_giftcard_max_transaction_limit">Το μέγιστο επιτρεπόμενο ποσό ανά συναλλαγή σε αυτήν τη δωροκάρτα είναι %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Επιβεβαίωση αφαίρεσης κάρτας</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Αφαίρεση των προστεθειμένων δωροκαρτών;</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Επιβεβαίωση αφαίρεσης</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Αφαίρεση εφαρμοσμένων στοιχείων;</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ναι, αφαίρεση</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Άκυρο</string>
     <string name="checkout_remove_stored_payment_method_body">Αφαίρεση αποθηκευμένου τρόπου πληρωμής</string>

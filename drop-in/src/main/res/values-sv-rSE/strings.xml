@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Tillämpade</string>
     <string name="checkout_giftcard_remove_button">Ta bort</string>
     <string name="checkout_giftcard_max_transaction_limit">Maximalt %s per transaktion är tillåtet på detta presentkort</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Bekräfta borttagning av kort</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Ta bort tillagda presentkort?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Bekräfta borttagning</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Vill du ta bort tillämpade objekt?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ja, ta bort</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Avbryt</string>
     <string name="checkout_remove_stored_payment_method_body">Ta bort sparat betalningssätt</string>

@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Приложено</string>
     <string name="checkout_giftcard_remove_button">Премахване</string>
     <string name="checkout_giftcard_max_transaction_limit">Макс. %s разрешени за транзакция на тази карта за подарък</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Потвърдете премахването на картата</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Да се премахнат ли добавените подаръчни карти?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Потвърдете премахването</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Да се премахнат ли приложените елементи?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Да, премахнете</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Отказ</string>
     <string name="checkout_remove_stored_payment_method_body">Премахнете съхранения метод на плащане</string>

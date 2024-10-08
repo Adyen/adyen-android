@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Aplikováno</string>
     <string name="checkout_giftcard_remove_button">Odebrat</string>
     <string name="checkout_giftcard_max_transaction_limit">Maximální povolená částka za jednu transakci touto dárkovou kartou je %s.</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Potvrďte odebrání karty</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Odebrat přidané dárkové karty?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Potvrďte odebrání</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Odebrat použité položky?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ano, odebrat</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušit</string>
     <string name="checkout_remove_stored_payment_method_body">Odebrat uložený způsob platby</string>

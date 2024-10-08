@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Notaðar</string>
     <string name="checkout_giftcard_remove_button">Fjarlægja</string>
     <string name="checkout_giftcard_max_transaction_limit">Hám. %s leyfð fyrir hverja færslu á þessu gjafakorti</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Staðfesta að kort hafi verið fjarlægt</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Fjarlægja gjafakort sem bætt var við?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Staðfesta fjarlægingu</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Fjarlægja notuð atriði?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Já, fjarlægja</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Hætta við</string>
     <string name="checkout_remove_stored_payment_method_body">Fjarlægja geymdan greiðslumáta</string>

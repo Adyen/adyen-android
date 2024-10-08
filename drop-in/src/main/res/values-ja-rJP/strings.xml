@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">適用済み</string>
     <string name="checkout_giftcard_remove_button">削除</string>
     <string name="checkout_giftcard_max_transaction_limit">このギフトカードでの取引ごとに許可される最大%s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">カードの削除を確認する</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">追加したギフトカードを削除しますか？</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 削除を確認</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 適用されたアイテムを削除しますか？</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">はい、削除します</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">キャンセル</string>
     <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>

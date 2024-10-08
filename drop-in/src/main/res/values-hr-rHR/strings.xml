@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Primijenjeni</string>
     <string name="checkout_giftcard_remove_button">Ukloni</string>
     <string name="checkout_giftcard_max_transaction_limit">Na ovoj je poklon-kartici maks. dopušteno %s po transakciji</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Potvrdite uklanjanje kartice</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Ukloniti dodane poklon-kartice?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Potvrdite uklanjanje</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Ukloniti primijenjene stavke?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, ukloni</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Otkaži</string>
     <string name="checkout_remove_stored_payment_method_body">Uklonite pohranjeni način plaćanja</string>

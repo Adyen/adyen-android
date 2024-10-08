@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Rakendatud</string>
     <string name="checkout_giftcard_remove_button">Eemalda</string>
     <string name="checkout_giftcard_max_transaction_limit">Selle kinkekaardi limiit tehingu kohta on %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Kinnita kaardi eemaldamine</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Kas eemaldada lisatud kinkekaardid?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Kinnitage eemaldamine</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Kas eemaldada rakendatud üksused?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Jah, eemalda</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Katkesta</string>
     <string name="checkout_remove_stored_payment_method_body">Eemalda salvestatud makseviis</string>

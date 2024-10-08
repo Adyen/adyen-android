@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">已套用</string>
     <string name="checkout_giftcard_remove_button">移除</string>
     <string name="checkout_giftcard_max_transaction_limit">此禮品卡每筆交易的金額上限為 %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">確認移除該卡</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">移除已新增禮品卡？</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 確認移除</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 移除已套用的項目？</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">是，請移除</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">取消</string>
     <string name="checkout_remove_stored_payment_method_body">移除已儲存付款方式</string>

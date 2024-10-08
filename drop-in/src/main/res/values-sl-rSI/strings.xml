@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Uporabljeno</string>
     <string name="checkout_giftcard_remove_button">Odstrani</string>
     <string name="checkout_giftcard_max_transaction_limit">Za posamezno transakcijo na tej darilni kartici je dovoljeno največ %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Potrdite odstranitev kartice</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Želite odstraniti dodane darilne kartice?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Potrdite odstranitev</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Želite odstraniti uporabljene elemente?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, odstrani</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Prekliči</string>
     <string name="checkout_remove_stored_payment_method_body">Odstrani shranjen način plačila</string>

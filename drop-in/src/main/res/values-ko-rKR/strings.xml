@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">적용된</string>
     <string name="checkout_giftcard_remove_button">삭제</string>
     <string name="checkout_giftcard_max_transaction_limit">이 기프트카드로 건당 결제 가능한 최고 액수는 %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">카드 삭제 확인</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">추가된 기프트 카드를 삭제할까요?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 삭제 확인</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 적용된 항목을 삭제하시겠습니까?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">예, 삭제합니다</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">취소</string>
     <string name="checkout_remove_stored_payment_method_body">저장된 결제 수단 삭제</string>

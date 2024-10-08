@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Applied</string>
     <string name="checkout_giftcard_remove_button">Remove</string>
     <string name="checkout_giftcard_max_transaction_limit">Max. %s allowed per transaction on this gift card</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirm card removal</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Remove added giftcards?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirm removal</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Remove applied items?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Yes, remove</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel</string>
     <string name="checkout_remove_stored_payment_method_body">Remove stored payment method</string>
