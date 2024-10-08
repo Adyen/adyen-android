@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -70,20 +71,20 @@ data class SessionSetupResponse(
             override fun deserialize(jsonObject: JSONObject): SessionSetupResponse {
                 return try {
                     SessionSetupResponse(
-                        id = jsonObject.optString(ID),
-                        sessionData = jsonObject.optString(SESSION_DATA),
+                        id = jsonObject.getStringOrNull(ID).orEmpty(),
+                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                         amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
-                        expiresAt = jsonObject.optString(EXPIRES_AT),
+                        expiresAt = jsonObject.getStringOrNull(EXPIRES_AT).orEmpty(),
                         paymentMethodsApiResponse = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
                             PaymentMethodsApiResponse.SERIALIZER
                         ),
-                        returnUrl = jsonObject.optString(RETURN_URL),
+                        returnUrl = jsonObject.getStringOrNull(RETURN_URL),
                         configuration = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(CONFIGURATION),
                             SessionSetupConfiguration.SERIALIZER
                         ),
-                        shopperLocale = jsonObject.optString(SHOPPER_LOCALE),
+                        shopperLocale = jsonObject.getStringOrNull(SHOPPER_LOCALE),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupResponse::class.java, e)

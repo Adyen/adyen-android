@@ -13,6 +13,7 @@ import com.adyen.checkout.core.internal.data.model.JsonUtils.serializeOptStringL
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -51,7 +52,7 @@ internal data class CardParameters(
                         putOpt(BILLING_ADDRESS_REQUIRED, modelObject.isBillingAddressRequired)
                         putOpt(
                             BILLING_ADDRESS_PARAMETERS,
-                            serializeOpt(modelObject.billingAddressParameters, BillingAddressParameters.SERIALIZER)
+                            serializeOpt(modelObject.billingAddressParameters, BillingAddressParameters.SERIALIZER),
                         )
                     }
                 } catch (e: JSONException) {
@@ -62,13 +63,13 @@ internal data class CardParameters(
             override fun deserialize(jsonObject: JSONObject) = CardParameters(
                 allowedAuthMethods = parseOptStringList(jsonObject.optJSONArray(ALLOWED_AUTH_METHODS)),
                 allowedCardNetworks = parseOptStringList(jsonObject.optJSONArray(ALLOWED_CARD_NETWORKS)),
-                isAllowPrepaidCards = jsonObject.optBoolean(ALLOW_PREPAID_CARDS),
-                isAllowCreditCards = jsonObject.optBoolean(ALLOW_CREDIT_CARDS),
-                isAssuranceDetailsRequired = jsonObject.optBoolean(ASSURANCE_DETAILS_REQUIRED),
-                isBillingAddressRequired = jsonObject.optBoolean(BILLING_ADDRESS_REQUIRED),
+                isAllowPrepaidCards = jsonObject.getBooleanOrNull(ALLOW_PREPAID_CARDS) ?: false,
+                isAllowCreditCards = jsonObject.getBooleanOrNull(ALLOW_CREDIT_CARDS),
+                isAssuranceDetailsRequired = jsonObject.getBooleanOrNull(ASSURANCE_DETAILS_REQUIRED),
+                isBillingAddressRequired = jsonObject.getBooleanOrNull(BILLING_ADDRESS_REQUIRED) ?: false,
                 billingAddressParameters = deserializeOpt(
                     jsonObject.optJSONObject(BILLING_ADDRESS_PARAMETERS),
-                    BillingAddressParameters.SERIALIZER
+                    BillingAddressParameters.SERIALIZER,
                 ),
             )
         }

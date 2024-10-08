@@ -9,6 +9,7 @@ package com.adyen.checkout.components.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,8 +39,8 @@ data class OrderRequest constructor(
 
             override fun deserialize(jsonObject: JSONObject): OrderRequest {
                 return OrderRequest(
-                    pspReference = jsonObject.optString(PSP_REFERENCE, ""),
-                    orderData = jsonObject.optString(ORDER_DATA, "")
+                    pspReference = jsonObject.getStringOrNull(PSP_REFERENCE).orEmpty(),
+                    orderData = jsonObject.getStringOrNull(ORDER_DATA).orEmpty(),
                 )
             }
         }

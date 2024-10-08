@@ -31,6 +31,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
@@ -171,7 +172,7 @@ constructor(
         coroutineScope.launch {
             val request = NativeRedirectRequest(
                 redirectData = nativeRedirectData,
-                returnQueryString = details.optString(RETURN_URL_QUERY_STRING_PARAMETER),
+                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER).orEmpty(),
             )
             try {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)

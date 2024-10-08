@@ -11,6 +11,7 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils.parseOptStringList
 import com.adyen.checkout.core.internal.data.model.JsonUtils.serializeOptStringList
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -50,7 +51,7 @@ data class ShippingAddressParameters(
 
             override fun deserialize(jsonObject: JSONObject) = ShippingAddressParameters(
                 allowedCountryCodes = parseOptStringList(jsonObject.optJSONArray(ALLOWED_COUNTRY_CODES)),
-                isPhoneNumberRequired = jsonObject.optBoolean(PHONE_NUMBER_REQUIRED),
+                isPhoneNumberRequired = jsonObject.getBooleanOrNull(PHONE_NUMBER_REQUIRED) ?: false,
             )
         }
     }

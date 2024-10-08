@@ -11,6 +11,7 @@ package com.adyen.checkout.sessions.core
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
 import com.adyen.checkout.core.internal.data.model.optIntList
 import com.adyen.checkout.core.internal.data.model.optStringList
 import kotlinx.parcelize.Parcelize
@@ -48,7 +49,7 @@ data class SessionSetupInstallmentOptions(
                     return try {
                         SessionSetupInstallmentOptions(
                             plans = jsonObject.optStringList(PLANS).orEmpty(),
-                            preselectedValue = jsonObject.optInt(PRESELECTED_VALUE),
+                            preselectedValue = jsonObject.getIntOrNull(PRESELECTED_VALUE),
                             values = jsonObject.optIntList(VALUES)
                         )
                     } catch (e: JSONException) {

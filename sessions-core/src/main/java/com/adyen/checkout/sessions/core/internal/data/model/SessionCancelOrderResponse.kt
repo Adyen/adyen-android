@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -40,8 +41,8 @@ data class SessionCancelOrderResponse(
 
             override fun deserialize(jsonObject: JSONObject): SessionCancelOrderResponse {
                 return SessionCancelOrderResponse(
-                    sessionData = jsonObject.optString(SESSION_DATA),
-                    status = jsonObject.optString(STATUS)
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                    status = jsonObject.getStringOrNull(STATUS)
                 )
             }
         }
