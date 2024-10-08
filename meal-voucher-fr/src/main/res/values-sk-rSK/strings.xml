@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 31/7/2024.
+  -->
+
+<resources>
+    <string name="checkout_meal_voucher_fr_card_number_hint">Číslo karty</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_hint">Koniec platnosti</string>
+    <string name="checkout_meal_voucher_fr_security_code_hint">Bezpečnostný kód</string>
+
+    <string name="checkout_meal_voucher_fr_number_not_valid">Zadajte správne číslo karty</string>
+    <string name="checkout_meal_voucher_fr_pin_not_valid">Zadajte správny bezpečnostný kód</string>
+
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid">Zadajte správny dátum vypršania platnosti</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_old">Zadajte správny dátum vypršania platnosti</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future">Zadajte správny dátum vypršania platnosti</string>
+</resources>

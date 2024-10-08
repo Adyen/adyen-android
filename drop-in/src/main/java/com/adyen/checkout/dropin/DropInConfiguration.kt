@@ -38,6 +38,7 @@ import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.instant.GLOBAL_INSTANT_CONFIG_KEY
 import com.adyen.checkout.instant.InstantPaymentConfiguration
 import com.adyen.checkout.mbway.MBWayConfiguration
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRConfiguration
 import com.adyen.checkout.molpay.MolpayConfiguration
 import com.adyen.checkout.onlinebankingcz.OnlineBankingCZConfiguration
 import com.adyen.checkout.onlinebankingjp.OnlineBankingJPConfiguration
@@ -425,6 +426,16 @@ class DropInConfiguration private constructor(
          */
         fun addGiftCardConfiguration(giftCardConfiguration: GiftCardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.GIFTCARD] = giftCardConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for French meal voucher payment method.
+         */
+        fun addMealVoucherFRConfiguration(mealVoucherFRConfiguration: MealVoucherFRConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.MEAL_VOUCHER_FR_GROUPEUP] = mealVoucherFRConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MEAL_VOUCHER_FR_NATIXIS] = mealVoucherFRConfiguration
+            availablePaymentConfigs[PaymentMethodTypes.MEAL_VOUCHER_FR_SODEXO] = mealVoucherFRConfiguration
             return this
         }
 

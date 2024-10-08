@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Aplicat</string>
     <string name="checkout_giftcard_remove_button">Elimina</string>
     <string name="checkout_giftcard_max_transaction_limit">Màx. %s permès per transacció en aquesta targeta regal</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirmeu l\'eliminació de la targeta</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Voleu suprimir les targetes regal afegides?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirma la supressió</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Voleu suprimir els elements aplicats?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Sí, elimina-ho</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel·la</string>
     <string name="checkout_remove_stored_payment_method_body">Elimina la forma de pagament emmagatzemada</string>

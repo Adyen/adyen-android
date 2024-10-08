@@ -11,6 +11,10 @@
 ## New
 - Added support for 6 more locales: Catalan (ca-ES), Icelandic (is-IS), Bulgarian (bg-BG),
   Estonian (et-EE), Latvian (lv-LV) and Lithuanian (lt-lT).
+- French meal vouchers are now available with the following payment method types. See the documentation [here](/docs/payment-methods/FRENCH_MEAL_VOUCHER.md).
+  - Up. Payment method type: **mealVoucher_FR_groupeup**.
+  - Natixis. Payment method type: **mealVoucher_FR_natixis**.
+  - Sodexo. Payment method type: **mealVoucher_FR_sodexo**.
 - For Twint, storing payment details and paying with them is now supported. See the documentation [here](/docs/payment-methods/TWINT.md).
 - You can now use [Adyen Test Cards Android](https://github.com/Adyen/adyen-testcards-android) to prefill test payment method information, making testing your integration easier.
 

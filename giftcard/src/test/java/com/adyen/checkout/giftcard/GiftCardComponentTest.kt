@@ -51,7 +51,7 @@ internal class GiftCardComponentTest(
 
     @BeforeEach
     fun before() {
-        whenever(giftCardDelegate.viewFlow) doReturn MutableStateFlow(GiftCardComponentViewType)
+        whenever(giftCardDelegate.viewFlow) doReturn MutableStateFlow(GiftCardComponentViewType())
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
         component = GiftCardComponent(
@@ -100,7 +100,7 @@ internal class GiftCardComponentTest(
     @Test
     fun `when component is initialized then view flow should match gift card delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertEquals(GiftCardComponentViewType, awaitItem())
+            assert(awaitItem() is GiftCardComponentViewType)
             expectNoEvents()
         }
     }
@@ -140,7 +140,7 @@ internal class GiftCardComponentTest(
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
             // and in practice the initial value of the action delegate view flow is always null so it should be ignored
-            assertEquals(GiftCardComponentViewType, awaitItem())
+            assert(awaitItem() is GiftCardComponentViewType)
 
             actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
             assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())

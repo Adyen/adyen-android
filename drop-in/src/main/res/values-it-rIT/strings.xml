@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Applicato</string>
     <string name="checkout_giftcard_remove_button">Rimuovi</string>
     <string name="checkout_giftcard_max_transaction_limit">Importo massimo di %s per transazione su questo buono regalo</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Conferma rimozione della carta</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Rimuovere le carte regalo aggiunte?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Conferma rimozione</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Rimuovere gli elementi applicati?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Sì, rimuoverli</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancella</string>
     <string name="checkout_remove_stored_payment_method_body">Rimuovi il metodo di pagamento archiviato</string>

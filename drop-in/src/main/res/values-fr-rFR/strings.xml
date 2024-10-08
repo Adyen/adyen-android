@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Appliquée</string>
     <string name="checkout_giftcard_remove_button">Supprimer</string>
     <string name="checkout_giftcard_max_transaction_limit">Montant maximum autorisé par transaction avec cette carte cadeau : %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirmer la suppression de la carte</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Supprimer les cartes-cadeaux ajoutées ?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirmer la suppression</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Supprimer les éléments appliqués ?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Oui, supprimer</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Annuler</string>
     <string name="checkout_remove_stored_payment_method_body">Supprimer le mode de paiement enregistré</string>

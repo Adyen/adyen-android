@@ -36,6 +36,10 @@ object PaymentMethodTypes {
     const val GOOGLE_PAY_LEGACY = "paywithgoogle"
     const val IDEAL = "ideal"
     const val MB_WAY = "mbway"
+    const val MEAL_VOUCHER_FR_GROUPEUP = "mealVoucher_FR_groupeup"
+    const val MEAL_VOUCHER_FR_NATIXIS = "mealVoucher_FR_natixis"
+    const val MEAL_VOUCHER_FR_SODEXO = "mealVoucher_FR_sodexo"
+    const val MEAL_VOUCHER_FR = "mealVoucher_FR"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
     const val MOLPAY_VIETNAM = "molpay_ebanking_VN"
@@ -118,6 +122,9 @@ object PaymentMethodTypes {
         GOOGLE_PAY_LEGACY,
         IDEAL,
         MB_WAY,
+        MEAL_VOUCHER_FR_GROUPEUP,
+        MEAL_VOUCHER_FR_NATIXIS,
+        MEAL_VOUCHER_FR_SODEXO,
         MOLPAY_MALAYSIA,
         MOLPAY_THAILAND,
         MOLPAY_VIETNAM,

@@ -1,5 +1,6 @@
 package com.adyen.checkout.giftcard.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -12,7 +13,8 @@ import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.GiftCardException
 import kotlinx.coroutines.CoroutineScope
 
-internal class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardComponentState> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class GiftCardComponentEventHandler : ComponentEventHandler<GiftCardComponentState> {
 
     // no ops
     override fun initialize(coroutineScope: CoroutineScope) = Unit

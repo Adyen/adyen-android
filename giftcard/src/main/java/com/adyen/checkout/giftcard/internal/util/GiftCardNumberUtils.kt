@@ -8,11 +8,10 @@
 
 package com.adyen.checkout.giftcard.internal.util
 
-import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.giftcard.R
+import androidx.annotation.RestrictTo
 
-internal object GiftCardNumberUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object GiftCardNumberUtils {
 
     private const val CARD_NUMBER_MASK_GROUP_LENGTH = 4
     const val DIGIT_SEPARATOR = ' '
@@ -39,15 +38,13 @@ internal object GiftCardNumberUtils {
         return text.replace(DIGIT_SEPARATOR.toString(), "")
     }
 
-    fun validateInputField(giftCardNumber: String): FieldState<String> {
+    fun validateInputField(giftCardNumber: String): GiftCardNumberValidationResult {
         val rawInput = getRawValue(giftCardNumber)
-        val validation = when {
-            rawInput.length < MINIMUM_GIFT_CARD_NUMBER_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_number_not_valid)
-            rawInput.length > MAXIMUM_GIFT_CARD_NUMBER_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_number_not_valid)
-            else -> Validation.Valid
+
+        return when {
+            rawInput.length < MINIMUM_GIFT_CARD_NUMBER_LENGTH -> GiftCardNumberValidationResult.INVALID
+            rawInput.length > MAXIMUM_GIFT_CARD_NUMBER_LENGTH -> GiftCardNumberValidationResult.INVALID
+            else -> GiftCardNumberValidationResult.VALID
         }
-        return FieldState(rawInput, validation)
     }
 }

@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">مُطبَّق</string>
     <string name="checkout_giftcard_remove_button">إزالة</string>
     <string name="checkout_giftcard_max_transaction_limit">يسمح فقط بحد أقصى %s لكل معاملة على بطاقة الهدايا هذه</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">تأكيد إزالة البطاقة</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">هل ترغب في إزالة بطاقات الهدايا المضافة؟</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> تأكيد عملية الإزالة</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> هل تريد إزالة العناصر المحددة؟</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">نعم، أرغب في إزالتها</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">إلغاء</string>
     <string name="checkout_remove_stored_payment_method_body">إزالة طريقة الدفع المخزنة</string>

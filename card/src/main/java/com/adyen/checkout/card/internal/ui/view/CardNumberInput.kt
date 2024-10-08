@@ -14,6 +14,7 @@ import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.util.CardNumberUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
@@ -21,12 +22,14 @@ import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 /**
  * Input that support formatting for card number.
  */
-open class CardNumberInput @JvmOverloads constructor(
+class CardNumberInput
+@JvmOverloads
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) :
-    AdyenTextInputEditText(context, attrs, defStyleAttr) {
+) : AdyenTextInputEditText(context, attrs, defStyleAttr) {
 
     private var isAmexCard = false
     override val rawValue: String

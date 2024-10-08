@@ -901,6 +901,10 @@ public final class com/adyen/checkout/components/core/PaymentMethodTypes {
 	public static final field IDEAL Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/components/core/PaymentMethodTypes;
 	public static final field MB_WAY Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_GROUPEUP Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_NATIXIS Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_SODEXO Ljava/lang/String;
 	public static final field MOLPAY_MALAYSIA Ljava/lang/String;
 	public static final field MOLPAY_THAILAND Ljava/lang/String;
 	public static final field MOLPAY_VIETNAM Ljava/lang/String;
@@ -2399,16 +2403,20 @@ public final class com/adyen/checkout/components/core/paymentmethod/GiftCardPaym
 	public static final field Companion Lcom/adyen/checkout/components/core/paymentmethod/GiftCardPaymentMethod$Companion;
 	public static final field PAYMENT_METHOD_TYPE Ljava/lang/String;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public fun describeContents ()I
 	public final fun getBrand ()Ljava/lang/String;
 	public fun getCheckoutAttemptId ()Ljava/lang/String;
 	public final fun getEncryptedCardNumber ()Ljava/lang/String;
+	public final fun getEncryptedExpiryMonth ()Ljava/lang/String;
+	public final fun getEncryptedExpiryYear ()Ljava/lang/String;
 	public final fun getEncryptedSecurityCode ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public final fun setBrand (Ljava/lang/String;)V
 	public fun setCheckoutAttemptId (Ljava/lang/String;)V
 	public final fun setEncryptedCardNumber (Ljava/lang/String;)V
+	public final fun setEncryptedExpiryMonth (Ljava/lang/String;)V
+	public final fun setEncryptedExpiryYear (Ljava/lang/String;)V
 	public final fun setEncryptedSecurityCode (Ljava/lang/String;)V
 	public fun setType (Ljava/lang/String;)V
 	public fun writeToParcel (Landroid/os/Parcel;I)V

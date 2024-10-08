@@ -48,6 +48,7 @@ include ':3ds2',
         ':issuer-list',
         ':lint',
         ':mbway',
+        ':meal-voucher-fr',
         ':molpay',
         ':online-banking-core',
         ':online-banking-cz',
@@ -69,4 +70,3 @@ include ':3ds2',
         ':upi',
         ':voucher',
         ':wechatpay'
-

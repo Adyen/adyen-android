@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Alkalmazott</string>
     <string name="checkout_giftcard_remove_button">Eltávolítás</string>
     <string name="checkout_giftcard_max_transaction_limit">Ezen az ajándékkártyán a tranzakciónként engedélyezett maximális összeg %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Kártya eltávolításának megerősítése</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Eltávolítja a hozzáadott ajándékkártyákat?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Eltávolítás megerősítése</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Eltávolítja az alkalmazott elemeket?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Igen, eltávolítom</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Mégse</string>
     <string name="checkout_remove_stored_payment_method_body">Tárolt fizetési mód eltávolítása</string>

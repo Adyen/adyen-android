@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.giftcard.internal.ui
 
+import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.Amount
@@ -25,7 +26,6 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
@@ -40,15 +40,16 @@ import com.adyen.checkout.giftcard.GiftCardException
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
+import com.adyen.checkout.giftcard.internal.ui.protocol.GiftCardProtocol
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
-import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
-import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
+import com.adyen.checkout.giftcard.internal.util.GiftCardValidator
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -57,7 +58,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 @Suppress("TooManyFunctions", "LongParameterList")
-internal class DefaultGiftCardDelegate(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultGiftCardDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
@@ -66,6 +68,8 @@ internal class DefaultGiftCardDelegate(
     override val componentParams: GiftCardComponentParams,
     private val cardEncryptor: BaseCardEncryptor,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
+    private val validator: GiftCardValidator,
+    private val protocol: GiftCardProtocol
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -81,7 +85,7 @@ internal class DefaultGiftCardDelegate(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(GiftCardComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(protocol.getComponentViewType())
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<GiftCardComponentState> = submitHandler.submitFlow
@@ -161,17 +165,26 @@ internal class DefaultGiftCardDelegate(
     }
 
     private fun createOutputData() = GiftCardOutputData(
-        numberFieldState = GiftCardNumberUtils.validateInputField(inputData.cardNumber),
+        numberFieldState = validator.validateNumber(inputData.cardNumber),
         pinFieldState = getPinFieldState(inputData.pin),
+        expiryDateFieldState = getExpiryDateFieldState(inputData.expiryDate),
     )
 
-    private fun getPinFieldState(pin: String): FieldState<String> {
-        return if (isPinRequired()) {
-            GiftCardPinUtils.validateInputField(pin)
-        } else {
-            FieldState(pin, Validation.Valid)
-        }
+    private fun getPinFieldState(pin: String) = if (isPinRequired()) {
+        validator.validatePin(pin)
+    } else {
+        FieldState(pin, Validation.Valid)
     }
+
+    override fun isPinRequired(): Boolean = componentParams.isPinRequired
+
+    private fun getExpiryDateFieldState(expiryDate: ExpiryDate) = if (isExpiryDateRequired()) {
+        validator.validateExpiryDate(expiryDate)
+    } else {
+        FieldState(expiryDate, Validation.Valid)
+    }
+
+    private fun isExpiryDateRequired() = componentParams.isExpiryDateRequired
 
     @VisibleForTesting
     internal fun updateComponentState(outputData: GiftCardOutputData) {
@@ -212,12 +225,10 @@ internal class DefaultGiftCardDelegate(
             giftCardAction = GiftCardAction.Idle,
         )
 
-        val giftCardPaymentMethod = GiftCardPaymentMethod(
-            type = GiftCardPaymentMethod.PAYMENT_METHOD_TYPE,
+        val giftCardPaymentMethod = protocol.createPaymentMethod(
+            paymentMethod = paymentMethod,
+            encryptedCard = encryptedCard,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            encryptedCardNumber = encryptedCard.encryptedCardNumber,
-            encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
-            brand = paymentMethod.brand,
         )
 
         val lastDigits = outputData.numberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
@@ -252,9 +263,19 @@ internal class DefaultGiftCardDelegate(
     ): EncryptedCard? = try {
         val unencryptedCard = UnencryptedCard.Builder().run {
             setNumber(outputData.numberFieldState.value)
+
             if (componentParams.isPinRequired) {
                 setCvc(outputData.pinFieldState.value)
             }
+
+            val expiryDateResult = outputData.expiryDateFieldState.value
+            if (componentParams.isExpiryDateRequired && expiryDateResult != ExpiryDate.EMPTY_DATE) {
+                setExpiryDate(
+                    expiryMonth = expiryDateResult.expiryMonth.toString(),
+                    expiryYear = expiryDateResult.expiryYear.toString(),
+                )
+            }
+
             build()
         }
 
@@ -350,8 +371,6 @@ internal class DefaultGiftCardDelegate(
         _componentStateFlow.tryEmit(updatedState)
         submitHandler.onSubmit(updatedState)
     }
-
-    override fun isPinRequired(): Boolean = componentParams.isPinRequired
 
     override fun onCleared() {
         removeObserver()

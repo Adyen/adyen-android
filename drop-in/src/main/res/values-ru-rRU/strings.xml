@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Применяется</string>
     <string name="checkout_giftcard_remove_button">Удалить</string>
     <string name="checkout_giftcard_max_transaction_limit">Максимальная сумма операции по этой подарочной карте: %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Подтвердите удаление карты</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Удалить добавленные подарочные карты?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Подтвердить удаление</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Удалить примененные элементы?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Да, удалить</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Отменить</string>
     <string name="checkout_remove_stored_payment_method_body">Удалить сохраненный способ оплаты</string>

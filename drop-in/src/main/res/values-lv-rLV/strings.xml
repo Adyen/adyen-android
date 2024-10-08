@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">Piemērots</string>
     <string name="checkout_giftcard_remove_button">Noņemt</string>
     <string name="checkout_giftcard_max_transaction_limit">Maksimālā %s, kas atļauta katram darījumam ar šo dāvanu karti</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Apstipriniet kartes noņemšanu</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Vai noņemt pievienotās dāvanu kartes?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Apstipriniet noņemšanu</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Vai noņemt piemērotos vienumus?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Jā, noņemt</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Atcelt</string>
     <string name="checkout_remove_stored_payment_method_body">Noņemt saglabāto samaksas veidu</string>

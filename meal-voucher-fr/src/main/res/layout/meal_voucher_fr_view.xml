@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 17/7/2024.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout_mealVoucherFRCardNumber"
+        style="@style/AdyenCheckout.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.adyen.checkout.giftcard.internal.ui.view.GiftCardNumberInput
+            android:id="@+id/editText_mealVoucherFRCardNumber"
+            style="@style/AdyenCheckout.MealVoucherFR.CardNumberInput"
+            android:nextFocusDown="@id/editText_mealVoucherFRExpiryDate"
+            android:nextFocusForward="@id/editText_mealVoucherFRExpiryDate" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_mealVoucherFRExpiryDate"
+            style="@style/AdyenCheckout.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/standard_half_margin"
+            android:layout_weight="1">
+
+            <com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
+                android:id="@+id/editText_mealVoucherFRExpiryDate"
+                style="@style/AdyenCheckout.MealVoucherFR.ExpiryDateInput"
+                android:nextFocusDown="@id/editText_mealVoucherFRSecurityCode"
+                android:nextFocusForward="@id/editText_mealVoucherFRSecurityCode" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_mealVoucherFRSecurityCode"
+            style="@style/AdyenCheckout.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/standard_half_margin"
+            android:layout_weight="1">
+
+            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+                android:id="@+id/editText_mealVoucherFRSecurityCode"
+                style="@style/AdyenCheckout.MealVoucherFR.SecurityCodeInput" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+</merge>

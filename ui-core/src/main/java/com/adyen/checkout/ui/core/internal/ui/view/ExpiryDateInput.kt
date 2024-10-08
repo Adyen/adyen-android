@@ -1,28 +1,31 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 25/3/2022.
+ * Created by ararat on 17/7/2024.
  */
-package com.adyen.checkout.card.internal.ui.view
+package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
 import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
-import com.adyen.checkout.card.internal.ui.model.ExpiryDate
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.GregorianCalendar
 import java.util.Locale
 
-class ExpiryDateInput @JvmOverloads constructor(
+class ExpiryDateInput
+@JvmOverloads
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

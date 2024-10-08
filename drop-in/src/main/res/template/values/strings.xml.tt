@@ -24,8 +24,8 @@
     <string name="checkout_giftcard_payment_methods_header">%%paymentmethods.paid%%</string>
     <string name="checkout_giftcard_remove_button">%%storedPaymentMethod.disable.button%%</string>
     <string name="checkout_giftcard_max_transaction_limit">%%giftcardTransactionLimit%%</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">%%giftcard.remove.title%%</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">%%giftcard.remove.body.allgiftcards%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_title">%%paymentmethods.applied.remove.title%%</string>
+    <string name="checkout_giftcard_remove_gift_cards_body">%%paymentmethods.applied.remove.body%%</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">%%storedPaymentMethod.disable.confirmButton%%</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">%%storedPaymentMethod.disable.cancelButton%%</string>
     <string name="checkout_remove_stored_payment_method_body">%%storedPaymentMethod.disable.confirmation%%</string>

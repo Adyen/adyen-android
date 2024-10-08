@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 31/7/2024.
+  -->
+
+<resources>
+    <string name="checkout_meal_voucher_fr_card_number_hint">카드 번호</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_hint">만료일</string>
+    <string name="checkout_meal_voucher_fr_security_code_hint">보안 코드</string>
+
+    <string name="checkout_meal_voucher_fr_number_not_valid">정확한 카드 번호를 입력하세요</string>
+    <string name="checkout_meal_voucher_fr_pin_not_valid">정확한 보안 코드를 입력하세요</string>
+
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid">정확한 만료일을 입력하세요</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_old">정확한 만료일을 입력하세요</string>
+    <string name="checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future">정확한 만료일을 입력하세요</string>
+</resources>

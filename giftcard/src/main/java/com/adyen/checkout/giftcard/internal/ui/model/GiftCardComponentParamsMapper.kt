@@ -38,6 +38,7 @@ internal class GiftCardComponentParamsMapper(
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
                 ?: giftCardConfiguration?.isSubmitButtonVisible ?: true,
             isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
+            isExpiryDateRequired = false,
         )
     }
 }
