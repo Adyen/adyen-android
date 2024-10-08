@@ -18,9 +18,6 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardNumberValidationResult
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinValidationResult
 import com.adyen.checkout.mealvoucherfr.R
-import org.jetbrains.annotations.VisibleForTesting
-import java.util.Calendar
-import java.util.GregorianCalendar
 
 internal object MealVoucherFRValidationUtils {
 
@@ -49,12 +46,7 @@ internal object MealVoucherFRValidationUtils {
     }
 
     fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
-    }
-
-    @VisibleForTesting
-    internal fun validateExpiryDate(expiryDate: ExpiryDate, calendar: Calendar): FieldState<ExpiryDate> {
-        return when (CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)) {
+        return when (CardExpiryDateValidator.validateExpiryDate(expiryDate)) {
             CardExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
             CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
                 expiryDate,

@@ -20,8 +20,6 @@ import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
 import com.adyen.checkout.core.ui.validation.CardNumberValidator
 import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidator
-import java.util.Calendar
-import java.util.GregorianCalendar
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CardValidationUtils {
@@ -61,9 +59,8 @@ object CardValidationUtils {
     internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         fieldPolicy: Brand.FieldPolicy?,
-        calendar: Calendar = GregorianCalendar.getInstance()
     ): CardExpiryDateValidation {
-        val result = CardExpiryDateValidator.validateExpiryDate(expiryDate, calendar)
+        val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)
         return validateExpiryDate(result, fieldPolicy)
     }
 

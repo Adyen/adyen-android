@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.ui.validation
 
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.internal.ui.model.isEmptyDate
 import com.adyen.checkout.core.internal.ui.model.isInvalidDate
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -31,15 +32,8 @@ object CardExpiryDateValidator {
         expiryDate: ExpiryDate
     ) = validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
 
-    /**
-     * Validate expiry date.
-     *
-     * @param expiryDate Expiry date.
-     * @param calendar Calendar instance to be used to compare given expiry date.
-     *
-     * @return Validation result.
-     */
-    fun validateExpiryDate(
+    @VisibleForTesting
+    internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         calendar: Calendar
     ) = when {

@@ -250,7 +250,6 @@ public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidatio
 public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidator {
 	public static final field INSTANCE Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidator;
 	public final fun validateExpiryDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public final fun validateExpiryDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;Ljava/util/Calendar;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
 }
 
 public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult : java/lang/Enum {
