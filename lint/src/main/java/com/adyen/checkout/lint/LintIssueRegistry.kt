@@ -22,5 +22,6 @@ internal class LintIssueRegistry : IssueRegistry() {
         NOT_ADYEN_LOG_ISSUE,
         OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE,
         TEXT_IN_LAYOUT_XML_ISSUE,
+        JSON_OPT_FUNCTIONS_ISSUE,
     )
 }
