@@ -11,10 +11,12 @@ package com.adyen.checkout.core.ui.validation
 /**
  * Possible validation results for card number validation. (@see [CardNumberValidator.validateCardNumber]
  */
-enum class CardNumberValidationResult {
-    INVALID_ILLEGAL_CHARACTERS,
-    INVALID_TOO_LONG,
-    INVALID_TOO_SHORT,
-    INVALID_LUHN_CHECK,
-    VALID
+sealed interface CardNumberValidationResult {
+    class Valid : CardNumberValidationResult
+    interface Invalid : CardNumberValidationResult {
+        class IllegalCharacters : Invalid
+        class TooLong : Invalid
+        class TooShort : Invalid
+        class LuhnCheck : Invalid
+    }
 }

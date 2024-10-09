@@ -267,15 +267,30 @@ public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidator
 	public final fun validateExpiryDate (Lcom/adyen/checkout/core/ui/model/ExpiryDate;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
 }
 
-public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult : java/lang/Enum {
-	public static final field INVALID_ILLEGAL_CHARACTERS Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static final field INVALID_LUHN_CHECK Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static final field INVALID_TOO_LONG Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static final field INVALID_TOO_SHORT Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static final field VALID Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
-	public static fun values ()[Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
+public abstract interface class com/adyen/checkout/core/ui/validation/CardNumberValidationResult {
+}
+
+public abstract interface class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid : com/adyen/checkout/core/ui/validation/CardNumberValidationResult {
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid$IllegalCharacters : com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid$LuhnCheck : com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid$TooLong : com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid$TooShort : com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardNumberValidationResult$Valid : com/adyen/checkout/core/ui/validation/CardNumberValidationResult {
+	public fun <init> ()V
 }
 
 public final class com/adyen/checkout/core/ui/validation/CardNumberValidator {

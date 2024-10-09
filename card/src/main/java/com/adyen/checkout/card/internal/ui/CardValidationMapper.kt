@@ -34,6 +34,7 @@ class CardValidationMapper {
             )
 
             CardNumberValidation.INVALID_LUHN_CHECK -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+            CardNumberValidation.INVALID_OTHER_REASON -> Validation.Invalid(R.string.checkout_card_number_not_valid)
             CardNumberValidation.VALID -> Validation.Valid
         }
 

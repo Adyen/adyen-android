@@ -42,11 +42,19 @@ object CardValidationUtils {
         isBrandSupported: Boolean
     ): CardNumberValidation {
         return when (validationResult) {
-            CardNumberValidationResult.INVALID_ILLEGAL_CHARACTERS -> CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
-            CardNumberValidationResult.INVALID_TOO_LONG -> CardNumberValidation.INVALID_TOO_LONG
-            CardNumberValidationResult.INVALID_TOO_SHORT -> CardNumberValidation.INVALID_TOO_SHORT
-            CardNumberValidationResult.INVALID_LUHN_CHECK -> CardNumberValidation.INVALID_LUHN_CHECK
-            CardNumberValidationResult.VALID -> when {
+            is CardNumberValidationResult.Invalid -> {
+                when (validationResult) {
+                    is CardNumberValidationResult.Invalid.IllegalCharacters ->
+                        CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
+                    is CardNumberValidationResult.Invalid.TooLong -> CardNumberValidation.INVALID_TOO_LONG
+                    is CardNumberValidationResult.Invalid.TooShort -> CardNumberValidation.INVALID_TOO_SHORT
+                    is CardNumberValidationResult.Invalid.LuhnCheck -> CardNumberValidation.INVALID_LUHN_CHECK
+                    else -> {
+                        CardNumberValidation.INVALID_OTHER_REASON
+                    }
+                }
+            }
+            is CardNumberValidationResult.Valid -> when {
                 !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
                 else -> CardNumberValidation.VALID
             }
@@ -139,7 +147,8 @@ enum class CardNumberValidation {
     INVALID_LUHN_CHECK,
     INVALID_TOO_SHORT,
     INVALID_TOO_LONG,
-    INVALID_UNSUPPORTED_BRAND
+    INVALID_UNSUPPORTED_BRAND,
+    INVALID_OTHER_REASON
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

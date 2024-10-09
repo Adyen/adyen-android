@@ -33,14 +33,14 @@ object CardNumberValidator {
         val length = normalizedNumber.length
         return when {
             !StringUtil.isDigitsAndSeparatorsOnly(normalizedNumber) ->
-                CardNumberValidationResult.INVALID_ILLEGAL_CHARACTERS
+                CardNumberValidationResult.Invalid.IllegalCharacters()
 
-            length > MAXIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.INVALID_TOO_LONG
-            length < MINIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.INVALID_TOO_SHORT
+            length > MAXIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.Invalid.TooLong()
+            length < MINIMUM_CARD_NUMBER_LENGTH -> CardNumberValidationResult.Invalid.TooShort()
             enableLuhnCheck && !isLuhnChecksumValid(normalizedNumber) ->
-                CardNumberValidationResult.INVALID_LUHN_CHECK
+                CardNumberValidationResult.Invalid.LuhnCheck()
 
-            else -> CardNumberValidationResult.VALID
+            else -> CardNumberValidationResult.Valid()
         }
     }
 

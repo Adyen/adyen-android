@@ -27,7 +27,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is valid with brand supported, then result should be valid`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.VALID,
+                validationResult = CardNumberValidationResult.Valid(),
                 isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.VALID, validation)
@@ -36,7 +36,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is valid with brand unsupported, then result should be invalid unsupported brand`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.VALID,
+                validationResult = CardNumberValidationResult.Valid(),
                 isBrandSupported = false,
             )
             assertEquals(CardNumberValidation.INVALID_UNSUPPORTED_BRAND, validation)
@@ -45,7 +45,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is invalid with illegal characters, then result should be invalid illegal characters`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.INVALID_ILLEGAL_CHARACTERS,
+                validationResult = CardNumberValidationResult.Invalid.IllegalCharacters(),
                 isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.INVALID_ILLEGAL_CHARACTERS, validation)
@@ -54,7 +54,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is too long, then result should be invalid too long`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.INVALID_TOO_LONG,
+                validationResult = CardNumberValidationResult.Invalid.TooLong(),
                 isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.INVALID_TOO_LONG, validation)
@@ -63,7 +63,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is too short, then result should be invalid too short`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.INVALID_TOO_SHORT,
+                validationResult = CardNumberValidationResult.Invalid.TooShort(),
                 isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.INVALID_TOO_SHORT, validation)
@@ -72,7 +72,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `number is invalid due to failing luhn check, then result should be invalid luhn check`() {
             val validation = CardValidationUtils.validateCardNumber(
-                validationResult = CardNumberValidationResult.INVALID_LUHN_CHECK,
+                validationResult = CardNumberValidationResult.Invalid.LuhnCheck(),
                 isBrandSupported = true,
             )
             assertEquals(CardNumberValidation.INVALID_LUHN_CHECK, validation)
