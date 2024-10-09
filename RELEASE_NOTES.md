@@ -33,6 +33,9 @@
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   | [Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/2.2.20)                          | **2.2.20**                    |
+  | [AndroidX Fragment](https://developer.android.com/jetpack/androidx/releases/fragment#1.8.3)            | **1.8.3**                     |
+  | [AndroidX Activity](https://developer.android.com/jetpack/androidx/releases/activity#1.9.2)            | **1.9.2**                     |
+  | [AndroidX Compose Activity](https://developer.android.com/jetpack/androidx/releases/activity#1.9.2)    | **1.9.2**                     |
 
 ## Fixed
 - JSON deserialization no longer returns the coerced `"null"` string when parsing JSON objects with explicit null values.
