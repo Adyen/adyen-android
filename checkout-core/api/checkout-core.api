@@ -236,15 +236,30 @@ public final class com/adyen/checkout/core/ui/model/ExpiryDate {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult : java/lang/Enum {
-	public static final field INVALID_DATE_FORMAT Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static final field INVALID_OTHER_REASON Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static final field INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static final field INVALID_TOO_OLD Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static final field VALID Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
-	public static fun values ()[Lcom/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult;
+public abstract interface class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult {
+}
+
+public abstract interface class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult {
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid$DateFormat : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid$OtherReason : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid$TooFarInTheFuture : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid$TooOld : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Invalid {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult$Valid : com/adyen/checkout/core/ui/validation/CardExpiryDateValidationResult {
+	public fun <init> ()V
 }
 
 public final class com/adyen/checkout/core/ui/validation/CardExpiryDateValidator {

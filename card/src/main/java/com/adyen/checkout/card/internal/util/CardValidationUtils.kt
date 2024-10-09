@@ -70,21 +70,30 @@ object CardValidationUtils {
         fieldPolicy: Brand.FieldPolicy?
     ): CardExpiryDateValidation {
         return when (validationResult) {
-            CardExpiryDateValidationResult.VALID -> CardExpiryDateValidation.VALID
+            is CardExpiryDateValidationResult.Valid -> CardExpiryDateValidation.VALID
 
-            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE ->
-                CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE
+            is CardExpiryDateValidationResult.Invalid -> {
+                when (validationResult) {
+                    is CardExpiryDateValidationResult.Invalid.TooFarInTheFuture ->
+                        CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE
 
-            CardExpiryDateValidationResult.INVALID_TOO_OLD ->
-                CardExpiryDateValidation.INVALID_TOO_OLD
+                    is CardExpiryDateValidationResult.Invalid.TooOld ->
+                        CardExpiryDateValidation.INVALID_TOO_OLD
 
-            CardExpiryDateValidationResult.INVALID_DATE_FORMAT ->
-                CardExpiryDateValidation.INVALID_DATE_FORMAT
+                    is CardExpiryDateValidationResult.Invalid.DateFormat ->
+                        CardExpiryDateValidation.INVALID_DATE_FORMAT
 
-            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> if (fieldPolicy?.isRequired() == false) {
-                CardExpiryDateValidation.VALID_NOT_REQUIRED
-            } else {
-                CardExpiryDateValidation.INVALID_OTHER_REASON
+                    is CardExpiryDateValidationResult.Invalid.OtherReason -> if (fieldPolicy?.isRequired() == false) {
+                        CardExpiryDateValidation.VALID_NOT_REQUIRED
+                    } else {
+                        CardExpiryDateValidation.INVALID_OTHER_REASON
+                    }
+
+                    else -> {
+                        // should not happen, due to CardExpiryDateValidationResult being an abstract class
+                        CardExpiryDateValidation.INVALID_OTHER_REASON
+                    }
+                }
             }
         }
     }

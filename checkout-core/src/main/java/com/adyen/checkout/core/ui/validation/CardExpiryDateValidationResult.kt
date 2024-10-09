@@ -11,10 +11,12 @@ package com.adyen.checkout.core.ui.validation
 /**
  * Possible validation results for expiry date validation. (@see [CardExpiryDateValidator.validateExpiryDate]
  */
-enum class CardExpiryDateValidationResult {
-    VALID,
-    INVALID_TOO_FAR_IN_THE_FUTURE,
-    INVALID_TOO_OLD,
-    INVALID_DATE_FORMAT,
-    INVALID_OTHER_REASON,
+sealed interface CardExpiryDateValidationResult {
+    class Valid : CardExpiryDateValidationResult
+    interface Invalid : CardExpiryDateValidationResult {
+        class TooFarInTheFuture : Invalid
+        class TooOld : Invalid
+        class DateFormat : Invalid
+        class OtherReason : Invalid
+    }
 }

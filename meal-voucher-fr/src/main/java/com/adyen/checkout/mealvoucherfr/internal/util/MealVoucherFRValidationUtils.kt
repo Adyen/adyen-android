@@ -46,23 +46,35 @@ internal object MealVoucherFRValidationUtils {
     }
 
     fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return when (CardExpiryDateValidator.validateExpiryDate(expiryDate)) {
-            CardExpiryDateValidationResult.VALID -> FieldState(expiryDate, Validation.Valid)
-            CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future),
-            )
+        return when (val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)) {
+            is CardExpiryDateValidationResult.Valid -> FieldState(expiryDate, Validation.Valid)
+            is CardExpiryDateValidationResult.Invalid -> {
+                when (result) {
+                    is CardExpiryDateValidationResult.Invalid.TooFarInTheFuture -> FieldState(
+                        expiryDate,
+                        Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_far_in_future),
+                    )
 
-            CardExpiryDateValidationResult.INVALID_TOO_OLD -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_old),
-            )
+                    is CardExpiryDateValidationResult.Invalid.TooOld -> FieldState(
+                        expiryDate,
+                        Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid_too_old),
+                    )
 
-            CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
-            CardExpiryDateValidationResult.INVALID_OTHER_REASON -> FieldState(
-                expiryDate,
-                Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid),
-            )
+                    is CardExpiryDateValidationResult.Invalid.DateFormat,
+                    is CardExpiryDateValidationResult.Invalid.OtherReason -> FieldState(
+                        expiryDate,
+                        Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid),
+                    )
+
+                    else -> {
+                        // should not happen, due to CardExpiryDateValidationResult being an abstract class
+                        FieldState(
+                            expiryDate,
+                            Validation.Invalid(R.string.checkout_meal_voucher_fr_expiry_date_not_valid),
+                        )
+                    }
+                }
+            }
         }
     }
 }

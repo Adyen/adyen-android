@@ -29,7 +29,7 @@ internal class CardExpiryDateValidatorTest {
     ) {
         val actualResult = CardExpiryDateValidator.validateExpiryDate(expiryDateInput, calendar)
 
-        assertEquals(expectedValidationResult, actualResult)
+        assertEquals(expectedValidationResult.javaClass, actualResult.javaClass)
     }
 
     companion object {
@@ -40,54 +40,54 @@ internal class CardExpiryDateValidatorTest {
             arguments(
                 EMPTY_DATE,
                 GregorianCalendar.getInstance(),
-                CardExpiryDateValidationResult.INVALID_OTHER_REASON,
+                CardExpiryDateValidationResult.Invalid.OtherReason(),
             ),
             arguments(
                 INVALID_DATE,
                 GregorianCalendar.getInstance(),
-                CardExpiryDateValidationResult.INVALID_DATE_FORMAT,
+                CardExpiryDateValidationResult.Invalid.DateFormat(),
             ),
             // Date 30 years in future
             arguments(
                 ExpiryDate(12, 2052), // 12/2052 (last valid date in future)
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.VALID,
+                CardExpiryDateValidationResult.Valid(),
             ),
             // Date more than 30 years in future
             arguments(
                 ExpiryDate(1, 2053), // 01/2053 (first invalid date in future)
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE,
+                CardExpiryDateValidationResult.Invalid.TooFarInTheFuture(),
             ),
             // Date 8 years in future
             arguments(
                 ExpiryDate(1, 2030), // 01/2030
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.VALID,
+                CardExpiryDateValidationResult.Valid(),
             ),
             // Date 1 month in past
             arguments(
                 ExpiryDate(4, 2022), // 04/2022 (last valid date in past)
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.VALID,
+                CardExpiryDateValidationResult.Valid(),
             ),
             // Date 3 months in past
             arguments(
                 ExpiryDate(2, 2022), // 02/2022 (last valid date in past)
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.VALID,
+                CardExpiryDateValidationResult.Valid(),
             ),
             // Date more than 3 months in past
             arguments(
                 ExpiryDate(1, 2022), // 01/2022 (first invalid date in past)
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.INVALID_TOO_OLD,
+                CardExpiryDateValidationResult.Invalid.TooOld(),
             ),
             // Date 1 year in future
             arguments(
                 ExpiryDate(1, 2023), // 01/2023
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
-                CardExpiryDateValidationResult.VALID,
+                CardExpiryDateValidationResult.Valid(),
             ),
         )
     }

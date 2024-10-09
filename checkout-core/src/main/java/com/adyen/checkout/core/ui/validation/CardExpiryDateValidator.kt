@@ -43,16 +43,16 @@ object CardExpiryDateValidator {
 
             when {
                 // higher than maxPast and lower than maxFuture
-                isInMinMonthRange && isInMaxYearRange -> CardExpiryDateValidationResult.VALID
-                !isInMaxYearRange -> CardExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE
+                isInMinMonthRange && isInMaxYearRange -> CardExpiryDateValidationResult.Valid()
+                !isInMaxYearRange -> CardExpiryDateValidationResult.Invalid.TooFarInTheFuture()
                 // Too old (!isInMinMonthRange)
-                else -> CardExpiryDateValidationResult.INVALID_TOO_OLD
+                else -> CardExpiryDateValidationResult.Invalid.TooOld()
             }
         }
 
-        expiryDate.isInvalidDate() -> CardExpiryDateValidationResult.INVALID_DATE_FORMAT
+        expiryDate.isInvalidDate() -> CardExpiryDateValidationResult.Invalid.DateFormat()
 
-        else -> CardExpiryDateValidationResult.INVALID_OTHER_REASON
+        else -> CardExpiryDateValidationResult.Invalid.OtherReason()
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
