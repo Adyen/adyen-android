@@ -79,7 +79,7 @@ internal class CardValidationMapperTest {
             val expiryDate = ExpiryDate(4, 20) // 04/2020
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
-                CardExpiryDateValidation.INVALID_DATE_FORMAT,
+                CardExpiryDateValidation.INVALID_OTHER_REASON,
             )
 
             val expectedInvalidReason = R.string.checkout_expiry_date_not_valid

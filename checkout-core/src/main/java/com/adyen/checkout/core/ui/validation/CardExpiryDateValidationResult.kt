@@ -16,7 +16,6 @@ sealed interface CardExpiryDateValidationResult {
     interface Invalid : CardExpiryDateValidationResult {
         class TooFarInTheFuture : Invalid
         class TooOld : Invalid
-        class DateFormat : Invalid
-        class OtherReason : Invalid
+        class NonParseableDate : Invalid
     }
 }

@@ -54,7 +54,6 @@ class CardValidationMapper {
             CardExpiryDateValidation.INVALID_TOO_OLD ->
                 Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
 
-            CardExpiryDateValidation.INVALID_DATE_FORMAT -> Validation.Invalid(R.string.checkout_expiry_date_not_valid)
             CardExpiryDateValidation.INVALID_OTHER_REASON -> Validation.Invalid(R.string.checkout_expiry_date_not_valid)
         }
         return FieldState(expiryDate, validation)

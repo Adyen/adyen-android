@@ -40,12 +40,12 @@ internal class CardExpiryDateValidatorTest {
             arguments(
                 EMPTY_DATE,
                 GregorianCalendar.getInstance(),
-                CardExpiryDateValidationResult.Invalid.OtherReason(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
             ),
             arguments(
                 INVALID_DATE,
                 GregorianCalendar.getInstance(),
-                CardExpiryDateValidationResult.Invalid.DateFormat(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
             ),
             // Date 30 years in future
             arguments(

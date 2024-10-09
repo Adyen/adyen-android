@@ -9,8 +9,6 @@
 package com.adyen.checkout.core.ui.validation
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.internal.ui.model.isEmptyDate
-import com.adyen.checkout.core.internal.ui.model.isInvalidDate
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -50,9 +48,7 @@ object CardExpiryDateValidator {
             }
         }
 
-        expiryDate.isInvalidDate() -> CardExpiryDateValidationResult.Invalid.DateFormat()
-
-        else -> CardExpiryDateValidationResult.Invalid.OtherReason()
+        else -> CardExpiryDateValidationResult.Invalid.NonParseableDate()
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
@@ -70,11 +66,8 @@ object CardExpiryDateValidator {
     }
 
     private fun dateExists(expiryDate: ExpiryDate): Boolean {
-        return (
-            !expiryDate.isEmptyDate() &&
-                isValidMonth(expiryDate.expiryMonth) &&
-                expiryDate.expiryYear > 0
-            )
+        return isValidMonth(expiryDate.expiryMonth) &&
+            expiryDate.expiryYear > 0
     }
 
     private fun isValidMonth(month: Int): Boolean {

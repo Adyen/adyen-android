@@ -10,6 +10,9 @@ package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.internal.ui.model.INVALID_DATE
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
 import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
@@ -85,6 +88,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is valid with field policy optional, then result should be valid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2030),
                 CardExpiryDateValidationResult.Valid(),
                 Brand.FieldPolicy.OPTIONAL,
             )
@@ -95,6 +99,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is valid with field policy hidden, then result should be valid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2030),
                 CardExpiryDateValidationResult.Valid(),
                 Brand.FieldPolicy.HIDDEN,
             )
@@ -105,6 +110,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is too far in the future with field policy optional, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2099),
                 CardExpiryDateValidationResult.Invalid.TooFarInTheFuture(),
                 Brand.FieldPolicy.OPTIONAL,
             )
@@ -115,6 +121,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is too far in the future with field policy hidden, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2099),
                 CardExpiryDateValidationResult.Invalid.TooFarInTheFuture(),
                 Brand.FieldPolicy.HIDDEN,
             )
@@ -125,6 +132,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is too old with field policy optional, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2012),
                 CardExpiryDateValidationResult.Invalid.TooOld(),
                 Brand.FieldPolicy.OPTIONAL,
             )
@@ -135,6 +143,7 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is too old with field policy hidden, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
+                ExpiryDate(12, 2012),
                 CardExpiryDateValidationResult.Invalid.TooOld(),
                 Brand.FieldPolicy.HIDDEN,
             )
@@ -145,7 +154,8 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is empty with field policy required, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.OtherReason(),
+                EMPTY_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.REQUIRED,
             )
 
@@ -155,7 +165,8 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is empty with field policy optional, then result should be valid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.OtherReason(),
+                EMPTY_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.OPTIONAL,
             )
 
@@ -165,7 +176,8 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is empty with field policy hidden, then result should be valid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.OtherReason(),
+                EMPTY_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.HIDDEN,
             )
 
@@ -175,31 +187,34 @@ internal class CardValidationUtilsTest {
         @Test
         fun `date is invalid with field policy required, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.DateFormat(),
+                INVALID_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.REQUIRED,
             )
 
-            assertEquals(CardExpiryDateValidation.INVALID_DATE_FORMAT, actual)
+            assertEquals(CardExpiryDateValidation.INVALID_OTHER_REASON, actual)
         }
 
         @Test
         fun `date is invalid with field policy optional, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.DateFormat(),
+                INVALID_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.OPTIONAL,
             )
 
-            assertEquals(CardExpiryDateValidation.INVALID_DATE_FORMAT, actual)
+            assertEquals(CardExpiryDateValidation.INVALID_OTHER_REASON, actual)
         }
 
         @Test
         fun `date is invalid with field policy hidden, then result should be invalid`() {
             val actual = CardValidationUtils.validateExpiryDate(
-                CardExpiryDateValidationResult.Invalid.DateFormat(),
+                INVALID_DATE,
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
                 Brand.FieldPolicy.HIDDEN,
             )
 
-            assertEquals(CardExpiryDateValidation.INVALID_DATE_FORMAT, actual)
+            assertEquals(CardExpiryDateValidation.INVALID_OTHER_REASON, actual)
         }
     }
 

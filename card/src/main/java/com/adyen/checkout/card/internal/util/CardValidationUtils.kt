@@ -12,6 +12,7 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.core.internal.ui.model.isEmptyDate
 import com.adyen.checkout.core.internal.util.StringUtil
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
@@ -69,11 +70,12 @@ object CardValidationUtils {
         fieldPolicy: Brand.FieldPolicy?,
     ): CardExpiryDateValidation {
         val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)
-        return validateExpiryDate(result, fieldPolicy)
+        return validateExpiryDate(expiryDate, result, fieldPolicy)
     }
 
     @VisibleForTesting
     internal fun validateExpiryDate(
+        expiryDate: ExpiryDate,
         validationResult: CardExpiryDateValidationResult,
         fieldPolicy: Brand.FieldPolicy?
     ): CardExpiryDateValidation {
@@ -88,13 +90,12 @@ object CardValidationUtils {
                     is CardExpiryDateValidationResult.Invalid.TooOld ->
                         CardExpiryDateValidation.INVALID_TOO_OLD
 
-                    is CardExpiryDateValidationResult.Invalid.DateFormat ->
-                        CardExpiryDateValidation.INVALID_DATE_FORMAT
-
-                    is CardExpiryDateValidationResult.Invalid.OtherReason -> if (fieldPolicy?.isRequired() == false) {
-                        CardExpiryDateValidation.VALID_NOT_REQUIRED
-                    } else {
-                        CardExpiryDateValidation.INVALID_OTHER_REASON
+                    is CardExpiryDateValidationResult.Invalid.NonParseableDate -> {
+                        if (expiryDate.isEmptyDate() && fieldPolicy?.isRequired() == false) {
+                            CardExpiryDateValidation.VALID_NOT_REQUIRED
+                        } else {
+                            CardExpiryDateValidation.INVALID_OTHER_REASON
+                        }
                     }
 
                     else -> {
@@ -157,7 +158,6 @@ enum class CardExpiryDateValidation {
     VALID_NOT_REQUIRED,
     INVALID_TOO_FAR_IN_THE_FUTURE,
     INVALID_TOO_OLD,
-    INVALID_DATE_FORMAT,
     INVALID_OTHER_REASON,
 }
 
