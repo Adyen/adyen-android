@@ -124,8 +124,8 @@ object CardValidationUtils {
             uiState == InputFieldUIState.OPTIONAL && length == 0 -> CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY
             else -> {
                 when (validationResult) {
-                    CardSecurityCodeValidationResult.INVALID -> CardSecurityCodeValidation.INVALID
-                    CardSecurityCodeValidationResult.VALID -> CardSecurityCodeValidation.VALID
+                    is CardSecurityCodeValidationResult.Invalid -> CardSecurityCodeValidation.INVALID
+                    is CardSecurityCodeValidationResult.Valid -> CardSecurityCodeValidation.VALID
                 }
             }
         }

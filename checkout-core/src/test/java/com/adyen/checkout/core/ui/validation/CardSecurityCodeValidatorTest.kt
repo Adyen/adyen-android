@@ -25,7 +25,7 @@ internal class CardSecurityCodeValidatorTest {
         expectedValidationResult: CardSecurityCodeValidationResult
     ) {
         val actualResult = CardSecurityCodeValidator.validateSecurityCode(securityCodeInput, cardBrand)
-        assertEquals(expectedValidationResult, actualResult)
+        assertEquals(expectedValidationResult.javaClass, actualResult.javaClass)
     }
 
     companion object {
@@ -34,47 +34,47 @@ internal class CardSecurityCodeValidatorTest {
             arguments(
                 "",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "7",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "12",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "737",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.VALID,
+                CardSecurityCodeValidationResult.Valid(),
             ),
             arguments(
                 "8689",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "123456",
                 CardBrand(CardType.VISA),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "737",
                 CardBrand(CardType.AMERICAN_EXPRESS),
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
             arguments(
                 "8689",
                 CardBrand(CardType.AMERICAN_EXPRESS),
-                CardSecurityCodeValidationResult.VALID,
+                CardSecurityCodeValidationResult.Valid(),
             ),
             arguments(
                 "1%y",
                 null,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             ),
         )
     }

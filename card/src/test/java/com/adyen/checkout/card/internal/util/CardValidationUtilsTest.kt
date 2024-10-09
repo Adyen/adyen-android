@@ -211,7 +211,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.REQUIRED,
-                CardSecurityCodeValidationResult.VALID,
+                CardSecurityCodeValidationResult.Valid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID, actual)
         }
@@ -222,7 +222,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.OPTIONAL,
-                CardSecurityCodeValidationResult.VALID,
+                CardSecurityCodeValidationResult.Valid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID, actual)
         }
@@ -233,7 +233,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.HIDDEN,
-                CardSecurityCodeValidationResult.VALID,
+                CardSecurityCodeValidationResult.Valid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
         }
@@ -244,7 +244,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.REQUIRED,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.INVALID, actual)
         }
@@ -255,7 +255,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.OPTIONAL,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.INVALID, actual)
         }
@@ -266,7 +266,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.HIDDEN,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
         }
@@ -277,7 +277,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.REQUIRED,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.INVALID, actual)
         }
@@ -288,7 +288,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.OPTIONAL,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY, actual)
         }
@@ -299,7 +299,7 @@ internal class CardValidationUtilsTest {
             val actual = CardValidationUtils.validateSecurityCode(
                 cvc,
                 InputFieldUIState.HIDDEN,
-                CardSecurityCodeValidationResult.INVALID,
+                CardSecurityCodeValidationResult.Invalid(),
             )
             assertEquals(CardSecurityCodeValidation.VALID_HIDDEN, actual)
         }

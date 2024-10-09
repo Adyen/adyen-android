@@ -11,7 +11,7 @@ package com.adyen.checkout.core.ui.validation
 /**
  * Possible validation results for security code validation. (@see [CardSecurityCodeValidator.validateSecurityCode]
  */
-enum class CardSecurityCodeValidationResult {
-    INVALID,
-    VALID
+sealed interface CardSecurityCodeValidationResult {
+    class Valid : CardSecurityCodeValidationResult
+    class Invalid : CardSecurityCodeValidationResult
 }

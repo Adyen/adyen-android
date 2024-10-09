@@ -284,12 +284,15 @@ public final class com/adyen/checkout/core/ui/validation/CardNumberValidator {
 	public final fun validateCardNumber (Ljava/lang/String;Z)Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
 }
 
-public final class com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult : java/lang/Enum {
-	public static final field INVALID Lcom/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult;
-	public static final field VALID Lcom/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult;
-	public static fun values ()[Lcom/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult;
+public abstract interface class com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult {
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult$Invalid : com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult {
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult$Valid : com/adyen/checkout/core/ui/validation/CardSecurityCodeValidationResult {
+	public fun <init> ()V
 }
 
 public final class com/adyen/checkout/core/ui/validation/CardSecurityCodeValidator {

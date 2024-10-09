@@ -31,14 +31,14 @@ object CardSecurityCodeValidator {
         val normalizedSecurityCode = StringUtil.normalize(securityCode)
         val length = normalizedSecurityCode.length
         return when {
-            !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> CardSecurityCodeValidationResult.INVALID
+            !StringUtil.isDigitsAndSeparatorsOnly(normalizedSecurityCode) -> CardSecurityCodeValidationResult.Invalid()
             cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
-                length == AMEX_SECURITY_CODE_SIZE -> CardSecurityCodeValidationResult.VALID
+                length == AMEX_SECURITY_CODE_SIZE -> CardSecurityCodeValidationResult.Valid()
 
             cardBrand != CardBrand(cardType = CardType.AMERICAN_EXPRESS) &&
-                length == GENERAL_CARD_SECURITY_CODE_SIZE -> CardSecurityCodeValidationResult.VALID
+                length == GENERAL_CARD_SECURITY_CODE_SIZE -> CardSecurityCodeValidationResult.Valid()
 
-            else -> CardSecurityCodeValidationResult.INVALID
+            else -> CardSecurityCodeValidationResult.Invalid()
         }
     }
 }
