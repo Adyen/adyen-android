@@ -58,10 +58,8 @@ jobs:
       # Get the version name from a script and save to environment variable.
       - name: Set PROJECT_VERSION
         run: |
-          echo "▸ Set run permission."
-          chmod +x scripts/version_name.sh
           echo "▸ Getting version name"
-          PROJECT_VERSION=$(./scripts/version_name.sh)
+          PROJECT_VERSION=$(${{github.workspace}}/gradlew -q printVersionName)
           echo "▸ Variable PROJECT_VERSION set to: ${PROJECT_VERSION}"
           echo "▸ Adding PROJECT_VERSION variable with: $PROJECT_VERSION"
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV

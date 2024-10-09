@@ -74,4 +74,14 @@ subprojects {
     }
 }
 
+tasks.register("printVersionName") {
+    def version_validation_regex = "^[0-9]{1,2}\\.[0-9]{1,2}\\.[0-9]{1,2}(-(alpha|beta|rc)[0-9]{2}){0,1}\$"
+    def version_name = libs.versions.version.name.get()
+    if (version_name ==~ version_validation_regex) {
+        println version_name
+    } else {
+        throw new GradleException("Error: invalid version name [$version_name], please validate that the specified version follows the regex $version_validation_regex")
+    }
+}
+
 apply from: file('config/gradle/dependencyGraph.gradle')
