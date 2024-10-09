@@ -42,6 +42,7 @@ dependencies {
 
     // Dependencies
     api libraries.kotlinCoroutines
+    api libraries.androidx.activity
     api libraries.androidx.fragment
     api libraries.androidx.lifecycle
 
