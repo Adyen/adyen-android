@@ -33,6 +33,9 @@ import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.test.LoggingExtension
 import com.google.android.gms.wallet.WalletConstants
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -481,6 +484,57 @@ internal class GooglePayComponentParamsMapperTest {
         )
 
         assertEquals(expected, params)
+    }
+
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when created by drop-in, then submit button should not be visible`() {
+            val configuration = createCheckoutConfiguration()
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = DropInOverrideParams(null, null, true),
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertFalse(params.isSubmitButtonVisible)
+        }
+
+        @Test
+        fun `when not created by drop-in and set in configuration, then submit button should be visible`() {
+            val configuration = createCheckoutConfiguration {
+                setSubmitButtonVisible(true)
+            }
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertTrue(params.isSubmitButtonVisible)
+        }
+
+        @Test
+        fun `when not created by drop-in and not configured, then submit button should not be visible`() {
+            val configuration = createCheckoutConfiguration()
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertFalse(params.isSubmitButtonVisible)
+        }
     }
 
     private fun createCheckoutConfiguration(
