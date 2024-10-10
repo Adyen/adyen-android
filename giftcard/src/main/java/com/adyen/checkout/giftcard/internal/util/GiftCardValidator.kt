@@ -10,7 +10,7 @@ package com.adyen.checkout.giftcard.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
+import com.adyen.checkout.core.ui.model.ExpiryDate
 
 /**
  * Validator class responsible for validating input fields in [com.adyen.checkout.giftcard.GiftCardComponent].

@@ -15,6 +15,7 @@
   - Up. Payment method type: **mealVoucher_FR_groupeup**.
   - Natixis. Payment method type: **mealVoucher_FR_natixis**.
   - Sodexo. Payment method type: **mealVoucher_FR_sodexo**.
+- For API only merchants, `CardNumberValidator`, `CardExpiryDateValidator` and `CardSecurityCodeValidator` classes are added to make validation functionality for the corresponding fields available to public.
 - For Twint, storing payment details and paying with them is now supported. See the documentation [here](/docs/payment-methods/TWINT.md).
 - You can now use [Adyen Test Cards Android](https://github.com/Adyen/adyen-testcards-android) to prefill test payment method information, making testing your integration easier.
 

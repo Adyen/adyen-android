@@ -11,13 +11,14 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardInputData(
     var cardNumber: String = "",
-    var expiryDate: ExpiryDate = ExpiryDate.EMPTY_DATE,
+    var expiryDate: ExpiryDate = EMPTY_DATE,
     var securityCode: String = "",
     var holderName: String = "",
     var socialSecurityNumber: String = "",

@@ -13,9 +13,11 @@ import android.text.Editable
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.internal.ui.model.INVALID_DATE
 import com.adyen.checkout.core.internal.util.StringUtil.normalize
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -73,11 +75,11 @@ constructor(
                 ExpiryDate(calendar[Calendar.MONTH] + 1, calendar[Calendar.YEAR])
             } catch (e: ParseException) {
                 adyenLog(AdyenLogLevel.DEBUG, e) { "getDate - value does not match expected pattern. " }
-                if (rawValue.isEmpty()) ExpiryDate.EMPTY_DATE else ExpiryDate.INVALID_DATE
+                if (rawValue.isEmpty()) EMPTY_DATE else INVALID_DATE
             }
         }
         set(expiryDate) {
-            if (expiryDate !== ExpiryDate.EMPTY_DATE) {
+            if (expiryDate !== EMPTY_DATE) {
                 adyenLog(AdyenLogLevel.VERBOSE) { "setDate - " + expiryDate.expiryYear + " " + expiryDate.expiryMonth }
                 val calendar = GregorianCalendar.getInstance()
                 calendar.clear()

@@ -11,10 +11,8 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.StringRes
 import app.cash.turbine.test
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -53,7 +51,10 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.cse.internal.TestCardEncryptor
@@ -68,7 +69,6 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope

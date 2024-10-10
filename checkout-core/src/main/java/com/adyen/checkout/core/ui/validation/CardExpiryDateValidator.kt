@@ -3,24 +3,35 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 23/7/2024.
+ * Created by ozgur on 4/10/2024.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.core.ui.validation
 
-import androidx.annotation.RestrictTo
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
+import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import java.util.Calendar
 import java.util.GregorianCalendar
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object ExpiryDateValidationUtils {
+object CardExpiryDateValidator {
     // Date
     private const val MONTHS_IN_YEAR = 12
     private const val MAXIMUM_YEARS_IN_FUTURE = 30
     private const val MAXIMUM_EXPIRED_MONTHS = 3
 
+    /**
+     * Validate expiry date.
+     *
+     * @param expiryDate Expiry date.
+     *
+     * @return Validation result.
+     */
     fun validateExpiryDate(
+        expiryDate: ExpiryDate
+    ) = validateExpiryDate(expiryDate, GregorianCalendar.getInstance())
+
+    @VisibleForTesting
+    internal fun validateExpiryDate(
         expiryDate: ExpiryDate,
         calendar: Calendar
     ) = when {
@@ -30,16 +41,14 @@ object ExpiryDateValidationUtils {
 
             when {
                 // higher than maxPast and lower than maxFuture
-                isInMinMonthRange && isInMaxYearRange -> ExpiryDateValidationResult.VALID
-                !isInMaxYearRange -> ExpiryDateValidationResult.INVALID_TOO_FAR_IN_THE_FUTURE
+                isInMinMonthRange && isInMaxYearRange -> CardExpiryDateValidationResult.Valid()
+                !isInMaxYearRange -> CardExpiryDateValidationResult.Invalid.TooFarInTheFuture()
                 // Too old (!isInMinMonthRange)
-                else -> ExpiryDateValidationResult.INVALID_TOO_OLD
+                else -> CardExpiryDateValidationResult.Invalid.TooOld()
             }
         }
 
-        expiryDate == ExpiryDate.INVALID_DATE -> ExpiryDateValidationResult.INVALID_DATE_FORMAT
-
-        else -> ExpiryDateValidationResult.INVALID_OTHER_REASON
+        else -> CardExpiryDateValidationResult.Invalid.NonParseableDate()
     }
 
     private fun isInMaxYearRange(expiryDate: ExpiryDate, calendar: Calendar): Boolean {
@@ -57,11 +66,8 @@ object ExpiryDateValidationUtils {
     }
 
     private fun dateExists(expiryDate: ExpiryDate): Boolean {
-        return (
-            expiryDate !== ExpiryDate.EMPTY_DATE &&
-                isValidMonth(expiryDate.expiryMonth) &&
-                expiryDate.expiryYear > 0
-            )
+        return isValidMonth(expiryDate.expiryMonth) &&
+            expiryDate.expiryYear > 0
     }
 
     private fun isValidMonth(month: Int): Boolean {

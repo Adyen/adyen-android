@@ -29,7 +29,9 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -49,7 +51,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.ExpiryDate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -269,7 +270,7 @@ class DefaultGiftCardDelegate(
             }
 
             val expiryDateResult = outputData.expiryDateFieldState.value
-            if (componentParams.isExpiryDateRequired && expiryDateResult != ExpiryDate.EMPTY_DATE) {
+            if (componentParams.isExpiryDateRequired && expiryDateResult != EMPTY_DATE) {
                 setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
                     expiryYear = expiryDateResult.expiryYear.toString(),

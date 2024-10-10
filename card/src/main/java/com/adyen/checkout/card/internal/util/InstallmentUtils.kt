@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.util
 
 import android.content.Context
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
@@ -21,6 +20,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Installments
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
+import com.adyen.checkout.core.CardBrand
 import java.util.Locale
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1
@@ -47,7 +47,7 @@ internal object InstallmentUtils {
                     installmentOptions = params.cardBasedOptions.firstOrNull { it.cardBrand == cardBrand },
                     amount = params.amount,
                     shopperLocale = params.shopperLocale,
-                    showAmount = params.showInstallmentAmount
+                    showAmount = params.showInstallmentAmount,
                 )
             }
 
@@ -56,7 +56,7 @@ internal object InstallmentUtils {
                     installmentOptions = params.defaultOptions,
                     amount = params.amount,
                     shopperLocale = params.shopperLocale,
-                    showAmount = params.showInstallmentAmount
+                    showAmount = params.showInstallmentAmount,
                 )
             }
 
@@ -79,7 +79,7 @@ internal object InstallmentUtils {
             option = InstallmentOption.ONE_TIME,
             amount = amount,
             shopperLocale = shopperLocale,
-            showAmount = showAmount
+            showAmount = showAmount,
         )
         installmentOptionsList.add(oneTimeOption)
 
@@ -89,7 +89,7 @@ internal object InstallmentUtils {
                 option = InstallmentOption.REVOLVING,
                 amount = amount,
                 shopperLocale = shopperLocale,
-                showAmount = showAmount
+                showAmount = showAmount,
             )
             installmentOptionsList.add(revolvingOption)
         }
@@ -100,7 +100,7 @@ internal object InstallmentUtils {
                 option = InstallmentOption.REGULAR,
                 amount = amount,
                 shopperLocale = shopperLocale,
-                showAmount = showAmount
+                showAmount = showAmount,
             )
         }
         installmentOptionsList.addAll(regularOptions)
@@ -125,12 +125,12 @@ internal object InstallmentUtils {
                         context.getString(
                             R.string.checkout_card_installments_option_regular_with_price,
                             formattedNumberOfInstallments,
-                            formattedInstallmentAmount
+                            formattedInstallmentAmount,
                         )
                     } else {
                         context.getString(
                             R.string.checkout_card_installments_option_regular,
-                            formattedNumberOfInstallments
+                            formattedNumberOfInstallments,
                         )
                     }
                 }
