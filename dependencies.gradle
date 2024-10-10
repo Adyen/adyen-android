@@ -35,19 +35,20 @@ ext {
     binary_compatibility_validator_version = "0.16.0"
 
     // Android Dependencies
+    activity_version = "1.9.2"
     annotation_version = "1.8.0"
     appcompat_version = "1.7.0"
     autofill_version = "1.3.0-alpha01"
     browser_version = "1.8.0"
     coroutines_version = "1.8.1"
-    fragment_version = "1.8.1"
+    fragment_version = "1.8.3"
     lifecycle_version = "2.8.3"
     material_version = "1.12.0"
     recyclerview_version = "1.3.2"
     constraintlayout_version = '2.1.4'
 
     // Compose Dependencies
-    compose_activity_version = '1.9.0'
+    compose_activity_version = '1.9.2'
     compose_bom_version = '2024.06.00'
     compose_hilt_version = '1.2.0'
     compose_viewmodel_version = '2.8.3'
@@ -91,6 +92,7 @@ ext {
     libraries = [
         adyen3ds2       : "com.adyen.threeds:adyen-3ds2:$adyen3ds2_version",
         androidx        : [
+            activity        : "androidx.activity:activity:$activity_version",
             annotation      : "androidx.annotation:annotation:$annotation_version",
             appcompat       : "androidx.appcompat:appcompat:$appcompat_version",
             autofill        : "androidx.autofill:autofill:$autofill_version",
