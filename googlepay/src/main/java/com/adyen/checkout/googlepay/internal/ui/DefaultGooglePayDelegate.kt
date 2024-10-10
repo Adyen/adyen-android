@@ -254,6 +254,10 @@ internal class DefaultGooglePayDelegate(
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
+    internal fun setInteractionBlocked(isInteractionBlocked: Boolean) {
+        submitHandler.setInteractionBlocked(isInteractionBlocked)
+    }
+
     override fun getPaymentMethodType(): String {
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }

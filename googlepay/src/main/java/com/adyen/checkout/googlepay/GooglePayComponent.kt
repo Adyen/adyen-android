@@ -26,6 +26,7 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.internal.provider.GooglePayComponentProvider
+import com.adyen.checkout.googlepay.internal.ui.DefaultGooglePayDelegate
 import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -97,7 +98,8 @@ class GooglePayComponent internal constructor(
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        adyenLog(AdyenLogLevel.WARN) { "Interaction with GooglePayComponent can't be blocked" }
+        (delegate as? DefaultGooglePayDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not interactable, ignoring." }
     }
 
     override fun isConfirmationRequired(): Boolean = (delegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
