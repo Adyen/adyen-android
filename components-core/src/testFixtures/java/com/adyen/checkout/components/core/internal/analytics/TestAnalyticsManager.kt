@@ -19,7 +19,7 @@ class TestAnalyticsManager : AnalyticsManager {
 
     private var isInitialized = false
     private var isCleared = false
-    private var checkoutAttemptId: String? = null
+    private var checkoutAttemptId: String = CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     private val events: MutableList<AnalyticsEvent> = mutableListOf()
 
     override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
@@ -58,11 +58,9 @@ class TestAnalyticsManager : AnalyticsManager {
         return re.matches(actual)
     }
 
-    override fun getCheckoutAttemptId(): String? {
-        return checkoutAttemptId
-    }
+    override fun getCheckoutAttemptId(): String = checkoutAttemptId
 
-    fun setCheckoutAttemptId(checkoutAttemptId: String?) {
+    fun setCheckoutAttemptId(checkoutAttemptId: String) {
         this.checkoutAttemptId = checkoutAttemptId
     }
 
@@ -72,5 +70,9 @@ class TestAnalyticsManager : AnalyticsManager {
 
     fun assertIsCleared() {
         assertTrue(isCleared)
+    }
+
+    companion object {
+        const val CHECKOUT_ATTEMPT_ID_NOT_FETCHED = "not-fetched"
     }
 }

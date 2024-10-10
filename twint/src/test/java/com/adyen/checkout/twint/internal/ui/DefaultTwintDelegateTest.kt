@@ -91,7 +91,7 @@ internal class DefaultTwintDelegateTest(
             data = PaymentComponentData(
                 paymentMethod = TwintPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     subtype = "sdk",
                 ),
                 order = TEST_ORDER,

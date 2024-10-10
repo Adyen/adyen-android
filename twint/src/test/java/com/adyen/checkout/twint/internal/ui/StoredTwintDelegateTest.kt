@@ -87,7 +87,7 @@ internal class StoredTwintDelegateTest {
             data = PaymentComponentData(
                 paymentMethod = TwintPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     storedPaymentMethodId = TEST_PAYMENT_METHOD_ID,
                 ),
                 order = TEST_ORDER,

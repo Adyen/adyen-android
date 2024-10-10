@@ -130,7 +130,7 @@ internal class DefaultCashAppPayDelegateTest(
             data = PaymentComponentData(
                 paymentMethod = CashAppPayPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     grantId = "grantId",
                     onFileGrantId = "grantId",
                     customerId = "customerId",

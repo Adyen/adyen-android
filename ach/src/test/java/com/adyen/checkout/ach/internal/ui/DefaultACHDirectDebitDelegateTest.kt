@@ -496,7 +496,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
                 val expectedPaymentMethod = ACHDirectDebitPaymentMethod(
                     type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     encryptedBankAccountNumber = TEST_BANK_ACCOUNT_NUMBER,
                     encryptedBankLocationId = TEST_BANK_BANK_LOCATION_ID,
                     ownerName = TEST_OWNER_NAME,
