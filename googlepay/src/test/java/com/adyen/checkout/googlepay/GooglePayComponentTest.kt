@@ -16,8 +16,8 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.googlepay.internal.ui.DefaultGooglePayDelegate
 import com.adyen.checkout.googlepay.internal.ui.GooglePayComponentViewType
-import com.adyen.checkout.googlepay.internal.ui.GooglePayDelegate
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -41,7 +41,7 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GooglePayComponentTest(
-    @Mock private val googlePayDelegate: GooglePayDelegate,
+    @Mock private val googlePayDelegate: DefaultGooglePayDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock private val componentEventHandler: ComponentEventHandler<GooglePayComponentState>,
@@ -105,7 +105,7 @@ internal class GooglePayComponentTest(
     }
 
     @Test
-    fun `when cash app pay delegate view flow emits a value then component view flow should match that value`() =
+    fun `when google pay delegate view flow emits a value then component view flow should match that value`() =
         runTest {
             val delegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
             whenever(googlePayDelegate.viewFlow) doReturn delegateViewFlow
@@ -208,5 +208,27 @@ internal class GooglePayComponentTest(
         component.isConfirmationRequired()
 
         verify(googlePayDelegate).isConfirmationRequired()
+    }
+
+    @Test
+    fun `when setInteractionBlocked is called, then delegate is called`() {
+        component = GooglePayComponent(
+            googlePayDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
+        whenever(component.delegate).thenReturn(googlePayDelegate)
+
+        component.setInteractionBlocked(true)
+
+        verify(googlePayDelegate).setInteractionBlocked(true)
+    }
+
+    @Test
+    fun `when getGooglePayButtonParameters is called, then delegate is called`() {
+        component.getGooglePayButtonParameters()
+
+        verify(googlePayDelegate).getGooglePayButtonParameters()
     }
 }
