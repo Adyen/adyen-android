@@ -44,6 +44,7 @@ import org.junit.jupiter.api.Assertions.assertInstanceOf
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -54,6 +55,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
@@ -164,6 +166,51 @@ internal class DefaultGooglePayDelegateTest(
             delegate.updateComponentState(TEST_PAYMENT_DATA)
             assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
         }
+    }
+
+    @Nested
+    @DisplayName("when submit button is configured to be")
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `hidden, then it should not show`() {
+            delegate = createGooglePayDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
+            )
+
+            assertFalse(delegate.shouldShowSubmitButton())
+        }
+
+        @Test
+        fun `visible, then it should show`() {
+            delegate = createGooglePayDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
+            )
+
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
+
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized, then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+        }
+
+        @Test
+        fun `when delegate setInteractionBlocked is called, then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
+            }
     }
 
     @Nested
