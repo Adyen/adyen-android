@@ -87,6 +87,7 @@ internal class GooglePayComponentParamsMapper(
         return if (commonComponentParams.isCreatedByDropIn) {
             false
         } else {
+            // TODO return true by default in v6
             googlePayConfiguration?.isSubmitButtonVisible ?: false
         }
     }
