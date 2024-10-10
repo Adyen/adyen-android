@@ -198,14 +198,10 @@ internal class DropInActivity :
         fragment.handleActivityResult(resultCode, data)
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         adyenLog(AdyenLogLevel.DEBUG) { "onNewIntent" }
-        if (intent != null) {
-            handleIntent(intent)
-        } else {
-            adyenLog(AdyenLogLevel.ERROR) { "Null intent" }
-        }
+        handleIntent(intent)
     }
 
     override fun onStart() {
