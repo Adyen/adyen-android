@@ -15,9 +15,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GooglePayButtonStyling(
-    val buttonTheme: GooglePayButtonTheme?,
-    val buttonType: GooglePayButtonType?,
-    @Dimension(Dimension.DP) val cornerRadius: Int?,
+    val buttonTheme: GooglePayButtonTheme? = null,
+    val buttonType: GooglePayButtonType? = null,
+    @Dimension(Dimension.DP) val cornerRadius: Int? = null,
 ) : Parcelable
 
 enum class GooglePayButtonTheme(
