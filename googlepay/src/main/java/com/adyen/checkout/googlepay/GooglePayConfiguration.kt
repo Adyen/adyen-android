@@ -54,6 +54,7 @@ class GooglePayConfiguration private constructor(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
+    val googlePayButtonStyling: GooglePayButtonStyling?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
 
@@ -80,6 +81,7 @@ class GooglePayConfiguration private constructor(
         private var isBillingAddressRequired: Boolean? = null
         private var billingAddressParameters: BillingAddressParameters? = null
         private var totalPriceStatus: String? = null
+        private var googlePayButtonStyling: GooglePayButtonStyling? = null
         private var isSubmitButtonVisible: Boolean? = null
 
         /**
@@ -383,6 +385,11 @@ class GooglePayConfiguration private constructor(
             return super.setAmount(amount)
         }
 
+        fun setGooglePayButtonStyling(googlePayButtonStyling: GooglePayButtonStyling): Builder {
+            this.googlePayButtonStyling = googlePayButtonStyling
+            return this
+        }
+
         /**
          * Sets if submit button will be visible or not.
          *
@@ -419,6 +426,7 @@ class GooglePayConfiguration private constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 isBillingAddressRequired = isBillingAddressRequired,
                 billingAddressParameters = billingAddressParameters,
+                googlePayButtonStyling = googlePayButtonStyling,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }
