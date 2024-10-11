@@ -9,12 +9,12 @@
 package com.adyen.checkout.googlepay.internal.ui
 
 import android.content.Context
+import android.content.res.Resources
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.adyen.checkout.googlepay.databinding.ViewGooglePayButtonBinding
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
-import com.google.android.gms.wallet.button.ButtonConstants.ButtonType
 import com.google.android.gms.wallet.button.ButtonOptions
 
 internal class GooglePayButtonView @JvmOverloads constructor(
@@ -28,11 +28,29 @@ internal class GooglePayButtonView @JvmOverloads constructor(
     override fun initialize(delegate: ButtonDelegate) {
         check(delegate is GooglePayDelegate)
 
+        val buttonStyle = delegate.componentParams.googlePayButtonStyling
+
+        val buttonType = buttonStyle?.buttonType
+        val buttonTheme = buttonStyle?.buttonTheme
+        val cornerRadius =
+            buttonStyle?.cornerRadius?.let { (it * Resources.getSystem().displayMetrics.density).toInt() }
+
         binding.payButton.initialize(
-            ButtonOptions.newBuilder()
-                .setButtonType(ButtonType.PAY)
-                .setAllowedPaymentMethods(delegate.getGooglePayButtonParameters().allowedPaymentMethods)
-                .build(),
+            ButtonOptions.newBuilder().apply {
+                if (buttonType != null) {
+                    setButtonType(buttonType.value)
+                }
+
+                if (buttonTheme != null) {
+                    setButtonTheme(buttonTheme.value)
+                }
+
+                if (cornerRadius != null) {
+                    setCornerRadius(cornerRadius)
+                }
+
+                setAllowedPaymentMethods(delegate.getGooglePayButtonParameters().allowedPaymentMethods)
+            }.build(),
         )
     }
 
