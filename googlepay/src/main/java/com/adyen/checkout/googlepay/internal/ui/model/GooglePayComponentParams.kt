@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.GooglePayButtonStyling
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
 
@@ -36,4 +37,5 @@ internal data class GooglePayComponentParams(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
+    val googlePayButtonStyling: GooglePayButtonStyling?,
 ) : ComponentParams by commonComponentParams, ButtonParams

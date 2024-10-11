@@ -265,6 +265,7 @@ internal class GooglePayUtilsTest {
             shippingAddressParameters = null,
             isBillingAddressRequired = false,
             billingAddressParameters = null,
+            googlePayButtonStyling = null,
         )
     }
 
@@ -305,6 +306,7 @@ internal class GooglePayUtilsTest {
                 format = "FORMAT",
                 isPhoneNumberRequired = true,
             ),
+            googlePayButtonStyling = null,
         )
     }
 }
