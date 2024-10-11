@@ -385,6 +385,11 @@ class GooglePayConfiguration private constructor(
             return super.setAmount(amount)
         }
 
+        /**
+         * Set a [GooglePayButtonStyling] object for customization of the Google Pay button.
+         *
+         * @param googlePayButtonStyling The customization object.
+         */
         fun setGooglePayButtonStyling(googlePayButtonStyling: GooglePayButtonStyling): Builder {
             this.googlePayButtonStyling = googlePayButtonStyling
             return this
