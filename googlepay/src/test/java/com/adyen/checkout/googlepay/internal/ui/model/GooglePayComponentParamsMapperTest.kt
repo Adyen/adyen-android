@@ -26,6 +26,9 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonTheme
+import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
@@ -74,6 +77,11 @@ internal class GooglePayComponentParamsMapperTest {
         val allowedCardNetworks = listOf("CARD1", "CARD2")
         val shippingAddressParameters = ShippingAddressParameters(listOf("ZZ", "AA"), true)
         val billingAddressParameters = BillingAddressParameters("FORMAT", true)
+        val googlePayButtonStyling = GooglePayButtonStyling(
+            buttonTheme = GooglePayButtonTheme.LIGHT,
+            buttonType = GooglePayButtonType.BOOK,
+            cornerRadius = 16,
+        )
 
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.FRANCE,
@@ -98,6 +106,7 @@ internal class GooglePayComponentParamsMapperTest {
                 setShippingAddressParameters(shippingAddressParameters)
                 setShippingAddressRequired(true)
                 setTotalPriceStatus("STATUS")
+                setGooglePayButtonStyling(googlePayButtonStyling)
             }
         }
 
@@ -132,6 +141,7 @@ internal class GooglePayComponentParamsMapperTest {
             shippingAddressParameters = shippingAddressParameters,
             isBillingAddressRequired = true,
             billingAddressParameters = billingAddressParameters,
+            googlePayButtonStyling = googlePayButtonStyling,
         )
 
         assertEquals(expected, params)
@@ -599,6 +609,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters: ShippingAddressParameters? = null,
         isBillingAddressRequired: Boolean = false,
         billingAddressParameters: BillingAddressParameters? = null,
+        googlePayButtonStyling: GooglePayButtonStyling? = null,
     ) = GooglePayComponentParams(
         commonComponentParams = CommonComponentParams(
             shopperLocale = shopperLocale,
@@ -626,6 +637,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters = shippingAddressParameters,
         isBillingAddressRequired = isBillingAddressRequired,
         billingAddressParameters = billingAddressParameters,
+        googlePayButtonStyling = googlePayButtonStyling,
     )
 
     companion object {
