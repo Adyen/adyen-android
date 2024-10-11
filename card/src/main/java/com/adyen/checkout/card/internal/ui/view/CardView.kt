@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.view
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.util.AttributeSet
@@ -86,6 +87,10 @@ class CardView @JvmOverloads constructor(
         orientation = VERTICAL
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            binding.editTextExpiryDate.setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DATE)
+        }
     }
 
     override fun onAttachedToWindow() {

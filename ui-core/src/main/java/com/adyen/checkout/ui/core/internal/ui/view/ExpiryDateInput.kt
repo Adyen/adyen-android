@@ -8,7 +8,6 @@
 package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
-import android.os.Build
 import android.text.Editable
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
@@ -39,9 +38,6 @@ constructor(
         enforceMaxInputLength(MAX_LENGTH)
         // Make sure DateFormat only accepts the correct formatting.
         dateFormat.isLenient = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            setAutofillHints(AUTOFILL_HINT_CREDIT_CARD_EXPIRATION_DATE)
-        }
     }
 
     public override fun afterTextChanged(editable: Editable) {
