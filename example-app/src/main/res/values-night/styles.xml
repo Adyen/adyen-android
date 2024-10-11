@@ -8,7 +8,7 @@
 
 <resources>
 
-    <style name="GooglePayButton">
-        <item name="buttonTheme">light</item>
+    <style name="AdyenCheckout.GooglePay.Button">
+        <item name="adyenGooglePayButtonTheme">light</item>
     </style>
 </resources>
