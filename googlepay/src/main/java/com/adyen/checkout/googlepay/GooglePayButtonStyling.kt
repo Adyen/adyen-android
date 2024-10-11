@@ -20,6 +20,7 @@ import kotlinx.parcelize.Parcelize
  * @param buttonType Changes the text displayed inside of the button.
  * @param cornerRadius Sets the corner radius of the button. For example, passing 16 means the radius will be 16 dp.
  */
+@Suppress("MaxLineLength")
 @Parcelize
 data class GooglePayButtonStyling(
     val buttonTheme: GooglePayButtonTheme? = null,
