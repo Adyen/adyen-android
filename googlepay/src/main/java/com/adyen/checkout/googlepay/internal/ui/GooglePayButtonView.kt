@@ -89,6 +89,7 @@ internal class GooglePayButtonView @JvmOverloads constructor(
 
     override fun setText(text: String?) = Unit
 
+    @Suppress("MagicNumber")
     private fun Int.mapStyledButtonType(): GooglePayButtonType? = when (this) {
         0 -> GooglePayButtonType.BUY
         1 -> GooglePayButtonType.BOOK
