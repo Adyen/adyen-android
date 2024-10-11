@@ -34,7 +34,7 @@ enum class AnalyticsLevel {
     ALL,
 
     /**
-     * No analytics are sent from the library.
+     * Only Drop-in/Components analytics are not sent from the library.
      */
     NONE,
 }
