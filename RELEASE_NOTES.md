@@ -1,5 +1,5 @@
 [//]: # (This file will be used for the release notes on GitHub when publishing.)
-[//]: # (Types of changes: `Breaking changes` `New` `Added` `Improved` `Changed` `Deprecated` `Removed` `Fixed`)
+[//]: # (Types of changes: `Breaking changes` `New` `Fixed` `Improved` `Changed` `Deprecated` `Removed`)
 [//]: # (Example:)
 [//]: # (## New)
 [//]: # ( - New payment method)
