@@ -291,7 +291,6 @@ public final class com/adyen/checkout/core/ui/validation/CardNumberValidationRes
 
 public final class com/adyen/checkout/core/ui/validation/CardNumberValidator {
 	public static final field INSTANCE Lcom/adyen/checkout/core/ui/validation/CardNumberValidator;
-	public static final field MAXIMUM_CARD_NUMBER_LENGTH I
 	public final fun validateCardNumber (Ljava/lang/String;Z)Lcom/adyen/checkout/core/ui/validation/CardNumberValidationResult;
 }
 
