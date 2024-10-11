@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.ui.validation
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.internal.util.StringUtil
 
 object CardNumberValidator {
@@ -18,6 +19,8 @@ object CardNumberValidator {
 
     // Card Number
     private const val MINIMUM_CARD_NUMBER_LENGTH = 12
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     const val MAXIMUM_CARD_NUMBER_LENGTH = 19
 
     /**
