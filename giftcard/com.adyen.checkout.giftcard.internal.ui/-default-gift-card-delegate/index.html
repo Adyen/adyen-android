@@ -1,0 +1,457 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DefaultGiftCardDelegate</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            adyen-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":giftcard:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="giftcard::com.adyen.checkout.giftcard.internal.ui/DefaultGiftCardDelegate///PointingToDeclaration//1892179859">
+  <div class="breadcrumbs"><a href="../../index.html">giftcard</a><span class="delimiter">/</span><a href="../index.html">com.adyen.checkout.giftcard.internal.ui</a><span class="delimiter">/</span><span class="current">DefaultGiftCardDelegate</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Default</span><wbr><span>Gift</span><wbr><span>Card</span><wbr><span><span>Delegate</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/RestrictTo.html"><span class="token annotation builtin">RestrictTo</span></a><span class="token punctuation">(</span><span>value<span class="token operator"> = </span><span class="token punctuation">[</span><span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/RestrictTo.Scope.LIBRARY_GROUP.html">RestrictTo.Scope.LIBRARY_GROUP</a></span><wbr><span class="token punctuation">]</span></span><wbr><span class="token punctuation">)</span></div></div><span class="token keyword">class </span><a href="index.html">DefaultGiftCardDelegate</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observerRepository<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal/-payment-observer-repository/index.html">PaymentObserverRepository</a><span class="token punctuation">, </span></span><span class="parameter ">paymentMethod<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-payment-method/index.html">PaymentMethod</a><span class="token punctuation">, </span></span><span class="parameter ">order<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-order-request/index.html">OrderRequest</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">analyticsManager<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.analytics/-analytics-manager/index.html">AnalyticsManager</a><span class="token punctuation">, </span></span><span class="parameter ">publicKeyRepository<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.data.api/-public-key-repository/index.html">PublicKeyRepository</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>componentParams<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-component-params/index.html">GiftCardComponentParams</a><span class="token punctuation">, </span></span><span class="parameter ">cardEncryptor<span class="token operator">: </span><a href="../../../cse/com.adyen.checkout.cse.internal/-base-card-encryptor/index.html">BaseCardEncryptor</a><span class="token punctuation">, </span></span><span class="parameter ">submitHandler<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-submit-handler/index.html">SubmitHandler</a><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard/-gift-card-component-state/index.html">GiftCardComponentState</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">validator<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.util/-gift-card-validator/index.html">GiftCardValidator</a><span class="token punctuation">, </span></span><span class="parameter ">protocol<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.protocol/-gift-card-protocol/index.html">GiftCardProtocol</a></span></span><span class="token punctuation">)</span> : <a href="../-gift-card-delegate/index.html">GiftCardDelegate</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="853427315%2FConstructors%2F1892179859" anchor-label="DefaultGiftCardDelegate" id="853427315%2FConstructors%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-gift-card-delegate.html"><span>Default</span><wbr><span>Gift</span><wbr><span>Card</span><wbr><span><span>Delegate</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="853427315%2FConstructors%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observerRepository<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal/-payment-observer-repository/index.html">PaymentObserverRepository</a><span class="token punctuation">, </span></span><span class="parameter ">paymentMethod<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-payment-method/index.html">PaymentMethod</a><span class="token punctuation">, </span></span><span class="parameter ">order<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-order-request/index.html">OrderRequest</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">analyticsManager<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.analytics/-analytics-manager/index.html">AnalyticsManager</a><span class="token punctuation">, </span></span><span class="parameter ">publicKeyRepository<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core.internal.data.api/-public-key-repository/index.html">PublicKeyRepository</a><span class="token punctuation">, </span></span><span class="parameter ">componentParams<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-component-params/index.html">GiftCardComponentParams</a><span class="token punctuation">, </span></span><span class="parameter ">cardEncryptor<span class="token operator">: </span><a href="../../../cse/com.adyen.checkout.cse.internal/-base-card-encryptor/index.html">BaseCardEncryptor</a><span class="token punctuation">, </span></span><span class="parameter ">submitHandler<span class="token operator">: </span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-submit-handler/index.html">SubmitHandler</a><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard/-gift-card-component-state/index.html">GiftCardComponentState</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">validator<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.util/-gift-card-validator/index.html">GiftCardValidator</a><span class="token punctuation">, </span></span><span class="parameter ">protocol<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.protocol/-gift-card-protocol/index.html">GiftCardProtocol</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1422495833%2FClasslikes%2F1892179859" anchor-label="Companion" id="1422495833%2FClasslikes%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1422495833%2FClasslikes%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="1150439375%2FProperties%2F1892179859" anchor-label="componentParams" id="1150439375%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="component-params.html"><span>component</span><wbr><span><span>Params</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1150439375%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="component-params.html">componentParams</a><span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-component-params/index.html">GiftCardComponentParams</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1317731994%2FProperties%2F1892179859" anchor-label="componentStateFlow" id="-1317731994%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="component-state-flow.html"><span>component</span><wbr><span>State</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1317731994%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="component-state-flow.html">componentStateFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard/-gift-card-component-state/index.html">GiftCardComponentState</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1007439595%2FProperties%2F1892179859" anchor-label="exceptionFlow" id="-1007439595%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="exception-flow.html"><span>exception</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1007439595%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="exception-flow.html">exceptionFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../checkout-core/com.adyen.checkout.core.exception/-checkout-exception/index.html">CheckoutException</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="696563997%2FProperties%2F1892179859" anchor-label="outputData" id="696563997%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="output-data.html"><span>output</span><wbr><span><span>Data</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="696563997%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="output-data.html">outputData</a><span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-output-data/index.html">GiftCardOutputData</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1382975375%2FProperties%2F1892179859" anchor-label="outputDataFlow" id="1382975375%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="output-data-flow.html"><span>output</span><wbr><span>Data</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1382975375%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="output-data-flow.html">outputDataFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-output-data/index.html">GiftCardOutputData</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="234178658%2FProperties%2F1892179859" anchor-label="submitFlow" id="234178658%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="submit-flow.html"><span>submit</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="234178658%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="submit-flow.html">submitFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard/-gift-card-component-state/index.html">GiftCardComponentState</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1841278366%2FProperties%2F1892179859" anchor-label="uiEventFlow" id="1841278366%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ui-event-flow.html"><span>ui</span><wbr><span>Event</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1841278366%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="ui-event-flow.html">uiEventFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-payment-component-u-i-event/index.html">PaymentComponentUIEvent</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="476222215%2FProperties%2F1892179859" anchor-label="uiStateFlow" id="476222215%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="ui-state-flow.html"><span>ui</span><wbr><span>State</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="476222215%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="ui-state-flow.html">uiStateFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-payment-component-u-i-state/index.html">PaymentComponentUIState</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1361024075%2FProperties%2F1892179859" anchor-label="viewFlow" id="-1361024075%2FProperties%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="view-flow.html"><span>view</span><wbr><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1361024075%2FProperties%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="view-flow.html">viewFlow</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/Flow///PointingToDeclaration/">Flow</span><span class="token operator">&lt;</span><a href="../../../ui-core/com.adyen.checkout.ui.core.internal.ui/-component-view-type/index.html">ComponentViewType</a><span class="token operator">?</span><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="1597273597%2FFunctions%2F1892179859" anchor-label="getPaymentMethodType" id="1597273597%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="get-payment-method-type.html"><span>get</span><wbr><span>Payment</span><wbr><span>Method</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1597273597%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-payment-method-type.html"><span class="token function">getPaymentMethodType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="433633266%2FFunctions%2F1892179859" anchor-label="initialize" id="433633266%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="initialize.html"><span><span>initialize</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="433633266%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="initialize.html"><span class="token function">initialize</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="706690314%2FFunctions%2F1892179859" anchor-label="isConfirmationRequired" id="706690314%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-confirmation-required.html"><span>is</span><wbr><span>Confirmation</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="706690314%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="is-confirmation-required.html"><span class="token function">isConfirmationRequired</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1458427128%2FFunctions%2F1892179859" anchor-label="isPinRequired" id="-1458427128%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-pin-required.html"><span>is</span><wbr><span>Pin</span><wbr><span><span>Required</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1458427128%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="is-pin-required.html"><span class="token function">isPinRequired</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1882397570%2FFunctions%2F1892179859" anchor-label="observe" id="1882397570%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="observe.html"><span><span>observe</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1882397570%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="observe.html"><span class="token function">observe</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">lifecycleOwner<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/LifecycleOwner.html">LifecycleOwner</a><span class="token punctuation">, </span></span><span class="parameter ">coroutineScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token punctuation">, </span></span><span class="parameter ">callback<span class="token operator">: </span><span class="token punctuation">(</span><a href="../../../components-core/com.adyen.checkout.components.core.internal/-payment-component-event/index.html">PaymentComponentEvent</a><span class="token operator">&lt;</span><a href="../../com.adyen.checkout.giftcard/-gift-card-component-state/index.html">GiftCardComponentState</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1425369829%2FFunctions%2F1892179859" anchor-label="onCleared" id="1425369829%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-cleared.html"><span>on</span><wbr><span><span>Cleared</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1425369829%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-cleared.html"><span class="token function">onCleared</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2058370351%2FFunctions%2F1892179859" anchor-label="onSubmit" id="-2058370351%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="on-submit.html"><span>on</span><wbr><span><span>Submit</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2058370351%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-submit.html"><span class="token function">onSubmit</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2044106930%2FFunctions%2F1892179859" anchor-label="removeObserver" id="-2044106930%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-observer.html"><span>remove</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2044106930%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-observer.html"><span class="token function">removeObserver</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1116922811%2FFunctions%2F1892179859" anchor-label="resolveBalanceResult" id="-1116922811%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolve-balance-result.html"><span>resolve</span><wbr><span>Balance</span><wbr><span><span>Result</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1116922811%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="resolve-balance-result.html"><span class="token function">resolveBalanceResult</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">balanceResult<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-balance-result/index.html">BalanceResult</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-752073447%2FFunctions%2F1892179859" anchor-label="resolveOrderResponse" id="-752073447%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="resolve-order-response.html"><span>resolve</span><wbr><span>Order</span><wbr><span><span>Response</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-752073447%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="resolve-order-response.html"><span class="token function">resolveOrderResponse</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">orderResponse<span class="token operator">: </span><a href="../../../components-core/com.adyen.checkout.components.core/-order-response/index.html">OrderResponse</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="768900187%2FFunctions%2F1892179859" anchor-label="setInteractionBlocked" id="768900187%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="set-interaction-blocked.html"><span>set</span><wbr><span>Interaction</span><wbr><span><span>Blocked</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="768900187%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="set-interaction-blocked.html"><span class="token function">setInteractionBlocked</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">isInteractionBlocked<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1697714926%2FFunctions%2F1892179859" anchor-label="shouldShowSubmitButton" id="1697714926%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="should-show-submit-button.html"><span>should</span><wbr><span>Show</span><wbr><span>Submit</span><wbr><span><span>Button</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1697714926%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="should-show-submit-button.html"><span class="token function">shouldShowSubmitButton</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2108728008%2FFunctions%2F1892179859" anchor-label="updateInputData" id="-2108728008%2FFunctions%2F1892179859" data-filterable-set=":giftcard:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":giftcard:dokkaHtmlPartial/release" data-filterable-set=":giftcard:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-input-data.html"><span>update</span><wbr><span>Input</span><wbr><span><span>Data</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2108728008%2FFunctions%2F1892179859"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":giftcard:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="update-input-data.html"><span class="token function">updateInputData</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">update<span class="token operator">: </span><a href="../../com.adyen.checkout.giftcard.internal.ui.model/-gift-card-input-data/index.html">GiftCardInputData</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
