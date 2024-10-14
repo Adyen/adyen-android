@@ -147,6 +147,7 @@ internal class MealVoucherFRView @JvmOverloads constructor(
             }
         } else {
             binding.textInputLayoutMealVoucherFRSecurityCode.isVisible = false
+            (binding.textInputLayoutMealVoucherFRExpiryDate.layoutParams as LayoutParams).marginEnd = 0
         }
     }
 
