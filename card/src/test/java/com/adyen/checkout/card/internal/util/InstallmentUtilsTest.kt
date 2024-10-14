@@ -10,8 +10,6 @@ package com.adyen.checkout.card.internal.util
 
 import android.content.Context
 import androidx.annotation.StringRes
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
@@ -21,6 +19,8 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -60,9 +60,9 @@ internal class InstallmentUtilsTest {
         val installmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = installmentOptionValues,
-                includeRevolving = false
+                includeRevolving = false,
             ),
-            shopperLocale = Locale.US
+            shopperLocale = Locale.US,
         )
 
         val installmentOptions = InstallmentUtils.makeInstallmentOptions(installmentParams, null, false)
@@ -82,21 +82,21 @@ internal class InstallmentUtilsTest {
                 InstallmentOptionParams.CardBasedInstallmentOptions(
                     values = installmentOptionValues,
                     cardBrand = cardBrand,
-                    includeRevolving = false
+                    includeRevolving = false,
                 ),
                 InstallmentOptionParams.CardBasedInstallmentOptions(
                     values = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9),
                     cardBrand = cardBrand,
-                    includeRevolving = false
-                )
+                    includeRevolving = false,
+                ),
             ),
-            shopperLocale = Locale.US
+            shopperLocale = Locale.US,
         )
 
         val installmentOptions = InstallmentUtils.makeInstallmentOptions(
             installmentParams = installmentParams,
             cardBrand = cardBrand,
-            isCardTypeReliable = true
+            isCardTypeReliable = true,
         )
 
         val regularInstallmentOptions = installmentOptions.filter { model -> model.option == InstallmentOption.REGULAR }
@@ -110,9 +110,9 @@ internal class InstallmentUtilsTest {
         val installmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(1, 3, 5, 10),
-                includeRevolving = false
+                includeRevolving = false,
             ),
-            shopperLocale = Locale.US
+            shopperLocale = Locale.US,
         )
 
         val installmentOptions = InstallmentUtils.makeInstallmentOptions(installmentParams, null, false)
@@ -127,9 +127,9 @@ internal class InstallmentUtilsTest {
         val installmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(1, 3, 5, 10),
-                includeRevolving = true
+                includeRevolving = true,
             ),
-            shopperLocale = Locale.US
+            shopperLocale = Locale.US,
         )
 
         val installmentOptions = InstallmentUtils.makeInstallmentOptions(installmentParams, null, false)
@@ -144,9 +144,9 @@ internal class InstallmentUtilsTest {
         val installmentParams = InstallmentParams(
             defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                 values = listOf(1, 3, 5, 10),
-                includeRevolving = false
+                includeRevolving = false,
             ),
-            shopperLocale = Locale.US
+            shopperLocale = Locale.US,
         )
 
         val installmentOptions = InstallmentUtils.makeInstallmentOptions(installmentParams, null, false)
@@ -261,14 +261,14 @@ internal class InstallmentUtilsTest {
                 InstallmentParams(
                     defaultOptions = InstallmentOptionParams.DefaultInstallmentOptions(
                         values = listOf(),
-                        includeRevolving = true
+                        includeRevolving = true,
                     ),
                     amount = Amount("EUR", 100L),
                     shopperLocale = Locale.US,
-                    showInstallmentAmount = true
+                    showInstallmentAmount = true,
                 ),
                 CardBrand(CardType.VISA),
-                true
+                true,
             ),
             arguments(
                 InstallmentParams(
@@ -276,10 +276,10 @@ internal class InstallmentUtilsTest {
                     cardBasedOptions = listOf(),
                     amount = Amount("EUR", 100L),
                     shopperLocale = Locale.US,
-                    showInstallmentAmount = true
+                    showInstallmentAmount = true,
                 ),
                 CardBrand(CardType.VISA),
-                true
+                true,
             ),
             arguments(
                 InstallmentParams(
@@ -287,13 +287,13 @@ internal class InstallmentUtilsTest {
                         InstallmentOptionParams.CardBasedInstallmentOptions(
                             values = listOf(),
                             includeRevolving = false,
-                            cardBrand = CardBrand(CardType.MASTERCARD)
-                        )
+                            cardBrand = CardBrand(CardType.MASTERCARD),
+                        ),
                     ),
-                    shopperLocale = Locale.US
+                    shopperLocale = Locale.US,
                 ),
                 CardBrand(CardType.VISA),
-                true
+                true,
             ),
             arguments(
                 InstallmentParams(
@@ -301,13 +301,13 @@ internal class InstallmentUtilsTest {
                         InstallmentOptionParams.CardBasedInstallmentOptions(
                             values = listOf(),
                             includeRevolving = false,
-                            cardBrand = CardBrand(CardType.MASTERCARD)
-                        )
+                            cardBrand = CardBrand(CardType.MASTERCARD),
+                        ),
                     ),
-                    shopperLocale = Locale.US
+                    shopperLocale = Locale.US,
                 ),
                 CardBrand(CardType.MASTERCARD),
-                false
+                false,
             ),
             arguments(null, null, false),
         )
@@ -320,9 +320,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.ONE_TIME,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
+                    showAmount = false,
                 ),
-                R.string.checkout_card_installments_option_one_time
+                R.string.checkout_card_installments_option_one_time,
             ),
             arguments(
                 InstallmentModel(
@@ -330,10 +330,10 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REVOLVING,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
+                    showAmount = false,
                 ),
-                R.string.checkout_card_installments_option_revolving
-            )
+                R.string.checkout_card_installments_option_revolving,
+            ),
         )
 
         @JvmStatic
@@ -344,8 +344,8 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = Amount("USD", 100L),
                     shopperLocale = Locale.US,
-                    showAmount = false
-                )
+                    showAmount = false,
+                ),
             ),
             arguments(
                 InstallmentModel(
@@ -353,9 +353,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
-                )
-            )
+                    showAmount = false,
+                ),
+            ),
         )
 
         @JvmStatic
@@ -366,9 +366,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = Amount("USD", 10000L),
                     shopperLocale = Locale.US,
-                    showAmount = true
+                    showAmount = true,
                 ),
-                "$50.00"
+                "$50.00",
             ),
             arguments(
                 InstallmentModel(
@@ -376,9 +376,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = Amount("USD", 10000L),
                     shopperLocale = Locale.US,
-                    showAmount = true
+                    showAmount = true,
                 ),
-                "$33.33"
+                "$33.33",
             ),
             arguments(
                 InstallmentModel(
@@ -386,10 +386,10 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = Amount("USD", 10000L),
                     shopperLocale = Locale.US,
-                    showAmount = true
+                    showAmount = true,
                 ),
-                "$25.00"
-            )
+                "$25.00",
+            ),
         )
 
         @JvmStatic
@@ -401,9 +401,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.ONE_TIME,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
-                )
-            )
+                    showAmount = false,
+                ),
+            ),
         )
 
         @JvmStatic
@@ -414,8 +414,8 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REGULAR,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
-                )
+                    showAmount = false,
+                ),
             ),
             arguments(
                 InstallmentModel(
@@ -423,9 +423,9 @@ internal class InstallmentUtilsTest {
                     option = InstallmentOption.REVOLVING,
                     amount = null,
                     shopperLocale = Locale.US,
-                    showAmount = false
-                )
-            )
+                    showAmount = false,
+                ),
+            ),
         )
 
         @JvmStatic
@@ -434,21 +434,21 @@ internal class InstallmentUtilsTest {
             arguments(
                 listOf(
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
-                )
+                ),
             ),
             arguments(
                 listOf(
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.VISA)),
-                )
+                ),
             ),
             arguments(
                 listOf(
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.VISA)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.AMERICAN_EXPRESS)),
-                )
-            )
+                ),
+            ),
         )
 
         @JvmStatic
@@ -457,7 +457,7 @@ internal class InstallmentUtilsTest {
                 listOf(
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
-                )
+                ),
             ),
             arguments(
                 listOf(
@@ -465,8 +465,8 @@ internal class InstallmentUtilsTest {
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.MASTERCARD)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.VISA)),
                     InstallmentOptions.CardBasedInstallmentOptions(10, false, CardBrand(CardType.AMERICAN_EXPRESS)),
-                )
-            )
+                ),
+            ),
         )
 
         @JvmStatic
@@ -476,9 +476,9 @@ internal class InstallmentUtilsTest {
                 InstallmentConfiguration(
                     defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
                         values = listOf(2, 6, 10),
-                        includeRevolving = false
-                    )
-                )
+                        includeRevolving = false,
+                    ),
+                ),
             ),
             arguments(
                 InstallmentConfiguration(
@@ -486,31 +486,31 @@ internal class InstallmentUtilsTest {
                         InstallmentOptions.CardBasedInstallmentOptions(
                             values = listOf(2, 6, 10),
                             includeRevolving = false,
-                            cardBrand = CardBrand(CardType.MASTERCARD)
+                            cardBrand = CardBrand(CardType.MASTERCARD),
                         ),
                         InstallmentOptions.CardBasedInstallmentOptions(
                             values = listOf(2, 6),
                             includeRevolving = false,
-                            cardBrand = CardBrand(CardType.VISA)
-                        )
-                    )
-                )
+                            cardBrand = CardBrand(CardType.VISA),
+                        ),
+                    ),
+                ),
             ),
             arguments(
                 InstallmentConfiguration(
                     defaultOptions = InstallmentOptions.DefaultInstallmentOptions(
                         values = listOf(2, 6),
-                        includeRevolving = false
+                        includeRevolving = false,
                     ),
                     cardBasedOptions = listOf(
                         InstallmentOptions.CardBasedInstallmentOptions(
                             values = listOf(2, 6),
                             includeRevolving = false,
-                            cardBrand = CardBrand(CardType.MASTERCARD)
-                        )
-                    )
-                )
-            )
+                            cardBrand = CardBrand(CardType.MASTERCARD),
+                        ),
+                    ),
+                ),
+            ),
         )
 
         @JvmStatic
@@ -520,20 +520,20 @@ internal class InstallmentUtilsTest {
                     whenever(defaultOptions).thenReturn(
                         InstallmentOptions.DefaultInstallmentOptions(
                             values = listOf(0),
-                            includeRevolving = false
-                        )
+                            includeRevolving = false,
+                        ),
                     )
-                }
+                },
             ),
             arguments(
                 mock<InstallmentConfiguration>().apply {
                     whenever(defaultOptions).thenReturn(
                         InstallmentOptions.DefaultInstallmentOptions(
                             values = listOf(1),
-                            includeRevolving = false
-                        )
+                            includeRevolving = false,
+                        ),
                     )
-                }
+                },
             ),
             arguments(
                 mock<InstallmentConfiguration>().apply {
@@ -542,31 +542,31 @@ internal class InstallmentUtilsTest {
                             InstallmentOptions.CardBasedInstallmentOptions(
                                 values = listOf(1),
                                 includeRevolving = false,
-                                cardBrand = CardBrand(CardType.MASTERCARD)
-                            )
-                        )
+                                cardBrand = CardBrand(CardType.MASTERCARD),
+                            ),
+                        ),
                     )
-                }
+                },
             ),
             arguments(
                 mock<InstallmentConfiguration>().apply {
                     whenever(defaultOptions).thenReturn(
                         InstallmentOptions.DefaultInstallmentOptions(
                             values = listOf(3, 4),
-                            includeRevolving = false
-                        )
+                            includeRevolving = false,
+                        ),
                     )
                     whenever(cardBasedOptions).thenReturn(
                         listOf(
                             InstallmentOptions.CardBasedInstallmentOptions(
                                 values = listOf(2, 3, 1),
                                 includeRevolving = false,
-                                cardBrand = CardBrand(CardType.MASTERCARD)
-                            )
-                        )
+                                cardBrand = CardBrand(CardType.MASTERCARD),
+                            ),
+                        ),
                     )
-                }
-            )
+                },
+            ),
         )
     }
 }

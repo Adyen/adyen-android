@@ -12,19 +12,20 @@
     <string name="action_failed">Podczas przetwarzania płatności wystąpił błąd. Prosimy spróbować ponownie.</string>
     <string name="time_out_error">Upłynął limit czasu żądania. Spróbuj ponownie.</string>
     <string name="unknown_error">Wystąpił nieoczekiwany błąd</string>
-    <string name="store_payment_methods_header">Twoje metody płatności</string>
-    <string name="other_payment_methods">Wybierz inną metodę</string>
+    <string name="store_payment_methods_header">Przechowywane</string>
+    <string name="other_payment_methods">Inne</string>
+    <string name="checkout_preselected_stored_payment_method_header">Metoda płatności</string>
     <string name="continue_button">Kontynuuj</string>
     <string name="change_payment_method">Zmień metodę płatności</string>
     <string name="checkout_giftcard_error_zero_balance">Saldo karty podarunkowej jest puste</string>
     <string name="checkout_giftcard_error_currency">Karty podarunkowe są ważne tylko w walucie, w której zostały wydane</string>
     <string name="checkout_giftcard_remaining_balance_text">Pozostałe saldo wynosi %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Wybierz metodę płatności dla pozostałych %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Dodano kartę podarunkową</string>
+    <string name="checkout_giftcard_payment_methods_header">Stosowane</string>
     <string name="checkout_giftcard_remove_button">Usuń</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. dozwolona kwota (%s) na transakcję tą kartą upominkową</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Potwierdź usunięcie karty</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Usunąć dodane karty podarunkowe?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Potwierdź usunięcie</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Usunąć zastosowane elementy?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Tak, usuń</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anuluj</string>
     <string name="checkout_remove_stored_payment_method_body">Usuń zapisaną metodę płatności</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Aby zapisać ten obraz w urządzeniu, należy włączyć zezwolenie na przechowywanie</string>
     <string name="checkout_stored_payment_confirmation_message">Potwierdź płatność %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Anuluj</string>
+    <string name="checkout_close">Zamknij</string>
+    <string name="checkout_back">Wstecz</string>
 </resources>

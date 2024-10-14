@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Nukopijuokite kodą, tada atidarykite programą su registruotu PIX raktu, pasirinkite „Mokėti su PIX“ ir įklijuokite kodą.</string>
+    <string name="checkout_qr_code_upi">Padarykite ekrano kopiją ir įkelkite ją į UPI programą arba nuskaitykite QR kodą naudodami pageidaujamą UPI programą, kad užbaigtumėte mokėjimą.</string>
+    <string name="checkout_qr_code_copy_button">Kopijuoti kodą</string>
+    <string name="checkout_qr_code_timer_text">Jūs turite mokėti %s</string>
+    <string name="checkout_qr_code_copied_toast">Į iškarpinę nukopijuotas kodas</string>
+    <string name="checkout_qr_code_duit_now">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>
+    <string name="checkout_qr_code_prompt_pay">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>
+    <string name="checkout_qr_code_pay_now">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Šis QR kodas galioja %s</string>
+    <string name="checkout_qr_code_save_button">Išsaugoti kaip vaizdą</string>
+    <string name="checkout_qr_code_download_image_succeeded">Atsisiųsti vaizdą pavyko</string>
+    <string name="checkout_qr_code_download_image_failed">Atsisiųsti vaizdo nepavyko</string>
+    <string name="checkout_qr_code_permission_denied">Leidimas nesuteiktas</string>
+</resources>

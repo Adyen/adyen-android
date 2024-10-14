@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="payment_methods_header">Mètodes de pagament</string>
+    <string name="payment_failed">S\'ha produït un error en enviar el pagament. Torneu-ho a provar.</string>
+    <string name="action_failed">S\'ha produït un error en processar el vostre pagament. Torneu-ho a provar.</string>
+    <string name="time_out_error">S\'ha superat el temps d\'espera. Torneu-ho a provar.</string>
+    <string name="unknown_error">S\'ha produït un error desconegut</string>
+    <string name="store_payment_methods_header">Emmagatzemat</string>
+    <string name="other_payment_methods">Altres</string>
+    <string name="checkout_preselected_stored_payment_method_header">mètode de pagament</string>
+    <string name="continue_button">Continua</string>
+    <string name="change_payment_method">Canvieu el mètode de pagament</string>
+    <string name="checkout_giftcard_error_zero_balance">Aquesta targeta regal té un saldo zero</string>
+    <string name="checkout_giftcard_error_currency">Les targetes regal només són vàlides en la moneda en què van ser emeses</string>
+    <string name="checkout_giftcard_remaining_balance_text">El saldo restant serà de %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Seleccioneu la forma de pagament per al %s restant</string>
+    <string name="checkout_giftcard_payment_methods_header">Aplicat</string>
+    <string name="checkout_giftcard_remove_button">Elimina</string>
+    <string name="checkout_giftcard_max_transaction_limit">Màx. %s permès per transacció en aquesta targeta regal</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirma la supressió</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Voleu suprimir els elements aplicats?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Sí, elimina-ho</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel·la</string>
+    <string name="checkout_remove_stored_payment_method_body">Elimina la forma de pagament emmagatzemada</string>
+    <string name="checkout_permission_not_granted">No s\'atorga permís</string>
+    <string name="checkout_rationale_title_storage_permission">Sol·licitar permís d\'emmagatzematge</string>
+    <string name="checkout_rationale_message_storage_permission">Per desar aquesta imatge al vostre dispositiu, heu d\'activar el permís d\'emmagatzematge</string>
+    <string name="checkout_stored_payment_confirmation_message">Confirmació del pagament de %s</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Cancel·la</string>
+    <string name="checkout_close">Tanca</string>
+    <string name="checkout_back">Tornar</string>
+</resources>

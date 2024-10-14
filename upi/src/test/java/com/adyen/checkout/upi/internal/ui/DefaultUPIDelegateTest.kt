@@ -236,6 +236,24 @@ internal class DefaultUPIDelegateTest(
 
             outputTestFlow.cancel()
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.upi.internal.ui.DefaultUPIDelegateTest#noSelectedItemErrorMessageSource")
+        fun `selected mode and selected UPI intent item update, then showNoSelectedUPIIntentItemError is always false`(
+            actualSelectedMode: UPISelectedMode,
+            actualSelectedUPIIntentItem: UPIIntentItem?,
+        ) = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                selectedMode = actualSelectedMode
+                selectedUPIIntentItem = actualSelectedUPIIntentItem
+            }
+
+            assertFalse(outputTestFlow.latestValue.showNoSelectedUPIIntentItemError)
+
+            outputTestFlow.cancel()
+        }
     }
 
     @Nested
@@ -407,48 +425,6 @@ internal class DefaultUPIDelegateTest(
     }
 
     @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when selected mode is INTENT and there is no selected upi intent item, then submit button should not be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = null
-            }
-
-            assertFalse(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is INTENT and there is selected upi intent item, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.GenericApp()
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is VPA, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.VPA
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-
-        @Test
-        fun `when selected mode is QR, then submit button should be enabled`() {
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.QR
-            }
-
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-    }
-
-    @Nested
     inner class SubmitHandlerTest {
 
         @Test
@@ -476,11 +452,11 @@ internal class DefaultUPIDelegateTest(
     }
 
     @Nested
-    @DisplayName("when highlightValidationErrors is called for ")
+    @DisplayName("when highlightValidationErrors is called and ")
     inner class HighlightValidationErrorsTest {
 
         @Test
-        fun `invalid payment address, output data includes validation errors`() = runTest {
+        fun `payment address is invalid, then output data includes validation errors`() = runTest {
             val paymentMethod = PaymentMethod(
                 apps = listOf(
                     AppData("id1", "name1"),
@@ -510,7 +486,7 @@ internal class DefaultUPIDelegateTest(
         }
 
         @Test
-        fun `valid payment address, output data does not include validation errors`() = runTest {
+        fun `payment address is valid, then output data does not include validation errors`() = runTest {
             val paymentMethod = PaymentMethod(
                 apps = listOf(
                     AppData("id1", "name1"),
@@ -535,6 +511,26 @@ internal class DefaultUPIDelegateTest(
                     },
                 )
             }
+
+            outputTestFlow.cancel()
+        }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.upi.internal.ui.DefaultUPIDelegateTest#noSelectedItemErrorMessageSource")
+        fun `input data is updated, then showNoSelectedUPIIntentItemError updates too`(
+            actualSelectedMode: UPISelectedMode,
+            actualSelectedUPIIntentItem: UPIIntentItem?,
+            expectedShowNoSelectedItemError: Boolean
+        ) = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+            delegate.updateInputData {
+                selectedMode = actualSelectedMode
+                selectedUPIIntentItem = actualSelectedUPIIntentItem
+            }
+
+            delegate.highlightValidationErrors()
+
+            assertEquals(expectedShowNoSelectedItemError, outputTestFlow.latestValue.showNoSelectedUPIIntentItemError)
 
             outputTestFlow.cancel()
         }
@@ -651,6 +647,36 @@ internal class DefaultUPIDelegateTest(
         )
 
         @JvmStatic
+        fun noSelectedItemErrorMessageSource() = listOf(
+            // actualSelectedMode, actualSelectedUPIIntentItem, expectedShowNoSelectedItemError
+            arguments(
+                UPISelectedMode.INTENT,
+                null,
+                true,
+            ),
+            arguments(
+                UPISelectedMode.INTENT,
+                UPIIntentItem.GenericApp(),
+                false,
+            ),
+            arguments(
+                UPISelectedMode.INTENT,
+                UPIIntentItem.ManualInput(null),
+                false,
+            ),
+            arguments(
+                UPISelectedMode.VPA,
+                null,
+                false,
+            ),
+            arguments(
+                UPISelectedMode.QR,
+                null,
+                false,
+            ),
+        )
+
+        @JvmStatic
         fun amountSource() = listOf(
             // configurationValue, expectedComponentStateValue
             arguments(Amount("EUR", 100), Amount("EUR", 100)),
@@ -659,16 +685,19 @@ internal class DefaultUPIDelegateTest(
             arguments(null, null),
         )
 
+        @Suppress("LongParameterList")
         private fun createOutputData(
             availableModes: List<UPIMode> = listOf(),
             selectedMode: UPISelectedMode = UPISelectedMode.VPA,
             selectedUPIIntentItem: UPIIntentItem? = null,
+            showNoSelectedUPIIntentItemError: Boolean = false,
             virtualPaymentAddressFieldState: FieldState<String> = FieldState("test", Validation.Invalid(0)),
             intentVirtualPaymentAddressFieldState: FieldState<String> = FieldState("test", Validation.Invalid(0)),
         ) = UPIOutputData(
             availableModes = availableModes,
             selectedMode = selectedMode,
             selectedUPIIntentItem = selectedUPIIntentItem,
+            showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = virtualPaymentAddressFieldState,
             intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )

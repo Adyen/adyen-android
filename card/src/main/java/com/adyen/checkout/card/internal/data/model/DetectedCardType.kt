@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.core.CardBrand
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class DetectedCardType(

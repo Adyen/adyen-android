@@ -12,19 +12,20 @@
     <string name="action_failed">There was an error while processing your payment. Please try again later.</string>
     <string name="time_out_error">Request timed out. Please try again.</string>
     <string name="unknown_error">An unknown error occurred</string>
-    <string name="store_payment_methods_header">Your payment methods</string>
-    <string name="other_payment_methods">Select other method</string>
+    <string name="store_payment_methods_header">Stored</string>
+    <string name="other_payment_methods">Others</string>
+    <string name="checkout_preselected_stored_payment_method_header">Payment method</string>
     <string name="continue_button">Continue</string>
     <string name="change_payment_method">Change Payment Method</string>
     <string name="checkout_giftcard_error_zero_balance">This gift card has zero balance</string>
     <string name="checkout_giftcard_error_currency">Gift cards are only valid in the currency they were issued in</string>
     <string name="checkout_giftcard_remaining_balance_text">Remaining balance will be %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Select payment method for the remaining %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Added giftcard</string>
+    <string name="checkout_giftcard_payment_methods_header">Applied</string>
     <string name="checkout_giftcard_remove_button">Remove</string>
     <string name="checkout_giftcard_max_transaction_limit">Max. %s allowed per transaction on this gift card</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirm card removal</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Remove added giftcards?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirm removal</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Remove applied items?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Yes, remove</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancel</string>
     <string name="checkout_remove_stored_payment_method_body">Remove stored payment method</string>
@@ -33,6 +34,8 @@
     <string name="checkout_rationale_message_storage_permission">In order to save this image to your device, you need to enable storage permission</string>
     <string name="checkout_stored_payment_confirmation_message">Confirm %s payment</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancel</string>
+    <string name="checkout_close">Close</string>
+    <string name="checkout_back">Back</string>
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
     <string name="last_four_digits_format" translatable="false">•••• %s</string>

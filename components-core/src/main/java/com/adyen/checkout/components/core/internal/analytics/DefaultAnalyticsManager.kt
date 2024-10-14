@@ -30,7 +30,7 @@ internal class DefaultAnalyticsManager(
     private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AnalyticsManager {
 
-    private var checkoutAttemptId: String? = null
+    private var checkoutAttemptIdState: CheckoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
 
     private var isInitialized: Boolean = false
 
@@ -49,22 +49,23 @@ internal class DefaultAnalyticsManager(
         isInitialized = true
 
         ownerReference = owner::class.qualifiedName
-
         _coroutineScope = coroutineScope
-
-        if (cannotSendEvents()) {
-            checkoutAttemptId = CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS
-            return
-        }
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
                 analyticsRepository.fetchCheckoutAttemptId()
             }.fold(
                 onSuccess = { attemptId ->
-                    checkoutAttemptId = attemptId?.also { startTimer() }
+                    checkoutAttemptIdState = attemptId?.let { id ->
+                        CheckoutAttemptIdState.Available(id)
+                    }?.also {
+                        startTimer()
+                    } ?: CheckoutAttemptIdState.Failed
                 },
-                onFailure = { adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." } },
+                onFailure = {
+                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
+                    checkoutAttemptIdState = CheckoutAttemptIdState.Failed
+                },
             )
         }
     }
@@ -104,25 +105,27 @@ internal class DefaultAnalyticsManager(
     }
 
     private suspend fun sendEvents() {
-        val checkoutAttemptId = checkoutAttemptId
-        if (checkoutAttemptId == null) {
-            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should not be null at this point." }
+        val checkoutAttemptIdState = checkoutAttemptIdState as? CheckoutAttemptIdState.Available
+        if (checkoutAttemptIdState == null) {
+            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should be available at this point." }
             return
         }
 
         runSuspendCatching {
-            analyticsRepository.sendEvents(checkoutAttemptId)
+            analyticsRepository.sendEvents(checkoutAttemptIdState.checkoutAttemptId)
         }.fold(
             onSuccess = { /* Not necessary */ },
             onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" } },
         )
     }
 
-    override fun getCheckoutAttemptId(): String? = checkoutAttemptId
-
-    private fun cannotSendEvents(): Boolean {
-        return analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+    override fun getCheckoutAttemptId(): String = when (val checkoutAttemptIdState = checkoutAttemptIdState) {
+        is CheckoutAttemptIdState.Available -> checkoutAttemptIdState.checkoutAttemptId
+        CheckoutAttemptIdState.Failed -> FAILED_CHECKOUT_ATTEMPT_ID
+        CheckoutAttemptIdState.NotAvailable -> CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     }
+
+    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
 
     override fun clear(owner: Any) {
         if (ownerReference != owner::class.qualifiedName) {
@@ -133,7 +136,7 @@ internal class DefaultAnalyticsManager(
         adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
         _coroutineScope = null
-        checkoutAttemptId = null
+        checkoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
         ownerReference = null
         isInitialized = false
         stopTimer()
@@ -142,7 +145,10 @@ internal class DefaultAnalyticsManager(
 
     companion object {
         @VisibleForTesting
-        internal const val CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS = "do-not-track"
+        internal const val CHECKOUT_ATTEMPT_ID_NOT_FETCHED = "checkoutAttemptId-not-fetched"
+
+        @VisibleForTesting
+        internal const val FAILED_CHECKOUT_ATTEMPT_ID = "fetch-checkoutAttemptId-failed"
 
         @VisibleForTesting
         internal val DISPATCH_INTERVAL_MILLIS = 10.seconds.inWholeMilliseconds

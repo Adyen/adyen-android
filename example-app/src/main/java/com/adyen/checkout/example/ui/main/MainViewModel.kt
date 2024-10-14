@@ -15,13 +15,14 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.SessionDropInResult
+import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
-import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
+import com.adyen.checkout.example.ui.configuration.ConfigurationProvider
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
@@ -40,11 +41,11 @@ internal class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-    private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
+    private val checkoutConfigurationProvider: ConfigurationProvider,
 ) : ViewModel() {
 
     private val lifecycleResumed: MutableSharedFlow<Unit> = MutableSharedFlow()
-    private val useSessions: MutableStateFlow<Boolean> = MutableStateFlow(keyValueStorage.useSessions())
+    private val useSessions: MutableStateFlow<Boolean> = MutableStateFlow(false)
     private val showLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private val _mainViewState: MutableStateFlow<MainViewState> = MutableStateFlow(getInitialViewState())
@@ -55,6 +56,7 @@ internal class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            refreshUseSessions()
             combineViewStateFlows()
         }
     }
@@ -74,7 +76,12 @@ internal class MainViewModel @Inject constructor(
     internal fun onResume() {
         viewModelScope.launch {
             lifecycleResumed.emit(Unit)
+            refreshUseSessions()
         }
+    }
+
+    private suspend fun refreshUseSessions() {
+        useSessions.emit(keyValueStorage.getIntegrationFlow() == IntegrationFlow.SESSIONS)
     }
 
     @Suppress("CyclomaticComplexMethod")
@@ -208,7 +215,12 @@ internal class MainViewModel @Inject constructor(
 
     fun onSessionsToggled(enable: Boolean) {
         viewModelScope.launch {
-            keyValueStorage.setUseSessions(enable)
+            val integrationFlow = if (enable) {
+                IntegrationFlow.SESSIONS
+            } else {
+                IntegrationFlow.ADVANCED
+            }
+            keyValueStorage.setIntegrationFlow(integrationFlow)
             useSessions.emit(enable)
         }
     }

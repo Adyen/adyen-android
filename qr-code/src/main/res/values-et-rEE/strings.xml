@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Kopeerige kood, seejärel avage rakendus registreeritud PIX-võtmega, valige PIX-iga maksmine ja kleepige kood sinna.</string>
+    <string name="checkout_qr_code_upi">Tehke UPI rakenduses üleslaadimiseks kuvatõmmis või skannige QR-kood, kasutades oma eelistatud UPI rakendust, et makse lõpule viia.</string>
+    <string name="checkout_qr_code_copy_button">Kopeeri kood</string>
+    <string name="checkout_qr_code_timer_text">Teil on maksmiseks %s</string>
+    <string name="checkout_qr_code_copied_toast">Kood kopeeriti lõikelauale</string>
+    <string name="checkout_qr_code_duit_now">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>
+    <string name="checkout_qr_code_prompt_pay">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>
+    <string name="checkout_qr_code_pay_now">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">See QR kehtib siin: %s</string>
+    <string name="checkout_qr_code_save_button">Salvesta pildina</string>
+    <string name="checkout_qr_code_download_image_succeeded">Pilt on alla laaditud</string>
+    <string name="checkout_qr_code_download_image_failed">Pildi allalaadimine nurjus</string>
+    <string name="checkout_qr_code_permission_denied">Luba ei antud</string>
+</resources>

@@ -8,23 +8,17 @@
 
 package com.adyen.checkout.giftcard.internal.util
 
-import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.giftcard.R
+import androidx.annotation.RestrictTo
 
-internal object GiftCardPinUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object GiftCardPinUtils {
 
     private const val MINIMUM_GIFT_CARD_PIN_LENGTH = 3
     private const val MAXIMUM_GIFT_CARD_PIN_LENGTH = 10
 
-    fun validateInputField(giftCardPin: String): FieldState<String> {
-        val validation = when {
-            giftCardPin.length < MINIMUM_GIFT_CARD_PIN_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
-            giftCardPin.length > MAXIMUM_GIFT_CARD_PIN_LENGTH ->
-                Validation.Invalid(R.string.checkout_giftcard_pin_not_valid)
-            else -> Validation.Valid
-        }
-        return FieldState(giftCardPin, validation)
+    fun validateInputField(giftCardPin: String) = when {
+        giftCardPin.length < MINIMUM_GIFT_CARD_PIN_LENGTH -> GiftCardPinValidationResult.INVALID
+        giftCardPin.length > MAXIMUM_GIFT_CARD_PIN_LENGTH -> GiftCardPinValidationResult.INVALID
+        else -> GiftCardPinValidationResult.VALID
     }
 }

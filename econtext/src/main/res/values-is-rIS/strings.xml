@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 25/1/2023.
+  -->
+
+<resources>
+    <string name="checkout_econtext_first_name_hint">Fornafn</string>
+    <string name="checkout_econtext_last_name_hint">Eftirnafn</string>
+    <string name="checkout_econtext_phone_number_hint">Símanúmer</string>
+    <string name="checkout_econtext_shopper_email_hint">Netfang</string>
+
+    <string name="checkout_econtext_first_name_invalid">Sláðu inn fornafn</string>
+    <string name="checkout_econtext_last_name_invalid">Sláðu inn eftirnafn</string>
+    <string name="checkout_econtext_phone_number_invalid">Ógilt símanúmer</string>
+    <string name="checkout_econtext_shopper_email_invalid">Ógilt netfang</string>
+</resources>

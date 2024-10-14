@@ -10,10 +10,8 @@ package com.adyen.checkout.card.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.card.AddressConfiguration
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.CardConfiguration
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.KCPAuthVisibility
@@ -25,7 +23,6 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
@@ -39,15 +36,18 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
-import com.adyen.checkout.cse.internal.test.TestCardEncryptor
+import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -72,13 +72,17 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class StoredCardDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<CardComponentState>
+    @Mock private val submitHandler: SubmitHandler<CardComponentState>,
+    @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -92,6 +96,8 @@ internal class StoredCardDelegateTest(
         publicKeyRepository = TestPublicKeyRepository()
         analyticsManager = TestAnalyticsManager()
         delegate = createCardDelegate()
+
+        whenever(cardConfigDataGenerator.generate(any(), any())) doReturn emptyMap()
     }
 
     @Test
@@ -395,15 +401,6 @@ internal class StoredCardDelegateTest(
     }
 
     @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when shouldEnableSubmitButton is called, then true is returned`() {
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-    }
-
-    @Nested
     inner class SubmitHandlerTest {
 
         @Test
@@ -444,7 +441,11 @@ internal class StoredCardDelegateTest(
         fun `when delegate is initialized, then render event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            val expectedEvent = GenericEvents.rendered(PaymentMethodTypes.SCHEME, isStoredPaymentMethod = true)
+            val expectedEvent = GenericEvents.rendered(
+                component = PaymentMethodTypes.SCHEME,
+                isStoredPaymentMethod = true,
+                configData = emptyMap(),
+            )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
@@ -509,6 +510,8 @@ internal class StoredCardDelegateTest(
             analyticsManager = analyticsManager,
             submitHandler = submitHandler,
             order = order,
+            cardConfigDataGenerator = cardConfigDataGenerator,
+            cardValidationMapper = CardValidationMapper()
         )
     }
 

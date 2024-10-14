@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Sæktu leiðbeiningar um beingreiðslur (DDI /umboð)</string>
+    <string name="checkout_voucher_introduction">Þakka þér fyrir kaupin, notaðu eftirfarandi afsláttarmiða til að ljúka greiðslunni.</string>
+    <string name="checkout_voucher_introduction_econtext">Þakka þér fyrir kaupin, notaðu eftirfarandi upplýsingar til að ljúka greiðslunni.</string>
+    <string name="checkout_voucher_payment_reference">Greiðslutilvísun</string>
+    <string name="checkout_voucher_expiration_entity">Aðili</string>
+    <string name="checkout_voucher_expiration_date">Gildisdagur</string>
+    <string name="checkout_voucher_shopper_reference">Tilvísun kaupanda</string>
+    <string name="checkout_voucher_phone_number">Símanúmer</string>
+    <string name="checkout_voucher_collection_institution_number">Númer innheimtustofnunar</string>
+    <string name="checkout_voucher_read_instructions">Lesa leiðbeiningar</string>
+    <string name="checkout_voucher_copy_code">Afrita kóða</string>
+    <string name="checkout_voucher_copied_toast">Kóði afritaður á klemmuspjald</string>
+    <string name="checkout_voucher_download_pdf">Sækja PDF</string>
+    <string name="checkout_voucher_save_image">Vista sem mynd</string>
+    <string name="checkout_voucher_image_saved"> Mynd vistuð í tækinu þínu</string>
+    <string name="checkout_voucher_image_failed"> Ekki tókst að vista mynd</string>
+    <string name="checkout_voucher_finish">Ljúka</string>
+    <string name="checkout_voucher_permission_denied">Leyfi er ekki veitt</string>
+</resources>

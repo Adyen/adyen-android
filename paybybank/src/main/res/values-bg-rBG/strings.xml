@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 8/11/2022.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_search">Търсене…</string>
+    <string name="checkout_pay_by_bank_no_banks_found">Не са намерени банки с вашата заявка за търсене…</string>
+</resources>

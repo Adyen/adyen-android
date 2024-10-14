@@ -15,11 +15,14 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
+@Suppress("LongParameterList")
 class GiftCardPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
     var encryptedCardNumber: String?,
     var encryptedSecurityCode: String?,
+    var encryptedExpiryMonth: String?,
+    var encryptedExpiryYear: String?,
     var brand: String?,
 ) : PaymentMethodDetails() {
 
@@ -27,6 +30,8 @@ class GiftCardPaymentMethod(
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.GIFTCARD
         private const val ENCRYPTED_CARD_NUMBER = "encryptedCardNumber"
         private const val ENCRYPTED_SECURITY_CODE = "encryptedSecurityCode"
+        private const val ENCRYPTED_EXPIRY_MONTH = "encryptedExpiryMonth"
+        private const val ENCRYPTED_EXPIRY_YEAR = "encryptedExpiryYear"
         private const val BRAND = "brand"
 
         @JvmField
@@ -38,6 +43,8 @@ class GiftCardPaymentMethod(
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
+                        putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
+                        putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
                         putOpt(BRAND, modelObject.brand)
                     }
                 } catch (e: JSONException) {
@@ -51,6 +58,8 @@ class GiftCardPaymentMethod(
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedSecurityCode = jsonObject.getStringOrNull(ENCRYPTED_SECURITY_CODE),
+                    encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
+                    encryptedExpiryYear = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_YEAR),
                     brand = jsonObject.getStringOrNull(BRAND),
                 )
             }

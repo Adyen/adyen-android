@@ -92,6 +92,10 @@ internal class UPIView @JvmOverloads constructor(
             R.style.AdyenCheckout_UPI_QRButton,
             localizedContext,
         )
+        binding.textViewNoAppSelected.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_NoAppSelectedTextView,
+            localizedContext,
+        )
         binding.textInputLayoutVpa.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_UPI_VPAEditText,
             localizedContext,
@@ -120,6 +124,7 @@ internal class UPIView @JvmOverloads constructor(
 
     private fun outputDataChanged(outputData: UPIOutputData) {
         initPicker(outputData.availableModes, outputData.selectedMode)
+        initError(outputData)
     }
 
     private fun initPicker(availableModes: List<UPIMode>, selectedMode: UPISelectedMode) {
@@ -216,6 +221,10 @@ internal class UPIView @JvmOverloads constructor(
             binding.editTextVpa.clearFocus()
             hideKeyboard()
         }
+    }
+
+    private fun initError(outputData: UPIOutputData) {
+        binding.textViewNoAppSelected.isVisible = outputData.showNoSelectedUPIIntentItemError
     }
 
     private fun initVpaInput(delegate: UPIDelegate, localizedContext: Context) {

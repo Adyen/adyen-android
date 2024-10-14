@@ -42,7 +42,7 @@ android {
         versionCode version_code
         versionName version_name
 
-        testInstrumentationRunner 'com.adyen.checkout.HiltTestRunner'
+        testInstrumentationRunner 'com.adyen.checkout.test.HiltTestRunner'
     }
 
     testOptions {
@@ -71,8 +71,8 @@ dependencies {
     // Checkout
     implementation project(':drop-in')
     implementation project(':components-compose')
-//    implementation "com.adyen.checkout:drop-in:5.6.0"
-//    implementation "com.adyen.checkout:components-compose:5.6.0"
+//    implementation "com.adyen.checkout:drop-in:5.7.0"
+//    implementation "com.adyen.checkout:components-compose:5.7.0"
 
     // Dependencies
     implementation libraries.kotlinCoroutines
@@ -107,11 +107,15 @@ dependencies {
     // Tests
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
+    testImplementation testLibraries.konsist
+
 
     androidTestImplementation testLibraries.androidTest
     androidTestImplementation testLibraries.barista
     androidTestImplementation testLibraries.espresso
     androidTestImplementation testLibraries.hilt
+    androidTestImplementation testLibraries.kotlinCoroutines
+    androidTestImplementation testLibraries.mockWebServer
 
     kspAndroidTest testLibraries.hiltCompiler
 }

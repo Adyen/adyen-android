@@ -36,6 +36,10 @@ object PaymentMethodTypes {
     const val GOOGLE_PAY_LEGACY = "paywithgoogle"
     const val IDEAL = "ideal"
     const val MB_WAY = "mbway"
+    const val MEAL_VOUCHER_FR_GROUPEUP = "mealVoucher_FR_groupeup"
+    const val MEAL_VOUCHER_FR_NATIXIS = "mealVoucher_FR_natixis"
+    const val MEAL_VOUCHER_FR_SODEXO = "mealVoucher_FR_sodexo"
+    const val MEAL_VOUCHER_FR = "mealVoucher_FR"
     const val MOLPAY_MALAYSIA = "molpay_ebanking_fpx_MY"
     const val MOLPAY_THAILAND = "molpay_ebanking_TH"
     const val MOLPAY_VIETNAM = "molpay_ebanking_VN"
@@ -46,6 +50,7 @@ object PaymentMethodTypes {
     const val PAY_BY_BANK = "paybybank"
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
+    const val TWINT = "twint"
     const val UPI = "upi"
     const val UPI_INTENT = "upi_intent"
     const val UPI_COLLECT = "upi_collect"
@@ -56,7 +61,6 @@ object PaymentMethodTypes {
     const val PAY_NOW = "paynow"
     const val PIX = "pix"
     const val PROMPT_PAY = "promptpay"
-    const val TWINT = "twint"
     const val WECHAT_PAY_SDK = "wechatpaySDK"
     const val MULTIBANCO = "multibanco"
 
@@ -118,9 +122,13 @@ object PaymentMethodTypes {
         GOOGLE_PAY_LEGACY,
         IDEAL,
         MB_WAY,
+        MEAL_VOUCHER_FR_GROUPEUP,
+        MEAL_VOUCHER_FR_NATIXIS,
+        MEAL_VOUCHER_FR_SODEXO,
         MOLPAY_MALAYSIA,
         MOLPAY_THAILAND,
         MOLPAY_VIETNAM,
+        MULTIBANCO,
         ONLINE_BANKING_CZ,
         ONLINE_BANKING_PL,
         ONLINE_BANKING_SK,
@@ -133,10 +141,19 @@ object PaymentMethodTypes {
         SEPA,
         TWINT,
         UPI,
+        UPI_COLLECT,
+        UPI_INTENT,
+        UPI_QR,
         WECHAT_PAY_SDK,
     )
 
     // Payment methods that do not need a payment component, but only an action component
+    @Suppress("unused")
+    @Deprecated(
+        """
+        This list is no longer relevant nor maintained. To check which payment methods are supported by the 
+        InstantPayComponent use InstantPayComponent.PROVIDER.isPaymentMethodSupported.""",
+    )
     val SUPPORTED_ACTION_ONLY_PAYMENT_METHODS: List<String> = listOf(
         DUIT_NOW,
         PAY_NOW,
@@ -172,8 +189,5 @@ object PaymentMethodTypes {
         WECHAT_PAY_MINI_PROGRAM,
         WECHAT_PAY_QR,
         WECHAT_PAY_WEB,
-        UPI_INTENT,
-        UPI_COLLECT,
-        UPI_QR,
     )
 }

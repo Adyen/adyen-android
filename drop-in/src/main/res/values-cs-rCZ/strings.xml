@@ -12,19 +12,20 @@
     <string name="action_failed">Při zpracování platby došlo k chybě. Zkuste to znovu později.</string>
     <string name="time_out_error">Vypršení doby požadavku. Zkuste to znovu.</string>
     <string name="unknown_error">Došlo k neznámé chybě</string>
-    <string name="store_payment_methods_header">Vaše způsoby platby</string>
-    <string name="other_payment_methods">Vyberte jiný způsob platby</string>
+    <string name="store_payment_methods_header">Uložené</string>
+    <string name="other_payment_methods">Ostatní</string>
+    <string name="checkout_preselected_stored_payment_method_header">způsob platby</string>
     <string name="continue_button">Pokračovat</string>
     <string name="change_payment_method">Změnit způsob platby</string>
     <string name="checkout_giftcard_error_zero_balance">Na dárkové kartě je nulový zůstatek</string>
     <string name="checkout_giftcard_error_currency">Dárkové karty jsou platné jenom v měně, ve které byly vystavené</string>
     <string name="checkout_giftcard_remaining_balance_text">Zbývající zůstatek bude %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Zvolte, jakým způsobem se má %s zaplatit</string>
-    <string name="checkout_giftcard_payment_methods_header">Přidaná dárková karta</string>
+    <string name="checkout_giftcard_payment_methods_header">Aplikováno</string>
     <string name="checkout_giftcard_remove_button">Odebrat</string>
     <string name="checkout_giftcard_max_transaction_limit">Maximální povolená částka za jednu transakci touto dárkovou kartou je %s.</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Potvrďte odebrání karty</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Odebrat přidané dárkové karty?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Potvrďte odebrání</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Odebrat použité položky?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ano, odebrat</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Zrušit</string>
     <string name="checkout_remove_stored_payment_method_body">Odebrat uložený způsob platby</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Chcete-li tento obrázek uložit do vašeho zařízení, musíte povolit oprávnění k uložení</string>
     <string name="checkout_stored_payment_confirmation_message">Potvrdit platbu %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Zrušit</string>
+    <string name="checkout_close">Zavřít</string>
+    <string name="checkout_back">Zpět</string>
 </resources>

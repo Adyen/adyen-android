@@ -1,0 +1,39 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by caiof on 21/3/2019.
+  -->
+
+<resources>
+    <string name="payment_methods_header">Samaksas veidi</string>
+    <string name="payment_failed">Kļūda, nosūtot maksājumu. Lūdzu, mēģiniet vēlreiz.</string>
+    <string name="action_failed">Apstrādājot jūsu maksājumu, radās kļūda. Lūdzu, mēģiniet vēlreiz vēlāk.</string>
+    <string name="time_out_error">Pieprasījuma noildze. Lūdzu, mēģiniet vēlreiz.</string>
+    <string name="unknown_error">Radās nezināma kļūda</string>
+    <string name="store_payment_methods_header">Saglabāts</string>
+    <string name="other_payment_methods">Citi</string>
+    <string name="checkout_preselected_stored_payment_method_header">samaksas metode</string>
+    <string name="continue_button">Turpināt</string>
+    <string name="change_payment_method">Mainīt samaksas veidu</string>
+    <string name="checkout_giftcard_error_zero_balance">Šai dāvanu kartei ir nulles atlikums</string>
+    <string name="checkout_giftcard_error_currency">Dāvanu kartes ir derīgas tikai tajā valūtā, kurā tās ir izsniegtas</string>
+    <string name="checkout_giftcard_remaining_balance_text">Atlikušais atlikums ir %s</string>
+    <string name="checkout_giftcard_pay_remaining_amount">Atlasiet samaksas veidu atlikušajiem %s</string>
+    <string name="checkout_giftcard_payment_methods_header">Piemērots</string>
+    <string name="checkout_giftcard_remove_button">Noņemt</string>
+    <string name="checkout_giftcard_max_transaction_limit">Maksimālā %s, kas atļauta katram darījumam ar šo dāvanu karti</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Apstipriniet noņemšanu</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Vai noņemt piemērotos vienumus?</string>
+    <string name="checkout_giftcard_remove_gift_cards_positive_button">Jā, noņemt</string>
+    <string name="checkout_giftcard_remove_gift_cards_negative_button">Atcelt</string>
+    <string name="checkout_remove_stored_payment_method_body">Noņemt saglabāto samaksas veidu</string>
+    <string name="checkout_permission_not_granted">Atļauja nav piešķirta</string>
+    <string name="checkout_rationale_title_storage_permission">Pieprasīt glabāšanas atļauju</string>
+    <string name="checkout_rationale_message_storage_permission">Lai saglabātu šo attēlu savā ierīcē, jums jāiespējo glabāšanas atļauja</string>
+    <string name="checkout_stored_payment_confirmation_message">Apstipriniet %s maksājumu</string>
+    <string name="checkout_stored_payment_confirmation_cancel_button">Atcelt</string>
+    <string name="checkout_close">Aizvērt</string>
+    <string name="checkout_back">Atpakaļ</string>
+</resources>

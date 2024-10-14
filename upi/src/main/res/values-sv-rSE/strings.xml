@@ -14,5 +14,5 @@
     <string name="checkout_upi_continue">Fortsätt</string>
     <string name="checkout_upi_app_manual_input">Ange UPI-ID</string>
     <string name="checkout_upi_app_other_upi">Annan UPI</string>
-
+    <string name="checkout_upi_no_app_selected">Välj en betalningsmetod för att fortsätta</string>
 </resources>

@@ -27,7 +27,7 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -478,15 +478,6 @@ internal class DefaultBoletoDelegateTest(
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
-        }
-    }
-
-    @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when shouldEnableSubmitButton is called, then true is returned`() {
-            assertTrue(delegate.shouldEnableSubmitButton())
         }
     }
 

@@ -63,6 +63,7 @@ dependencies {
     api project(':ideal')
     api project(":instant")
     api project(':mbway')
+    api project(':meal-voucher-fr')
     api project(':molpay')
     api project(':online-banking-cz')
     api project(':online-banking-jp')
@@ -83,7 +84,8 @@ dependencies {
     implementation libraries.material
 
     //Tests
-    testImplementation project(':test-core')
+    testImplementation testFixtures(project(':test-core'))
+    testImplementation testFixtures(project(':components-core'))
     testImplementation testLibraries.androidx.lifecycle
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5

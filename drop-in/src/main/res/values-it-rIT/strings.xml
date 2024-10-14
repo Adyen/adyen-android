@@ -12,19 +12,20 @@
     <string name="action_failed">Si è verificato un errore durante l\'elaborazione del pagamento. Riprova più tardi.</string>
     <string name="time_out_error">Il tempo disponibile per la richiesta è scaduto. Riprova.</string>
     <string name="unknown_error">Si è verificato un errore sconosciuto</string>
-    <string name="store_payment_methods_header">Metodi di pagamento</string>
-    <string name="other_payment_methods">Scegli altro metodo di pagamento</string>
+    <string name="store_payment_methods_header">Salvato</string>
+    <string name="other_payment_methods">Altri</string>
+    <string name="checkout_preselected_stored_payment_method_header">metodo di pagamento</string>
     <string name="continue_button">Continua</string>
     <string name="change_payment_method">Cambia metodo di pagamento</string>
     <string name="checkout_giftcard_error_zero_balance">Questo buono regalo ha un saldo pari a zero</string>
     <string name="checkout_giftcard_error_currency">I buono regalo sono validi solo nella valuta in cui sono state emessi</string>
     <string name="checkout_giftcard_remaining_balance_text">Il saldo rimanente sarà di %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Seleziona metodo di pagamento per i restanti %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Carta regalo aggiunta</string>
+    <string name="checkout_giftcard_payment_methods_header">Applicato</string>
     <string name="checkout_giftcard_remove_button">Rimuovi</string>
     <string name="checkout_giftcard_max_transaction_limit">Importo massimo di %s per transazione su questo buono regalo</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Conferma rimozione della carta</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Rimuovere le carte regalo aggiunte?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Conferma rimozione</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Rimuovere gli elementi applicati?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Sì, rimuoverli</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancella</string>
     <string name="checkout_remove_stored_payment_method_body">Rimuovi il metodo di pagamento archiviato</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Per salvare l\'immagine sul tuo dispositivo, devi abilitare l\'autorizzazione all\'archiviazione</string>
     <string name="checkout_stored_payment_confirmation_message">Conferma il pagamento di %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Annulla</string>
+    <string name="checkout_close">Chiudi</string>
+    <string name="checkout_back">Indietro</string>
 </resources>

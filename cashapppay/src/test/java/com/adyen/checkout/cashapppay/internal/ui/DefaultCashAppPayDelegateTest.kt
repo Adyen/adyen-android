@@ -102,7 +102,11 @@ internal class DefaultCashAppPayDelegateTest(
             )
             delegate.initialize(this)
 
-            verify(cashAppPay).createCustomerRequest(paymentActions = any(), redirectUri = anyOrNull())
+            verify(cashAppPay).createCustomerRequest(
+                paymentActions = any(),
+                redirectUri = anyOrNull(),
+                referenceId = anyOrNull(),
+            )
         }
     }
 
@@ -126,7 +130,7 @@ internal class DefaultCashAppPayDelegateTest(
             data = PaymentComponentData(
                 paymentMethod = CashAppPayPaymentMethod(
                     type = TEST_PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     grantId = "grantId",
                     onFileGrantId = "grantId",
                     customerId = "customerId",
@@ -167,15 +171,6 @@ internal class DefaultCashAppPayDelegateTest(
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
-        }
-    }
-
-    @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when shouldEnableSubmitButton is called, then true is returned`() {
-            assertTrue(delegate.shouldEnableSubmitButton())
         }
     }
 
@@ -342,7 +337,11 @@ internal class DefaultCashAppPayDelegateTest(
                 delegate.onSubmit()
 
                 // Called once on initialization, but shouldn't be called by onSubmit
-                verify(cashAppPay, times(1)).createCustomerRequest(paymentActions = any(), redirectUri = anyOrNull())
+                verify(cashAppPay, times(1)).createCustomerRequest(
+                    paymentActions = any(),
+                    redirectUri = anyOrNull(),
+                    referenceId = anyOrNull(),
+                )
             }
     }
 

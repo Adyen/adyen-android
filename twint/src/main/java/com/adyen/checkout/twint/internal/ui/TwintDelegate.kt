@@ -1,29 +1,24 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2024 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 18/10/2023.
+ * Created by oscars on 10/7/2024.
  */
 
 package com.adyen.checkout.twint.internal.ui
 
-import androidx.annotation.RestrictTo
-import ch.twint.payment.sdk.TwintPayResult
-import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.components.core.internal.ui.DetailsEmittingDelegate
-import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
+import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
+import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.internal.ui.model.TwintInputData
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface TwintDelegate :
-    ActionDelegate,
-    DetailsEmittingDelegate,
-    StatusPollingDelegate,
+internal interface TwintDelegate :
+    PaymentComponentDelegate<TwintComponentState>,
     ViewProvidingDelegate {
 
-    val payEventFlow: Flow<String>
+    val componentStateFlow: Flow<TwintComponentState>
 
-    fun handleTwintResult(result: TwintPayResult)
+    fun updateInputData(update: TwintInputData.() -> Unit)
 }

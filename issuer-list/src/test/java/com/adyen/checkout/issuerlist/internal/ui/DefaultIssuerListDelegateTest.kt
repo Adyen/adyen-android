@@ -261,15 +261,6 @@ internal class DefaultIssuerListDelegateTest(
     }
 
     @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when shouldEnableSubmitButton is called, then true is returned`() {
-            assertTrue(delegate.shouldEnableSubmitButton())
-        }
-    }
-
-    @Nested
     inner class SubmitHandlerTest {
 
         @Test

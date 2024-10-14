@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Nafn bankareikningshafa</string>
+    <string name="bacs_account_number_hint">Bankareikningsnúmer</string>
+    <string name="bacs_sort_code_hint">Röðunarkóði</string>
+    <string name="bacs_shopper_email_hint">Netfang</string>
+
+    <string name="bacs_holder_name_invalid">Ógilt nafn bankareikningseiganda</string>
+    <string name="bacs_account_number_invalid">Ógilt bankareikningsnúmer</string>
+    <string name="bacs_sort_code_invalid">Ógildur röðunarkóði</string>
+    <string name="bacs_shopper_email_invalid">Ógilt netfang</string>
+
+    <string name="bacs_consent_account">Ég staðfesti að reikningurinn er á mínu nafni og ég sé eini undirritarinn sem þarf að heimila beingreiðsluna á þessum reikningi.</string>
+    <string name="bacs_consent_amount">Ég er sammála því að ofangreind upphæð verði skuldfærð af bankareikningnum mínum.</string>
+    <string name="bacs_consent_amount_specified">Ég samþykki að %s verði skuldfærðar af bankareikningnum mínum.</string>
+    <string name="bacs_consent_invalid">Þessi reitur krefst athygli þinnar</string>
+
+    <string name="bacs_continue">Halda áfram</string>
+    <string name="bacs_confirm_and_pay">Staðfesta og greiða</string>
+</resources>

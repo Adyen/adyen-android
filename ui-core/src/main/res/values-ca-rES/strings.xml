@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Paga</string>
+    <string name="pay_button_with_value">Pagueu %s</string>
+    <string name="confirm_preauthorization">Confirmar la preautorització</string>
+
+    <string name="error_dialog_title">Error</string>
+    <string name="error_dialog_button">Accepta</string>
+    <string name="component_error">Alguna cosa ha anat malament.</string>
+
+    <string name="paymentInProgressView_title">Encara hi ha un procés de pagament actiu</string>
+    <string name="paymentInProgressView_loadingText">A l\'espera de finalitzar…</string>
+    <string name="paymentInProgressView_cancelButton">Cancel·la</string>
+
+    <string name="checkout_address_form_field_not_valid">Entrada incorrecta</string>
+    <string name="checkout_social_security_number_not_valid">Entrada incorrecta</string>
+
+    <string name="checkout_address_form_billing_address_title">Adreça de facturació</string>
+    <string name="checkout_address_form_street_hint">Carrer</string>
+    <string name="checkout_address_form_address_hint">Adreça</string>
+    <string name="checkout_address_form_house_number_hint">Número de casa</string>
+    <string name="checkout_address_form_apartment_suite_hint">Apartament / Porta</string>
+    <string name="checkout_address_form_city_hint">Ciutat</string>
+    <string name="checkout_address_form_country_hint">País/Regió</string>
+    <string name="checkout_address_form_states_hint">Estat</string>
+    <string name="checkout_address_postal_code_hint">Codi postal</string>
+    <string name="checkout_address_form_zip_code_hint">Codi postal</string>
+    <string name="checkout_address_form_province_territory_hint">Província o territori</string>
+    <string name="checkout_address_form_city_town_hint">Ciutat / Poble</string>
+
+    <string name="checkout_address_form_street_hint_optional">Carrer (opcional)</string>
+    <string name="checkout_address_form_address_hint_optional">Adreça (opcional)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Número de casa (opcional)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Apartament / Porta (opcional)</string>
+    <string name="checkout_address_form_city_hint_optional"> Ciutat (opcional)</string>
+    <string name="checkout_address_form_country_hint_optional">País/Regió (opcional)</string>
+    <string name="checkout_address_form_states_hint_optional">Estat (opcional)</string>
+    <string name="checkout_address_postal_code_hint_optional">Codi postal (opcional)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Codi postal (opcional)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Província o territori (opcional)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Ciutat / Poble (opcional)</string>
+
+    <string name="checkout_address_lookup_hint">Cerqueu la vostra adreça</string>
+    <string name="checkout_address_lookup_initial">No podeu cercar la vostra adreça?</string>
+    <string name="checkout_address_lookup_initial_description">Sempre podeu #introduir la vostra adreça manualment#</string>
+    <string name="checkout_address_lookup_empty">No s\'ha trobat cap resultat</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' no coincidia amb res, torneu-ho a intentar o utilitzeu la #introducció d\'adreça manual #</string>
+    <string name="checkout_address_lookup_enter_manually">Introduïu l\'adreça manualment</string>
+    <string name="checkout_address_lookup_submit">Utilitza aquesta adreça</string>
+    <string name="checkout_address_lookup_validation_empty">Adreça obligatòria</string>
+</resources>

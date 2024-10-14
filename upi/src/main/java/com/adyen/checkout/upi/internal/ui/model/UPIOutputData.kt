@@ -15,6 +15,7 @@ internal class UPIOutputData(
     val availableModes: List<UPIMode>,
     val selectedMode: UPISelectedMode,
     var selectedUPIIntentItem: UPIIntentItem? = null,
+    val showNoSelectedUPIIntentItemError: Boolean,
     val virtualPaymentAddressFieldState: FieldState<String>,
     val intentVirtualPaymentAddressFieldState: FieldState<String>,
 ) : OutputData {

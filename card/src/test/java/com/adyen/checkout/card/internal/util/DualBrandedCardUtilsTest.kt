@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -35,7 +35,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
         assertEquals(detectedCards, DualBrandedCardUtils.sortBrands(detectedCards))
     }
@@ -62,7 +62,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         val sortedCards = listOf(
@@ -85,7 +85,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         assertEquals(sortedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -113,7 +113,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         val sortedCards = listOf(
@@ -136,7 +136,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         assertEquals(sortedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -164,7 +164,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         val sortedCards = listOf(
@@ -187,7 +187,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         assertEquals(sortedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -215,7 +215,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         val sortedCards = listOf(
@@ -238,7 +238,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
 
         assertEquals(sortedCards, DualBrandedCardUtils.sortBrands(detectedCards))

@@ -12,19 +12,20 @@
     <string name="action_failed">S-a produs o eroare la prelucrarea plății. Vă rugăm să încercați din nou mai târziu.</string>
     <string name="time_out_error">Solicitarea a expirat. Vă rugăm să încercați din nou.</string>
     <string name="unknown_error">S-a produs o eroare necunoscută</string>
-    <string name="store_payment_methods_header">Metodele dvs. de plată</string>
-    <string name="other_payment_methods">Selectați o altă metodă</string>
+    <string name="store_payment_methods_header">Salvat</string>
+    <string name="other_payment_methods">Altele</string>
+    <string name="checkout_preselected_stored_payment_method_header">metodă de plată</string>
     <string name="continue_button">Continuare</string>
     <string name="change_payment_method">Schimbare metodă de plată</string>
     <string name="checkout_giftcard_error_zero_balance">Acest card cadou are soldul zero</string>
     <string name="checkout_giftcard_error_currency">Cardurile cadou sunt valabile numai în moneda în care au fost emise</string>
     <string name="checkout_giftcard_remaining_balance_text">Soldul rămas va fi de %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Selectați metoda de plată pentru suma de %s rămasă</string>
-    <string name="checkout_giftcard_payment_methods_header">Card cadou adăugat</string>
+    <string name="checkout_giftcard_payment_methods_header">Aplicate</string>
     <string name="checkout_giftcard_remove_button">Ștergere</string>
     <string name="checkout_giftcard_max_transaction_limit">Pentru acest card cadou, suma maximă permisă per tranzacție este de %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirmați eliminarea cardului</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Eliminați cardurile cadou adăugate?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirmați eliminarea</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Eliminați elementele aplicate?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Da, șterge</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Anulare</string>
     <string name="checkout_remove_stored_payment_method_body">Ștergeți metoda de plată memorată</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Pentru a salva această imagine pe dispozitivul dvs., trebuie să activați permisiunea de stocare</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmați plata %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Anulare</string>
+    <string name="checkout_close">Închidere</string>
+    <string name="checkout_back">Înapoi</string>
 </resources>

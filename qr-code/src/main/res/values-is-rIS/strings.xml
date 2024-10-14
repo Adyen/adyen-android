@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by josephj on 26/3/2021.
+  -->
+
+<resources>
+    <string name="checkout_qr_code_pix">Afritaðu kóðann og opnaðu síðan forritið með skráða PIX-lyklinum, veldu „Greiða með PIX“ og límdu kóðann þar.</string>
+    <string name="checkout_qr_code_upi">Taktu skjámynd til að hlaða upp í UPI-forritinu eða skannaðu QR-kóðann með því að nota UPI-forrit sem þú vilt til að ljúka greiðslunni.</string>
+    <string name="checkout_qr_code_copy_button">Afrita kóða</string>
+    <string name="checkout_qr_code_timer_text">Þú þarft að greiða %s</string>
+    <string name="checkout_qr_code_copied_toast">Kóði afritaður á klemmuspjald</string>
+    <string name="checkout_qr_code_duit_now">Taktu skjámynd eða vistaðu QR-kóðann, opnaðu bankaforritið þitt og hladdu QR-kóðanum upp til að staðfesta upplýsingar og ljúka greiðslunni.</string>
+    <string name="checkout_qr_code_prompt_pay">Taktu skjámynd eða vistaðu QR-kóðann, opnaðu bankaforritið þitt og hladdu QR-kóðanum upp til að staðfesta upplýsingar og ljúka greiðslunni.</string>
+    <string name="checkout_qr_code_pay_now">Taktu skjámynd eða vistaðu QR-kóðann, opnaðu bankaforritið þitt og hladdu QR-kóðanum upp til að staðfesta upplýsingar og ljúka greiðslunni.</string>
+    <string name="checkout_qr_code_pay_now_timer_text">Þessi QR-kóði gildir í %s</string>
+    <string name="checkout_qr_code_save_button">Vista sem mynd</string>
+    <string name="checkout_qr_code_download_image_succeeded">Mynd hefur verið sótt</string>
+    <string name="checkout_qr_code_download_image_failed">Ekki tókst að sækja mynd</string>
+    <string name="checkout_qr_code_permission_denied">Leyfi er ekki veitt</string>
+</resources>

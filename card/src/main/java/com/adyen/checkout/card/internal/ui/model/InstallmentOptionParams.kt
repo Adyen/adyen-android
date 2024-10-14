@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.CardBrand
+import com.adyen.checkout.core.CardBrand
 
 /**
  * InstallmentOptionParams is used for defining the details of installment options.

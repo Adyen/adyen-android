@@ -23,6 +23,7 @@ import com.adyen.checkout.bcmc.internal.ui.model.BcmcComponentParamsMapper
 import com.adyen.checkout.bcmc.toCheckoutConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
+import com.adyen.checkout.card.internal.ui.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -138,6 +139,7 @@ constructor(
                     addressRepository = addressRepository,
                     shopperLocale = componentParams.shopperLocale,
                 ),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =
@@ -243,6 +245,7 @@ constructor(
                     addressRepository = addressRepository,
                     shopperLocale = componentParams.shopperLocale,
                 ),
+                cardConfigDataGenerator = CardConfigDataGenerator(),
             )
 
             val genericActionDelegate =

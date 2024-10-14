@@ -17,14 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/bottom_sheet_header"
-        style="@style/AdyenCheckout.Toolbar.HeaderTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/standard_half_margin"
-        tools:text="@string/store_payment_methods_header" />
-
     <include
         android:id="@+id/stored_payment_method_item"
         layout="@layout/removable_payment_methods_list_item"
@@ -33,9 +25,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/payButton"
-        style="@style/AdyenCheckout.Button.Colored"
-        android:layout_width="match_parent"
-        android:text="@string/continue_button" />
+        style="@style/AdyenCheckout.DropIn.ContinueButton"
+        android:layout_width="match_parent" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar"
@@ -47,8 +38,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_payment_method_button"
-        style="@style/AdyenCheckout.Button.Secondary"
+        style="@style/AdyenCheckout.DropIn.ChangePaymentMethodButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/change_payment_method" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

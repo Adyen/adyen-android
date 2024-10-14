@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Banko sąskaita</string>
+    <string name="checkout_ach_bank_account_holder_name">Sąskaitos turėtojo vardas ir pavardė</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Netinkamas sąskaitos turėtojo vardas ir pavardė</string>
+    <string name="checkout_ach_bank_account_number">Sąskaitos numeris</string>
+    <string name="checkout_ach_bank_account_number_invalid">Netinkamas sąskaitos numeris</string>
+    <string name="checkout_ach_bank_account_location">ABA maršruto numeris</string>
+    <string name="checkout_ach_bank_account_location_invalid">Neteisingas ABA maršruto numeris</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Išsaugoti kitam mokėjimui</string>
+</resources>

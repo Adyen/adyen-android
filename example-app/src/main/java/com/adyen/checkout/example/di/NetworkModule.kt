@@ -23,6 +23,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -73,9 +74,10 @@ object NetworkModule {
     internal fun provideRetrofit(
         okHttpClient: OkHttpClient,
         converterFactory: Converter.Factory,
+        @BaseUrl baseUrl: String,
     ): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BuildConfig.MERCHANT_SERVER_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addConverterFactory(converterFactory)
             .build()
@@ -83,4 +85,17 @@ object NetworkModule {
     @Provides
     internal fun provideApiService(@Named("RetrofitCheckout") retrofit: Retrofit): CheckoutApiService =
         retrofit.create(CheckoutApiService::class.java)
+
+    @Module
+    @InstallIn(SingletonComponent::class)
+    object BaseUrlModule {
+
+        @BaseUrl
+        @Provides
+        fun provideBaseUrl(): String = BuildConfig.MERCHANT_SERVER_URL
+    }
 }
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class BaseUrl

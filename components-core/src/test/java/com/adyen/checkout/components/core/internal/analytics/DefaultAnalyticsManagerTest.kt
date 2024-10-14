@@ -11,7 +11,6 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -40,22 +39,14 @@ internal class DefaultAnalyticsManagerTest(
         analyticsManager = createAnalyticsManager()
     }
 
+    @Test
+    fun `checkoutAttemptId is not available by default`() {
+        assertEquals(DefaultAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED, analyticsManager.getCheckoutAttemptId())
+    }
+
     @Nested
     @DisplayName("when initializing and")
     inner class InitializeTest {
-
-        @Test
-        fun `sending events is disabled, then checkoutAttemptId is anonymous`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
-
-            analyticsManager.initialize(this@InitializeTest, this)
-
-            assertEquals(
-                DefaultAnalyticsManager.CHECKOUT_ATTEMPT_ID_FOR_DISABLED_ANALYTICS,
-                analyticsManager.getCheckoutAttemptId(),
-            )
-            verify(analyticsRepository, never()).fetchCheckoutAttemptId()
-        }
 
         @Test
         fun `fetching checkoutAttemptId succeeds, then it is set`() = runTest {
@@ -68,12 +59,24 @@ internal class DefaultAnalyticsManagerTest(
         }
 
         @Test
-        fun `fetching checkoutAttemptId fails, then checkoutAttemptId is null`() = runTest {
+        fun `sending events is disabled, then checkoutAttemptId is still set`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
+
+            analyticsManager.initialize(this@InitializeTest, this)
+
+            assertEquals("test value", analyticsManager.getCheckoutAttemptId())
+            analyticsManager.clear(this@InitializeTest)
+        }
+
+        @Test
+        fun `fetching checkoutAttemptId fails, then checkoutAttemptId is failed`() = runTest {
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
             analyticsManager.initialize(this@InitializeTest, this)
 
-            assertNull(analyticsManager.getCheckoutAttemptId())
+            assertEquals(DefaultAnalyticsManager.FAILED_CHECKOUT_ATTEMPT_ID, analyticsManager.getCheckoutAttemptId())
+            analyticsManager.clear(this@InitializeTest)
         }
 
         @Test
@@ -81,9 +84,9 @@ internal class DefaultAnalyticsManagerTest(
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
 
             analyticsManager.initialize(this@InitializeTest, this)
-            analyticsManager.initialize(this@InitializeTest, this)
 
             verify(analyticsRepository, times(1)).fetchCheckoutAttemptId()
+            analyticsManager.clear(this@InitializeTest)
         }
     }
 
@@ -99,6 +102,7 @@ internal class DefaultAnalyticsManagerTest(
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
 
             verify(analyticsRepository, never()).storeEvent(any())
+            analyticsManager.clear(this@TrackEventTest)
         }
 
         @Test
@@ -112,6 +116,7 @@ internal class DefaultAnalyticsManagerTest(
             analyticsManager.trackEvent(event)
 
             verify(analyticsRepository).storeEvent(event)
+            analyticsManager.clear(this@TrackEventTest)
         }
 
         @Test
@@ -130,6 +135,56 @@ internal class DefaultAnalyticsManagerTest(
         }
     }
 
+    @Nested
+    @DisplayName("when sending events and")
+    inner class SendEventTest {
+
+        @Test
+        fun `sending events is disabled, then events are not sent`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+            analyticsManager.initialize(this@SendEventTest, this)
+            val event = AnalyticsEvent.Info(
+                component = "test",
+                shouldForceSend = true,
+            )
+
+            analyticsManager.trackEvent(event)
+
+            verify(analyticsRepository, never()).sendEvents(any())
+            analyticsManager.clear(this@SendEventTest)
+        }
+
+        @Test
+        fun `checkoutAttemptId is null when fetching, then events are not sent`() = runTest {
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn null
+            analyticsManager.initialize(this@SendEventTest, this)
+            val event = AnalyticsEvent.Info(
+                component = "test",
+                shouldForceSend = true,
+            )
+
+            analyticsManager.trackEvent(event)
+
+            verify(analyticsRepository, never()).sendEvents(any())
+            analyticsManager.clear(this@SendEventTest)
+        }
+
+        @Test
+        fun `checkoutAttemptId has failed fetching, then events are not sent`() = runTest {
+            whenever(analyticsRepository.fetchCheckoutAttemptId()) doAnswer { error("test") }
+            analyticsManager.initialize(this@SendEventTest, this)
+            val event = AnalyticsEvent.Info(
+                component = "test",
+                shouldForceSend = true,
+            )
+
+            analyticsManager.trackEvent(event)
+
+            verify(analyticsRepository, never()).sendEvents(any())
+            analyticsManager.clear(this@SendEventTest)
+        }
+    }
+
     @Test
     fun `when timer ticks, then all stored events should be sent`() = runTest {
         analyticsManager = createAnalyticsManager(coroutineDispatcher = StandardTestDispatcher(testScheduler))
@@ -142,21 +197,6 @@ internal class DefaultAnalyticsManagerTest(
         testScheduler.advanceTimeBy(DefaultAnalyticsManager.DISPATCH_INTERVAL_MILLIS + 1)
 
         verify(analyticsRepository, times(1)).sendEvents(any())
-        analyticsManager.clear(this@DefaultAnalyticsManagerTest)
-    }
-
-    @Test
-    fun `when sending events and checkoutAttemptId is null, then events are not sent`() = runTest {
-        whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn null
-        analyticsManager.initialize(this@DefaultAnalyticsManagerTest, this)
-        val event = AnalyticsEvent.Info(
-            component = "test",
-            shouldForceSend = true,
-        )
-
-        analyticsManager.trackEvent(event)
-
-        verify(analyticsRepository, never()).sendEvents(any())
         analyticsManager.clear(this@DefaultAnalyticsManagerTest)
     }
 

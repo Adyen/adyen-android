@@ -50,21 +50,26 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             PaymentMethodListItem.PAYMENT_METHODS_HEADER -> HeaderVH(
-                PaymentMethodsListHeaderBinding.inflate(inflater, parent, false)
+                PaymentMethodsListHeaderBinding.inflate(inflater, parent, false),
             )
+
             PaymentMethodListItem.STORED_PAYMENT_METHOD -> StoredPaymentMethodVH(
                 RemovablePaymentMethodsListItemBinding.inflate(inflater, parent, false),
-                onUnderlayExpandListener
+                onUnderlayExpandListener,
             )
+
             PaymentMethodListItem.PAYMENT_METHOD -> PaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
+
             PaymentMethodListItem.GIFT_CARD_PAYMENT_METHOD -> GiftCardPaymentMethodVH(
                 PaymentMethodsListItemBinding.inflate(inflater, parent, false),
             )
+
             PaymentMethodListItem.PAYMENT_METHODS_NOTE -> NoteVH(
-                PaymentMethodsListNoteBinding.inflate(inflater, parent, false)
+                PaymentMethodsListNoteBinding.inflate(inflater, parent, false),
             )
+
             else -> throw CheckoutException("Unexpected viewType on onCreateViewHolder - $viewType")
         }
     }
@@ -76,12 +81,14 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             is StoredPaymentMethodVH -> holder.bind(
                 item as StoredPaymentMethodModel,
                 onStoredPaymentRemovedCallback,
-                onPaymentMethodSelectedCallback
+                onPaymentMethodSelectedCallback,
             )
+
             is PaymentMethodVH -> holder.bind(
                 item as PaymentMethodModel,
-                onPaymentMethodSelectedCallback
+                onPaymentMethodSelectedCallback,
             )
+
             is GiftCardPaymentMethodVH -> holder.bind(item as GiftCardPaymentMethodModel)
             is NoteVH -> holder.bind(item as PaymentMethodNote)
         }
@@ -108,7 +115,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
                 paymentMethodItemUnderlayButton.setOnClickListener {
                     showRemoveStoredPaymentDialog(
                         model,
-                        onStoredPaymentRemovedCallback
+                        onStoredPaymentRemovedCallback,
                     )
                 }
                 swipeToRevealLayout.apply {
@@ -225,7 +232,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             } else {
                 val value = CurrencyUtils.formatAmount(
                     model.transactionLimit,
-                    model.shopperLocale
+                    model.shopperLocale,
                 )
                 textViewDetail.apply {
                     isVisible = true
@@ -237,7 +244,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             } else {
                 val value = CurrencyUtils.formatAmount(
                     model.amount,
-                    model.shopperLocale
+                    model.shopperLocale,
                 )
                 textViewAmount.apply {
                     isVisible = true
@@ -254,7 +261,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             model: PaymentMethodHeader,
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
         ) = with(binding) {
-            paymentMethodHeaderTitle.setText(model.titleResId)
+            paymentMethodHeaderLabel.setText(model.titleResId)
             if (model.actionResId == null) {
                 paymentMethodHeaderAction.isVisible = false
             } else {

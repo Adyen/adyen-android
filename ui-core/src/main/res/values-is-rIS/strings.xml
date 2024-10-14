@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Greiða</string>
+    <string name="pay_button_with_value">Greiða %s</string>
+    <string name="confirm_preauthorization">Staðfesta greiðsluheimild</string>
+
+    <string name="error_dialog_title">Villa</string>
+    <string name="error_dialog_button">Í lagi</string>
+    <string name="component_error">Eitthvað fór úrskeiðis.</string>
+
+    <string name="paymentInProgressView_title">Greiðsluferli er enn virkt</string>
+    <string name="paymentInProgressView_loadingText">Bíður eftir að ljúka…</string>
+    <string name="paymentInProgressView_cancelButton">Hætta við</string>
+
+    <string name="checkout_address_form_field_not_valid">Ógilt inntak</string>
+    <string name="checkout_social_security_number_not_valid">Ógilt inntak</string>
+
+    <string name="checkout_address_form_billing_address_title">Heimilisfang greiðanda</string>
+    <string name="checkout_address_form_street_hint">Gata</string>
+    <string name="checkout_address_form_address_hint">Heimilisfang</string>
+    <string name="checkout_address_form_house_number_hint">Húsnúmer</string>
+    <string name="checkout_address_form_apartment_suite_hint">Íbúð</string>
+    <string name="checkout_address_form_city_hint">Borg</string>
+    <string name="checkout_address_form_country_hint">Land/svæði</string>
+    <string name="checkout_address_form_states_hint">Fylki</string>
+    <string name="checkout_address_postal_code_hint">Póstnúmer</string>
+    <string name="checkout_address_form_zip_code_hint">Póstnúmer</string>
+    <string name="checkout_address_form_province_territory_hint">Hérað eða svæði</string>
+    <string name="checkout_address_form_city_town_hint">Borg/bær</string>
+
+    <string name="checkout_address_form_street_hint_optional">Gata (valfrjálst)</string>
+    <string name="checkout_address_form_address_hint_optional">Heimilisfang (valfrjálst)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Húsnúmer (valfrjálst)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Íbúð (valfrjálst)</string>
+    <string name="checkout_address_form_city_hint_optional"> Borg (valfrjálst)</string>
+    <string name="checkout_address_form_country_hint_optional">Land/svæði (valfrjálst)</string>
+    <string name="checkout_address_form_states_hint_optional">Fylki (valfrjálst)</string>
+    <string name="checkout_address_postal_code_hint_optional">Póstnúmer (valfrjálst)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Póstnúmer (valfrjálst)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Hérað eða yfirráðasvæði (valfrjálst)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Borg/bær (valfrjálst)</string>
+
+    <string name="checkout_address_lookup_hint">Leita að heimilisfanginu þínu</string>
+    <string name="checkout_address_lookup_initial">Geturðu ekki leitað að heimilisfanginu þínu?</string>
+    <string name="checkout_address_lookup_initial_description">Þú getur alltaf #slegið heimilisfangið þitt handvirkt inn#</string>
+    <string name="checkout_address_lookup_empty">Engar niðurstöður fundust</string>
+    <string name="checkout_address_lookup_empty_description">„%s“ passaði ekki við neitt, reyndu aftur eða #sláðu heimilisfangið handvirkt inn#</string>
+    <string name="checkout_address_lookup_enter_manually">Slá inn heimilisfang handvirkt</string>
+    <string name="checkout_address_lookup_submit">Nota þetta heimilisfang</string>
+    <string name="checkout_address_lookup_validation_empty">Heimilisfang er áskilið</string>
+</resources>

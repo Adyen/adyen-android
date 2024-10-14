@@ -18,7 +18,7 @@ interface AnalyticsManager {
 
     fun trackEvent(event: AnalyticsEvent)
 
-    fun getCheckoutAttemptId(): String?
+    fun getCheckoutAttemptId(): String
 
     fun clear(owner: Any)
 }

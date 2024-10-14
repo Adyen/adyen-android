@@ -12,19 +12,20 @@
     <string name="action_failed">支払の処理中にエラーが発生しました。後でもう一度やり直してください。</string>
     <string name="time_out_error">リクエストがタイムアウトになりました。再度お試し下さい。</string>
     <string name="unknown_error">不明なエラーが発生しました</string>
-    <string name="store_payment_methods_header">選択済みのお支払い方法</string>
-    <string name="other_payment_methods">その他のお支払いオプション</string>
+    <string name="store_payment_methods_header">保存済み</string>
+    <string name="other_payment_methods">その他</string>
+    <string name="checkout_preselected_stored_payment_method_header">支払方法</string>
     <string name="continue_button">続ける</string>
     <string name="change_payment_method">お支払方法を変更する</string>
     <string name="checkout_giftcard_error_zero_balance">このギフトカードの残高はゼロです</string>
     <string name="checkout_giftcard_error_currency">ギフトカードは、発行された通貨でのみ有効です。</string>
     <string name="checkout_giftcard_remaining_balance_text">残りの残高は%sになります</string>
     <string name="checkout_giftcard_pay_remaining_amount">残りの%sの支払方法を選択してください</string>
-    <string name="checkout_giftcard_payment_methods_header">追加したギフトカード</string>
+    <string name="checkout_giftcard_payment_methods_header">適用済み</string>
     <string name="checkout_giftcard_remove_button">削除</string>
     <string name="checkout_giftcard_max_transaction_limit">このギフトカードでの取引ごとに許可される最大%s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">カードの削除を確認する</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">追加したギフトカードを削除しますか？</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 削除を確認</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 適用されたアイテムを削除しますか？</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">はい、削除します</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">キャンセル</string>
     <string name="checkout_remove_stored_payment_method_body">保存されている支払方法を削除する</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">この画像をデバイスに保存するには、ストレージ権限を有効にする必要があります</string>
     <string name="checkout_stored_payment_confirmation_message">%sのお支払いをご確認下さい</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">キャンセル</string>
+    <string name="checkout_close">終了</string>
+    <string name="checkout_back">戻る</string>
 </resources>

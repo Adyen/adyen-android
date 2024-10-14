@@ -39,7 +39,7 @@ data class InstallmentConfiguration(
         }
         if (!InstallmentUtils.areInstallmentValuesValid(this)) {
             throw CheckoutException(
-                "Installment Configuration contains invalid values for options. Values must be greater than 1."
+                "Installment Configuration contains invalid values for options. Values must be greater than 1.",
             )
         }
     }

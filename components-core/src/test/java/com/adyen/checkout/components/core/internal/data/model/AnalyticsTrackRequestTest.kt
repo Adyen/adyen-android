@@ -21,6 +21,7 @@ internal class AnalyticsTrackRequestTest {
                 issuer = null,
                 validationErrorCode = null,
                 validationErrorMessage = null,
+                configData = null,
             ),
         )
         val logs = listOf(
@@ -67,6 +68,7 @@ internal class AnalyticsTrackRequestTest {
                 issuer = null,
                 validationErrorCode = null,
                 validationErrorMessage = null,
+                configData = null,
             ),
         )
         val logs = listOf(

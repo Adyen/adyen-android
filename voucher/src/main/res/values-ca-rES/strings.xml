@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Baixeu la vostra instrucció de domiciliació bancària (DDI / Mandat)</string>
+    <string name="checkout_voucher_introduction">Gràcies per la seva compra, si us plau utilitzeu el següent cupó per completar el vostre pagament.</string>
+    <string name="checkout_voucher_introduction_econtext">Gràcies per la vostra compra. Us preguem que utilitzeu la informació següent per completar el pagament.</string>
+    <string name="checkout_voucher_payment_reference">Referència del pagament</string>
+    <string name="checkout_voucher_expiration_entity">Entitat</string>
+    <string name="checkout_voucher_expiration_date">Data de caducitat</string>
+    <string name="checkout_voucher_shopper_reference">Referència del comprador</string>
+    <string name="checkout_voucher_phone_number">Número de telèfon</string>
+    <string name="checkout_voucher_collection_institution_number">Número d\'entitat de recollida</string>
+    <string name="checkout_voucher_read_instructions">Llegiu les instruccions</string>
+    <string name="checkout_voucher_copy_code">Copiar el codi</string>
+    <string name="checkout_voucher_copied_toast">Codi copiat al porta-retalls</string>
+    <string name="checkout_voucher_download_pdf">Baixar el PDF</string>
+    <string name="checkout_voucher_save_image">Desar com a imatge</string>
+    <string name="checkout_voucher_image_saved"> Imatge desada al dispositiu</string>
+    <string name="checkout_voucher_image_failed"> No s\'ha pogut desar la imatge</string>
+    <string name="checkout_voucher_finish">Acabar</string>
+    <string name="checkout_voucher_permission_denied">No s\'atorga permís</string>
+</resources>

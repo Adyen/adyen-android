@@ -1,0 +1,20 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by atef on 3/3/2023.
+  -->
+
+<resources>
+    <string name="checkout_boleto_personal_details">Asmeniniai duomenys</string>
+    <string name="checkout_boleto_first_name">Vardas</string>
+    <string name="checkout_boleto_last_name">Pavardė</string>
+    <string name="checkout_boleto_send_email_copy">Siųskite kopiją į mano el. paštą</string>
+    <string name="checkout_boleto_email">El. pašto adresas</string>
+    <string name="checkout_boleto_generate_btn_label">Generuoti „Boleto“</string>
+
+    <string name="checkout_boleto_first_name_invalid">Įveskite savo vardą</string>
+    <string name="checkout_boleto_last_name_invalid">Įveskite savo pavardę</string>
+    <string name="checkout_boleto_email_invalid">Netinkamas el. pašto adresas</string>
+</resources>

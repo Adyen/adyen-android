@@ -55,5 +55,4 @@
     <string name="checkout_address_lookup_enter_manually">Manuálne zadajte adresu</string>
     <string name="checkout_address_lookup_submit">Použite túto adresu</string>
     <string name="checkout_address_lookup_validation_empty">Adresa sa požaduje</string>
-
 </resources>

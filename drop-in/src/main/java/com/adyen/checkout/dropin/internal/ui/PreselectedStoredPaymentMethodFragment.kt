@@ -110,13 +110,12 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun initToolbar() {
-        binding.bottomSheetHeader.text = getString(R.string.store_payment_methods_header)
-
         with(binding.bottomSheetToolbar) {
             setOnButtonClickListener {
                 performBackAction()
             }
             setMode(DropInBottomSheetToolbarMode.CLOSE_BUTTON)
+            setTitle(getString(R.string.checkout_preselected_stored_payment_method_header))
         }
     }
 

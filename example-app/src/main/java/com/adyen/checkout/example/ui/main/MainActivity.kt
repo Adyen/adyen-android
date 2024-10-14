@@ -32,12 +32,12 @@ import com.adyen.checkout.example.ui.blik.BlikActivity
 import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
 import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
-import com.adyen.checkout.example.ui.configuration.ConfigurationActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
 import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
 import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
 import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
+import com.adyen.checkout.example.ui.settings.SettingsActivity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected")
         if (item.itemId == R.id.settings) {
-            val intent = Intent(this@MainActivity, ConfigurationActivity::class.java)
+            val intent = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(intent)
             return true
         }

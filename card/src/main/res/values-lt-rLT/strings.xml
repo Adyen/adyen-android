@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (c) 2019 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ran on 13/3/2019.
+  -->
+
+<resources>
+    <string name="checkout_card_number_hint">Kortelės numeris</string>
+    <string name="checkout_card_holder_hint">Vardas ant kortelės</string>
+    <string name="checkout_card_expiry_date_hint">Galiojimo data</string>
+    <string name="checkout_card_expiry_date_optional_hint">Galiojimo data (neprivaloma)</string>
+    <string name="checkout_card_security_code_hint">Saugos kodas</string>
+    <string name="checkout_card_security_code_optional_hint">Saugos kodas (neprivaloma)</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortelės turėtojo gimimo data (MMMMDD) arba įmonės registracijos numeris (10 skaitmenų)</string>
+    <string name="checkout_kcp_tax_number_hint">Įmonės registracijos numeris (10 skaitmenų)</string>
+    <string name="checkout_kcp_password_hint">Pirmieji 2 kortelės slaptažodžio skaitmenys</string>
+
+    <string name="checkout_card_number_not_valid">Netinkamas kortelės numeris</string>
+    <string name="checkout_expiry_date_not_valid">Netinkama galiojimo data</string>
+    <string name="checkout_expiry_date_not_valid_too_old">Įveskite tinkamą galiojimo datą</string>
+    <string name="checkout_expiry_date_not_valid_too_far_in_future">Įveskite tinkamą galiojimo datą</string>
+    <string name="checkout_security_code_not_valid">Netinkamas CVC / CVV formatas</string>
+    <string name="checkout_holder_name_not_valid">Turėtojo vardas ir pavardė netinkami</string>
+    <string name="checkout_social_security_number_not_valid">Netinkama įvestis</string>
+    <string name="checkout_kcp_birth_date_or_tax_number_invalid">Netinkama kortelės turėtojo gimimo data arba įmonės registracijos numeris</string>
+    <string name="checkout_kcp_password_invalid">Netinkamas slaptažodis</string>
+    <string name="checkout_card_postal_not_valid">Įvesties formatas negalioja.</string>
+    <string name="checkout_card_brand_not_supported">Įvestas kortelės prekės ženklas nepalaikomas</string>
+    <string name="checkout_card_formatted_brand_name_not_supported">„%s“ nepalaikomas</string>
+
+    <string name="checkout_card_installments_title">Įmokų skaičius</string>
+    <string name="checkout_card_installments_option_regular">%s mėn.</string>
+    <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
+    <string name="checkout_card_installments_option_one_time">Vienkartinis mokėjimas</string>
+    <string name="checkout_card_installments_option_revolving">Atnaujinamasis mokėjimas</string>
+
+    <string name="store_payment_method">Išsaugoti kitam mokėjimui</string>
+</resources>

@@ -1,0 +1,59 @@
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_null_value_placeholder">Not set</string>
+    <string name="settings_default_value">Default: %1$s</string>
+    <string name="settings_format_helper_locale">Format: en-us</string>
+    <string name="settings_shopper_locale_advanced_flow_placeholder">Device locale (%1$s)</string>
+    <string name="settings_shopper_locale_sessions_flow_placeholder">Default sessions locale</string>
+    <string name="settings_integration_region_display_value">%1$s (%2$s - %3$s)</string>
+
+    <string name="settings_category_integration_parameters">Integration parameters</string>
+    <string name="settings_category_card">Cards</string>
+    <string name="settings_category_analytics">Analytics</string>
+    <string name="settings_category_app">App</string>
+    <string name="settings_category_shopper_information">Shopper information</string>
+    <string name="settings_category_drop_in">Drop-in</string>
+
+    <string name="settings_title_merchant_account">Merchant account</string>
+    <string name="settings_title_shopper_reference">Shopper reference</string>
+    <string name="settings_title_threeds_mode">3D Secure</string>
+    <string name="settings_title_integration_region">Country/region - Currency</string>
+    <string name="settings_title_shopper_locale">Shopper locale</string>
+    <string name="settings_title_shopper_email">Shopper email</string>
+    <string name="settings_title_split_card_funding_sources">Split card funding sources</string>
+    <string name="settings_title_card_installment_options_mode">Installment options</string>
+    <string name="settings_title_card_installment_show_amount">Show installment amount</string>
+    <string name="settings_title_address_mode">Address mode</string>
+    <string name="settings_title_remove_stored_payment_method">Enable removing stored payment methods</string>
+    <string name="settings_title_instant_payment_method_type">Instant payment method type</string>
+    <string name="settings_title_analytics_mode">Level</string>
+    <string name="settings_title_ui_theme">Theme</string>
+    <string name="settings_title_amount">Amount (minor units)</string>
+    <string name="settings_title_integration_flow">Integration flow</string>
+
+    <string name="settings_list_card_address_none">None</string>
+    <string name="settings_list_card_address_postal_code">Postal code</string>
+    <string name="settings_list_card_address_full_address">Full address</string>
+    <string name="settings_list_card_address_lookup">Lookup</string>
+
+    <string name="settings_list_installment_option_none">None</string>
+    <string name="settings_list_installment_option_default">Default installment options</string>
+    <string name="settings_list_installment_option_default_revolving">Default installment options with revolving</string>
+    <string name="settings_list_installment_option_card_based">Card based installment options (VISA)</string>
+
+    <string name="settings_list_analytics_mode_all">All</string>
+    <string name="settings_list_analytics_mode_none">None</string>
+
+    <string name="settings_list_threeds_mode_prefer_native">Prefer native</string>
+    <string name="settings_list_threeds_mode_redirect">Redirect</string>
+    <string name="settings_list_threeds_mode_disabled">Disabled</string>
+
+    <string name="settings_list_ui_theme_light">Light</string>
+    <string name="settings_list_ui_theme_dark">Dark</string>
+    <string name="settings_list_ui_theme_system">System</string>
+
+    <string name="settings_list_integration_flow_sessions">Sessions</string>
+    <string name="settings_list_integration_flow_advanced">Advanced</string>
+
+</resources>

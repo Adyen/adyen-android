@@ -100,7 +100,7 @@
             android:layout_marginEnd="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.card.internal.ui.view.ExpiryDateInput
+            <com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:nextFocusDown="@id/editText_securityCode"
@@ -115,7 +115,7 @@
             android:layout_marginStart="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.card.internal.ui.view.SecurityCodeInput
+            <com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
                 style="@style/AdyenCheckout.Card.SecurityCodeInput"
                 android:nextFocusDown="@id/editText_cardHolder"

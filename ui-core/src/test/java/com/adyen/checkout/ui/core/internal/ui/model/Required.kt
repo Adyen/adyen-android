@@ -8,7 +8,4 @@
 
 package com.adyen.checkout.ui.core.internal.ui.model
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.TESTS)
 internal class Required : AddressFieldPolicy

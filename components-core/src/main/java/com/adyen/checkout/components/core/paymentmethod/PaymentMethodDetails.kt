@@ -65,7 +65,12 @@ abstract class PaymentMethodDetails : ModelObject() {
                 DotpayPaymentMethod.PAYMENT_METHOD_TYPE -> DotpayPaymentMethod.SERIALIZER
                 EPSPaymentMethod.PAYMENT_METHOD_TYPE -> EPSPaymentMethod.SERIALIZER
                 EntercashPaymentMethod.PAYMENT_METHOD_TYPE -> EntercashPaymentMethod.SERIALIZER
-                GiftCardPaymentMethod.PAYMENT_METHOD_TYPE -> GiftCardPaymentMethod.SERIALIZER
+                GiftCardPaymentMethod.PAYMENT_METHOD_TYPE,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_GROUPEUP,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_NATIXIS,
+                PaymentMethodTypes.MEAL_VOUCHER_FR_SODEXO,
+                PaymentMethodTypes.MEAL_VOUCHER_FR -> GiftCardPaymentMethod.SERIALIZER
+
                 IdealPaymentMethod.PAYMENT_METHOD_TYPE -> IdealPaymentMethod.SERIALIZER
                 MBWayPaymentMethod.PAYMENT_METHOD_TYPE -> MBWayPaymentMethod.SERIALIZER
                 OnlineBankingCZPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingCZPaymentMethod.SERIALIZER
@@ -81,6 +86,8 @@ abstract class PaymentMethodDetails : ModelObject() {
                 PaymentMethodTypes.MOLPAY_MALAYSIA,
                 PaymentMethodTypes.MOLPAY_THAILAND,
                 PaymentMethodTypes.MOLPAY_VIETNAM -> MolpayPaymentMethod.SERIALIZER
+
+                PaymentMethodTypes.TWINT -> TwintPaymentMethod.SERIALIZER
 
                 PaymentMethodTypes.UPI,
                 PaymentMethodTypes.UPI_COLLECT,

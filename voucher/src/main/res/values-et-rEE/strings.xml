@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Laadige alla oma otsedebiteerimise korraldus (DDI/mandaat)</string>
+    <string name="checkout_voucher_introduction">Täname teid ostu eest. Kasutage makse lõpuleviimiseks järgmist kupongi.</string>
+    <string name="checkout_voucher_introduction_econtext">Täname ostu eest. Kasutage makse lõpuleviimiseks järgmist teavet.</string>
+    <string name="checkout_voucher_payment_reference">Makse viide</string>
+    <string name="checkout_voucher_expiration_entity">Ettevõte</string>
+    <string name="checkout_voucher_expiration_date">Aegumiskuupäev</string>
+    <string name="checkout_voucher_shopper_reference">Ostja viide</string>
+    <string name="checkout_voucher_phone_number">Telefoninumber</string>
+    <string name="checkout_voucher_collection_institution_number">Makse saaja number</string>
+    <string name="checkout_voucher_read_instructions">Lugege juhiseid</string>
+    <string name="checkout_voucher_copy_code">Kopeeri kood</string>
+    <string name="checkout_voucher_copied_toast">Kood kopeeriti lõikelauale</string>
+    <string name="checkout_voucher_download_pdf">Laadi alla PDF</string>
+    <string name="checkout_voucher_save_image">Salvesta pildina</string>
+    <string name="checkout_voucher_image_saved"> Pilt on teie seadmesse salvestatud</string>
+    <string name="checkout_voucher_image_failed"> Pildi salvestamine nurjus</string>
+    <string name="checkout_voucher_finish">Lõpeta</string>
+    <string name="checkout_voucher_permission_denied">Luba ei antud</string>
+</resources>

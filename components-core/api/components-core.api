@@ -40,6 +40,14 @@ public final class com/adyen/checkout/components/core/ActionComponentData$Creato
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/components/core/ActionHandlingMethod : java/lang/Enum {
+	public static final field PREFER_NATIVE Lcom/adyen/checkout/components/core/ActionHandlingMethod;
+	public static final field PREFER_WEB Lcom/adyen/checkout/components/core/ActionHandlingMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/components/core/ActionHandlingMethod;
+	public static fun values ()[Lcom/adyen/checkout/components/core/ActionHandlingMethod;
+}
+
 public final class com/adyen/checkout/components/core/Address : com/adyen/checkout/core/internal/data/model/ModelObject {
 	public static final field ADDRESS_COUNTRY_NULL_PLACEHOLDER Ljava/lang/String;
 	public static final field ADDRESS_NULL_PLACEHOLDER Ljava/lang/String;
@@ -893,6 +901,10 @@ public final class com/adyen/checkout/components/core/PaymentMethodTypes {
 	public static final field IDEAL Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/components/core/PaymentMethodTypes;
 	public static final field MB_WAY Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_GROUPEUP Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_NATIXIS Ljava/lang/String;
+	public static final field MEAL_VOUCHER_FR_SODEXO Ljava/lang/String;
 	public static final field MOLPAY_MALAYSIA Ljava/lang/String;
 	public static final field MOLPAY_THAILAND Ljava/lang/String;
 	public static final field MOLPAY_VIETNAM Ljava/lang/String;
@@ -1394,14 +1406,16 @@ public final class com/adyen/checkout/components/core/action/TwintSdkData : com/
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/components/core/action/TwintSdkData$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
-	public fun <init> (Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Z)V
 	public final fun component1 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/action/TwintSdkData;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
+	public final fun component2 ()Z
+	public final fun copy (Ljava/lang/String;Z)Lcom/adyen/checkout/components/core/action/TwintSdkData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/action/TwintSdkData;Ljava/lang/String;ZILjava/lang/Object;)Lcom/adyen/checkout/components/core/action/TwintSdkData;
 	public fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getToken ()Ljava/lang/String;
 	public fun hashCode ()I
+	public final fun isStored ()Z
 	public fun toString ()Ljava/lang/String;
 	public fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1654,11 +1668,12 @@ public abstract interface class com/adyen/checkout/components/core/internal/Paym
 }
 
 public final class com/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info : com/adyen/checkout/components/core/internal/analytics/AnalyticsEvent {
-	public fun <init> (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component10 ()Ljava/lang/String;
 	public final fun component11 ()Ljava/lang/String;
+	public final fun component12 ()Ljava/util/Map;
 	public final fun component2 ()J
 	public final fun component3 ()Z
 	public final fun component4 ()Ljava/lang/String;
@@ -1667,11 +1682,12 @@ public final class com/adyen/checkout/components/core/internal/analytics/Analyti
 	public final fun component7 ()Ljava/lang/Boolean;
 	public final fun component8 ()Ljava/lang/String;
 	public final fun component9 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;
+	public final fun copy (Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;)Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;Ljava/lang/String;JZLjava/lang/String;Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info$Type;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/Map;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/analytics/AnalyticsEvent$Info;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBrand ()Ljava/lang/String;
 	public fun getComponent ()Ljava/lang/String;
+	public final fun getConfigData ()Ljava/util/Map;
 	public fun getId ()Ljava/lang/String;
 	public final fun getIssuer ()Ljava/lang/String;
 	public fun getShouldForceSend ()Z
@@ -1931,9 +1947,6 @@ public final class com/adyen/checkout/components/core/internal/provider/StoredPa
 	public static synthetic fun get$default (Lcom/adyen/checkout/components/core/internal/provider/StoredPaymentComponentProvider;Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/StoredPaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public static synthetic fun get$default (Lcom/adyen/checkout/components/core/internal/provider/StoredPaymentComponentProvider;Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/StoredPaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public static synthetic fun get$default (Lcom/adyen/checkout/components/core/internal/provider/StoredPaymentComponentProvider;Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/StoredPaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
-}
-
-public final class com/adyen/checkout/components/core/internal/test/TestPublicKeyRepository$Companion {
 }
 
 public final class com/adyen/checkout/components/core/internal/ui/model/Validation$Invalid : com/adyen/checkout/components/core/internal/ui/model/Validation {
@@ -2390,16 +2403,20 @@ public final class com/adyen/checkout/components/core/paymentmethod/GiftCardPaym
 	public static final field Companion Lcom/adyen/checkout/components/core/paymentmethod/GiftCardPaymentMethod$Companion;
 	public static final field PAYMENT_METHOD_TYPE Ljava/lang/String;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
 	public fun describeContents ()I
 	public final fun getBrand ()Ljava/lang/String;
 	public fun getCheckoutAttemptId ()Ljava/lang/String;
 	public final fun getEncryptedCardNumber ()Ljava/lang/String;
+	public final fun getEncryptedExpiryMonth ()Ljava/lang/String;
+	public final fun getEncryptedExpiryYear ()Ljava/lang/String;
 	public final fun getEncryptedSecurityCode ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public final fun setBrand (Ljava/lang/String;)V
 	public fun setCheckoutAttemptId (Ljava/lang/String;)V
 	public final fun setEncryptedCardNumber (Ljava/lang/String;)V
+	public final fun setEncryptedExpiryMonth (Ljava/lang/String;)V
+	public final fun setEncryptedExpiryYear (Ljava/lang/String;)V
 	public final fun setEncryptedSecurityCode (Ljava/lang/String;)V
 	public fun setType (Ljava/lang/String;)V
 	public fun writeToParcel (Landroid/os/Parcel;I)V
@@ -2860,6 +2877,44 @@ public final class com/adyen/checkout/components/core/paymentmethod/SevenElevenP
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/paymentmethod/SevenElevenPaymentMethod;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/components/core/paymentmethod/SevenElevenPaymentMethod;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod : com/adyen/checkout/components/core/paymentmethod/PaymentMethodDetails {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod;
+	public fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getCheckoutAttemptId ()Ljava/lang/String;
+	public final fun getStoredPaymentMethodId ()Ljava/lang/String;
+	public final fun getSubtype ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun setCheckoutAttemptId (Ljava/lang/String;)V
+	public final fun setStoredPaymentMethodId (Ljava/lang/String;)V
+	public final fun setSubtype (Ljava/lang/String;)V
+	public fun setType (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/components/core/paymentmethod/TwintPaymentMethod;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 

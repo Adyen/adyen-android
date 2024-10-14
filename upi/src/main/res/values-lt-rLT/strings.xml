@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 9/2/2023.
+  -->
+
+<resources>
+    <string name="checkout_upi_mode_selection">Kaip norėtumėte naudoti UPI?</string>
+    <string name="checkout_upi_vpa_validation">Įveskite teisingą virtualų mokėjimo adresą</string>
+    <string name="checkout_upi_qr_generation">Sugeneruokite QR kodą, kurį galite atsisiųsti arba padaryti ekrano kopiją ir įkelti į UPI programą, kad užbaigtumėte mokėjimą.</string>
+    <string name="checkout_upi_continue">Tęsti</string>
+    <string name="checkout_upi_app_manual_input">Įveskite UPI ID</string>
+    <string name="checkout_upi_app_other_upi">Kitos UPI</string>
+    <string name="checkout_upi_no_app_selected">Norėdami tęsti, pasirinkite mokėjimo metodą</string>
+</resources>

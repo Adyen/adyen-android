@@ -25,7 +25,8 @@ data class AnalyticsConfiguration(
 ) : Parcelable
 
 /**
- * The different configurable levels of analytics.
+ * The different configurable levels of analytics. Learn more about the
+ * [data we are collecting](https://docs.adyen.com/online-payments/analytics-and-data-tracking/#data-we-are-collecting).
  */
 enum class AnalyticsLevel {
     /**
@@ -34,7 +35,7 @@ enum class AnalyticsLevel {
     ALL,
 
     /**
-     * No analytics are sent from the library.
+     * Only Drop-in/Components analytics are not sent from the library.
      */
     NONE,
 }

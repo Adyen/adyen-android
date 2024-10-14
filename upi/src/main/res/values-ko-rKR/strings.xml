@@ -14,5 +14,5 @@
     <string name="checkout_upi_continue">계속</string>
     <string name="checkout_upi_app_manual_input">UPI ID 입력</string>
     <string name="checkout_upi_app_other_upi">기타 UPI</string>
-
+    <string name="checkout_upi_no_app_selected">계속 진행하려면 결제 수단을 선택하세요</string>
 </resources>

@@ -12,19 +12,20 @@
     <string name="action_failed">Maksua käsitellessä tapahtui virhe. Yritä myöhemmin uudelleen.</string>
     <string name="time_out_error">Pyydä aikakatkaisu. Yritä uudelleen.</string>
     <string name="unknown_error">Tapahtui tuntematon virhe</string>
-    <string name="store_payment_methods_header">Maksutapasi</string>
-    <string name="other_payment_methods">Valitse muu maksutapa</string>
+    <string name="store_payment_methods_header">Tallennettu</string>
+    <string name="other_payment_methods">Muut</string>
+    <string name="checkout_preselected_stored_payment_method_header">maksutapa</string>
     <string name="continue_button">Jatka</string>
     <string name="change_payment_method">Muuta maksutapaa</string>
     <string name="checkout_giftcard_error_zero_balance">Lahjakortin saldo on nolla</string>
     <string name="checkout_giftcard_error_currency">Gift cards are only valid in the currency they were issued in</string>
     <string name="checkout_giftcard_remaining_balance_text">Jäljellä oleva saldo on %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Valitse maksutapa jäljelle jääneelle prosentille %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Lisätty lahjakortti</string>
+    <string name="checkout_giftcard_payment_methods_header">Käytetyt</string>
     <string name="checkout_giftcard_remove_button">Poista</string>
     <string name="checkout_giftcard_max_transaction_limit">Maks. %s sallittu tapahtumaa kohti tällä lahjakortilla</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Vahvista kortin poisto</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Poistetaanko lisätyt lahjakortit?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Vahvista poisto</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Poistetaanko käytetyt kohteet?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Kyllä, poista</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Peruuta</string>
     <string name="checkout_remove_stored_payment_method_body">Poista tallennettu maksutapa</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Sinun on otettava käyttöön tallennusoikeus tallentaaksesi tämän kuvan laitteeseesi</string>
     <string name="checkout_stored_payment_confirmation_message">Vahvista %s maksu</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Peruuta</string>
+    <string name="checkout_close">Sulje</string>
+    <string name="checkout_back">Takaisin</string>
 </resources>

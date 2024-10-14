@@ -12,19 +12,20 @@
     <string name="action_failed">处理您的付款时发生错误。请稍候重试。</string>
     <string name="time_out_error">请求超时。请重试。</string>
     <string name="unknown_error">发生未知错误</string>
-    <string name="store_payment_methods_header">您的支付方式</string>
-    <string name="other_payment_methods">选择其他方式</string>
+    <string name="store_payment_methods_header">已存储</string>
+    <string name="other_payment_methods">其他</string>
+    <string name="checkout_preselected_stored_payment_method_header">支付方式</string>
     <string name="continue_button">继续</string>
     <string name="change_payment_method">更改支付方式</string>
     <string name="checkout_giftcard_error_zero_balance">礼品卡余额为零</string>
     <string name="checkout_giftcard_error_currency">礼品卡仅以其发行的货币为有效货币</string>
     <string name="checkout_giftcard_remaining_balance_text">剩余额度为 %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">选择支付方式支付剩余的 %s</string>
-    <string name="checkout_giftcard_payment_methods_header">已添加礼品卡</string>
+    <string name="checkout_giftcard_payment_methods_header">已应用</string>
     <string name="checkout_giftcard_remove_button">删除</string>
     <string name="checkout_giftcard_max_transaction_limit">此礼品卡上每笔交易允许的最大金额为 %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">确认删除卡片</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">删除已添加礼品卡？</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 确认移除</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 删除已应用的项目？</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">是，删除</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">取消</string>
     <string name="checkout_remove_stored_payment_method_body">删除存储的支付方式</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">要将此图片保存到设备，您需要启用存储权限</string>
     <string name="checkout_stored_payment_confirmation_message">确认 %s 支付</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">取消</string>
+    <string name="checkout_close">关闭</string>
+    <string name="checkout_back">返回</string>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Bankas konts</string>
+    <string name="checkout_ach_bank_account_holder_name">Konta īpašnieka nosaukums</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Nederīga konta īpašnieka vārds</string>
+    <string name="checkout_ach_bank_account_number">Konta numurs</string>
+    <string name="checkout_ach_bank_account_number_invalid">Nederīgs konta numurs</string>
+    <string name="checkout_ach_bank_account_location">ABA maršrutēšanas numurs</string>
+    <string name="checkout_ach_bank_account_location_invalid">Nederīgs ABA maršrutēšanas numurs</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Saglabāt manam nākamajam maksājumam</string>
+</resources>

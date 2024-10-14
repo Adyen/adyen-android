@@ -11,19 +11,22 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
+import com.adyen.checkout.components.core.ActionHandlingMethod
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
+import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.example.data.storage.AnalyticsMode
 import com.adyen.checkout.example.data.storage.CardAddressMode
 import com.adyen.checkout.example.data.storage.CardInstallmentOptionsMode
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
-import com.adyen.checkout.instant.ActionHandlingMethod
 import com.adyen.checkout.instant.instantPayment
+import com.adyen.checkout.mealvoucherfr.mealVoucherFR
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -34,7 +37,7 @@ import javax.inject.Singleton
 internal class CheckoutConfigurationProvider @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
     @ApplicationContext private val context: Context,
-) {
+) : ConfigurationProvider {
 
     private val shopperLocale: Locale?
         get() {
@@ -48,7 +51,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
 
     private val environment = Environment.TEST
 
-    val checkoutConfig: CheckoutConfiguration
+    override val checkoutConfig: CheckoutConfiguration
         get() = CheckoutConfiguration(
             environment = environment,
             clientKey = clientKey,
@@ -81,6 +84,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setPinRequired(true)
             }
 
+            mealVoucherFR {
+                setSecurityCodeRequired(true)
+            }
+
             googlePay {
                 setCountryCode(keyValueStorage.getCountry())
             }
@@ -96,7 +103,10 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val analyticsLevel = keyValueStorage.getAnalyticsLevel()
+        val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {
+            AnalyticsMode.ALL -> AnalyticsLevel.ALL
+            AnalyticsMode.NONE -> AnalyticsLevel.NONE
+        }
         return AnalyticsConfiguration(level = analyticsLevel)
     }
 

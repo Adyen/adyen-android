@@ -12,19 +12,20 @@
     <string name="action_failed">При обработке платежа возникла ошибка. Повторите попытку позже.</string>
     <string name="time_out_error">Время ожидания запроса истекло. Повторите попытку.</string>
     <string name="unknown_error">Возникла неизвестная ошибка</string>
-    <string name="store_payment_methods_header">Ваши способы оплаты</string>
-    <string name="other_payment_methods">Выбрать другой способ</string>
+    <string name="store_payment_methods_header">Сохраненные</string>
+    <string name="other_payment_methods">Прочие</string>
+    <string name="checkout_preselected_stored_payment_method_header">Способ оплаты</string>
     <string name="continue_button">Продолжить</string>
     <string name="change_payment_method">Изменить способ оплаты</string>
     <string name="checkout_giftcard_error_zero_balance">На этой подарочной карте нет средств</string>
     <string name="checkout_giftcard_error_currency">Принимаются только подарочные карты соответствующей валюты</string>
     <string name="checkout_giftcard_remaining_balance_text">Остаток на балансе составит %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Выбрать другой способ оплаты оставшейся суммы %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Подарочные карты</string>
+    <string name="checkout_giftcard_payment_methods_header">Применяется</string>
     <string name="checkout_giftcard_remove_button">Удалить</string>
     <string name="checkout_giftcard_max_transaction_limit">Максимальная сумма операции по этой подарочной карте: %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Подтвердите удаление карты</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Удалить добавленные подарочные карты?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Подтвердить удаление</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Удалить примененные элементы?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Да, удалить</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Отменить</string>
     <string name="checkout_remove_stored_payment_method_body">Удалить сохраненный способ оплаты</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Для сохранения данного изображения на устройстве необходимо предоставить на это разрешение</string>
     <string name="checkout_stored_payment_confirmation_message">Подтвердить оплату %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Отменить</string>
+    <string name="checkout_close">Закрыть</string>
+    <string name="checkout_back">Назад</string>
 </resources>

@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -59,7 +59,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = null,
                 paymentMethodVariant = null,
-            )
+            ),
         )
     }
 
@@ -75,7 +75,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = 16,
                 paymentMethodVariant = "mccredit",
-            )
+            ),
         )
     }
 
@@ -102,7 +102,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardBrands.contains(cardBrandSecond),
                 panLength = 16,
                 paymentMethodVariant = "maestrouk",
-            )
+            ),
         )
     }
 }

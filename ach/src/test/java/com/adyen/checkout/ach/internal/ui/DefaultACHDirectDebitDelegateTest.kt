@@ -25,7 +25,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
-import com.adyen.checkout.components.core.internal.test.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -33,11 +33,11 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.ACHDirectDebitPaymentMethod
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
-import com.adyen.checkout.cse.internal.test.TestGenericEncryptor
+import com.adyen.checkout.cse.internal.TestGenericEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
-import com.adyen.checkout.ui.core.internal.test.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -496,7 +496,7 @@ internal class DefaultACHDirectDebitDelegateTest(
 
                 val expectedPaymentMethod = ACHDirectDebitPaymentMethod(
                     type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
-                    checkoutAttemptId = null,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
                     encryptedBankAccountNumber = TEST_BANK_ACCOUNT_NUMBER,
                     encryptedBankLocationId = TEST_BANK_BANK_LOCATION_ID,
                     ownerName = TEST_OWNER_NAME,
@@ -602,15 +602,6 @@ internal class DefaultACHDirectDebitDelegateTest(
             )
 
             assertTrue(delegate.shouldShowSubmitButton())
-        }
-    }
-
-    @Nested
-    inner class SubmitButtonEnableTest {
-
-        @Test
-        fun `when shouldEnableSubmitButton is called, then true is returned`() {
-            assertTrue(delegate.shouldEnableSubmitButton())
         }
     }
 

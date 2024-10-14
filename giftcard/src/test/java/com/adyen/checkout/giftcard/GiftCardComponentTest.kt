@@ -22,8 +22,7 @@ import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
-import com.adyen.checkout.ui.core.internal.test.TestComponentViewType
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -40,7 +39,6 @@ import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class GiftCardComponentTest(
     @Mock private val giftCardDelegate: GiftCardDelegate,
@@ -53,7 +51,7 @@ internal class GiftCardComponentTest(
 
     @BeforeEach
     fun before() {
-        whenever(giftCardDelegate.viewFlow) doReturn MutableStateFlow(GiftCardComponentViewType)
+        whenever(giftCardDelegate.viewFlow) doReturn MutableStateFlow(GiftCardComponentViewType())
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
         component = GiftCardComponent(
@@ -102,7 +100,7 @@ internal class GiftCardComponentTest(
     @Test
     fun `when component is initialized then view flow should match gift card delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertEquals(GiftCardComponentViewType, awaitItem())
+            assert(awaitItem() is GiftCardComponentViewType)
             expectNoEvents()
         }
     }
@@ -142,7 +140,7 @@ internal class GiftCardComponentTest(
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
             // and in practice the initial value of the action delegate view flow is always null so it should be ignored
-            assertEquals(GiftCardComponentViewType, awaitItem())
+            assert(awaitItem() is GiftCardComponentViewType)
 
             actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
             assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())

@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Mokėti</string>
+    <string name="pay_button_with_value">Mokėti %s</string>
+    <string name="confirm_preauthorization">Patvirtinti išankstinį įgaliojimą</string>
+
+    <string name="error_dialog_title">Klaida</string>
+    <string name="error_dialog_button">Gerai</string>
+    <string name="component_error">Kažkas nepavyko.</string>
+
+    <string name="paymentInProgressView_title">Mokėjimo procesas vis dar aktyvus</string>
+    <string name="paymentInProgressView_loadingText">Laukiama užbaigimo…</string>
+    <string name="paymentInProgressView_cancelButton">Atšaukti</string>
+
+    <string name="checkout_address_form_field_not_valid">Netinkama įvestis</string>
+    <string name="checkout_social_security_number_not_valid">Netinkama įvestis</string>
+
+    <string name="checkout_address_form_billing_address_title">Sąskaitų siuntimo adresas</string>
+    <string name="checkout_address_form_street_hint">Gatvė</string>
+    <string name="checkout_address_form_address_hint">Adresas</string>
+    <string name="checkout_address_form_house_number_hint">Namo numeris</string>
+    <string name="checkout_address_form_apartment_suite_hint">Apartamentai / liukso numeris</string>
+    <string name="checkout_address_form_city_hint">Miestas</string>
+    <string name="checkout_address_form_country_hint">Šalis / regionas</string>
+    <string name="checkout_address_form_states_hint">Valstija</string>
+    <string name="checkout_address_postal_code_hint">Pašto kodas</string>
+    <string name="checkout_address_form_zip_code_hint">Pašto indeksas</string>
+    <string name="checkout_address_form_province_territory_hint">Provincija arba teritorija</string>
+    <string name="checkout_address_form_city_town_hint">Miestas / miestelis</string>
+
+    <string name="checkout_address_form_street_hint_optional">Gatvė (neprivaloma)</string>
+    <string name="checkout_address_form_address_hint_optional">Adresas (neprivaloma)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Namo numeris (neprivaloma)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Apartamentai / liukso numeris (neprivaloma)</string>
+    <string name="checkout_address_form_city_hint_optional"> Miestas (neprivaloma)</string>
+    <string name="checkout_address_form_country_hint_optional">Šalis / regionas (neprivaloma)</string>
+    <string name="checkout_address_form_states_hint_optional">Valstija (neprivaloma)</string>
+    <string name="checkout_address_postal_code_hint_optional">Pašto kodas (neprivaloma)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Pašto indeksas (neprivaloma)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Provincija arba teritorija (neprivaloma)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Miestas / miestelis (neprivaloma)</string>
+
+    <string name="checkout_address_lookup_hint">Ieškokite savo adreso</string>
+    <string name="checkout_address_lookup_initial">Negalite ieškoti savo adreso?</string>
+    <string name="checkout_address_lookup_initial_description">Visada galite #įvesti savo adresą ranka#</string>
+    <string name="checkout_address_lookup_empty">Rezultatų nėra</string>
+    <string name="checkout_address_lookup_empty_description">„%s“ su niekuo nesutapo, bandykite dar kartą arba #įveskite adresą ranka#</string>
+    <string name="checkout_address_lookup_enter_manually">Įveskite adresą rankiniu būdu</string>
+    <string name="checkout_address_lookup_submit">Naudokite šį adresą</string>
+    <string name="checkout_address_lookup_validation_empty">Adresas privalomas</string>
+</resources>

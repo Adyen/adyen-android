@@ -12,19 +12,20 @@
     <string name="action_failed">Προέκυψε σφάλμα κατά την επεξεργασία της πληρωμής σας. Προσπαθήστε ξανά αργότερα.</string>
     <string name="time_out_error">Έληξε το χρονικό όριο του αιτήματος. Προσπαθήστε ξανά.</string>
     <string name="unknown_error">Προέκυψε άγνωστο σφάλμα</string>
-    <string name="store_payment_methods_header">Οι τρόποι πληρωμής σας</string>
-    <string name="other_payment_methods">Επιλέξτε άλλον τρόπο</string>
+    <string name="store_payment_methods_header">Αποθηκευμένοι</string>
+    <string name="other_payment_methods">Άλλοι</string>
+    <string name="checkout_preselected_stored_payment_method_header">μέθοδος πληρωμής</string>
     <string name="continue_button">Συνέχεια</string>
     <string name="change_payment_method">Αλλαγή τρόπου πληρωμής</string>
     <string name="checkout_giftcard_error_zero_balance">Η συγκεκριμένη δωροκάρτα έχει μηδενικό υπόλοιπο</string>
     <string name="checkout_giftcard_error_currency">Οι δωροκάρτες ισχύουν μόνο για το νόμισμα στο οποίο εκδόθηκαν</string>
     <string name="checkout_giftcard_remaining_balance_text">Το υπόλοιπο θα είναι %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Επιλέξτε έναν τρόπο πληρωμής για το εναπομείναν ποσό %s</string>
-    <string name="checkout_giftcard_payment_methods_header">Προστέθηκε δωροκάρτα</string>
+    <string name="checkout_giftcard_payment_methods_header">Εφαρμοσμένες</string>
     <string name="checkout_giftcard_remove_button">Αφαίρεση</string>
     <string name="checkout_giftcard_max_transaction_limit">Το μέγιστο επιτρεπόμενο ποσό ανά συναλλαγή σε αυτήν τη δωροκάρτα είναι %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Επιβεβαίωση αφαίρεσης κάρτας</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Αφαίρεση των προστεθειμένων δωροκαρτών;</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Επιβεβαίωση αφαίρεσης</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Αφαίρεση εφαρμοσμένων στοιχείων;</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Ναι, αφαίρεση</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Άκυρο</string>
     <string name="checkout_remove_stored_payment_method_body">Αφαίρεση αποθηκευμένου τρόπου πληρωμής</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Για να αποθηκεύσετε αυτήν την εικόνα στη συσκευή σας, πρέπει να εκχωρήσετε δικαίωμα για τον χώρο αποθήκευσης</string>
     <string name="checkout_stored_payment_confirmation_message">Επιβεβαίωση πληρωμής μέσω %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Άκυρο</string>
+    <string name="checkout_close">Κλείσιμο</string>
+    <string name="checkout_back">Πίσω</string>
 </resources>

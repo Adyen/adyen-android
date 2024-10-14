@@ -31,30 +31,32 @@ Import the corresponding module in your `build.gradle` file.
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in-compose:5.6.0"
+implementation "com.adyen.checkout:drop-in-compose:5.7.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.6.0"
-implementation "com.adyen.checkout:components-compose:5.6.0"
+implementation "com.adyen.checkout:card:5.7.0"
+implementation "com.adyen.checkout:components-compose:5.7.0"
 ```
 
 ### Without Jetpack Compose
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in:5.6.0"
+implementation "com.adyen.checkout:drop-in:5.7.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.6.0"
+implementation "com.adyen.checkout:card:5.7.0"
 ```
 
 The library is available on [Maven Central][mavenRepo].
 
-## UI Customization
+## Additional documentation
 
-[See the UI Customization Guide for more.](docs/UI_CUSTOMIZATION.md)
+* [UI Customization guide][docs.github.uiCustomization]
+
+* [Additional documentation for payment methods][docs.github.paymentMethods]
 
 ## Migrate from v4
 
@@ -65,15 +67,15 @@ If you are upgrading from 4.x.x to a current release, check out our [migration g
 If you use ProGuard or R8, you do not need to manually add any rules, as they are automatically embedded in the artifacts.
 Please let us know if you find any issues.
 
-## Development
+## Development and testing
 
 For development and testing purposes the project is accompanied by a test app. See [here](example-app/README.md) how to set it up and run it.
 
+To test your integration you could use [Adyen Test Cards Android][adyenTestCardsAndroid]. This will allow you to easily prefill test payment method information.
+
 ## Support
 
-If you have a feature request, or spotted a bug or a technical problem, [create an issue here][github.newIssue].
-
-For other questions, [contact our support team][adyen.support].
+If you have a feature request, or spotted a bug or a technical problem, [create an issue here][github.newIssue]. For other questions, contact our Support Team via [Customer Area][adyen.support] or via email: support@adyen.com
 
 ## Analytics and data tracking
 
@@ -105,19 +107,22 @@ This repository is available under the [MIT license](LICENSE).
 [shield.license.image]: https://img.shields.io/github/license/Adyen/adyen-android
 [shield.license.link]: LICENSE
 [docs.android]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android
-[header.preview]: https://github.com/Adyen/adyen-android/assets/9079915/e6e18a07-b30f-41f0-b7ef-701b20e2e339
+[header.preview]: https://github.com/user-attachments/assets/0393e58d-172c-45fb-9e49-3a720fe53c89
 [adyen.testAccount]: https://www.adyen.com/signup
 [docs.apiKey]: https://docs.adyen.com/development-resources/how-to-get-the-api-key
 [docs.clientKey]: https://docs.adyen.com/development-resources/client-side-authentication#get-your-client-key
 [docs.dropIn]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Drop-in
 [docs.components]: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android&integration=Components
+[docs.github.uiCustomization]: docs/UI_CUSTOMIZATION.md
+[docs.github.paymentMethods]: docs/payment-methods
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
 [migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
-[adyen.support]: https://www.adyen.help/hc/en-us/requests/new
+[adyen.support]: https://ca-live.adyen.com/ca/ca/contactUs/support.shtml
 [analytics.firstVersion]: https://github.com/Adyen/adyen-android/releases/tag/5.0.0
 [docs.analytics]: https://docs.adyen.com/online-payments/analytics-and-data-tracking
 [contributing.guidelines]: https://github.com/Adyen/.github/blob/main/CONTRIBUTING.md
 [dokka]: https://adyen.github.io/adyen-android/
 [docs.checkout]: https://docs.adyen.com/online-payments/
 [docs.apiExplorer]: https://docs.adyen.com/api-explorer/
+[adyenTestCardsAndroid]: https://github.com/Adyen/adyen-testcards-android

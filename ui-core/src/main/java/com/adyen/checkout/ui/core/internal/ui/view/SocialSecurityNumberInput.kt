@@ -13,9 +13,13 @@ import android.text.Editable
 import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 
-class SocialSecurityNumberInput constructor(
+class SocialSecurityNumberInput
+@JvmOverloads
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -24,10 +28,6 @@ class SocialSecurityNumberInput constructor(
     companion object {
         private const val SUPPORTED_CHARS = "0123456789./-"
     }
-
-    constructor(context: Context) : this(context, null, 0)
-
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
     init {
         enforceMaxInputLength(

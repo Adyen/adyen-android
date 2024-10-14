@@ -365,27 +365,29 @@
         <item name="android:text">@string/checkout_address_lookup_submit</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Title" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">12sp</item>
+    <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Title" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+        <item name="android:gravity">center</item>
         <item name="android:text">@string/checkout_address_lookup_initial</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">12sp</item>
+    <style name="AdyenCheckout.AddressLookup.InitialDisclaimer.Description" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
         <item name="android:text">@string/checkout_address_lookup_initial_description</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup.Empty.Title" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">12sp</item>
+    <style name="AdyenCheckout.AddressLookup.Empty.Title" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+        <item name="android:gravity">center</item>
         <item name="android:text">@string/checkout_address_lookup_empty</item>
     </style>
 
-    <style name="AdyenCheckout.AddressLookup.Empty.Description" parent="AdyenCheckout.TextAppearance">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:textSize">12sp</item>
+    <style name="AdyenCheckout.AddressLookup.Empty.Description" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:gravity">center</item>
         <item name="android:text">@string/checkout_address_lookup_empty_description</item>
     </style>
 

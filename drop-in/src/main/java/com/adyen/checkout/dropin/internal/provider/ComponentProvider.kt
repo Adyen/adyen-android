@@ -67,6 +67,9 @@ import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvi
 import com.adyen.checkout.mbway.MBWayComponent
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponent
+import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponentCallback
+import com.adyen.checkout.mealvoucherfr.internal.provider.MealVoucherFRComponentProvider
 import com.adyen.checkout.molpay.MolpayComponent
 import com.adyen.checkout.molpay.MolpayComponentState
 import com.adyen.checkout.molpay.internal.provider.MolpayComponentProvider
@@ -97,6 +100,9 @@ import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
 import com.adyen.checkout.seveneleven.SevenElevenComponent
 import com.adyen.checkout.seveneleven.SevenElevenComponentState
 import com.adyen.checkout.seveneleven.internal.provider.SevenElevenComponentProvider
+import com.adyen.checkout.twint.TwintComponent
+import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.internal.provider.TwintComponentProvider
 import com.adyen.checkout.upi.UPIComponent
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
@@ -140,7 +146,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -155,6 +161,16 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<CardComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
+        checkCompileOnly { TwintComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            TwintComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<TwintComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -240,7 +256,7 @@ internal fun getComponentFor(
         }
 
         checkCompileOnly { CashAppPayComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
-            CashAppPayComponentProvider(dropInOverrideParams).get(
+            CashAppPayComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
@@ -317,6 +333,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<MBWayComponentState>,
+            )
+        }
+
+        checkCompileOnly { MealVoucherFRComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            MealVoucherFRComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as MealVoucherFRComponentCallback,
             )
         }
 
@@ -407,6 +432,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<SevenElevenComponentState>,
+            )
+        }
+
+        checkCompileOnly { TwintComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            TwintComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<TwintComponentState>,
             )
         }
 

@@ -124,6 +124,7 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/a
 	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public static synthetic fun addInstantPaymentConfiguration$default (Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMBWayConfiguration (Lcom/adyen/checkout/mbway/MBWayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun addMealVoucherFRConfiguration (Lcom/adyen/checkout/mealvoucherfr/MealVoucherFRConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMolpayMalasyaConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMolpayThailandConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMolpayVietnamConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
@@ -135,6 +136,7 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/a
 	public final fun addPayEasyConfiguration (Lcom/adyen/checkout/payeasy/PayEasyConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addSepaConfiguration (Lcom/adyen/checkout/sepa/SepaConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addSevenElevenConfiguration (Lcom/adyen/checkout/seveneleven/SevenElevenConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun addTwintConfiguration (Lcom/adyen/checkout/twint/TwintConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addUPIConfiguration (Lcom/adyen/checkout/upi/UPIConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public final fun overridePaymentMethodName (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
@@ -398,13 +400,6 @@ public abstract class com/adyen/checkout/dropin/internal/service/BaseDropInServi
 }
 
 public final class com/adyen/checkout/dropin/internal/service/BaseDropInService$Companion {
-}
-
-public final class com/adyen/checkout/dropin/internal/ui/ActionComponentFragmentEvent : java/lang/Enum {
-	public static final field HANDLE_ACTION Lcom/adyen/checkout/dropin/internal/ui/ActionComponentFragmentEvent;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/dropin/internal/ui/ActionComponentFragmentEvent;
-	public static fun values ()[Lcom/adyen/checkout/dropin/internal/ui/ActionComponentFragmentEvent;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/model/DropInPaymentMethodInformation$Creator : android/os/Parcelable$Creator {

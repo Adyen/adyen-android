@@ -62,12 +62,15 @@ internal class DropInViewModelFactory(
             sessionId = bundleHandler.sessionDetails?.id,
         )
 
+        val dropInConfigDataGenerator = DropInConfigDataGenerator()
+
         @Suppress("UNCHECKED_CAST")
         return DropInViewModel(
             bundleHandler,
             orderStatusRepository,
             analyticsManager,
             dropInParams,
+            dropInConfigDataGenerator,
         ) as T
     }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 02/12/2021.
+  -->
+
+<resources>
+    <string name="checkout_voucher_introduction_bacs">Atsisiųskite tiesioginio debeto nurodymą (DDI / įgaliojimas)</string>
+    <string name="checkout_voucher_introduction">Dėkojame, kad pirkote, norėdami užbaigti mokėjimą, naudokite šį kuponą.</string>
+    <string name="checkout_voucher_introduction_econtext">Dėkojame, kad pirkote, norėdami užbaigti mokėjimą, naudokite šią informaciją.</string>
+    <string name="checkout_voucher_payment_reference">Mokėjimo nuoroda</string>
+    <string name="checkout_voucher_expiration_entity">Subjektas</string>
+    <string name="checkout_voucher_expiration_date">Galiojimo data</string>
+    <string name="checkout_voucher_shopper_reference">Pirkėjo nuoroda</string>
+    <string name="checkout_voucher_phone_number">Telefono numeris</string>
+    <string name="checkout_voucher_collection_institution_number">Kolekcijos institucijos numeris</string>
+    <string name="checkout_voucher_read_instructions">Perskaitykite instrukcijas</string>
+    <string name="checkout_voucher_copy_code">Kopijuoti kodą</string>
+    <string name="checkout_voucher_copied_toast">Į iškarpinę nukopijuotas kodas</string>
+    <string name="checkout_voucher_download_pdf">Atsisiųsti PDF</string>
+    <string name="checkout_voucher_save_image">Išsaugoti kaip vaizdą</string>
+    <string name="checkout_voucher_image_saved"> Vaizdas išsaugotas jūsų įrenginyje</string>
+    <string name="checkout_voucher_image_failed"> Nepavyko išsaugoti vaizdo</string>
+    <string name="checkout_voucher_finish">Baigti</string>
+    <string name="checkout_voucher_permission_denied">Leidimas nesuteiktas</string>
+</resources>

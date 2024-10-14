@@ -11,15 +11,12 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
-import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.card.internal.ui.model.ExpiryDate
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
@@ -41,10 +38,14 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -77,6 +78,8 @@ internal class StoredCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
+    private val cardConfigDataGenerator: CardConfigDataGenerator,
+    private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
@@ -159,6 +162,7 @@ internal class StoredCardDelegate(
         val event = GenericEvents.rendered(
             component = storedPaymentMethod.type.orEmpty(),
             isStoredPaymentMethod = true,
+            configData = cardConfigDataGenerator.generate(configuration = componentParams, isStored = true),
         )
         analyticsManager.trackEvent(event)
     }
@@ -281,7 +285,7 @@ internal class StoredCardDelegate(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != ExpiryDate.EMPTY_DATE) {
+            if (expiryDateResult != EMPTY_DATE) {
                 unencryptedCardBuilder.setExpiryDate(
                     expiryMonth = expiryDateResult.expiryMonth.toString(),
                     expiryYear = expiryDateResult.expiryYear.toString(),
@@ -328,7 +332,8 @@ internal class StoredCardDelegate(
 
     private fun validateSecurityCode(securityCode: String, detectedCardType: DetectedCardType): FieldState<String> {
         val cvcUiState = makeCvcUIState(detectedCardType.cvcPolicy)
-        return CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
+        val validation = CardValidationUtils.validateSecurityCode(securityCode, detectedCardType, cvcUiState)
+        return cardValidationMapper.mapSecurityCodeValidation(securityCode, validation)
     }
 
     private fun isCvcHidden(): Boolean {
@@ -389,7 +394,7 @@ internal class StoredCardDelegate(
             inputData.expiryDate = storedDate
         } catch (e: NumberFormatException) {
             adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
-            inputData.expiryDate = ExpiryDate.EMPTY_DATE
+            inputData.expiryDate = EMPTY_DATE
         }
 
         onInputDataChanged()
@@ -418,8 +423,6 @@ internal class StoredCardDelegate(
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
-
-    override fun shouldEnableSubmitButton(): Boolean = true
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         // no ops

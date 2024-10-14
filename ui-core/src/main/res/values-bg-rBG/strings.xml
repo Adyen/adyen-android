@@ -1,0 +1,58 @@
+<!--
+  ~ Copyright (c) 2022 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 12/12/2022.
+  -->
+
+<resources>
+    <string name="pay_button">Плащане</string>
+    <string name="pay_button_with_value">Платете %s</string>
+    <string name="confirm_preauthorization">Потвърдете предварителното разрешение</string>
+
+    <string name="error_dialog_title">Грешка</string>
+    <string name="error_dialog_button">ОК</string>
+    <string name="component_error">Нещо се обърка.</string>
+
+    <string name="paymentInProgressView_title">Процесът на плащане все още е активен</string>
+    <string name="paymentInProgressView_loadingText">В очакване на завършване…</string>
+    <string name="paymentInProgressView_cancelButton">Отказ</string>
+
+    <string name="checkout_address_form_field_not_valid">Невалидно въвеждане</string>
+    <string name="checkout_social_security_number_not_valid">Невалидно въвеждане</string>
+
+    <string name="checkout_address_form_billing_address_title">Адрес за фактуриране</string>
+    <string name="checkout_address_form_street_hint">Улица</string>
+    <string name="checkout_address_form_address_hint">Адрес</string>
+    <string name="checkout_address_form_house_number_hint">Номер на къща</string>
+    <string name="checkout_address_form_apartment_suite_hint">Апартамент / Суит</string>
+    <string name="checkout_address_form_city_hint">Град</string>
+    <string name="checkout_address_form_country_hint">Държава/регион</string>
+    <string name="checkout_address_form_states_hint">Държава</string>
+    <string name="checkout_address_postal_code_hint">Пощенски код</string>
+    <string name="checkout_address_form_zip_code_hint">Пощенски код</string>
+    <string name="checkout_address_form_province_territory_hint">Провинция или територия</string>
+    <string name="checkout_address_form_city_town_hint">Град / населено място</string>
+
+    <string name="checkout_address_form_street_hint_optional">Улица (незадължително)</string>
+    <string name="checkout_address_form_address_hint_optional">Адрес (незадължително)</string>
+    <string name="checkout_address_form_house_number_hint_optional">Номер на къщата (незадължително)</string>
+    <string name="checkout_address_form_apartment_suite_hint_optional">Апартамент / апартамент (незадължително)</string>
+    <string name="checkout_address_form_city_hint_optional"> Град (незадължително)</string>
+    <string name="checkout_address_form_country_hint_optional">Държава/Регион (незадължително)</string>
+    <string name="checkout_address_form_states_hint_optional">Щат (незадължително)</string>
+    <string name="checkout_address_postal_code_hint_optional">Пощенски код (незадължително)</string>
+    <string name="checkout_address_form_zip_code_hint_optional">Пощенски код (незадължително)</string>
+    <string name="checkout_address_form_province_territory_hint_optional">Провинция или територия (незадължително)</string>
+    <string name="checkout_address_form_city_town_hint_optional">Град / село (опция)</string>
+
+    <string name="checkout_address_lookup_hint">Търси за твоя адрес</string>
+    <string name="checkout_address_lookup_initial">Не можете да търсите вашия адрес?</string>
+    <string name="checkout_address_lookup_initial_description">Винаги можете да #въведете адреса си ръчно#</string>
+    <string name="checkout_address_lookup_empty">Няма намерени резултати</string>
+    <string name="checkout_address_lookup_empty_description">\'%s\' не съвпада с нищо, опитайте отново или използвайте #ръчно въвеждане на адрес#</string>
+    <string name="checkout_address_lookup_enter_manually">Въведете адреса ръчно</string>
+    <string name="checkout_address_lookup_submit">Използвайте този адрес</string>
+    <string name="checkout_address_lookup_validation_empty">Изисква се адрес</string>
+</resources>

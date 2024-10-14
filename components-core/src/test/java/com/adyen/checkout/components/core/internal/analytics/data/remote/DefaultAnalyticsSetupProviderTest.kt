@@ -36,7 +36,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             version = AnalyticsPlatformParams.version,
             channel = AnalyticsPlatformParams.channel,
             platform = AnalyticsPlatformParams.platform,
-            locale = Locale.US.toString(),
+            locale = Locale.US.toLanguageTag(),
             component = "scheme",
             flavor = "components",
             deviceBrand = Build.BRAND,

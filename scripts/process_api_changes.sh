@@ -15,10 +15,9 @@ touch "$output_file"
 
 if [ -s $input_file ]
 then
-  echo "# 🚫 Public API Changes" >> "$output_file"
+  echo "# 🚫 Public API changes" >> "$output_file"
 else
-  echo "# ✅ Public API Changes" >> "$output_file"
-  echo "No changes detected!" >> "$output_file"
+  echo "# ✅ No public API changes" >> "$output_file"
   exit 0
 fi
 
@@ -27,7 +26,7 @@ api_files=($(find . -name '*.api'))
 api_files_size=${#api_files[@]}
 
 for ((i = 0 ; i < $api_files_size ; i+= 2 )); do
-  git_diff=$(git diff --no-index "${api_files[i]}" "${api_files[i + 1]}")
+  git_diff=$(git diff --no-index "${api_files[i + 1]}" "${api_files[i]}")
   if [ -n "$git_diff" ]
   then
     # Add module name as title

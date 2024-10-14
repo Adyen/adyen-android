@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Bankas konta īpašnieka vārds</string>
+    <string name="bacs_account_number_hint">Bankas konta numurs</string>
+    <string name="bacs_sort_code_hint">Kārtošanas kods</string>
+    <string name="bacs_shopper_email_hint">E-pasta adrese</string>
+
+    <string name="bacs_holder_name_invalid">Nederīgs bankas konta īpašnieka vārds</string>
+    <string name="bacs_account_number_invalid">Nederīgs bankas konta numurs</string>
+    <string name="bacs_sort_code_invalid">Nederīgs kārtošanas kods</string>
+    <string name="bacs_shopper_email_invalid">Nederīga e-pasta adrese</string>
+
+    <string name="bacs_consent_account">Es apstiprinu, ka šis konts ir atvērts uz mana vārda, un es esmu vienīgais(ā) parakstītājs(-a), kas var autorizēt tiešā debeta maksājumu šajā kontā.</string>
+    <string name="bacs_consent_amount">Es piekrītu, ka iepriekš minētā summa tiek atskaitīta no mana bankas konta.</string>
+    <string name="bacs_consent_amount_specified">Es piekrītu, ka %s tiks atskaitīti no mana bankas konta.</string>
+    <string name="bacs_consent_invalid">Šajā laukā ir nepieciešama jūsu darbība</string>
+
+    <string name="bacs_continue">Turpināt</string>
+    <string name="bacs_confirm_and_pay">Apstipriniet un samaksājiet</string>
+</resources>

@@ -42,11 +42,12 @@ dependencies {
 
     // Dependencies
     api libraries.kotlinCoroutines
+    api libraries.androidx.activity
     api libraries.androidx.fragment
     api libraries.androidx.lifecycle
 
     //Tests
-    testImplementation project(':test-core')
+    testImplementation testFixtures(project(':test-core'))
     testImplementation testLibraries.json
     testImplementation testLibraries.junit5
     testImplementation testLibraries.androidx.lifecycle

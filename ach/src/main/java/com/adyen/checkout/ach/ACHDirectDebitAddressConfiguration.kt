@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ach
 
+import android.annotation.SuppressLint
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -19,6 +20,7 @@ sealed class ACHDirectDebitAddressConfiguration : Parcelable {
     /**
      * Address Form will be hidden.
      */
+    @SuppressLint("ObjectInPublicSealedClass")
     @Parcelize
     object None : ACHDirectDebitAddressConfiguration()
 

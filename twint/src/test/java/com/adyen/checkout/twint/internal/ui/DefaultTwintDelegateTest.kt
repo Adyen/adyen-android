@@ -1,42 +1,31 @@
-/*
- * Copyright (c) 2023 Adyen N.V.
- *
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- *
- * Created by oscars on 21/11/2023.
- */
-
 package com.adyen.checkout.twint.internal.ui
 
-import android.app.Activity
-import androidx.lifecycle.SavedStateHandle
-import ch.twint.payment.sdk.TwintPayResult
-import com.adyen.checkout.components.core.ActionComponentData
+import com.adyen.checkout.components.core.ActionHandlingMethod
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.components.core.action.AwaitAction
-import com.adyen.checkout.components.core.action.RedirectAction
-import com.adyen.checkout.components.core.action.SdkAction
-import com.adyen.checkout.components.core.action.TwintSdkData
-import com.adyen.checkout.components.core.action.WeChatPaySdkData
-import com.adyen.checkout.components.core.internal.ActionObserverRepository
-import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
-import com.adyen.checkout.components.core.internal.data.model.StatusResponse
-import com.adyen.checkout.components.core.internal.test.TestStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
+import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.twint.TwintComponentState
+import com.adyen.checkout.twint.TwintConfiguration
+import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
+import com.adyen.checkout.twint.internal.ui.model.TwintOutputData
+import com.adyen.checkout.twint.twint
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -47,284 +36,361 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.io.IOException
+import org.mockito.kotlin.any
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@ExtendWith(MockitoExtension::class, LoggingExtension::class)
-internal class DefaultTwintDelegateTest {
+@ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
+internal class DefaultTwintDelegateTest(
+    @Mock private val submitHandler: SubmitHandler<TwintComponentState>,
+) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var statusRepository: TestStatusRepository
     private lateinit var delegate: DefaultTwintDelegate
 
     @BeforeEach
-    fun beforeEach() {
+    fun before() {
         analyticsManager = TestAnalyticsManager()
-        statusRepository = TestStatusRepository()
-        delegate = createDelegate()
+        delegate = createDefaultTwintDelegate()
+    }
+
+    @Nested
+    @DisplayName("when delegate is initialized")
+    inner class InitializeTest {
+
+        @Test
+        fun `no confirmation is required, then payment should be initiated`() = runTest {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
+            )
+            delegate.initialize(this)
+
+            verify(submitHandler).onSubmit(any())
+        }
     }
 
     @Test
-    fun `when handling action successfully, then a pay event should be emitted`() = runTest {
-        val payEventFlow = delegate.payEventFlow.test(testScheduler)
-        val action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token"))
-
-        delegate.handleAction(action, Activity())
-
-        assertEquals(action.sdkData?.token, payEventFlow.latestValue)
-    }
-
-    @ParameterizedTest
-    @MethodSource("handleActionSource")
-    fun `when handling action, then expect`(action: Action, expectedErrorMessage: String) = runTest {
-        val testFlow = delegate.exceptionFlow.test(testScheduler)
-
-        delegate.handleAction(action, Activity())
-
-        assertEquals(expectedErrorMessage, testFlow.latestValue.message)
-    }
-
-    @ParameterizedTest
-    @MethodSource("handleTwintResult")
-    fun `when handling twint result, then expect`(result: TwintPayResult, testResult: TwintTestResult) = runTest {
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = StatusResponseUtils.RESULT_AUTHORIZED, payload = TEST_PAYLOAD)),
+    fun `when input data changes, then component state is created`() = runTest {
+        delegate = createDefaultTwintDelegate(
+            createCheckoutConfiguration(Amount("USD", 10L)),
         )
-        val detailsFlow = delegate.detailsFlow.test(testScheduler)
-        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
-        delegate.handleAction(SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")), Activity())
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-        delegate.handleTwintResult(result)
+        delegate.updateInputData {
+            isStorePaymentSelected = true
+        }
 
-        when (testResult) {
-            is TwintTestResult.Error -> {
-                assertEquals(testResult.expectedMessage, exceptionFlow.latestValue.message)
+        val expected = TwintComponentState(
+            data = PaymentComponentData(
+                paymentMethod = TwintPaymentMethod(
+                    type = TEST_PAYMENT_METHOD_TYPE,
+                    checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
+                    subtype = "sdk",
+                ),
+                order = TEST_ORDER,
+                amount = Amount("USD", 10L),
+                storePaymentMethod = true,
+            ),
+            isInputValid = true,
+            isReady = true,
+        )
+        assertEquals(expected, testFlow.latestValue)
+    }
+
+    @Nested
+    @DisplayName("when actions should be handled with ")
+    inner class ActionHandlingMethodTest {
+
+        @Test
+        fun `SDK, then sub type is set in payment method`() = runTest {
+            val configuration = createCheckoutConfiguration {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
             }
+            delegate = createDefaultTwintDelegate(configuration)
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
 
-            is TwintTestResult.Success -> {
-                with(detailsFlow.latestValue) {
-                    assertEquals(testResult.expectedActionComponentData.paymentData, paymentData)
-                    assertEquals(testResult.expectedActionComponentData.details.toString(), details.toString())
-                }
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val actual = componentStateFlow.latestValue.data.paymentMethod?.subtype
+            assertEquals(DefaultTwintDelegate.SDK_SUBTYPE, actual)
+        }
+
+        @Test
+        fun `WEB, then sub type is not set in payment method`() = runTest {
+            val configuration = createCheckoutConfiguration {
+                setActionHandlingMethod(ActionHandlingMethod.PREFER_WEB)
             }
+            delegate = createDefaultTwintDelegate(configuration)
+            val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertNull(componentStateFlow.latestValue.data.paymentMethod?.subtype)
         }
     }
 
     @Nested
-    @DisplayName("when polling and")
-    inner class PollingTest {
+    @DisplayName("when submit button is configured to be")
+    inner class SubmitButtonVisibilityTest {
 
         @Test
-        fun `paymentData is missing, then an error is propagated`() = runTest {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        fun `hidden, then it should not show`() {
+            delegate = createDefaultTwintDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(false)
+                },
+            )
 
-            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
-
-            val expectedErrorMessage = "PaymentData should not be null."
-            assertEquals(expectedErrorMessage, exceptionFlow.latestValue.message)
+            assertFalse(delegate.shouldShowSubmitButton())
         }
 
         @Test
-        fun `polling fails, then an error is propagated`() = runTest {
-            statusRepository.pollingResults = listOf(Result.failure(IOException("Test")))
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
-            delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
-                activity = Activity(),
+        fun `visible, then it should show`() {
+            delegate = createDefaultTwintDelegate(
+                configuration = createCheckoutConfiguration {
+                    setSubmitButtonVisible(true)
+                },
             )
 
-            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
+            assertTrue(delegate.shouldShowSubmitButton())
+        }
+    }
 
-            val expectedErrorMessage = "Error while polling status."
-            assertEquals(expectedErrorMessage, exceptionFlow.latestValue.message)
+    @Nested
+    inner class SubmitHandlerTest {
+
+        @Test
+        fun `when delegate is initialized, then submit handler event is initialized`() = runTest {
+            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
+            delegate.initialize(coroutineScope)
+            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
         }
 
         @Test
-        fun `polling succeeds and payload is missing, then an error is propagated`() = runTest {
-            statusRepository.pollingResults = listOf(
-                Result.success(StatusResponse(resultCode = StatusResponseUtils.RESULT_AUTHORIZED, payload = null)),
-            )
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
-            delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
-                activity = Activity(),
-            )
-
-            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
-
-            val expectedErrorMessage = "Payload is missing from StatusResponse."
-            assertEquals(expectedErrorMessage, exceptionFlow.latestValue.message)
-        }
-
-        @Test
-        fun `polling succeeds and payload is available, then details are emitted`() = runTest {
-            statusRepository.pollingResults = listOf(
-                Result.success(
-                    StatusResponse(
-                        resultCode = StatusResponseUtils.RESULT_AUTHORIZED,
-                        payload = TEST_PAYLOAD,
-                    ),
-                ),
-            )
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val detailsFlow = delegate.detailsFlow.test(testScheduler)
-            delegate.handleAction(
-                action = SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
-                activity = Activity(),
-            )
-
-            delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
-
-            val expected = ActionComponentData(
-                paymentData = null,
-                details = JSONObject().put(DefaultTwintDelegate.PAYLOAD_DETAILS_KEY, TEST_PAYLOAD),
-            )
-            with(detailsFlow.latestValue) {
-                assertNull(paymentData)
-                assertEquals(expected.details.toString(), details.toString())
+        fun `when delegate setInteractionBlocked is called, then submit handler setInteractionBlocked is called`() =
+            runTest {
+                delegate.setInteractionBlocked(true)
+                verify(submitHandler).setInteractionBlocked(true)
             }
-        }
     }
 
-    @Test
-    fun `when initializing and action is set, then state is restored`() = runTest {
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
-        )
-        val savedStateHandle = SavedStateHandle().apply {
-            set(
-                DefaultTwintDelegate.ACTION_KEY,
-                SdkAction(paymentData = TEST_PAYMENT_DATA, sdkData = TwintSdkData("token")),
+    @Nested
+    @DisplayName("when onSubmit is called and")
+    inner class OnSubmitTest {
+
+        @Test
+        fun `the component doesn't require confirmation, then the submit handler should not be called`() = runTest {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 0L)) {
+                    setShowStorePaymentField(false)
+                },
             )
-            set(DefaultTwintDelegate.IS_POLLING_KEY, true)
+            delegate.initialize(this)
+
+            delegate.onSubmit()
+
+            // Called once on initialization, but shouldn't be called by onSubmit
+            verify(submitHandler, times(1)).onSubmit(any())
         }
-        delegate = createDelegate(savedStateHandle)
-        val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+        @Test
+        fun `the component does require confirmation, then the submit handler should be called`() = runTest {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 0L)) {
+                    setShowStorePaymentField(true)
+                },
+            )
+            delegate.initialize(this)
 
-        assertTrue(detailsFlow.values.isNotEmpty())
+            delegate.onSubmit()
+
+            // Called once on initialization, but shouldn't be called by onSubmit
+            verify(submitHandler, times(1)).onSubmit(any())
+        }
+
+        @Test
+        fun `the user doesn't want to store, then we don't store the pm`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 100L)) {
+                        setShowStorePaymentField(true)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { isStorePaymentSelected = false }
+
+                delegate.onSubmit()
+
+                assertEquals(false, componentStateFlow.latestValue.data.storePaymentMethod)
+            }
+
+        @Test
+        fun `the user wants to store, then we store the pm`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(true)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { isStorePaymentSelected = true }
+
+                delegate.onSubmit()
+
+                assertEquals(true, componentStateFlow.latestValue.data.storePaymentMethod)
+            }
     }
 
-    @Test
-    fun `when details are emitted, then state is cleared`() = runTest {
-        statusRepository.pollingResults = listOf(
-            Result.success(StatusResponse(resultCode = "finished", payload = "testpayload")),
-        )
-        val savedStateHandle = SavedStateHandle()
-        delegate = createDelegate(savedStateHandle)
-        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-        delegate.handleTwintResult(TwintPayResult.TW_B_SUCCESS)
-
-        assertNull(savedStateHandle[DefaultTwintDelegate.ACTION_KEY])
-    }
-
-    @Test
-    fun `when an error is emitted, then state is cleared`() = runTest {
-        val savedStateHandle = SavedStateHandle().apply {
-            set(DefaultTwintDelegate.ACTION_KEY, SdkAction(paymentData = "test", sdkData = TwintSdkData("token")))
+    @ParameterizedTest
+    @MethodSource("amountSource")
+    fun `when updating component state, then amount is propagated in component state if set`(
+        configurationValue: Amount?,
+        expectedComponentStateValue: Amount?,
+    ) = runTest {
+        if (configurationValue != null) {
+            val configuration = createCheckoutConfiguration(configurationValue)
+            delegate = createDefaultTwintDelegate(configuration = configuration)
         }
-        delegate = createDelegate(savedStateHandle)
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-        delegate.handleAction(
-            action = RedirectAction(paymentMethodType = TEST_PAYMENT_METHOD_TYPE, paymentData = TEST_PAYMENT_DATA),
-            activity = Activity(),
-        )
+        delegate.updateComponentState(TwintOutputData(false))
 
-        assertNull(savedStateHandle[DefaultTwintDelegate.ACTION_KEY])
+        assertEquals(expectedComponentStateValue, testFlow.latestValue.data.amount)
     }
 
     @Nested
     inner class AnalyticsTest {
 
         @Test
-        fun `when handleAction is called, then action event is tracked`() {
+        fun `when delegate is initialized, then analytics manager is initialized`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val action = SdkAction(
-                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
-                type = TEST_ACTION_TYPE,
-                paymentData = TEST_PAYMENT_DATA,
-                sdkData = TwintSdkData("token"),
-            )
 
-            delegate.handleAction(action, Activity())
+            analyticsManager.assertIsInitialized()
+        }
 
-            val expectedEvent = GenericEvents.action(
-                component = TEST_PAYMENT_METHOD_TYPE,
-                subType = TEST_ACTION_TYPE,
-            )
+        @Test
+        fun `when delegate is initialized, then render event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when delegate is initialized, then submit event is not tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventNotEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when delegate is initialized and confirmation is not required, then submit event is tracked`() {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
+            )
+
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when component state is valid, then payment method should contain checkoutAttemptId`() = runTest {
+            analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
+            delegate = createDefaultTwintDelegate()
+
+            val testFlow = delegate.componentStateFlow.test(testScheduler)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            assertEquals(TEST_CHECKOUT_ATTEMPT_ID, testFlow.latestValue.data.paymentMethod?.checkoutAttemptId)
+        }
+
+        @Test
+        fun `when onSubmit is called, then submit event is tracked`() {
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when onSubmit is called and confirmation is not required, then submit event is not tracked`() {
+            delegate = createDefaultTwintDelegate(
+                createCheckoutConfiguration(Amount("USD", 10L)) {
+                    setShowStorePaymentField(false)
+                },
+            )
+
+            delegate.onSubmit()
+
+            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+            analyticsManager.assertLastEventNotEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when delegate is cleared then analytics manager is cleared`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onCleared()
+
+            analyticsManager.assertIsCleared()
         }
     }
 
-    private fun createDelegate(
-        savedStateHandle: SavedStateHandle = SavedStateHandle()
-    ): DefaultTwintDelegate {
-        val configuration = CheckoutConfiguration(Environment.TEST, TEST_CLIENT_KEY)
+    private fun createDefaultTwintDelegate(
+        configuration: CheckoutConfiguration = createCheckoutConfiguration(),
+    ) = DefaultTwintDelegate(
+        submitHandler = submitHandler,
+        analyticsManager = analyticsManager,
+        observerRepository = PaymentObserverRepository(),
+        paymentMethod = PaymentMethod(type = TEST_PAYMENT_METHOD_TYPE),
+        order = TEST_ORDER,
+        componentParams = TwintComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+        ),
+    )
 
-        return DefaultTwintDelegate(
-            observerRepository = ActionObserverRepository(),
-            savedStateHandle = savedStateHandle,
-            componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
-                .mapToParams(configuration, Locale.US, null, null),
-            paymentDataRepository = PaymentDataRepository(SavedStateHandle()),
-            statusRepository = statusRepository,
-            analyticsManager = analyticsManager,
-        )
+    private fun createCheckoutConfiguration(
+        amount: Amount? = null,
+        configuration: TwintConfiguration.Builder.() -> Unit = {},
+    ) = CheckoutConfiguration(
+        shopperLocale = Locale.US,
+        environment = Environment.TEST,
+        clientKey = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
+        amount = amount,
+    ) {
+        twint(configuration)
     }
 
     companion object {
-        private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
-        private const val TEST_PAYLOAD = "TEST_PAYLOAD"
+        private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
+        private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
-        private const val TEST_ACTION_TYPE = "TEST_PAYMENT_METHOD_TYPE"
-        private const val TEST_PAYMENT_DATA = "TEST_PAYMENT_DATA"
 
         @JvmStatic
-        fun handleActionSource() = listOf(
-            arguments(AwaitAction(), "Unsupported action"),
-            arguments(
-                SdkAction(paymentData = "something", sdkData = WeChatPaySdkData()),
-                "SDK Data is null or of wrong type",
-            ),
-            arguments(SdkAction<WeChatPaySdkData>(paymentData = "something"), "SDK Data is null or of wrong type"),
-            arguments(SdkAction(paymentData = null, sdkData = TwintSdkData("")), "Payment data is null"),
-            arguments(
-                SdkAction<TwintSdkData>(paymentData = "something", sdkData = null),
-                "SDK Data is null or of wrong type",
-            ),
+        fun amountSource() = listOf(
+            // configurationValue, expectedComponentStateValue
+            arguments(Amount("EUR", 100), Amount("EUR", 100)),
+            arguments(Amount("USD", 0), Amount("USD", 0)),
+            arguments(null, null),
+            arguments(null, null),
         )
-
-        @JvmStatic
-        fun handleTwintResult() = listOf(
-            arguments(
-                TwintPayResult.TW_B_SUCCESS,
-                TwintTestResult.Success(
-                    ActionComponentData(null, JSONObject().put(DefaultTwintDelegate.PAYLOAD_DETAILS_KEY, TEST_PAYLOAD)),
-                ),
-            ),
-            arguments(
-                TwintPayResult.TW_B_ERROR,
-                TwintTestResult.Error("Twint encountered an error."),
-            ),
-            arguments(
-                TwintPayResult.TW_B_APP_NOT_INSTALLED,
-                TwintTestResult.Error("Twint app not installed."),
-            ),
-        )
-    }
-
-    sealed class TwintTestResult {
-        data class Success(val expectedActionComponentData: ActionComponentData) : TwintTestResult()
-
-        data class Error(val expectedMessage: String) : TwintTestResult()
     }
 }

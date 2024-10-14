@@ -12,19 +12,20 @@
     <string name="action_failed">Ocorreu um erro ao processar o seu pagamento. Tente novamente mais tarde.</string>
     <string name="time_out_error">O pedido expirou. Tente novamente.</string>
     <string name="unknown_error">Ocorreu um erro desconhecido</string>
-    <string name="store_payment_methods_header">Meus métodos de pagamento</string>
-    <string name="other_payment_methods">Todos os métodos de pagamento</string>
+    <string name="store_payment_methods_header">Armazenado</string>
+    <string name="other_payment_methods">Outros</string>
+    <string name="checkout_preselected_stored_payment_method_header">Método de pagamento</string>
     <string name="continue_button">Continuar</string>
     <string name="change_payment_method">Alterar método de pagamento</string>
     <string name="checkout_giftcard_error_zero_balance">Este vale-presente tem saldo zero</string>
     <string name="checkout_giftcard_error_currency">Os vales-presente são válidos somente na moeda em que foram emitidos</string>
     <string name="checkout_giftcard_remaining_balance_text">O saldo restante será %s</string>
     <string name="checkout_giftcard_pay_remaining_amount">Selecione o método de pagamento dos %s restantes</string>
-    <string name="checkout_giftcard_payment_methods_header">Vale presentes</string>
+    <string name="checkout_giftcard_payment_methods_header">Aplicado</string>
     <string name="checkout_giftcard_remove_button">Remover</string>
     <string name="checkout_giftcard_max_transaction_limit">Máximo de %s permitido por transação neste cartão-presente</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">Confirme a remoção do cartão</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">Remover vales-presente adicionados?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> Confirme a remoção</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> Remover itens aplicados?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">Sim, remover</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">Cancelar</string>
     <string name="checkout_remove_stored_payment_method_body">Remover método de pagamento armazenado</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">Para salvar esta imagem no seu dispositivo, habilite a permissão de armazenamento</string>
     <string name="checkout_stored_payment_confirmation_message">Confirmar pagamento %s</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">Cancelar</string>
+    <string name="checkout_close">Fechar</string>
+    <string name="checkout_back">Voltar</string>
 </resources>

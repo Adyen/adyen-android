@@ -31,7 +31,7 @@ android {
 dependencies {
     api project(':econtext')
 
-    testImplementation project(':test-core')
+    testImplementation testFixtures(project(':test-core'))
     testImplementation testLibraries.junit5
     testImplementation testLibraries.mockito
 }

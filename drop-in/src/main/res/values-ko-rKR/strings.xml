@@ -12,19 +12,20 @@
     <string name="action_failed">결제 처리 중 오류가 발생했습니다. 나중에 다시 시도해 주세요.</string>
     <string name="time_out_error">요청 시간 초과. 다시 시도해 주세요.</string>
     <string name="unknown_error">알 수 없는 오류 발생</string>
-    <string name="store_payment_methods_header">귀하의 결제 수단</string>
-    <string name="other_payment_methods">다른 수단 선택</string>
+    <string name="store_payment_methods_header">저장됨</string>
+    <string name="other_payment_methods">기타</string>
+    <string name="checkout_preselected_stored_payment_method_header">결제 수단</string>
     <string name="continue_button">계속</string>
     <string name="change_payment_method">결제 수단 변경</string>
     <string name="checkout_giftcard_error_zero_balance">이 기프트 카드에는 잔액이 없습니다</string>
     <string name="checkout_giftcard_error_currency">기프트 카드는 발급된 통화로만 사용하실 수 있습니다</string>
     <string name="checkout_giftcard_remaining_balance_text">남은 잔액은 %s입니다</string>
     <string name="checkout_giftcard_pay_remaining_amount">남은 %s에 대한 결제 수단 선택</string>
-    <string name="checkout_giftcard_payment_methods_header">추가된 기프트카드</string>
+    <string name="checkout_giftcard_payment_methods_header">적용된</string>
     <string name="checkout_giftcard_remove_button">삭제</string>
     <string name="checkout_giftcard_max_transaction_limit">이 기프트카드로 건당 결제 가능한 최고 액수는 %s</string>
-    <string name="checkout_giftcard_remove_gift_cards_title">카드 삭제 확인</string>
-    <string name="checkout_giftcard_remove_gift_cards_body">추가된 기프트 카드를 삭제할까요?</string>
+    <string name="checkout_giftcard_remove_gift_cards_title"> 삭제 확인</string>
+    <string name="checkout_giftcard_remove_gift_cards_body"> 적용된 항목을 삭제하시겠습니까?</string>
     <string name="checkout_giftcard_remove_gift_cards_positive_button">예, 삭제합니다</string>
     <string name="checkout_giftcard_remove_gift_cards_negative_button">취소</string>
     <string name="checkout_remove_stored_payment_method_body">저장된 결제 수단 삭제</string>
@@ -33,4 +34,6 @@
     <string name="checkout_rationale_message_storage_permission">이 이미지를 장치에 저장하려면 저장 권한을 활성화해야 합니다.</string>
     <string name="checkout_stored_payment_confirmation_message">%s 결제 확인</string>
     <string name="checkout_stored_payment_confirmation_cancel_button">취소</string>
+    <string name="checkout_close">닫기</string>
+    <string name="checkout_back">뒤로</string>
 </resources>

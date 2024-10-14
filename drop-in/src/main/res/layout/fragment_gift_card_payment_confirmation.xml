@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2021 Adyen N.V.
   ~
   ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
@@ -7,12 +6,12 @@
   ~ Created by josephj on 1/10/2021.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/standard_half_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/standard_half_margin">
 
     <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
         android:id="@+id/bottom_sheet_toolbar"
@@ -23,19 +22,19 @@
         android:id="@+id/recyclerView_giftCards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
         android:layout_marginTop="@dimen/standard_half_margin"
         android:layout_marginBottom="@dimen/standard_half_margin"
+        android:layout_weight="1"
+        android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="2"
-        tools:listitem="@layout/payment_methods_list_item"/>
+        tools:listitem="@layout/payment_methods_list_item" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/payButton"
         style="@style/AdyenCheckout.Button.Colored"
         android:layout_width="match_parent"
-        tools:text="Pay €13,37"/>
+        tools:text="Pay €13,37" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_remainingBalance"
@@ -55,8 +54,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/change_payment_method_button"
+        style="@style/AdyenCheckout.DropIn.ChangePaymentMethodButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/AdyenCheckout.Button.Secondary"
-        android:text="@string/change_payment_method" />
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

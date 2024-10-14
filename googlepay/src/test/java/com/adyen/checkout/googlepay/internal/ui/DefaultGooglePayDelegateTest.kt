@@ -113,7 +113,7 @@ internal class DefaultGooglePayDelegateTest {
             val expectedPaymentMethod = GooglePayUtils.createGooglePayPaymentMethod(
                 paymentData = paymentData,
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
-                checkoutAttemptId = null,
+                checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
             )
             assertEquals(expectedPaymentMethod, paymentComponentData.paymentMethod)
 

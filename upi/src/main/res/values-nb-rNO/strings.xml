@@ -14,5 +14,5 @@
     <string name="checkout_upi_continue">Fortsett</string>
     <string name="checkout_upi_app_manual_input">Angi UPI-ID</string>
     <string name="checkout_upi_app_other_upi">Andre UPI-alternativer</string>
-
+    <string name="checkout_upi_no_app_selected">Velg en betalingsmetode for å fortsette</string>
 </resources>

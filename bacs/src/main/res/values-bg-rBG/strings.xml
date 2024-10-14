@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (c) 2021 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 5/11/2021.
+  -->
+
+<resources>
+    <string name="bacs_holder_name_hint">Име на титуляря на банковата сметка</string>
+    <string name="bacs_account_number_hint">Номер на банкова сметка</string>
+    <string name="bacs_sort_code_hint">Код за сортиране</string>
+    <string name="bacs_shopper_email_hint">Имейл адрес</string>
+
+    <string name="bacs_holder_name_invalid">Невалидно име на титуляр на банкова сметка</string>
+    <string name="bacs_account_number_invalid">Невалиден номер на банкова сметка</string>
+    <string name="bacs_sort_code_invalid">Невалиден код за сортиране</string>
+    <string name="bacs_shopper_email_invalid">Невалиден имейл адрес</string>
+
+    <string name="bacs_consent_account">Потвърждавам, че сметката е на мое име и съм единственият подписал, който трябва да оторизира директния дебит по тази сметка.</string>
+    <string name="bacs_consent_amount">Съгласен съм, че горната сума ще бъде приспадната от банковата ми сметка.</string>
+    <string name="bacs_consent_amount_specified">Съгласен съм %s да бъде удържан от банковата ми сметка.</string>
+    <string name="bacs_consent_invalid">Това поле изисква вашето действие</string>
+
+    <string name="bacs_continue">Продължи</string>
+    <string name="bacs_confirm_and_pay">Потвърдете и платете</string>
+</resources>

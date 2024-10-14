@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.CardType
 
 internal object DualBrandedCardUtils {
 
@@ -29,10 +29,12 @@ internal object DualBrandedCardUtils {
                 hasCarteBancaire && hasVisa -> cards.sortedByDescending {
                     it.cardBrand == CardBrand(cardType = CardType.VISA)
                 }
+
                 hasPlcc -> cards.sortedByDescending {
                     it.cardBrand.txVariant.contains("plcc") ||
                         it.cardBrand.txVariant.contains("cbcc")
                 }
+
                 else -> cards
             }
         }

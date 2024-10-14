@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2020 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by onurk on 17/01/2023.
+  -->
+
+<resources>
+    <string name="checkout_ach_bank_account_title">Bankareikningur</string>
+    <string name="checkout_ach_bank_account_holder_name">Nafn reikningshafa</string>
+    <string name="checkout_ach_bank_account_holder_name_invalid">Ógilt nafn reikningshafa</string>
+    <string name="checkout_ach_bank_account_number">Reikningsnúmer</string>
+    <string name="checkout_ach_bank_account_number_invalid">Ógilt reikningsnúmer</string>
+    <string name="checkout_ach_bank_account_location">ABA-bankanúmer</string>
+    <string name="checkout_ach_bank_account_location_invalid">Ógilt ABA-bankanúmer</string>
+    <string name="checkout_ach_store_payment_method_switch_text">Spara fyrir næstu greiðslu</string>
+</resources>
