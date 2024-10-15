@@ -5,6 +5,8 @@
  *
  * Created by ran on 6/2/2019.
  */
+// cannot reference the plugins declared in the version catalogs here because it requires the use of the `plugins` block instead of the `apply plugin` command
+// the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
@@ -35,7 +37,7 @@ if (secretPropsFile.exists()) {
 
 final theGroupId = "com.adyen.checkout"
 final theArtifactId = project.mavenArtifactId
-final theVersion = project.version_name
+final theVersion = libs.versions.version.name.get()
 
 final theName = project.mavenArtifactName
 final theDescription = project.mavenArtifactDescription

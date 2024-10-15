@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 }
 
 ext.mavenArtifactId = "#module_name"
@@ -10,13 +10,11 @@ ext.mavenArtifactDescription = "Adyen checkout #module_name component client for
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
-        versionCode version_code
-        versionName version_name
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"

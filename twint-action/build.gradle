@@ -7,9 +7,9 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
 }
 
 ext.mavenArtifactId = "twint-action"
@@ -20,13 +20,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.twint.action'
-    compileSdkVersion compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdkVersion min_sdk_version
-        targetSdkVersion target_sdk_version
-        versionCode version_code
-        versionName version_name
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -42,14 +40,14 @@ dependencies {
     api project(':ui-core')
 
     // Dependencies
-    implementation libraries.twint
+    implementation libs.twint
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
     testImplementation testFixtures(project(':components-core'))
     testImplementation testFixtures(project(':ui-core'))
-    testImplementation testLibraries.json
-    testImplementation testLibraries.junit5
-    testImplementation testLibraries.kotlinCoroutines
-    testImplementation testLibraries.mockito
+    testImplementation libs.json
+    testImplementation libs.bundles.junit
+    testImplementation libs.bundles.kotlin.coroutines.test
+    testImplementation libs.bundles.mockito
 }
