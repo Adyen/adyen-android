@@ -123,4 +123,15 @@ object GenericEvents {
         subType = subType,
         message = message,
     )
+
+    // Error events
+    @Suppress("Unused") // Should be removed once error events are implemented
+    fun error(
+        component: String,
+        event: ErrorEvent,
+    ) = AnalyticsEvent.Error(
+        component = component,
+        errorType = event.errorType,
+        code = event.errorCode,
+    )
 }
