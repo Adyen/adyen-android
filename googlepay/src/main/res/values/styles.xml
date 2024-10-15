@@ -10,6 +10,8 @@
 
     <style name="AdyenCheckout.GooglePay" />
 
-    <style name="AdyenCheckout.GooglePay.Button" />
+    <style name="AdyenCheckout.GooglePay.Button">
+        <item name="adyenGooglePayButtonTheme">dark</item>
+    </style>
 
 </resources>
