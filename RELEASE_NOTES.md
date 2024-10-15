@@ -27,6 +27,7 @@
 - For UPI Intent an error message will be shown when "Continue" button is pressed without selecting
   any UPI option.
 - For drop-in, improved accessibility of back/close button in the navigation bar.
+- For drop-in, show a toolbar on every intermediary screen, so shoppers can always easily navigate back.
 
 ## Changed
 - For drop-in, headers of preselected stored payment screen and payment methods list screen are
