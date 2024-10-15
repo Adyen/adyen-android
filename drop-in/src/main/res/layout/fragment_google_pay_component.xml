@@ -11,6 +11,11 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <com.adyen.checkout.dropin.internal.ui.DropInBottomSheetToolbar
+        android:id="@+id/bottom_sheet_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.adyen.checkout.ui.core.AdyenComponentView
         android:id="@+id/componentView"
         android:layout_width="match_parent"
