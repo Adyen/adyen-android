@@ -11,18 +11,18 @@ version-name = "5.7.0"
 
 # Build script
 android-gradle-plugin = "8.5.1"
-kotlin = "1.9.24"
-ksp = "1.9.24-1.0.20"
+kotlin = "1.9.25"
+ksp = "1.9.25-1.0.20"
 dokka = "1.9.20"
 hilt = "2.52"
-compose-compiler = "1.5.14"
+compose-compiler = "1.5.15"
 
 # Code quality
 detekt = "1.23.7"
 jacoco = "0.8.12"
 ktlint = "1.3.1"
 sonarqube = "5.0.0.4638"
-binary-compatibility-validator = "0.16.0"
+binary-compatibility-validator = "0.16.3"
 
 # Android dependencies
 activity = "1.9.2"
@@ -30,7 +30,7 @@ annotation = "1.8.0"
 appcompat = "1.7.0"
 autofill = "1.3.0-alpha01"
 browser = "1.8.0"
-coroutines = "1.8.1"
+coroutines = "1.9.0"
 fragment = "1.8.3"
 lifecycle = "2.8.3"
 material = "1.12.0"
