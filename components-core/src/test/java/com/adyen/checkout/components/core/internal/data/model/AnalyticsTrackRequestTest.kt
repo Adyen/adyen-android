@@ -36,11 +36,23 @@ internal class AnalyticsTrackRequestTest {
                 message = null,
             ),
         )
+        val errors = listOf(
+            AnalyticsTrackError(
+                id = "id",
+                timestamp = 12345L,
+                component = "dropin",
+                errorType = null,
+                code = null,
+                target = null,
+                message = null,
+            ),
+        )
         val request = AnalyticsTrackRequest(
             channel = "android",
             platform = "android",
             info = info,
             logs = logs,
+            errors = errors,
         )
 
         val actual = AnalyticsTrackRequest.SERIALIZER.serialize(request)
@@ -50,6 +62,7 @@ internal class AnalyticsTrackRequestTest {
             .put("platform", "android")
             .put("info", ModelUtils.serializeOptList(info, AnalyticsTrackInfo.SERIALIZER))
             .put("logs", ModelUtils.serializeOptList(logs, AnalyticsTrackLog.SERIALIZER))
+            .put("errors", ModelUtils.serializeOptList(errors, AnalyticsTrackError.SERIALIZER))
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -83,11 +96,23 @@ internal class AnalyticsTrackRequestTest {
                 message = null,
             ),
         )
+        val errors = listOf(
+            AnalyticsTrackError(
+                id = "id",
+                timestamp = 12345L,
+                component = "dropin",
+                errorType = null,
+                code = null,
+                target = null,
+                message = null,
+            ),
+        )
         val response = JSONObject()
             .put("channel", "android")
             .put("platform", "android")
             .put("info", ModelUtils.serializeOptList(info, AnalyticsTrackInfo.SERIALIZER))
             .put("logs", ModelUtils.serializeOptList(logs, AnalyticsTrackLog.SERIALIZER))
+            .put("errors", ModelUtils.serializeOptList(errors, AnalyticsTrackError.SERIALIZER))
 
         val actual = AnalyticsTrackRequest.SERIALIZER.deserialize(response)
 
@@ -96,6 +121,7 @@ internal class AnalyticsTrackRequestTest {
             platform = "android",
             info = info,
             logs = logs,
+            errors = errors,
         )
 
         assertEquals(expected, actual)

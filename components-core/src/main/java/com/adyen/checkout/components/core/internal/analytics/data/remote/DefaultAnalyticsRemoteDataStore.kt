@@ -18,6 +18,7 @@ internal class DefaultAnalyticsRemoteDataStore(
     private val clientKey: String,
     override val infoSize: Int,
     override val logSize: Int,
+    override val errorSize: Int,
 ) : AnalyticsRemoteDataStore {
 
     override suspend fun fetchCheckoutAttemptId(request: AnalyticsSetupRequest): AnalyticsSetupResponse {

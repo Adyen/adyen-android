@@ -2,6 +2,7 @@ package com.adyen.checkout.components.core.internal.analytics.data.remote
 
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
 import com.adyen.checkout.components.core.internal.analytics.DirectAnalyticsEventCreation
+import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackError
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackInfo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackLog
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
@@ -47,8 +48,19 @@ internal class AnalyticsTrackRequestProviderTest {
                 message = null,
             ),
         )
+        val errorList = listOf(
+            AnalyticsEvent.Error(
+                id = "id",
+                timestamp = 12345L,
+                component = "dropin",
+                errorType = AnalyticsEvent.Error.Type.INTERNAL,
+                code = "100",
+                target = null,
+                message = null,
+            )
+        )
 
-        val result = analyticsTrackRequestProvider.invoke(infoList, logList)
+        val result = analyticsTrackRequestProvider.invoke(infoList, logList, errorList)
 
         val expected = AnalyticsTrackRequest(
             channel = "android",
@@ -80,6 +92,17 @@ internal class AnalyticsTrackRequestProviderTest {
                     message = null,
                 ),
             ),
+            errors = listOf(
+                AnalyticsTrackError(
+                    id = "id",
+                    timestamp = 12345L,
+                    component = "dropin",
+                    errorType = "Internal",
+                    code = "100",
+                    target = null,
+                    message = null,
+                )
+            )
         )
         assertEquals(expected, result)
     }
