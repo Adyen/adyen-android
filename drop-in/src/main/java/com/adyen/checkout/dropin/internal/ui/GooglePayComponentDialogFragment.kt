@@ -42,6 +42,12 @@ internal class GooglePayComponentDialogFragment :
     private lateinit var paymentMethod: PaymentMethod
     private lateinit var component: GooglePayComponent
 
+    private val toolbarMode: DropInBottomSheetToolbarMode
+        get() = when {
+            dropInViewModel.shouldSkipToSinglePaymentMethod() -> DropInBottomSheetToolbarMode.CLOSE_BUTTON
+            else -> DropInBottomSheetToolbarMode.BACK_BUTTON
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate" }
         super.onCreate(savedInstanceState)
@@ -60,6 +66,8 @@ internal class GooglePayComponentDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         adyenLog(AdyenLogLevel.DEBUG) { "onViewCreated" }
 
+        initToolbar()
+
         loadComponent()
 
         binding.componentView.attach(component, viewLifecycleOwner)
@@ -70,6 +78,14 @@ internal class GooglePayComponentDialogFragment :
             .onEach(::handleEvent)
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .launchIn(viewLifecycleOwner.lifecycleScope)
+    }
+
+    private fun initToolbar() = with(binding.bottomSheetToolbar) {
+        setTitle(paymentMethod.name)
+        setOnButtonClickListener {
+            onBackPressed()
+        }
+        setMode(toolbarMode)
     }
 
     private fun loadComponent() {
