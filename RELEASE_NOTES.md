@@ -10,6 +10,7 @@
 
 ## New
 - Launch Google Pay with `submit()` to get rid of the deprecated activity result handling.
+- For drop-in, show a toolbar on every intermediary screen, so shoppers can always easily navigate back.
 
 ## Fixed
 
