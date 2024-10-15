@@ -38,8 +38,4 @@
 
     <style name="AppTheme" parent="MyAppTheme" />
 
-    <style name="AdyenCheckout.GooglePay.Button">
-        <item name="adyenGooglePayButtonTheme">dark</item>
-    </style>
-
 </resources>
