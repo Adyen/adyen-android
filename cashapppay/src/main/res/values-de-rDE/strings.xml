@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Für zukünftige Zahlvorgänge speichern</string>
-    <string name="cash_app_pay_waiting_text">Zahlung wird verarbeitet…</string>
 </resources>

@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Spara fyrir næstu greiðslu</string>
-    <string name="cash_app_pay_waiting_text">Unnið úr greiðslu…</string>
 </resources>

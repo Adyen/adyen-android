@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Ručno unesite adresu</string>
     <string name="checkout_address_lookup_submit">Koristi ovu adresu</string>
     <string name="checkout_address_lookup_validation_empty">Potrebna je adresa</string>
+
+    <string name="checkout_processing_payment">Obrada plaćanja u tijeku…</string>
 </resources>
