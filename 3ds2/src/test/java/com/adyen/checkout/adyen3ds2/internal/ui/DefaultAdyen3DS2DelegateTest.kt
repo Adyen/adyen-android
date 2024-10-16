@@ -189,8 +189,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             assertTrue(exceptionFlow.latestValue is ComponentException)
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `3ds2 sdk throws an exception while initializing, then an exception emitted`() = runTest {
             val error = InvalidInputException("test", null)
             threeDS2Service.initializeError = error
@@ -203,8 +202,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             assertEquals(error, exceptionFlow.latestValue.cause)
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `3ds2 sdk returns an initialization error, then details are emitted`() = runTest {
             val transStatus = "X"
             val additionalDetails = "mockAdditionalDetails"
@@ -357,8 +355,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             transaction.assertDoChallengeCalled()
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `challenge fails, then an exception is emitted`() = runTest {
             initializeChallengeTransaction(this).apply {
                 shouldThrowError = true
@@ -418,8 +415,7 @@ internal class DefaultAdyen3DS2DelegateTest(
     @DisplayName("when transaction is")
     inner class TransactionTest {
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `completed, then details are emitted`() = runTest {
             val details =
                 JSONObject("{\"threeds2.challengeResult\":\"eyJ0cmFuc1N0YXR1cyI6InRyYW5zYWN0aW9uU3RhdHVzIn0=\"}")
@@ -438,8 +434,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             assertEquals(expected.details.toString(), detailsFlow.latestValue.details.toString())
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `completed and creating details fails, then an error is emitted`() = runTest {
             val error = ComponentException("test")
             // We have to mock the serializer in order to throw an exception
@@ -487,8 +482,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             assertNotNull(detailsFlow.latestValue.details)
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @Test
+        @Test
         fun `error, then details are emitted`() = runTest {
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
@@ -636,9 +630,8 @@ internal class DefaultAdyen3DS2DelegateTest(
             analyticsManager.assertLastEventEquals(expectedDisplayedEvent)
         }
 
-        // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-        // @ParameterizedTest
-        // @MethodSource("com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2DelegateTest#challengeResult")
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.adyen3ds2.internal.ui.DefaultAdyen3DS2DelegateTest#challengeResult")
         fun `when challenge result is returned, then event is tracked`(
             challengeResult: ChallengeResult,
             analyticsResult: ThreeDS2Events.Result
@@ -655,8 +648,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
     }
 
-    // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-    // @Test
+    @Test
     fun `when details are emitted, then state is cleared`() = runTest {
         val savedStateHandle = SavedStateHandle().apply {
             set(

@@ -3,6 +3,7 @@ package com.adyen.checkout.adyen3ds2.internal.ui
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 internal class SharedChallengeStatusHandlerTest {
 
@@ -11,8 +12,7 @@ internal class SharedChallengeStatusHandlerTest {
         SharedChallengeStatusHandler.reset()
     }
 
-    // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-    // @Test
+    @Test
     fun `when onCompletion is triggered, then listener is called`() {
         val onCompletionListener = TestOnCompletionListener()
         SharedChallengeStatusHandler.onCompletionListener = onCompletionListener
@@ -22,8 +22,7 @@ internal class SharedChallengeStatusHandlerTest {
         onCompletionListener.assertOnCompletionCalled()
     }
 
-    // commenting this out because of failing tests, should be fixed later in collaboration with the 3DS2 team
-    // @Test
+    @Test
     fun `when onCompletion is triggered and no listener is set, then onCompletion is queued until a listener is set`() {
         val onCompletionListener = TestOnCompletionListener()
         SharedChallengeStatusHandler.onCompletion(ChallengeResult.Completed("test"))
