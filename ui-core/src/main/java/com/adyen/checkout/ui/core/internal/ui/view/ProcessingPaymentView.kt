@@ -1,4 +1,12 @@
-package com.adyen.checkout.cashapppay.internal.ui.view
+/*
+ * Copyright (c) 2024 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 16/10/2024.
+ */
+
+package com.adyen.checkout.ui.core.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,27 +14,28 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import com.adyen.checkout.cashapppay.R
-import com.adyen.checkout.cashapppay.databinding.CashAppPayWaitingViewBinding
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.ui.core.R
+import com.adyen.checkout.ui.core.databinding.ProcessingPaymentViewBinding
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
-import com.adyen.checkout.ui.core.R as UICoreR
 
-internal class CashAppPayWaitingView @JvmOverloads constructor(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class ProcessingPaymentView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
-    private val binding = CashAppPayWaitingViewBinding.inflate(LayoutInflater.from(context), this)
+    private val binding = ProcessingPaymentViewBinding.inflate(LayoutInflater.from(context), this)
 
     init {
         orientation = HORIZONTAL
         gravity = Gravity.CENTER
 
-        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, padding)
     }
 
@@ -36,8 +45,8 @@ internal class CashAppPayWaitingView @JvmOverloads constructor(
 
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewPaymentInProgressDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_CashAppPay_WaitingDescriptionTextView,
-            localizedContext
+            R.style.AdyenCheckout_ProcessingPaymentView_WaitingDescriptionTextView,
+            localizedContext,
         )
     }
 
