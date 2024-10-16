@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Slá inn heimilisfang handvirkt</string>
     <string name="checkout_address_lookup_submit">Nota þetta heimilisfang</string>
     <string name="checkout_address_lookup_validation_empty">Heimilisfang er áskilið</string>
+
+    <string name="checkout_processing_payment">Unnið úr greiðslu…</string>
 </resources>

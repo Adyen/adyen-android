@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Introduzca la dirección manualmente</string>
     <string name="checkout_address_lookup_submit">Usar esta dirección</string>
     <string name="checkout_address_lookup_validation_empty">Se necesita la dirección</string>
+
+    <string name="checkout_processing_payment">Procesando pago…</string>
 </resources>
