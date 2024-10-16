@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Introduïu l\'adreça manualment</string>
     <string name="checkout_address_lookup_submit">Utilitza aquesta adreça</string>
     <string name="checkout_address_lookup_validation_empty">Adreça obligatòria</string>
+
+    <string name="checkout_processing_payment">S\'esta processant el pagament…</string>
 </resources>
