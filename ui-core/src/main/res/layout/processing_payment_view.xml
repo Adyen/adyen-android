@@ -9,12 +9,12 @@
 
     <ProgressBar
         android:id="@+id/progressBar_paymentInProgress"
-        style="@style/AdyenCheckout.CashAppPay.ProgressBar"
+        style="@style/AdyenCheckout.ProcessingPaymentView.ProgressBar"
         tools:ignore="RequiredSize" />
 
     <TextView
         android:id="@+id/textView_paymentInProgress_description"
-        style="@style/AdyenCheckout.CashAppPay.WaitingDescriptionTextView"
+        style="@style/AdyenCheckout.ProcessingPaymentView.WaitingDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
