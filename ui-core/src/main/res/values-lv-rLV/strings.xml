@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Ievadiet adresi manuāli</string>
     <string name="checkout_address_lookup_submit">Izmantot šo adresi</string>
     <string name="checkout_address_lookup_validation_empty">Nepieciešama adrese</string>
+
+    <string name="checkout_processing_payment">Notiek maksājuma apstrāde…</string>
 </resources>

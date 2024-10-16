@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Gem til min næste betaling</string>
-    <string name="cash_app_pay_waiting_text">Behandler betaling…</string>
 </resources>

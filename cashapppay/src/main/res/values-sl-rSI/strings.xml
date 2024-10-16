@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Shrani za moje naslednje plačilo</string>
-    <string name="cash_app_pay_waiting_text">Obdelava plačila…</string>
 </resources>
