@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Įveskite adresą rankiniu būdu</string>
     <string name="checkout_address_lookup_submit">Naudokite šį adresą</string>
     <string name="checkout_address_lookup_validation_empty">Adresas privalomas</string>
+
+    <string name="checkout_processing_payment">Mokėjimas apdorojamas…</string>
 </resources>

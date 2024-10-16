@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Въведете адреса ръчно</string>
     <string name="checkout_address_lookup_submit">Използвайте този адрес</string>
     <string name="checkout_address_lookup_validation_empty">Изисква се адрес</string>
+
+    <string name="checkout_processing_payment">Обработка на плащането…</string>
 </resources>
