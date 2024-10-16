@@ -10,7 +10,7 @@ version-code = "1"
 version-name = "5.7.0"
 
 # Build script
-android-gradle-plugin = "8.5.1"
+android-gradle-plugin = "8.7.1"
 kotlin = "1.9.25"
 ksp = "1.9.25-1.0.20"
 dokka = "1.9.20"
