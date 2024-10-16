@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Desa\'l per al meu proper pagament</string>
-    <string name="cash_app_pay_waiting_text">S\'esta processant el pagament…</string>
 </resources>
