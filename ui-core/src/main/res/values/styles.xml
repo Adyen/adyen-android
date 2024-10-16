@@ -407,4 +407,19 @@
         <item name="adyenCustomTabsNavigationBarDividerColor">someColor3</item>
         -->
     </style>
+
+    <style name="AdyenCheckout.ProcessingPaymentView" />
+
+    <style name="AdyenCheckout.ProcessingPaymentView.ProgressBar">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:indeterminateTint">?android:attr/colorPrimary</item>
+    </style>
+
+    <style name="AdyenCheckout.ProcessingPaymentView.WaitingDescriptionTextView">
+        <item name="android:text">@string/checkout_processing_payment</item>
+        <item name="android:textIsSelectable">false</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
 </resources>
