@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">다음 결제를 위해 이 수단 저장</string>
-    <string name="cash_app_pay_waiting_text">결제 처리 중…</string>
 </resources>
