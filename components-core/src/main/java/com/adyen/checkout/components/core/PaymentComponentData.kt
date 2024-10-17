@@ -12,6 +12,8 @@ import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -89,17 +91,17 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                     ),
                     order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
                     amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
-                    storePaymentMethod = jsonObject.optBoolean(STORE_PAYMENT_METHOD),
-                    shopperReference = jsonObject.optString(SHOPPER_REFERENCE),
+                    storePaymentMethod = jsonObject.getBooleanOrNull(STORE_PAYMENT_METHOD),
+                    shopperReference = jsonObject.getStringOrNull(SHOPPER_REFERENCE),
                     billingAddress = deserializeOpt(jsonObject.optJSONObject(BILLING_ADDRESS), Address.SERIALIZER),
                     deliveryAddress = deserializeOpt(jsonObject.optJSONObject(DELIVERY_ADDRESS), Address.SERIALIZER),
                     shopperName = deserializeOpt(jsonObject.optJSONObject(SHOPPER_NAME), ShopperName.SERIALIZER),
-                    telephoneNumber = jsonObject.optString(TELEPHONE_NUMBER),
-                    shopperEmail = jsonObject.optString(SHOPPER_EMAIL),
-                    dateOfBirth = jsonObject.optString(DATE_OF_BIRTH),
-                    socialSecurityNumber = jsonObject.optString(SOCIAL_SECURITY_NUMBER),
+                    telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
+                    shopperEmail = jsonObject.getStringOrNull(SHOPPER_EMAIL),
+                    dateOfBirth = jsonObject.getStringOrNull(DATE_OF_BIRTH),
+                    socialSecurityNumber = jsonObject.getStringOrNull(SOCIAL_SECURITY_NUMBER),
                     installments = deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER),
-                    supportNativeRedirect = jsonObject.optBoolean(SUPPORT_NATIVE_REDIRECT),
+                    supportNativeRedirect = jsonObject.getBooleanOrNull(SUPPORT_NATIVE_REDIRECT),
                 )
             }
         }

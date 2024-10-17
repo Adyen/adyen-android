@@ -11,6 +11,7 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.util.JSONObjectParceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
@@ -47,8 +48,8 @@ data class SessionDetailsRequest(
             override fun deserialize(jsonObject: JSONObject): SessionDetailsRequest {
                 return try {
                     SessionDetailsRequest(
-                        sessionData = jsonObject.optString(SESSION_DATA),
-                        paymentData = jsonObject.optString(PAYMENT_DATA),
+                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                        paymentData = jsonObject.getStringOrNull(PAYMENT_DATA),
                         details = jsonObject.optJSONObject(DETAILS)
                     )
                 } catch (e: JSONException) {

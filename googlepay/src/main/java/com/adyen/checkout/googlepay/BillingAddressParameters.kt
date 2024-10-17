@@ -9,6 +9,7 @@ package com.adyen.checkout.googlepay
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -49,7 +50,7 @@ data class BillingAddressParameters(
 
             override fun deserialize(jsonObject: JSONObject) = BillingAddressParameters(
                 format = jsonObject.getStringOrNull(FORMAT),
-                isPhoneNumberRequired = jsonObject.optBoolean(PHONE_NUMBER_REQUIRED),
+                isPhoneNumberRequired = jsonObject.getBooleanOrNull(PHONE_NUMBER_REQUIRED) ?: false,
             )
         }
     }

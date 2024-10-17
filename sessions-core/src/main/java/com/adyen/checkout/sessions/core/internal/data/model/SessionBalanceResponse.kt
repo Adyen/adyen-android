@@ -13,6 +13,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -49,7 +50,7 @@ data class SessionBalanceResponse(
 
             override fun deserialize(jsonObject: JSONObject): SessionBalanceResponse {
                 return SessionBalanceResponse(
-                    sessionData = jsonObject.optString(SESSION_DATA),
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                     balance = ModelUtils.deserializeOpt(jsonObject.optJSONObject(BALANCE), Amount.SERIALIZER)
                         ?: throw CheckoutException("Balance not found"),
                     transactionLimit = ModelUtils.deserializeOpt(
