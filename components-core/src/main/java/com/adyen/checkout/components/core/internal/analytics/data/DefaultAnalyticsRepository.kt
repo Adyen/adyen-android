@@ -19,6 +19,7 @@ import com.adyen.checkout.core.internal.util.adyenLog
 internal class DefaultAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
     private val localLogDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Log>,
+    private val localErrorDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Error>,
     private val remoteDataStore: AnalyticsRemoteDataStore,
     private val analyticsSetupProvider: AnalyticsSetupProvider,
     private val analyticsTrackRequestProvider: AnalyticsTrackRequestProvider,
@@ -33,6 +34,7 @@ internal class DefaultAnalyticsRepository(
         when (event) {
             is AnalyticsEvent.Info -> localInfoDataStore.storeEvent(event)
             is AnalyticsEvent.Log -> localLogDataStore.storeEvent(event)
+            is AnalyticsEvent.Error -> localErrorDataStore.storeEvent(event)
         }
     }
 
@@ -41,17 +43,20 @@ internal class DefaultAnalyticsRepository(
     ) {
         val infoEvents = localInfoDataStore.fetchEvents(remoteDataStore.infoSize)
         val logEvents = localLogDataStore.fetchEvents(remoteDataStore.logSize)
+        val errorEvents = localErrorDataStore.fetchEvents(remoteDataStore.errorSize)
 
-        if (infoEvents.isEmpty() && logEvents.isEmpty()) return
+        if (infoEvents.isEmpty() && logEvents.isEmpty() && errorEvents.isEmpty()) return
 
         val request = analyticsTrackRequestProvider(
             infoList = infoEvents,
             logList = logEvents,
+            errorList = errorEvents,
         )
         remoteDataStore.sendEvents(request, checkoutAttemptId)
 
         localInfoDataStore.removeEvents(infoEvents)
         localLogDataStore.removeEvents(logEvents)
+        localErrorDataStore.removeEvents(errorEvents)
 
         adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
     }

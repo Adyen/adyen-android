@@ -16,6 +16,7 @@ internal interface AnalyticsRemoteDataStore {
 
     val infoSize: Int
     val logSize: Int
+    val errorSize: Int
 
     suspend fun fetchCheckoutAttemptId(request: AnalyticsSetupRequest): AnalyticsSetupResponse
 
