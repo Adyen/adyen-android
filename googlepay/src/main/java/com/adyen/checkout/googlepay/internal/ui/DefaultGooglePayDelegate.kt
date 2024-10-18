@@ -68,7 +68,7 @@ internal class DefaultGooglePayDelegate(
 
     override val submitFlow: Flow<GooglePayComponentState> = submitHandler.submitFlow
 
-    private val _viewFlow = MutableStateFlow(GooglePayComponentViewType)
+    private val _viewFlow = MutableStateFlow<ComponentViewType>(GooglePayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     private var _coroutineScope: CoroutineScope? = null
@@ -153,6 +153,9 @@ internal class DefaultGooglePayDelegate(
 
     override fun onSubmit() {
         adyenLog(AdyenLogLevel.DEBUG) { "onSubmit" }
+
+        _viewFlow.tryEmit(PaymentInProgressViewType)
+
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)
         coroutineScope.launch {
@@ -237,7 +240,6 @@ internal class DefaultGooglePayDelegate(
         return GooglePayButtonParameters(allowedPaymentMethods)
     }
 
-    @Suppress("USELESS_IS_CHECK")
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
     override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
