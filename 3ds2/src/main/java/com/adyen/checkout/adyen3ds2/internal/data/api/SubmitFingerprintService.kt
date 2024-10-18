@@ -10,15 +10,15 @@ package com.adyen.checkout.adyen3ds2.internal.data.api
 
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResponse
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 internal class SubmitFingerprintService(
     private val httpClient: HttpClient,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
     suspend fun submitFingerprint(

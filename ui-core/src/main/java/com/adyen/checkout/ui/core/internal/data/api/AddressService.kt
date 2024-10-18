@@ -9,17 +9,17 @@
 package com.adyen.checkout.ui.core.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.getList
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AddressService(
     private val httpClient: HttpClient,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
     suspend fun getCountries(
         shopperLocale: String

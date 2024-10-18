@@ -14,9 +14,9 @@ import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.HttpException
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -43,10 +43,10 @@ class DefaultImageLoader(context: Context) : ImageLoader {
         url: String,
         onSuccess: suspend (Bitmap) -> Unit,
         onError: suspend (Throwable) -> Unit
-    ) = withContext(Dispatchers.IO) {
+    ) = withContext(DispatcherProvider.IO) {
         val cachedBitmap = cache[url]
         if (cachedBitmap != null) {
-            withContext(Dispatchers.Main) {
+            withContext(DispatcherProvider.Main) {
                 onSuccess(cachedBitmap)
             }
             return@withContext
@@ -72,11 +72,11 @@ class DefaultImageLoader(context: Context) : ImageLoader {
 
                 cache[url] = bitmap
 
-                withContext(Dispatchers.Main) {
+                withContext(DispatcherProvider.Main) {
                     onSuccess(bitmap)
                 }
             } else {
-                withContext(Dispatchers.Main) {
+                withContext(DispatcherProvider.Main) {
                     onError(HttpException(response.code, response.message, null))
                 }
             }
@@ -85,7 +85,7 @@ class DefaultImageLoader(context: Context) : ImageLoader {
         } catch (e: CancellationException) {
             call.cancel()
         } catch (e: IOException) {
-            withContext(Dispatchers.Main) {
+            withContext(DispatcherProvider.Main) {
                 onError(e)
             }
         }
