@@ -26,6 +26,7 @@ import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.ideal.internal.ui.IdealDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -42,12 +43,13 @@ class IdealComponent internal constructor(
     ButtonComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    @Suppress("ForbiddenComment")
-    // FIXME: Using actionHandlingComponent.activeDelegate will crash for QR code actions. This is a workaround for the
-    //  actual issue.
-    override val delegate: ComponentDelegate get() = genericActionDelegate.delegate
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        idealDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         idealDelegate.initialize(viewModelScope)

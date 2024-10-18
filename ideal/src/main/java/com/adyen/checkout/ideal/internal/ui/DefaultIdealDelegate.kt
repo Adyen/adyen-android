@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.paymentmethod.IdealPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.ideal.IdealComponentState
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -42,6 +43,9 @@ internal class DefaultIdealDelegate(
 
     private val submitChannel: Channel<IdealComponentState> = bufferedChannel()
     override val submitFlow: Flow<IdealComponentState> = submitChannel.receiveAsFlow()
+
+    private val _viewFlow = MutableStateFlow<ComponentViewType>(PaymentInProgressViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     init {
         submitChannel.trySend(componentStateFlow.value)
