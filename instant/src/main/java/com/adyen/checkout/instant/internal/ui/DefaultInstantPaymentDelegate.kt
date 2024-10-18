@@ -25,6 +25,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.internal.ui.model.InstantComponentParams
+import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,9 @@ internal class DefaultInstantPaymentDelegate(
 
     private val submitChannel: Channel<InstantComponentState> = bufferedChannel()
     override val submitFlow: Flow<InstantComponentState> = submitChannel.receiveAsFlow()
+
+    private val _viewFlow = MutableStateFlow<ComponentViewType>(PaymentInProgressViewType)
+    override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     init {
         submitChannel.trySend(componentStateFlow.value)
