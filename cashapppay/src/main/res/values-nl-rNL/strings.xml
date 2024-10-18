@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Bewaar voor mijn volgende betaling</string>
-    <string name="cash_app_pay_waiting_text">Betaling wordt verwerkt…</string>
 </resources>
