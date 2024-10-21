@@ -8,6 +8,15 @@
 
 package com.adyen.checkout.paybybankus
 
-class PayByBankUSComponentState {
-    // TODO implement
-}
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.paymentmethod.PayByBankUSPaymentMethod
+
+/**
+ * Represents the state of [PayByBankUSComponent].
+ */
+data class PayByBankUSComponentState(
+    override val data: PaymentComponentData<PayByBankUSPaymentMethod>,
+    override val isInputValid: Boolean,
+    override val isReady: Boolean
+) : PaymentComponentState<PayByBankUSPaymentMethod>
