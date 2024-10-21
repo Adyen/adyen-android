@@ -48,6 +48,7 @@ object PaymentMethodTypes {
     const val ONLINE_BANKING_SK = "onlineBanking_SK"
     const val OPEN_BANKING = "openbanking_UK"
     const val PAY_BY_BANK = "paybybank"
+    const val PAY_BY_BANK_US = "paybybank_AIS_DD"
     const val SCHEME = "scheme"
     const val SEPA = "sepadirectdebit"
     const val TWINT = "twint"
