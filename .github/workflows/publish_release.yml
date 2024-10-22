@@ -73,5 +73,5 @@ jobs:
           tag_name: ${{ env.PROJECT_VERSION }}
           release_name: ${{ env.PROJECT_VERSION }}
           body_path: ${{ github.workspace }}/RELEASE_NOTES.md
-          draft: false
+          draft: true
           prerelease: false
