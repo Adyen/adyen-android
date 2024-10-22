@@ -67,7 +67,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commitish: main
           tag_name: ${{ env.PROJECT_VERSION }}
           release_name: ${{ env.PROJECT_VERSION }}
           body_path: ${{ github.workspace }}/RELEASE_NOTES.md
