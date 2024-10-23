@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Uložiť pre moju ďalšiu platbu</string>
-    <string name="cash_app_pay_waiting_text">Platba sa spracúva.</string>
 </resources>

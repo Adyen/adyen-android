@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">أدخل العنوان يدويًا</string>
     <string name="checkout_address_lookup_submit">استخدم هذا العنوان</string>
     <string name="checkout_address_lookup_validation_empty">العنوان مطلوب</string>
+
+    <string name="checkout_processing_payment">جارِ معالجة المدفوعات…</string>
 </resources>

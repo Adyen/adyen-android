@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Saisissez l\'adresse manuellement</string>
     <string name="checkout_address_lookup_submit">Utiliser cette adresse</string>
     <string name="checkout_address_lookup_validation_empty">Adresse requise</string>
+
+    <string name="checkout_processing_payment">Traitement du paiement en cours…</string>
 </resources>

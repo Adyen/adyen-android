@@ -11,13 +11,13 @@ package com.adyen.checkout.cashapppay.internal.ui
 import android.content.Context
 import com.adyen.checkout.cashapppay.internal.ui.view.CashAppPayButtonView
 import com.adyen.checkout.cashapppay.internal.ui.view.CashAppPayView
-import com.adyen.checkout.cashapppay.internal.ui.view.CashAppPayWaitingView
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonViewProvider
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
+import com.adyen.checkout.ui.core.internal.ui.view.ProcessingPaymentView
 
 internal object CashAppPayViewProvider : ViewProvider {
 
@@ -26,7 +26,7 @@ internal object CashAppPayViewProvider : ViewProvider {
         context: Context,
     ): ComponentView = when (viewType) {
         CashAppPayComponentViewType -> CashAppPayView(context)
-        PaymentInProgressViewType -> CashAppPayWaitingView(context)
+        PaymentInProgressViewType -> ProcessingPaymentView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }

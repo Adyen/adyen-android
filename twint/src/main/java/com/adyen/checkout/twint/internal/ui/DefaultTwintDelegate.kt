@@ -159,6 +159,8 @@ internal class DefaultTwintDelegate(
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
 
+        _viewFlow.tryEmit(PaymentInProgressViewType)
+
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state = state)
     }
