@@ -23,3 +23,9 @@
   |                           |                     |
 
 ## Deprecated
+- The styles and strings for the Cash App Pay loading indicator. Use the new styles and strings instead.
+| Previous                                                  | Now                                                              |
+|-----------------------------------------------------------|------------------------------------------------------------------|
+| `AdyenCheckout.CashAppPay.ProgressBar`                    | `AdyenCheckout.ProcessingPaymentView.ProgressBar`                |
+| `AdyenCheckout.CashAppPay.WaitingDescriptionTextView`     | `AdyenCheckout.ProcessingPaymentView.WaitingDescriptionTextView` |
+| `cash_app_pay_waiting_text`                               | `checkout_processing_payment` |
