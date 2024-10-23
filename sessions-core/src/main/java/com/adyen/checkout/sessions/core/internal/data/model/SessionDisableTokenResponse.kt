@@ -11,6 +11,7 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,7 +39,7 @@ data class SessionDisableTokenResponse(
             override fun deserialize(jsonObject: JSONObject): SessionDisableTokenResponse {
                 return try {
                     SessionDisableTokenResponse(
-                        sessionData = jsonObject.optString(SESSION_DATA),
+                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionDisableTokenResponse::class.java, e)

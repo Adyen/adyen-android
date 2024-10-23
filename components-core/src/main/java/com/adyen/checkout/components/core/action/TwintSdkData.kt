@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -41,7 +42,7 @@ data class TwintSdkData(
                 return try {
                     TwintSdkData(
                         token = jsonObject.getString(TOKEN),
-                        isStored = jsonObject.optBoolean(IS_STORED),
+                        isStored = jsonObject.getBooleanOrNull(IS_STORED) ?: false,
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(TwintSdkData::class.java, e)

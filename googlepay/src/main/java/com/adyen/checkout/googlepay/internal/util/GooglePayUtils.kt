@@ -143,7 +143,7 @@ internal object GooglePayUtils {
                 val tokenizationDataJson = paymentMethodDataJson.getJSONObject(TOKENIZATION_DATA)
                 googlePayToken = tokenizationDataJson.getString(TOKEN)
                 val infoJson = paymentMethodDataJson.optJSONObject(INFO)
-                if (infoJson != null && infoJson.has(CARD_NETWORK)) {
+                if (infoJson != null && !infoJson.isNull(CARD_NETWORK)) {
                     googlePayCardNetwork = infoJson.getString(CARD_NETWORK)
                 }
             } catch (e: JSONException) {

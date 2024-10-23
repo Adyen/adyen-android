@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -55,12 +56,12 @@ data class SessionPaymentsResponse(
 
             override fun deserialize(jsonObject: JSONObject): SessionPaymentsResponse {
                 return SessionPaymentsResponse(
-                    sessionData = jsonObject.optString(SESSION_DATA),
-                    status = jsonObject.optString(STATUS),
-                    resultCode = jsonObject.optString(RESULT_CODE),
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                    status = jsonObject.getStringOrNull(STATUS),
+                    resultCode = jsonObject.getStringOrNull(RESULT_CODE),
                     action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
                     order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderResponse.SERIALIZER),
-                    sessionResult = jsonObject.optString(SESSION_RESULT),
+                    sessionResult = jsonObject.getStringOrNull(SESSION_RESULT),
                 )
             }
         }
