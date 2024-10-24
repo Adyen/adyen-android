@@ -915,6 +915,7 @@ public final class com/adyen/checkout/components/core/PaymentMethodTypes {
 	public static final field OPEN_BANKING Ljava/lang/String;
 	public static final field OXXO Ljava/lang/String;
 	public static final field PAY_BY_BANK Ljava/lang/String;
+	public static final field PAY_BY_BANK_US Ljava/lang/String;
 	public static final field PAY_NOW Ljava/lang/String;
 	public static final field PIX Ljava/lang/String;
 	public static final field PROMPT_PAY Ljava/lang/String;
