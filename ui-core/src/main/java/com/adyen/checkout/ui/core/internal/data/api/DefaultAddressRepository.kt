@@ -11,13 +11,13 @@ package com.adyen.checkout.ui.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,7 +27,7 @@ import java.util.Locale
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultAddressRepository(
     private val addressService: AddressService,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AddressRepository {
 
     private val statesChannel: Channel<List<AddressItem>> = bufferedChannel()

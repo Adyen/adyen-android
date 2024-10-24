@@ -11,16 +11,16 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusRequest
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OrderStatusService(
     private val httpClient: HttpClient,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
     internal suspend fun getOrderStatus(
