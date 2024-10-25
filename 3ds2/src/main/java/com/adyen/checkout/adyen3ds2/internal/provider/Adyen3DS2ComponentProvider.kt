@@ -39,11 +39,11 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
 import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
-import kotlinx.coroutines.Dispatchers
 
 class Adyen3DS2ComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -105,7 +105,7 @@ constructor(
             adyen3DS2Serializer = adyen3DS2DetailsParser,
             redirectHandler = redirectHandler,
             threeDS2Service = ThreeDS2Service.INSTANCE,
-            coroutineDispatcher = Dispatchers.Default,
+            coroutineDispatcher = DispatcherProvider.Default,
             application = application,
             analyticsManager = analyticsManager,
         )

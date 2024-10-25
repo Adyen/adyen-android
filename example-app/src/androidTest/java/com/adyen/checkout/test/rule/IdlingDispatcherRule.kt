@@ -10,6 +10,7 @@ package com.adyen.checkout.test.rule
 
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.test.util.IdlingResourceDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class IdlingDispatcherRule : TestRule {
                     unregister(defaultIdlingResource)
                     unregister(ioIdlingResource)
                 }
-                overrideDispatchers(defaultDispatcher, ioDispatcher)
+                DispatcherProvider.resetAll()
             }
         }
     }
@@ -54,14 +55,7 @@ class IdlingDispatcherRule : TestRule {
         default: CoroutineDispatcher,
         io: CoroutineDispatcher,
     ) {
-        fun setField(name: String, value: CoroutineDispatcher) {
-            Dispatchers::class.java.getDeclaredField(name).apply {
-                isAccessible = true
-                set(Dispatchers, value)
-            }
-        }
-
-        setField("Default", default)
-        setField("IO", io)
+        DispatcherProvider.overrideDefault(default)
+        DispatcherProvider.overrideIO(io)
     }
 }
