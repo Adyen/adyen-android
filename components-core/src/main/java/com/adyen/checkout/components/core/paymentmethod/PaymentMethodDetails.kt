@@ -79,6 +79,7 @@ abstract class PaymentMethodDetails : ModelObject() {
                 OnlineBankingSKPaymentMethod.PAYMENT_METHOD_TYPE -> OnlineBankingSKPaymentMethod.SERIALIZER
                 OpenBankingPaymentMethod.PAYMENT_METHOD_TYPE -> OpenBankingPaymentMethod.SERIALIZER
                 PayByBankPaymentMethod.PAYMENT_METHOD_TYPE -> PayByBankPaymentMethod.SERIALIZER
+                PaymentMethodTypes.PAY_BY_BANK_US -> PayByBankUSPaymentMethod.SERIALIZER
                 PayEasyPaymentMethod.PAYMENT_METHOD_TYPE -> PayEasyPaymentMethod.SERIALIZER
                 PaymentMethodTypes.GOOGLE_PAY,
                 PaymentMethodTypes.GOOGLE_PAY_LEGACY -> GooglePayPaymentMethod.SERIALIZER
