@@ -5,28 +5,16 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  publish-release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check
-        uses: ./.github/workflows/check.yml
-
-      - name: Publish to Maven Central
-        uses: ./.github/workflows/publish_to_maven_central.yml
-
-      # Get the version name from a script and save to environment variable.
-      - name: Set PROJECT_VERSION
-        run: |
-          echo "▸ Set run permission."
-          chmod +x scripts/version_name.sh
-          echo "▸ Getting version name"
-          PROJECT_VERSION=$(./scripts/version_name.sh)
-          echo "▸ Variable PROJECT_VERSION set to: ${PROJECT_VERSION}"
-          echo "▸ Adding PROJECT_VERSION variable with: $PROJECT_VERSION"
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          echo "▸ DONE"
-
-      - name: Create GitHub Release
-        uses: ./.github/workflows/create_github_release.yml
+  check:
+    name: Check
+    uses: ./.github/workflows/check.yml
+  publish_to_maven_central:
+    name: Publish to Maven Central
+    uses: ./.github/workflows/publish_to_maven_central.yml
+    secrets: inherit
+    needs: check
+  create_github_release:
+    name: Create GitHub Release
+    uses: ./.github/workflows/create_github_release.yml
+    secrets: inherit
+    needs: publish_to_maven_central
