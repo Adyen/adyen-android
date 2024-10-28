@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
@@ -39,7 +40,6 @@ import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -80,6 +80,7 @@ class ExampleAdvancedDropInService : DropInService() {
                     is AddressLookupCompletionState.Address -> {
                         AddressLookupDropInServiceResult.LookupComplete(it.lookupAddress)
                     }
+
                     is AddressLookupCompletionState.Error -> AddressLookupDropInServiceResult.Error(
                         errorDialog = ErrorDialog(
                             message = it.message,
@@ -90,10 +91,11 @@ class ExampleAdvancedDropInService : DropInService() {
             }.launchIn(this)
     }
 
+    @Suppress("RestrictedApi")
     override fun onSubmit(
         state: PaymentComponentState<*>,
     ) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -139,8 +141,9 @@ class ExampleAdvancedDropInService : DropInService() {
         // read bundle and handle it
     }
 
+    @Suppress("RestrictedApi")
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -212,9 +215,10 @@ class ExampleAdvancedDropInService : DropInService() {
         return OrderResponse.SERIALIZER.deserialize(orderJSON)
     }
 
+    @Suppress("RestrictedApi")
     private fun fetchPaymentMethods(orderResponse: OrderResponse? = null) {
         Log.d(TAG, "fetchPaymentMethods")
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             val order = orderResponse?.let {
                 Order(
                     pspReference = it.pspReference,
@@ -241,8 +245,9 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    @Suppress("RestrictedApi")
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "checkBalance")
             val amount = paymentComponentState.data.amount
             val paymentMethod = paymentComponentState.data.paymentMethod
@@ -295,8 +300,9 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    @Suppress("RestrictedApi")
     override fun onOrderRequest() {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
@@ -326,8 +332,9 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    @Suppress("RestrictedApi")
     override fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "cancelOrder")
             val orderJson = Order.SERIALIZER.serialize(order)
             val request = createCancelOrderRequest(
@@ -364,10 +371,11 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
+    @Suppress("RestrictedApi")
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,

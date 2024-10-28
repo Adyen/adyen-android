@@ -11,6 +11,7 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.AddressLookupCompletionState
 import com.adyen.checkout.example.repositories.AddressLookupRepository
@@ -18,7 +19,6 @@ import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,7 +60,8 @@ internal class CardViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+    @Suppress("RestrictedApi")
+    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -135,7 +136,8 @@ internal class CardViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        @Suppress("RestrictedApi")
+        viewModelScope.launch(DispatcherProvider.IO) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -169,8 +171,9 @@ internal class CardViewModel @Inject constructor(
         _events.emit(CardEvent.AdditionalAction(action))
     }
 
+    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(DispatcherProvider.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }

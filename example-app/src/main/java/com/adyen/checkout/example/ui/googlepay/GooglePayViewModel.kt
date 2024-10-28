@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -29,7 +30,6 @@ import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +67,8 @@ internal class GooglePayViewModel @Inject constructor(
         viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+    @Suppress("RestrictedApi")
+    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -137,8 +138,9 @@ internal class GooglePayViewModel @Inject constructor(
         viewModelScope.launch { _events.emit(GooglePayEvent.PaymentResult("Failed: ${error.errorMessage}")) }
     }
 
+    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(DispatcherProvider.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
@@ -167,7 +169,8 @@ internal class GooglePayViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        @Suppress("RestrictedApi")
+        viewModelScope.launch(DispatcherProvider.IO) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),

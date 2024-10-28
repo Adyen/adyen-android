@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.ErrorDialog
@@ -25,7 +26,6 @@ import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -43,10 +43,11 @@ class ExampleDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
+    @Suppress("RestrictedApi")
     override fun onSubmit(
         state: PaymentComponentState<*>
     ) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -61,7 +62,7 @@ class ExampleDropInService : DropInService() {
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
-                shopperEmail = keyValueStorage.getShopperEmail()
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
@@ -82,8 +83,9 @@ class ExampleDropInService : DropInService() {
         }
     }
 
+    @Suppress("RestrictedApi")
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -126,10 +128,11 @@ class ExampleDropInService : DropInService() {
         return jsonResponse.has("action")
     }
 
+    @Suppress("RestrictedApi")
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(Dispatchers.IO) {
+        launch(DispatcherProvider.IO) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,
