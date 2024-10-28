@@ -44,14 +44,5 @@ jobs:
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
           echo "▸ DONE"
 
-      # Create the Release TAG and notes.
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.PROJECT_VERSION }}
-          release_name: ${{ env.PROJECT_VERSION }}
-          body_path: ${{ github.workspace }}/RELEASE_NOTES.md
-          draft: true
-          prerelease: false
+        uses: ./.github/workflows/create_github_release.yml
