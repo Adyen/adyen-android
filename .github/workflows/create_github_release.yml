@@ -4,29 +4,43 @@ on:
   workflow_call
 
 jobs:
-  create_github_release:
+  generate_version_name:
     runs-on: ubuntu-latest
+
+    outputs:
+      version_name: ${{ steps.version_name.outputs.PROJECT_VERSION }}
 
     steps:
       - uses: actions/checkout@v4
 
-      # Base64 decodes and pipes the GPG key content into the secret file
-      - name: Prepare environment
-        env:
-          GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
-          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
+      # Get the version name from a script and save it in version_name output.
+      - name: Generate version_name
+        id: version_name
         run: |
-          git fetch --unshallow
-          sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"
+          echo "▸ Set run permission."
+          chmod +x scripts/version_name.sh
+          echo "▸ Getting version name"
+          PROJECT_VERSION=$(./scripts/version_name.sh)
+          echo "▸ Creating the version_name output with value: $PROJECT_VERSION"
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+          echo "▸ DONE"
+
+  create_github_release:
+    runs-on: ubuntu-latest
+    needs: generate_version_name
+
+    steps:
+      - uses: actions/checkout@v4
 
       # Create the Release TAG and notes.
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION_NAME: ${{ needs.generate_version_name.outputs.version_name }}
         with:
-          tag_name: ${{ env.PROJECT_VERSION }}
-          release_name: ${{ env.PROJECT_VERSION }}
+          tag_name: ${{ env.VERSION_NAME }}
+          release_name: ${{ env.VERSION_NAME }}
           body_path: ${{ github.workspace }}/RELEASE_NOTES.md
           draft: true
           prerelease: false
