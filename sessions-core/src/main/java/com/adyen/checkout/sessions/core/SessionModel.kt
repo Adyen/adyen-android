@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -43,8 +44,8 @@ data class SessionModel(
 
             override fun deserialize(jsonObject: JSONObject): SessionModel {
                 return SessionModel(
-                    id = jsonObject.optString(ID),
-                    sessionData = jsonObject.optString(SESSION_DATA)
+                    id = jsonObject.getStringOrNull(ID).orEmpty(),
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA)
                 )
             }
         }

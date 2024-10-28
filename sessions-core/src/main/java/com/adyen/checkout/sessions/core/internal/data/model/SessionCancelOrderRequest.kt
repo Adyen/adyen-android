@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,7 +45,7 @@ data class SessionCancelOrderRequest(
             override fun deserialize(jsonObject: JSONObject): SessionCancelOrderRequest {
                 return try {
                     SessionCancelOrderRequest(
-                        sessionData = jsonObject.optString(SESSION_DATA),
+                        sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                         order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER)
                     )
                 } catch (e: JSONException) {

@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,7 +39,7 @@ data class OrderResponse(
                         putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
                         putOpt(
                             REMAINING_AMOUNT,
-                            ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER)
+                            ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER),
                         )
                     } catch (e: JSONException) {
                         throw ModelSerializationException(OrderResponse::class.java, e)
@@ -48,12 +49,12 @@ data class OrderResponse(
 
             override fun deserialize(jsonObject: JSONObject): OrderResponse {
                 return OrderResponse(
-                    pspReference = jsonObject.optString(PSP_REFERENCE, ""),
-                    orderData = jsonObject.optString(ORDER_DATA, ""),
+                    pspReference = jsonObject.getStringOrNull(PSP_REFERENCE).orEmpty(),
+                    orderData = jsonObject.getStringOrNull(ORDER_DATA).orEmpty(),
                     amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
                     remainingAmount = ModelUtils.deserializeOpt(
                         jsonObject.optJSONObject(REMAINING_AMOUNT),
-                        Amount.SERIALIZER
+                        Amount.SERIALIZER,
                     ),
                 )
             }

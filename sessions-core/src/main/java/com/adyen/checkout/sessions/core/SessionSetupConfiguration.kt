@@ -52,7 +52,7 @@ data class SessionSetupConfiguration(
                 return try {
                     SessionSetupConfiguration(
                         enableStoreDetails = jsonObject.getBooleanOrNull(ENABLE_STORE_DETAILS),
-                        showInstallmentAmount = jsonObject.optBoolean(SHOW_INSTALLMENT_AMOUNT),
+                        showInstallmentAmount = jsonObject.getBooleanOrNull(SHOW_INSTALLMENT_AMOUNT) ?: false,
                         installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
                             ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
                         showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(SHOW_REMOVE_PAYMENT_METHOD_BUTTON),

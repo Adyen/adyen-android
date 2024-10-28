@@ -13,6 +13,8 @@ import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
 import kotlinx.parcelize.Parcelize
@@ -51,17 +53,17 @@ internal data class PaymentDataRequestModel(
                         putOpt(MERCHANT_INFO, serializeOpt(modelObject.merchantInfo, MerchantInfo.SERIALIZER))
                         putOpt(
                             ALLOWED_PAYMENT_METHODS,
-                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER)
+                            serializeOptList(modelObject.allowedPaymentMethods, GooglePayPaymentMethodModel.SERIALIZER),
                         )
                         putOpt(
                             TRANSACTION_INFO,
-                            serializeOpt(modelObject.transactionInfo, TransactionInfoModel.SERIALIZER)
+                            serializeOpt(modelObject.transactionInfo, TransactionInfoModel.SERIALIZER),
                         )
                         putOpt(EMAIL_REQUIRED, modelObject.isEmailRequired)
                         putOpt(SHIPPING_ADDRESS_REQUIRED, modelObject.isShippingAddressRequired)
                         putOpt(
                             SHIPPING_ADDRESS_PARAMETERS,
-                            serializeOpt(modelObject.shippingAddressParameters, ShippingAddressParameters.SERIALIZER)
+                            serializeOpt(modelObject.shippingAddressParameters, ShippingAddressParameters.SERIALIZER),
                         )
                     }
                 } catch (e: JSONException) {
@@ -71,25 +73,26 @@ internal data class PaymentDataRequestModel(
 
             override fun deserialize(jsonObject: JSONObject): PaymentDataRequestModel {
                 val paymentDataRequestModel = PaymentDataRequestModel()
-                paymentDataRequestModel.apiVersion = jsonObject.optInt(API_VERSION)
-                paymentDataRequestModel.apiVersionMinor = jsonObject.optInt(API_VERSION_MINOR)
+                paymentDataRequestModel.apiVersion = jsonObject.getIntOrNull(API_VERSION) ?: 0
+                paymentDataRequestModel.apiVersionMinor = jsonObject.getIntOrNull(API_VERSION_MINOR) ?: 0
                 paymentDataRequestModel.merchantInfo = deserializeOpt(
                     jsonObject.optJSONObject(MERCHANT_INFO),
-                    MerchantInfo.SERIALIZER
+                    MerchantInfo.SERIALIZER,
                 )
                 paymentDataRequestModel.allowedPaymentMethods = deserializeOptList(
                     jsonObject.optJSONArray(ALLOWED_PAYMENT_METHODS),
-                    GooglePayPaymentMethodModel.SERIALIZER
+                    GooglePayPaymentMethodModel.SERIALIZER,
                 )
                 paymentDataRequestModel.transactionInfo = deserializeOpt(
                     jsonObject.optJSONObject(TRANSACTION_INFO),
-                    TransactionInfoModel.SERIALIZER
+                    TransactionInfoModel.SERIALIZER,
                 )
-                paymentDataRequestModel.isEmailRequired = jsonObject.optBoolean(EMAIL_REQUIRED)
-                paymentDataRequestModel.isShippingAddressRequired = jsonObject.optBoolean(SHIPPING_ADDRESS_REQUIRED)
+                paymentDataRequestModel.isEmailRequired = jsonObject.getBooleanOrNull(EMAIL_REQUIRED) ?: false
+                paymentDataRequestModel.isShippingAddressRequired =
+                    jsonObject.getBooleanOrNull(SHIPPING_ADDRESS_REQUIRED) ?: false
                 paymentDataRequestModel.shippingAddressParameters = deserializeOpt(
                     jsonObject.optJSONObject(SHIPPING_ADDRESS_PARAMETERS),
-                    ShippingAddressParameters.SERIALIZER
+                    ShippingAddressParameters.SERIALIZER,
                 )
                 return paymentDataRequestModel
             }
