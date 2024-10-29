@@ -16,6 +16,7 @@ import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.PermissionHandlerCallback
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -23,7 +24,6 @@ import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import com.adyen.checkout.instant.InstantComponentState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,7 +55,8 @@ internal class InstantViewModel @Inject constructor(
         viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+    @Suppress("RestrictedApi")
+    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -118,11 +119,12 @@ internal class InstantViewModel @Inject constructor(
         permissionCallback = null
     }
 
+    @Suppress("RestrictedApi")
     private fun makePayment(data: PaymentComponentData<*>) {
         _instantViewState.tryEmit(InstantViewState.Loading)
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(DispatcherProvider.IO) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -153,8 +155,9 @@ internal class InstantViewModel @Inject constructor(
         } ?: _events.emit(InstantEvent.PaymentResult("Failed"))
     }
 
+    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(DispatcherProvider.IO) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
