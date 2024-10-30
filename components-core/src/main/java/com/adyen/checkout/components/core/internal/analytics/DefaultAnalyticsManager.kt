@@ -125,7 +125,7 @@ internal class DefaultAnalyticsManager(
         CheckoutAttemptIdState.NotAvailable -> CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     }
 
-    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
 
     override fun clear(owner: Any) {
         if (ownerReference != owner::class.qualifiedName) {

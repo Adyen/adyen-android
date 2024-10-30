@@ -273,7 +273,7 @@ internal class GooglePayUtilsTest {
                 shopperLocale = Locale.GERMAN,
                 environment = Environment.EUROPE,
                 clientKey = "CLIENT_KEY_CUSTOM",
-                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, "CLIENT_KEY_CUSTOM"),
+                analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, "CLIENT_KEY_CUSTOM"),
                 isCreatedByDropIn = true,
                 amount = Amount("EUR", 13_37),
             ),
