@@ -12,6 +12,7 @@ import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
@@ -21,11 +22,15 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
+import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayOutputData
+import com.adyen.checkout.googlepay.internal.util.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
@@ -56,6 +61,7 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
+import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -66,6 +72,7 @@ import java.util.Locale
 internal class DefaultGooglePayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
     @Mock private val paymentsClient: PaymentsClient,
+    @Mock private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -95,7 +102,7 @@ internal class DefaultGooglePayDelegateTest(
     @Test
     fun `when payment data is null, then state is not valid`() = runTest {
         delegate.componentStateFlow.test {
-            delegate.updateComponentState(null)
+            delegate.updateComponentState(createOutputData(paymentData = null))
 
             with(awaitItem()) {
                 assertNull(data.paymentMethod)
@@ -115,7 +122,7 @@ internal class DefaultGooglePayDelegateTest(
 
             val paymentData = TEST_PAYMENT_DATA
 
-            delegate.updateComponentState(paymentData)
+            delegate.updateComponentState(createOutputData(paymentData = paymentData))
 
             val componentState = awaitItem()
 
@@ -165,7 +172,7 @@ internal class DefaultGooglePayDelegateTest(
         }
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.componentStateFlow.test {
-            delegate.updateComponentState(TEST_PAYMENT_DATA)
+            delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
             assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
         }
     }
@@ -240,7 +247,7 @@ internal class DefaultGooglePayDelegateTest(
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             delegate.componentStateFlow.test {
-                delegate.updateComponentState(TEST_PAYMENT_DATA)
+                delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
@@ -249,7 +256,7 @@ internal class DefaultGooglePayDelegateTest(
         @Test
         fun `when payment is successful and the data is valid, then submit event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            delegate.updateComponentState(TEST_PAYMENT_DATA)
+            delegate.updateComponentState(createOutputData(paymentData = TEST_PAYMENT_DATA))
 
             val result = ApiTaskResult(TEST_PAYMENT_DATA, Status.RESULT_SUCCESS)
             delegate.handlePaymentResult(result)
@@ -274,6 +281,37 @@ internal class DefaultGooglePayDelegateTest(
                 event = ErrorEvent.THIRD_PARTY,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("googlePayAvailableSource")
+    fun `when checking Google Pay availability, then expect isReady and-or exception`(
+        isSubmitButtonVisible: Boolean,
+        isAvailable: Boolean,
+        expectedIsReady: Boolean,
+        expectedException: CheckoutException?,
+    ) = runTest {
+        whenever(googlePayAvailabilityCheck.isAvailable(any(), any(), any())) doAnswer { invocation ->
+            (invocation.getArgument(2, ComponentAvailableCallback::class.java))
+                .onAvailabilityResult(isAvailable, PaymentMethod())
+        }
+
+        val config = createCheckoutConfiguration {
+            setSubmitButtonVisible(isSubmitButtonVisible)
+        }
+        delegate = createGooglePayDelegate(config)
+        val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+        val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertEquals(expectedIsReady, componentStateFlow.latestValue.isReady)
+
+        if (expectedException != null) {
+            assertEquals(expectedException.message, exceptionFlow.latestValue.message)
+        } else {
+            assertTrue(exceptionFlow.values.isEmpty())
         }
     }
 
@@ -322,8 +360,14 @@ internal class DefaultGooglePayDelegateTest(
                 .mapToParams(configuration, Locale.US, null, null, paymentMethod),
             analyticsManager = analyticsManager,
             paymentsClient = paymentsClient,
+            googlePayAvailabilityCheck = googlePayAvailabilityCheck,
         )
     }
+
+    private fun createOutputData(
+        isButtonVisible: Boolean = false,
+        paymentData: PaymentData? = null,
+    ) = GooglePayOutputData(isButtonVisible, paymentData)
 
     companion object {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
@@ -349,6 +393,15 @@ internal class DefaultGooglePayDelegateTest(
             arguments(ApiTaskResult(null, Status.RESULT_INTERNAL_ERROR), false),
             arguments(ApiTaskResult(null, Status.RESULT_INTERRUPTED), false),
             arguments(ApiTaskResult(null, Status(AutoResolveHelper.RESULT_ERROR)), false),
+        )
+
+        @JvmStatic
+        fun googlePayAvailableSource() = listOf(
+            // isSubmitButtonVisible, isAvailable, expectedIsReady, expectedException
+            arguments(false, false, true, GooglePayUnavailableException()),
+            arguments(false, true, true, null),
+            arguments(true, false, false, GooglePayUnavailableException()),
+            arguments(true, true, true, null),
         )
     }
 }
