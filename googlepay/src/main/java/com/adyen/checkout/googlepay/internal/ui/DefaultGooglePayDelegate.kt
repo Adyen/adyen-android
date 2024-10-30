@@ -29,8 +29,10 @@ import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.util.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.util.awaitTask
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -59,6 +61,7 @@ internal class DefaultGooglePayDelegate(
     override val componentParams: GooglePayComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val paymentsClient: PaymentsClient,
+    private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
 ) : GooglePayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -91,6 +94,19 @@ internal class DefaultGooglePayDelegate(
 
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+
+        checkAvailability()
+    }
+
+    private fun checkAvailability() {
+        googlePayAvailabilityCheck.isAvailable(
+            paymentMethod,
+            componentParams,
+        ) { isAvailable, _ ->
+            if (!isAvailable) {
+                exceptionChannel.trySend(GooglePayUnavailableException())
+            }
+        }
     }
 
     override fun observe(
