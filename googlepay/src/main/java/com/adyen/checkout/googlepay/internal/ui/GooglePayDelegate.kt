@@ -15,6 +15,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.google.android.gms.tasks.Task
@@ -28,6 +29,8 @@ internal interface GooglePayDelegate :
     ButtonDelegate {
 
     override val componentParams: GooglePayComponentParams
+
+    val outputDataFlow: Flow<GooglePayOutputData>
 
     val componentStateFlow: Flow<GooglePayComponentState>
 
