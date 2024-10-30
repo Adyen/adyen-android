@@ -14,11 +14,15 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
@@ -93,6 +97,25 @@ internal class DefaultAnalyticsRepositoryTest(
             verify(remoteDataStore, never()).sendEvents(any(), any())
         }
 
+        @ParameterizedTest
+        @MethodSource(
+            "com.adyen.checkout.components.core.internal.analytics.data.DefaultAnalyticsRepositoryTest#sendEventsSource"
+        )
+        fun `there are events stored, then events are successfully sent`(
+            infoEvents: List<AnalyticsEvent.Info>,
+            logEvents: List<AnalyticsEvent.Log>,
+            errorEvents: List<AnalyticsEvent.Error>,
+        ) = runTest {
+            whenever(localInfoDataStore.fetchEvents(any())) doReturn infoEvents
+            whenever(localLogDataStore.fetchEvents(any())) doReturn logEvents
+            whenever(localErrorDataStore.fetchEvents(any())) doReturn errorEvents
+            val expectedRequest = analyticsTrackRequestProvider(infoEvents, logEvents, errorEvents)
+
+            analyticsRepository.sendEvents("test")
+
+            verify(remoteDataStore).sendEvents(eq(expectedRequest), any())
+        }
+
         @OptIn(DirectAnalyticsEventCreation::class)
         @Test
         fun `it is successful, then events are cleared from storage`() = runTest {
@@ -127,5 +150,49 @@ internal class DefaultAnalyticsRepositoryTest(
             verify(localLogDataStore, never()).removeEvents(any())
             verify(localErrorDataStore, never()).removeEvents(any())
         }
+    }
+
+    companion object {
+
+        @OptIn(DirectAnalyticsEventCreation::class)
+        @JvmStatic
+        fun sendEventsSource() = listOf(
+            // infoEvents, logEvents, errorEvents
+            arguments(
+                listOf(AnalyticsEvent.Info(component = "test info")),
+                emptyList<AnalyticsEvent.Log>(),
+                emptyList<AnalyticsEvent.Error>(),
+            ),
+            arguments(
+                emptyList<AnalyticsEvent.Info>(),
+                listOf(AnalyticsEvent.Log(component = "test log")),
+                emptyList<AnalyticsEvent.Error>(),
+            ),
+            arguments(
+                emptyList<AnalyticsEvent.Info>(),
+                emptyList<AnalyticsEvent.Log>(),
+                listOf(AnalyticsEvent.Error(component = "test error")),
+            ),
+            arguments(
+                listOf(AnalyticsEvent.Info(component = "test info")),
+                listOf(AnalyticsEvent.Log(component = "test log")),
+                emptyList<AnalyticsEvent.Error>(),
+            ),
+            arguments(
+                listOf(AnalyticsEvent.Info(component = "test info")),
+                emptyList<AnalyticsEvent.Log>(),
+                listOf(AnalyticsEvent.Error(component = "test error")),
+            ),
+            arguments(
+                emptyList<AnalyticsEvent.Info>(),
+                listOf(AnalyticsEvent.Log(component = "test log")),
+                listOf(AnalyticsEvent.Error(component = "test error")),
+            ),
+            arguments(
+                listOf(AnalyticsEvent.Info(component = "test info")),
+                listOf(AnalyticsEvent.Log(component = "test log")),
+                listOf(AnalyticsEvent.Error(component = "test error")),
+            ),
+        )
     }
 }

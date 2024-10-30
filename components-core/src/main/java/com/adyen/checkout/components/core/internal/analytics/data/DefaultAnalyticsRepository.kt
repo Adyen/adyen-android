@@ -45,7 +45,7 @@ internal class DefaultAnalyticsRepository(
         val logEvents = localLogDataStore.fetchEvents(remoteDataStore.logSize)
         val errorEvents = localErrorDataStore.fetchEvents(remoteDataStore.errorSize)
 
-        if (infoEvents.isEmpty() && logEvents.isEmpty() && errorEvents.isEmpty()) return
+        if (!hasEventsToTrack(infoEvents, logEvents, errorEvents)) return
 
         val request = analyticsTrackRequestProvider(
             infoList = infoEvents,
@@ -59,5 +59,14 @@ internal class DefaultAnalyticsRepository(
         localErrorDataStore.removeEvents(errorEvents)
 
         adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
+    }
+
+    private fun hasEventsToTrack(vararg eventLists: List<AnalyticsEvent>): Boolean {
+        for (events in eventLists) {
+            if (events.isNotEmpty()) {
+                return true
+            }
+        }
+        return false
     }
 }
