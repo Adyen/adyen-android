@@ -20,7 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.example.ui.theme.ExampleTheme
@@ -35,19 +37,14 @@ internal fun ResultContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        val tint = when (resultState) {
-            ResultState.SUCCESS -> ExampleTheme.customColors.success
-            ResultState.PENDING -> ExampleTheme.customColors.warning
-            ResultState.FAILURE -> MaterialTheme.colorScheme.error
-        }
         Icon(
             painter = painterResource(id = resultState.drawable),
             contentDescription = null,
-            tint = tint,
+            tint = Color.Unspecified,
             modifier = Modifier.size(100.dp),
         )
         Spacer(modifier = Modifier.height(ExampleTheme.dimensions.grid_2))
-        Text(text = resultState.text, style = MaterialTheme.typography.displaySmall)
+        Text(text = resultState.text, style = MaterialTheme.typography.displaySmall, textAlign = TextAlign.Center)
     }
 }
 
