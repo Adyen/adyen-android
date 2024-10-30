@@ -19,6 +19,9 @@ import com.adyen.checkout.googlepay.databinding.ViewGooglePayButtonBinding
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
 import com.google.android.gms.wallet.button.ButtonOptions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class GooglePayButtonView @JvmOverloads constructor(
     context: Context,
@@ -49,7 +52,7 @@ internal class GooglePayButtonView @JvmOverloads constructor(
         typedArray.recycle()
     }
 
-    override fun initialize(delegate: ButtonDelegate) {
+    override fun initialize(delegate: ButtonDelegate, coroutineScope: CoroutineScope) {
         check(delegate is GooglePayDelegate)
 
         val buttonStyle = delegate.componentParams.googlePayButtonStyling
