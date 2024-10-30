@@ -7,6 +7,6 @@
  */
 package com.adyen.checkout.components.core
 
-interface ComponentAvailableCallback {
+fun interface ComponentAvailableCallback {
     fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod)
 }
