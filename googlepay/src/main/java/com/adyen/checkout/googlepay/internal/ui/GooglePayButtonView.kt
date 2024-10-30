@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import androidx.core.view.isVisible
 import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
-import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.googlepay.R
 import com.adyen.checkout.googlepay.databinding.ViewGooglePayButtonBinding
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -87,11 +86,9 @@ internal class GooglePayButtonView @JvmOverloads constructor(
     }
 
     private fun observeDelegate(delegate: GooglePayDelegate, coroutineScope: CoroutineScope) {
-        delegate.exceptionFlow
-            .onEach { e ->
-                if (e is GooglePayUnavailableException) {
-                    binding.payButton.isVisible = false
-                }
+        delegate.outputDataFlow
+            .onEach {
+                binding.payButton.isVisible = it.isButtonVisible
             }
             .launchIn(coroutineScope)
     }
