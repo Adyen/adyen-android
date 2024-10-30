@@ -8,19 +8,17 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.DispatcherProvider
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -28,8 +26,8 @@ import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
@@ -49,13 +47,11 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SessionsGooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val application: Application,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
-    SessionComponentCallback<GooglePayComponentState>,
-    ComponentAvailableCallback {
+    SessionComponentCallback<GooglePayComponentState> {
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
@@ -93,7 +89,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         )
 
         updateEvent { SessionsGooglePayEvents.ComponentData(componentData) }
-        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
+        updateState { SessionsGooglePayState.ShowButton }
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
@@ -129,35 +125,19 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         }
     }
 
-    private fun checkGooglePayAvailability(
-        paymentMethod: PaymentMethod,
-        checkoutConfiguration: CheckoutConfiguration,
-    ) {
-        GooglePayComponent.PROVIDER.isAvailable(
-            application = application,
-            paymentMethod = paymentMethod,
-            checkoutConfiguration = checkoutConfiguration,
-            callback = this,
-        )
-    }
-
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
-        viewModelScope.launch {
-            if (isAvailable) {
-                updateState { SessionsGooglePayState.ShowButton }
-            } else {
-                onError()
-            }
-        }
-    }
-
     override fun onAction(action: Action) {
         updateEvent { SessionsGooglePayEvents.Action(action) }
     }
 
     override fun onError(componentError: ComponentError) {
-        Log.e(TAG, "Component error occurred")
-        onError()
+        val exception = componentError.exception
+        Log.e(TAG, "Component error occurred", exception)
+
+        if (exception is GooglePayUnavailableException) {
+            onGooglePayUnavailable()
+        } else {
+            onError()
+        }
     }
 
     override fun onFinished(result: SessionPaymentResult) {
@@ -170,6 +150,16 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         "Received" -> ResultState.PENDING
 
         else -> ResultState.FAILURE
+    }
+
+    private fun onGooglePayUnavailable() {
+        updateState {
+            val result = ResultState(
+                R.drawable.ic_result_failure,
+                "Google Pay is not available on this device",
+            )
+            SessionsGooglePayState.FinalResult(result)
+        }
     }
 
     private fun onError() {
