@@ -35,7 +35,7 @@ internal interface GooglePayDelegate :
 
     val payEventFlow: Flow<Task<PaymentData>>
 
-    @Deprecated("Deprecated in favor of startGooglePayScreen()", ReplaceWith("onSubmit()"))
+    @Deprecated("Deprecated in favor of onSubmit()", ReplaceWith("onSubmit()"))
     fun startGooglePayScreen(activity: Activity, requestCode: Int)
 
     fun handleActivityResult(resultCode: Int, data: Intent?)
