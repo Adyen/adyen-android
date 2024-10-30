@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 abstract class PayButton(
@@ -21,7 +22,7 @@ abstract class PayButton(
     defStyleAttr: Int,
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    abstract fun initialize(delegate: ButtonDelegate)
+    abstract fun initialize(delegate: ButtonDelegate, coroutineScope: CoroutineScope)
 
     abstract override fun setEnabled(enabled: Boolean)
 

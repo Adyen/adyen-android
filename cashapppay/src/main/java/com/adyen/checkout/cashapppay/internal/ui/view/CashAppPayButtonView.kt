@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import com.adyen.checkout.cashapppay.databinding.CashAppPayButtonViewBinding
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
+import kotlinx.coroutines.CoroutineScope
 
 internal class CashAppPayButtonView @JvmOverloads constructor(
     context: Context,
@@ -23,7 +24,7 @@ internal class CashAppPayButtonView @JvmOverloads constructor(
 
     private val binding = CashAppPayButtonViewBinding.inflate(LayoutInflater.from(context), this)
 
-    override fun initialize(delegate: ButtonDelegate) = Unit
+    override fun initialize(delegate: ButtonDelegate, coroutineScope: CoroutineScope) = Unit
 
     override fun setEnabled(enabled: Boolean) {
         binding.payButton.isEnabled = enabled
