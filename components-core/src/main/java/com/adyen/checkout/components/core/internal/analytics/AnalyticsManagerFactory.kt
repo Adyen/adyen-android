@@ -12,6 +12,7 @@ import android.app.Application
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.analytics.data.DefaultAnalyticsRepository
+import com.adyen.checkout.components.core.internal.analytics.data.local.ErrorAnalyticsLocalDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.local.InfoAnalyticsLocalDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.local.LogAnalyticsLocalDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
@@ -59,6 +60,7 @@ class AnalyticsManagerFactory {
         analyticsRepository = DefaultAnalyticsRepository(
             localInfoDataStore = InfoAnalyticsLocalDataStore(),
             localLogDataStore = LogAnalyticsLocalDataStore(),
+            localErrorDataStore = ErrorAnalyticsLocalDataStore(),
             remoteDataStore = DefaultAnalyticsRemoteDataStore(
                 analyticsService = AnalyticsService(
                     HttpClientFactory.getAnalyticsHttpClient(environment),
@@ -66,6 +68,7 @@ class AnalyticsManagerFactory {
                 clientKey = clientKey,
                 infoSize = INFO_SIZE,
                 logSize = LOG_SIZE,
+                errorSize = ERROR_SIZE,
             ),
             analyticsSetupProvider = DefaultAnalyticsSetupProvider(
                 application = application,
@@ -83,5 +86,6 @@ class AnalyticsManagerFactory {
     companion object {
         private const val INFO_SIZE = 50
         private const val LOG_SIZE = 5
+        private const val ERROR_SIZE = 5
     }
 }
