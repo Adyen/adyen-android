@@ -74,6 +74,7 @@ class AnalyticsManagerFactory {
                 application = application,
                 shopperLocale = shopperLocale,
                 isCreatedByDropIn = isCreatedByDropIn,
+                analyticsLevel = analyticsParams.level,
                 amount = amount,
                 source = source,
                 sessionId = sessionId,

@@ -17,6 +17,7 @@ internal class AnalyticsSetupRequestTest {
             locale = "en-US",
             component = "dropin",
             flavor = "dropin",
+            level = "all",
             deviceBrand = "Google",
             deviceModel = "Pixel",
             referrer = "unknown",
@@ -37,6 +38,7 @@ internal class AnalyticsSetupRequestTest {
             .put("locale", "en-US")
             .put("component", "dropin")
             .put("flavor", "dropin")
+            .put("level", "all")
             .put("deviceBrand", "Google")
             .put("deviceModel", "Pixel")
             .put("referrer", "unknown")
@@ -59,6 +61,7 @@ internal class AnalyticsSetupRequestTest {
             .put("locale", "en-US")
             .put("component", "dropin")
             .put("flavor", "dropin")
+            .put("level", "all")
             .put("deviceBrand", "Google")
             .put("deviceModel", "Pixel")
             .put("referrer", "unknown")
@@ -78,6 +81,7 @@ internal class AnalyticsSetupRequestTest {
             locale = "en-US",
             component = "dropin",
             flavor = "dropin",
+            level = "all",
             deviceBrand = "Google",
             deviceModel = "Pixel",
             referrer = "unknown",

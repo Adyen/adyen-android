@@ -29,6 +29,7 @@ internal data class AnalyticsSetupRequest(
     val locale: String?,
     val component: String?,
     val flavor: String?,
+    val level: String?,
     val deviceBrand: String?,
     val deviceModel: String?,
     val referrer: String?,
@@ -47,6 +48,7 @@ internal data class AnalyticsSetupRequest(
         private const val LOCALE = "locale"
         private const val COMPONENT = "component"
         private const val FLAVOR = "flavor"
+        private const val LEVEL = "level"
         private const val DEVICE_BRAND = "deviceBrand"
         private const val DEVICE_MODEL = "deviceModel"
         private const val REFERRER = "referrer"
@@ -68,6 +70,7 @@ internal data class AnalyticsSetupRequest(
                         putOpt(LOCALE, modelObject.locale)
                         putOpt(COMPONENT, modelObject.component)
                         putOpt(FLAVOR, modelObject.flavor)
+                        putOpt(LEVEL, modelObject.level)
                         putOpt(DEVICE_BRAND, modelObject.deviceBrand)
                         putOpt(DEVICE_MODEL, modelObject.deviceModel)
                         putOpt(REFERRER, modelObject.referrer)
@@ -93,6 +96,7 @@ internal data class AnalyticsSetupRequest(
                             locale = getStringOrNull(LOCALE),
                             component = getStringOrNull(COMPONENT),
                             flavor = getStringOrNull(FLAVOR),
+                            level = getStringOrNull(LEVEL),
                             deviceBrand = getStringOrNull(DEVICE_BRAND),
                             deviceModel = getStringOrNull(DEVICE_MODEL),
                             referrer = getStringOrNull(REFERRER),
