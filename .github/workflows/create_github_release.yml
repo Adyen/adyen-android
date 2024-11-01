@@ -32,15 +32,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Create the Release TAG and notes.
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
+      # Create a Github release with release notes.
+      - name: Create Github release
+        uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION_NAME: ${{ needs.generate_version_name.outputs.version_name }}
         with:
-          tag_name: ${{ env.VERSION_NAME }}
-          release_name: ${{ env.VERSION_NAME }}
-          body_path: ${{ github.workspace }}/RELEASE_NOTES.md
+          token: ${{ env.GITHUB_TOKEN }}
+          tag: ${{ env.VERSION_NAME }}
+          name: ${{ env.VERSION_NAME }}
+          bodyFile: ${{ github.workspace }}/RELEASE_NOTES.md
           draft: true
-          prerelease: false
