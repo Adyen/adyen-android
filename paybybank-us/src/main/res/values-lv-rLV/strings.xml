@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Izmantojiet Pay by Bank pakalpojumu, lai nekavējoties norēķinātos no jebkura bankas konta.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Pievienojot bankas kontu, jūs atļaujat debetēt no sava konta jebkuru summu, kas maksājama par mūsu pakalpojumu izmantošanu un/vai mūsu produktu iegādi, līdz brīdim, kad šī atļauja tiek atsaukta.</string>
+    <string name="checkout_pay_by_bank_us_submit">Turpināt maksāt ar bankas starpniecību</string>
+    <string name="checkout_pay_by_bank_us_more">+ vairāk</string>
+</resources>

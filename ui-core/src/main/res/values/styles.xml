@@ -43,6 +43,11 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="AdyenCheckout.TextAppearance.Tertiary" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:alpha">0.54</item>
+    </style>
+
     <style name="AdyenCheckout.Translucent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:backgroundDimEnabled">true</item>
@@ -117,6 +122,13 @@
         <item name="android:maxHeight">@dimen/logo_large_height</item>
         <item name="android:layout_marginRight">0dp</item>
         <item name="android:layout_marginEnd">0dp</item>
+    </style>
+
+    <style name="AdyenCheckout.Image.Logo.Small">
+        <item name="android:layout_width">@dimen/logo_small_width</item>
+        <item name="android:layout_height">@dimen/logo_small_height</item>
+        <item name="android:minHeight">@dimen/logo_small_width</item>
+        <item name="android:maxHeight">@dimen/logo_small_height</item>
     </style>
 
     <style name="AdyenCheckout.ListItemText">

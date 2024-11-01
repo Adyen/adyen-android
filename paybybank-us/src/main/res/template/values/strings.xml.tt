@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">%%payByBankAISDD.disclaimer.header%%</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">%%payByBankAISDD.disclaimer.body%%</string>
+    <string name="checkout_pay_by_bank_us_submit">%%payByBankAISDD.submit%%</string>
+    <string name="checkout_pay_by_bank_us_more">%%payByBankAISDD.more%%</string>
+    <!-- Untranslatable strings -->
+    <string name="checkout_pay_by_bank_us_title" translatable="false">Pay by Bank</string>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 28/10/2024.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <ImageView
+        android:id="@+id/imageView_logo"
+        style="@style/AdyenCheckout.Image.Logo.Large"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/textView_title"
+        style="@style/AdyenCheckout.PayByBankUS.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Pay by Bank" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_brandList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="4"
+        tools:listitem="@layout/logo_view_holder" />
+
+    <TextView
+        android:id="@+id/textView_disclaimerHeader"
+        style="@style/AdyenCheckout.PayByBankUS.DisclaimerHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textView_disclaimerBody"
+        style="@style/AdyenCheckout.PayByBankUS.DisclaimerBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</merge>
