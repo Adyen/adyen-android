@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Uporabite Pay by Bank za takojšnje plačilo s katerega koli bančnega računa.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">S povezavo svojega bančnega računa dovoljujete bremenitev računa za vse zneske, ki jih dolgujete za uporabo naših storitev in/ali nakup naših izdelkov, dokler tega dovoljenja ne prekličete.</string>
+    <string name="checkout_pay_by_bank_us_submit">Nadaljuj na storitev Pay by Bank</string>
+    <string name="checkout_pay_by_bank_us_more">+ več</string>
+</resources>

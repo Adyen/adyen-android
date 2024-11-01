@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">運用銀行支付方式透過任何銀行帳戶立即付款。</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">連結您的銀行帳戶即表示您授權我們可以在您享有我們的服務和/或購買我們的產品時，向您的帳戶扣款對應的費用，直到授權被撤銷為止。</string>
+    <string name="checkout_pay_by_bank_us_submit">繼續透過銀行付款</string>
+    <string name="checkout_pay_by_bank_us_more">+ 更多</string>
+</resources>

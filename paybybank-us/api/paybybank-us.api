@@ -69,8 +69,15 @@ public final class com/adyen/checkout/paybybankus/PayByBankUSConfigurationKt {
 	public static synthetic fun payByBankUS$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
-public final class com/adyen/checkout/paybybankus/internal/PayByBankUSViewProvider {
-	public fun <init> ()V
+public final class com/adyen/checkout/paybybankus/databinding/PayByBankUsViewBinding : androidx/viewbinding/ViewBinding {
+	public final field imageViewLogo Landroid/widget/ImageView;
+	public final field recyclerViewBrandList Landroidx/recyclerview/widget/RecyclerView;
+	public final field textViewDisclaimerBody Landroid/widget/TextView;
+	public final field textViewDisclaimerHeader Landroid/widget/TextView;
+	public final field textViewTitle Landroid/widget/TextView;
+	public static fun bind (Landroid/view/View;)Lcom/adyen/checkout/paybybankus/databinding/PayByBankUsViewBinding;
+	public fun getRoot ()Landroid/view/View;
+	public static fun inflate (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Lcom/adyen/checkout/paybybankus/databinding/PayByBankUsViewBinding;
 }
 
 public final class com/adyen/checkout/paybybankus/internal/provider/PayByBankUSComponentProvider : com/adyen/checkout/components/core/internal/provider/PaymentComponentProvider, com/adyen/checkout/sessions/core/internal/provider/SessionPaymentComponentProvider {
@@ -103,9 +110,5 @@ public final class com/adyen/checkout/paybybankus/internal/provider/PayByBankUSC
 	public synthetic fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Landroid/app/Application;Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/paybybankus/PayByBankUSConfiguration;Landroid/app/Application;Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/paybybankus/PayByBankUSComponent;
 	public fun isPaymentMethodSupported (Lcom/adyen/checkout/components/core/PaymentMethod;)Z
-}
-
-public final class com/adyen/checkout/paybybankus/internal/ui/view/PayByBankUSView {
-	public fun <init> ()V
 }
 

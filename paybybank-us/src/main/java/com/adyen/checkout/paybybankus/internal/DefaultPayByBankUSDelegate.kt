@@ -22,11 +22,17 @@ import com.adyen.checkout.components.core.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.PayByBankUSComponentState
+import com.adyen.checkout.paybybankus.R
+import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
+import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.LogoItem
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.TextItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,11 +47,15 @@ internal class DefaultPayByBankUSDelegate(
     private val submitHandler: SubmitHandler<PayByBankUSComponentState>,
 ) : PayByBankUSDelegate {
 
+    private val _outputDataFlow = MutableStateFlow(createOutputData())
+    override val outputDataFlow: Flow<PayByBankUSOutputData> = _outputDataFlow
+
+    override val outputData: PayByBankUSOutputData = _outputDataFlow.value
+
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<PayByBankUSComponentState> = _componentStateFlow
 
-    // TODO push pay by bank us view after implementing view provider and view
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(PayByBankUSComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<PayByBankUSComponentState> = submitHandler.submitFlow
@@ -86,6 +96,10 @@ internal class DefaultPayByBankUSDelegate(
 
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
+    private fun createOutputData() = PayByBankUSOutputData(
+        brandList = getBrandList()
+    )
+
     private fun createComponentState(): PayByBankUSComponentState {
         val payByBankUsPaymentMethod = PayByBankUSPaymentMethod(
             type = getPaymentMethodType(),
@@ -124,5 +138,15 @@ internal class DefaultPayByBankUSDelegate(
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
+    }
+
+    private fun getBrandList(): List<LogoTextItem> {
+        return listOf(
+            LogoItem(PayByBankUSBrandLogo.US_1.path, componentParams.environment),
+            LogoItem(PayByBankUSBrandLogo.US_2.path, componentParams.environment),
+            LogoItem(PayByBankUSBrandLogo.US_3.path, componentParams.environment),
+            LogoItem(PayByBankUSBrandLogo.US_4.path, componentParams.environment),
+            TextItem(R.string.checkout_pay_by_bank_us_more),
+        )
     }
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Ha bankszámláról szeretne azonnal fizetni, használja a Fizetés bankkal lehetőséget.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Bankszámlája csatlakoztatásával engedélyezi, hogy a szolgáltatásaink használatáért és/vagy termékeink megvásárlásáért levonandó összeget a számlájára terheljük egészen addig, amíg ezt az engedélyt vissza nem vonja.</string>
+    <string name="checkout_pay_by_bank_us_submit">Tovább a Fizetés bankkal lehetőségre</string>
+    <string name="checkout_pay_by_bank_us_more">+ továbbiak</string>
+</resources>

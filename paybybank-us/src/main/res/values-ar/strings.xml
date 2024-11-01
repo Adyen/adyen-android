@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">استخدم خدمة Pay by Bank للدفع الفوري من خلال أي حساب مصرفي.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">من خلال ربط حسابك البنكي، أنت بذلك تمنحنا تفويضًا بخصم مدفوعات المبالغ المستحقة من حسابك البنكي، وذلك مقابل استخدام خدماتنا و/أو شراء منتجاتنا. ويستمر العمل بهذا التفويض إلى أن يتم إلغاؤه.</string>
+    <string name="checkout_pay_by_bank_us_submit">المضي قُدمًا والدفع عن طريق البنك</string>
+    <string name="checkout_pay_by_bank_us_more">+ المزيد</string>
+</resources>
