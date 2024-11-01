@@ -10,6 +10,7 @@ package com.adyen.checkout.paybybankus
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
@@ -17,11 +18,15 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.internal.PayByBankUSDelegate
 import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -39,30 +44,43 @@ class PayByBankUSComponent internal constructor(
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    override val delegate: ComponentDelegate
-        get() = TODO("Not yet implemented")
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?>
-        get() = TODO("Not yet implemented")
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        payByBankUSDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
+
+    init {
+        payByBankUSDelegate.initialize(viewModelScope)
+        genericActionDelegate.initialize(viewModelScope)
+        componentEventHandler.initialize(viewModelScope)
+    }
 
     internal fun observe(
         lifecycleOwner: LifecycleOwner,
         callback: (PaymentComponentEvent<PayByBankUSComponentState>) -> Unit
     ) {
-        TODO("Not yet implemented")
+        payByBankUSDelegate.observe(lifecycleOwner, viewModelScope, callback)
+        genericActionDelegate.observe(lifecycleOwner, viewModelScope, callback.toActionCallback())
     }
 
     internal fun removeObserver() {
-        TODO("Not yet implemented")
+        payByBankUSDelegate.removeObserver()
+        genericActionDelegate.removeObserver()
     }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        TODO("Not yet implemented")
+        (delegate as? PayByBankUSDelegate)?.setInteractionBlocked(isInteractionBlocked)
+            ?: adyenLog(AdyenLogLevel.ERROR) { "Payment component is not interactable, ignoring." }
     }
 
     override fun onCleared() {
         super.onCleared()
-        TODO("Not yet implemented")
+        payByBankUSDelegate.onCleared()
+        genericActionDelegate.onCleared()
+        componentEventHandler.onCleared()
     }
 
     companion object {
