@@ -5,8 +5,30 @@ on:
   workflow_dispatch:
 
 jobs:
+  generate_version_name:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version_name: ${{ steps.version_name.outputs.PROJECT_VERSION }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Get the version name from a script and save it in version_name output.
+      - name: Generate version_name
+        id: version_name
+        run: |
+          echo "▸ Set run permission."
+          chmod +x scripts/version_name.sh
+          echo "▸ Getting version name"
+          PROJECT_VERSION=$(./scripts/version_name.sh)
+          echo "▸ Creating the version_name output with value: $PROJECT_VERSION"
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+          echo "▸ DONE"
+
   publish_draft_release:
     runs-on: ubuntu-latest
+    needs: generate_version_name
 
     steps:
       - uses: actions/checkout@v4
