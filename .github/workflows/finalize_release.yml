@@ -23,3 +23,14 @@ jobs:
           omitNameDuringUpdate: true
           omitBodyDuringUpdate: true
           draft: false
+
+  remove_release_branch:
+    runs-on: ubuntu-latest
+    needs: publish_draft_release
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove release branch
+        run: |
+          git push origin --delete ${{ github.ref_name }}
