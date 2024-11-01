@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Pankkimaksutoiminnolla voit maksaa heti miltä tahansa pankkitililtä.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Kun yhdistät pankkitilisi, annat luvan veloittaa tililtäsi kaikki palveluidemme käytöstä ja/tai tuotteidemme ostamisesta aiheutuvat kulut. Tämä valtuutus on voimassa siihen saakka, kunnes peruutat sen.</string>
+    <string name="checkout_pay_by_bank_us_submit">Jatka pankkimaksuun</string>
+    <string name="checkout_pay_by_bank_us_more">+ lisää</string>
+</resources>

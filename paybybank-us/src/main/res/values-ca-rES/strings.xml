@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Utilitzeu el pagament per banc per pagar a l\'instant des de qualsevol compte bancari.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">En connectar el vostre compte bancari, esteu autoritzant càrrecs a aquest compte per qualsevol import degut per l\'ús dels nostres serveis o la compra dels nostres productes, fins que es revoqui aquesta autorització.</string>
+    <string name="checkout_pay_by_bank_us_submit">Continua a pagament per banc</string>
+    <string name="checkout_pay_by_bank_us_more">+ més</string>
+</resources>

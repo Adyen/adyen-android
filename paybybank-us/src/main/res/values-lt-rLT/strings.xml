@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Naudokitės „Pay by Bank“ ir akimirksniu atsiskaitykite iš bet kurios banko sąskaitos.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Prijungdami savo banko sąskaitą sutinkate, kad iš jos būtų nurašomos visos mokėtinos sumos už naudojimąsi mūsų paslaugomis ir (arba) už mūsų produktų pirkimą, kol šis leidimas bus atšauktas.</string>
+    <string name="checkout_pay_by_bank_us_submit">Toliau eiti į „Pay by Bank“</string>
+    <string name="checkout_pay_by_bank_us_more">+ daugiau</string>
+</resources>
