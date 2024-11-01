@@ -1,0 +1,25 @@
+name: Finalize Release
+
+# Every time we trigger the workflow on a branch.
+on:
+  workflow_dispatch:
+
+jobs:
+  publish_draft_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Publish Github release and the tag
+      - name: Publish Github release
+        uses: ncipollo/release-action@v1
+        env:
+          VERSION_NAME: ${{ needs.generate_version_name.outputs.version_name }}
+        with:
+          tag: ${{ env.VERSION_NAME }}
+          allowUpdates: true
+          updateOnlyUnreleased: true
+          omitNameDuringUpdate: true
+          omitBodyDuringUpdate: true
+          draft: false
