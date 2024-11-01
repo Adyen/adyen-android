@@ -76,7 +76,7 @@ mockito = "5.14.2"
 robolectric = "4.13"
 test-ext = "1.2.1"
 test-rules = "1.6.1"
-turbine = "1.1.0"
+turbine = "1.2.0"
 uiautomator = "2.3.0"
 
 [libraries]
