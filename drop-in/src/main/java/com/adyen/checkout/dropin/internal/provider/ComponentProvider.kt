@@ -91,6 +91,9 @@ import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProv
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
+import com.adyen.checkout.paybybankus.PayByBankUSComponent
+import com.adyen.checkout.paybybankus.PayByBankUSComponentState
+import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProvider
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
@@ -405,6 +408,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<PayByBankComponentState>,
+            )
+        }
+
+        checkCompileOnly { PayByBankUSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            PayByBankUSComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayByBankUSComponentState>,
             )
         }
 
