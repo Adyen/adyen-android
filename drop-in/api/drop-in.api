@@ -133,6 +133,7 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/a
 	public final fun addOnlineBankingPLConfiguration (Lcom/adyen/checkout/onlinebankingpl/OnlineBankingPLConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addOnlineBankingSKConfiguration (Lcom/adyen/checkout/onlinebankingsk/OnlineBankingSKConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addOpenBankingConfiguration (Lcom/adyen/checkout/openbanking/OpenBankingConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun addPayByBankUSConfiguration (Lcom/adyen/checkout/paybybankus/PayByBankUSConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addPayEasyConfiguration (Lcom/adyen/checkout/payeasy/PayEasyConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addSepaConfiguration (Lcom/adyen/checkout/sepa/SepaConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addSevenElevenConfiguration (Lcom/adyen/checkout/seveneleven/SevenElevenConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
