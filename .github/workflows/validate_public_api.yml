@@ -30,8 +30,8 @@ jobs:
       - name: Comment on PR
         uses: thollander/actions-comment-pull-request@v3
         with:
-          filePath: "${{ github.workspace }}/api_changes.md"
-          comment_tag: api_changes
+          file-path: "${{ github.workspace }}/api_changes.md"
+          comment-tag: api_changes
           mode: recreate
 
       - name: Check if successful
