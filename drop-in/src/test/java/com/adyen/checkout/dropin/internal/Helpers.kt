@@ -48,7 +48,8 @@ internal object Helpers {
             name = name.orEmpty(),
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
-            Environment.TEST,
+            environment = Environment.TEST,
+            brandList = emptyList(),
         )
     }
 

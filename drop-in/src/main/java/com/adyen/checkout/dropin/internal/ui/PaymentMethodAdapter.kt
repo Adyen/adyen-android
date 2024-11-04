@@ -35,6 +35,7 @@ import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
+import com.adyen.checkout.ui.core.internal.ui.view.LogoTextAdapter
 
 internal class PaymentMethodAdapter @JvmOverloads constructor(
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,
@@ -213,6 +214,11 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             }
 
             textViewAmount.isVisible = false
+
+            recyclerViewBrandList.isVisible = model.brandList.isNotEmpty()
+            val adapter = LogoTextAdapter(binding.root.context)
+            recyclerViewBrandList.adapter = adapter
+            adapter.submitList(model.brandList)
         }
     }
 

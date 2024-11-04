@@ -61,6 +61,19 @@
             tools:text="Test" />
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_brandList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="4"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:listitem="@layout/logo_view_holder" />
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_amount"
         android:layout_width="wrap_content"

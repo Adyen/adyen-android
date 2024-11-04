@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.paybybankus.internal.ui.model
 
-internal enum class PayByBankUSBrandLogo(val path: String) {
+import androidx.annotation.RestrictTo
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class PayByBankUSBrandLogo(val path: String) {
     US_1("US-1"),
     US_2("US-2"),
     US_3("US-3"),

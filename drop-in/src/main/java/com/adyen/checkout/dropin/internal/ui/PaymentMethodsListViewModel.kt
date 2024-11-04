@@ -37,6 +37,10 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
+import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.LogoItem
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.TextItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -240,7 +244,24 @@ internal class PaymentMethodsListViewModel(
             icon = icon.orEmpty(),
             drawIconBorder = drawIconBorder,
             environment = dropInParams.environment,
+            brandList = if (type == PaymentMethodTypes.PAY_BY_BANK_US) {
+                makeBrandList()
+            } else {
+                emptyList()
+            },
         )
+    }
+
+    private fun makeBrandList(): List<LogoTextItem> {
+        return listOf(
+            PayByBankUSBrandLogo.entries.take(PAY_BY_BANK_BRAND_LOGO_SIZE).map {
+                LogoItem(
+                    it.path,
+                    dropInParams.environment,
+                )
+            },
+            listOf(TextItem(R.string.checkout_plus)),
+        ).flatten()
     }
 
     private fun List<OrderPaymentMethod>.mapToGiftCardPaymentMethodModel(): List<GiftCardPaymentMethodModel> =
@@ -258,6 +279,7 @@ internal class PaymentMethodsListViewModel(
     companion object {
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
+        private const val PAY_BY_BANK_BRAND_LOGO_SIZE = 3
     }
 }
 
