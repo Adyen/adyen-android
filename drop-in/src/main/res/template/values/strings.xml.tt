@@ -39,4 +39,5 @@
     <!-- Untranslatable strings -->
     <string name="checkout_negative_amount" translatable="false">- %s</string>
     <string name="last_four_digits_format" translatable="false">•••• %s</string>
+    <string name="checkout_plus" translatable="false">+</string>
 </resources>
