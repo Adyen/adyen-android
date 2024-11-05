@@ -11,8 +11,10 @@ import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepositor
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.dropin.internal.analytics.DropInEvents
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.test.LoggingExtension
+import com.adyen.checkout.test.TestDispatcherExtension
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -28,7 +30,7 @@ import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 import java.util.Locale
 
-@ExtendWith(MockitoExtension::class, LoggingExtension::class)
+@ExtendWith(MockitoExtension::class, LoggingExtension::class, TestDispatcherExtension::class)
 internal class DropInViewModelTest(
     @Mock private val bundleHandler: DropInSavedStateHandleContainer,
     @Mock private val orderStatusRepository: OrderStatusRepository,
@@ -96,6 +98,16 @@ internal class DropInViewModelTest(
                 component = "dropin",
                 configData = emptyMap(),
             )
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when drop-in is cancelled, then analytics event is tracked`() {
+            viewModel = createDropInViewModel()
+
+            viewModel.cancelDropIn()
+
+            val expected = DropInEvents.closed()
             analyticsManager.assertLastEventEquals(expected)
         }
     }

@@ -35,6 +35,7 @@ import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.internal.analytics.DropInEvents
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
@@ -458,6 +459,10 @@ internal class DropInViewModel(
 
     fun cancelDropIn() {
         currentOrder?.let { sendCancelOrderEvent(it, true) }
+
+        val event = DropInEvents.closed()
+        analyticsManager.trackEvent(event)
+
         sendEvent(DropInActivityEvent.CancelDropIn)
     }
 
