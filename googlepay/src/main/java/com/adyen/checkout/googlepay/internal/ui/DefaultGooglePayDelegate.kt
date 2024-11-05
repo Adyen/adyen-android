@@ -90,6 +90,7 @@ internal class DefaultGooglePayDelegate(
         submitHandler.initialize(coroutineScope, componentStateFlow)
 
         initializeAnalytics(coroutineScope)
+        checkAvailability()
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -98,8 +99,6 @@ internal class DefaultGooglePayDelegate(
 
         val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
-
-        checkAvailability()
     }
 
     private fun checkAvailability() {
