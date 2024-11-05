@@ -66,6 +66,7 @@ sealed interface AnalyticsEvent {
         enum class Type(val value: String) {
             ACTION("action"),
             SUBMIT("submit"),
+            CLOSED("closed"),
             THREEDS2("ThreeDS2"),
         }
     }
