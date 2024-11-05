@@ -25,7 +25,6 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
-import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -237,8 +236,7 @@ internal class DropInViewModel(
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, viewModelScope)
 
-        val event = GenericEvents.rendered(
-            component = ANALYTICS_COMPONENT,
+        val event = DropInEvents.rendered(
             configData = dropInConfigDataGenerator.generate(configuration = dropInParams),
         )
         analyticsManager.trackEvent(event)
@@ -487,8 +485,6 @@ internal class DropInViewModel(
     }
 
     companion object {
-
-        private const val ANALYTICS_COMPONENT = "dropin"
 
         // These payment methods are either action only or have no UI.
         private val SKIP_TO_SINGLE_PM_BLOCK_LIST = listOf(

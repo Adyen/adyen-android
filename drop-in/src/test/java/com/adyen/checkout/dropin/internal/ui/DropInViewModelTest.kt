@@ -5,7 +5,6 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
@@ -94,8 +93,7 @@ internal class DropInViewModelTest(
 
             viewModel.onCreated(false)
 
-            val expected = GenericEvents.rendered(
-                component = "dropin",
+            val expected = DropInEvents.rendered(
                 configData = emptyMap(),
             )
             analyticsManager.assertLastEventEquals(expected)
