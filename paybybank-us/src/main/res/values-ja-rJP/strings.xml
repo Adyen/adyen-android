@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Pay by Bankを使用すると、どの銀行口座からでも即座に支払いができます。</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">銀行口座を接続することで、お客様は、この承認が取り消されるまで、当社のサービスの利用および/または当社製品の購入のために支払うべき金額をお客様の口座から引き落とすことを承認したことになります。</string>
+    <string name="checkout_pay_by_bank_us_submit">Pay by Bankに進む</string>
+    <string name="checkout_pay_by_bank_us_more">+ 詳細を確認</string>
+</resources>

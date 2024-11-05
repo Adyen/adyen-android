@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Gebruik Pay by Bank om direct vanaf elke bankrekening te betalen.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Door uw bankrekening te koppelen, machtigt u afschrijvingen van uw rekening voor elk bedrag dat u verschuldigd bent voor het gebruik van onze diensten en/of de aankoop van onze producten, totdat deze machtiging wordt ingetrokken.</string>
+    <string name="checkout_pay_by_bank_us_submit">Doorgaan met betalen via de bank</string>
+    <string name="checkout_pay_by_bank_us_more">+ meer</string>
+</resources>

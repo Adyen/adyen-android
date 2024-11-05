@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Notaðu Pay by Bank til að greiða strax af hvaða bankareikningi sem er.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Með því að tengja bankareikninginn þinn heimilar þú skuldfærslu af reikningnum þínum fyrir hvaða upphæð sem þú skuldar vegna notkunar á þjónustu okkar og/eða kaupum á vörum okkar, þar til þessi heimild er afturkölluð.</string>
+    <string name="checkout_pay_by_bank_us_submit">Fara í Pay by Bank</string>
+    <string name="checkout_pay_by_bank_us_more">+ meira</string>
+</resources>
