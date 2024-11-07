@@ -217,6 +217,25 @@ internal class DefaultRedirectDelegateTest(
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+
+        @Test
+        fun `when handleIntent called and parsing redirect result fails, then an event is tracked`() = runTest {
+            val action = RedirectAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, Activity())
+            redirectHandler.exception = ComponentException("Failed to parse redirect result.")
+
+            delegate.handleIntent(Intent())
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.REDIRECT_PARSE_FAILED,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
     }
 
     @Test

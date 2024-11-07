@@ -164,6 +164,12 @@ constructor(
                 }
             }
         } catch (ex: CheckoutException) {
+            val event = GenericEvents.error(
+                component = action?.paymentMethodType.orEmpty(),
+                event = ErrorEvent.REDIRECT_PARSE_FAILED
+            )
+            analyticsManager?.trackEvent(event)
+
             emitError(ex)
         }
     }
