@@ -43,6 +43,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -461,6 +462,9 @@ class DefaultCardDelegate(
 
             cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
+            val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.ENCRYPTION)
+            analyticsManager.trackEvent(event)
+
             exceptionChannel.trySend(e)
 
             return CardComponentState(

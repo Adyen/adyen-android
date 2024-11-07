@@ -30,6 +30,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -294,6 +295,9 @@ internal class StoredCardDelegate(
 
             cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (e: EncryptionException) {
+            val event = GenericEvents.error(storedPaymentMethod.type.orEmpty(), ErrorEvent.ENCRYPTION)
+            analyticsManager.trackEvent(event)
+
             exceptionChannel.trySend(e)
             return CardComponentState(
                 data = PaymentComponentData(null, null, null),
