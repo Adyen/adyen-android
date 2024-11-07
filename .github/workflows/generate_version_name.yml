@@ -19,4 +19,6 @@ jobs:
         id: generate_version_name
         run: |
           chmod +x scripts/version_name.sh
-          echo "version_name = $(./scripts/version_name.sh)" >> $GITHUB_OUTPUT
+          VERSION_NAME=$(./scripts/version_name.sh)
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo $VERSION_NAME
