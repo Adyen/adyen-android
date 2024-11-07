@@ -37,7 +37,7 @@ if (secretPropsFile.exists()) {
 
 final theGroupId = "com.adyen.checkout"
 final theArtifactId = project.mavenArtifactId
-final theVersion = libs.versions.version.name.get()
+final theVersion = rootProject.ext.versionName
 
 final theName = project.mavenArtifactName
 final theDescription = project.mavenArtifactDescription
