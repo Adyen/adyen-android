@@ -17,11 +17,11 @@ jobs:
     secrets: inherit
     needs: [generate_version_name, check]
     with:
-      version-name: needs.generate_version_name.outputs.version-name
+      version-name: ${{ needs.generate_version_name.outputs.version-name }}
   create_github_release:
     name: Create GitHub Release
     uses: ./.github/workflows/create_github_release.yml
     secrets: inherit
     needs: [generate_version_name, publish_to_maven_central]
     with:
-      version-name: needs.generate_version_name.outputs.version-name
+      version-name: ${{ needs.generate_version_name.outputs.version-name }}
