@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -139,6 +140,12 @@ constructor(
             //  PaymentComponentState for actions.
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
+            val event = GenericEvents.error(
+                component = action?.paymentMethodType.orEmpty(),
+                event = ErrorEvent.REDIRECT_FAILED
+            )
+            analyticsManager?.trackEvent(event)
+
             emitError(ex)
         }
     }
