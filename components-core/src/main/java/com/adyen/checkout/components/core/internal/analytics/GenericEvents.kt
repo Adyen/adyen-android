@@ -125,7 +125,6 @@ object GenericEvents {
     )
 
     // Error events
-    @Suppress("Unused") // Should be removed once error events are implemented
     fun error(
         component: String,
         event: ErrorEvent,
