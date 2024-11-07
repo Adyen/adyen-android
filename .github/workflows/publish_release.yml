@@ -8,14 +8,20 @@ jobs:
   check:
     name: Check
     uses: ./.github/workflows/check.yml
-
+  generate_version_name:
+    name: Generate version name
+    uses: ./.github/workflows/generate_version_name.yml
   publish_to_maven_central:
     name: Publish to Maven Central
     uses: ./.github/workflows/publish_to_maven_central.yml
     secrets: inherit
-    needs: check
+    needs: [generate_version_name, check]
+    with:
+      version-name: needs.generate_version_name.outputs.version-name
   create_github_release:
     name: Create GitHub Release
     uses: ./.github/workflows/create_github_release.yml
     secrets: inherit
-    needs: publish_to_maven_central
+    needs: [generate_version_name, publish_to_maven_central]
+    with:
+      version-name: needs.generate_version_name.outputs.version-name
