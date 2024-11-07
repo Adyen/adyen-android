@@ -28,6 +28,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.HttpException
@@ -200,6 +201,14 @@ constructor(
     }
 
     override fun onError(e: CheckoutException) {
+        if (e is CancellationException) {
+            val event = GenericEvents.error(
+                component = action?.paymentMethodType.orEmpty(),
+                event = ErrorEvent.REDIRECT_CANCELLED
+            )
+            analyticsManager?.trackEvent(event)
+        }
+
         emitError(e)
     }
 
