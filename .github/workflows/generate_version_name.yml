@@ -1,0 +1,22 @@
+name: Generate version name
+
+on:
+  workflow_call:
+    outputs:
+      version-name:
+        description: "The version name of the current release"
+        value: ${{ jobs.generate_version_name.outputs.version-name }}
+
+jobs:
+  generate_version_name:
+    runs-on: ubuntu-latest
+    outputs:
+      version-name: ${{ steps.generate_version_name.outputs.version_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate version name
+        id: generate_version_name
+        run: |
+          chmod +x scripts/version_name.sh
+          echo "version_name = $(./scripts/version_name.sh)" >> $GITHUB_OUTPUT
