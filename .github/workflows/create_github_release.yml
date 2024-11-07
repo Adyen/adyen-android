@@ -18,9 +18,9 @@ jobs:
         id: version_name
         run: |
           echo "▸ Set run permission."
-          chmod +x scripts/version_name.sh
+          chmod +x scripts/version_name_old.sh
           echo "▸ Getting version name"
-          PROJECT_VERSION=$(./scripts/version_name.sh)
+          PROJECT_VERSION=$(./scripts/version_name_old.sh)
           echo "▸ Creating the version_name output with value: $PROJECT_VERSION"
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
           echo "▸ DONE"

@@ -59,9 +59,9 @@ jobs:
       - name: Set PROJECT_VERSION
         run: |
           echo "▸ Set run permission."
-          chmod +x scripts/version_name.sh
+          chmod +x scripts/version_name_old.sh
           echo "▸ Getting version name"
-          PROJECT_VERSION=$(./scripts/version_name.sh)
+          PROJECT_VERSION=$(./scripts/version_name_old.sh)
           echo "▸ Variable PROJECT_VERSION set to: ${PROJECT_VERSION}"
           echo "▸ Adding PROJECT_VERSION variable with: $PROJECT_VERSION"
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
