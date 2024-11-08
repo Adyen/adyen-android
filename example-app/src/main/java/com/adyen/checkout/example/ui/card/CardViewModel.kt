@@ -102,6 +102,7 @@ internal class CardViewModel @Inject constructor(
         addressLookupRepository.onQuery(query)
     }
 
+    // intentionally not called, check comment in CardActivity
     fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
         viewModelScope.launch {
             when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
