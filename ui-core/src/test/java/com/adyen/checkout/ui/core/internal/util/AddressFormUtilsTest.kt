@@ -8,13 +8,20 @@
 
 package com.adyen.checkout.ui.core.internal.util
 
+import com.adyen.checkout.components.core.Address
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.ui.model.Required
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 @Suppress("MaxLineLength")
@@ -26,35 +33,35 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = true
+                selected = true,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(expected, AddressFormUtils.markAddressListItemSelected(input, "US"))
     }
@@ -65,35 +72,35 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(expected, AddressFormUtils.markAddressListItemSelected(input))
     }
@@ -104,35 +111,35 @@ internal class AddressFormUtilsTest {
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(expected, AddressFormUtils.markAddressListItemSelected(input, "TR"))
     }
@@ -143,21 +150,21 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
         )
     }
 
@@ -167,21 +174,21 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
         )
     }
 
@@ -191,37 +198,37 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.GERMANY, addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.GERMANY, addressParams, inputCountryList),
         )
     }
 
@@ -231,37 +238,37 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = true
+                selected = true,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.US, addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.US, addressParams, inputCountryList),
         )
     }
 
@@ -271,37 +278,37 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United States",
                 code = "US",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = true
-            )
+                selected = true,
+            ),
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
         )
     }
 
@@ -315,32 +322,32 @@ internal class AddressFormUtilsTest {
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
-                name = "Canada"
+                name = "Canada",
             ),
             AddressItem(
                 id = "US",
-                name = "United States"
+                name = "United States",
             ),
             AddressItem(
                 id = "GB",
-                name = "United Kingdom"
-            )
+                name = "United Kingdom",
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 name = "Canada",
                 code = "CA",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 name = "United Kingdom",
                 code = "GB",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList)
+            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
         )
     }
 
@@ -349,33 +356,33 @@ internal class AddressFormUtilsTest {
         val input = listOf(
             AddressItem(
                 id = "AL",
-                name = "Alabama"
+                name = "Alabama",
             ),
             AddressItem(
                 id = "MA",
-                name = "Massachusetts"
+                name = "Massachusetts",
             ),
             AddressItem(
                 id = "NY",
-                name = "New York"
-            )
+                name = "New York",
+            ),
         )
         val expected = listOf(
             AddressListItem(
                 code = "AL",
                 name = "Alabama",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 code = "MA",
                 name = "Massachusetts",
-                selected = false
+                selected = false,
             ),
             AddressListItem(
                 code = "NY",
                 name = "New York",
-                selected = false
-            )
+                selected = false,
+            ),
         )
         assertEquals(expected, AddressFormUtils.initializeStateOptions(input))
     }
@@ -420,5 +427,73 @@ internal class AddressFormUtilsTest {
         val houseNumber = ""
         val apartmentSuite = "3b"
         assertEquals("3b", AddressFormUtils.makeHouseNumberOrName(houseNumber, apartmentSuite))
+    }
+
+    @ParameterizedTest
+    @MethodSource("makeAddressDataSource")
+    fun `when makeAddressData is called it returns the correct Address object`(
+        addressOutputData: AddressOutputData,
+        addressFormUIState: AddressFormUIState,
+        expectedAddress: Address?,
+    ) {
+        val actual = AddressFormUtils.makeAddressData(addressOutputData, addressFormUIState)
+        assertEquals(expectedAddress, actual)
+    }
+
+    companion object {
+        private val TEST_ADDRESS_OUTPUT_DATA = AddressOutputData(
+            postalCode = FieldState("postalCode", Validation.Valid),
+            houseNumberOrName = FieldState("houseNumberOrName", Validation.Valid),
+            apartmentSuite = FieldState("", Validation.Valid),
+            street = FieldState("street", Validation.Valid),
+            city = FieldState("city", Validation.Valid),
+            stateOrProvince = FieldState("stateOrProvince", Validation.Valid),
+            country = FieldState("country", Validation.Valid),
+            isOptional = false,
+            countryOptions = emptyList(),
+            stateOptions = emptyList(),
+        )
+
+        @JvmStatic
+        fun makeAddressDataSource() = listOf(
+            // addressOutputData, addressFormUIState, expected Address object
+            arguments(TEST_ADDRESS_OUTPUT_DATA, AddressFormUIState.NONE, null),
+            arguments(
+                TEST_ADDRESS_OUTPUT_DATA,
+                AddressFormUIState.POSTAL_CODE,
+                Address(
+                    postalCode = "postalCode",
+                    street = Address.ADDRESS_NULL_PLACEHOLDER,
+                    stateOrProvince = Address.ADDRESS_NULL_PLACEHOLDER,
+                    houseNumberOrName = Address.ADDRESS_NULL_PLACEHOLDER,
+                    city = Address.ADDRESS_NULL_PLACEHOLDER,
+                    country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
+                ),
+            ),
+            arguments(
+                TEST_ADDRESS_OUTPUT_DATA,
+                AddressFormUIState.FULL_ADDRESS,
+                Address(
+                    postalCode = "postalCode",
+                    street = "street",
+                    stateOrProvince = "stateOrProvince",
+                    houseNumberOrName = "houseNumberOrName",
+                    city = "city",
+                    country = "country",
+                ),
+            ),
+            arguments(
+                TEST_ADDRESS_OUTPUT_DATA,
+                AddressFormUIState.LOOKUP,
+                Address(
+                    postalCode = "postalCode",
+                    street = "street",
+                    stateOrProvince = "stateOrProvince",
+                    houseNumberOrName = "houseNumberOrName",
+                    city = "city",
+                    country = "country",
+                ),
+            ),
+        )
     }
 }

@@ -130,7 +130,7 @@ object AddressFormUtils {
      */
     fun makeAddressData(addressOutputData: AddressOutputData, addressFormUIState: AddressFormUIState): Address? {
         return when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> Address(
+            AddressFormUIState.FULL_ADDRESS, AddressFormUIState.LOOKUP -> Address(
                 postalCode = addressOutputData.postalCode.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 street = addressOutputData.street.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 stateOrProvince = addressOutputData.stateOrProvince.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
@@ -151,7 +151,7 @@ object AddressFormUtils {
                 country = Address.ADDRESS_COUNTRY_NULL_PLACEHOLDER,
             )
 
-            else -> null
+            AddressFormUIState.NONE -> null
         }
     }
 
