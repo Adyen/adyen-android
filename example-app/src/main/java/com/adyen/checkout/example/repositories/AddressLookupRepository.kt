@@ -25,9 +25,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AddressLookupRepository @Inject constructor(
     assetManager: AssetManager
 ) {
