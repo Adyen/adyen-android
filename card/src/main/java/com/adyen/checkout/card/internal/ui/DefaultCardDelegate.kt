@@ -168,7 +168,7 @@ class DefaultCardDelegate(
         addressLookupDelegate.addressLookupSubmitFlow
             .onEach {
                 _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
-                inputData.address = it
+                inputData.address.set(it)
                 updateOutputData()
             }
             .launchIn(coroutineScope)
@@ -491,8 +491,8 @@ class DefaultCardDelegate(
     }
 
     override fun startAddressLookup() {
-        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
         addressLookupDelegate.initialize(coroutineScope, inputData.address)
+        _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
     }
 
     override fun handleBackPress(): Boolean {
