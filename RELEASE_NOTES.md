@@ -10,3 +10,4 @@
 
 ## Fixed
 - Address data not being correctly saved to PaymentComponentData in Lookup mode.
+- Manually edited fields in address form in Lookup mode no longer lose their state on starting Lookup mode. 
