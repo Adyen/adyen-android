@@ -1,7 +1,11 @@
 name: Publish to Maven Central
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
 
 jobs:
   publish_to_maven_central:
@@ -30,7 +34,6 @@ jobs:
 
       # Packages and publishes to Maven Central
       - name: Publish to Maven Central
-        run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
@@ -38,3 +41,5 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          VERSION_NAME: ${{ inputs.version-name }}
+        run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace -Pversion-name=$VERSION_NAME
