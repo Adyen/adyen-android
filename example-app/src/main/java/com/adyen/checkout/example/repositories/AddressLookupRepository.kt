@@ -19,11 +19,9 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class AddressLookupRepository @Inject constructor(
@@ -49,21 +47,16 @@ class AddressLookupRepository @Inject constructor(
             queryAddressLookupOptions(query)
         }
 
-    private val _addressLookupCompletionFlow: MutableStateFlow<AddressLookupCompletionState?> = MutableStateFlow(null)
-    val addressLookupCompletionFlow: Flow<AddressLookupCompletionState> = _addressLookupCompletionFlow
-        .asStateFlow()
-        .onEach { delay(ADDRESS_LOOKUP_COMPLETION_DELAY) }
-        .filterNotNull()
-
     fun onQuery(query: String) {
         addressLookupQueryFlow.tryEmit(query)
     }
 
-    fun onAddressLookupCompleted(lookupAddress: LookupAddress) {
-        if (lookupAddress.id == ADDRESS_LOOKUP_ERROR_ITEM_ID) {
-            _addressLookupCompletionFlow.tryEmit(AddressLookupCompletionState.Error())
+    suspend fun onAddressLookupCompleted(lookupAddress: LookupAddress): AddressLookupCompletionResult {
+        delay(ADDRESS_LOOKUP_COMPLETION_DELAY)
+        return if (lookupAddress.id == ADDRESS_LOOKUP_ERROR_ITEM_ID) {
+            AddressLookupCompletionResult.Error()
         } else {
-            _addressLookupCompletionFlow.tryEmit(AddressLookupCompletionState.Address(lookupAddress))
+            AddressLookupCompletionResult.Address(lookupAddress)
         }
     }
 
