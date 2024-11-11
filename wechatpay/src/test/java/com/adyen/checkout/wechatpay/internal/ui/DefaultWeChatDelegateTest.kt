@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.action.SdkAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -169,6 +170,25 @@ internal class DefaultWeChatDelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertHasEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleAction is called and sending a request to WeChat fails, then an error is tracked`() {
+            whenever(iwxApi.sendReq(any())) doReturn false
+            val action = SdkAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+                sdkData = WeChatPaySdkData(),
+            )
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.THIRD_PARTY,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
