@@ -34,6 +34,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
@@ -284,6 +285,7 @@ constructor(
             }
 
             is CashAppPayState.CashAppPayExceptionState -> {
+                trackThirdPartyErrorEvent()
                 exceptionChannel.trySend(
                     ComponentException("Cash App Pay has encountered an error", newState.exception),
                 )
@@ -309,6 +311,14 @@ constructor(
             oneTimeData = oneTimeData,
             onFileData = onFileData,
         )
+    }
+
+    private fun trackThirdPartyErrorEvent() {
+        val event = GenericEvents.error(
+            component = getPaymentMethodType(),
+            event = ErrorEvent.THIRD_PARTY,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun isConfirmationRequired(): Boolean =
