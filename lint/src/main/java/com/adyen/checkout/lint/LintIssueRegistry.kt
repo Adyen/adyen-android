@@ -19,9 +19,10 @@ internal class LintIssueRegistry : IssueRegistry() {
 
     override val issues: List<Issue> = listOf(
         CONTEXT_GET_STRING_ISSUE,
+        JSON_OPT_FUNCTIONS_ISSUE,
         NOT_ADYEN_LOG_ISSUE,
+        NOT_DISPATCHER_PROVIDER_ISSUE,
         OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE,
         TEXT_IN_LAYOUT_XML_ISSUE,
-        JSON_OPT_FUNCTIONS_ISSUE,
     )
 }
