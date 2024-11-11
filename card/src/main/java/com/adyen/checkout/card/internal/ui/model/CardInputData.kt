@@ -13,7 +13,6 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupInputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardInputData(
@@ -25,7 +24,6 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
-    var addressLookupInputData: AddressLookupInputData = AddressLookupInputData(),
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
     var selectedCardIndex: Int = -1,
