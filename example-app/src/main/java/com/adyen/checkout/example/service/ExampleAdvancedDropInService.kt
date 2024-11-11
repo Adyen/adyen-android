@@ -35,7 +35,7 @@ import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
@@ -72,22 +72,6 @@ class ExampleAdvancedDropInService : DropInService() {
         addressLookupRepository.addressLookupOptionsFlow
             .onEach { options ->
                 sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
-            }.launchIn(this)
-
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                val result = when (it) {
-                    is AddressLookupCompletionState.Address -> {
-                        AddressLookupDropInServiceResult.LookupComplete(it.lookupAddress)
-                    }
-
-                    is AddressLookupCompletionState.Error -> AddressLookupDropInServiceResult.Error(
-                        errorDialog = ErrorDialog(
-                            message = it.message,
-                        ),
-                    )
-                }
-                sendAddressLookupResult(result)
             }.launchIn(this)
     }
 
@@ -419,7 +403,20 @@ class ExampleAdvancedDropInService : DropInService() {
 
     override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
         Log.d(TAG, "On address lookup query completion: $lookupAddress")
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        launch {
+            val lookupResult = when (val result = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> {
+                    AddressLookupDropInServiceResult.LookupComplete(result.lookupAddress)
+                }
+
+                is AddressLookupCompletionResult.Error -> AddressLookupDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(
+                        message = result.message,
+                    ),
+                )
+            }
+            sendAddressLookupResult(lookupResult)
+        }
         return true
     }
 

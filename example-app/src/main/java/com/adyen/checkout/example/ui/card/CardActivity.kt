@@ -159,15 +159,10 @@ class CardActivity : AppCompatActivity(), AddressLookupCallback {
         cardComponent?.setAddressLookupResult(AddressLookupResult.Error(message))
     }
 
+    // onLookupCompletion is not implemented intentionally to allow testing this scenario
     override fun onQueryChanged(query: String) {
         Log.d(TAG, "On address lookup query changed: $query")
         cardViewModel.onAddressLookupQueryChanged(query)
-    }
-
-    override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
-        Log.d(TAG, "on lookup completed $lookupAddress")
-        cardViewModel.onAddressLookupCompletion(lookupAddress)
-        return true
     }
 
     override fun onBackPressed() {

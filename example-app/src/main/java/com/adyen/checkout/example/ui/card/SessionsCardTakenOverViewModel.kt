@@ -25,7 +25,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -83,15 +83,6 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
         addressLookupRepository.addressLookupOptionsFlow
             .onEach { options ->
                 _events.emit(CardEvent.AddressLookup(options))
-            }.launchIn(viewModelScope)
-
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                val event = when (it) {
-                    is AddressLookupCompletionState.Address -> CardEvent.AddressLookupCompleted(it.lookupAddress)
-                    is AddressLookupCompletionState.Error -> CardEvent.AddressLookupError(it.message)
-                }
-                _events.emit(event)
             }.launchIn(viewModelScope)
     }
 
@@ -247,7 +238,13 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     }
 
     fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        viewModelScope.launch {
+            val event = when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> CardEvent.AddressLookupCompleted(lookupResult.lookupAddress)
+                is AddressLookupCompletionResult.Error -> CardEvent.AddressLookupError(lookupResult.message)
+            }
+            _events.emit(event)
+        }
     }
 
     companion object {

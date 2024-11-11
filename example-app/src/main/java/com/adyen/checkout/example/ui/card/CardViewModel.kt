@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -53,10 +53,6 @@ internal class CardViewModel @Inject constructor(
         addressLookupRepository.addressLookupOptionsFlow
             .onEach { options ->
                 _events.emit(CardEvent.AddressLookup(options))
-            }.launchIn(viewModelScope)
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                onAddressCompleted(it)
             }.launchIn(viewModelScope)
     }
 
@@ -106,22 +102,19 @@ internal class CardViewModel @Inject constructor(
         addressLookupRepository.onQuery(query)
     }
 
+    // intentionally not called, check comment in CardActivity
     fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
-    }
-
-    private fun onAddressCompleted(addressLookupCompletionState: AddressLookupCompletionState) {
         viewModelScope.launch {
-            when (addressLookupCompletionState) {
-                is AddressLookupCompletionState.Address -> _events.emit(
+            when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> _events.emit(
                     CardEvent.AddressLookupCompleted(
-                        addressLookupCompletionState.lookupAddress,
+                        lookupResult.lookupAddress,
                     ),
                 )
 
-                is AddressLookupCompletionState.Error -> _events.emit(
+                is AddressLookupCompletionResult.Error -> _events.emit(
                     CardEvent.AddressLookupError(
-                        addressLookupCompletionState.message,
+                        lookupResult.message,
                     ),
                 )
             }
