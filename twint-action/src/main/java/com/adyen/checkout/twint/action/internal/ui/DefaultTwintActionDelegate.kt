@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.StatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
@@ -163,10 +164,12 @@ internal class DefaultTwintActionDelegate(
             }
 
             TwintPayResult.TW_B_ERROR -> {
+                trackThirdPartyErrorEvent()
                 onError(ComponentException("Twint encountered an error."))
             }
 
             TwintPayResult.TW_B_APP_NOT_INSTALLED -> {
+                trackThirdPartyErrorEvent()
                 onError(ComponentException("Twint app not installed."))
             }
         }
@@ -218,6 +221,14 @@ internal class DefaultTwintActionDelegate(
             // We don't share paymentData on purpose, so merchant will not use it to build their own polling.
             paymentData = null,
         )
+    }
+
+    private fun trackThirdPartyErrorEvent() {
+        val event = GenericEvents.error(
+            component = action?.paymentMethodType.orEmpty(),
+            event = ErrorEvent.THIRD_PARTY,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     override fun onError(e: CheckoutException) {
