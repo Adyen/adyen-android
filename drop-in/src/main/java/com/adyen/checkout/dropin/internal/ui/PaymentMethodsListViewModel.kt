@@ -254,7 +254,7 @@ internal class PaymentMethodsListViewModel(
 
     private fun makeBrandList(): List<LogoTextItem> {
         return listOf(
-            PayByBankUSBrandLogo.entries.take(PAY_BY_BANK_BRAND_LOGO_SIZE).map {
+            PayByBankUSBrandLogo.entries.map {
                 LogoItem(
                     it.path,
                     dropInParams.environment,
@@ -279,7 +279,6 @@ internal class PaymentMethodsListViewModel(
     companion object {
         private const val CARD_LOGO_TYPE = "card"
         private const val GOOGLE_PAY_LOGO_TYPE = PaymentMethodTypes.GOOGLE_PAY
-        private const val PAY_BY_BANK_BRAND_LOGO_SIZE = 3
     }
 }
 
