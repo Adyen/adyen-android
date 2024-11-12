@@ -9,5 +9,6 @@
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
 ## Fixed
-- Address data not being correctly saved to PaymentComponentData in Lookup mode.
-- Manually edited fields in address form in Lookup mode no longer lose their state on starting Lookup mode. 
+- For the Address Lookup functionality:
+  -  Address data is now correctly saved to `PaymentComponentData`.
+  -  Address fields that were edited manually no longer lose their state when starting Lookup mode.  
