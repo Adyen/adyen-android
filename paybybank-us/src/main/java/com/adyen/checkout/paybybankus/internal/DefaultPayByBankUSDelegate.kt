@@ -97,7 +97,7 @@ internal class DefaultPayByBankUSDelegate(
     override fun getPaymentMethodType(): String = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
     private fun createOutputData() = PayByBankUSOutputData(
-        brandList = getBrandList()
+        brandList = getBrandList(),
     )
 
     private fun createComponentState(): PayByBankUSComponentState {
@@ -142,11 +142,13 @@ internal class DefaultPayByBankUSDelegate(
 
     private fun getBrandList(): List<LogoTextItem> {
         return listOf(
-            LogoItem(PayByBankUSBrandLogo.US_1.path, componentParams.environment),
-            LogoItem(PayByBankUSBrandLogo.US_2.path, componentParams.environment),
-            LogoItem(PayByBankUSBrandLogo.US_3.path, componentParams.environment),
-            LogoItem(PayByBankUSBrandLogo.US_4.path, componentParams.environment),
-            TextItem(R.string.checkout_pay_by_bank_us_more),
-        )
+            PayByBankUSBrandLogo.entries.map {
+                LogoItem(
+                    it.path,
+                    componentParams.environment,
+                )
+            },
+            listOf(TextItem(R.string.checkout_pay_by_bank_us_more)),
+        ).flatten()
     }
 }
