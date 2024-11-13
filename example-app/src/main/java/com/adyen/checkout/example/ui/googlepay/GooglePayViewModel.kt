@@ -79,26 +79,26 @@ internal class GooglePayViewModel @Inject constructor(
             ),
         )
 
-            val paymentMethod = paymentMethodResponse
-                ?.paymentMethods
-                ?.firstOrNull { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) }
+        val paymentMethod = paymentMethodResponse
+            ?.paymentMethods
+            ?.firstOrNull { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-            if (paymentMethod == null) {
-                @Suppress("RestrictedApi")
-                _viewState.emit(GooglePayViewState.Error(UICoreR.string.error_dialog_title))
-                return@withContext
-            }
-
-            _googleComponentDataFlow.emit(
-                GooglePayComponentData(
-                    paymentMethod,
-                    checkoutConfiguration,
-                    this@GooglePayViewModel,
-                ),
-            )
-
-            checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
+        if (paymentMethod == null) {
+            @Suppress("RestrictedApi")
+            _viewState.emit(GooglePayViewState.Error(UICoreR.string.error_dialog_title))
+            return@withContext
         }
+
+        _googleComponentDataFlow.emit(
+            GooglePayComponentData(
+                paymentMethod,
+                checkoutConfiguration,
+                this@GooglePayViewModel,
+            ),
+        )
+
+        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
+    }
 
     private fun checkGooglePayAvailability(
         paymentMethod: PaymentMethod,
