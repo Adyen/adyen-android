@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
  * JUnit 5 extension that replaces [Dispatchers.Main] with a test dispatcher. This gives control over how the dispatcher
  * executes it's work.
  */
+@Suppress("NotDispatcherProvider")
 @OptIn(ExperimentalCoroutinesApi::class)
 class TestDispatcherExtension : BeforeEachCallback, AfterEachCallback {
 

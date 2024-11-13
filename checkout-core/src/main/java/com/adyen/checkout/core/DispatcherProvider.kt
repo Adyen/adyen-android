@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainCoroutineDispatcher
 
+@Suppress("NotDispatcherProvider")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object DispatcherProvider {
 
