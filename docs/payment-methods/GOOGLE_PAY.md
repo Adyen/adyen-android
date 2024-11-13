@@ -137,4 +137,6 @@ The `com.google.pay.button:compose-pay-button` dependency can now also be remove
 
 ### 3. Google Pay availability check
 
-The `GooglePayComponent` now does the availability check on initialization and will return a `GooglePayUnavailableException` in `onError`. You no longer need to manually call `GooglePayComponent.PROVIDER.isAvailable(…)`.
+You no longer need to call `GooglePayComponent.PROVIDER.isAvailable(…)`.
+
+The`GooglePayComponent` now checks if Google Pay is available when you initialize it. If Google Pay is not available, you get a `GooglePayUnavailableException` in `onError`.
