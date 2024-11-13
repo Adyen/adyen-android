@@ -10,6 +10,7 @@ package com.adyen.checkout.ui.core.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Address
+import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
@@ -70,13 +71,16 @@ object AddressFormUtils {
 
                 val defaultCountryCode = getInitialCountryCode(
                     shopperLocale = shopperLocale,
-                    addressParams = addressParams
+                    addressParams = addressParams,
                 )
-                markAddressListItemSelected(mapToListItem(filteredCountryList), defaultCountryCode)
+                markAddressListItemSelected(
+                    mapToCountryListItem(filteredCountryList, shopperLocale),
+                    defaultCountryCode,
+                )
             }
 
             is AddressParams.Lookup -> {
-                mapToListItem(countryList)
+                mapToCountryListItem(countryList, shopperLocale)
             }
 
             else -> emptyList()
@@ -106,7 +110,7 @@ object AddressFormUtils {
      * @return State options.
      */
     fun initializeStateOptions(stateList: List<AddressItem>): List<AddressListItem> {
-        return markAddressListItemSelected(mapToListItem(stateList))
+        return markAddressListItemSelected(mapToStateListItem(stateList))
     }
 
     /**
@@ -136,7 +140,7 @@ object AddressFormUtils {
                 stateOrProvince = addressOutputData.stateOrProvince.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 houseNumberOrName = makeHouseNumberOrName(
                     addressOutputData.houseNumberOrName.value,
-                    addressOutputData.apartmentSuite.value
+                    addressOutputData.apartmentSuite.value,
                 ).ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 city = addressOutputData.city.value.ifEmpty { Address.ADDRESS_NULL_PLACEHOLDER },
                 country = addressOutputData.country.value,
@@ -173,16 +177,34 @@ object AddressFormUtils {
     /**
      * Map a list of [AddressItem] to a list of [AddressListItem].
      *
-     * @param list Input list.
+     * @param list Input country list.
      *
      * @return Mapped list of [AddressListItem].
      */
-    private fun mapToListItem(list: List<AddressItem>): List<AddressListItem> {
+    private fun mapToCountryListItem(list: List<AddressItem>, shopperLocale: Locale): List<AddressListItem> {
+        return list.map {
+            AddressListItem(
+                name = it.id?.let { isoCode -> CountryUtils.getCountryName(isoCode, shopperLocale) }
+                    ?: it.name.orEmpty(),
+                code = it.id.orEmpty(),
+                selected = false,
+            )
+        }
+    }
+
+    /**
+     * Map a list of [AddressItem] to a list of [AddressListItem].
+     *
+     * @param list Input states list.
+     *
+     * @return Mapped list of [AddressListItem].
+     */
+    private fun mapToStateListItem(list: List<AddressItem>): List<AddressListItem> {
         return list.map {
             AddressListItem(
                 name = it.name.orEmpty(),
                 code = it.id.orEmpty(),
-                selected = false
+                selected = false,
             )
         }
     }

@@ -211,17 +211,17 @@ internal class AddressFormUtilsTest {
         )
         val expected = listOf(
             AddressListItem(
-                name = "Canada",
+                name = "Kanada",
                 code = "CA",
                 selected = false,
             ),
             AddressListItem(
-                name = "United States",
+                name = "Vereinigte Staaten",
                 code = "US",
                 selected = false,
             ),
             AddressListItem(
-                name = "United Kingdom",
+                name = "Vereinigtes Königreich",
                 code = "GB",
                 selected = false,
             ),
