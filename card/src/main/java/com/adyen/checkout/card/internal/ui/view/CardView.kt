@@ -726,7 +726,9 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun updateAddressLookupInputText(addressOutputData: AddressOutputData) {
-        binding.autoCompleteTextViewAddressLookup.setText(addressOutputData.toString())
+        binding.autoCompleteTextViewAddressLookup.setText(
+            addressOutputData.getDisplayAddress(cardDelegate.componentParams.shopperLocale)
+        )
     }
 
     private fun updateAddressHint(addressFormUIState: AddressFormUIState, isOptional: Boolean) {

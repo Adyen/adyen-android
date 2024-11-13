@@ -12,24 +12,25 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import java.util.Locale
 
 class AddressOutputDataTest {
     @Test
     fun addressOutputDataToString() {
         val addressOutputData = AddressOutputData(
-            postalCode = FieldState("postalCode", Validation.Valid),
-            houseNumberOrName = FieldState("houseNumberOrName", Validation.Valid),
-            apartmentSuite = FieldState("apartmentSuite", Validation.Valid),
-            street = FieldState("street", Validation.Valid),
-            city = FieldState("city", Validation.Valid),
-            stateOrProvince = FieldState("stateOrProvince", Validation.Valid),
-            country = FieldState("country", Validation.Valid),
+            postalCode = FieldState("1234AB", Validation.Valid),
+            houseNumberOrName = FieldState("1", Validation.Valid),
+            apartmentSuite = FieldState("A", Validation.Valid),
+            street = FieldState("Straat", Validation.Valid),
+            city = FieldState("Amsterdam", Validation.Valid),
+            stateOrProvince = FieldState("Noord-Holland", Validation.Valid),
+            country = FieldState("NL", Validation.Valid),
             isOptional = false,
             countryOptions = emptyList(),
             stateOptions = emptyList(),
         )
 
-        val expected = "street houseNumberOrName apartmentSuite postalCode city stateOrProvince country"
-        assertEquals(expected, addressOutputData.toString())
+        val expected = "Straat 1 A 1234AB Amsterdam Noord-Holland Netherlands"
+        assertEquals(expected, addressOutputData.getDisplayAddress(Locale.ENGLISH))
     }
 }

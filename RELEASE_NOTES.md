@@ -10,5 +10,8 @@
 
 ## Fixed
 - For the Address Lookup functionality:
-  -  Address data is now correctly saved to `PaymentComponentData`.
-  -  Address fields that were edited manually no longer lose their state when starting Lookup mode.  
+  - Address data is now correctly saved to `PaymentComponentData`.
+  - Address fields that were edited manually no longer lose their state when starting Lookup mode.
+
+## Changed
+- In Card Component selected lookup address field, country name is displayed now instead of country code.

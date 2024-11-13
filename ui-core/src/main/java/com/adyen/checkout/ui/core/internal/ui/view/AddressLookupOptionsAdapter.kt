@@ -16,10 +16,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.components.core.LookupAddress
+import com.adyen.checkout.components.core.internal.util.CountryUtils
 import com.adyen.checkout.ui.core.databinding.AddressLookupOptionItemViewBinding
+import java.util.Locale
 
 internal class AddressLookupOptionsAdapter(
-    private val onItemClicked: (LookupAddress) -> Unit
+    private val shopperLocale: Locale,
+    private val onItemClicked: (LookupAddress) -> Unit,
 ) :
     ListAdapter<LookupOption, AddressLookupOptionsAdapter.AddressLookupOptionViewHolder>(
         AddressLookupOptionDiffCallback,
@@ -27,7 +30,7 @@ internal class AddressLookupOptionsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddressLookupOptionViewHolder {
         val binding = AddressLookupOptionItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return AddressLookupOptionViewHolder(binding, onItemClicked)
+        return AddressLookupOptionViewHolder(binding, onItemClicked, shopperLocale)
     }
 
     override fun onBindViewHolder(holder: AddressLookupOptionViewHolder, position: Int) {
@@ -36,15 +39,16 @@ internal class AddressLookupOptionsAdapter(
 
     internal class AddressLookupOptionViewHolder(
         private val binding: AddressLookupOptionItemViewBinding,
-        private val onItemClicked: (LookupAddress) -> Unit
+        private val onItemClicked: (LookupAddress) -> Unit,
+        private val shopperLocale: Locale,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItem(lookupOption: LookupOption) {
             binding.root.setOnClickListener {
                 onItemClicked(lookupOption.lookupAddress)
             }
             binding.progressBar.isVisible = lookupOption.isLoading
-            binding.textViewAddressHeader.text = lookupOption.title
-            binding.textViewAddressDescription.text = lookupOption.subtitle
+            binding.textViewAddressHeader.text = lookupOption.getDisplayTitle(shopperLocale)
+            binding.textViewAddressDescription.text = lookupOption.getDisplaySubtitle(shopperLocale)
         }
     }
 
@@ -62,7 +66,7 @@ data class LookupOption(
     val lookupAddress: LookupAddress,
     val isLoading: Boolean = false
 ) {
-    override fun toString(): String {
+    private fun getDisplayName(locale: Locale): String {
         return listOf(
             lookupAddress.address.street,
             lookupAddress.address.houseNumberOrName,
@@ -70,19 +74,17 @@ data class LookupOption(
             lookupAddress.address.postalCode,
             lookupAddress.address.city,
             lookupAddress.address.stateOrProvince,
-            lookupAddress.address.country,
+            CountryUtils.getCountryName(lookupAddress.address.country, locale),
         ).filter { !it.isNullOrBlank() }.joinToString(" ")
     }
 
-    val title
-        get() = lookupAddress.address.street.ifBlank {
-            toString()
-        }
+    fun getDisplayTitle(locale: Locale) = lookupAddress.address.street.ifBlank {
+        getDisplayName(locale)
+    }
 
-    val subtitle
-        get() = if (lookupAddress.address.street.isBlank()) {
-            ""
-        } else {
-            toString()
-        }
+    fun getDisplaySubtitle(locale: Locale) = if (lookupAddress.address.street.isBlank()) {
+        ""
+    } else {
+        getDisplayName(locale)
+    }
 }

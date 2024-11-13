@@ -31,6 +31,7 @@ import com.adyen.checkout.ui.core.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.Locale
 
 @Suppress("TooManyFunctions")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -50,6 +51,8 @@ class AddressLookupView @JvmOverloads constructor(
 
     private lateinit var localizedContext: Context
 
+    private lateinit var shopperLocale: Locale
+
     private lateinit var addressLookupDelegate: AddressLookupDelegate
 
     private var addressLookupOptionsAdapter: AddressLookupOptionsAdapter? = null
@@ -63,6 +66,8 @@ class AddressLookupView @JvmOverloads constructor(
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
         require(delegate is AddressLookupDelegate) { "Unsupported delegate type" }
         addressLookupDelegate = delegate
+
+        shopperLocale = delegate.componentParams.shopperLocale
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
@@ -164,7 +169,7 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initAddressOptions() {
-        addressLookupOptionsAdapter = AddressLookupOptionsAdapter(::onAddressSelected)
+        addressLookupOptionsAdapter = AddressLookupOptionsAdapter(shopperLocale, ::onAddressSelected)
         addressLookupOptionsAdapter?.let { adapter ->
             binding.recyclerViewAddressLookupOptions.adapter = adapter
         }

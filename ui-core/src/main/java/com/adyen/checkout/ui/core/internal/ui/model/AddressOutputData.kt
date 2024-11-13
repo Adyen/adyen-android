@@ -11,6 +11,8 @@ package com.adyen.checkout.ui.core.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
+import com.adyen.checkout.components.core.internal.util.CountryUtils
+import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AddressOutputData(
@@ -34,7 +36,7 @@ data class AddressOutputData(
             city.validation.isValid() &&
             country.validation.isValid()
 
-    override fun toString(): String {
+    fun getDisplayAddress(locale: Locale): String {
         return listOf(
             street.value,
             houseNumberOrName.value,
@@ -42,7 +44,7 @@ data class AddressOutputData(
             postalCode.value,
             city.value,
             stateOrProvince.value,
-            country.value,
+            CountryUtils.getCountryName(country.value, locale),
         ).filter { it.isNotBlank() }.joinToString(" ")
     }
 }
