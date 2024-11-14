@@ -22,7 +22,6 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
@@ -33,6 +32,7 @@ import com.adyen.checkout.dropin.FinishedDialog
 import com.adyen.checkout.dropin.OrderDropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
@@ -75,11 +75,10 @@ class ExampleAdvancedDropInService : DropInService() {
             }.launchIn(this)
     }
 
-    @Suppress("RestrictedApi")
     override fun onSubmit(
         state: PaymentComponentState<*>,
     ) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -125,9 +124,8 @@ class ExampleAdvancedDropInService : DropInService() {
         // read bundle and handle it
     }
 
-    @Suppress("RestrictedApi")
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -199,10 +197,9 @@ class ExampleAdvancedDropInService : DropInService() {
         return OrderResponse.SERIALIZER.deserialize(orderJSON)
     }
 
-    @Suppress("RestrictedApi")
     private fun fetchPaymentMethods(orderResponse: OrderResponse? = null) {
         Log.d(TAG, "fetchPaymentMethods")
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             val order = orderResponse?.let {
                 Order(
                     pspReference = it.pspReference,
@@ -229,9 +226,8 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "checkBalance")
             val amount = paymentComponentState.data.amount
             val paymentMethod = paymentComponentState.data.paymentMethod
@@ -284,9 +280,8 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onOrderRequest() {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
@@ -316,9 +311,8 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "cancelOrder")
             val orderJson = Order.SERIALIZER.serialize(order)
             val request = createCancelOrderRequest(
@@ -355,11 +349,10 @@ class ExampleAdvancedDropInService : DropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,

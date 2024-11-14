@@ -20,8 +20,8 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
@@ -71,8 +71,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         viewModelScope.launch { fetchSession() }
     }
 
-    @Suppress("RestrictedApi")
-    private suspend fun fetchSession() = withContext(DispatcherProvider.IO) {
+    private suspend fun fetchSession() = withContext(IODispatcher) {
         val paymentMethodType = PaymentMethodTypes.GOOGLE_PAY
         val checkoutSession = getSession(paymentMethodType)
         if (checkoutSession == null) {

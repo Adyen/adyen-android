@@ -11,8 +11,8 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -56,8 +56,7 @@ internal class CardViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    @Suppress("RestrictedApi")
-    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -129,8 +128,7 @@ internal class CardViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        @Suppress("RestrictedApi")
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -164,9 +162,8 @@ internal class CardViewModel @Inject constructor(
         _events.emit(CardEvent.AdditionalAction(action))
     }
 
-    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }

@@ -23,9 +23,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createBalanceRequest
@@ -68,8 +68,7 @@ internal class GiftCardViewModel @Inject constructor(
         viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    @Suppress("RestrictedApi")
-    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -113,9 +112,8 @@ internal class GiftCardViewModel @Inject constructor(
     // no ops
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
-    @Suppress("RestrictedApi")
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             Log.d(TAG, "checkBalance")
 
             val amount = paymentComponentState.data.amount
@@ -177,9 +175,8 @@ internal class GiftCardViewModel @Inject constructor(
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onRequestOrder() {
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
@@ -213,13 +210,12 @@ internal class GiftCardViewModel @Inject constructor(
         }
     }
 
-    @Suppress("RestrictedApi")
     private fun makePayment(data: PaymentComponentData<*>) {
         _giftCardViewStateFlow.value = GiftCardViewState.Loading
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -284,9 +280,8 @@ internal class GiftCardViewModel @Inject constructor(
         viewModelScope.launch { _events.emit(GiftCardEvent.AdditionalAction(action)) }
     }
 
-    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }

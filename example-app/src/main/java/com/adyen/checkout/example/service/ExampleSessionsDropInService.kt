@@ -15,11 +15,11 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.ErrorDialog
 import com.adyen.checkout.dropin.SessionDropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -38,7 +38,6 @@ class ExampleSessionsDropInService : SessionDropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    @Suppress("RestrictedApi")
     override fun onSubmit(
         state: PaymentComponentState<*>,
     ): Boolean {
@@ -46,7 +45,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
             state is BlikComponentState ||
             state is CardComponentState
         ) {
-            launch(DispatcherProvider.IO) {
+            launch(IODispatcher) {
                 Log.d(TAG, "onPaymentsCallRequested")
 
                 // Check out the documentation of this method on the parent DropInService class
@@ -74,12 +73,11 @@ class ExampleSessionsDropInService : SessionDropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onAdditionalDetails(
         actionComponentData: ActionComponentData,
     ): Boolean {
         return if (isFlowTakenOver) {
-            launch(DispatcherProvider.IO) {
+            launch(IODispatcher) {
                 Log.d(TAG, "onDetailsCallRequested")
 
                 val response = paymentsRepository.makeDetailsRequest(
