@@ -20,9 +20,9 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
@@ -67,8 +67,7 @@ internal class GooglePayViewModel @Inject constructor(
         viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    @Suppress("RestrictedApi")
-    private suspend fun fetchPaymentMethods() = withContext(DispatcherProvider.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -138,9 +137,8 @@ internal class GooglePayViewModel @Inject constructor(
         viewModelScope.launch { _events.emit(GooglePayEvent.PaymentResult("Failed: ${error.errorMessage}")) }
     }
 
-    @Suppress("RestrictedApi")
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
@@ -169,8 +167,7 @@ internal class GooglePayViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        @Suppress("RestrictedApi")
-        viewModelScope.launch(DispatcherProvider.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),

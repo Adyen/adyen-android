@@ -15,12 +15,12 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.dropin.DropInService
 import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.ErrorDialog
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
@@ -43,11 +43,10 @@ class ExampleDropInService : DropInService() {
     @Inject
     lateinit var keyValueStorage: KeyValueStorage
 
-    @Suppress("RestrictedApi")
     override fun onSubmit(
         state: PaymentComponentState<*>
     ) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -83,9 +82,8 @@ class ExampleDropInService : DropInService() {
         }
     }
 
-    @Suppress("RestrictedApi")
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -128,11 +126,10 @@ class ExampleDropInService : DropInService() {
         return jsonResponse.has("action")
     }
 
-    @Suppress("RestrictedApi")
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(DispatcherProvider.IO) {
+        launch(IODispatcher) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,
