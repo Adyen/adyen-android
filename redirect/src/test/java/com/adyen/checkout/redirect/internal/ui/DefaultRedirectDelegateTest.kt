@@ -17,11 +17,13 @@ import com.adyen.checkout.components.core.action.ActionTypes
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
@@ -196,6 +198,60 @@ internal class DefaultRedirectDelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleAction called and redirect fails, then an event is tracked`() = runTest {
+            val action = RedirectAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+            )
+            redirectHandler.exception = ComponentException("Failed to launch redirect.")
+
+            delegate.handleAction(action, Activity())
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.REDIRECT_FAILED,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when handleIntent called and parsing redirect result fails, then an event is tracked`() = runTest {
+            val action = RedirectAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+            )
+
+            delegate.handleAction(action, Activity())
+            redirectHandler.exception = ComponentException("Failed to parse redirect result.")
+
+            delegate.handleIntent(Intent())
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.REDIRECT_PARSE_FAILED,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when redirect is cancelled with CancellationException, then an event is tracked`() = runTest {
+            val action = RedirectAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+            )
+            delegate.handleAction(action, Activity())
+
+            val exception = CancellationException("Redirect flow cancelled.")
+            delegate.onError(exception)
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.REDIRECT_CANCELLED,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
