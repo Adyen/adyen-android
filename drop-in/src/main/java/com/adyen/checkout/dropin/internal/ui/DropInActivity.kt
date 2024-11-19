@@ -277,8 +277,6 @@ internal class DropInActivity :
     private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
         if (terminateDropIn) {
             terminateWithError(reason)
-        } else {
-            setLoading(false)
         }
     }
 
@@ -384,6 +382,7 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}" }
         dropInViewModel.isWaitingResult = false
+        setLoading(false)
         when (dropInServiceResult) {
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
@@ -457,10 +456,10 @@ internal class DropInActivity :
         dropInServiceResult.errorDialog?.let { errorDialog ->
             val errorMessage = errorDialog.message ?: getString(R.string.unknown_error)
             showError(errorDialog.title, errorMessage, reason, dropInServiceResult.dismissDropIn)
-        } ?: if (dropInServiceResult.dismissDropIn) {
-            terminateWithError(reason)
-        } else {
-            setLoading(false)
+        } ?: run {
+            if (dropInServiceResult.dismissDropIn) {
+                terminateWithError(reason)
+            }
         }
     }
 
@@ -480,7 +479,6 @@ internal class DropInActivity :
             handleAction(action)
             return
         }
-        setLoading(false)
         hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
@@ -654,7 +652,6 @@ internal class DropInActivity :
 
     private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceResult.FullPayment) {
         adyenLog(AdyenLogLevel.DEBUG) { "handleGiftCardFullPayment" }
-        setLoading(false)
         showGiftCardPaymentConfirmationDialog(fullPayment.data)
     }
 
@@ -679,7 +676,6 @@ internal class DropInActivity :
     }
 
     private fun handleRemovePaymentMethodResult(id: String) {
-        setLoading(false)
         dropInViewModel.removeStoredPaymentMethodWithId(id)
 
         val preselectedStoredPaymentMethodFragment =
