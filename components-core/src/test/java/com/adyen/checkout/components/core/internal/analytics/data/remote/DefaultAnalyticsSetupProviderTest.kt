@@ -8,6 +8,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.doReturn
@@ -25,6 +26,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             application = createMockApplication(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
@@ -39,6 +41,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             locale = Locale.US.toLanguageTag(),
             component = "scheme",
             flavor = "components",
+            level = "initial",
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
             referrer = "com.adyen.checkout",
@@ -58,6 +61,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             application = createMockApplication(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
@@ -74,6 +78,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             application = createMockApplication(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
@@ -90,6 +95,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             application = createMockApplication(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
             amount = Amount("USD", 123),
             source = AnalyticsSource.DropIn(listOf()),
             sessionId = "sessionId",
@@ -106,6 +112,7 @@ internal class DefaultAnalyticsSetupProviderTest {
             application = createMockApplication(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
             amount = Amount("USD", 123),
             source = AnalyticsSource.PaymentComponent("scheme"),
             sessionId = "sessionId",
@@ -114,6 +121,40 @@ internal class DefaultAnalyticsSetupProviderTest {
         val result = analyticsSetupProvider.provide()
 
         assertEquals("scheme", result.component)
+    }
+
+    @Test
+    fun `when analytics params level is initial, then level should be initial`() {
+        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
+            application = createMockApplication(),
+            shopperLocale = Locale.US,
+            isCreatedByDropIn = false,
+            analyticsLevel = AnalyticsParamsLevel.INITIAL,
+            amount = Amount("USD", 123),
+            source = AnalyticsSource.PaymentComponent("scheme"),
+            sessionId = "sessionId",
+        )
+
+        val result = analyticsSetupProvider.provide()
+
+        assertEquals("initial", result.level)
+    }
+
+    @Test
+    fun `when analytics params level is all, then level should be all`() {
+        analyticsSetupProvider = DefaultAnalyticsSetupProvider(
+            application = createMockApplication(),
+            shopperLocale = Locale.US,
+            isCreatedByDropIn = false,
+            analyticsLevel = AnalyticsParamsLevel.ALL,
+            amount = Amount("USD", 123),
+            source = AnalyticsSource.PaymentComponent("scheme"),
+            sessionId = "sessionId",
+        )
+
+        val result = analyticsSetupProvider.provide()
+
+        assertEquals("all", result.level)
     }
 
     private fun createMockApplication(): Application {
