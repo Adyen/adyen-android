@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -230,16 +231,19 @@ internal class DefaultGooglePayDelegate(
             AutoResolveHelper.RESULT_ERROR -> {
                 val statusMessage: String = paymentDataTaskResult.status.statusMessage?.let { ": $it" }.orEmpty()
                 adyenLog(AdyenLogLevel.ERROR) { "GooglePay encountered an error$statusMessage" }
+                trackThirdPartyErrorEvent()
                 exceptionChannel.trySend(ComponentException("GooglePay encountered an error$statusMessage"))
             }
 
             CommonStatusCodes.INTERNAL_ERROR -> {
                 adyenLog(AdyenLogLevel.ERROR) { "GooglePay encountered an internal error" }
+                trackThirdPartyErrorEvent()
                 exceptionChannel.trySend(ComponentException("GooglePay encountered an internal error"))
             }
 
             else -> {
                 adyenLog(AdyenLogLevel.ERROR) { "GooglePay encountered an unexpected error, statusCode: $statusCode" }
+                trackThirdPartyErrorEvent()
                 exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
             }
         }
@@ -250,6 +254,7 @@ internal class DefaultGooglePayDelegate(
         when (resultCode) {
             Activity.RESULT_OK -> {
                 if (data == null) {
+                    trackThirdPartyErrorEvent()
                     exceptionChannel.trySend(ComponentException("Result data is null"))
                     return
                 }
@@ -261,6 +266,8 @@ internal class DefaultGooglePayDelegate(
             }
 
             AutoResolveHelper.RESULT_ERROR -> {
+                trackThirdPartyErrorEvent()
+
                 val status = AutoResolveHelper.getStatusFromIntent(data)
                 val statusMessage: String = status?.let { ": ${it.statusMessage}" }.orEmpty()
                 exceptionChannel.trySend(ComponentException("GooglePay returned an error$statusMessage"))
@@ -271,6 +278,7 @@ internal class DefaultGooglePayDelegate(
     private fun initiatePayment(paymentData: PaymentData?) {
         if (paymentData == null) {
             adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            trackThirdPartyErrorEvent()
             exceptionChannel.trySend(ComponentException("GooglePay encountered an unexpected error"))
             return
         }
@@ -281,6 +289,14 @@ internal class DefaultGooglePayDelegate(
 
         updateOutputData(paymentData = paymentData)
         submitHandler.onSubmit(_componentStateFlow.value)
+    }
+
+    private fun trackThirdPartyErrorEvent() {
+        val event = GenericEvents.error(
+            component = getPaymentMethodType(),
+            event = ErrorEvent.THIRD_PARTY,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun getGooglePayButtonParameters(): GooglePayButtonParameters {
