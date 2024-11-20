@@ -23,7 +23,9 @@ import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class ProcessingPaymentView @JvmOverloads constructor(
+class ProcessingPaymentView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
