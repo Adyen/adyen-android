@@ -135,19 +135,22 @@ internal class DefaultGooglePayDelegate(
 
     private fun updateOutputData(
         isButtonVisible: Boolean = this.outputData.isButtonVisible,
+        isLoading: Boolean = this.outputData.isLoading,
         paymentData: PaymentData? = this.outputData.paymentData,
     ) {
-        val newOutputData = createOutputData(isButtonVisible, paymentData)
+        val newOutputData = createOutputData(isButtonVisible, isLoading, paymentData)
         _outputDataFlow.tryEmit(newOutputData)
         updateComponentState(newOutputData)
     }
 
     private fun createOutputData(
         isButtonVisible: Boolean = componentParams.isSubmitButtonVisible,
+        isLoading: Boolean = !isButtonVisible,
         paymentData: PaymentData? = null,
     ): GooglePayOutputData {
         return GooglePayOutputData(
             isButtonVisible = isButtonVisible,
+            isLoading = isLoading,
             paymentData = paymentData,
         )
     }
@@ -204,7 +207,7 @@ internal class DefaultGooglePayDelegate(
     override fun onSubmit() {
         adyenLog(AdyenLogLevel.DEBUG) { "onSubmit" }
 
-        _viewFlow.tryEmit(PaymentInProgressViewType)
+        updateOutputData(isButtonVisible = false, isLoading = true)
 
         val paymentDataRequest = GooglePayUtils.createPaymentDataRequest(componentParams)
         val paymentDataTask = paymentsClient.loadPaymentData(paymentDataRequest)

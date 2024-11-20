@@ -12,5 +12,6 @@ import com.google.android.gms.wallet.PaymentData
 
 internal data class GooglePayOutputData(
     val isButtonVisible: Boolean,
+    val isLoading: Boolean,
     val paymentData: PaymentData?,
 )

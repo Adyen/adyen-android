@@ -158,6 +158,18 @@ internal class DefaultGooglePayDelegateTest(
         assertEquals(task, payEventFlow.latestValue)
     }
 
+    @Test
+    fun `when onSubmit is called, then button is hidden and loading state is shown`() = runTest {
+        val outputDataFlow = delegate.outputDataFlow.test(testScheduler)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.onSubmit()
+
+        val latestOutputData = outputDataFlow.latestValue
+        assertFalse(latestOutputData.isButtonVisible)
+        assertTrue(latestOutputData.isLoading)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `when input data is valid then amount is propagated in component state if set`(
@@ -353,8 +365,9 @@ internal class DefaultGooglePayDelegateTest(
 
     private fun createOutputData(
         isButtonVisible: Boolean = false,
+        isLoading: Boolean = !isButtonVisible,
         paymentData: PaymentData? = null,
-    ) = GooglePayOutputData(isButtonVisible, paymentData)
+    ) = GooglePayOutputData(isButtonVisible, isLoading, paymentData)
 
     companion object {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
