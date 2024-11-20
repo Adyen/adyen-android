@@ -13,10 +13,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.googlepay.databinding.ViewGooglePayBinding
+import com.adyen.checkout.googlepay.internal.ui.model.GooglePayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 internal class GooglePayView
 @JvmOverloads
@@ -41,10 +45,22 @@ internal constructor(
         require(delegate is GooglePayDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         initializeFragment(delegate)
+
+        observeDelegate(delegate, coroutineScope)
     }
 
     private fun initializeFragment(delegate: GooglePayDelegate) {
         binding.fragmentContainer.getFragment<GooglePayFragment?>()?.initialize(delegate)
+    }
+
+    private fun observeDelegate(delegate: GooglePayDelegate, coroutineScope: CoroutineScope) {
+        delegate.outputDataFlow
+            .onEach { outputDataChanged(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun outputDataChanged(outputData: GooglePayOutputData) {
+        binding.processingPaymentView.isVisible = outputData.isLoading
     }
 
     override fun highlightValidationErrors() = Unit
