@@ -16,7 +16,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
-import com.adyen.checkout.ui.core.internal.ui.view.ProcessingPaymentView
 
 internal class GooglePayViewProvider : ViewProvider {
 
@@ -25,7 +24,6 @@ internal class GooglePayViewProvider : ViewProvider {
         context: Context,
     ): ComponentView = when (viewType) {
         GooglePayComponentViewType -> GooglePayView(context)
-        PaymentInProgressViewType -> ProcessingPaymentView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 
@@ -34,7 +32,6 @@ internal class GooglePayViewProvider : ViewProvider {
         layoutInflater: LayoutInflater
     ): ComponentView = when (viewType) {
         GooglePayComponentViewType -> GooglePayView(layoutInflater)
-        PaymentInProgressViewType -> ProcessingPaymentView(layoutInflater.context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
@@ -49,9 +46,4 @@ internal object GooglePayComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider get() = GooglePayViewProvider()
 
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
-}
-
-internal object PaymentInProgressViewType : ComponentViewType {
-
-    override val viewProvider: ViewProvider get() = GooglePayViewProvider()
 }
