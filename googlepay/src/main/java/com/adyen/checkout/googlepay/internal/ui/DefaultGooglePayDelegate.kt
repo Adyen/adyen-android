@@ -85,6 +85,8 @@ internal class DefaultGooglePayDelegate(
     private val payEventChannel: Channel<Task<PaymentData>> = bufferedChannel()
     override val payEventFlow: Flow<Task<PaymentData>> = payEventChannel.receiveAsFlow()
 
+    private var isAvailable = false
+
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -106,6 +108,7 @@ internal class DefaultGooglePayDelegate(
             paymentMethod,
             componentParams,
         ) { isAvailable, _ ->
+            this.isAvailable = isAvailable
             updateOutputData(isButtonVisible = isAvailable)
 
             if (!isAvailable) {
@@ -181,11 +184,7 @@ internal class DefaultGooglePayDelegate(
             amount = componentParams.amount,
         )
 
-        val isReady = if (shouldShowSubmitButton()) {
-            outputData.isButtonVisible
-        } else {
-            true
-        }
+        val isReady = isAvailable
 
         return GooglePayComponentState(
             data = paymentComponentData,

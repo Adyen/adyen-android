@@ -89,7 +89,7 @@ internal class DefaultGooglePayDelegateTest(
             with(awaitItem()) {
                 assertNull(data.paymentMethod)
                 assertFalse(isInputValid)
-                assertTrue(isReady)
+                assertFalse(isReady)
                 assertNull(paymentData)
             }
 
@@ -99,6 +99,9 @@ internal class DefaultGooglePayDelegateTest(
 
     @Test
     fun `when payment data is null, then state is not valid`() = runTest {
+        withAvailabilityCheck(true)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
         delegate.componentStateFlow.test {
             delegate.updateComponentState(createOutputData(paymentData = null))
 
@@ -115,6 +118,9 @@ internal class DefaultGooglePayDelegateTest(
 
     @Test
     fun `when creating component state with valid payment data, then the state is propagated`() = runTest {
+        withAvailabilityCheck(true)
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
         delegate.componentStateFlow.test {
             skipItems(1)
 
@@ -291,10 +297,7 @@ internal class DefaultGooglePayDelegateTest(
         expectedIsReady: Boolean,
         expectedException: CheckoutException?,
     ) = runTest {
-        whenever(googlePayAvailabilityCheck.isAvailable(any(), any(), any())) doAnswer { invocation ->
-            (invocation.getArgument(2, ComponentAvailableCallback::class.java))
-                .onAvailabilityResult(isAvailable, PaymentMethod())
-        }
+        withAvailabilityCheck(isAvailable)
 
         val config = createCheckoutConfiguration {
             setSubmitButtonVisible(isSubmitButtonVisible)
@@ -369,6 +372,13 @@ internal class DefaultGooglePayDelegateTest(
         paymentData: PaymentData? = null,
     ) = GooglePayOutputData(isButtonVisible, isLoading, paymentData)
 
+    private fun withAvailabilityCheck(isAvailable: Boolean) {
+        whenever(googlePayAvailabilityCheck.isAvailable(any(), any(), any())) doAnswer { invocation ->
+            (invocation.getArgument(2, ComponentAvailableCallback::class.java))
+                .onAvailabilityResult(isAvailable, PaymentMethod())
+        }
+    }
+
     companion object {
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
@@ -398,7 +408,7 @@ internal class DefaultGooglePayDelegateTest(
         @JvmStatic
         fun googlePayAvailableSource() = listOf(
             // isSubmitButtonVisible, isAvailable, expectedIsReady, expectedException
-            arguments(false, false, true, GooglePayUnavailableException()),
+            arguments(false, false, false, GooglePayUnavailableException()),
             arguments(false, true, true, null),
             arguments(true, false, false, GooglePayUnavailableException()),
             arguments(true, true, true, null),
