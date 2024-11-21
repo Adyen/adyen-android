@@ -54,3 +54,12 @@ jobs:
           chmod +x scripts/generate_release_notes.sh
           RELEASE_NOTES_FILE_NAME="release-notes-${VERSION_NAME}.md"
           scripts/generate_release_notes.sh $RELEASE_NOTES_FILE_NAME
+
+      - name: Upload release notes artifact
+        uses: actions/upload-artifact@v3
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
+        with:
+          name: "release-notes-${{ env.VERSION_NAME }}"
+          path: "release-notes-${{ env.VERSION_NAME }}.md"
+          overwrite: true
