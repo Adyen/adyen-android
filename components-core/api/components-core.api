@@ -935,6 +935,11 @@ public final class com/adyen/checkout/components/core/PaymentMethodTypes {
 	public final fun getUNSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
 }
 
+public class com/adyen/checkout/components/core/PaymentMethodUnavailableException : com/adyen/checkout/core/exception/CheckoutException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class com/adyen/checkout/components/core/PaymentMethodsApiResponse : com/adyen/checkout/core/internal/data/model/ModelObject {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse$Companion;

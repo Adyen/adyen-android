@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Mentés a következő fizetéshez</string>
-    <string name="cash_app_pay_waiting_text">Fizetés feldolgozása…</string>
 </resources>

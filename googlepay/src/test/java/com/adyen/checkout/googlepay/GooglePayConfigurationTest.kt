@@ -22,6 +22,7 @@ internal class GooglePayConfigurationTest {
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
         ) {
             googlePay {
+                setSubmitButtonVisible(true)
                 setMerchantAccount("merchantAccount")
                 setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
                 setMerchantInfo(MerchantInfo(merchantId = "id"))
@@ -48,6 +49,7 @@ internal class GooglePayConfigurationTest {
             environment = Environment.TEST,
             clientKey = TEST_CLIENT_KEY,
         )
+            .setSubmitButtonVisible(true)
             .setAmount(Amount("EUR", 123L))
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             .setMerchantAccount("merchantAccount")
@@ -99,6 +101,7 @@ internal class GooglePayConfigurationTest {
             clientKey = TEST_CLIENT_KEY,
         )
             .setAmount(Amount("EUR", 123L))
+            .setSubmitButtonVisible(true)
             .setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
             .setMerchantAccount("merchantAccount")
             .setGooglePayEnvironment(WalletConstants.ENVIRONMENT_PRODUCTION)
@@ -139,6 +142,7 @@ internal class GooglePayConfigurationTest {
         assertEquals(config.environment, actualGooglePayCardConfig?.environment)
         assertEquals(config.clientKey, actualGooglePayCardConfig?.clientKey)
         assertEquals(config.amount, actualGooglePayCardConfig?.amount)
+        assertEquals(config.isSubmitButtonVisible, actualGooglePayCardConfig?.isSubmitButtonVisible)
         assertEquals(config.analyticsConfiguration, actualGooglePayCardConfig?.analyticsConfiguration)
         assertEquals(config.merchantAccount, actualGooglePayCardConfig?.merchantAccount)
         assertEquals(config.googlePayEnvironment, actualGooglePayCardConfig?.googlePayEnvironment)

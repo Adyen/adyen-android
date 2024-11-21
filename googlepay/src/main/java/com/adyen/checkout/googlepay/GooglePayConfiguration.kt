@@ -16,6 +16,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ButtonConfiguration
+import com.adyen.checkout.components.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
 import com.adyen.checkout.core.Environment
@@ -34,9 +36,10 @@ class GooglePayConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
     override val analyticsConfiguration: AnalyticsConfiguration?,
+    override val amount: Amount?,
+    override val isSubmitButtonVisible: Boolean?,
     val merchantAccount: String?,
     val googlePayEnvironment: Int?,
-    override val amount: Amount?,
     val totalPriceStatus: String?,
     val countryCode: String?,
     val merchantInfo: MerchantInfo?,
@@ -51,15 +54,17 @@ class GooglePayConfiguration private constructor(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
+    val googlePayButtonStyling: GooglePayButtonStyling?,
     internal val genericActionConfiguration: GenericActionConfiguration,
-) : Configuration {
+) : Configuration, ButtonConfiguration {
 
     /**
      * Builder to create a [GooglePayConfiguration].
      */
     @Suppress("TooManyFunctions")
     class Builder :
-        ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder> {
+        ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder>,
+        ButtonConfigurationBuilder {
         private var merchantAccount: String? = null
         private var googlePayEnvironment: Int? = null
         private var merchantInfo: MerchantInfo? = null
@@ -76,6 +81,8 @@ class GooglePayConfiguration private constructor(
         private var isBillingAddressRequired: Boolean? = null
         private var billingAddressParameters: BillingAddressParameters? = null
         private var totalPriceStatus: String? = null
+        private var googlePayButtonStyling: GooglePayButtonStyling? = null
+        private var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -378,15 +385,38 @@ class GooglePayConfiguration private constructor(
             return super.setAmount(amount)
         }
 
+        /**
+         * Set a [GooglePayButtonStyling] object for customization of the Google Pay button.
+         *
+         * @param googlePayButtonStyling The customization object.
+         */
+        fun setGooglePayButtonStyling(googlePayButtonStyling: GooglePayButtonStyling): Builder {
+            this.googlePayButtonStyling = googlePayButtonStyling
+            return this
+        }
+
+        /**
+         * Sets if submit button will be visible or not.
+         *
+         * Default is false.
+         *
+         * @param isSubmitButtonVisible If submit button should be visible or not.
+         */
+        override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
+            this.isSubmitButtonVisible = isSubmitButtonVisible
+            return this
+        }
+
         override fun buildInternal(): GooglePayConfiguration {
             return GooglePayConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
+                amount = amount,
+                isSubmitButtonVisible = isSubmitButtonVisible,
                 merchantAccount = merchantAccount,
                 googlePayEnvironment = googlePayEnvironment,
-                amount = amount,
                 totalPriceStatus = totalPriceStatus,
                 countryCode = countryCode,
                 merchantInfo = merchantInfo,
@@ -401,6 +431,7 @@ class GooglePayConfiguration private constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 isBillingAddressRequired = isBillingAddressRequired,
                 billingAddressParameters = billingAddressParameters,
+                googlePayButtonStyling = googlePayButtonStyling,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )
         }

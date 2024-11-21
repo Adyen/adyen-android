@@ -8,7 +8,24 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## New
+- Launch Google Pay with `submit()` to get rid of the deprecated activity result handling.
+- For drop-in, show a toolbar on every intermediary screen, so shoppers can always easily navigate back.
+
 ## Fixed
-- For the Address Lookup functionality:
-  -  Address data is now correctly saved to `PaymentComponentData`.
-  -  Address fields that were edited manually no longer lose their state when starting Lookup mode.  
+
+## Improved
+
+## Changed
+- Dependency versions:
+  | Name                                                                                                   | Version                       |
+  |--------------------------------------------------------------------------------------------------------|-------------------------------|
+  |                           |                     |
+
+## Deprecated
+- The styles and strings for the Cash App Pay loading indicator. Use the new styles and strings instead.
+| Previous                                                  | Now                                                              |
+|-----------------------------------------------------------|------------------------------------------------------------------|
+| `AdyenCheckout.CashAppPay.ProgressBar`                    | `AdyenCheckout.ProcessingPaymentView.ProgressBar`                |
+| `AdyenCheckout.CashAppPay.WaitingDescriptionTextView`     | `AdyenCheckout.ProcessingPaymentView.WaitingDescriptionTextView` |
+| `cash_app_pay_waiting_text`                               | `checkout_processing_payment` |
