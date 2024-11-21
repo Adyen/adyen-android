@@ -10,3 +10,14 @@
 - [ ] Related issues are linked
 
 COAND-XXX
+
+## Release notes
+[//]: # (Use the headers listed below to organize your release notes. Each section should begin with ### followed by a valid label)
+[//]: # (Allowed labels: `Breaking changes`, `New`, `Fixed`, `Improved`, `Changed`, `Removed`, `Deprecated`)
+[//]: # (Content will be grouped under a specific label until the next header #, ##, or ### is found)
+[//]: # (### New)
+[//]: # (List any new features or enhancements)
+[//]: # (e.g. - Added functionality for user authentication)
+[//]: # (### Fixed)
+[//]: # (List fixes here)
+[//]: # (e.g. - Fixed issue with incorrect data rendering)
