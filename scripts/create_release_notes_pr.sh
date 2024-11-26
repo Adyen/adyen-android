@@ -13,8 +13,8 @@ prepare_branches() {
     git fetch origin "$BASE_BRANCH"
     git checkout -f "$BASE_BRANCH"
 
-    echo "Creating and switching to branch '$VERSION_NAME'..."
-    git checkout -b "$VERSION_NAME"
+    echo "Creating and switching to branch '$RELEASE_NOTES_BRANCH'..."
+    git checkout -b "$RELEASE_NOTES_BRANCH"
 }
 
 # Commit the release notes file
@@ -24,7 +24,7 @@ commit_release_notes() {
 
     echo "Committing changes..."
     git commit -m "Add release notes for $VERSION_NAME release"
-    git push origin "$VERSION_NAME"
+    git push origin "$RELEASE_NOTES_BRANCH"
 }
 
 # Create a pull request via the GitHub API
@@ -38,7 +38,7 @@ create_pr() {
     JSON_PAYLOAD=$(cat <<EOF
         {
             "title": "$PR_TITLE",
-            "head": "$VERSION_NAME",
+            "head": "$RELEASE_NOTES_BRANCH",
             "base": "$BASE_BRANCH",
             "body": "$PR_BODY"
         }
@@ -88,5 +88,6 @@ create_release_notes_pr() {
 }
 
 RELEASE_NOTES_FILE_NAME=$1
+RELEASE_NOTES_BRANCH="release-notes-$VERSION_NAME"
 
 create_release_notes_pr
