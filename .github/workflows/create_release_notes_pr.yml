@@ -1,0 +1,33 @@
+name: Create release notes PR
+
+on:
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
+
+jobs:
+  create_release_notes_pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download release notes artifact
+        uses: actions/download-artifact@v3
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
+        with:
+          name: "${{ env.VERSION_NAME }}"
+
+      - name: Create release notes PR
+        env:
+          BASE_BRANCH: "release-notes"
+          VERSION_NAME: ${{ inputs.version-name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          chmod +x scripts/create_release_notes_pr.sh
+          RELEASE_NOTES_FILE_NAME="${VERSION_NAME}.md"
+          scripts/create_release_notes_pr.sh $RELEASE_NOTES_FILE_NAME
