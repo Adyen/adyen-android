@@ -88,6 +88,11 @@ generate_release_notes() {
         exit 1
     fi
 
+    if [ -z "$RELEASE_NOTES_FILE_NAME" ]; then
+        echo "Release notes file name is not provided. Please provide it in the arguments of the script. Exiting..."
+        exit 1
+    fi
+
     generate_release_notes_from_prs
 }
 
