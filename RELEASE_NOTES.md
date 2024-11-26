@@ -8,6 +8,10 @@
 [//]: # (## Deprecated)
 [//]: # ( - Configurations public constructor are deprecated, please use each Configuration's builder to make a Configuration object)
 
+## New
+- Payment method:
+  - Pay by Bank US. Payment method type: **paybybank_AIS_DD**.
+
 ## Fixed
 - For the Address Lookup functionality, when the postal/zip code field is focused and the user presses back, then it no longer crashes.
 - For drop-in, in some edge-cases the loading state would be shown on top of an error dialog. This is fixed now.
