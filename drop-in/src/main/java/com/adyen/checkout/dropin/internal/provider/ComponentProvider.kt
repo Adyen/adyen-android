@@ -117,7 +117,7 @@ import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
  * @param storedPaymentMethod The stored payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("UNCHECKED_CAST", "LongParameterList")
+@Suppress("UNCHECKED_CAST", "LongParameterList", "LongMethod")
 internal fun getComponentFor(
     fragment: Fragment,
     storedPaymentMethod: StoredPaymentMethod,
@@ -164,6 +164,16 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<CardComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
+        checkCompileOnly { PayByBankUSComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            PayByBankUSComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayByBankUSComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
