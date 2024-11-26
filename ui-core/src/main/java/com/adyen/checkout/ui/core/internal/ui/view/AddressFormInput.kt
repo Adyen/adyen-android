@@ -52,13 +52,13 @@ class AddressFormInput @JvmOverloads constructor(
     private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
     private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
 
-    private val textViewHeader: TextView
+    private val textViewHeader: TextView?
         get() = rootView.findViewById(R.id.textView_header)
 
-    private val formContainer: LinearLayout
+    private val formContainer: LinearLayout?
         get() = rootView.findViewById(R.id.linearLayout_formContainer)
 
-    private val autoCompleteTextViewCountry: AutoCompleteTextView
+    private val autoCompleteTextViewCountry: AutoCompleteTextView?
         get() = rootView.findViewById(R.id.autoCompleteTextView_country)
 
     private val autoCompleteTextViewState: AutoCompleteTextView?
@@ -74,7 +74,7 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.editText_apartmentSuite)
 
     private val editTextPostalCode: AdyenTextInputEditText?
-        get() = formContainer.findViewById(R.id.editText_postalCode)
+        get() = formContainer?.findViewById(R.id.editText_postalCode)
 
     private val editTextCity: AdyenTextInputEditText?
         get() = rootView.findViewById(R.id.editText_city)
@@ -95,7 +95,7 @@ class AddressFormInput @JvmOverloads constructor(
         get() = rootView.findViewById(R.id.textInputLayout_apartmentSuite)
 
     private val textInputLayoutPostalCode: TextInputLayout?
-        get() = formContainer.findViewById(R.id.textInputLayout_postalCode)
+        get() = formContainer?.findViewById(R.id.textInputLayout_postalCode)
 
     private val textInputLayoutCity: TextInputLayout?
         get() = rootView.findViewById(R.id.textInputLayout_city)
@@ -111,7 +111,7 @@ class AddressFormInput @JvmOverloads constructor(
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         LayoutInflater.from(context).inflate(R.layout.address_form_input, this, true)
 
-        autoCompleteTextViewCountry.apply {
+        autoCompleteTextViewCountry?.apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_COUNTRY)
             }
@@ -218,7 +218,7 @@ class AddressFormInput @JvmOverloads constructor(
         val selectedSpecification = AddressSpecification.fromString(selectedCountry?.code)
         if (selectedSpecification != currentSpec || currentSelected != selectedCountry) {
             currentSpec = selectedSpecification
-            autoCompleteTextViewCountry.setText(selectedCountry?.name)
+            autoCompleteTextViewCountry?.setText(selectedCountry?.name)
             populateFormFields(selectedSpecification)
         }
     }
@@ -246,7 +246,7 @@ class AddressFormInput @JvmOverloads constructor(
         }
 
         val hadFocus = hasFocus()
-        formContainer.removeAllViews()
+        formContainer?.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
         initForm(specification)
         if (hadFocus) requestFocus()
@@ -293,7 +293,7 @@ class AddressFormInput @JvmOverloads constructor(
     }
 
     private fun initHeader() {
-        textViewHeader.setLocalizedTextFromStyle(
+        textViewHeader?.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_AddressForm_HeaderTextAppearance,
             localizedContext,
         )
@@ -304,7 +304,8 @@ class AddressFormInput @JvmOverloads constructor(
             styleResId,
             localizedContext,
         )
-        autoCompleteTextViewCountry.setText(delegate.addressOutputData.countryOptions.firstOrNull { it.selected }?.name)
+        val text = delegate.addressOutputData.countryOptions.firstOrNull { it.selected }?.name
+        autoCompleteTextViewCountry?.setText(text)
     }
 
     private fun initStreetInput(styleResId: Int?) {
