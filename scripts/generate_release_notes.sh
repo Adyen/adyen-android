@@ -47,6 +47,7 @@ generate_release_notes_from_prs() {
                     capture { print $0 } # Continue capturing until a stopping condition
                 ')
                 if [ -n "$LABEL_CONTENT" ]; then
+                    LABEL_CONTENT=$(echo "$LABEL_CONTENT" | sed -e :a -e '/[^[:blank:]]/,$!d; /^[[:space:]]*$/{ $d; N; ba' -e '}') # Remove new lines at the beginning and at the end
                     LABEL_CONTENTS["$LABEL"]="${LABEL_CONTENTS[$LABEL]}$LABEL_CONTENT\n"
                     echo -e "Generated notes for $LABEL:\n$LABEL_CONTENT"
                 fi
