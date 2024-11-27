@@ -30,6 +30,7 @@ data class StoredPaymentMethod(
     var supportedShopperInteractions: List<String>? = null,
     var bankAccountNumber: String? = null,
     var cashtag: String? = null,
+    var label: String? = null,
 ) : ModelObject() {
 
     val isEcommerce: Boolean
@@ -49,6 +50,7 @@ data class StoredPaymentMethod(
         private const val ECOMMERCE = "Ecommerce"
         private const val BANK_ACCOUNT_NUMBER = "bankAccountNumber"
         private const val CASH_TAG = "cashtag"
+        private const val LABEL = "label"
 
         @JvmField
         val SERIALIZER: Serializer<StoredPaymentMethod> = object : Serializer<StoredPaymentMethod> {
@@ -67,6 +69,7 @@ data class StoredPaymentMethod(
                         putOpt(SUPPORTED_SHOPPER_INTERACTIONS, JSONArray(modelObject.supportedShopperInteractions))
                         putOpt(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
                         putOpt(CASH_TAG, modelObject.cashtag)
+                        putOpt(LABEL, modelObject.label)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(StoredPaymentMethod::class.java, e)
@@ -85,10 +88,11 @@ data class StoredPaymentMethod(
                     lastFour = jsonObject.getStringOrNull(LAST_FOUR),
                     shopperEmail = jsonObject.getStringOrNull(SHOPPER_EMAIL),
                     supportedShopperInteractions = parseOptStringList(
-                        jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS)
+                        jsonObject.optJSONArray(SUPPORTED_SHOPPER_INTERACTIONS),
                     ),
                     bankAccountNumber = jsonObject.getStringOrNull(BANK_ACCOUNT_NUMBER),
                     cashtag = jsonObject.getStringOrNull(CASH_TAG),
+                    label = jsonObject.getStringOrNull(LABEL),
                 )
             }
         }

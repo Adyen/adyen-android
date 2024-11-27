@@ -54,6 +54,17 @@ internal fun StoredPaymentMethod.mapStoredModel(
             )
         }
 
+        PaymentMethodTypes.PAY_BY_BANK_US -> {
+            GenericStoredModel(
+                id = id.orEmpty(),
+                imageId = type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                name = label.orEmpty(),
+                description = name,
+                environment = environment,
+            )
+        }
+
         else -> GenericStoredModel(
             id = id.orEmpty(),
             imageId = type.orEmpty(),
