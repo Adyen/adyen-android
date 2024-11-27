@@ -198,9 +198,6 @@ constructor(
     }
 
     private fun initiatePayment() {
-        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
-
         val actions = listOfNotNull(
             getOneTimeAction(),
             getOnFileAction(outputData),
@@ -275,6 +272,10 @@ constructor(
                 updateInputData {
                     authorizationData = createAuthorizationData(newState.responseData)
                 }
+
+                val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+                analyticsManager.trackEvent(event)
+
                 submitHandler.onSubmit(_componentStateFlow.value)
             }
 
