@@ -47,6 +47,8 @@ import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -481,20 +483,6 @@ internal class DefaultCashAppPayDelegateTest(
         }
 
         @Test
-        fun `when delegate is initialized and confirmation is not required, then submit event is tracked`() {
-            delegate = createDefaultCashAppPayDelegate(
-                createCheckoutConfiguration(Amount("USD", 10L)) {
-                    setShowStorePaymentField(false)
-                },
-            )
-
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
-        }
-
-        @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
 
@@ -512,11 +500,15 @@ internal class DefaultCashAppPayDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<CashAppPayComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createDefaultCashAppPayDelegate()
 
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test

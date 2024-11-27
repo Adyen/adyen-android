@@ -42,6 +42,7 @@ import com.adyen.checkout.upi.internal.ui.model.mapToSelectedMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class DefaultUPIDelegate(
@@ -66,7 +67,7 @@ internal class DefaultUPIDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(UPIComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<UPIComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<UPIComponentState> = getTrackedSubmitFlow()
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -312,10 +313,12 @@ internal class DefaultUPIDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         submitHandler.onSubmit(_componentStateFlow.value)
     }
 
