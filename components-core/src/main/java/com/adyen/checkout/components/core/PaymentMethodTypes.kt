@@ -135,6 +135,7 @@ object PaymentMethodTypes {
         ONLINE_BANKING_SK,
         OPEN_BANKING,
         PAY_BY_BANK,
+        PAY_BY_BANK_US,
         PAY_NOW,
         PIX,
         PROMPT_PAY,
