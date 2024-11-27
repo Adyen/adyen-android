@@ -17,7 +17,6 @@ enum class ErrorEvent(val errorType: Type, val errorCode: String) {
     // Redirect
     REDIRECT_FAILED(Type.REDIRECT, "600"),
     REDIRECT_PARSE_FAILED(Type.REDIRECT, "601"),
-    REDIRECT_CANCELLED(Type.REDIRECT, "602"),
 
     // Encryption
     ENCRYPTION(Type.INTERNAL, "610"),
