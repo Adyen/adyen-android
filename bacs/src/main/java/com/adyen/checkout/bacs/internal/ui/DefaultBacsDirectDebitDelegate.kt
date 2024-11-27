@@ -34,6 +34,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class DefaultBacsDirectDebitDelegate(
@@ -55,7 +56,7 @@ internal class DefaultBacsDirectDebitDelegate(
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<BacsDirectDebitComponentState> = _componentStateFlow
 
-    override val submitFlow: Flow<BacsDirectDebitComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<BacsDirectDebitComponentState> = getTrackedSubmitFlow()
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -122,6 +123,11 @@ internal class DefaultBacsDirectDebitDelegate(
         onInputDataChanged()
     }
 
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onSubmit() {
         val state = _componentStateFlow.value
         when (inputData.mode) {
@@ -134,12 +140,7 @@ internal class DefaultBacsDirectDebitDelegate(
                 }
             }
 
-            BacsDirectDebitMode.CONFIRMATION -> {
-                val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-                analyticsManager.trackEvent(event)
-
-                submitHandler.onSubmit(state)
-            }
+            BacsDirectDebitMode.CONFIRMATION -> submitHandler.onSubmit(state)
         }
     }
 

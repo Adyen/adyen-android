@@ -52,6 +52,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -82,7 +83,7 @@ constructor(
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
 
-    override val submitFlow: Flow<CashAppPayComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<CashAppPayComponentState> = getTrackedSubmitFlow()
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
@@ -192,6 +193,11 @@ constructor(
         )
     }
 
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onSubmit() {
         if (isConfirmationRequired()) {
             initiatePayment()
@@ -273,9 +279,6 @@ constructor(
                 updateInputData {
                     authorizationData = createAuthorizationData(newState.responseData)
                 }
-
-                val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-                analyticsManager.trackEvent(event)
 
                 submitHandler.onSubmit(_componentStateFlow.value)
             }

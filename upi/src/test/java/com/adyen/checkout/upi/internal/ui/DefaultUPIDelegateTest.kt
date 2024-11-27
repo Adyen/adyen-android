@@ -38,6 +38,8 @@ import com.adyen.checkout.upi.upi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,7 +56,10 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -555,11 +560,15 @@ internal class DefaultUPIDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<UPIComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createUPIDelegate()
 
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test
