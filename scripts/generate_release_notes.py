@@ -40,7 +40,7 @@ def get_pr_number(commit: str) -> str:
 
 def fetch_pr(number: str) -> dict:
     url = 'https://api.github.com/repos/{}/pulls/{}'.format(os.getenv('GITHUB_REPO'), number)
-    headers = {'Authorization': 'token ' + os.getenv('GITHUB_TOKEN')}
+    headers = {}
     return requests.get(url, headers=headers).json()
 
 def get_label_content(label: str, pr_body: str) -> str:
@@ -68,11 +68,25 @@ def parse_version(version_string) -> Version:
     except:
         return Version('0.0.0')
 
+dependency_exclusion_list = []
+with open('.github/.release_notes_dependency_exclusion_list') as file:
+    dependency_exclusion_list = file.read().splitlines()
+
+def is_dependency_excluded(id: str) -> bool:
+    for line in dependency_exclusion_list:
+        if id == line:
+            return True
+
+    return False
+
 def parse_dependency_update_row(row: str) -> DependencyUpdate:
     parts = row.split('|')
 
     tag = parts[1]
     id = tag[tag.index('[') + 1:tag.index(']')]
+
+    if is_dependency_excluded(id): return None
+
     link = tag[tag.index('(') + 1:tag.index(')')]
 
     version_split = parts[2].split('`')
@@ -90,7 +104,9 @@ def get_dependency_update_content(pr_body: str) -> [DependencyUpdate]:
             should_take = False
             break
 
-        if should_take: updates.append(parse_dependency_update_row(line))
+        if should_take:
+            parsed = parse_dependency_update_row(line)
+            if parsed: updates.append(parsed)
 
         if line == '|---|---|---|---|---|---|': should_take = True
 
