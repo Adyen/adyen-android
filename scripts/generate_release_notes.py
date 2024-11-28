@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from packaging.version import Version
 import json
 import os
 import re
@@ -9,6 +10,14 @@ import sys
 
 # You can test this script locally with this command:
 # ALLOWED_LABELS="Breaking changes,New,Fixed,Improved,Changed,Removed,Deprecated" GITHUB_TOKEN="" GITHUB_REPO="Adyen/adyen-android" python ./scripts/generate_release_notes.py test_output.txt
+
+class DependencyUpdate:
+
+    def __init__(self, id, link, new_version, old_version):
+        self.id = id
+        self.link = link
+        self.new_version = new_version
+        self.old_version = old_version
 
 def fetch_latest_release_tag() -> str:
     return subprocess.check_output(['git', 'describe', '--tags', '--abbrev=0']
@@ -35,6 +44,8 @@ def fetch_pr(number: str) -> dict:
     return requests.get(url, headers=headers).json()
 
 def get_label_content(label: str, pr_body: str) -> str:
+    if not pr_body: return ''
+
     header = '### ' + label
     should_take = False
 
@@ -51,15 +62,72 @@ def get_label_content(label: str, pr_body: str) -> str:
 
     return content
 
-def combine_contents(label_contents) -> str:
+def parse_version(version_string) -> Version:
+    try:
+        return Version(version_string)
+    except:
+        return Version('0.0.0')
+
+def parse_dependency_update_row(row: str) -> DependencyUpdate:
+    parts = row.split('|')
+
+    tag = parts[1]
+    id = tag[tag.index('[') + 1:tag.index(']')]
+    link = tag[tag.index('(') + 1:tag.index(')')]
+
+    version_split = parts[2].split('`')
+    old_version = parse_version(version_split[1])
+    new_version = parse_version(version_split[3])
+
+    return DependencyUpdate(id, link, new_version, old_version)
+
+def get_dependency_update_content(pr_body: str) -> [DependencyUpdate]:
+    updates = []
+    should_take = False
+
+    for line in pr_body.splitlines():
+        if should_take and not line.startswith('|'):
+            should_take = False
+            break
+
+        if should_take: updates.append(parse_dependency_update_row(line))
+
+        if line == '|---|---|---|---|---|---|': should_take = True
+
+    return updates
+
+def add_or_update_dependency(dependency_updates: dict, dependency: DependencyUpdate):
+    previous = dependency_updates.get(dependency.id)
+    if previous:
+        new_version = dependency.new_version if dependency.new_version > previous.new_version else previous.new_version
+        old_version = dependency.old_version if dependency.old_version < previous.old_version else previous.old_version
+        updated = DependencyUpdate(dependency.id, dependency.link, new_version, old_version)
+        dependency_updates[dependency.id] = updated
+    else:
+        dependency_updates[dependency.id] = dependency
+
+def format_dependency_table(dependency_updates: dict) -> str:
+    table = '| Name | Version |\n|------|---------|'
+
+    for dependency in dependency_updates.values():
+        table = table + '\n| [{}]({}) | `{}` -> `{}` |'.format(dependency.id, dependency.link, str(dependency.old_version), str(dependency.new_version))
+
+    return table
+
+def combine_contents(label_contents, dependency_updates) -> str:
     output = ''
     for label,value in label_contents.items():
-        if value: output = '{}### {}\n{}\n'.format(output, label, value)
+        if value or dependency_updates and label == 'Changed':
+            output = '{}### {}\n'.format(output, label)
+
+        if value: output = '{}{}\n'.format(output, value)
+
+        if label == 'Changed' and dependency_updates:
+            output = output + '- Dependency versions:\n\n' + format_dependency_table(dependency_updates)
 
     if output: output = output.strip()
 
     return output
-
 
 def generate_release_notes_from_prs():
     latest_tag = fetch_latest_release_tag()
@@ -71,6 +139,7 @@ def generate_release_notes_from_prs():
     label_contents = {}
     for label in labels:
         label_contents[label] = ''
+    dependency_updates = {}
 
     for commit in commits.splitlines():
         if is_merge_commit(commit):
@@ -82,15 +151,15 @@ def generate_release_notes_from_prs():
             has_dependencies_label = any(label['name'] == 'Dependencies' for label in response['labels'])
 
             if has_dependencies_label:
-                print('TODO')
+                for dependency in get_dependency_update_content(pr_body):
+                    add_or_update_dependency(dependency_updates, dependency)
             else:
                 for label in labels:
                     label_content = get_label_content(label, pr_body)
                     if label_content:
                         label_contents[label] = label_contents[label] + label_content
-                        print('Generated notes for {}:\n{}'.format(label, label_content))
 
-    output = combine_contents(label_contents)
+    output = combine_contents(label_contents, dependency_updates)
 
     if output:
         print('Generated release notes:\n' + output)
