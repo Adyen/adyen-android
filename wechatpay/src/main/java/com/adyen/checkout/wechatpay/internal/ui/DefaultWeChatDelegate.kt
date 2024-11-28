@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -169,6 +170,7 @@ constructor(
         val isWeChatNotInitiated = !initiateWeChatPayRedirect(sdkData, activityName)
 
         if (isWeChatNotInitiated) {
+            trackThirdPartyErrorEvent()
             emitError(ComponentException("Failed to initialize WeChat app"))
         }
     }
@@ -185,6 +187,14 @@ constructor(
             details = details,
             paymentData = paymentDataRepository.paymentData,
         )
+    }
+
+    private fun trackThirdPartyErrorEvent() {
+        val event = GenericEvents.error(
+            component = action?.paymentMethodType.orEmpty(),
+            event = ErrorEvent.THIRD_PARTY,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     override fun onError(e: CheckoutException) {
