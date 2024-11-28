@@ -19,6 +19,8 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.PayByBankUSPaymentMethod
+import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -59,6 +61,18 @@ internal class StoredPayByBankUSDelegate(
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
+        initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeAnalytics(coroutineScope: CoroutineScope) {
+        adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
+        analyticsManager.initialize(this, coroutineScope)
+
+        val event = GenericEvents.rendered(
+            component = storedPaymentMethod.type.orEmpty(),
+            isStoredPaymentMethod = true,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun getPaymentMethodType(): String {
