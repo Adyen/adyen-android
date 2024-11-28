@@ -13,37 +13,83 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  labels-check:
-    # https://github.com/actions/virtual-environments/
+  get_allowed_labels:
     runs-on: ubuntu-latest
+
+    outputs:
+      allowed-labels: ${{ steps.get_allowed_labels.outputs.allowed_labels }}
 
     steps:
       - uses: actions/checkout@v4
-      - name: Check PR labels
+
+      - name: Get the list of allowed pull request labels
+        id: get_allowed_labels
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}
         run: |
-          all_pr_labels_json=$(cat <<EOF
+          RED='\033[0;31m'
+          FILE_NAME=.release_notes_allowed_labels_list
+          GITHUB_DIR=.github
+          FILE_PATH=$PROJECT_ROOT/$GITHUB_DIR/$FILE_NAME
+          if [[ ! -f "$FILE_PATH" ]]; then
+             echo -e "${RED}$FILE_NAME file doesn't exits in $GITHUB_DIR/"
+             exit 1
+          fi 
+          ALLOWED_LABELS=$(cat $FILE_PATH)
+          echo -e "allowed_labels=$ALLOWED_LABELS" >> $GITHUB_OUTPUT
+          echo -e "Allowed labels are: $ALLOWED_LABELS"
+
+  labels-check:
+    runs-on: ubuntu-latest
+    needs: get_allowed_labels
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate release notes
+        env:
+          REQUIRED_PR_LABELS: "Breaking change,Feature,Fix"
+          OPTIONAL_PR_LABELS: "Dependencies,Chore"
+          ALLOWED_RELEASE_NOTES_LABELS: ${{ needs.get_allowed_labels.outputs.allowed-labels }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Fetch PR labels
+          ALL_PR_LABELS_JSON=$(cat <<EOF
           ${{ toJson(github.event.pull_request.labels.*.name) }}
           EOF
           )
-          all_pr_labels=$(jq -r '.[]' <<< "$all_pr_labels_json")
-          echo "PR labels: $all_pr_labels"
+          ALL_PR_LABELS=$(jq -r '.[]' <<< "$ALL_PR_LABELS_JSON")
+          
+          # Read PR labels into an array
+          IFS=',' read -r -a PR_LABELS <<< "$ALL_PR_LABELS"
+          echo "PR labels: $PR_LABELS"
 
-          if [[ "${all_pr_labels[@]}" =~ 'Breaking change' || "${all_pr_labels[@]}" =~ 'Feature' || "${all_pr_labels[@]}" =~ 'Fix' ]]
-          then
-            echo "Checking if release notes were added..."
-            git fetch origin develop --depth 1
-            if [ -n "$(git diff origin/develop RELEASE_NOTES.md)" ]
-            then
-              echo "Release notes were updated."
-              exit 0
-            else
-              echo "::error::Add release notes for your PR by updating RELEASE_NOTES.md"
-              exit 1
+          # Initialize flags
+          REQUIRED_LABEL_MATCH=false
+          OPTIONAL_LABEL_MATCH=false
+
+          # Check labels against categories
+          for label in "${PR_LABELS[@]}"; do
+            # Check if a label exists in a comma-separated required labels list
+            if [[ ",$REQUIRED_PR_LABELS," == *",$label,"* ]]; then
+              REQUIRED_LABEL_MATCH=true
             fi
-          elif [[ "${all_pr_labels[@]}" =~ 'Dependencies' || "${all_pr_labels[@]}" =~ 'Chore' ]]
-            then
-              echo "No extra actions needed for used labels"
-              exit 0
+          
+            # Check if a label exists in a comma-separated optional labels list
+            if [[ ",$OPTIONAL_PR_LABELS," == *",$label,"* ]]; then
+              OPTIONAL_LABEL_MATCH=true
             fi
-          echo "::error::You must add a valid label to this PR"
-          exit 1
+          done
+          
+          # Handle matches
+          if [[ "$OPTIONAL_LABEL_MATCH" == "true" ]]; then
+            echo "This PR has an optional label. No release notes are required."
+            exit 0
+          elif [[ "$REQUIRED_LABEL_MATCH" == "true" ]]; then
+            echo "This PR has a required label. Checking release notes..."
+            chmod +x scripts/check_release_notes_labels.sh
+            scripts/check_release_notes_labels.sh
+          else
+            echo "Error: You must add a valid label to this PR."
+            exit 1
+          fi
