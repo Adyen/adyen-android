@@ -278,6 +278,7 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         val title: String,
         val subtitle: String?,
         val imageId: String,
-        val environment: Environment
+        val environment: Environment,
+        val popUpMessage: String?
     )
 }

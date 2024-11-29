@@ -170,6 +170,10 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                     protocol.showStoredComponentDialog(storedPaymentMethod, true)
                 }
 
+                is PreselectedStoredEvent.ShowConfirmationPopup -> {
+                    showConfirmationPopup(event.paymentMethodName, event.storedPaymentMethodModel)
+                }
+
                 is PreselectedStoredEvent.RequestPaymentsCall -> {
                     protocol.requestPaymentsCall(event.state)
                 }
@@ -202,6 +206,33 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun showConfirmationPopup(paymentMethodName: String, storedPaymentMethodModel: StoredPaymentMethodModel) {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(
+                String.format(
+                    resources.getString(R.string.checkout_stored_payment_confirmation_message),
+                    paymentMethodName,
+                ),
+            )
+            .setNegativeButton(R.string.checkout_stored_payment_confirmation_cancel_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(
+                PayButtonFormatter.getPayButtonText(
+                    amount = dropInViewModel.dropInParams.amount,
+                    locale = dropInViewModel.dropInParams.shopperLocale,
+                    localizedContext = requireContext(),
+                ),
+            ) { dialog, _ ->
+                dialog.dismiss()
+                storedPaymentViewModel.onConfirmed()
+            }
+
+        val message = storedPaymentMethodModel.mapToStoredPaymentMethodItem(binding.root.context).popUpMessage
+        dialog.setMessage(message)
+        dialog.show()
     }
 
     override fun onBackPressed() = performBackAction()
