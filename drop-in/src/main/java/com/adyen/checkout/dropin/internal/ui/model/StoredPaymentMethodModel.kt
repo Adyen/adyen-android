@@ -69,31 +69,38 @@ internal fun StoredPaymentMethodModel.mapToStoredPaymentMethodItem(context: Cont
                 title = context.getString(R.string.last_four_digits_format, lastFour),
                 subtitle = DateUtils.parseDateToView(expiryMonth, expiryYear),
                 imageId = imageId,
-                environment = environment
+                environment = environment,
+                popUpMessage = context.getString(R.string.last_four_digits_format, lastFour),
             )
         }
+
         is GenericStoredModel -> {
             StoredPaymentMethodItem(
                 title = name,
                 subtitle = description,
                 imageId = imageId,
-                environment = environment
+                environment = environment,
+                popUpMessage = null,
             )
         }
+
         is StoredPayByBankUSModel -> {
             StoredPaymentMethodItem(
                 title = name,
                 subtitle = description,
                 imageId = imageId,
-                environment = environment
+                environment = environment,
+                popUpMessage = name,
             )
         }
+
         is StoredACHDirectDebitModel -> {
             StoredPaymentMethodItem(
                 title = context.getString(R.string.last_four_digits_format, lastFour),
                 subtitle = null,
                 imageId = imageId,
-                environment = environment
+                environment = environment,
+                popUpMessage = context.getString(R.string.last_four_digits_format, lastFour),
             )
         }
     }
