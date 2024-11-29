@@ -32,6 +32,7 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
+import com.adyen.checkout.dropin.internal.ui.model.StoredPayByBankUSModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
@@ -214,30 +215,15 @@ internal class PaymentMethodListDialogFragment :
                 paymentMethodsListViewModel.onClickConfirmationButton()
             }
 
-        when (storedPaymentMethodModel) {
-            is StoredCardModel -> {
-                dialog.setMessage(
-                    requireActivity().getString(
-                        R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour,
-                    ),
-                )
-            }
-
-            is GenericStoredModel -> {
-                // do nothing
-            }
-
-            is StoredACHDirectDebitModel -> {
-                dialog.setMessage(
-                    requireActivity().getString(
-                        R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour,
-                    ),
-                )
-            }
+        val message = when (storedPaymentMethodModel) {
+            is StoredCardModel ->
+                requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
+            is GenericStoredModel -> null
+            is StoredPayByBankUSModel -> storedPaymentMethodModel.name
+            is StoredACHDirectDebitModel ->
+                requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour,)
         }
-
+        dialog.setMessage(message)
         dialog.show()
     }
 

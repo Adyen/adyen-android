@@ -18,7 +18,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
@@ -27,10 +26,8 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentStoredPaymentMethodBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
-import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
-import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
-import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
+import com.adyen.checkout.dropin.internal.ui.model.mapToStoredPaymentMethodItem
 import com.adyen.checkout.dropin.internal.util.arguments
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
@@ -128,42 +125,15 @@ internal class PreselectedStoredPaymentMethodFragment : DropInBottomSheetDialogF
     }
 
     private fun updateStoredPaymentMethodItem(storedPaymentMethodModel: StoredPaymentMethodModel) {
-        when (storedPaymentMethodModel) {
-            is StoredCardModel -> {
-                binding.storedPaymentMethodItem.textViewTitle.text =
-                    requireActivity().getString(R.string.last_four_digits_format, storedPaymentMethodModel.lastFour)
-                binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInParams.environment,
-                    txVariant = storedPaymentMethodModel.imageId,
-                )
-                binding.storedPaymentMethodItem.textViewDetail.text =
-                    DateUtils.parseDateToView(storedPaymentMethodModel.expiryMonth, storedPaymentMethodModel.expiryYear)
-                binding.storedPaymentMethodItem.textViewDetail.isVisible = true
-            }
-
-            is StoredACHDirectDebitModel -> {
-                binding.storedPaymentMethodItem.textViewTitle.text =
-                    requireActivity().getString(
-                        R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour,
-                    )
-                binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInParams.environment,
-                    txVariant = storedPaymentMethodModel.imageId,
-                )
-                binding.storedPaymentMethodItem.textViewDetail.isVisible = false
-            }
-
-            is GenericStoredModel -> {
-                binding.storedPaymentMethodItem.textViewTitle.text = storedPaymentMethodModel.name
-                binding.storedPaymentMethodItem.textViewDetail.isVisible =
-                    !storedPaymentMethodModel.description.isNullOrEmpty()
-                binding.storedPaymentMethodItem.textViewDetail.text = storedPaymentMethodModel.description
-                binding.storedPaymentMethodItem.imageViewLogo.loadLogo(
-                    environment = dropInViewModel.dropInParams.environment,
-                    txVariant = storedPaymentMethodModel.imageId,
-                )
-            }
+        val storedPaymentMethodItem = storedPaymentMethodModel.mapToStoredPaymentMethodItem(binding.root.context)
+        with(binding.storedPaymentMethodItem) {
+            textViewTitle.text = storedPaymentMethodItem.title
+            textViewDetail.text = storedPaymentMethodItem.subtitle
+            textViewDetail.isVisible = !storedPaymentMethodItem.subtitle.isNullOrEmpty()
+            imageViewLogo.loadLogo(
+                environment = dropInViewModel.dropInParams.environment,
+                txVariant = storedPaymentMethodItem.imageId,
+            )
         }
     }
 
