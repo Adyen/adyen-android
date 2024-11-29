@@ -212,7 +212,6 @@ constructor(
                 storedPaymentMethod = storedPaymentMethod,
                 order = order,
                 analyticsManager = analyticsManager,
-                submitHandler = SubmitHandler(savedStateHandle),
             )
 
             val genericActionDelegate =
@@ -405,7 +404,6 @@ constructor(
                 storedPaymentMethod = storedPaymentMethod,
                 order = checkoutSession.order,
                 analyticsManager = analyticsManager,
-                submitHandler = SubmitHandler(savedStateHandle),
             )
 
             val genericActionDelegate =

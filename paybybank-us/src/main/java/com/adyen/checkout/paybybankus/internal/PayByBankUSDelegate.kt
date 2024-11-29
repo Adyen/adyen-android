@@ -11,16 +11,12 @@ package com.adyen.checkout.paybybankus.internal
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface PayByBankUSDelegate :
     PaymentComponentDelegate<PayByBankUSComponentState>,
-    ViewProvidingDelegate,
-    ButtonDelegate,
-    UIStateDelegate {
+    ViewProvidingDelegate {
 
     val outputData: PayByBankUSOutputData
 

@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.paybybankus.internal.ui
 
-import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest
@@ -19,32 +18,30 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.PayByBankUSConfiguration
 import com.adyen.checkout.paybybankus.getPayByBankUSConfiguration
 import com.adyen.checkout.paybybankus.internal.PayByBankUSDelegate
 import com.adyen.checkout.paybybankus.internal.StoredPayByBankUSDelegate
 import com.adyen.checkout.paybybankus.payByBankUS
 import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.kotlin.verify
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
-class StoredPayByBankUSDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<PayByBankUSComponentState>,
-) {
+class StoredPayByBankUSDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: PayByBankUSDelegate
@@ -55,31 +52,23 @@ class StoredPayByBankUSDelegateTest(
         delegate = createPayByBankUSDelegate()
     }
 
-    @Nested
-    inner class SubmitHandlerTest {
-
-        @Test
-        fun `when delegate is initialized then submit handler event is initialized`() = runTest {
-            val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-            delegate.initialize(coroutineScope)
-            verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
+    @Test
+    fun `when delegate is initialized, then state is valid`() = runTest {
+        val testFlow = delegate.componentStateFlow.test(testScheduler)
+        with(testFlow.latestValue) {
+            assertTrue(isInputValid)
+            assertTrue(isReady)
+            assertTrue(isValid)
         }
+    }
 
-        @Test
-        fun `when delegate setInteractionBlocked is called then submit handler setInteractionBlocked is called`() =
-            runTest {
-                delegate.setInteractionBlocked(true)
-                verify(submitHandler).setInteractionBlocked(true)
-            }
+    @Test
+    fun `when delegate is initialized, then submit handler onSubmit is called`() = runTest {
+        val testFlow = delegate.submitFlow.test(testScheduler)
 
-        @Test
-        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
-            delegate.componentStateFlow.test {
-                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-                delegate.onSubmit()
-                verify(submitHandler).onSubmit(expectMostRecentItem())
-            }
-        }
+        delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+        assertEquals(delegate.componentStateFlow.first(), testFlow.latestValue)
     }
 
     @Nested
@@ -104,8 +93,8 @@ class StoredPayByBankUSDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when delegeate is initialized, the component state is submitted, then submit event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
             val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
@@ -136,7 +125,6 @@ class StoredPayByBankUSDelegateTest(
         ),
         order = TEST_ORDER,
         analyticsManager = analyticsManager,
-        submitHandler = submitHandler,
     )
 
     private fun createCheckoutConfiguration(

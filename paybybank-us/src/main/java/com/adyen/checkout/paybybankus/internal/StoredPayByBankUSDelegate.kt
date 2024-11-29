@@ -18,19 +18,19 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.PayByBankUSPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @Suppress("TooManyFunctions")
 internal class StoredPayByBankUSDelegate(
@@ -39,7 +39,6 @@ internal class StoredPayByBankUSDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
-    private val submitHandler: SubmitHandler<PayByBankUSComponentState>,
 ) : PayByBankUSDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -54,14 +53,15 @@ internal class StoredPayByBankUSDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<PayByBankUSComponentState> = submitHandler.submitFlow
-
-    override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
-    override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+    private val submitChannel = bufferedChannel<PayByBankUSComponentState>()
+    override val submitFlow: Flow<PayByBankUSComponentState> = submitChannel.receiveAsFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        submitHandler.initialize(coroutineScope, componentStateFlow)
         initializeAnalytics(coroutineScope)
+
+        componentStateFlow.onEach {
+            onState(it)
+        }.launchIn(coroutineScope)
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -73,6 +73,15 @@ internal class StoredPayByBankUSDelegate(
             isStoredPaymentMethod = true,
         )
         analyticsManager.trackEvent(event)
+    }
+
+    private fun onState(achDirectDebitComponentState: PayByBankUSComponentState) {
+        if (achDirectDebitComponentState.isValid) {
+            val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
+            analyticsManager.trackEvent(event)
+
+            submitChannel.trySend(achDirectDebitComponentState)
+        }
     }
 
     override fun getPaymentMethodType(): String {
@@ -123,20 +132,8 @@ internal class StoredPayByBankUSDelegate(
         )
     }
 
-    override fun onSubmit() {
-        val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
-
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
-    }
-
-    override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
-
-    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
-
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
-        submitHandler.setInteractionBlocked(isInteractionBlocked)
+        // no ops
     }
 
     override fun onCleared() {
