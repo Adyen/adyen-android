@@ -17,22 +17,20 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.INVALID_TYPE
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.components.core.internal.util.DateUtils
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.PaymentMethodsListHeaderBinding
 import com.adyen.checkout.dropin.databinding.PaymentMethodsListItemBinding
 import com.adyen.checkout.dropin.databinding.PaymentMethodsListNoteBinding
 import com.adyen.checkout.dropin.databinding.RemovablePaymentMethodsListItemBinding
-import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodListItem
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
-import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
-import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
+import com.adyen.checkout.dropin.internal.ui.model.mapToStoredPaymentMethodItem
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.ui.view.LogoTextAdapter
@@ -108,11 +106,8 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback?
         ) {
             with(binding) {
-                when (model) {
-                    is StoredCardModel -> bindStoredCard(model)
-                    is GenericStoredModel -> bindGenericStored(model)
-                    is StoredACHDirectDebitModel -> bindStoredACHDirectDebit(model)
-                }
+                val storedPaymentMethodItem = model.mapToStoredPaymentMethodItem(root.context)
+                bindStoredPaymentMethodItem(storedPaymentMethodItem)
                 paymentMethodItemUnderlayButton.setOnClickListener {
                     showRemoveStoredPaymentDialog(
                         model,
@@ -131,44 +126,17 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
             }
         }
 
-        private fun bindStoredCard(model: StoredCardModel) {
+        private fun bindStoredPaymentMethodItem(model: StoredPaymentMethodItem) {
             with(binding) {
-                val context = root.context
-                textViewTitle.text = context.getString(R.string.last_four_digits_format, model.lastFour)
+                textViewTitle.text = model.title
                 imageViewLogo.loadLogo(
                     environment = model.environment,
                     txVariant = model.imageId,
                 )
                 textViewDetail.apply {
-                    text = DateUtils.parseDateToView(model.expiryMonth, model.expiryYear)
-                    isVisible = true
+                    text = model.subtitle
+                    isVisible = !model.subtitle.isNullOrEmpty()
                 }
-                textViewAmount.isVisible = false
-            }
-        }
-
-        private fun bindStoredACHDirectDebit(model: StoredACHDirectDebitModel) {
-            with(binding) {
-                val context = root.context
-                textViewTitle.text = context.getString(R.string.last_four_digits_format, model.lastFour)
-                imageViewLogo.loadLogo(
-                    environment = model.environment,
-                    txVariant = model.imageId,
-                )
-                textViewDetail.isVisible = false
-                textViewAmount.isVisible = false
-            }
-        }
-
-        private fun bindGenericStored(model: GenericStoredModel) {
-            with(binding) {
-                textViewTitle.text = model.name
-                textViewDetail.isVisible = !model.description.isNullOrEmpty()
-                textViewDetail.text = model.description
-                imageViewLogo.loadLogo(
-                    environment = model.environment,
-                    txVariant = model.imageId,
-                )
                 textViewAmount.isVisible = false
             }
         }
@@ -305,4 +273,11 @@ internal class PaymentMethodAdapter @JvmOverloads constructor(
         override fun areContentsTheSame(oldItem: PaymentMethodListItem, newItem: PaymentMethodListItem): Boolean =
             areItemsTheSame(oldItem, newItem)
     }
+
+    internal data class StoredPaymentMethodItem(
+        val title: String,
+        val subtitle: String?,
+        val imageId: String,
+        val environment: Environment
+    )
 }
