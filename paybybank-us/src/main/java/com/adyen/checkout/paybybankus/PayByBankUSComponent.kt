@@ -32,8 +32,6 @@ import kotlinx.coroutines.flow.Flow
 /**
  * A [PaymentComponent] that supports the [PaymentMethodTypes.PAY_BY_BANK_US] payment method.
  */
-// TODO remove the suppress annotation after complete implementation
-@Suppress("UnusedPrivateProperty", "UnusedParameter")
 class PayByBankUSComponent internal constructor(
     private val payByBankUSDelegate: PayByBankUSDelegate,
     private val genericActionDelegate: GenericActionDelegate,
