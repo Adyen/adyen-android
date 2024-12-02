@@ -19,9 +19,22 @@ jobs:
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
   create_github_release:
-    name: Create GitHub Release
+    name: Create GitHub release
     uses: ./.github/workflows/create_github_release.yml
     secrets: inherit
     needs: [generate_version_name, publish_to_maven_central]
+    with:
+      version-name: ${{ needs.generate_version_name.outputs.version-name }}
+  generate_release_notes:
+    name: Generate release notes
+    uses: ./.github/workflows/generate_release_notes.yml
+    secrets: inherit
+    needs: [generate_version_name, create_github_release]
+    with:
+      version-name: ${{ needs.generate_version_name.outputs.version-name }}
+  create_release_notes_pr:
+    name: Create release notes pr
+    uses: ./.github/workflows/create_release_notes_pr.yml
+    needs: [generate_version_name, generate_release_notes]
     with:
       version-name: ${{ needs.generate_version_name.outputs.version-name }}
