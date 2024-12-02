@@ -1,10 +1,10 @@
 name: Publish Release
 
-# Every time a release/** branch is created
+# Every time a push happens to the release/** branch. We use this trigger since create event does not support filtering
 on:
-  create:
+  push:
     branches:
-      - 'releases/**'
+      - 'release/**'
 
 jobs:
   check:
