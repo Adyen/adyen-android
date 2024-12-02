@@ -1,8 +1,10 @@
 name: Publish Release
 
-# Every time we trigger the workflow on a branch.
+# Every time a release/** branch is created
 on:
-  workflow_dispatch:
+  create:
+    branches:
+      - 'releases/**'
 
 jobs:
   check:
