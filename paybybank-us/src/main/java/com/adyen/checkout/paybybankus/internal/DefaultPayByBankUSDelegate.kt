@@ -26,10 +26,12 @@ import com.adyen.checkout.paybybankus.R
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
 import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.LogoItem
 import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.TextItem
@@ -45,7 +47,7 @@ internal class DefaultPayByBankUSDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<PayByBankUSComponentState>,
-) : PayByBankUSDelegate {
+) : PayByBankUSDelegate, ButtonDelegate, UIStateDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<PayByBankUSOutputData> = _outputDataFlow
