@@ -14,6 +14,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
+import com.adyen.checkout.dropin.internal.ui.model.StoredPayByBankUSModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 
 internal fun StoredPaymentMethod.mapStoredModel(
@@ -49,6 +50,17 @@ internal fun StoredPaymentMethod.mapStoredModel(
                 imageId = type.orEmpty(),
                 isRemovable = isRemovingEnabled,
                 name = cashtag.orEmpty(),
+                description = name,
+                environment = environment,
+            )
+        }
+
+        PaymentMethodTypes.PAY_BY_BANK_US -> {
+            StoredPayByBankUSModel(
+                id = id.orEmpty(),
+                imageId = type.orEmpty(),
+                isRemovable = isRemovingEnabled,
+                name = label.orEmpty(),
                 description = name,
                 environment = environment,
             )

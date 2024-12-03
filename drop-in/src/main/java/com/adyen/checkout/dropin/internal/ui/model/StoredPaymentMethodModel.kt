@@ -8,7 +8,11 @@
 
 package com.adyen.checkout.dropin.internal.ui.model
 
+import android.content.Context
+import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.internal.ui.PaymentMethodAdapter.StoredPaymentMethodItem
 
 internal sealed class StoredPaymentMethodModel : PaymentMethodListItem {
     abstract val id: String
@@ -38,6 +42,16 @@ internal data class StoredACHDirectDebitModel(
     val environment: Environment,
 ) : StoredPaymentMethodModel()
 
+internal data class StoredPayByBankUSModel(
+    override val id: String,
+    override val imageId: String,
+    override val isRemovable: Boolean,
+    val name: String,
+    val description: String?,
+    // We need the environment to load the logo
+    val environment: Environment,
+) : StoredPaymentMethodModel()
+
 internal data class GenericStoredModel(
     override val id: String,
     override val imageId: String,
@@ -47,3 +61,47 @@ internal data class GenericStoredModel(
     // We need the environment to load the logo
     val environment: Environment,
 ) : StoredPaymentMethodModel()
+
+internal fun StoredPaymentMethodModel.mapToStoredPaymentMethodItem(context: Context): StoredPaymentMethodItem {
+    return when (this) {
+        is StoredCardModel -> {
+            StoredPaymentMethodItem(
+                title = context.getString(R.string.last_four_digits_format, lastFour),
+                subtitle = DateUtils.parseDateToView(expiryMonth, expiryYear),
+                imageId = imageId,
+                environment = environment,
+                popUpMessage = context.getString(R.string.last_four_digits_format, lastFour),
+            )
+        }
+
+        is GenericStoredModel -> {
+            StoredPaymentMethodItem(
+                title = name,
+                subtitle = description,
+                imageId = imageId,
+                environment = environment,
+                popUpMessage = null,
+            )
+        }
+
+        is StoredPayByBankUSModel -> {
+            StoredPaymentMethodItem(
+                title = name,
+                subtitle = description,
+                imageId = imageId,
+                environment = environment,
+                popUpMessage = name,
+            )
+        }
+
+        is StoredACHDirectDebitModel -> {
+            StoredPaymentMethodItem(
+                title = context.getString(R.string.last_four_digits_format, lastFour),
+                subtitle = null,
+                imageId = imageId,
+                environment = environment,
+                popUpMessage = context.getString(R.string.last_four_digits_format, lastFour),
+            )
+        }
+    }
+}

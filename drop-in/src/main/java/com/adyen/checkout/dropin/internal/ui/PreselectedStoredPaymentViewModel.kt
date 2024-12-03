@@ -97,8 +97,18 @@ internal class PreselectedStoredPaymentViewModel(
         } else {
             // component does not require user input -> we should submit it directly instead of switching to a new
             // screen
-            eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(componentState))
+            eventsChannel.trySend(
+                PreselectedStoredEvent.ShowConfirmationPopup(
+                    storedPaymentMethod.name.orEmpty(),
+                    _uiStateFlow.value.storedPaymentMethodModel,
+                ),
+            )
         }
+    }
+
+    fun onConfirmed() {
+        val componentState = componentState ?: return
+        eventsChannel.trySend(PreselectedStoredEvent.RequestPaymentsCall(componentState))
     }
 }
 
@@ -114,7 +124,12 @@ internal sealed class ButtonState {
 }
 
 internal sealed class PreselectedStoredEvent {
-    object ShowStoredPaymentScreen : PreselectedStoredEvent()
+    data object ShowStoredPaymentScreen : PreselectedStoredEvent()
+    data class ShowConfirmationPopup(
+        val paymentMethodName: String,
+        val storedPaymentMethodModel: StoredPaymentMethodModel
+    ) : PreselectedStoredEvent()
+
     data class RequestPaymentsCall(val state: PaymentComponentState<*>) : PreselectedStoredEvent()
     data class ShowError(val componentError: ComponentError) : PreselectedStoredEvent()
 }

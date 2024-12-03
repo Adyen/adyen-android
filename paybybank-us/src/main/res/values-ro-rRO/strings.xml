@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 29/10/2024.
+  -->
+
+<resources>
+    <string name="checkout_pay_by_bank_us_disclaimer_header">Utilizați Plată prin bancă pentru a plăti instantaneu din orice cont bancar.</string>
+    <string name="checkout_pay_by_bank_us_disclaimer_body">Prin conectarea contului dvs. bancar, autorizați debitarea din contul dvs. a oricărei sume datorate cu privire la utilizarea serviciilor noastre și/sau achiziționarea produselor noastre, până la revocarea acestei autorizații.</string>
+    <string name="checkout_pay_by_bank_us_submit">Continuați către plata prin bancă</string>
+    <string name="checkout_pay_by_bank_us_more">+ mai multe</string>
+</resources>

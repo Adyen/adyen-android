@@ -91,6 +91,9 @@ import com.adyen.checkout.openbanking.internal.provider.OpenBankingComponentProv
 import com.adyen.checkout.paybybank.PayByBankComponent
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
+import com.adyen.checkout.paybybankus.PayByBankUSComponent
+import com.adyen.checkout.paybybankus.PayByBankUSComponentState
+import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProvider
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
@@ -114,7 +117,7 @@ import com.adyen.checkout.upi.internal.provider.UPIComponentProvider
  * @param storedPaymentMethod The stored payment method to be parsed.
  * @throws CheckoutException In case a component cannot be created.
  */
-@Suppress("UNCHECKED_CAST", "LongParameterList")
+@Suppress("UNCHECKED_CAST", "LongParameterList", "LongMethod")
 internal fun getComponentFor(
     fragment: Fragment,
     storedPaymentMethod: StoredPaymentMethod,
@@ -161,6 +164,16 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<CardComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
+        checkCompileOnly { PayByBankUSComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            PayByBankUSComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayByBankUSComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -405,6 +418,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<PayByBankComponentState>,
+            )
+        }
+
+        checkCompileOnly { PayByBankUSComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            PayByBankUSComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayByBankUSComponentState>,
             )
         }
 
