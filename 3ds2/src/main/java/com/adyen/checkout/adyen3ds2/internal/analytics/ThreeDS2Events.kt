@@ -42,6 +42,11 @@ internal object ThreeDS2Events {
         message = message,
     )
 
+    fun threeDS2FingerprintError(event: ErrorEvent) = GenericEvents.error(
+        component = "threeDS2Fingerprint",
+        event = event,
+    )
+
     fun threeDS2ChallengeError(event: ErrorEvent) = GenericEvents.error(
         component = "threeDS2Challenge",
         event = event,

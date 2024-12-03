@@ -650,6 +650,31 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when fingerprint token can't be decoded, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            val encodedJson = Base64.encode("{incorrectJson}".toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_DECODING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when challenge token can't be decoded, then error event is tracked`() = runTest {
+            initializeChallengeTransaction(this)
+
+            delegate.challengeShopper(Activity(), Base64.encode("token".toByteArray()))
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_DECODING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when challenge fails, then error event is tracked`() = runTest {
             initializeChallengeTransaction(this).apply {
                 shouldThrowError = true
