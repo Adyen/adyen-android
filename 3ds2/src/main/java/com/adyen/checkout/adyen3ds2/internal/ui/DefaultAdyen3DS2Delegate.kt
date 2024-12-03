@@ -314,6 +314,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun createTransaction(fingerprintToken: FingerprintToken): Transaction? {
         if (fingerprintToken.threeDSMessageVersion == null) {
             val error = "Failed to create 3DS2 Transaction. Missing threeDSMessageVersion inside fingerprintToken."
+            trackTransactionCreationErrorEvent()
             emitError(ComponentException(error))
             return null
         }
@@ -335,9 +336,11 @@ internal class DefaultAdyen3DS2Delegate(
                 is TransactionResult.Success -> result.transaction
             }
         } catch (e: SDKNotInitializedException) {
+            trackTransactionCreationErrorEvent()
             emitError(ComponentException("Failed to create 3DS2 Transaction", e))
             null
         } catch (e: SDKRuntimeException) {
+            trackTransactionCreationErrorEvent()
             emitError(ComponentException("Failed to create 3DS2 Transaction", e))
             null
         }
@@ -583,6 +586,9 @@ internal class DefaultAdyen3DS2Delegate(
         )
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackTransactionCreationErrorEvent() =
+        trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_CREATION)
 
     private fun trackFingerprintHandlingErrorEvent() =
         trackFingerprintErrorEvent(ErrorEvent.THREEDS2_FINGERPRINT_HANDLING)
