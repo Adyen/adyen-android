@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
@@ -459,6 +460,7 @@ internal class DefaultAdyen3DS2Delegate(
             )
             analyticsManager?.trackEvent(challengeDisplayedEvent)
         } catch (e: InvalidInputException) {
+            trackChallengeHandlingFailedErrorEvent()
             emitError(CheckoutException("Error starting challenge", e))
         }
     }
@@ -492,6 +494,7 @@ internal class DefaultAdyen3DS2Delegate(
             val details = makeDetails(transactionStatus)
             emitDetails(details)
         } catch (e: CheckoutException) {
+            trackChallengeHandlingFailedErrorEvent()
             emitError(e)
         } finally {
             closeTransaction()
@@ -510,6 +513,7 @@ internal class DefaultAdyen3DS2Delegate(
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
         } catch (e: CheckoutException) {
+            trackChallengeHandlingFailedErrorEvent()
             emitError(e)
         } finally {
             closeTransaction()
@@ -517,11 +521,12 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun onError(result: ChallengeResult.Error) {
-        adyenLog(AdyenLogLevel.DEBUG) { "challenge timed out" }
+        adyenLog(AdyenLogLevel.DEBUG) { "challenge error" }
         try {
             val details = makeDetails(result.transactionStatus, result.additionalDetails)
             emitDetails(details)
         } catch (e: CheckoutException) {
+            trackChallengeHandlingFailedErrorEvent()
             emitError(e)
         } finally {
             closeTransaction()
@@ -570,6 +575,14 @@ internal class DefaultAdyen3DS2Delegate(
             subType = action.type.orEmpty(),
             message = message,
         )
+        analyticsManager?.trackEvent(event)
+    }
+
+    private fun trackChallengeHandlingFailedErrorEvent() =
+        trackChallengeErrorEvent(ErrorEvent.THREEDS2_CHALLENGE_HANDLING)
+
+    private fun trackChallengeErrorEvent(errorEvent: ErrorEvent) {
+        val event = ThreeDS2Events.threeDS2ChallengeError(errorEvent)
         analyticsManager?.trackEvent(event)
     }
 

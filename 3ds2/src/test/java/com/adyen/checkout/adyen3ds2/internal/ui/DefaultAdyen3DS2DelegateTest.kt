@@ -30,6 +30,7 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -78,6 +79,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.io.IOException
@@ -643,6 +645,75 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = ThreeDS2Events.threeDS2Challenge(
                 subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
                 result = analyticsResult,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when challenge fails, then error event is tracked`() = runTest {
+            initializeChallengeTransaction(this).apply {
+                shouldThrowError = true
+            }
+
+            // We need to set the messageVersion to workaround an error in the 3DS2 SDK
+            delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when completed and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), anyOrNull())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Completed("transactionStatus"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when timed out and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), any())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Timeout("transactionStatus", "additionalDetails"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when error and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), any())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Error("transactionStatus", "additionalDetails"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
