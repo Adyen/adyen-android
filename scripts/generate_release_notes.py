@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-from packaging.version import Version
 import json
 import os
 import re
 import requests
 import subprocess
 import sys
+import toml
 
 # You can test this script locally with this command:
 # ALLOWED_LABELS="Breaking changes,New,Fixed,Improved,Changed,Removed,Deprecated" GITHUB_TOKEN="" GITHUB_REPO="Adyen/adyen-android" python ./scripts/generate_release_notes.py test_output.txt
@@ -40,7 +40,7 @@ def get_pr_number(commit: str) -> str:
 
 def fetch_pr(number: str) -> dict:
     url = 'https://api.github.com/repos/{}/pulls/{}'.format(os.getenv('GITHUB_REPO'), number)
-    headers = {}
+    headers = {'Authorization': 'token ' + os.getenv('GITHUB_TOKEN')}
     return requests.get(url, headers=headers).json()
 
 def get_label_content(label: str, pr_body: str) -> str:
@@ -62,12 +62,6 @@ def get_label_content(label: str, pr_body: str) -> str:
 
     return content
 
-def parse_version(version_string) -> Version:
-    try:
-        return Version(version_string)
-    except:
-        return Version('0.0.0')
-
 dependency_exclusion_list = []
 with open('.github/.release_notes_dependency_exclusion_list') as file:
     dependency_exclusion_list = file.read().splitlines()
@@ -79,54 +73,11 @@ def is_dependency_excluded(id: str) -> bool:
 
     return False
 
-def parse_dependency_update_row(row: str) -> DependencyUpdate:
-    parts = row.split('|')
-
-    tag = parts[1]
-    id = tag[tag.index('[') + 1:tag.index(']')]
-
-    if is_dependency_excluded(id): return None
-
-    link = tag[tag.index('(') + 1:tag.index(')')]
-
-    version_split = parts[2].split('`')
-    old_version = parse_version(version_split[1])
-    new_version = parse_version(version_split[3])
-
-    return DependencyUpdate(id, link, new_version, old_version)
-
-def get_dependency_update_content(pr_body: str) -> [DependencyUpdate]:
-    updates = []
-    should_take = False
-
-    for line in pr_body.splitlines():
-        if should_take and not line.startswith('|'):
-            should_take = False
-            break
-
-        if should_take:
-            parsed = parse_dependency_update_row(line)
-            if parsed: updates.append(parsed)
-
-        if line == '|---|---|---|---|---|---|': should_take = True
-
-    return updates
-
-def add_or_update_dependency(dependency_updates: dict, dependency: DependencyUpdate):
-    previous = dependency_updates.get(dependency.id)
-    if previous:
-        new_version = dependency.new_version if dependency.new_version > previous.new_version else previous.new_version
-        old_version = dependency.old_version if dependency.old_version < previous.old_version else previous.old_version
-        updated = DependencyUpdate(dependency.id, dependency.link, new_version, old_version)
-        dependency_updates[dependency.id] = updated
-    else:
-        dependency_updates[dependency.id] = dependency
-
-def format_dependency_table(dependency_updates: dict) -> str:
+def format_dependency_table(dependency_updates: [DependencyUpdate]) -> str:
     table = '| Name | Version |\n|------|---------|'
 
-    for dependency in dependency_updates.values():
-        table = table + '\n| [{}]({}) | `{}` -> `{}` |'.format(dependency.id, dependency.link, str(dependency.old_version), str(dependency.new_version))
+    for dependency in dependency_updates:
+        table = table + '\n| {} | `{}` -> `{}` |'.format(dependency.id, dependency.old_version, dependency.new_version)
 
     return table
 
@@ -145,6 +96,49 @@ def combine_contents(label_contents, dependency_updates) -> str:
 
     return output
 
+def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
+    updates = []
+    toml_file_path = 'gradle/libs.versions.toml'
+
+    old_toml_file = subprocess.check_output(['git', 'show', latest_tag + ':' + toml_file_path]
+        ).decode(sys.stdout.encoding
+        ).strip()
+    old_versions = toml.loads(old_toml_file)
+
+    with open(toml_file_path) as file:
+        new_versions = toml.load(file)
+
+    all_versions = {**old_versions['libraries'], **new_versions['libraries'], **old_versions['plugins'], **new_versions['plugins']}
+
+    for value in all_versions.values():
+        if 'group' in value and 'name' in value:
+            id = value['group'] + ':' + value['name']
+        elif 'module' in value:
+            id = value['module']
+        else:
+            id = value['id']
+
+        if is_dependency_excluded(id):
+            continue
+
+        if 'version' in value:
+            version_ref = value['version']['ref']
+        else:
+            # If there is no explicit version defined the version probably comes from a BoM and it's safe to skip
+            continue
+
+        new_version = new_versions['versions'].get(version_ref, None)
+        old_version = old_versions['versions'].get(version_ref, None)
+
+        # If the versions isn't updated we can ignore the dependency
+        if new_version == old_version:
+            continue
+
+        dependency_update = DependencyUpdate(id, None, new_version, old_version)
+        updates.append(dependency_update)
+
+    return updates
+
 def generate_release_notes_from_prs():
     latest_tag = fetch_latest_release_tag()
     commits = fetch_recent_commits(latest_tag)
@@ -155,7 +149,6 @@ def generate_release_notes_from_prs():
     label_contents = {}
     for label in labels:
         label_contents[label] = ''
-    dependency_updates = {}
 
     for commit in commits.splitlines():
         if is_merge_commit(commit):
@@ -164,24 +157,20 @@ def generate_release_notes_from_prs():
 
             response = fetch_pr(pr_number)
             pr_body = response['body']
-            has_dependencies_label = any(label['name'] == 'Dependencies' for label in response['labels'])
 
-            if has_dependencies_label:
-                for dependency in get_dependency_update_content(pr_body):
-                    add_or_update_dependency(dependency_updates, dependency)
-            else:
-                for label in labels:
-                    label_content = get_label_content(label, pr_body)
-                    if label_content:
-                        label_contents[label] = label_contents[label] + label_content
+            for label in labels:
+                label_content = get_label_content(label, pr_body)
+                if label_content:
+                    label_contents[label] = label_contents[label] + label_content
+
+    dependency_updates = generate_dependency_updates(latest_tag)
 
     output = combine_contents(label_contents, dependency_updates)
 
-    if output:
-        print('Generated release notes:\n' + output)
-        with open(sys.argv[1], 'w+') as f:
-            f.write(output)
-        if os.getenv('GITHUB_STEP_SUMMARY'): os.environ[os.getenv('GITHUB_STEP_SUMMARY')] = output
+    print('Generated release notes:\n' + output)
+    with open(sys.argv[1], 'w+') as f:
+        f.write(output)
+    if os.getenv('GITHUB_STEP_SUMMARY'): os.environ[os.getenv('GITHUB_STEP_SUMMARY')] = output
 
 def main():
     red = '\033[31m'
