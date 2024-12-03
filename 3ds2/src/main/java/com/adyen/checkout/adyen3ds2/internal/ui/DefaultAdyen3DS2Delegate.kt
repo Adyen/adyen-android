@@ -229,6 +229,7 @@ internal class DefaultAdyen3DS2Delegate(
         val fingerprintToken = try {
             decodeFingerprintToken(encodedFingerprintToken)
         } catch (e: CheckoutException) {
+            trackFingerprintTokenDecodeErrorEvent()
             emitError(ComponentException("Failed to decode fingerprint token", e))
             return
         }
@@ -436,7 +437,8 @@ internal class DefaultAdyen3DS2Delegate(
         val challengeTokenJson: JSONObject = try {
             JSONObject(decodedChallengeToken)
         } catch (e: JSONException) {
-            emitError(ComponentException("JSON parsing of FingerprintToken failed", e))
+            trackChallengeTokenDecodeErrorEvent()
+            emitError(ComponentException("JSON parsing of challenge token failed", e))
             return
         }
 
@@ -577,6 +579,17 @@ internal class DefaultAdyen3DS2Delegate(
         )
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackFingerprintTokenDecodeErrorEvent() =
+        trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
+
+    private fun trackFingerprintErrorEvent(errorEvent: ErrorEvent) {
+        val event = ThreeDS2Events.threeDS2FingerprintError(errorEvent)
+        analyticsManager?.trackEvent(event)
+    }
+
+    private fun trackChallengeTokenDecodeErrorEvent() =
+        trackChallengeErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
 
     private fun trackChallengeHandlingFailedErrorEvent() =
         trackChallengeErrorEvent(ErrorEvent.THREEDS2_CHALLENGE_HANDLING)
