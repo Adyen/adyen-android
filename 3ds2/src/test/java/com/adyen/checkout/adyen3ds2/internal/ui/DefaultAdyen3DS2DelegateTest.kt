@@ -52,6 +52,7 @@ import com.adyen.threeds2.TransactionResult
 import com.adyen.threeds2.Warning
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
+import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.parameters.ConfigParameters
@@ -79,7 +80,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.io.IOException
@@ -221,17 +221,32 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
-        fun `creating 3ds2 transaction fails, then an exception emitted`() = runTest {
-            val error = SDKRuntimeException("test", "test", null)
-            threeDS2Service.createTransactionError = error
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        fun `creating 3ds2 transaction fails and the error is SDKNotInitializedException, then an exception emitted`() =
+            runTest {
+                val error = SDKNotInitializedException()
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
-            delegate.identifyShopper(Activity(), encodedJson, false)
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
 
-            assertEquals(error, exceptionFlow.latestValue.cause)
-        }
+                assertEquals(error, exceptionFlow.latestValue.cause)
+            }
+
+        @Test
+        fun `creating 3ds2 transaction fails and the error is SDKRuntimeException, then an exception emitted`() =
+            runTest {
+                val error = SDKRuntimeException("test", "test", null)
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                assertEquals(error, exceptionFlow.latestValue.cause)
+            }
 
         @Test
         fun `creating 3ds2 transaction return transaction error, then details are emitted`() = runTest {
@@ -590,7 +605,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = ThreeDS2Events.threeDS2Fingerprint(
                 subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
             )
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @ParameterizedTest
@@ -648,6 +663,60 @@ internal class DefaultAdyen3DS2DelegateTest(
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and the threeDSMessageVersion is null, then error event is tracked`() =
+            runTest {
+                val fingerprintTokenWithoutMessageVersion =
+                    """
+                    {
+                        "directoryServerId":"id",
+                        "directoryServerPublicKey":"key",
+                        "directoryServerRootCertificates":"certs",
+                    }
+                    """.trimIndent()
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(fingerprintTokenWithoutMessageVersion.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and error is SDKNotInitializedException, then error event is tracked`() =
+            runTest {
+                val error = SDKNotInitializedException()
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and error is SDKRuntimeException, then error event is tracked`() =
+            runTest {
+                val error = SDKRuntimeException("test", "test", null)
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
 
         @Test
         fun `when fingerprint is submitted automatically and it fails, then error event is tracked`() = runTest {
