@@ -650,6 +650,16 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when transaction is null, then error event is tracked`() = runTest {
+            delegate.challengeShopper(mock(), "token")
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TRANSACTION_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when fingerprint token can't be decoded, then error event is tracked`() = runTest {
             delegate.initialize(this)
 

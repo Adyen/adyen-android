@@ -427,6 +427,7 @@ internal class DefaultAdyen3DS2Delegate(
         adyenLog(AdyenLogLevel.DEBUG) { "challengeShopper" }
 
         if (currentTransaction == null) {
+            trackChallengeTransactionMissingErrorEvent()
             emitError(
                 Authentication3DS2Exception("Failed to make challenge, missing reference to initial transaction."),
             )
@@ -587,6 +588,9 @@ internal class DefaultAdyen3DS2Delegate(
         val event = ThreeDS2Events.threeDS2FingerprintError(errorEvent)
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackChallengeTransactionMissingErrorEvent() =
+        trackChallengeErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_MISSING)
 
     private fun trackChallengeTokenDecodeErrorEvent() =
         trackChallengeErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
