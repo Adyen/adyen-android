@@ -650,6 +650,24 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when fingerprint is submitted automatically and it fails, then error event is tracked`() = runTest {
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.failure(IOException("test"))
+
+            delegate.initialize(this)
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, true)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when transaction is null, then error event is tracked`() = runTest {
             delegate.challengeShopper(mock(), "token")
 

@@ -375,7 +375,10 @@ internal class DefaultAdyen3DS2Delegate(
         )
             .fold(
                 onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
-                onFailure = { e -> emitError(ComponentException("Unable to submit fingerprint", e)) },
+                onFailure = { e ->
+                    trackFingerprintHandlingErrorEvent()
+                    emitError(ComponentException("Unable to submit fingerprint", e))
+                },
             )
     }
 
@@ -580,6 +583,9 @@ internal class DefaultAdyen3DS2Delegate(
         )
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackFingerprintHandlingErrorEvent() =
+        trackFingerprintErrorEvent(ErrorEvent.THREEDS2_FINGERPRINT_HANDLING)
 
     private fun trackFingerprintTokenDecodeErrorEvent() =
         trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TOKEN_DECODING)
