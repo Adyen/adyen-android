@@ -11,6 +11,8 @@ package com.adyen.checkout.adyen3ds2.internal.analytics
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsEvent
 import com.adyen.checkout.components.core.internal.analytics.DirectAnalyticsEventCreation
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 
 @OptIn(DirectAnalyticsEventCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -38,6 +40,11 @@ internal object ThreeDS2Events {
         subType = subType.value,
         result = result?.value,
         message = message,
+    )
+
+    fun threeDS2ChallengeError(event: ErrorEvent) = GenericEvents.error(
+        component = "threeDS2Challenge",
+        event = event,
     )
 
     enum class SubType(val value: String) {
