@@ -148,6 +148,7 @@ internal class DefaultAdyen3DS2Delegate(
         activity: Activity,
     ) {
         if (action.token.isNullOrEmpty()) {
+            trackFingerprintTokenMissingErrorEvent()
             emitError(ComponentException("Fingerprint token not found."))
             return
         }
@@ -166,6 +167,7 @@ internal class DefaultAdyen3DS2Delegate(
         activity: Activity,
     ) {
         if (action.token.isNullOrEmpty()) {
+            trackChallengeTokenMissingErrorEvent()
             emitError(ComponentException("Challenge token not found."))
             return
         }
@@ -179,10 +181,6 @@ internal class DefaultAdyen3DS2Delegate(
         action: Threeds2Action,
         activity: Activity,
     ) {
-        if (action.token.isNullOrEmpty()) {
-            emitError(ComponentException("3DS2 token not found."))
-            return
-        }
         if (action.subtype == null) {
             emitError(ComponentException("3DS2 Action subtype not found."))
             return
@@ -196,7 +194,17 @@ internal class DefaultAdyen3DS2Delegate(
         activity: Activity,
         subtype: Threeds2Action.SubType,
     ) {
-        val token = action.token.orEmpty()
+        val token = action.token
+        if (token.isNullOrEmpty()) {
+            when (subtype) {
+                Threeds2Action.SubType.FINGERPRINT -> trackFingerprintTokenMissingErrorEvent()
+                Threeds2Action.SubType.CHALLENGE -> trackChallengeTokenMissingErrorEvent()
+            }
+
+            emitError(ComponentException("3DS2 token not found."))
+            return
+        }
+
         when (subtype) {
             Threeds2Action.SubType.FINGERPRINT -> {
                 trackFingerprintActionEvent(action)
@@ -590,6 +598,9 @@ internal class DefaultAdyen3DS2Delegate(
         analyticsManager?.trackEvent(event)
     }
 
+    private fun trackFingerprintTokenMissingErrorEvent() =
+        trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TOKEN_MISSING)
+
     private fun trackFingerprintCreationErrorEvent() =
         trackFingerprintErrorEvent(ErrorEvent.THREEDS2_FINGERPRINT_CREATION)
 
@@ -606,6 +617,9 @@ internal class DefaultAdyen3DS2Delegate(
         val event = ThreeDS2Events.threeDS2FingerprintError(errorEvent)
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackChallengeTokenMissingErrorEvent() =
+        trackChallengeErrorEvent(ErrorEvent.THREEDS2_TOKEN_MISSING)
 
     private fun trackChallengeTransactionMissingErrorEvent() =
         trackChallengeErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_MISSING)

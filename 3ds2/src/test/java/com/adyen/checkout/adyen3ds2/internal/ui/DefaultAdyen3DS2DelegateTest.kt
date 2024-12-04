@@ -682,6 +682,53 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when action is Threeds2FingerprintAction and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            delegate.handleAction(Threeds2FingerprintAction(token = null), Activity())
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when action is Threeds2ChallengeAction and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            delegate.handleAction(Threeds2ChallengeAction(token = null), Activity())
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when action is Threeds2Action and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            delegate.handleAction(
+                Threeds2Action(token = null, subtype = Threeds2Action.SubType.FINGERPRINT.value),
+                Activity(),
+            )
+            val expectedFingerprintEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedFingerprintEvent)
+
+            delegate.handleAction(
+                Threeds2Action(token = null, subtype = Threeds2Action.SubType.CHALLENGE.value),
+                Activity(),
+            )
+            val expectedChallengeEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedChallengeEvent)
+        }
+
+        @Test
         fun `when fingerprintToken is partial, then error event is tracked`() = runTest {
             val partialFingerprintToken =
                 """
