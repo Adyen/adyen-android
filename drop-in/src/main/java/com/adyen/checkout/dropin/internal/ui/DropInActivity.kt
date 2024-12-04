@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -625,10 +626,23 @@ internal class DropInActivity :
         val loadingDialog = getFragmentByTag(LOADING_FRAGMENT_TAG)
         if (showLoading) {
             if (loadingDialog == null && !supportFragmentManager.isDestroyed) {
-                LoadingDialogFragment.newInstance().showNow(supportFragmentManager, LOADING_FRAGMENT_TAG)
+                LoadingDialogFragment.newInstance().show(supportFragmentManager, LOADING_FRAGMENT_TAG)
             }
         } else {
-            loadingDialog?.dismiss()
+            // Make sure the loading fragment transaction is completed before trying to dismiss it.
+            // This will prevent the loading fragment from overlapping any other dialogs.
+            if (loadingDialog == null) {
+                supportFragmentManager.executePendingTransactionsSafe()
+            }
+            getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+        }
+    }
+
+    private fun FragmentManager.executePendingTransactionsSafe() {
+        try {
+            executePendingTransactions()
+        } catch (e: IllegalStateException) {
+            adyenLog(AdyenLogLevel.WARN, e) { "Executing pending transactions failed" }
         }
     }
 
