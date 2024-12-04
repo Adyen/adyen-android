@@ -192,6 +192,23 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when fingerprintToken is partial, then an exception is emitted`() = runTest {
+            val partialFingerprintToken =
+                """
+                {
+                    "directoryServerId":"id",
+                }
+                """.trimIndent()
+            delegate.initialize(this)
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+            val encodedJson = Base64.encode(partialFingerprintToken.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            assertTrue(exceptionFlow.latestValue is ComponentException)
+        }
+
+        @Test
         fun `3ds2 sdk throws an exception while initializing, then an exception emitted`() = runTest {
             val error = InvalidInputException("test", null)
             threeDS2Service.initializeError = error
@@ -660,6 +677,52 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = ThreeDS2Events.threeDS2Challenge(
                 subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
                 result = analyticsResult,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when fingerprintToken is partial, then error event is tracked`() = runTest {
+            val partialFingerprintToken =
+                """
+                {
+                    "directoryServerId":"id",
+                }
+                """.trimIndent()
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            val encodedJson = Base64.encode(partialFingerprintToken.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when 3ds2 sdk throws an exception while initializing, then error event is tracked`() = runTest {
+            threeDS2Service.initializeError = InvalidInputException("test", null)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when transaction parameters are null, then error event is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }

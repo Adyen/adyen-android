@@ -235,12 +235,14 @@ internal class DefaultAdyen3DS2Delegate(
         }
 
         val configParameters = createAdyenConfigParameters(fingerprintToken) ?: run {
+            trackFingerprintCreationErrorEvent()
             emitError(ComponentException("Failed to create ConfigParameters."))
             return
         }
 
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
+            trackFingerprintCreationErrorEvent()
             emitError(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
 
@@ -262,6 +264,7 @@ internal class DefaultAdyen3DS2Delegate(
 
             val authenticationRequestParameters = currentTransaction?.authenticationRequestParameters
             if (authenticationRequestParameters == null) {
+                trackFingerprintCreationErrorEvent()
                 emitError(ComponentException("Failed to retrieve 3DS2 authentication parameters"))
                 return@launch
             }
@@ -586,6 +589,9 @@ internal class DefaultAdyen3DS2Delegate(
         )
         analyticsManager?.trackEvent(event)
     }
+
+    private fun trackFingerprintCreationErrorEvent() =
+        trackFingerprintErrorEvent(ErrorEvent.THREEDS2_FINGERPRINT_CREATION)
 
     private fun trackTransactionCreationErrorEvent() =
         trackFingerprintErrorEvent(ErrorEvent.THREEDS2_TRANSACTION_CREATION)
