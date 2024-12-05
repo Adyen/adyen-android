@@ -148,6 +148,10 @@ com.adyen.checkout.openbanking.internal.provider
 module:paybybank
 com.adyen.checkout.paybybank
 com.adyen.checkout.paybybank.internal.provider
+module:paybybank-us
+com.adyen.checkout.paybybankus
+com.adyen.checkout.paybybankus.internal.provider
+com.adyen.checkout.paybybankus.internal.ui.model
 module:payeasy
 com.adyen.checkout.payeasy
 com.adyen.checkout.payeasy.internal.provider
