@@ -7,9 +7,9 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
 }
 
 // Maven artifact
@@ -21,11 +21,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.components.core'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -41,24 +41,23 @@ dependencies {
     api project(':checkout-core')
 
     // Dependencies
-    api libraries.kotlinCoroutines
-    api libraries.androidx.activity
-    api libraries.androidx.fragment
-    api libraries.androidx.lifecycle
+    api libs.androidx.activity
+    api libs.androidx.fragment
+    api libs.bundles.androidx.lifecycle
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
-    testImplementation testLibraries.json
-    testImplementation testLibraries.junit5
-    testImplementation testLibraries.androidx.lifecycle
-    testImplementation testLibraries.kotlinCoroutines
-    testImplementation testLibraries.mockito
-    testImplementation testLibraries.robolectric
+    testImplementation libs.json
+    testImplementation libs.bundles.junit
+    testImplementation libs.androidx.test.lifecycle
+    testImplementation libs.bundles.kotlin.coroutines.test
+    testImplementation libs.bundles.mockito
+    testImplementation libs.robolectric
 
-    androidTestImplementation testLibraries.androidTest
-    androidTestImplementation testLibraries.mockitoAndroid
-    androidTestImplementation testLibraries.espresso
+    androidTestImplementation libs.bundles.androidx.test
+    androidTestImplementation libs.bundles.mockito.android
+    androidTestImplementation libs.bundles.espresso
 
-    testFixturesImplementation testLibraries.junit5
-    testFixturesImplementation testLibraries.mockito
+    testFixturesImplementation libs.bundles.junit
+    testFixturesImplementation libs.bundles.mockito
 }

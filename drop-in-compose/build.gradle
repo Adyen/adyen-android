@@ -7,8 +7,8 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 }
 
 // Maven artifact
@@ -20,11 +20,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.dropin.compose'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -35,7 +35,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = compose_compiler_version
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
 
@@ -43,6 +43,6 @@ dependencies {
     // Checkout
     api project(':drop-in')
 
-    implementation platform(libraries.compose.bom)
-    implementation libraries.compose.activity
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.activity
 }

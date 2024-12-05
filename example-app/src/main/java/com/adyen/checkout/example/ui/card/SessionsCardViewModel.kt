@@ -23,7 +23,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.core.exception.CancellationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
@@ -69,15 +69,6 @@ internal class SessionsCardViewModel @Inject constructor(
                 updateUiState {
                     it.copy(addressLookupOptions = options)
                 }
-            }.launchIn(viewModelScope)
-
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                val result = when (it) {
-                    is AddressLookupCompletionState.Address -> AddressLookupResult.Completed(it.lookupAddress)
-                    is AddressLookupCompletionState.Error -> AddressLookupResult.Error(it.message)
-                }
-                updateUiState { it.copy(addressLookupResult = result) }
             }.launchIn(viewModelScope)
     }
 
@@ -193,7 +184,13 @@ internal class SessionsCardViewModel @Inject constructor(
     }
 
     override fun onLookupCompletion(lookupAddress: LookupAddress): Boolean {
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        viewModelScope.launch {
+            val result = when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> AddressLookupResult.Completed(lookupResult.lookupAddress)
+                is AddressLookupCompletionResult.Error -> AddressLookupResult.Error(lookupResult.message)
+            }
+            updateUiState { it.copy(addressLookupResult = result) }
+        }
         return true
     }
 

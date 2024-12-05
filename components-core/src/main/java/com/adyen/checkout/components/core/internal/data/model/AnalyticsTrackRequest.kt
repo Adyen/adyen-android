@@ -23,12 +23,14 @@ internal data class AnalyticsTrackRequest(
     val platform: String?,
     val info: List<AnalyticsTrackInfo>?,
     val logs: List<AnalyticsTrackLog>?,
+    val errors: List<AnalyticsTrackError>?,
 ) : ModelObject() {
     companion object {
         private const val CHANNEL = "channel"
         private const val PLATFORM = "platform"
         private const val INFO = "info"
         private const val LOGS = "logs"
+        private const val ERRORS = "errors"
 
         @JvmField
         val SERIALIZER: Serializer<AnalyticsTrackRequest> = object : Serializer<AnalyticsTrackRequest> {
@@ -39,6 +41,7 @@ internal data class AnalyticsTrackRequest(
                         putOpt(PLATFORM, modelObject.platform)
                         putOpt(INFO, ModelUtils.serializeOptList(modelObject.info, AnalyticsTrackInfo.SERIALIZER))
                         putOpt(LOGS, ModelUtils.serializeOptList(modelObject.logs, AnalyticsTrackLog.SERIALIZER))
+                        putOpt(ERRORS, ModelUtils.serializeOptList(modelObject.errors, AnalyticsTrackError.SERIALIZER))
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(AnalyticsTrackRequest::class.java, e)
@@ -53,6 +56,7 @@ internal data class AnalyticsTrackRequest(
                             platform = getStringOrNull(PLATFORM),
                             info = deserializeOptList(getJSONArray(INFO), AnalyticsTrackInfo.SERIALIZER),
                             logs = deserializeOptList(getJSONArray(LOGS), AnalyticsTrackLog.SERIALIZER),
+                            errors = deserializeOptList(getJSONArray(ERRORS), AnalyticsTrackError.SERIALIZER),
                         )
                     }
                 } catch (e: JSONException) {

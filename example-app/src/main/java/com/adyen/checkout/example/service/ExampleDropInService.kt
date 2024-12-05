@@ -20,12 +20,12 @@ import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.ErrorDialog
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class ExampleDropInService : DropInService() {
     override fun onSubmit(
         state: PaymentComponentState<*>
     ) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -61,7 +61,7 @@ class ExampleDropInService : DropInService() {
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
-                shopperEmail = keyValueStorage.getShopperEmail()
+                shopperEmail = keyValueStorage.getShopperEmail(),
             )
 
             Log.v(TAG, "paymentComponentJson - ${paymentComponentJson.toStringPretty()}")
@@ -83,7 +83,7 @@ class ExampleDropInService : DropInService() {
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -129,7 +129,7 @@ class ExampleDropInService : DropInService() {
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,

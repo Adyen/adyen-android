@@ -27,6 +27,7 @@ import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.ui.PermissionHandler
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -36,7 +37,6 @@ import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSI
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.BufferedInputStream
 import java.io.File
@@ -49,7 +49,7 @@ import com.google.android.material.R as MaterialR
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ImageSaver(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val dispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
     @Suppress("LongParameterList")

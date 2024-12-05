@@ -32,14 +32,14 @@ import com.adyen.checkout.dropin.FinishedDialog
 import com.adyen.checkout.dropin.OrderDropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -73,27 +73,12 @@ class ExampleAdvancedDropInService : DropInService() {
             .onEach { options ->
                 sendAddressLookupResult(AddressLookupDropInServiceResult.LookupResult(options))
             }.launchIn(this)
-
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                val result = when (it) {
-                    is AddressLookupCompletionState.Address -> {
-                        AddressLookupDropInServiceResult.LookupComplete(it.lookupAddress)
-                    }
-                    is AddressLookupCompletionState.Error -> AddressLookupDropInServiceResult.Error(
-                        errorDialog = ErrorDialog(
-                            message = it.message,
-                        ),
-                    )
-                }
-                sendAddressLookupResult(result)
-            }.launchIn(this)
     }
 
     override fun onSubmit(
         state: PaymentComponentState<*>,
     ) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onPaymentsCallRequested")
 
             checkPaymentState(state)
@@ -140,7 +125,7 @@ class ExampleAdvancedDropInService : DropInService() {
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "onDetailsCallRequested")
 
             val actionComponentJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
@@ -214,7 +199,7 @@ class ExampleAdvancedDropInService : DropInService() {
 
     private fun fetchPaymentMethods(orderResponse: OrderResponse? = null) {
         Log.d(TAG, "fetchPaymentMethods")
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             val order = orderResponse?.let {
                 Order(
                     pspReference = it.pspReference,
@@ -242,7 +227,7 @@ class ExampleAdvancedDropInService : DropInService() {
     }
 
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "checkBalance")
             val amount = paymentComponentState.data.amount
             val paymentMethod = paymentComponentState.data.paymentMethod
@@ -296,7 +281,7 @@ class ExampleAdvancedDropInService : DropInService() {
     }
 
     override fun onOrderRequest() {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
@@ -327,7 +312,7 @@ class ExampleAdvancedDropInService : DropInService() {
     }
 
     override fun onOrderCancel(order: Order, shouldUpdatePaymentMethods: Boolean) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             Log.d(TAG, "cancelOrder")
             val orderJson = Order.SERIALIZER.serialize(order)
             val request = createCancelOrderRequest(
@@ -367,7 +352,7 @@ class ExampleAdvancedDropInService : DropInService() {
     override fun onRemoveStoredPaymentMethod(
         storedPaymentMethod: StoredPaymentMethod,
     ) {
-        launch(Dispatchers.IO) {
+        launch(IODispatcher) {
             val storedPaymentMethodId = storedPaymentMethod.id.orEmpty()
             val isSuccessfullyRemoved = paymentsRepository.removeStoredPaymentMethod(
                 storedPaymentMethodId = storedPaymentMethodId,
@@ -411,7 +396,20 @@ class ExampleAdvancedDropInService : DropInService() {
 
     override fun onAddressLookupCompletion(lookupAddress: LookupAddress): Boolean {
         Log.d(TAG, "On address lookup query completion: $lookupAddress")
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        launch {
+            val lookupResult = when (val result = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> {
+                    AddressLookupDropInServiceResult.LookupComplete(result.lookupAddress)
+                }
+
+                is AddressLookupCompletionResult.Error -> AddressLookupDropInServiceResult.Error(
+                    errorDialog = ErrorDialog(
+                        message = result.message,
+                    ),
+                )
+            }
+            sendAddressLookupResult(lookupResult)
+        }
         return true
     }
 

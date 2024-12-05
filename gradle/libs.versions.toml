@@ -1,0 +1,191 @@
+[versions]
+# SDK
+compile-sdk = "34"
+target-sdk = "34"
+min-sdk = "21"
+
+# App version, only used for example app, no need to increment
+version-code = "1"
+# The version-name format is "major.minor.patch(-(alpha|beta|rc)[0-9]{2}){0,1}" (e.g. 3.0.0, 3.1.1-alpha04 or 3.1.4-rc01 etc).
+version-name = "5.8.0"
+
+# Build script
+android-gradle-plugin = "8.7.1"
+kotlin = "1.9.25"
+ksp = "1.9.25-1.0.20"
+dokka = "1.9.20"
+hilt = "2.52"
+compose-compiler = "1.5.15"
+
+# Code quality
+detekt = "1.23.7"
+jacoco = "0.8.12"
+ktlint = "1.4.1"
+sonarqube = "5.1.0.4882"
+binary-compatibility-validator = "0.16.3"
+
+# Android dependencies
+activity = "1.9.3"
+annotation = "1.9.1"
+appcompat = "1.7.0"
+autofill = "1.3.0-beta01"
+browser = "1.8.0"
+coroutines = "1.9.0"
+fragment = "1.8.5"
+lifecycle = "2.8.6"
+material = "1.12.0"
+recyclerview = "1.3.2"
+constraintlayout = "2.1.4"
+
+# Compose dependencies
+compose-activity = "1.9.3"
+compose-bom = "2024.10.00"
+compose-hilt = "1.2.0"
+compose-viewmodel = "2.8.6"
+
+# Adyen dependencies
+adyen3ds2 = "2.2.21"
+
+# External dependencies
+cash-app-pay = "2.5.0"
+google-pay-compose-button = "1.0.0"
+okhttp = "4.12.0"
+play-services-wallet = "19.4.0"
+twint = "8.0.0"
+wechat-pay = "6.8.0"
+
+# Example app
+leak-canary = "2.14"
+moshi-adapters = "1.15.1"
+moshi-kotlin-adapter = "1.15.1"
+okhttp-logging = "4.12.0"
+preference = "1.2.1"
+retrofit2 = "2.11.0"
+
+# Tests
+arch-core-testing = "2.2.0"
+barista = "4.3.0"
+espresso = "3.6.1"
+json = "20240303"
+jose4j = "0.9.6"
+junit-jupiter = "5.11.3"
+konsist = "0.16.1"
+lint = "31.7.2"
+mockito-kotlin = "5.4.0"
+mockito = "5.14.2"
+robolectric = "4.13"
+test-ext = "1.2.1"
+test-rules = "1.6.1"
+turbine = "1.2.0"
+uiautomator = "2.3.0"
+
+[libraries]
+
+# Production libraries
+adyen3ds2 = { group = "com.adyen.threeds", name = "adyen-3ds2", version.ref = "adyen3ds2" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-autofill = { group = "androidx.autofill", name = "autofill", version.ref = "autofill" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+androidx-preference = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+cash-app-pay = { group = "app.cash.paykit", name = "core", version.ref = "cash-app-pay" }
+compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "compose-hilt" }
+compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-ui-main = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-viewmodel" }
+# this unused dependency is needed so that renovate can update the compose compiler version. More info in: https://github.com/renovatebot/renovate/issues/18354
+compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
+google-pay-compose-button = { group = "com.google.pay.button", name = "compose-pay-button", version.ref = "google-pay-compose-button" }
+google-pay-play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "play-services-wallet" }
+hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+kotlin-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlin-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+leak-canary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leak-canary" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi-adapters" }
+moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi-kotlin-adapter" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp-logging" }
+parcelize = { group = "org.jetbrains.kotlin", name = "kotlin-parcelize-runtime", version.ref = "kotlin" }
+retrofit-main = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit2" }
+wechat = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android-without-mta", version.ref = "wechat-pay" }
+detekt = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
+ktlint-cli = { group = "com.pinterest.ktlint", name = "ktlint-cli", version.ref = "ktlint" }
+twint = { group = "ch.twint.payment.sdk", name = "android-sdk", version.ref = "twint" }
+
+# Test libraries
+androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "test-rules" }
+androidx-test-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "test-ext" }
+androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-test-lifecycle = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch-core-testing" }
+barista = { group = "com.adevinta.android", name = "barista", version.ref = "barista" }
+espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espresso" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espresso" }
+hilt-test = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-compiler-test = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+jose4j = { group = "org.bitbucket.b_c", name = "jose4j", version.ref = "jose4j" }
+json = { group = "org.json", name = "json", version.ref = "json" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit-jupiter" }
+junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit-jupiter" }
+konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
+kotlinx-test-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
+cash-app-turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+lint = { group = "com.android.tools.lint", name = "lint", version.ref = "lint" }
+lint-api = { group = "com.android.tools.lint", name = "lint-api", version.ref = "lint" }
+lint-tests = { group = "com.android.tools.lint", name = "lint-tests", version.ref = "lint" }
+mockito-junit-jupiter = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
+mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockito-kotlin" }
+mockito-android-main = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
+mock-web-server = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+
+[bundles]
+
+# Production bundles
+androidx-lifecycle = ["androidx-lifecycle-runtime", "androidx-lifecycle-viewmodel-ktx"]
+compose-ui = ["compose-ui-main", "compose-ui-graphics", "compose-ui-tooling-preview"]
+kotlin-coroutines = ["kotlin-coroutines-core", "kotlin-coroutines-android"]
+moshi = ["moshi-adapters", "moshi-kotlin"]
+retrofit = ["retrofit-main", "retrofit-converter-moshi"]
+
+# Test bundles
+androidx-test = ["androidx-test-rules", "androidx-test-junit-ktx", "androidx-test-uiautomator"]
+espresso = ["espresso-contrib", "espresso-core", "espresso-intents"]
+junit = ["junit-jupiter-api", "junit-jupiter-engine", "junit-jupiter-params", "junit-vintage-engine"]
+kotlin-coroutines-test = ["kotlinx-test-coroutines", "cash-app-turbine"]
+mockito = ["mockito-junit-jupiter", "mockito-kotlin"]
+mockito-android = ["mockito-android-main", "mockito-kotlin"]
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+kotlin = { id = "kotlin" }
+kotlin-android = { id = "kotlin-android" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-parcelize = { id = "kotlin-parcelize" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+jacoco = { id = "jacoco" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+
+

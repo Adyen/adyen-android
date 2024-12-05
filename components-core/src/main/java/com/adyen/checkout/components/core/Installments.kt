@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -41,7 +42,7 @@ data class Installments(
                 return try {
                     Installments(
                         plan = jsonObject.getString(PLAN),
-                        value = jsonObject.optInt(VALUE, 1)
+                        value = jsonObject.getIntOrNull(VALUE) ?: 1,
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Installments::class.java, e)

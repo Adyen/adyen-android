@@ -27,12 +27,10 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.FragmentPaymentMethodsListBinding
 import com.adyen.checkout.dropin.internal.provider.getComponentFor
-import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
-import com.adyen.checkout.dropin.internal.ui.model.StoredACHDirectDebitModel
-import com.adyen.checkout.dropin.internal.ui.model.StoredCardModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
+import com.adyen.checkout.dropin.internal.ui.model.mapToStoredPaymentMethodItem
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
@@ -214,30 +212,8 @@ internal class PaymentMethodListDialogFragment :
                 paymentMethodsListViewModel.onClickConfirmationButton()
             }
 
-        when (storedPaymentMethodModel) {
-            is StoredCardModel -> {
-                dialog.setMessage(
-                    requireActivity().getString(
-                        R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour,
-                    ),
-                )
-            }
-
-            is GenericStoredModel -> {
-                // do nothing
-            }
-
-            is StoredACHDirectDebitModel -> {
-                dialog.setMessage(
-                    requireActivity().getString(
-                        R.string.last_four_digits_format,
-                        storedPaymentMethodModel.lastFour,
-                    ),
-                )
-            }
-        }
-
+        val message = storedPaymentMethodModel.mapToStoredPaymentMethodItem(requireContext()).popUpMessage
+        dialog.setMessage(message)
         dialog.show()
     }
 

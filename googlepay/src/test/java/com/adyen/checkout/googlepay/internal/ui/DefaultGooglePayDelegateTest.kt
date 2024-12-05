@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.googlepay.internal.ui
 
+import android.app.Activity
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -15,6 +16,7 @@ import com.adyen.checkout.components.core.Configuration
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -184,6 +186,17 @@ internal class DefaultGooglePayDelegateTest {
             delegate.onCleared()
 
             analyticsManager.assertIsCleared()
+        }
+
+        @Test
+        fun `when activity result is OK and data is null, then error event is tracked`() {
+            delegate.handleActivityResult(Activity.RESULT_OK, data = null)
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.THIRD_PARTY,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
     }
 

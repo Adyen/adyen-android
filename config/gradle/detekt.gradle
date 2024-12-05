@@ -12,10 +12,12 @@
  * Docs: https://github.com/detekt/detekt/
  */
 
+// cannot reference the plugins declared in the version catalogs here because it requires the use of the `plugins` block instead of the `apply plugin` command
+// the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
 apply plugin: 'io.gitlab.arturbosch.detekt'
 
 detekt {
-    toolVersion = "$project.detekt_version"
+    toolVersion = "${libs.versions.detekt.get()}"
 
     input = files("src")
 
@@ -36,7 +38,7 @@ tasks.named("detekt").configure {
 }
 
 dependencies {
-    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detekt_version"
+    detektPlugins libs.detekt
 }
 
 tasks.detekt.jvmTarget = JavaVersion.VERSION_1_8.toString()

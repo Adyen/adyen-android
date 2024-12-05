@@ -7,9 +7,9 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
 }
 
 ext.mavenArtifactId = "online-banking-pl"
@@ -20,11 +20,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.onlinebankingpl'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -37,9 +37,9 @@ dependencies {
     api project(':issuer-list')
 
     // Dependencies
-    implementation libraries.androidx.appcompat
-    implementation libraries.androidx.recyclerview
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.recyclerview
 
     //Tests
-    testImplementation testLibraries.junit5
+    testImplementation libs.bundles.junit
 }

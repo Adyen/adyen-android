@@ -12,17 +12,17 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
 import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class AnalyticsService(
     private val httpClient: HttpClient,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
     internal suspend fun setupAnalytics(

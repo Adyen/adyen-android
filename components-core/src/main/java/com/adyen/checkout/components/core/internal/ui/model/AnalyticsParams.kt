@@ -26,7 +26,7 @@ data class AnalyticsParams(
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class AnalyticsParamsLevel(val priority: Int) {
-    NONE(1),
+    INITIAL(1),
     ALL(2),
 }
 
@@ -34,6 +34,6 @@ private fun getLevel(analyticsConfiguration: AnalyticsConfiguration?): Analytics
     return when (analyticsConfiguration?.level) {
         null -> AnalyticsParamsLevel.ALL // default is ALL
         AnalyticsLevel.ALL -> AnalyticsParamsLevel.ALL
-        AnalyticsLevel.NONE -> AnalyticsParamsLevel.NONE
+        AnalyticsLevel.NONE -> AnalyticsParamsLevel.INITIAL
     }
 }

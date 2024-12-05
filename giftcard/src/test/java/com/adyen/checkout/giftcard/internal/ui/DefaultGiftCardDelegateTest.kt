@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
@@ -126,7 +127,7 @@ internal class DefaultGiftCardDelegateTest(
         }
 
         @Test
-        fun `encryption fails, then component state should be invalid`() = runTest {
+        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() = runTest {
             cardEncryptor.shouldThrowException = true
 
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -135,6 +136,9 @@ internal class DefaultGiftCardDelegateTest(
                 delegate.updateComponentState(createValidOutputData())
 
                 val componentState = expectMostRecentItem()
+
+                val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+                analyticsManager.assertLastEventEquals(expectedEvent)
 
                 assertTrue(componentState.isReady)
                 assertFalse(componentState.isInputValid)

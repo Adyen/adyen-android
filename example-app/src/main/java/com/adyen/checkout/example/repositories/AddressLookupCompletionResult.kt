@@ -10,7 +10,7 @@ package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.components.core.LookupAddress
 
-sealed class AddressLookupCompletionState {
-    data class Error(val message: String = "Something went wrong") : AddressLookupCompletionState()
-    data class Address(val lookupAddress: LookupAddress) : AddressLookupCompletionState()
+sealed class AddressLookupCompletionResult {
+    data class Error(val message: String = "Something went wrong") : AddressLookupCompletionResult()
+    data class Address(val lookupAddress: LookupAddress) : AddressLookupCompletionResult()
 }

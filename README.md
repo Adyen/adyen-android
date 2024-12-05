@@ -31,23 +31,23 @@ Import the corresponding module in your `build.gradle` file.
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in-compose:5.7.0"
+implementation "com.adyen.checkout:drop-in-compose:5.8.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.7.0"
-implementation "com.adyen.checkout:components-compose:5.7.0"
+implementation "com.adyen.checkout:card:5.8.0"
+implementation "com.adyen.checkout:components-compose:5.8.0"
 ```
 
 ### Without Jetpack Compose
 
 For Drop-in:
 ```groovy
-implementation "com.adyen.checkout:drop-in:5.7.0"
+implementation "com.adyen.checkout:drop-in:5.8.0"
 ```
 For the Credit Card component:
 ```groovy
-implementation "com.adyen.checkout:card:5.7.0"
+implementation "com.adyen.checkout:card:5.8.0"
 ```
 
 The library is available on [Maven Central][mavenRepo].
@@ -71,7 +71,7 @@ Please let us know if you find any issues.
 
 For development and testing purposes the project is accompanied by a test app. See [here](example-app/README.md) how to set it up and run it.
 
-To test your integration you could use [Adyen Test Cards Android][adyenTestCardsAndroid]. This will allow you to easily prefill test payment method information.
+To test your integration you could use [Adyen Test Cards Android][adyenTestCardsAndroid]. This will allow you to easily autofill test payment method information.
 
 ## Support
 

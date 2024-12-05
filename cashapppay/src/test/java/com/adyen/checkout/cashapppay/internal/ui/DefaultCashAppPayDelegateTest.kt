@@ -35,6 +35,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -530,6 +531,20 @@ internal class DefaultCashAppPayDelegateTest(
 
             val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventNotEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when state is exception, then an error is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val exception = RuntimeException("Stub!")
+
+            delegate.cashAppPayStateDidChange(CashAppPayState.CashAppPayExceptionState(exception))
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.THIRD_PARTY
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test

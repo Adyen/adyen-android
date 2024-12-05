@@ -97,7 +97,7 @@ internal class DropInParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, TEST_CLIENT_KEY_2),
             amount = Amount(
                 currency = "EUR",
                 value = 49_00L,

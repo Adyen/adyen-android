@@ -13,11 +13,11 @@ import com.adyen.checkout.components.core.internal.analytics.data.AnalyticsRepos
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 internal class DefaultAnalyticsManager(
     private val analyticsRepository: AnalyticsRepository,
     private val analyticsParams: AnalyticsParams,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : AnalyticsManager {
 
     private var checkoutAttemptIdState: CheckoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
@@ -125,7 +125,7 @@ internal class DefaultAnalyticsManager(
         CheckoutAttemptIdState.NotAvailable -> CHECKOUT_ATTEMPT_ID_NOT_FETCHED
     }
 
-    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.NONE.priority
+    private fun cannotSendEvents() = analyticsParams.level.priority <= AnalyticsParamsLevel.INITIAL.priority
 
     override fun clear(owner: Any) {
         if (ownerReference != owner::class.qualifiedName) {

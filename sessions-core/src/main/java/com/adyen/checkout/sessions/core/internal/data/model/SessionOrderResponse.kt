@@ -10,6 +10,7 @@ package com.adyen.checkout.sessions.core.internal.data.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -43,9 +44,9 @@ data class SessionOrderResponse(
 
             override fun deserialize(jsonObject: JSONObject): SessionOrderResponse {
                 return SessionOrderResponse(
-                    sessionData = jsonObject.optString(SESSION_DATA),
-                    orderData = jsonObject.optString(ORDER_DATA),
-                    pspReference = jsonObject.optString(PSP_REFERENCE)
+                    sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
+                    orderData = jsonObject.getStringOrNull(ORDER_DATA).orEmpty(),
+                    pspReference = jsonObject.getStringOrNull(PSP_REFERENCE).orEmpty(),
                 )
             }
         }

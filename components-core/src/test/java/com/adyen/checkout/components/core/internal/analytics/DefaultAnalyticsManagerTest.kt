@@ -59,8 +59,8 @@ internal class DefaultAnalyticsManagerTest(
         }
 
         @Test
-        fun `sending events is disabled, then checkoutAttemptId is still set`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+        fun `analytics level is initial, then checkoutAttemptId is still set`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
             whenever(analyticsRepository.fetchCheckoutAttemptId()) doReturn "test value"
 
             analyticsManager.initialize(this@InitializeTest, this)
@@ -95,8 +95,8 @@ internal class DefaultAnalyticsManagerTest(
     inner class TrackEventTest {
 
         @Test
-        fun `sending events is disabled, then events should not be stored`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+        fun `analytics level is initial, then events should not be stored`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
             analyticsManager.initialize(this@TrackEventTest, this)
 
             analyticsManager.trackEvent(GenericEvents.rendered("dropin", false))
@@ -140,8 +140,8 @@ internal class DefaultAnalyticsManagerTest(
     inner class SendEventTest {
 
         @Test
-        fun `sending events is disabled, then events are not sent`() = runTest {
-            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.NONE)
+        fun `analytics level is initial, then events are not sent`() = runTest {
+            analyticsManager = createAnalyticsManager(AnalyticsParamsLevel.INITIAL)
             analyticsManager.initialize(this@SendEventTest, this)
             val event = AnalyticsEvent.Info(
                 component = "test",

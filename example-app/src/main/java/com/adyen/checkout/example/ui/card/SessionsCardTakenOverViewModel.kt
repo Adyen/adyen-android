@@ -23,8 +23,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -38,8 +39,6 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +49,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
-@OptIn(FlowPreview::class)
 @Suppress("TooManyFunctions")
 @HiltViewModel
 internal class SessionsCardTakenOverViewModel @Inject constructor(
@@ -83,15 +81,6 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
         addressLookupRepository.addressLookupOptionsFlow
             .onEach { options ->
                 _events.emit(CardEvent.AddressLookup(options))
-            }.launchIn(viewModelScope)
-
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                val event = when (it) {
-                    is AddressLookupCompletionState.Address -> CardEvent.AddressLookupCompleted(it.lookupAddress)
-                    is AddressLookupCompletionState.Error -> CardEvent.AddressLookupError(it.message)
-                }
-                _events.emit(event)
             }.launchIn(viewModelScope)
     }
 
@@ -188,7 +177,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -223,7 +212,7 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
@@ -245,7 +234,13 @@ internal class SessionsCardTakenOverViewModel @Inject constructor(
     }
 
     fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
+        viewModelScope.launch {
+            val event = when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> CardEvent.AddressLookupCompleted(lookupResult.lookupAddress)
+                is AddressLookupCompletionResult.Error -> CardEvent.AddressLookupError(lookupResult.message)
+            }
+            _events.emit(event)
+        }
     }
 
     companion object {

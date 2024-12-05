@@ -89,7 +89,7 @@ class CheckoutConfiguration(
         environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
-        analyticsConfiguration = parcel.readParcelable(Amount::class.java.classLoader),
+        analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
     ) {
         val size = parcel.readInt()
 

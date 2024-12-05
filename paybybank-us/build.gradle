@@ -1,0 +1,47 @@
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
+}
+
+// Maven artifact
+ext.mavenArtifactId = "paybybank-us"
+ext.mavenArtifactName = "Adyen Pay by Bank US component"
+ext.mavenArtifactDescription = "Adyen Checkout Pay by Bank US component client for Adyen's Checkout API."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    namespace 'com.adyen.checkout.paybybankus'
+    compileSdk libs.versions.compile.sdk.get().toInteger()
+
+    defaultConfig {
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':action-core')
+    api project(':components-core')
+    api project(':sessions-core')
+
+    // Dependencies
+    implementation libs.material
+
+    //Tests
+    testImplementation testFixtures(project(':test-core'))
+    testImplementation testFixtures(project(':components-core'))
+    testImplementation testFixtures(project(':ui-core'))
+    testImplementation libs.bundles.junit
+    testImplementation libs.bundles.mockito
+    testImplementation libs.bundles.kotlin.coroutines.test
+}

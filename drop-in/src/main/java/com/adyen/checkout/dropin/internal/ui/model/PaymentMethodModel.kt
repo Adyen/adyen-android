@@ -9,6 +9,7 @@
 package com.adyen.checkout.dropin.internal.ui.model
 
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
 
 internal data class PaymentMethodModel(
     val index: Int,
@@ -18,6 +19,7 @@ internal data class PaymentMethodModel(
     val drawIconBorder: Boolean,
     // We need the environment to load the logo
     val environment: Environment,
+    val brandList: List<LogoTextItem>
 ) : PaymentMethodListItem {
     override fun getViewType(): Int = PaymentMethodListItem.PAYMENT_METHOD
 }

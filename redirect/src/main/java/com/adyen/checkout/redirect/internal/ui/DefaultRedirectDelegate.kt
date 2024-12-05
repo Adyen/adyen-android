@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.internal.PaymentDataRepository
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -31,6 +32,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
@@ -138,6 +140,12 @@ constructor(
             //  PaymentComponentState for actions.
             redirectHandler.launchUriRedirect(activity, url)
         } catch (ex: CheckoutException) {
+            val event = GenericEvents.error(
+                component = action?.paymentMethodType.orEmpty(),
+                event = ErrorEvent.REDIRECT_FAILED,
+            )
+            analyticsManager?.trackEvent(event)
+
             emitError(ex)
         }
     }
@@ -156,6 +164,12 @@ constructor(
                 }
             }
         } catch (ex: CheckoutException) {
+            val event = GenericEvents.error(
+                component = action?.paymentMethodType.orEmpty(),
+                event = ErrorEvent.REDIRECT_PARSE_FAILED,
+            )
+            analyticsManager?.trackEvent(event)
+
             emitError(ex)
         }
     }
@@ -171,7 +185,7 @@ constructor(
         coroutineScope.launch {
             val request = NativeRedirectRequest(
                 redirectData = nativeRedirectData,
-                returnQueryString = details.optString(RETURN_URL_QUERY_STRING_PARAMETER),
+                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER).orEmpty(),
             )
             try {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)

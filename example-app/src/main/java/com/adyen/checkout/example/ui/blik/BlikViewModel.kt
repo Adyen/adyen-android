@@ -22,11 +22,11 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -55,7 +55,7 @@ class BlikViewModel @Inject constructor(
         viewModelScope.launch { _blikViewState.emit(fetchPaymentMethods()) }
     }
 
-    private suspend fun fetchPaymentMethods(): BlikViewState = withContext(Dispatchers.IO) {
+    private suspend fun fetchPaymentMethods(): BlikViewState = withContext(IODispatcher) {
         if (keyValueStorage.getAmount().currency != CheckoutCurrency.PLN.name) {
             return@withContext BlikViewState.Error(R.string.currency_code_error, CheckoutCurrency.PLN.name)
         } else if (keyValueStorage.getCountry() != POLAND_COUNTRY_CODE) {
@@ -70,7 +70,7 @@ class BlikViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val blikPaymentMethod = paymentMethodResponse
@@ -132,13 +132,14 @@ class BlikViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     _blikViewState.value = BlikViewState.Action(action)
                 }
+
                 else -> _events.emit(BlikEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(BlikEvent.PaymentResult("Failed"))
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }

@@ -19,12 +19,12 @@ import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.ErrorDialog
 import com.adyen.checkout.dropin.SessionDropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.extensions.toStringPretty
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
@@ -45,7 +45,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
             state is BlikComponentState ||
             state is CardComponentState
         ) {
-            launch(Dispatchers.IO) {
+            launch(IODispatcher) {
                 Log.d(TAG, "onPaymentsCallRequested")
 
                 // Check out the documentation of this method on the parent DropInService class
@@ -77,7 +77,7 @@ class ExampleSessionsDropInService : SessionDropInService() {
         actionComponentData: ActionComponentData,
     ): Boolean {
         return if (isFlowTakenOver) {
-            launch(Dispatchers.IO) {
+            launch(IODispatcher) {
                 Log.d(TAG, "onDetailsCallRequested")
 
                 val response = paymentsRepository.makeDetailsRequest(

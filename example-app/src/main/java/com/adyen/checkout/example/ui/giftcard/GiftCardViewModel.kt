@@ -25,6 +25,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createBalanceRequest
@@ -35,7 +36,6 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -68,7 +68,7 @@ internal class GiftCardViewModel @Inject constructor(
         viewModelScope.launch { fetchPaymentMethods() }
     }
 
-    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -77,7 +77,7 @@ internal class GiftCardViewModel @Inject constructor(
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-            )
+            ),
         )
 
         val giftCardPaymentMethod = paymentMethodResponse
@@ -91,7 +91,7 @@ internal class GiftCardViewModel @Inject constructor(
                 GiftCardComponentData(
                     paymentMethod = giftCardPaymentMethod,
                     callback = this@GiftCardViewModel,
-                )
+                ),
             )
             _giftCardViewStateFlow.emit(GiftCardViewState.ShowComponent)
         }
@@ -113,7 +113,7 @@ internal class GiftCardViewModel @Inject constructor(
     override fun onStateChanged(state: GiftCardComponentState) = Unit
 
     override fun onBalanceCheck(paymentComponentState: PaymentComponentState<*>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             Log.d(TAG, "checkBalance")
 
             val amount = paymentComponentState.data.amount
@@ -125,7 +125,7 @@ internal class GiftCardViewModel @Inject constructor(
                 val request = createBalanceRequest(
                     paymentMethodJson,
                     amountJson,
-                    keyValueStorage.getMerchantAccount()
+                    keyValueStorage.getMerchantAccount(),
                 )
 
                 val response = paymentsRepository.getBalance(request)
@@ -145,27 +145,29 @@ internal class GiftCardViewModel @Inject constructor(
                         _events.emit(
                             GiftCardEvent.Balance(
                                 BalanceResult.SERIALIZER.deserialize(
-                                    jsonResponse
-                                )
-                            )
+                                    jsonResponse,
+                                ),
+                            ),
                         )
                     }
                 }
+
                 "NotEnoughBalance" -> {
                     try {
                         viewModelScope.launch {
                             _events.emit(
                                 GiftCardEvent.Balance(
                                     BalanceResult.SERIALIZER.deserialize(
-                                        jsonResponse
-                                    )
-                                )
+                                        jsonResponse,
+                                    ),
+                                ),
                             )
                         }
                     } catch (e: ModelSerializationException) {
                         viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
                     }
                 }
+
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
@@ -174,12 +176,12 @@ internal class GiftCardViewModel @Inject constructor(
     }
 
     override fun onRequestOrder() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             Log.d(TAG, "createOrder")
 
             val paymentRequest = createOrderRequest(
                 keyValueStorage.getAmount(),
-                keyValueStorage.getMerchantAccount()
+                keyValueStorage.getMerchantAccount(),
             )
 
             val response = paymentsRepository.createOrder(paymentRequest)
@@ -196,9 +198,10 @@ internal class GiftCardViewModel @Inject constructor(
                     _events.emit(GiftCardEvent.OrderCreated(orderResponse))
                     order = OrderRequest(
                         orderData = orderResponse.orderData,
-                        pspReference = orderResponse.pspReference
+                        pspReference = orderResponse.pspReference,
                     )
                 }
+
                 else -> viewModelScope.launch { _giftCardViewStateFlow.emit(GiftCardViewState.Error) }
             }
         } else {
@@ -212,7 +215,7 @@ internal class GiftCardViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -237,17 +240,20 @@ internal class GiftCardViewModel @Inject constructor(
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
                     handleAction(action)
                 }
+
                 isRefusedInPartialPaymentFlow(json) -> {
                     _events.emit(GiftCardEvent.PaymentResult("Refused in Partial Payment Flow"))
                 }
+
                 isNonFullyPaidOrder(json) -> {
                     order = getOrderFromResponse(json).let {
                         Order(
                             pspReference = it.pspReference,
-                            orderData = it.orderData
+                            orderData = it.orderData,
                         )
                     }
                 }
+
                 else -> _events.emit(GiftCardEvent.PaymentResult("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(GiftCardEvent.PaymentResult("Failed"))
@@ -275,7 +281,7 @@ internal class GiftCardViewModel @Inject constructor(
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }
@@ -293,8 +299,8 @@ internal class GiftCardViewModel @Inject constructor(
                 _events.emit(
                     GiftCardEvent.ReloadComponent(
                         order,
-                        giftCardComponentData
-                    )
+                        giftCardComponentData,
+                    ),
                 )
             }
         }

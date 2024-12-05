@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -277,8 +278,6 @@ internal class DropInActivity :
     private fun errorDialogDismissed(reason: String, terminateDropIn: Boolean) {
         if (terminateDropIn) {
             terminateWithError(reason)
-        } else {
-            setLoading(false)
         }
     }
 
@@ -384,6 +383,7 @@ internal class DropInActivity :
     private fun handleDropInServiceResult(dropInServiceResult: BaseDropInServiceResult) {
         adyenLog(AdyenLogLevel.DEBUG) { "handleDropInServiceResult - ${dropInServiceResult::class.simpleName}" }
         dropInViewModel.isWaitingResult = false
+        setLoading(false)
         when (dropInServiceResult) {
             is DropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
             is BalanceDropInServiceResult -> handleDropInServiceResult(dropInServiceResult)
@@ -457,10 +457,10 @@ internal class DropInActivity :
         dropInServiceResult.errorDialog?.let { errorDialog ->
             val errorMessage = errorDialog.message ?: getString(R.string.unknown_error)
             showError(errorDialog.title, errorMessage, reason, dropInServiceResult.dismissDropIn)
-        } ?: if (dropInServiceResult.dismissDropIn) {
-            terminateWithError(reason)
-        } else {
-            setLoading(false)
+        } ?: run {
+            if (dropInServiceResult.dismissDropIn) {
+                terminateWithError(reason)
+            }
         }
     }
 
@@ -480,7 +480,6 @@ internal class DropInActivity :
             handleAction(action)
             return
         }
-        setLoading(false)
         hideAllScreens()
         val actionFragment = ActionComponentDialogFragment.newInstance(action, dropInViewModel.checkoutConfiguration)
         actionFragment.show(supportFragmentManager, ACTION_FRAGMENT_TAG)
@@ -630,7 +629,20 @@ internal class DropInActivity :
                 LoadingDialogFragment.newInstance().show(supportFragmentManager, LOADING_FRAGMENT_TAG)
             }
         } else {
-            loadingDialog?.dismiss()
+            // Make sure the loading fragment transaction is completed before trying to dismiss it.
+            // This will prevent the loading fragment from overlapping any other dialogs.
+            if (loadingDialog == null) {
+                supportFragmentManager.executePendingTransactionsSafe()
+            }
+            getFragmentByTag(LOADING_FRAGMENT_TAG)?.dismiss()
+        }
+    }
+
+    private fun FragmentManager.executePendingTransactionsSafe() {
+        try {
+            executePendingTransactions()
+        } catch (e: IllegalStateException) {
+            adyenLog(AdyenLogLevel.WARN, e) { "Executing pending transactions failed" }
         }
     }
 
@@ -654,7 +666,6 @@ internal class DropInActivity :
 
     private fun handleGiftCardFullPayment(fullPayment: GiftCardBalanceResult.FullPayment) {
         adyenLog(AdyenLogLevel.DEBUG) { "handleGiftCardFullPayment" }
-        setLoading(false)
         showGiftCardPaymentConfirmationDialog(fullPayment.data)
     }
 
@@ -679,7 +690,6 @@ internal class DropInActivity :
     }
 
     private fun handleRemovePaymentMethodResult(id: String) {
-        setLoading(false)
         dropInViewModel.removeStoredPaymentMethodWithId(id)
 
         val preselectedStoredPaymentMethodFragment =

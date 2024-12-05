@@ -136,7 +136,7 @@ internal class CashAppPayComponentParamsMapperTest {
             environment = Environment.EUROPE,
             cashAppPayEnvironment = CashAppPayEnvironment.PRODUCTION,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",

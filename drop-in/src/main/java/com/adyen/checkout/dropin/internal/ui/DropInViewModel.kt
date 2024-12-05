@@ -25,15 +25,16 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
-import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
+import com.adyen.checkout.dropin.internal.analytics.DropInEvents
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent
 import com.adyen.checkout.dropin.internal.ui.model.DropInDestination
 import com.adyen.checkout.dropin.internal.ui.model.DropInOverrideParamsFactory
@@ -47,7 +48,6 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.sessions.core.internal.data.model.SessionDetails
 import com.adyen.checkout.sessions.core.internal.data.model.mapToModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -60,7 +60,7 @@ internal class DropInViewModel(
     internal val analyticsManager: AnalyticsManager,
     private val initialDropInParams: DropInParams,
     private val dropInConfigDataGenerator: DropInConfigDataGenerator,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : ViewModel() {
 
     private val eventChannel: Channel<DropInActivityEvent> = bufferedChannel()
@@ -236,8 +236,7 @@ internal class DropInViewModel(
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, viewModelScope)
 
-        val event = GenericEvents.rendered(
-            component = ANALYTICS_COMPONENT,
+        val event = DropInEvents.rendered(
             configData = dropInConfigDataGenerator.generate(configuration = dropInParams),
         )
         analyticsManager.trackEvent(event)
@@ -458,6 +457,10 @@ internal class DropInViewModel(
 
     fun cancelDropIn() {
         currentOrder?.let { sendCancelOrderEvent(it, true) }
+
+        val event = DropInEvents.closed()
+        analyticsManager.trackEvent(event)
+
         sendEvent(DropInActivityEvent.CancelDropIn)
     }
 
@@ -482,8 +485,6 @@ internal class DropInViewModel(
     }
 
     companion object {
-
-        private const val ANALYTICS_COMPONENT = "dropin"
 
         // These payment methods are either action only or have no UI.
         private val SKIP_TO_SINGLE_PM_BLOCK_LIST = listOf(

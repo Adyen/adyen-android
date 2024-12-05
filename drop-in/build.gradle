@@ -7,9 +7,9 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-parcelize'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
 }
 
 // Maven artifact
@@ -21,11 +21,11 @@ apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
     namespace 'com.adyen.checkout.dropin'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -72,6 +72,7 @@ dependencies {
     api project(':openbanking')
     api project(':payeasy')
     api project(':paybybank')
+    api project(':paybybank-us')
     api project(':sepa')
     api project(':seven-eleven')
     api project(':sessions-core')
@@ -80,15 +81,15 @@ dependencies {
     api project(':wechatpay')
 
     // Dependencies
-    implementation libraries.androidx.recyclerview
-    implementation libraries.material
+    implementation libs.androidx.recyclerview
+    implementation libs.material
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
     testImplementation testFixtures(project(':components-core'))
-    testImplementation testLibraries.androidx.lifecycle
-    testImplementation testLibraries.json
-    testImplementation testLibraries.junit5
-    testImplementation testLibraries.mockito
-    testImplementation testLibraries.kotlinCoroutines
+    testImplementation libs.androidx.test.lifecycle
+    testImplementation libs.json
+    testImplementation libs.bundles.junit
+    testImplementation libs.bundles.mockito
+    testImplementation libs.bundles.kotlin.coroutines.test
 }

@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
@@ -37,7 +38,6 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -71,7 +71,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         viewModelScope.launch { fetchSession() }
     }
 
-    private suspend fun fetchSession() = withContext(Dispatchers.IO) {
+    private suspend fun fetchSession() = withContext(IODispatcher) {
         val paymentMethodType = PaymentMethodTypes.GOOGLE_PAY
         val checkoutSession = getSession(paymentMethodType)
         if (checkoutSession == null) {

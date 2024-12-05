@@ -9,12 +9,12 @@
 package com.adyen.checkout.example.repositories
 
 import android.util.Log
+import com.adyen.checkout.example.extensions.IODispatcher
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Suppress("TooGenericExceptionCaught")
-internal suspend fun <T> safeApiCall(call: suspend () -> T): T? = withContext(Dispatchers.IO) {
+internal suspend fun <T> safeApiCall(call: suspend () -> T): T? = withContext(IODispatcher) {
     return@withContext try {
         call()
     } catch (e: CancellationException) {

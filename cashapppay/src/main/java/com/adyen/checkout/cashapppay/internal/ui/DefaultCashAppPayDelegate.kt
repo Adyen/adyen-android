@@ -34,10 +34,12 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -47,7 +49,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,7 +66,7 @@ constructor(
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
     private val cashAppPayFactory: CashAppPayFactory,
-    private val coroutineDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
@@ -284,6 +285,7 @@ constructor(
             }
 
             is CashAppPayState.CashAppPayExceptionState -> {
+                trackThirdPartyErrorEvent()
                 exceptionChannel.trySend(
                     ComponentException("Cash App Pay has encountered an error", newState.exception),
                 )
@@ -309,6 +311,14 @@ constructor(
             oneTimeData = oneTimeData,
             onFileData = onFileData,
         )
+    }
+
+    private fun trackThirdPartyErrorEvent() {
+        val event = GenericEvents.error(
+            component = getPaymentMethodType(),
+            event = ErrorEvent.THIRD_PARTY,
+        )
+        analyticsManager.trackEvent(event)
     }
 
     override fun isConfirmationRequired(): Boolean =

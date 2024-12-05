@@ -14,12 +14,15 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
+import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import java.util.Locale
 
+@Suppress("LongParameterList")
 internal class DefaultAnalyticsSetupProvider(
     private val application: Application,
     private val shopperLocale: Locale,
     private val isCreatedByDropIn: Boolean,
+    private val analyticsLevel: AnalyticsParamsLevel,
     private val amount: Amount?,
     private val source: AnalyticsSource,
     private val sessionId: String?,
@@ -33,6 +36,7 @@ internal class DefaultAnalyticsSetupProvider(
             locale = shopperLocale.toLanguageTag(),
             component = getComponentQueryParameter(source),
             flavor = getFlavorQueryParameter(isCreatedByDropIn),
+            level = getLevelQueryParameter(analyticsLevel),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
             referrer = application.packageName,
@@ -57,8 +61,16 @@ internal class DefaultAnalyticsSetupProvider(
         is AnalyticsSource.PaymentComponent -> source.paymentMethodType
     }
 
+    private fun getLevelQueryParameter(analyticsParamsLevel: AnalyticsParamsLevel) = when (analyticsParamsLevel) {
+        AnalyticsParamsLevel.INITIAL -> ANALYTICS_LEVEL_INITIAL
+        AnalyticsParamsLevel.ALL -> ANALYTICS_LEVEL_ALL
+    }
+
     companion object {
         private const val DROP_IN = "dropin"
         private const val COMPONENTS = "components"
+
+        private const val ANALYTICS_LEVEL_INITIAL = "initial"
+        private const val ANALYTICS_LEVEL_ALL = "all"
     }
 }

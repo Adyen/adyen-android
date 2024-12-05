@@ -123,4 +123,16 @@ object GenericEvents {
         subType = subType,
         message = message,
     )
+
+    // Error events
+    fun error(
+        component: String,
+        event: ErrorEvent,
+        target: String? = null,
+    ) = AnalyticsEvent.Error(
+        component = component,
+        errorType = event.errorType,
+        code = event.errorCode,
+        target = target,
+    )
 }

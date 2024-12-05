@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
+import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
@@ -31,7 +32,6 @@ import com.adyen.checkout.dropin.DropInServiceResult
 import com.adyen.checkout.dropin.OrderDropInServiceResult
 import com.adyen.checkout.dropin.RecurringDropInServiceResult
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -46,7 +46,7 @@ abstract class BaseDropInService
 constructor() : Service(), CoroutineScope, BaseDropInServiceInterface, BaseDropInServiceContract {
 
     private val coroutineJob: Job = Job()
-    final override val coroutineContext: CoroutineContext get() = Dispatchers.Main + coroutineJob
+    final override val coroutineContext: CoroutineContext get() = DispatcherProvider.Main + coroutineJob
 
     @Suppress("LeakingThis")
     private val binder = DropInBinder(this)

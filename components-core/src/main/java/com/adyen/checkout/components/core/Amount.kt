@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core
 import com.adyen.checkout.components.core.internal.util.EMPTY_VALUE
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getLongOrNull
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -41,7 +42,7 @@ data class Amount(
             override fun deserialize(jsonObject: JSONObject): Amount {
                 return Amount(
                     currency = jsonObject.getStringOrNull(CURRENCY),
-                    value = jsonObject.optLong(VALUE, EMPTY_VALUE),
+                    value = jsonObject.getLongOrNull(VALUE) ?: EMPTY_VALUE,
                 )
             }
         }

@@ -37,6 +37,7 @@ internal class AnalyticsServiceTest(
             platform = "android",
             info = emptyList(),
             logs = emptyList(),
+            errors = emptyList()
         )
         val checkoutAttemptId = "testtest"
         whenever(httpClient.post(eq("v3/analytics/$checkoutAttemptId"), any(), any(), any()))

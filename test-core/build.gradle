@@ -7,19 +7,19 @@
  */
 
 plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
 }
 
 apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 
 android {
     namespace 'com.adyen.checkout.test'
-    compileSdk compile_sdk_version
+    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk min_sdk_version
-        targetSdk target_sdk_version
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
 
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
@@ -32,9 +32,9 @@ android {
 
 dependencies {
     testFixturesImplementation project(':checkout-core')
-    testFixturesImplementation libraries.androidx.lifecycle
-    testFixturesImplementation testLibraries.junit5
-    testFixturesImplementation testLibraries.kotlinCoroutines
+    testFixturesImplementation libs.bundles.androidx.lifecycle
+    testFixturesImplementation libs.bundles.junit
+    testFixturesImplementation libs.bundles.kotlin.coroutines.test
 }
 
 // Disable test tasks, because this module only contains test utils.

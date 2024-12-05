@@ -22,6 +22,9 @@
     <dimen name="logo_large_width">80dp</dimen>
     <dimen name="logo_large_height">52dp</dimen>
 
+    <dimen name="logo_small_width">24dp</dimen>
+    <dimen name="logo_small_height">16dp</dimen>
+
     <dimen name="input_layout_height">82dp</dimen>
     <dimen name="input_height">55dp</dimen>
 

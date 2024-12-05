@@ -1,18 +1,14 @@
-buildscript {
-    apply from: './dependencies.gradle'
-}
-
 plugins {
-    id 'com.android.application' version "$android_gradle_plugin_version" apply false
-    id 'com.android.library' version "$android_gradle_plugin_version" apply false
-    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
-    id 'com.google.devtools.ksp' version "$ksp_version" apply false
-    id 'com.google.dagger.hilt.android' version "$hilt_version" apply false
-    id 'io.gitlab.arturbosch.detekt' version "$detekt_gradle_plugin_version"
-    id 'org.jetbrains.dokka' version "$dokka_version"
-    id 'org.sonarqube' version "$sonarqube_version"
-    id 'jacoco'
-    id 'org.jetbrains.kotlinx.binary-compatibility-validator' version "$binary_compatibility_validator_version"
+    alias libs.plugins.android.application apply false
+    alias libs.plugins.android.library apply false
+    alias libs.plugins.jetbrains.kotlin.android apply false
+    alias libs.plugins.ksp apply false
+    alias libs.plugins.hilt apply false
+    alias libs.plugins.detekt
+    alias libs.plugins.dokka
+    alias libs.plugins.sonarqube
+    alias libs.plugins.jacoco
+    alias libs.plugins.binary.compatibility.validator
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"

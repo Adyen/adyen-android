@@ -12,13 +12,13 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
-import com.adyen.checkout.example.repositories.AddressLookupCompletionState
+import com.adyen.checkout.example.extensions.IODispatcher
+import com.adyen.checkout.example.repositories.AddressLookupCompletionResult
 import com.adyen.checkout.example.repositories.AddressLookupRepository
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,13 +54,9 @@ internal class CardViewModel @Inject constructor(
             .onEach { options ->
                 _events.emit(CardEvent.AddressLookup(options))
             }.launchIn(viewModelScope)
-        addressLookupRepository.addressLookupCompletionFlow
-            .onEach {
-                onAddressCompleted(it)
-            }.launchIn(viewModelScope)
     }
 
-    private suspend fun fetchPaymentMethods() = withContext(Dispatchers.IO) {
+    private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         val paymentMethodResponse = paymentsRepository.getPaymentMethods(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
@@ -105,22 +101,19 @@ internal class CardViewModel @Inject constructor(
         addressLookupRepository.onQuery(query)
     }
 
+    // intentionally not called, check comment in CardActivity
     fun onAddressLookupCompletion(lookupAddress: LookupAddress) {
-        addressLookupRepository.onAddressLookupCompleted(lookupAddress)
-    }
-
-    private fun onAddressCompleted(addressLookupCompletionState: AddressLookupCompletionState) {
         viewModelScope.launch {
-            when (addressLookupCompletionState) {
-                is AddressLookupCompletionState.Address -> _events.emit(
+            when (val lookupResult = addressLookupRepository.onAddressLookupCompleted(lookupAddress)) {
+                is AddressLookupCompletionResult.Address -> _events.emit(
                     CardEvent.AddressLookupCompleted(
-                        addressLookupCompletionState.lookupAddress,
+                        lookupResult.lookupAddress,
                     ),
                 )
 
-                is AddressLookupCompletionState.Error -> _events.emit(
+                is AddressLookupCompletionResult.Error -> _events.emit(
                     CardEvent.AddressLookupError(
-                        addressLookupCompletionState.message,
+                        lookupResult.message,
                     ),
                 )
             }
@@ -135,7 +128,7 @@ internal class CardViewModel @Inject constructor(
 
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val paymentRequest = createPaymentRequest(
                 paymentComponentData = paymentComponentData,
                 shopperReference = keyValueStorage.getShopperReference(),
@@ -170,7 +163,7 @@ internal class CardViewModel @Inject constructor(
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(IODispatcher) {
             val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
             handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
         }

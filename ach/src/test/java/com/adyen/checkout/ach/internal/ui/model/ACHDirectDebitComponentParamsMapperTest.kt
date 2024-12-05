@@ -88,7 +88,7 @@ internal class ACHDirectDebitComponentParamsMapperTest {
             shopperLocale = Locale.GERMAN,
             environment = Environment.EUROPE,
             clientKey = TEST_CLIENT_KEY_2,
-            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.NONE, TEST_CLIENT_KEY_2),
+            analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, TEST_CLIENT_KEY_2),
             isCreatedByDropIn = true,
             amount = Amount(
                 currency = "EUR",

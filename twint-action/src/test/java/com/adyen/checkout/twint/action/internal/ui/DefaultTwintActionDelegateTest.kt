@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.action.TwintSdkData
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
@@ -287,6 +288,32 @@ internal class DefaultTwintActionDelegateTest {
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+
+        @ParameterizedTest
+        @MethodSource(
+            "com.adyen.checkout.twint.action.internal.ui.DefaultTwintActionDelegateTest#handleTwintResultErrorEvents",
+        )
+        fun `when handling twint result, then event is tracked`(
+            result: TwintPayResult,
+            errorEvent: ErrorEvent
+        ) = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val action = SdkAction(
+                paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                type = TEST_ACTION_TYPE,
+                paymentData = TEST_PAYMENT_DATA,
+                sdkData = TwintSdkData("token", false),
+            )
+            delegate.handleAction(action, Activity())
+
+            delegate.handleTwintResult(result)
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = errorEvent,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
     }
 
     private fun createDelegate(
@@ -345,6 +372,19 @@ internal class DefaultTwintActionDelegateTest {
             arguments(
                 TwintPayResult.TW_B_APP_NOT_INSTALLED,
                 TwintTestResult.Error("Twint app not installed."),
+            ),
+        )
+
+        @JvmStatic
+        fun handleTwintResultErrorEvents() = listOf(
+            // result, errorEvent
+            arguments(
+                TwintPayResult.TW_B_ERROR,
+                ErrorEvent.THIRD_PARTY,
+            ),
+            arguments(
+                TwintPayResult.TW_B_APP_NOT_INSTALLED,
+                ErrorEvent.THIRD_PARTY,
             ),
         )
     }

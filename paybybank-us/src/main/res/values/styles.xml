@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ozgur on 28/10/2024.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.PayByBankUS" />
+
+    <style name="AdyenCheckout.PayByBankUS.Title">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_margin">@dimen/standard_margin</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:text">@string/checkout_pay_by_bank_us_title</item>
+    </style>
+
+    <style name="AdyenCheckout.PayByBankUS.BrandLogo">
+        <item name="android:layout_height">16dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_marginEnd">@dimen/standard_quarter_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.PayByBankUS.More" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:alpha">0.54</item>
+    </style>
+
+    <style name="AdyenCheckout.PayByBankUS.DisclaimerHeader" parent="AdyenCheckout.TextAppearance">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:text">@string/checkout_pay_by_bank_us_disclaimer_header</item>
+    </style>
+
+    <style name="AdyenCheckout.PayByBankUS.DisclaimerBody" parent="AdyenCheckout.TextAppearance.Secondary">
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:alpha">0.54</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:text">@string/checkout_pay_by_bank_us_disclaimer_body</item>
+    </style>
+</resources>

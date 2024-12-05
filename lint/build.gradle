@@ -7,7 +7,7 @@
  */
 
 plugins {
-    id 'kotlin'
+    alias libs.plugins.kotlin
 }
 
 java {
@@ -20,11 +20,11 @@ kotlin {
 }
 
 dependencies {
-    compileOnly testLibraries.lintApi
+    compileOnly libs.lint.api
 
-    testImplementation testLibraries.junit5
-    testImplementation testLibraries.lint
-    testImplementation testLibraries.lintTests
+    testImplementation libs.bundles.junit
+    testImplementation libs.lint
+    testImplementation libs.lint.tests
 }
 
 jar {

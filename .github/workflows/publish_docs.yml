@@ -25,7 +25,7 @@ jobs:
           java-version: 17
 
       - name: Gradle cache
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: true
 
@@ -38,7 +38,7 @@ jobs:
 
       # Deploy to GitHub Pages
       - name: Deploy GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.6.4
+        uses: JamesIves/github-pages-deploy-action@v4.6.9
         with:
           BRANCH: gh-pages
           FOLDER: build/docs/

@@ -20,6 +20,7 @@ sealed interface AnalyticsEvent {
     val shouldForceSend: Boolean
     val component: String
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Info @DirectAnalyticsEventCreation constructor(
         override val id: String = UUID.randomUUID().toString(),
         override val timestamp: Long = Date().time,
@@ -34,6 +35,8 @@ sealed interface AnalyticsEvent {
         val validationErrorMessage: String? = null,
         val configData: Map<String, String>? = null,
     ) : AnalyticsEvent {
+
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         enum class Type(val value: String) {
             DISPLAYED("displayed"),
             DOWNLOAD("download"),
@@ -46,6 +49,7 @@ sealed interface AnalyticsEvent {
         }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     data class Log @DirectAnalyticsEventCreation constructor(
         override val id: String = UUID.randomUUID().toString(),
         override val timestamp: Long = Date().time,
@@ -57,9 +61,34 @@ sealed interface AnalyticsEvent {
         val target: String? = null,
         val message: String? = null,
     ) : AnalyticsEvent {
+
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         enum class Type(val value: String) {
             ACTION("action"),
             SUBMIT("submit"),
+            CLOSED("closed"),
+            THREEDS2("ThreeDS2"),
+        }
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    data class Error @DirectAnalyticsEventCreation constructor(
+        override val id: String = UUID.randomUUID().toString(),
+        override val timestamp: Long = Date().time,
+        override val shouldForceSend: Boolean = true,
+        override val component: String,
+        val errorType: Type? = null,
+        val code: String? = null,
+        val target: String? = null,
+        val message: String? = null,
+    ) : AnalyticsEvent {
+
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+        enum class Type(val value: String) {
+            REDIRECT("Redirect"),
+            INTERNAL("Internal"),
+            THIRD_PARTY("ThirdParty"),
+            API_ERROR("ApiError"),
             THREEDS2("ThreeDS2"),
         }
     }

@@ -20,6 +20,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel
+import com.adyen.checkout.dropin.internal.util.mapStoredModel
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -144,13 +145,35 @@ internal class PreselectedStoredPaymentViewModelTest {
         }
 
     @Test
-    fun `when button is clicked with a valid input then view model should request payments call`() =
+    fun `when button is clicked with a valid input then view model should display confirmation popup`() =
         runTest {
             viewModel.eventsFlow.test {
                 val componentState =
                     TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = true)
                 viewModel.onStateChanged(componentState)
                 viewModel.onButtonClicked()
+
+                assertEquals(
+                    PreselectedStoredEvent.ShowConfirmationPopup(
+                        storedPaymentMethod.name.orEmpty(),
+                        storedPaymentMethod.mapStoredModel(
+                            dropInParams.isRemovingStoredPaymentMethodsEnabled,
+                            dropInParams.environment,
+                        ),
+                    ),
+                    awaitItem(),
+                )
+            }
+        }
+
+    @Test
+    fun `when confirmation button is clicked then view model should request payments call`() =
+        runTest {
+            viewModel.eventsFlow.test {
+                val componentState =
+                    TestComponentState(PaymentComponentData(null, null, null), isInputValid = true, isReady = true)
+                viewModel.onStateChanged(componentState)
+                viewModel.onConfirmed()
 
                 assertEquals(PreselectedStoredEvent.RequestPaymentsCall(componentState), awaitItem())
             }
