@@ -62,22 +62,11 @@ def get_label_content(label: str, pr_body: str) -> str:
 
     return content
 
-dependency_exclusion_list = []
-with open('.github/.release_notes_dependency_exclusion_list') as file:
-    dependency_exclusion_list = file.read().splitlines()
-
-def is_dependency_excluded(id: str) -> bool:
-    for line in dependency_exclusion_list:
-        if id == line:
-            return True
-
-    return False
-
 def format_dependency_table(dependency_updates: [DependencyUpdate]) -> str:
     table = '| Name | Version |\n|------|---------|'
 
     for dependency in dependency_updates:
-        table = table + '\n| {} | `{}` -> `{}` |'.format(dependency.id, dependency.old_version, dependency.new_version)
+        table = table + '\n| {} | `{}` -> `{}` |'.format(dependency.link, dependency.old_version, dependency.new_version)
 
     return table
 
@@ -110,6 +99,9 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
 
     all_versions = {**old_versions['libraries'], **new_versions['libraries'], **old_versions['plugins'], **new_versions['plugins']}
 
+    with open('.github/release_notes_dependency_list.toml') as file:
+        dependency_list = toml.load(file)
+
     for value in all_versions.values():
         if 'group' in value and 'name' in value:
             id = value['group'] + ':' + value['name']
@@ -118,7 +110,10 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
         else:
             id = value['id']
 
-        if is_dependency_excluded(id):
+        if id not in dependency_list['excluded'] and id not in dependency_list['included']:
+            raise Exception('Dependency not recognized: ' + id)
+
+        if id in dependency_list['excluded']:
             continue
 
         if 'version' in value:
@@ -127,6 +122,7 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
             # If there is no explicit version defined the version probably comes from a BoM and it's safe to skip
             continue
 
+        link = dependency_list['included'][id]
         new_version = new_versions['versions'].get(version_ref, None)
         old_version = old_versions['versions'].get(version_ref, None)
 
@@ -134,7 +130,7 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
         if new_version == old_version:
             continue
 
-        dependency_update = DependencyUpdate(id, None, new_version, old_version)
+        dependency_update = DependencyUpdate(id, link, new_version, old_version)
         updates.append(dependency_update)
 
     return updates
