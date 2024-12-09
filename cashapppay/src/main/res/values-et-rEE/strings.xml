@@ -8,5 +8,4 @@
 
 <resources>
     <string name="cash_app_pay_store_payment_method">Salvesta mu järgmise makse jaoks</string>
-    <string name="cash_app_pay_waiting_text">Makse töötlemine …</string>
 </resources>

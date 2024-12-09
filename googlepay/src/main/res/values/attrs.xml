@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 11/10/2024.
+  -->
+
+<resources>
+
+    <declare-styleable name="GooglePayButtonView">
+        <attr name="adyenGooglePayButtonType">
+            <enum name="buy" value="0" />
+            <enum name="book" value="1" />
+            <enum name="checkout" value="2" />
+            <enum name="donate" value="3" />
+            <enum name="order" value="4" />
+            <enum name="pay" value="5" />
+            <enum name="subscribe" value="6" />
+            <enum name="plain" value="7" />
+        </attr>
+
+        <attr name="adyenGooglePayButtonTheme">
+            <enum name="light" value="0" />
+            <enum name="dark" value="1" />
+        </attr>
+
+        <attr name="adyenGooglePayButtonCornerRadius" format="dimension" />
+    </declare-styleable>
+</resources>

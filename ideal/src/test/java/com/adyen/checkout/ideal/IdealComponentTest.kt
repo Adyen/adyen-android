@@ -8,6 +8,7 @@ import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.ideal.internal.ui.IdealDelegate
+import com.adyen.checkout.ideal.internal.ui.PaymentInProgressViewType
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -15,7 +16,6 @@ import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -40,6 +40,7 @@ internal class IdealComponentTest(
 
     @BeforeEach
     fun before() {
+        whenever(idealDelegate.viewFlow) doReturn MutableStateFlow(PaymentInProgressViewType)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
         component = IdealComponent(
@@ -86,9 +87,25 @@ internal class IdealComponentTest(
     }
 
     @Test
-    fun `when component is initialized then view flow should bu null`() = runTest {
+    fun `when component is initialized then view flow should match ideal delegate view flow`() = runTest {
         component.viewFlow.test {
-            assertNull(awaitItem())
+            assertEquals(PaymentInProgressViewType, awaitItem())
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when ideal delegate view flow emits a value then component view flow should match that value`() = runTest {
+        val idealDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
+        whenever(idealDelegate.viewFlow) doReturn idealDelegateViewFlow
+        component = IdealComponent(idealDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+
+        component.viewFlow.test {
+            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+
+            idealDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
+            assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())
+
             expectNoEvents()
         }
     }
@@ -105,7 +122,9 @@ internal class IdealComponentTest(
         )
 
         component.viewFlow.test {
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+            // this value should match the value of the main delegate and not the action delegate
+            // and in practice the initial value of the action delegate view flow is always null so it should be ignored
+            assertEquals(PaymentInProgressViewType, awaitItem())
 
             actionDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
             assertEquals(TestComponentViewType.VIEW_TYPE_2, awaitItem())

@@ -12,6 +12,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.adyen.checkout.ui.core.databinding.DefaultPayButtonViewBinding
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import kotlinx.coroutines.CoroutineScope
 
 internal class DefaultPayButton @JvmOverloads constructor(
     context: Context,
@@ -20,6 +22,8 @@ internal class DefaultPayButton @JvmOverloads constructor(
 ) : PayButton(context, attrs, defStyleAttr) {
 
     private val binding = DefaultPayButtonViewBinding.inflate(LayoutInflater.from(context), this)
+
+    override fun initialize(delegate: ButtonDelegate, coroutineScope: CoroutineScope) = Unit
 
     override fun setEnabled(enabled: Boolean) {
         binding.payButton.isEnabled = enabled

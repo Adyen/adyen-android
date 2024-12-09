@@ -26,6 +26,9 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.googlepay.AllowedAuthMethods
 import com.adyen.checkout.googlepay.AllowedCardNetworks
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.GooglePayButtonStyling
+import com.adyen.checkout.googlepay.GooglePayButtonTheme
+import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
@@ -33,6 +36,9 @@ import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.test.LoggingExtension
 import com.google.android.gms.wallet.WalletConstants
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -71,6 +77,11 @@ internal class GooglePayComponentParamsMapperTest {
         val allowedCardNetworks = listOf("CARD1", "CARD2")
         val shippingAddressParameters = ShippingAddressParameters(listOf("ZZ", "AA"), true)
         val billingAddressParameters = BillingAddressParameters("FORMAT", true)
+        val googlePayButtonStyling = GooglePayButtonStyling(
+            buttonTheme = GooglePayButtonTheme.LIGHT,
+            buttonType = GooglePayButtonType.BOOK,
+            cornerRadius = 16,
+        )
 
         val configuration = CheckoutConfiguration(
             shopperLocale = Locale.FRANCE,
@@ -95,6 +106,7 @@ internal class GooglePayComponentParamsMapperTest {
                 setShippingAddressParameters(shippingAddressParameters)
                 setShippingAddressRequired(true)
                 setTotalPriceStatus("STATUS")
+                setGooglePayButtonStyling(googlePayButtonStyling)
             }
         }
 
@@ -111,9 +123,10 @@ internal class GooglePayComponentParamsMapperTest {
             environment = Environment.APSE,
             clientKey = TEST_CLIENT_KEY_2,
             analyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_2),
+            amount = amount,
+            isSubmitButtonVisible = false,
             gatewayMerchantId = "MERCHANT_ACCOUNT",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
-            amount = amount,
             totalPriceStatus = "STATUS",
             countryCode = "ZZ",
             merchantInfo = merchantInfo,
@@ -128,6 +141,7 @@ internal class GooglePayComponentParamsMapperTest {
             shippingAddressParameters = shippingAddressParameters,
             isBillingAddressRequired = true,
             billingAddressParameters = billingAddressParameters,
+            googlePayButtonStyling = googlePayButtonStyling,
         )
 
         assertEquals(expected, params)
@@ -148,6 +162,7 @@ internal class GooglePayComponentParamsMapperTest {
             googlePay {
                 setAmount(Amount("USD", 1L))
                 setAnalyticsConfiguration(AnalyticsConfiguration(AnalyticsLevel.ALL))
+                setSubmitButtonVisible(true)
                 setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)
             }
         }
@@ -172,6 +187,7 @@ internal class GooglePayComponentParamsMapperTest {
                 currency = "CAD",
                 value = 123L,
             ),
+            isSubmitButtonVisible = false,
         )
 
         assertEquals(expected, params)
@@ -480,6 +496,57 @@ internal class GooglePayComponentParamsMapperTest {
         assertEquals(expected, params)
     }
 
+    @Nested
+    inner class SubmitButtonVisibilityTest {
+
+        @Test
+        fun `when created by drop-in, then submit button should not be visible`() {
+            val configuration = createCheckoutConfiguration()
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = DropInOverrideParams(null, null, true),
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertFalse(params.isSubmitButtonVisible)
+        }
+
+        @Test
+        fun `when not created by drop-in and set in configuration, then submit button should be visible`() {
+            val configuration = createCheckoutConfiguration {
+                setSubmitButtonVisible(true)
+            }
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertTrue(params.isSubmitButtonVisible)
+        }
+
+        @Test
+        fun `when not created by drop-in and not configured, then submit button should not be visible`() {
+            val configuration = createCheckoutConfiguration()
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertFalse(params.isSubmitButtonVisible)
+        }
+    }
+
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
         shopperLocale: Locale? = null,
@@ -524,9 +591,10 @@ internal class GooglePayComponentParamsMapperTest {
         clientKey: String = TEST_CLIENT_KEY_1,
         analyticsParams: AnalyticsParams = AnalyticsParams(AnalyticsParamsLevel.ALL, TEST_CLIENT_KEY_1),
         isCreatedByDropIn: Boolean = false,
+        amount: Amount? = null,
+        isSubmitButtonVisible: Boolean = false,
         gatewayMerchantId: String = TEST_GATEWAY_MERCHANT_ID,
         googlePayEnvironment: Int = WalletConstants.ENVIRONMENT_TEST,
-        amount: Amount? = null,
         totalPriceStatus: String = "FINAL",
         countryCode: String? = null,
         merchantInfo: MerchantInfo? = null,
@@ -541,6 +609,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters: ShippingAddressParameters? = null,
         isBillingAddressRequired: Boolean = false,
         billingAddressParameters: BillingAddressParameters? = null,
+        googlePayButtonStyling: GooglePayButtonStyling? = null,
     ) = GooglePayComponentParams(
         commonComponentParams = CommonComponentParams(
             shopperLocale = shopperLocale,
@@ -550,9 +619,10 @@ internal class GooglePayComponentParamsMapperTest {
             isCreatedByDropIn = isCreatedByDropIn,
             amount = amount,
         ),
+        amount = amount ?: Amount("USD", 0),
+        isSubmitButtonVisible = isSubmitButtonVisible,
         gatewayMerchantId = gatewayMerchantId,
         googlePayEnvironment = googlePayEnvironment,
-        amount = amount ?: Amount("USD", 0),
         totalPriceStatus = totalPriceStatus,
         countryCode = countryCode,
         merchantInfo = merchantInfo,
@@ -567,6 +637,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters = shippingAddressParameters,
         isBillingAddressRequired = isBillingAddressRequired,
         billingAddressParameters = billingAddressParameters,
+        googlePayButtonStyling = googlePayButtonStyling,
     )
 
     companion object {

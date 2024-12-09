@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Indtast adresse manuelt</string>
     <string name="checkout_address_lookup_submit">Brug denne adresse</string>
     <string name="checkout_address_lookup_validation_empty">Adresse er påkrævet</string>
+
+    <string name="checkout_processing_payment">Behandler betaling…</string>
 </resources>

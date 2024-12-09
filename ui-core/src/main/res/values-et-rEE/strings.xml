@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Sisestage aadress käsitsi</string>
     <string name="checkout_address_lookup_submit">Kasuta seda aadressi</string>
     <string name="checkout_address_lookup_validation_empty">Aadress on kohustuslik</string>
+
+    <string name="checkout_processing_payment">Makse töötlemine …</string>
 </resources>
