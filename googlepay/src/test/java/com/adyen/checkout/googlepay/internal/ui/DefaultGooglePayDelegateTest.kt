@@ -290,6 +290,20 @@ internal class DefaultGooglePayDelegateTest(
             analyticsManager.assertIsCleared()
         }
 
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.googlepay.internal.ui.DefaultGooglePayDelegateTest#paymentResultErrorSource")
+        fun `when handling payment result is error, then error event is tracked`(
+            result: ApiTaskResult<PaymentData>
+        ) {
+            delegate.handlePaymentResult(result)
+
+            val expectedEvent = GenericEvents.error(
+                component = TEST_PAYMENT_METHOD_TYPE,
+                event = ErrorEvent.THIRD_PARTY,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
         @Test
         fun `when activity result is OK and data is null, then error event is tracked`() {
             delegate.handleActivityResult(Activity.RESULT_OK, data = null)
@@ -425,6 +439,15 @@ internal class DefaultGooglePayDelegateTest(
             arguments(false, true, true, null),
             arguments(true, false, false, GooglePayUnavailableException()),
             arguments(true, true, true, null),
+        )
+
+        @JvmStatic
+        fun paymentResultErrorSource() = listOf(
+            // result
+            arguments(ApiTaskResult(null, Status.RESULT_SUCCESS)),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERNAL_ERROR)),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERRUPTED)),
+            arguments(ApiTaskResult(null, Status(AutoResolveHelper.RESULT_ERROR))),
         )
     }
 }
