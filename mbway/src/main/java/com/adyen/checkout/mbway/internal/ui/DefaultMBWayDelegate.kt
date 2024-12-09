@@ -35,6 +35,7 @@ import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
@@ -59,7 +60,7 @@ internal class DefaultMBWayDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<MBWayComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<MBWayComponentState> = getTrackedSubmitFlow()
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -78,8 +79,8 @@ internal class DefaultMBWayDelegate(
         adyenLog(AdyenLogLevel.VERBOSE) { "initializeAnalytics" }
         analyticsManager.initialize(this, coroutineScope)
 
-        val event = GenericEvents.rendered(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
+        val renderedEvent = GenericEvents.rendered(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(renderedEvent)
     }
 
     override fun observe(
@@ -158,6 +159,11 @@ internal class DefaultMBWayDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+    }
+
     override fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
 
@@ -167,9 +173,6 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun onSubmit() {
-        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
-
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }
