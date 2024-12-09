@@ -56,34 +56,40 @@ def get_label_content(label: str, pr_body: str) -> str:
             should_take = False
             break
 
-        if should_take: content = content + line + '\n'
+        if should_take: content = content + '\n' + line
 
         if line == header: should_take = True
+
+    if content: content = content.strip() + '\n'
 
     return content
 
 def format_dependency_table(dependency_updates: [DependencyUpdate]) -> str:
-    table = '| Name | Version |\n|------|---------|'
+    table = '  | Name | Version |\n  |------|---------|'
 
     for dependency in dependency_updates:
-        table = table + '\n| {} | `{}` -> `{}` |'.format(dependency.link, dependency.old_version, dependency.new_version)
+        table = table + '\n  | {} | `{}` -> `{}` |'.format(dependency.link, dependency.old_version, dependency.new_version)
 
     return table
 
 def combine_contents(label_contents, dependency_updates) -> str:
     output = ''
     for label,value in label_contents.items():
+        # Add header
         if value or dependency_updates and label == 'Changed':
-            output = '{}### {}\n'.format(output, label)
+            output = '{}### {}'.format(output, label)
 
-        if value: output = '{}{}\n'.format(output, value)
+        # Add contents below header
+        if value: output = '{}\n{}'.format(output, value)
 
+        # Add dependency table to 'Changed' section
         if label == 'Changed' and dependency_updates:
-            output = output + '- Dependency versions:\n\n' + format_dependency_table(dependency_updates)
+            output = output + '\n- Dependency versions:\n' + format_dependency_table(dependency_updates)
 
-    if output: output = output.strip()
+        # Add new line to separate sections
+        output = output + '\n'
 
-    return output
+    return output.strip() + '\n'
 
 def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
     updates = []
