@@ -27,8 +27,10 @@ ext {
 
 nexusStaging {
     packageGroup = "com.adyen.checkout"
+    stagingProfileId = "com.adyen"
     username = System.getenv('OSSRH_USERNAME')
     password = System.getenv('OSSRH_PASSWORD')
+    serverUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
 subprojects {
