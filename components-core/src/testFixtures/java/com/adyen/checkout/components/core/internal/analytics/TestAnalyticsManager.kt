@@ -54,6 +54,8 @@ class TestAnalyticsManager : AnalyticsManager {
             // Exclude these fields as they are generated at runtime
             "id",
             "timestamp",
+            // Exclude message field as it is not required
+            "message",
         )
         return re.matches(actual)
     }
