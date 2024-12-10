@@ -25,6 +25,12 @@ ext {
     checkoutRedirectScheme = "adyencheckout"
 }
 
+nexusStaging {
+    packageGroup = "com.adyen.checkout"
+    username = System.getenv('OSSRH_USERNAME')
+    password = System.getenv('OSSRH_PASSWORD')
+}
+
 subprojects {
     def javaVersion = 11
 
