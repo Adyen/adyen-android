@@ -65,6 +65,7 @@
 "com.squareup.okhttp3:mockwebserver" = ""
 "com.squareup.retrofit2:converter-moshi" = ""
 "com.squareup.retrofit2:retrofit" = ""
+"io.codearte.nexus-staging" = ""
 "io.gitlab.arturbosch.detekt" = ""
 "io.gitlab.arturbosch.detekt:detekt-formatting" = ""
 "jacoco" = ""
