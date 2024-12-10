@@ -9,6 +9,7 @@ plugins {
     alias libs.plugins.sonarqube
     alias libs.plugins.jacoco
     alias libs.plugins.binary.compatibility.validator
+    alias libs.plugins.nexus.staging
 }
 
 apply from: "config/gradle/dokkaRoot.gradle"

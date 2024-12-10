@@ -9,11 +9,12 @@ version-code = "1"
 
 # Build script
 android-gradle-plugin = "8.7.1"
-kotlin = "1.9.25"
-ksp = "1.9.25-1.0.20"
+compose-compiler = "1.5.15"
 dokka = "1.9.20"
 hilt = "2.52"
-compose-compiler = "1.5.15"
+kotlin = "1.9.25"
+ksp = "1.9.25-1.0.20"
+nexus-staging = "0.30.0"
 
 # Code quality
 detekt = "1.23.7"
@@ -174,16 +175,15 @@ mockito-android = ["mockito-android-main", "mockito-kotlin"]
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
-kotlin = { id = "kotlin" }
-kotlin-android = { id = "kotlin-android" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-kotlin-parcelize = { id = "kotlin-parcelize" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
-sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jacoco = { id = "jacoco" }
-binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
-
-
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin = { id = "kotlin" }
+kotlin-android = { id = "kotlin-android" }
+kotlin-parcelize = { id = "kotlin-parcelize" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+nexus-staging = { id = "io.codearte.nexus-staging", version.ref = "nexus-staging" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
