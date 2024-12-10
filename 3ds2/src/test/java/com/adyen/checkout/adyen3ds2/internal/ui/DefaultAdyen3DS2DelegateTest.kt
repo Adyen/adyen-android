@@ -688,7 +688,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.handleAction(Threeds2FingerprintAction(token = null), Activity())
 
             val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
-                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }

@@ -42,14 +42,22 @@ internal object ThreeDS2Events {
         message = message,
     )
 
-    fun threeDS2FingerprintError(event: ErrorEvent) = GenericEvents.error(
+    fun threeDS2FingerprintError(
+        event: ErrorEvent,
+        message: String? = null
+    ) = GenericEvents.error(
         component = "threeDS2Fingerprint",
         event = event,
+        message = message,
     )
 
-    fun threeDS2ChallengeError(event: ErrorEvent) = GenericEvents.error(
+    fun threeDS2ChallengeError(
+        event: ErrorEvent,
+        message: String? = null
+    ) = GenericEvents.error(
         component = "threeDS2Challenge",
         event = event,
+        message = message,
     )
 
     enum class SubType(val value: String) {
