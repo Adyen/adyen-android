@@ -623,10 +623,10 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun trackFingerprintActionEvent(action: Action) =
-        trackActionEvent(action, ANALYTICS_MESSAGE_FINGERPRINT)
+        trackActionEvent(action, "Fingerprint action was handled by the SDK")
 
     private fun trackChallengeActionEvent(action: Action) =
-        trackActionEvent(action, ANALYTICS_MESSAGE_CHALLENGE)
+        trackActionEvent(action, "Challenge action was handled by the SDK")
 
     private fun trackActionEvent(action: Action, message: String) {
         val event = GenericEvents.action(
@@ -740,13 +740,6 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     companion object {
-        @VisibleForTesting
-        internal const val ANALYTICS_MESSAGE_FINGERPRINT =
-            "Fingerprint action was handled by the SDK"
-
-        @VisibleForTesting
-        internal const val ANALYTICS_MESSAGE_CHALLENGE = "Challenge action was handled by the SDK"
-
         private const val DEFAULT_CHALLENGE_TIME_OUT = 10
         private const val PROTOCOL_VERSION_2_1_0 = "2.1.0"
 

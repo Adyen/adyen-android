@@ -548,7 +548,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -567,7 +566,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -587,7 +585,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -607,7 +604,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
