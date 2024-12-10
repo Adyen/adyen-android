@@ -129,10 +129,12 @@ object GenericEvents {
         component: String,
         event: ErrorEvent,
         target: String? = null,
+        message: String? = null,
     ) = AnalyticsEvent.Error(
         component = component,
         errorType = event.errorType,
         code = event.errorCode,
         target = target,
+        message = message,
     )
 }
