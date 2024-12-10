@@ -33,6 +33,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class DefaultSepaDelegate(
@@ -57,7 +58,7 @@ internal class DefaultSepaDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(SepaComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<SepaComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<SepaComponentState> = getTrackedSubmitFlow()
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -140,10 +141,12 @@ internal class DefaultSepaDelegate(
         )
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state = state)
     }

@@ -40,6 +40,8 @@ import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -56,7 +58,10 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -127,25 +132,26 @@ internal class DefaultGiftCardDelegateTest(
         }
 
         @Test
-        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() = runTest {
-            cardEncryptor.shouldThrowException = true
+        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() =
+            runTest {
+                cardEncryptor.shouldThrowException = true
 
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.componentStateFlow.test {
-                delegate.updateComponentState(createValidOutputData())
+                delegate.componentStateFlow.test {
+                    delegate.updateComponentState(createValidOutputData())
 
-                val componentState = expectMostRecentItem()
+                    val componentState = expectMostRecentItem()
 
-                val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
-                analyticsManager.assertLastEventEquals(expectedEvent)
+                    val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+                    analyticsManager.assertLastEventEquals(expectedEvent)
 
-                assertTrue(componentState.isReady)
-                assertFalse(componentState.isInputValid)
-                assertEquals(null, componentState.lastFourDigits)
-                assertEquals(GiftCardAction.Idle, componentState.giftCardAction)
+                    assertTrue(componentState.isReady)
+                    assertFalse(componentState.isInputValid)
+                    assertEquals(null, componentState.lastFourDigits)
+                    assertEquals(GiftCardAction.Idle, componentState.giftCardAction)
+                }
             }
-        }
 
         @Test
         fun `everything is valid, then component state should be good`() = runTest {
@@ -377,11 +383,15 @@ internal class DefaultGiftCardDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<GiftCardComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createGiftCardDelegate()
 
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test
