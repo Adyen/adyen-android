@@ -30,6 +30,7 @@ import com.adyen.checkout.components.core.action.Threeds2ChallengeAction
 import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.PaymentDataRepository
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -51,6 +52,7 @@ import com.adyen.threeds2.TransactionResult
 import com.adyen.threeds2.Warning
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.exception.InvalidInputException
+import com.adyen.threeds2.exception.SDKNotInitializedException
 import com.adyen.threeds2.exception.SDKRuntimeException
 import com.adyen.threeds2.parameters.ChallengeParameters
 import com.adyen.threeds2.parameters.ConfigParameters
@@ -190,6 +192,23 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
+        fun `when fingerprintToken is partial, then an exception is emitted`() = runTest {
+            val partialFingerprintToken =
+                """
+                {
+                    "directoryServerId":"id",
+                }
+                """.trimIndent()
+            delegate.initialize(this)
+            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+            val encodedJson = Base64.encode(partialFingerprintToken.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            assertTrue(exceptionFlow.latestValue is ComponentException)
+        }
+
+        @Test
         fun `3ds2 sdk throws an exception while initializing, then an exception emitted`() = runTest {
             val error = InvalidInputException("test", null)
             threeDS2Service.initializeError = error
@@ -219,17 +238,32 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
-        fun `creating 3ds2 transaction fails, then an exception emitted`() = runTest {
-            val error = SDKRuntimeException("test", "test", null)
-            threeDS2Service.createTransactionError = error
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        fun `creating 3ds2 transaction fails and the error is SDKNotInitializedException, then an exception emitted`() =
+            runTest {
+                val error = SDKNotInitializedException()
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
 
-            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
-            delegate.identifyShopper(Activity(), encodedJson, false)
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
 
-            assertEquals(error, exceptionFlow.latestValue.cause)
-        }
+                assertEquals(error, exceptionFlow.latestValue.cause)
+            }
+
+        @Test
+        fun `creating 3ds2 transaction fails and the error is SDKRuntimeException, then an exception emitted`() =
+            runTest {
+                val error = SDKRuntimeException("test", "test", null)
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                assertEquals(error, exceptionFlow.latestValue.cause)
+            }
 
         @Test
         fun `creating 3ds2 transaction return transaction error, then details are emitted`() = runTest {
@@ -514,7 +548,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -533,7 +566,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -553,7 +585,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_FINGERPRINT,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -573,7 +604,6 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = GenericEvents.action(
                 component = TEST_PAYMENT_METHOD_TYPE,
                 subType = TEST_ACTION_TYPE,
-                message = DefaultAdyen3DS2Delegate.ANALYTICS_MESSAGE_CHALLENGE,
             )
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
@@ -588,7 +618,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = ThreeDS2Events.threeDS2Fingerprint(
                 subType = ThreeDS2Events.SubType.FINGERPRINT_DATA_SENT,
             )
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
         @ParameterizedTest
@@ -643,6 +673,275 @@ internal class DefaultAdyen3DS2DelegateTest(
             val expectedEvent = ThreeDS2Events.threeDS2Challenge(
                 subType = ThreeDS2Events.SubType.CHALLENGE_COMPLETED,
                 result = analyticsResult,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when action is Threeds2FingerprintAction and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            delegate.handleAction(Threeds2FingerprintAction(token = null), Activity())
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when action is Threeds2ChallengeAction and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            delegate.handleAction(Threeds2ChallengeAction(token = null), Activity())
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when action is Threeds2Action and token is null, then error event is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            delegate.handleAction(
+                Threeds2Action(token = null, subtype = Threeds2Action.SubType.FINGERPRINT.value),
+                Activity(),
+            )
+            val expectedFingerprintEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedFingerprintEvent)
+
+            delegate.handleAction(
+                Threeds2Action(token = null, subtype = Threeds2Action.SubType.CHALLENGE.value),
+                Activity(),
+            )
+            val expectedChallengeEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedChallengeEvent)
+        }
+
+        @Test
+        fun `when fingerprintToken is partial, then error event is tracked`() = runTest {
+            val partialFingerprintToken =
+                """
+                {
+                    "directoryServerId":"id",
+                }
+                """.trimIndent()
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            val encodedJson = Base64.encode(partialFingerprintToken.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when 3ds2 sdk throws an exception while initializing, then error event is tracked`() = runTest {
+            threeDS2Service.initializeError = InvalidInputException("test", null)
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher(testScheduler)))
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when transaction parameters are null, then error event is tracked`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and the threeDSMessageVersion is null, then error event is tracked`() =
+            runTest {
+                val fingerprintTokenWithoutMessageVersion =
+                    """
+                    {
+                        "directoryServerId":"id",
+                        "directoryServerPublicKey":"key",
+                        "directoryServerRootCertificates":"certs",
+                    }
+                    """.trimIndent()
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(fingerprintTokenWithoutMessageVersion.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and error is SDKNotInitializedException, then error event is tracked`() =
+            runTest {
+                val error = SDKNotInitializedException()
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
+
+        @Test
+        fun `when creating 3ds2 transaction fails and error is SDKRuntimeException, then error event is tracked`() =
+            runTest {
+                val error = SDKRuntimeException("test", "test", null)
+                threeDS2Service.createTransactionError = error
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+                val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+                delegate.identifyShopper(Activity(), encodedJson, false)
+
+                val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                    event = ErrorEvent.THREEDS2_TRANSACTION_CREATION,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
+
+        @Test
+        fun `when fingerprint is submitted automatically and it fails, then error event is tracked`() = runTest {
+            threeDS2Service.transactionResult =
+                TransactionResult.Success(TestTransaction(getAuthenticationRequestParams()))
+            whenever(submitFingerprintRepository.submitFingerprint(any(), any(), anyOrNull())) doReturn
+                Result.failure(IOException("test"))
+
+            delegate.initialize(this)
+
+            val encodedJson = Base64.encode(TEST_FINGERPRINT_TOKEN.toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, true)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when transaction is null, then error event is tracked`() = runTest {
+            delegate.challengeShopper(mock(), "token")
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TRANSACTION_MISSING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when fingerprint token can't be decoded, then error event is tracked`() = runTest {
+            delegate.initialize(this)
+
+            val encodedJson = Base64.encode("{incorrectJson}".toByteArray())
+            delegate.identifyShopper(Activity(), encodedJson, false)
+
+            val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
+                event = ErrorEvent.THREEDS2_TOKEN_DECODING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when challenge token can't be decoded, then error event is tracked`() = runTest {
+            initializeChallengeTransaction(this)
+
+            delegate.challengeShopper(Activity(), Base64.encode("token".toByteArray()))
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_TOKEN_DECODING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when challenge fails, then error event is tracked`() = runTest {
+            initializeChallengeTransaction(this).apply {
+                shouldThrowError = true
+            }
+
+            // We need to set the messageVersion to workaround an error in the 3DS2 SDK
+            delegate.challengeShopper(Activity(), Base64.encode("{\"messageVersion\":\"2.1.0\"}".toByteArray()))
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when completed and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), anyOrNull())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Completed("transactionStatus"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when timed out and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), any())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Timeout("transactionStatus", "additionalDetails"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
+        fun `when error and creating details fails, then error event is tracked`() = runTest {
+            val adyen3DS2Serializer: Adyen3DS2Serializer = mock()
+            whenever(adyen3DS2Serializer.createChallengeDetails(any(), any())) doAnswer {
+                throw ComponentException("test")
+            }
+            delegate = createDelegate(adyen3DS2Serializer)
+
+            delegate.onCompletion(
+                result = ChallengeResult.Error("transactionStatus", "additionalDetails"),
+            )
+
+            val expectedEvent = ThreeDS2Events.threeDS2ChallengeError(
+                event = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
