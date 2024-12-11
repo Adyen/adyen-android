@@ -149,7 +149,7 @@ internal class DefaultGooglePayDelegate(
 
     private fun createOutputData(
         isButtonVisible: Boolean = componentParams.isSubmitButtonVisible,
-        isLoading: Boolean = !isButtonVisible,
+        isLoading: Boolean = false,
         paymentData: PaymentData? = null,
     ): GooglePayOutputData {
         return GooglePayOutputData(
