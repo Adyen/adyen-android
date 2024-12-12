@@ -84,6 +84,7 @@ internal class GooglePayViewModel @Inject constructor(
             ?.firstOrNull { GooglePayComponent.PROVIDER.isPaymentMethodSupported(it) }
 
         if (paymentMethod == null) {
+            @Suppress("RestrictedApi")
             _viewState.emit(GooglePayViewState.Error(UICoreR.string.error_dialog_title))
             return@withContext
         }
@@ -114,7 +115,7 @@ internal class GooglePayViewModel @Inject constructor(
     override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
         viewModelScope.launch {
             if (isAvailable) {
-                _viewState.emit(GooglePayViewState.ShowButton)
+                _viewState.emit(GooglePayViewState.ShowComponent)
             } else {
                 _viewState.emit(GooglePayViewState.Error(R.string.google_pay_unavailable_error))
             }

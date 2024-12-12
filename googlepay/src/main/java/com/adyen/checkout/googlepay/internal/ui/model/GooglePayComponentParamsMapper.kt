@@ -60,6 +60,7 @@ internal class GooglePayComponentParamsMapper(
         return GooglePayComponentParams(
             commonComponentParams = commonComponentParams,
             amount = commonComponentParams.amount ?: DEFAULT_AMOUNT,
+            isSubmitButtonVisible = shouldShowSubmitButton(commonComponentParams, googlePayConfiguration),
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
@@ -76,7 +77,20 @@ internal class GooglePayComponentParamsMapper(
             shippingAddressParameters = googlePayConfiguration?.shippingAddressParameters,
             isBillingAddressRequired = googlePayConfiguration?.isBillingAddressRequired ?: false,
             billingAddressParameters = googlePayConfiguration?.billingAddressParameters,
+            googlePayButtonStyling = googlePayConfiguration?.googlePayButtonStyling,
         )
+    }
+
+    private fun shouldShowSubmitButton(
+        commonComponentParams: CommonComponentParams,
+        googlePayConfiguration: GooglePayConfiguration?,
+    ): Boolean {
+        return if (commonComponentParams.isCreatedByDropIn) {
+            false
+        } else {
+            // TODO return true by default in v6
+            googlePayConfiguration?.isSubmitButtonVisible ?: false
+        }
     }
 
     /**

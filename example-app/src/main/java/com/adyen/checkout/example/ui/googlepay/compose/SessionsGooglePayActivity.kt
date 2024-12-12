@@ -13,6 +13,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
@@ -39,12 +41,14 @@ class SessionsGooglePayActivity : AppCompatActivity() {
         intent = (intent ?: Intent()).putExtra(RETURN_URL_EXTRA, returnUrl)
 
         setContent {
+            val googlePayState by sessionsGooglePayViewModel.googlePayState.collectAsState()
+            val eventsState by sessionsGooglePayViewModel.stateEvents.collectAsState()
             val isDarkTheme = uiThemeRepository.isDarkTheme()
             ExampleTheme(isDarkTheme) {
                 SessionsGooglePayScreen(
-                    useDarkTheme = isDarkTheme,
                     onBackPressed = { onBackPressedDispatcher.onBackPressed() },
-                    viewModel = sessionsGooglePayViewModel,
+                    googlePayState = googlePayState,
+                    eventsState = eventsState,
                 )
             }
         }
@@ -57,13 +61,6 @@ class SessionsGooglePayActivity : AppCompatActivity() {
         if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
             sessionsGooglePayViewModel.onNewIntent(intent)
         }
-    }
-
-    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        sessionsGooglePayViewModel.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object {

@@ -248,6 +248,7 @@ internal class GooglePayUtilsTest {
                 amount = null,
             ),
             amount = Amount("USD", 0),
+            isSubmitButtonVisible = false,
             gatewayMerchantId = "",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_TEST,
             totalPriceStatus = "NOT_CURRENTLY_KNOWN",
@@ -264,6 +265,7 @@ internal class GooglePayUtilsTest {
             shippingAddressParameters = null,
             isBillingAddressRequired = false,
             billingAddressParameters = null,
+            googlePayButtonStyling = null,
         )
     }
 
@@ -278,6 +280,7 @@ internal class GooglePayUtilsTest {
                 amount = Amount("EUR", 13_37),
             ),
             amount = Amount("EUR", 13_37),
+            isSubmitButtonVisible = true,
             gatewayMerchantId = "GATEWAY_MERCHANT_ID",
             googlePayEnvironment = WalletConstants.ENVIRONMENT_PRODUCTION,
             totalPriceStatus = "TOTAL_PRICE_STATUS",
@@ -303,6 +306,7 @@ internal class GooglePayUtilsTest {
                 format = "FORMAT",
                 isPhoneNumberRequired = true,
             ),
+            googlePayButtonStyling = null,
         )
     }
 }

@@ -17,6 +17,7 @@ import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvi
 import com.adyen.checkout.instant.internal.ui.InstantPaymentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -32,12 +33,13 @@ class InstantPaymentComponent internal constructor(
     ViewableComponent,
     ActionHandlingComponent by actionHandlingComponent {
 
-    @Suppress("ForbiddenComment")
-    // FIXME: Using actionHandlingComponent.activeDelegate will crash for QR code actions. This is a workaround for the
-    //  actual issue.
-    override val delegate: ComponentDelegate get() = genericActionDelegate.delegate
+    override val delegate: ComponentDelegate get() = actionHandlingComponent.activeDelegate
 
-    override val viewFlow: Flow<ComponentViewType?> = genericActionDelegate.viewFlow
+    override val viewFlow: Flow<ComponentViewType?> = mergeViewFlows(
+        viewModelScope,
+        instantPaymentDelegate.viewFlow,
+        genericActionDelegate.viewFlow,
+    )
 
     init {
         instantPaymentDelegate.initialize(viewModelScope)

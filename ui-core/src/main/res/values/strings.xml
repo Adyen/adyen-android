@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Enter address manually</string>
     <string name="checkout_address_lookup_submit">Use this address</string>
     <string name="checkout_address_lookup_validation_empty">Address required</string>
+
+    <string name="checkout_processing_payment">Processing payment…</string>
 </resources>

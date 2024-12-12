@@ -8,18 +8,16 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-import android.app.Application
 import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.ComponentAvailableCallback
 import com.adyen.checkout.components.core.ComponentError
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
+import com.adyen.checkout.example.R
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
@@ -28,9 +26,8 @@ import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.example.ui.googlepay.GooglePayActivityResult
-import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
+import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionProvider
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
@@ -50,22 +47,19 @@ import javax.inject.Inject
 @HiltViewModel
 internal class SessionsGooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val application: Application,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
     checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
-    SessionComponentCallback<GooglePayComponentState>,
-    ComponentAvailableCallback {
+    SessionComponentCallback<GooglePayComponentState> {
 
     private val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-    private val _googlePayState = MutableStateFlow(SessionsGooglePayState(SessionsGooglePayUIState.Loading))
+    private val _googlePayState = MutableStateFlow<SessionsGooglePayState>(SessionsGooglePayState.Loading)
     val googlePayState: StateFlow<SessionsGooglePayState> = _googlePayState.asStateFlow()
 
-    private var _componentData: SessionsGooglePayComponentData? = null
-    private val componentData: SessionsGooglePayComponentData
-        get() = requireNotNull(_componentData) { "component data should not be null" }
+    private val _stateEvents: MutableStateFlow<SessionsGooglePayEvents> = MutableStateFlow(SessionsGooglePayEvents.None)
+    val stateEvents: StateFlow<SessionsGooglePayEvents> = _stateEvents.asStateFlow()
 
     init {
         viewModelScope.launch { fetchSession() }
@@ -86,14 +80,15 @@ internal class SessionsGooglePayViewModel @Inject constructor(
             return@withContext
         }
 
-        _componentData = SessionsGooglePayComponentData(
+        val componentData = SessionsGooglePayComponentData(
             checkoutSession,
             checkoutConfiguration,
             paymentMethod,
             this@SessionsGooglePayViewModel,
         )
 
-        checkGooglePayAvailability(paymentMethod, checkoutConfiguration)
+        updateEvent { SessionsGooglePayEvents.ComponentData(componentData) }
+        updateState { SessionsGooglePayState.ShowButton }
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
@@ -129,41 +124,23 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         }
     }
 
-    private fun checkGooglePayAvailability(
-        paymentMethod: PaymentMethod,
-        checkoutConfiguration: CheckoutConfiguration,
-    ) {
-        GooglePayComponent.PROVIDER.isAvailable(
-            application = application,
-            paymentMethod = paymentMethod,
-            checkoutConfiguration = checkoutConfiguration,
-            callback = this,
-        )
-    }
-
-    override fun onAvailabilityResult(isAvailable: Boolean, paymentMethod: PaymentMethod) {
-        viewModelScope.launch {
-            if (isAvailable) {
-                updateState { it.copy(uiState = SessionsGooglePayUIState.ShowButton(componentData)) }
-            } else {
-                onError()
-            }
-        }
-    }
-
     override fun onAction(action: Action) {
-        updateState { it.copy(actionToHandle = SessionsGooglePayAction(componentData, action)) }
+        updateEvent { SessionsGooglePayEvents.Action(action) }
     }
 
     override fun onError(componentError: ComponentError) {
-        Log.e(TAG, "Component error occurred")
-        onError()
+        val exception = componentError.exception
+        Log.e(TAG, "Component error occurred", exception)
+
+        if (exception is GooglePayUnavailableException) {
+            onGooglePayUnavailable()
+        } else {
+            onError()
+        }
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-        updateState {
-            it.copy(uiState = SessionsGooglePayUIState.FinalResult(getFinalResultState(result)))
-        }
+        updateState { SessionsGooglePayState.FinalResult(getFinalResultState(result)) }
     }
 
     private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
@@ -174,50 +151,33 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         else -> ResultState.FAILURE
     }
 
+    private fun onGooglePayUnavailable() {
+        updateState {
+            val result = ResultState(
+                R.drawable.ic_result_failure,
+                "Google Pay is not available on this device",
+            )
+            SessionsGooglePayState.FinalResult(result)
+        }
+    }
+
     private fun onError() {
-        updateState { it.copy(uiState = SessionsGooglePayUIState.FinalResult(ResultState.FAILURE)) }
+        updateState { SessionsGooglePayState.FinalResult(ResultState.FAILURE) }
     }
 
     private fun updateState(block: (SessionsGooglePayState) -> SessionsGooglePayState) {
         _googlePayState.update(block)
     }
 
-    fun onButtonClicked() {
-        updateState {
-            it.copy(
-                uiState = SessionsGooglePayUIState.ShowComponent(componentData),
-                startGooglePay = SessionsStartGooglePayData(componentData, ACTIVITY_RESULT_CODE),
-            )
-        }
-    }
-
-    fun onGooglePayStarted() {
-        updateState { it.copy(startGooglePay = null) }
-    }
-
-    fun onActionConsumed() {
-        updateState { it.copy(actionToHandle = null) }
-    }
-
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != ACTIVITY_RESULT_CODE) return
-        updateState { it.copy(activityResultToHandle = GooglePayActivityResult(componentData, resultCode, data)) }
-    }
-
-    fun onActivityResultHandled() {
-        updateState { it.copy(activityResultToHandle = null) }
+    private fun updateEvent(block: (SessionsGooglePayEvents) -> SessionsGooglePayEvents) {
+        _stateEvents.update(block)
     }
 
     fun onNewIntent(intent: Intent) {
-        updateState { it.copy(intentToHandle = SessionsGooglePayIntent(componentData, intent)) }
-    }
-
-    fun onNewIntentHandled() {
-        updateState { it.copy(intentToHandle = null) }
+        updateEvent { SessionsGooglePayEvents.Intent(intent) }
     }
 
     companion object {
         private val TAG = getLogTag()
-        private const val ACTIVITY_RESULT_CODE = 1
     }
 }

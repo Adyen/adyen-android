@@ -10,11 +10,14 @@ package com.adyen.checkout.example.ui.compose
 
 import com.adyen.checkout.example.R
 
-enum class ResultState(
+data class ResultState(
     val drawable: Int,
     val text: String,
 ) {
-    SUCCESS(R.drawable.ic_result_success, "Payment successful!"),
-    PENDING(R.drawable.ic_result_pending, "Payment pending..."),
-    FAILURE(R.drawable.ic_result_failure, "Payment failed..."),
+
+    companion object {
+        val SUCCESS = ResultState(R.drawable.ic_result_success, "Payment successful!")
+        val PENDING = ResultState(R.drawable.ic_result_pending, "Payment pending...")
+        val FAILURE = ResultState(R.drawable.ic_result_failure, "Payment failed...")
+    }
 }
