@@ -29,6 +29,8 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -45,7 +47,10 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -262,11 +267,15 @@ internal class DefaultPayByBankDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<PayByBankComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createPayByBankDelegate(issuers = emptyList())
 
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test

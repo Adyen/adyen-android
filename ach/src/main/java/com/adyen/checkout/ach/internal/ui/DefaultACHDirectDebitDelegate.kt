@@ -104,7 +104,7 @@ internal class DefaultACHDirectDebitDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(ACHDirectDebitComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<ACHDirectDebitComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<ACHDirectDebitComponentState> = getTrackedSubmitFlow()
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -363,10 +363,12 @@ internal class DefaultACHDirectDebitDelegate(
         analyticsManager.clear(this)
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(
             state = state,

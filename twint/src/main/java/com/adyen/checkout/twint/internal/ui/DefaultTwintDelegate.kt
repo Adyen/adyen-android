@@ -33,6 +33,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
 internal class DefaultTwintDelegate(
@@ -54,7 +55,7 @@ internal class DefaultTwintDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(TwintComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<TwintComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<TwintComponentState> = getTrackedSubmitFlow()
 
     override fun initialize(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
@@ -149,6 +150,11 @@ internal class DefaultTwintDelegate(
     private fun shouldStorePaymentMethod(): Boolean =
         componentParams.showStorePaymentField && outputData.isStorePaymentSelected
 
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
+        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onSubmit() {
         if (isConfirmationRequired()) {
             initiatePayment()
@@ -156,9 +162,6 @@ internal class DefaultTwintDelegate(
     }
 
     private fun initiatePayment() {
-        val event = GenericEvents.submit(paymentMethod.type.orEmpty())
-        analyticsManager.trackEvent(event)
-
         _viewFlow.tryEmit(PaymentInProgressViewType)
 
         val state = _componentStateFlow.value

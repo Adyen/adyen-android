@@ -83,7 +83,7 @@ internal class DefaultBoletoDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(BoletoComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<BoletoComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<BoletoComponentState> = getTrackedSubmitFlow()
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -292,10 +292,12 @@ internal class DefaultBoletoDelegate(
         observerRepository.removeObservers()
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         submitHandler.onSubmit(_componentStateFlow.value)
     }
 
