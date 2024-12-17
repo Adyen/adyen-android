@@ -338,7 +338,7 @@ public final class com/adyen/checkout/dropin/SessionDropInResultContract : andro
 
 public class com/adyen/checkout/dropin/SessionDropInService : com/adyen/checkout/dropin/internal/service/BaseDropInService, com/adyen/checkout/dropin/SessionDropInServiceContract, com/adyen/checkout/dropin/internal/service/SessionDropInServiceInterface {
 	public fun <init> ()V
-	public final fun initialize (Lcom/adyen/checkout/sessions/core/SessionModel;Ljava/lang/String;Lcom/adyen/checkout/core/Environment;Z)V
+	public final fun initialize (Lcom/adyen/checkout/sessions/core/SessionModel;Ljava/lang/String;Lcom/adyen/checkout/core/Environment;ZLcom/adyen/checkout/components/core/internal/analytics/AnalyticsManager;)V
 	public final fun isFlowTakenOver ()Z
 	public fun onAdditionalDetails (Lcom/adyen/checkout/components/core/ActionComponentData;)Z
 	public fun onBalanceCheck (Lcom/adyen/checkout/components/core/PaymentComponentState;)Z

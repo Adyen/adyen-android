@@ -320,6 +320,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
             val sessionComponentEventHandler = SessionComponentEventHandler<PayByBankUSComponentState>(
                 sessionInteractor = sessionInteractor,
@@ -425,6 +426,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
 
             val sessionComponentEventHandler =

@@ -585,6 +585,7 @@ internal class DropInActivity :
             clientKey = event.clientKey,
             environment = event.environment,
             isFlowTakenOver = event.isFlowTakenOver,
+            analyticsManager = event.analyticsManager,
         )
     }
 

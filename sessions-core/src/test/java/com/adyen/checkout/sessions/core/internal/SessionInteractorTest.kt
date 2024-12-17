@@ -18,6 +18,9 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.action.RedirectAction
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.sessions.core.SessionModel
@@ -35,7 +38,6 @@ import com.adyen.checkout.sessions.core.internal.data.model.SessionOrderResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionPaymentsResponse
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -51,16 +53,17 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.whenever
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class SessionInteractorTest(
     @Mock private val sessionRepository: SessionRepository,
 ) {
 
     private lateinit var sessionInteractor: SessionInteractor
+    private lateinit var analyticsManager: TestAnalyticsManager
 
     @BeforeEach
     fun before() {
+        analyticsManager = TestAnalyticsManager()
         sessionInteractor = createSessionInteractor()
     }
 
@@ -715,6 +718,34 @@ internal class SessionInteractorTest(
         }
     }
 
+    @Nested
+    inner class AnalyticsTest {
+
+        @Test
+        fun `when payment calls returns an error then error event is tracked`() = runTest {
+            val exception = Exception("failed for testing")
+            val paymentMethodType = "scheme"
+            val componentState = TestComponentState(
+                data = PaymentComponentData(
+                    TestPaymentMethod(type = paymentMethodType),
+                    TEST_ORDER_REQUEST,
+                    TEST_AMOUNT,
+                ),
+                isInputValid = true,
+                isReady = true,
+            )
+            whenever(sessionRepository.submitPayment(any(), any())) doReturn Result.failure(exception)
+
+            sessionInteractor.onPaymentsCallRequested(componentState, { false }, "")
+
+            val expectedEvent = GenericEvents.error(
+                component = paymentMethodType,
+                event = ErrorEvent.API_PAYMENTS,
+            )
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+    }
+
     private fun createSessionInteractor(
         sessionModel: SessionModel = TEST_SESSION_MODEL,
         isFlowTakenOver: Boolean = false
@@ -723,6 +754,7 @@ internal class SessionInteractorTest(
             sessionRepository = sessionRepository,
             sessionModel = sessionModel,
             isFlowTakenOver = isFlowTakenOver,
+            analyticsManager = analyticsManager,
         )
     }
 
