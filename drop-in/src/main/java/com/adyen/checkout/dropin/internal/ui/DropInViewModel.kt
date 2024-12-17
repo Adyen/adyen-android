@@ -203,6 +203,7 @@ internal class DropInViewModel(
             clientKey = dropInParams.clientKey,
             environment = dropInParams.environment,
             isFlowTakenOver = isSessionsFlowTakenOver,
+            analyticsManager = analyticsManager,
         )
         sendEvent(event)
     }

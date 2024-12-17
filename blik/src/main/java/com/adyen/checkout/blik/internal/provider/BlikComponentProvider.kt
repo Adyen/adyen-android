@@ -318,6 +318,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<BlikComponentState>(
@@ -425,6 +426,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
 
             val sessionComponentEventHandler =

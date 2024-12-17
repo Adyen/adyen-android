@@ -37,6 +37,7 @@ dependencies {
 
     //Tests
     testImplementation testFixtures(project(':test-core'))
+    testImplementation testFixtures(project(':components-core'))
     testImplementation libs.androidx.test.lifecycle
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.kotlin.coroutines.test

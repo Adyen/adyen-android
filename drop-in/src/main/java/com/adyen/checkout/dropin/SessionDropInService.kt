@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
@@ -50,7 +51,8 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
         sessionModel: SessionModel,
         clientKey: String,
         environment: Environment,
-        isFlowTakenOver: Boolean
+        isFlowTakenOver: Boolean,
+        analyticsManager: AnalyticsManager,
     ) {
         val httpClient = HttpClientFactory.getHttpClient(environment)
         val sessionService = SessionService(httpClient)
@@ -61,6 +63,7 @@ open class SessionDropInService : BaseDropInService(), SessionDropInServiceInter
             ),
             sessionModel = sessionModel,
             isFlowTakenOver = isFlowTakenOver,
+            analyticsManager = analyticsManager,
         )
         this.isFlowTakenOver = isFlowTakenOver
 

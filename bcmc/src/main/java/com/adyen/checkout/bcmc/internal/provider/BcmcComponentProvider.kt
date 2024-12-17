@@ -267,6 +267,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<BcmcComponentState>(

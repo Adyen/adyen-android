@@ -459,6 +459,7 @@ constructor(
             ),
             sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
             isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+            analyticsManager = analyticsManager,
         )
 
         return SessionComponentEventHandler(

@@ -209,6 +209,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
             val sessionComponentEventHandler = SessionComponentEventHandler<IdealComponentState>(
                 sessionInteractor = sessionInteractor,
