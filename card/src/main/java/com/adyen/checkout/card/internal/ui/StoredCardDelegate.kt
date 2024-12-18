@@ -198,6 +198,9 @@ internal class StoredCardDelegate(
                     updateComponentState(outputData)
                 },
                 onFailure = { e ->
+                    val event = GenericEvents.error(storedPaymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
+                    analyticsManager.trackEvent(event)
+
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 },
             )
