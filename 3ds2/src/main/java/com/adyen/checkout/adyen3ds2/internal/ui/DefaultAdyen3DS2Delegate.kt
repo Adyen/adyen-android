@@ -269,8 +269,8 @@ internal class DefaultAdyen3DS2Delegate(
         val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
             adyenLog(AdyenLogLevel.ERROR, throwable) { "Unexpected uncaught 3DS2 Exception" }
             trackFingerprintErrorEvent(
-                errorEvent = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
-                message = "Fingerprint creation failed because of uncaught exception",
+                errorEvent = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
+                message = "Fingerprint handling failed because of uncaught exception",
             )
             emitError(CheckoutException("Unexpected 3DS2 exception.", throwable))
         }
@@ -436,7 +436,7 @@ internal class DefaultAdyen3DS2Delegate(
             .fold(
                 onSuccess = { result -> onSubmitFingerprintResult(result, activity) },
                 onFailure = { e ->
-                    trackFingerprintErrorEvent(ErrorEvent.THREEDS2_FINGERPRINT_HANDLING)
+                    trackFingerprintErrorEvent(ErrorEvent.API_THREEDS2)
                     emitError(ComponentException("Unable to submit fingerprint", e))
                 },
             )

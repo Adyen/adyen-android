@@ -752,7 +752,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.identifyShopper(Activity(), encodedJson, false)
 
             val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
-                event = ErrorEvent.THREEDS2_FINGERPRINT_CREATION,
+                event = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
@@ -837,7 +837,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.identifyShopper(Activity(), encodedJson, true)
 
             val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
-                event = ErrorEvent.THREEDS2_FINGERPRINT_HANDLING,
+                event = ErrorEvent.API_THREEDS2,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
