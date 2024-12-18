@@ -486,6 +486,14 @@ internal class StoredCardDelegateTest(
         }
 
         @Test
+        fun `when fetching the public key fails, then an error event is tracked`() = runTest {
+            publicKeyRepository.shouldReturnError = true
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val expectedEvent = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+            analyticsManager.assertLastEventEquals(expectedEvent)
+        }
+
+        @Test
         fun `when delegate is cleared then analytics manager is cleared`() {
             delegate.onCleared()
 
