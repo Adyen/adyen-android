@@ -236,6 +236,30 @@ internal class DefaultRedirectDelegateTest(
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
+
+        @ParameterizedTest
+        @MethodSource("com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegateTest#errorSource")
+        fun `when native redirect is handled and error is thrown, then an error event is tracked`(error: Exception) =
+            runTest {
+                whenever(nativeRedirectService.makeNativeRedirect(any(), any())) doAnswer { throw error }
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.handleAction(
+                    action = RedirectAction(
+                        paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
+                        type = ActionTypes.NATIVE_REDIRECT,
+                        nativeRedirectData = "testData",
+                    ),
+                    activity = Activity(),
+                )
+
+                delegate.handleIntent(Intent())
+
+                val expectedEvent = GenericEvents.error(
+                    component = TEST_PAYMENT_METHOD_TYPE,
+                    event = ErrorEvent.API_NATIVE_REDIRECT,
+                )
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
     }
 
     @Test
