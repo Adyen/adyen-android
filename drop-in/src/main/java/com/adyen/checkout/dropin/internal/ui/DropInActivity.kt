@@ -728,8 +728,6 @@ internal class DropInActivity :
         private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
         private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
 
-        internal const val GOOGLE_PAY_REQUEST_CODE = 1
-
         fun createIntent(
             context: Context,
             checkoutConfiguration: CheckoutConfiguration,
