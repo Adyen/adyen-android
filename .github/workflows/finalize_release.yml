@@ -1,34 +1,16 @@
 name: Finalize Release
 
-# Every time we trigger the workflow on a branch.
+# Every time the workflow is triggered
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
 
 jobs:
-  generate_version_name:
-    runs-on: ubuntu-latest
-
-    outputs:
-      version_name: ${{ steps.version_name.outputs.PROJECT_VERSION }}
-
-    steps:
-      - uses: actions/checkout@v4
-
-      # Get the version name from a script and save it in version_name output.
-      - name: Generate version_name
-        id: version_name
-        run: |
-          echo "▸ Set run permission."
-          chmod +x scripts/version_name.sh
-          echo "▸ Getting version name"
-          PROJECT_VERSION=$(./scripts/version_name.sh)
-          echo "▸ Creating the version_name output with value: $PROJECT_VERSION"
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_OUTPUT
-          echo "▸ DONE"
-
   publish_draft_release:
     runs-on: ubuntu-latest
-    needs: generate_version_name
 
     steps:
       - uses: actions/checkout@v4
@@ -38,7 +20,7 @@ jobs:
         uses: ncipollo/release-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERSION_NAME: ${{ needs.generate_version_name.outputs.version_name }}
+          VERSION_NAME: ${{ inputs.version-name }}
         with:
           token: ${{ env.GITHUB_TOKEN }}
           tag: ${{ env.VERSION_NAME }}
@@ -56,5 +38,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Remove release branch
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
         run: |
-          git push origin --delete ${{ github.ref_name }}
+          RELEASE_BRANCH_NAME="release/$VERSION_NAME"
+          
+          if git ls-remote --exit-code --heads origin "$RELEASE_BRANCH_NAME"; then
+            git push origin --delete "$RELEASE_BRANCH_NAME"
+          else
+            echo "Warning: Branch $RELEASE_BRANCH_NAME does not exist."
+          fi
