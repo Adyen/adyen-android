@@ -1,6 +1,13 @@
 name: Publish to Maven Central
 
 on:
+  workflow_dispatch:
+    inputs:
+      version-name:
+        description: "Version name of the build"
+        required: true
+        type: string
+
   workflow_call:
     inputs:
       version-name:
