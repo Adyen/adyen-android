@@ -24,5 +24,4 @@ jobs:
           token: ${{ env.GITHUB_TOKEN }}
           tag: ${{ env.VERSION_NAME }}
           name: ${{ env.VERSION_NAME }}
-          bodyFile: ${{ github.workspace }}/RELEASE_NOTES.md
           draft: true
