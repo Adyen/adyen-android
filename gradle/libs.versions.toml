@@ -56,7 +56,7 @@ wechat-pay = "6.8.0"
 
 # Example app
 leak-canary = "2.14"
-moshi-adapters = "1.15.1"
+moshi-adapters = "1.15.2"
 moshi-kotlin-adapter = "1.15.1"
 okhttp-logging = "4.12.0"
 preference = "1.2.1"
