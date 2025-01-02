@@ -1,0 +1,59 @@
+name: Update release notes
+
+# Every time the workflow is triggered
+on:
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
+
+jobs:
+  fetch_updated_release_notes_file:
+    name: Fetch Updated Release Notes File
+    runs-on: ubuntu-latest
+    outputs:
+      updated-release-notes-filepath: ${{ steps.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch filepath for updated release notes file
+        id: fetch_updated_release_notes_file
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}
+          VERSION_NAME: ${{ inputs.version-name }}
+        run: |
+          chmod +x scripts/fetch_updated_release_notes_file.sh
+          UPDATED_RELEASE_NOTES_FILEPATH=$(./scripts/fetch_updated_release_notes_file.sh $PROJECT_ROOT $VERSION_NAME)
+          echo -e "updated-release-notes-filepath=$UPDATED_RELEASE_NOTES_FILEPATH" >> $GITHUB_OUTPUT
+          echo -e $UPDATED_RELEASE_NOTES_FILEPATH
+
+  update_release_notes:
+    name: Update Release Notes
+    runs-on: ubuntu-latest
+    needs: fetch_updated_release_notes_file
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Print updated release notes
+        run: |
+          cat ${{ needs.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
+
+      # Update Github release with the updated release notes
+      - name: Update Github release notes
+        id: update_github_release_notes
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION_NAME: ${{ inputs.version-name }}
+          BODY_FILE : ${{ needs.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
+        with:
+          token: ${{ env.GITHUB_TOKEN }}
+          tag: ${{ env.VERSION_NAME }}
+          allowUpdates: true
+          updateOnlyUnreleased: true
+          omitNameDuringUpdate: true
+          draft: true
+          bodyFile: ${{ env.BODY_FILE }}

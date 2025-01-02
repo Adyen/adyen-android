@@ -1,0 +1,28 @@
+name: Finalize Release
+
+# Every time the workflow is triggered
+on:
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
+
+jobs:
+  remove_release_branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove release branch
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
+        run: |
+          RELEASE_BRANCH_NAME="release/$VERSION_NAME"
+          
+          if git ls-remote --exit-code --heads origin "$RELEASE_BRANCH_NAME"; then
+            git push origin --delete "$RELEASE_BRANCH_NAME"
+          else
+            echo "Warning: Branch $RELEASE_BRANCH_NAME does not exist."
+          fi

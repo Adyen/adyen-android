@@ -1,0 +1,26 @@
+name: Fetch version name from release notes
+
+on:
+  workflow_call:
+    outputs:
+      version-name:
+        description: "The version name of the release associated to latest release notes"
+        value: ${{ jobs.fetch_version_name.outputs.version-name }}
+
+jobs:
+  fetch_version_name:
+    name: Fetch Version Name
+    runs-on: ubuntu-latest
+    outputs:
+      version-name: ${{ steps.fetch_version_name.outputs.version-name }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch version name from latest release notes
+        id: fetch_version_name
+        run: |
+          chmod +x scripts/fetch_release_notes_version_name.sh
+          commit_message="${{ github.event.head_commit.message }}"
+          VERSION_NAME=$(./scripts/fetch_release_notes_version_name.sh "${commit_message// /}")
+          echo -e "version-name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo -e $VERSION_NAME
