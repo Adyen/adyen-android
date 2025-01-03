@@ -1,4 +1,4 @@
-name: Publish Release
+name: Prepare Release
 
 # Every time a push happens to the release/** branch. We use this trigger since create event does not support filtering
 on:
