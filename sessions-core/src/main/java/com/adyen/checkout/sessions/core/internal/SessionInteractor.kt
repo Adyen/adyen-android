@@ -15,6 +15,9 @@ import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
+import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.util.StatusResponseUtils
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.MethodNotImplementedException
@@ -33,6 +36,7 @@ class SessionInteractor(
     private val sessionRepository: SessionRepository,
     sessionModel: SessionModel,
     isFlowTakenOver: Boolean,
+    private val analyticsManager: AnalyticsManager?,
 ) {
 
     @VisibleForTesting
@@ -76,6 +80,14 @@ class SessionInteractor(
                     }
                 },
                 onFailure = {
+                    paymentComponentState.data.paymentMethod?.type?.let { paymentMethodType ->
+                        val event = GenericEvents.error(
+                            component = paymentMethodType,
+                            event = ErrorEvent.API_PAYMENTS,
+                        )
+                        analyticsManager?.trackEvent(event)
+                    }
+
                     return SessionCallResult.Payments.Error(throwable = it)
                 },
             )
@@ -260,7 +272,8 @@ class SessionInteractor(
         return if (!callWasHandled) {
             if (isFlowTakenOver) {
                 throw MethodNotImplementedException(
-                    "Sessions flow was already taken over in a previous call, $merchantMethodName should be implemented"
+                    "Sessions flow was already taken over in a previous call, " +
+                        "$merchantMethodName should be implemented",
                 )
             } else {
                 internalCall()

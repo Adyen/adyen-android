@@ -129,6 +129,10 @@ class DefaultGiftCardDelegate(
                 },
                 onFailure = { e ->
                     adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
+
+                    val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
+                    analyticsManager.trackEvent(event)
+
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 },
             )

@@ -291,6 +291,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
             val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,
@@ -504,6 +505,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
             val sessionComponentEventHandler = SessionComponentEventHandler<CardComponentState>(
                 sessionInteractor = sessionInteractor,

@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.dropin.BaseDropInServiceResult
 import com.adyen.checkout.sessions.core.SessionModel
@@ -39,6 +40,7 @@ internal interface SessionDropInServiceInterface : BaseDropInServiceInterface {
         sessionModel: SessionModel,
         clientKey: String,
         environment: Environment,
-        isFlowTakenOver: Boolean
+        isFlowTakenOver: Boolean,
+        analyticsManager: AnalyticsManager,
     )
 }
