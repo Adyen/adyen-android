@@ -4,7 +4,6 @@ name: Check Labels
 on:
   pull_request:
     branches-ignore:
-      - 'main'
       - 'release/**'
     types: [ synchronize, labeled, unlabeled ]
 
