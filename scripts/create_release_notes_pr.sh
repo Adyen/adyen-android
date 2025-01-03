@@ -32,18 +32,32 @@ create_pr() {
     echo "Creating pull request via GitHub API..."
 
     API_URL="https://api.github.com/repos/$GITHUB_REPO/pulls"
-    PR_TITLE="Create release notes for $VERSION_NAME release"
-    PR_BODY="This PR adds release notes for the $VERSION_NAME release."
+    PR_TITLE="Release $VERSION_NAME"
+    PR_BODY=$(cat <<EOF
+      ## Description
+      This PR adds release notes for the $VERSION_NAME release. Merging it will update the release notes and publish the draft GitHub release.
 
-    JSON_PAYLOAD=$(cat <<EOF
-        {
-            "title": "$PR_TITLE",
-            "head": "$RELEASE_NOTES_BRANCH",
-            "base": "$BASE_BRANCH",
-            "body": "$PR_BODY"
-        }
+      ## Checklist before merging
+      - [ ] Release is tested
+      - [ ] Release notes are approved by the Docs team
+      - [ ] Release is published to Maven Central
 EOF
     )
+
+    # Remove leading spaces
+    PR_BODY="${PR_BODY//      /}"
+
+    JSON_PAYLOAD=$(jq -n \
+      --arg title "$PR_TITLE" \
+      --arg head "$RELEASE_NOTES_BRANCH" \
+      --arg base "$BASE_BRANCH" \
+      --arg body "$PR_BODY" \
+      '{
+          title: $title,
+          head: $head,
+          base: $base,
+          body: $body
+      }')
 
     curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
         -H "Content-Type: application/json" \
