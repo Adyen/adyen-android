@@ -3,8 +3,6 @@ name: Check Labels
 # Every PR should have a label and some labels should include an update to the release notes
 on:
   pull_request:
-    branches-ignore:
-      - 'release/**'
     types: [ synchronize, labeled, unlabeled ]
 
 concurrency:
