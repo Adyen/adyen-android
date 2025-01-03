@@ -83,7 +83,7 @@ Starting [5.0.0][analytics.firstVersion] the Drop-in and Components integrations
 
 ## Contributing
 
-We merge every pull request into the `develop` branch. We aim to keep `develop` in good shape, which allows us to release a new version whenever we need to.
+We merge every pull request into the `main` branch. We aim to keep `main` in good shape, which allows us to release a new version whenever we need to.
 
 Have a look at our [contributing guidelines][contributing.guidelines] to find out how to raise a pull request.
 
