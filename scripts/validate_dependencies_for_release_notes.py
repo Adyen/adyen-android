@@ -12,7 +12,6 @@ def fetch_changed_dependencies() -> dict:
         ['git', 'merge-base', 'origin/main', 'HEAD']
     ).decode(sys.stdout.encoding).strip()
 
-
     # Fetch the version of the file before the PR changes
     old_toml_file = subprocess.check_output(
         ['git', 'show', base_commit + ':' + toml_file_path]
