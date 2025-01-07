@@ -16,7 +16,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
-import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
@@ -489,8 +488,8 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @Test
-        fun `cancelled, then an error is emitted`() = runTest {
-            val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
+        fun `cancelled, then details are emitted`() = runTest {
+            val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
             delegate.onCompletion(
                 result = ChallengeResult.Cancelled(
@@ -499,11 +498,11 @@ internal class DefaultAdyen3DS2DelegateTest(
                 ),
             )
 
-            assertTrue(exceptionFlow.latestValue is Cancelled3DS2Exception)
+            assertNotNull(detailsFlow.latestValue.details)
         }
 
         @Test
-        fun `timedout, then details are emitted`() = runTest {
+        fun `timed out, then details are emitted`() = runTest {
             val detailsFlow = delegate.detailsFlow.test(testScheduler)
 
             delegate.onCompletion(
