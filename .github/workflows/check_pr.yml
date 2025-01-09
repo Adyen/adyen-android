@@ -28,3 +28,6 @@ jobs:
     name: Validate public API
     uses: ./.github/workflows/validate_public_api.yml
     secrets: inherit
+  verify_dependencies:
+    name: Validate dependencies
+    uses: ./.github/workflows/validate_dependencies.yml
