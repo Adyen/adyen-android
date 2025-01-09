@@ -2,13 +2,21 @@ name: Finalize Release
 
 # Every time the workflow is triggered
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       version-name:
+        description: "Version Name"
         required: true
         type: string
 
 jobs:
+  update_release_notes:
+    name: Update release notes
+    uses: ./.github/workflows/update_release_notes.yml
+    secrets: inherit
+    with:
+      version-name: ${{ inputs.version-name }}
+
   publish_draft_release:
     runs-on: ubuntu-latest
 
