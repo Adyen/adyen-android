@@ -39,4 +39,8 @@ android {
     }
 }
 
-dependencies {}
+dependencies {
+    api project(':checkout-core')
+
+    implementation(libs.google.pay.play.services.wallet)
+}
