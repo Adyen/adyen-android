@@ -29,3 +29,6 @@
   | `AdyenCheckout.CashAppPay.ProgressBar`                    | `AdyenCheckout.ProcessingPaymentView.ProgressBar`                |
   | `AdyenCheckout.CashAppPay.WaitingDescriptionTextView`     | `AdyenCheckout.ProcessingPaymentView.WaitingDescriptionTextView` |
   | `cash_app_pay_waiting_text`                               | `checkout_processing_payment` |
+
+## Repository Maintenance
+- We are changing the default branch of our SDK repository from `develop` to `main`. If you are using our SDK repository and working with the `develop` branch, we recommend switching to the `main` branch. The `develop` branch will be removed within the next few weeks.
