@@ -8,4 +8,36 @@
 
 package com.adyen.checkout.card.scanning
 
-class AdyenCardScanner
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import com.adyen.checkout.core.Environment
+
+class AdyenCardScanner {
+
+    fun initialize(context: Context, environment: Environment) {
+
+    }
+
+    suspend fun isAvailable(): Boolean {
+        return true
+    }
+
+    fun startScanner(activity: Activity) {
+
+    }
+
+    fun getResult(data: Intent?): AdyenCardScannerResult? {
+        return null
+    }
+
+    fun terminate() {
+
+    }
+}
+
+data class AdyenCardScannerResult(
+    val pan: String?,
+    val expiryMonth: Int?,
+    val expiryYear: Int?,
+)
