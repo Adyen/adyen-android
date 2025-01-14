@@ -23,7 +23,7 @@ import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -47,7 +47,8 @@ internal class DefaultMBWayDelegate(
     private val submitHandler: SubmitHandler<MBWayComponentState>,
 ) : MBWayDelegate {
 
-    private val inputData = MBWayInputData()
+    private var localPhoneNumber: String = ""
+    private var countryCode: String = ""
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
@@ -106,21 +107,27 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun updateInputData(update: MBWayInputData.() -> Unit) {
-        inputData.update()
-        onInputDataChanged()
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, newValue: String) {
+        when (fieldId) {
+            MBWayFieldId.COUNTRY_CODE -> countryCode = newValue
+            MBWayFieldId.LOCAL_PHONE_NUMBER -> localPhoneNumber = newValue
+        }
+
+        onDataChanged()
     }
 
-    private fun onInputDataChanged() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
+    }
+
+    private fun onDataChanged() {
+        adyenLog(AdyenLogLevel.VERBOSE) { "onDataChanged" }
         val outputData = createOutputData()
         outputDataChanged(outputData)
         updateComponentState(outputData)
     }
 
     private fun createOutputData(): MBWayOutputData {
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        return MBWayOutputData(inputData.countryCode + sanitizedNumber)
+        val sanitizedNumber = localPhoneNumber.trimStart('0')
+        return MBWayOutputData(countryCode + sanitizedNumber)
     }
 
     private fun outputDataChanged(outputData: MBWayOutputData) {
