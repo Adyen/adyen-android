@@ -10,7 +10,7 @@ package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
@@ -34,7 +34,7 @@ internal interface MBWayDelegate :
 
     fun getInitiallySelectedCountry(): CountryModel?
 
-    fun updateInputData(update: MBWayInputData.() -> Unit)
+    fun onFieldValueChanged(fieldId: MBWayFieldId, newValue: String)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }

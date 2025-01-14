@@ -20,6 +20,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
@@ -59,9 +60,7 @@ internal class MbWayView @JvmOverloads constructor(
 
     private fun initMobileNumberInput() {
         binding.editTextMobileNumber.setOnChangeListener {
-            delegate.updateInputData {
-                localPhoneNumber = it.toString()
-            }
+            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
             binding.textInputLayoutMobileNumber.hideError()
         }
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
@@ -109,8 +108,6 @@ internal class MbWayView @JvmOverloads constructor(
     override fun getView(): View = this
 
     private fun onCountrySelected(countryModel: CountryModel) {
-        delegate.updateInputData {
-            countryCode = countryModel.callingCode
-        }
+        delegate.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, countryModel.callingCode)
     }
 }
