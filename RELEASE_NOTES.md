@@ -11,19 +11,23 @@
 ## New
 - Launch Google Pay with `submit()` to get rid of the deprecated activity result handling.
 - For drop-in, show a toolbar on every intermediary screen, so shoppers can always easily navigate back.
-- For 3DS2 native flow, cancellations by shopper trigger `onAdditionalDetails()` now. With this change, merchants will be able to make a `/payments/details` call so that they can get more insight on the transaction. 
 
 ## Fixed
 
 ## Improved
 
 ## Changed
+- For 3DS2 native flow, cancellations by shopper trigger `onAdditionalDetails()` event. You can make a `/payments/details` call to gain more insight into the transaction.
+  - If you already handle other 3DS2 errors by making a `/payments/details` call, then no changes are required and the specific handling for `Cancelled3DS2Exception` can be removed.
+  - If not yet implemented, you should update your systems to handle shopper cancellations using the new flow.
 - Dependency versions:
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   |                           |                     |
 
 ## Deprecated
+- `Cancelled3DS2Exception` is now deprecated. Shopper cancellations trigger the `onAdditionalDetails()` event, enabling a `/payments/details` call for transaction insights.
+- For 3DS2 native flow, `Cancelled3DS2Exception` is deprecated. Now the shopper cancellations triggers `onAdditionalDetails()` and you can make a `/payments/details` call.
 - The styles and strings for the Cash App Pay loading indicator. Use the new styles and strings instead.
   | Previous                                                  | Now                                                              |
   |-----------------------------------------------------------|------------------------------------------------------------------|
