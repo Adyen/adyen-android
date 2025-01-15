@@ -86,8 +86,8 @@ CheckoutConfiguration(
 | `setTotalPriceStatus`              | Sets the status of the total price used.                                                                                                          |
 | `setGooglePayButtonStyling`        | Allows to configure the styling of the Google Pay button.                                                                                         |
 
-## Migrating to 5.8.0+
-It is not necessary to migrate, but 5.8.0 introduced a simplified integration for Google Pay. This new integration among others gets rid of the deprecated `onActivityResult` and includes the Google Pay button. Follow the steps below to migrate from previous 5.x.x versions to 5.8.0:
+## Migrating to 5.9.0+
+It is not necessary to migrate, but 5.9.0 introduced a simplified integration for Google Pay. This new integration among others gets rid of the deprecated `onActivityResult` and includes the Google Pay button. Follow the steps below to migrate from previous 5.x.x versions to 5.9.0:
 
 ### 1. Remove deprecated Activity Result code
 
