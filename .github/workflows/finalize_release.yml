@@ -56,3 +56,9 @@ jobs:
           else
             echo "Warning: Branch $RELEASE_BRANCH_NAME does not exist."
           fi
+
+  publish_docs_to_github_pages:
+    name: Publish docs to Github pages
+    uses: ./.github/workflows/publish_docs.yml
+    secrets: inherit
+    needs: publish_draft_release
