@@ -19,12 +19,14 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldState
+import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -45,18 +47,17 @@ internal class DefaultMBWayDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
+    private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var localPhoneNumber: String = ""
-    private var countryCode: String = ""
-
-    private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
+    private var localPhoneNumber = ComponentFieldState("")
+    private var countryCode = ComponentFieldState("")
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
 
-    override val outputData: MBWayOutputData get() = _outputDataFlow.value
+    private val _viewStateFlow: MutableStateFlow<MBWayViewState> = MutableStateFlow(MBWayViewState())
+    override val viewStateFlow: Flow<MBWayViewState> = _viewStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
@@ -68,7 +69,7 @@ internal class DefaultMBWayDelegate(
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
     init {
-        updateComponentState(outputData)
+        updateComponentState()
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
@@ -107,46 +108,58 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, newValue: String) {
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) {
         when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> countryCode = newValue
-            MBWayFieldId.LOCAL_PHONE_NUMBER -> localPhoneNumber = newValue
+            MBWayFieldId.COUNTRY_CODE -> updateCountryCodeValue(value)
+            MBWayFieldId.LOCAL_PHONE_NUMBER -> updateLocalPhoneNumberValue(value)
         }
 
         onDataChanged()
     }
 
+    // TODO: Validation should not be done here, only when focus changes?
+    // TODO: Think about the submit button click also. We need to do the validation then.
+    private fun updateCountryCodeValue(value: String) {
+        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0'))
+
+        countryCode = countryCode.copy(
+            value = value,
+            validation = validation,
+        )
+    }
+
+    // TODO: Validation should not be done here, only when focus changes?
+    private fun updateLocalPhoneNumberValue(value: String) {
+        val validation = validationRegistry.validate(MBWayFieldId.LOCAL_PHONE_NUMBER, value)
+
+        localPhoneNumber = localPhoneNumber.copy(
+            value = value,
+            validation = validation,
+        )
     }
 
     private fun onDataChanged() {
         adyenLog(AdyenLogLevel.VERBOSE) { "onDataChanged" }
-        val outputData = createOutputData()
-        outputDataChanged(outputData)
-        updateComponentState(outputData)
+        updateViewState()
+        updateComponentState()
     }
 
-    private fun createOutputData(): MBWayOutputData {
-        val sanitizedNumber = localPhoneNumber.trimStart('0')
-        return MBWayOutputData(countryCode + sanitizedNumber)
-    }
-
-    private fun outputDataChanged(outputData: MBWayOutputData) {
-        _outputDataFlow.tryEmit(outputData)
+    private fun updateViewState() {
+        _viewStateFlow.value = _viewStateFlow.value.copy(phoneNumberFieldState = localPhoneNumber)
     }
 
     @VisibleForTesting
-    internal fun updateComponentState(outputData: MBWayOutputData) {
-        val componentState = createComponentState(outputData)
+    internal fun updateComponentState() {
+        val componentState = createComponentState()
         componentStateChanged(componentState)
     }
 
-    private fun createComponentState(
-        outputData: MBWayOutputData = this.outputData
-    ): MBWayComponentState {
+    private fun createComponentState(): MBWayComponentState {
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
+            // TODO: These value manipulation should move somewhere else
+            telephoneNumber = localPhoneNumber.value.trimStart('0'),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -157,7 +170,7 @@ internal class DefaultMBWayDelegate(
 
         return MBWayComponentState(
             data = paymentComponentData,
-            isInputValid = outputData.isValid,
+            isInputValid = localPhoneNumber.validation?.isValid() ?: false,
             isReady = true,
         )
     }
