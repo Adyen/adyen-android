@@ -17,12 +17,16 @@
 ## Improved
 
 ## Changed
+- For 3DS2 native flow, cancellations by shopper trigger `onAdditionalDetails()` event. You can make a `/payments/details` call to gain more insight into the transaction.
+  - If you already handle other 3DS2 errors by making a `/payments/details` call, then no changes are required and the specific handling for `Cancelled3DS2Exception` can be removed.
+  - If not yet implemented, you should update your systems to handle shopper cancellations using the new flow.
 - Dependency versions:
   | Name                                                                                                   | Version                       |
   |--------------------------------------------------------------------------------------------------------|-------------------------------|
   |                           |                     |
 
 ## Deprecated
+- `Cancelled3DS2Exception` is now deprecated. Shopper cancellation of the 3DS2 native flow triggers the `onAdditionalDetails()` event, enabling a `/payments/details` call for transaction insights.
 - The styles and strings for the Cash App Pay loading indicator. Use the new styles and strings instead.
   | Previous                                                  | Now                                                              |
   |-----------------------------------------------------------|------------------------------------------------------------------|

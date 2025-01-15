@@ -15,7 +15,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.Authentication3DS2Exception
-import com.adyen.checkout.adyen3ds2.Cancelled3DS2Exception
 import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
@@ -573,10 +572,20 @@ internal class DefaultAdyen3DS2Delegate(
         }
     }
 
-    private fun onCancelled() {
+    private fun onCancelled(result: ChallengeResult.Cancelled) {
         adyenLog(AdyenLogLevel.DEBUG) { "challenge cancelled" }
-        emitError(Cancelled3DS2Exception("Challenge canceled."))
-        closeTransaction()
+        try {
+            val details = makeDetails(result.transactionStatus, result.additionalDetails)
+            emitDetails(details)
+        } catch (e: CheckoutException) {
+            trackChallengeErrorEvent(
+                errorEvent = ErrorEvent.THREEDS2_CHALLENGE_HANDLING,
+                message = "Challenge is cancelled and details cannot be created",
+            )
+            emitError(e)
+        } finally {
+            closeTransaction()
+        }
     }
 
     private fun onTimeout(result: ChallengeResult.Timeout) {
@@ -615,7 +624,7 @@ internal class DefaultAdyen3DS2Delegate(
         when (result) {
             is ChallengeResult.Cancelled -> {
                 trackChallengeCompletedEvent(ThreeDS2Events.Result.CANCELLED)
-                onCancelled()
+                onCancelled(result)
             }
 
             is ChallengeResult.Completed -> {
