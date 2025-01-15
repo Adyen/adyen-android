@@ -11,7 +11,7 @@ package com.adyen.checkout.mbway.internal.ui
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
@@ -24,9 +24,7 @@ internal interface MBWayDelegate :
     ButtonDelegate,
     UIStateDelegate {
 
-    val outputData: MBWayOutputData
-
-    val outputDataFlow: Flow<MBWayOutputData>
+    val viewStateFlow: Flow<MBWayViewState>
 
     val componentStateFlow: Flow<MBWayComponentState>
 
@@ -34,7 +32,7 @@ internal interface MBWayDelegate :
 
     fun getInitiallySelectedCountry(): CountryModel?
 
-    fun onFieldValueChanged(fieldId: MBWayFieldId, newValue: String)
+    fun onFieldValueChanged(fieldId: MBWayFieldId, value: String)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
