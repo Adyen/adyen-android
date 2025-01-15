@@ -15,18 +15,22 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class MbWayView @JvmOverloads constructor(
@@ -54,25 +58,38 @@ internal class MbWayView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
+        initObservers()
         initMobileNumberInput()
         initCountryInput()
+    }
+
+    private fun initObservers() {
+        // TODO: Should we make this lifecycle aware?
+        delegate
+            .viewStateFlow
+            .onEach {
+                updateMobileNumberInput(it.phoneNumberFieldState)
+            }
     }
 
     private fun initMobileNumberInput() {
         binding.editTextMobileNumber.setOnChangeListener {
             delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
-            binding.textInputLayoutMobileNumber.hideError()
         }
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            val outputData = delegate.outputData
-            val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
-            if (hasFocus) {
-                binding.textInputLayoutMobileNumber.hideError()
-            } else if (mobilePhoneNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMobileNumber.showError(
-                    localizedContext.getString(mobilePhoneNumberValidation.reason),
-                )
-            }
+            delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
+        }
+    }
+
+    private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldState<String>) {
+        val validation = phoneNumberFieldState.validation
+
+        if (phoneNumberFieldState.hasFocus) {
+            binding.textInputLayoutMobileNumber.hideError()
+        } else if (validation is Validation.Invalid) {
+            binding.textInputLayoutMobileNumber.showError(
+                localizedContext.getString(validation.reason),
+            )
         }
     }
 
@@ -95,12 +112,16 @@ internal class MbWayView @JvmOverloads constructor(
         }
     }
 
+    // TODO: This should potentially come from the viewmodel
     override fun highlightValidationErrors() {
         adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
-        val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation
-        if (mobilePhoneNumberValidation is Validation.Invalid) {
+
+        val phoneNumberState =
+            (delegate.viewStateFlow as? MutableStateFlow<MBWayViewState>)?.value?.phoneNumberFieldState
+        val phoneNumberValidation = phoneNumberState?.validation
+        if (phoneNumberValidation is Validation.Invalid) {
             binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(mobilePhoneNumberValidation.reason),
+                localizedContext.getString(phoneNumberValidation.reason),
             )
         }
     }
