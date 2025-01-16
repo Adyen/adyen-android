@@ -31,17 +31,16 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.util.LocaleProvider
-import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.internal.ui.DefaultGooglePayDelegate
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParamsMapper
+import com.adyen.checkout.googlepay.internal.util.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.googlepay.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -53,10 +52,8 @@ import com.adyen.checkout.sessions.core.internal.data.api.SessionRepository
 import com.adyen.checkout.sessions.core.internal.data.api.SessionService
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.ui.model.SessionParamsFactory
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
+import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.google.android.gms.wallet.Wallet
-import java.lang.ref.WeakReference
 
 class GooglePayComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -108,12 +105,18 @@ constructor(
                 sessionId = null,
             )
 
+            val paymentsClient =
+                Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
+
             val googlePayDelegate = DefaultGooglePayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                paymentsClient = paymentsClient,
+                googlePayAvailabilityCheck = GooglePayAvailabilityCheck(application),
             )
 
             val genericActionDelegate =
@@ -195,12 +198,18 @@ constructor(
                 sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
+            val paymentsClient =
+                Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
+
             val googlePayDelegate = DefaultGooglePayDelegate(
+                submitHandler = SubmitHandler(savedStateHandle),
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                paymentsClient = paymentsClient,
+                googlePayAvailabilityCheck = GooglePayAvailabilityCheck(application),
             )
 
             val genericActionDelegate =
@@ -222,6 +231,7 @@ constructor(
                 ),
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+                analyticsManager = analyticsManager,
             )
 
             val sessionComponentEventHandler = SessionComponentEventHandler<GooglePayComponentState>(
@@ -275,14 +285,6 @@ constructor(
         checkoutConfiguration: CheckoutConfiguration,
         callback: ComponentAvailableCallback
     ) {
-        if (
-            GoogleApiAvailability.getInstance()
-                .isGooglePlayServicesAvailable(application) != ConnectionResult.SUCCESS
-        ) {
-            callback.onAvailabilityResult(false, paymentMethod)
-            return
-        }
-        val callbackWeakReference = WeakReference(callback)
         val componentParams = GooglePayComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = localeProvider.getLocale(application),
@@ -291,20 +293,11 @@ constructor(
             paymentMethod = paymentMethod,
         )
 
-        val paymentsClient = Wallet.getPaymentsClient(application, GooglePayUtils.createWalletOptions(componentParams))
-        val readyToPayRequest = GooglePayUtils.createIsReadyToPayRequest(componentParams)
-        val readyToPayTask = paymentsClient.isReadyToPay(readyToPayRequest)
-        readyToPayTask.addOnSuccessListener { result ->
-            callbackWeakReference.get()?.onAvailabilityResult(result == true, paymentMethod)
-        }
-        readyToPayTask.addOnCanceledListener {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePay readyToPay task is cancelled." }
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
-        }
-        readyToPayTask.addOnFailureListener {
-            adyenLog(AdyenLogLevel.ERROR, it) { "GooglePay readyToPay task is failed." }
-            callbackWeakReference.get()?.onAvailabilityResult(false, paymentMethod)
-        }
+        GooglePayAvailabilityCheck(application).isAvailable(
+            paymentMethod = paymentMethod,
+            componentParams = componentParams,
+            callback = callback,
+        )
     }
 
     override fun isAvailable(

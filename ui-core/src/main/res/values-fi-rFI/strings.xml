@@ -55,4 +55,6 @@
     <string name="checkout_address_lookup_enter_manually">Syötä osoite manuaalisesti</string>
     <string name="checkout_address_lookup_submit">Käytä tätä osoitetta</string>
     <string name="checkout_address_lookup_validation_empty">Osoite vaaditaan</string>
+
+    <string name="checkout_processing_payment">Maksua käsitellään…</string>
 </resources>

@@ -47,7 +47,9 @@ import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
@@ -64,7 +66,10 @@ import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -335,33 +340,34 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
 
         @Test
-        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() = runTest {
-            genericEncryptor.shouldThrowException = true
+        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() =
+            runTest {
+                genericEncryptor.shouldThrowException = true
 
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.updateInputData {
-                bankLocationId = TEST_BANK_BANK_LOCATION_ID
-                bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
-                ownerName = TEST_OWNER_NAME
-                address = AddressInputModel(
-                    postalCode = "34220",
-                    street = "Street Name",
-                    stateOrProvince = "province",
-                    houseNumberOrName = "44",
-                    apartmentSuite = "aparment",
-                    city = "Istanbul",
-                    country = "Turkey",
-                )
+                delegate.updateInputData {
+                    bankLocationId = TEST_BANK_BANK_LOCATION_ID
+                    bankAccountNumber = TEST_BANK_ACCOUNT_NUMBER
+                    ownerName = TEST_OWNER_NAME
+                    address = AddressInputModel(
+                        postalCode = "34220",
+                        street = "Street Name",
+                        stateOrProvince = "province",
+                        houseNumberOrName = "44",
+                        apartmentSuite = "aparment",
+                        city = "Istanbul",
+                        country = "Turkey",
+                    )
+                }
+
+                val componentState = delegate.componentStateFlow.first()
+
+                val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+
+                assertFalse(componentState.isValid)
             }
-
-            val componentState = delegate.componentStateFlow.first()
-
-            val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
-            analyticsManager.assertLastEventEquals(expectedEvent)
-
-            assertFalse(componentState.isValid)
-        }
 
         @Test
         fun `when bankLocationId is invalid, then component state should be invalid`() = runTest {
@@ -655,11 +661,15 @@ internal class DefaultACHDirectDebitDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<ACHDirectDebitComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createAchDelegate()
 
-            val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(TEST_PAYMENT_METHOD_TYPE)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test
@@ -678,6 +688,14 @@ internal class DefaultACHDirectDebitDelegateTest(
             val componentState = delegate.componentStateFlow.first()
 
             assertEquals(TEST_CHECKOUT_ATTEMPT_ID, componentState.data.paymentMethod?.checkoutAttemptId)
+        }
+
+        @Test
+        fun `when fetching the public key fails, then an error event is tracked`() = runTest {
+            publicKeyRepository.shouldReturnError = true
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val expectedEvent = GenericEvents.error(TEST_PAYMENT_METHOD_TYPE, ErrorEvent.API_PUBLIC_KEY)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test

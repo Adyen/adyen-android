@@ -122,7 +122,7 @@ internal class StoredCardDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(null)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<CardComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<CardComponentState> = getTrackedSubmitFlow()
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
@@ -198,6 +198,9 @@ internal class StoredCardDelegate(
                     updateComponentState(outputData)
                 },
                 onFailure = { e ->
+                    val event = GenericEvents.error(storedPaymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
+                    analyticsManager.trackEvent(event)
+
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 },
             )
@@ -316,10 +319,12 @@ internal class StoredCardDelegate(
         )
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }

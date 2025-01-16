@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.example.ui.googlepay
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +24,6 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.redirect.RedirectComponent
-import com.google.android.gms.wallet.button.ButtonConstants.ButtonType
-import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -89,8 +86,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         this.googlePayComponent = googlePayComponent
 
         binding.componentView.attach(googlePayComponent, viewLifecycleOwner)
-
-        loadGooglePayButton()
     }
 
     private fun onViewState(state: GooglePayViewState) {
@@ -100,28 +95,18 @@ class GooglePayFragment : BottomSheetDialogFragment() {
                 binding.errorView.text = getString(state.message)
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = false
             }
 
             GooglePayViewState.Loading -> {
                 binding.errorView.isVisible = false
                 binding.componentView.isVisible = false
                 binding.progressIndicator.isVisible = true
-                binding.googlePayButton.isVisible = false
-            }
-
-            GooglePayViewState.ShowButton -> {
-                binding.errorView.isVisible = false
-                binding.componentView.isVisible = false
-                binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = true
             }
 
             GooglePayViewState.ShowComponent -> {
                 binding.errorView.isVisible = false
                 binding.componentView.isVisible = true
                 binding.progressIndicator.isVisible = false
-                binding.googlePayButton.isVisible = false
             }
         }
     }
@@ -138,29 +123,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         dismiss()
     }
 
-    private fun loadGooglePayButton() {
-        val allowedPaymentMethods = googlePayComponent?.getGooglePayButtonParameters()?.allowedPaymentMethods.orEmpty()
-        val buttonOptions = ButtonOptions
-            .newBuilder()
-            .setButtonType(ButtonType.PAY)
-            .setAllowedPaymentMethods(allowedPaymentMethods)
-            .build()
-        binding.googlePayButton.initialize(buttonOptions)
-
-        binding.googlePayButton.setOnClickListener {
-            googlePayComponent?.startGooglePayScreen(requireActivity(), ACTIVITY_RESULT_CODE)
-        }
-    }
-
-    // It is required to use onActivityResult with the Google Pay library (AutoResolveHelper).
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ACTIVITY_RESULT_CODE) {
-            googlePayComponent?.handleActivityResult(resultCode, data)
-        }
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -172,7 +134,6 @@ class GooglePayFragment : BottomSheetDialogFragment() {
         internal val TAG = getLogTag()
 
         internal const val RETURN_URL_EXTRA = "RETURN_URL_EXTRA"
-        internal const val ACTIVITY_RESULT_CODE = 1
 
         fun show(fragmentManager: FragmentManager) {
             GooglePayFragment().show(fragmentManager, TAG)

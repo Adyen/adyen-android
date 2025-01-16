@@ -192,8 +192,10 @@ constructor(
                 val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
                 emitDetails(detailsJson)
             } catch (e: HttpException) {
+                trackNativeRedirectError("Network error")
                 emitError(e)
             } catch (e: ModelSerializationException) {
+                trackNativeRedirectError("Serialization error")
                 emitError(e)
             }
         }
@@ -205,6 +207,15 @@ constructor(
 
     override fun setOnRedirectListener(listener: () -> Unit) {
         redirectHandler.setOnRedirectListener(listener)
+    }
+
+    private fun trackNativeRedirectError(message: String) {
+        val event = GenericEvents.error(
+            component = action?.paymentMethodType.orEmpty(),
+            event = ErrorEvent.API_NATIVE_REDIRECT,
+            message = message,
+        )
+        analyticsManager?.trackEvent(event)
     }
 
     private fun emitError(e: CheckoutException) {

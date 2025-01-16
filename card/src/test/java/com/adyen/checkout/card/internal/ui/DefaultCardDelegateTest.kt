@@ -76,6 +76,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -95,6 +97,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -695,24 +698,25 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() = runTest {
-            cardEncryptor.shouldThrowException = true
+        fun `encryption fails, then component state should be invalid and analytics error event is tracked`() =
+            runTest {
+                cardEncryptor.shouldThrowException = true
 
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
 
-            delegate.componentStateFlow.test {
-                delegate.updateComponentState(createOutputData())
+                delegate.componentStateFlow.test {
+                    delegate.updateComponentState(createOutputData())
 
-                val componentState = expectMostRecentItem()
+                    val componentState = expectMostRecentItem()
 
-                val expectedEvent = GenericEvents.error(PaymentMethodTypes.SCHEME, ErrorEvent.ENCRYPTION)
-                analyticsManager.assertLastEventEquals(expectedEvent)
+                    val expectedEvent = GenericEvents.error(PaymentMethodTypes.SCHEME, ErrorEvent.ENCRYPTION)
+                    analyticsManager.assertLastEventEquals(expectedEvent)
 
-                assertTrue(componentState.isReady)
-                assertFalse(componentState.isInputValid)
-                assertNull(componentState.lastFourDigits)
+                    assertTrue(componentState.isReady)
+                    assertFalse(componentState.isInputValid)
+                    assertNull(componentState.lastFourDigits)
+                }
             }
-        }
 
         @Test
         fun `card number in output data is invalid, then component state should be invalid`() = runTest {
@@ -1063,11 +1067,15 @@ internal class DefaultCardDelegateTest(
         }
 
         @Test
-        fun `when onSubmit is called, then submit event is tracked`() {
-            delegate.onSubmit()
+        fun `when submitFlow emits an event, then submit event is tracked`() = runTest {
+            val submitFlow = flow<CardComponentState> { emit(mock()) }
+            whenever(submitHandler.submitFlow) doReturn submitFlow
+            val delegate = createCardDelegate()
 
-            val expectedEvent = GenericEvents.submit(PaymentMethodTypes.SCHEME)
-            analyticsManager.assertLastEventEquals(expectedEvent)
+            delegate.submitFlow.collectLatest {
+                val expectedEvent = GenericEvents.submit(PaymentMethodTypes.SCHEME)
+                analyticsManager.assertLastEventEquals(expectedEvent)
+            }
         }
 
         @Test
@@ -1085,6 +1093,14 @@ internal class DefaultCardDelegateTest(
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
+        }
+
+        @Test
+        fun `when fetching the public key fails, then an error event is tracked`() = runTest {
+            publicKeyRepository.shouldReturnError = true
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            val expectedEvent = GenericEvents.error(PaymentMethodTypes.SCHEME, ErrorEvent.API_PUBLIC_KEY)
+            analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
         @Test

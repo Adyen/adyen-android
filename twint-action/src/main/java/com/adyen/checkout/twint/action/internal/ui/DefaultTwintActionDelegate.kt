@@ -164,12 +164,12 @@ internal class DefaultTwintActionDelegate(
             }
 
             TwintPayResult.TW_B_ERROR -> {
-                trackThirdPartyErrorEvent()
+                trackThirdPartyErrorEvent("Twint result is error")
                 onError(ComponentException("Twint encountered an error."))
             }
 
             TwintPayResult.TW_B_APP_NOT_INSTALLED -> {
-                trackThirdPartyErrorEvent()
+                trackThirdPartyErrorEvent("Twint app not installed")
                 onError(ComponentException("Twint app not installed."))
             }
         }
@@ -223,10 +223,11 @@ internal class DefaultTwintActionDelegate(
         )
     }
 
-    private fun trackThirdPartyErrorEvent() {
+    private fun trackThirdPartyErrorEvent(message: String) {
         val event = GenericEvents.error(
             component = action?.paymentMethodType.orEmpty(),
             event = ErrorEvent.THIRD_PARTY,
+            message = message
         )
         analyticsManager?.trackEvent(event)
     }

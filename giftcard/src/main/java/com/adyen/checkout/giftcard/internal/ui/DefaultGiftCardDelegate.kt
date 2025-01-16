@@ -56,6 +56,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -90,7 +91,7 @@ class DefaultGiftCardDelegate(
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(protocol.getComponentViewType())
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
-    override val submitFlow: Flow<GiftCardComponentState> = submitHandler.submitFlow
+    override val submitFlow: Flow<GiftCardComponentState> = getTrackedSubmitFlow()
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
 
@@ -128,6 +129,10 @@ class DefaultGiftCardDelegate(
                 },
                 onFailure = { e ->
                     adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
+
+                    val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
+                    analyticsManager.trackEvent(event)
+
                     exceptionChannel.trySend(ComponentException("Unable to fetch publicKey.", e))
                 },
             )
@@ -251,10 +256,12 @@ class DefaultGiftCardDelegate(
         )
     }
 
-    override fun onSubmit() {
+    private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
 
+    override fun onSubmit() {
         val state = _componentStateFlow.value
         submitHandler.onSubmit(state)
     }

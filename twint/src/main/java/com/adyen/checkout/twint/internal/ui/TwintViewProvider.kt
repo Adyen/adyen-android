@@ -14,11 +14,13 @@ import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.internal.ui.view.ProcessingPaymentView
 
 internal class TwintViewProvider : ViewProvider {
 
     override fun getView(viewType: ComponentViewType, context: Context): ComponentView = when (viewType) {
         TwintComponentViewType -> TwintView(context)
+        PaymentInProgressViewType -> ProcessingPaymentView(context)
         else -> throw IllegalArgumentException("Unsupported view type")
     }
 }
@@ -28,4 +30,9 @@ internal object TwintComponentViewType : ButtonComponentViewType {
     override val viewProvider: ViewProvider get() = TwintViewProvider()
 
     override val buttonTextResId: Int = ButtonComponentViewType.DEFAULT_BUTTON_TEXT_RES_ID
+}
+
+internal object PaymentInProgressViewType : ComponentViewType {
+
+    override val viewProvider: ViewProvider get() = TwintViewProvider()
 }

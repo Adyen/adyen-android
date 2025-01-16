@@ -183,22 +183,6 @@ internal class DropInActivity :
         return baseContext.createLocalizedContext(locale)
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        checkGooglePayActivityResult(requestCode, resultCode, data)
-    }
-
-    private fun checkGooglePayActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode != GOOGLE_PAY_REQUEST_CODE) return
-        val fragment = getFragmentByTag(COMPONENT_FRAGMENT_TAG) as? GooglePayComponentDialogFragment
-        if (fragment == null) {
-            adyenLog(AdyenLogLevel.ERROR) { "GooglePayComponentDialogFragment is not loaded" }
-            return
-        }
-        fragment.handleActivityResult(resultCode, data)
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         adyenLog(AdyenLogLevel.DEBUG) { "onNewIntent" }
@@ -601,6 +585,7 @@ internal class DropInActivity :
             clientKey = event.clientKey,
             environment = event.environment,
             isFlowTakenOver = event.isFlowTakenOver,
+            analyticsManager = event.analyticsManager,
         )
     }
 
@@ -743,8 +728,6 @@ internal class DropInActivity :
         private const val ACTION_FRAGMENT_TAG = "ACTION_DIALOG_FRAGMENT"
         private const val LOADING_FRAGMENT_TAG = "LOADING_DIALOG_FRAGMENT"
         private const val GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT_TAG = "GIFT_CARD_PAYMENT_CONFIRMATION_FRAGMENT"
-
-        internal const val GOOGLE_PAY_REQUEST_CODE = 1
 
         fun createIntent(
             context: Context,

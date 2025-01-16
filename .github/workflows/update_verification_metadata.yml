@@ -1,17 +1,21 @@
 name: Update verification metadata
 
 on:
+  push:
+    branches:
+      - 'renovate/android.gradle.plugin'
   workflow_dispatch:
 
 jobs:
   update-verification-metadata:
     name: Update verification metadata
     runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.commits[0].message, '[skip update-verification-metadata]') }}
 
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          token: ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
 
       - name: Set up JDK
         uses: actions/setup-java@v4
@@ -32,8 +36,10 @@ jobs:
 
       - name: Commit
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "${{ secrets.ADYEN_AUTOMATION_BOT_USER }}"
+          git config user.email "${{ secrets.ADYEN_AUTOMATION_BOT_NO_REPLY_EMAIL }}"
           git add .
-          git diff-index --quiet HEAD || git commit -am 'Update verification metadata'
+          git diff-index --quiet HEAD || git commit -m "Update verification metadata
+          
+          [skip update-verification-metadata]"
           git push
