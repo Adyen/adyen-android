@@ -34,5 +34,7 @@ internal interface MBWayDelegate :
 
     fun onFieldValueChanged(fieldId: MBWayFieldId, value: String)
 
+    fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean)
+
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
