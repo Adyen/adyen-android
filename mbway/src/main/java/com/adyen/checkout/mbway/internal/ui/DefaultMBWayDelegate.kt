@@ -19,14 +19,15 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
@@ -50,13 +51,12 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var localPhoneNumber = ComponentFieldState("")
-    private var countryCode = ComponentFieldState("")
+    private var state: MBWayState = MBWayState()
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
 
-    private val _viewStateFlow: MutableStateFlow<MBWayViewState> = MutableStateFlow(MBWayViewState())
+    private val _viewStateFlow: MutableStateFlow<MBWayViewState> = MutableStateFlow(state.toViewState())
     override val viewStateFlow: Flow<MBWayViewState> = _viewStateFlow
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
@@ -117,25 +117,39 @@ internal class DefaultMBWayDelegate(
         onDataChanged()
     }
 
-    // TODO: Validation should not be done here, only when focus changes?
-    // TODO: Think about the submit button click also. We need to do the validation then.
     private fun updateCountryCodeValue(value: String) {
         val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0'))
 
-        countryCode = countryCode.copy(
-            value = value,
-            validation = validation,
+        state = state.copy(
+            countryCodeFieldState = state.countryCodeFieldState.copy(
+                value = value,
+                validation = validation,
+            ),
         )
     }
 
-    // TODO: Validation should not be done here, only when focus changes?
     private fun updateLocalPhoneNumberValue(value: String) {
         val validation = validationRegistry.validate(MBWayFieldId.LOCAL_PHONE_NUMBER, value)
 
-        localPhoneNumber = localPhoneNumber.copy(
-            value = value,
-            validation = validation,
+        state = state.copy(
+            localPhoneNumberFieldState = state.localPhoneNumberFieldState.copy(
+                value = value,
+                validation = validation,
+            ),
         )
+    }
+
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+        state = when (fieldId) {
+            MBWayFieldId.COUNTRY_CODE -> state.copy(
+                countryCodeFieldState = state.countryCodeFieldState.copy(hasFocus = hasFocus),
+            )
+
+            MBWayFieldId.LOCAL_PHONE_NUMBER -> state.copy(
+                localPhoneNumberFieldState = state.localPhoneNumberFieldState.copy(hasFocus = hasFocus),
+            )
+        }
+        updateViewState()
     }
 
     private fun onDataChanged() {
@@ -145,7 +159,7 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun updateViewState() {
-        _viewStateFlow.value = _viewStateFlow.value.copy(phoneNumberFieldState = localPhoneNumber)
+        _viewStateFlow.value = state.toViewState()
     }
 
     @VisibleForTesting
@@ -159,7 +173,7 @@ internal class DefaultMBWayDelegate(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             // TODO: These value manipulation should move somewhere else
-            telephoneNumber = localPhoneNumber.value.trimStart('0'),
+            telephoneNumber = state.localPhoneNumberFieldState.value.trimStart('0'),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -170,7 +184,7 @@ internal class DefaultMBWayDelegate(
 
         return MBWayComponentState(
             data = paymentComponentData,
-            isInputValid = localPhoneNumber.validation?.isValid() ?: false,
+            isInputValid = state.localPhoneNumberFieldState.validation?.isValid() ?: false,
             isReady = true,
         )
     }

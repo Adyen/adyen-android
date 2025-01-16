@@ -15,8 +15,7 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
@@ -30,6 +29,7 @@ import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
 
@@ -58,18 +58,17 @@ internal class MbWayView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
-        initObservers()
+        observeDelegate(delegate, coroutineScope)
+
         initMobileNumberInput()
         initCountryInput()
     }
 
-    private fun initObservers() {
-        // TODO: Should we make this lifecycle aware?
-        delegate
-            .viewStateFlow
-            .onEach {
-                updateMobileNumberInput(it.phoneNumberFieldState)
-            }
+
+    private fun observeDelegate(delegate: MBWayDelegate, coroutineScope: CoroutineScope) {
+        delegate.viewStateFlow
+            .onEach { updateMobileNumberInput(it.phoneNumberFieldState) }
+            .launchIn(coroutineScope)
     }
 
     private fun initMobileNumberInput() {
@@ -81,15 +80,13 @@ internal class MbWayView @JvmOverloads constructor(
         }
     }
 
-    private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldState<String>) {
-        val validation = phoneNumberFieldState.validation
-
-        if (phoneNumberFieldState.hasFocus) {
-            binding.textInputLayoutMobileNumber.hideError()
-        } else if (validation is Validation.Invalid) {
+    private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
+        phoneNumberFieldState.errorMessageId?.let { errorMessageId ->
             binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(validation.reason),
+                localizedContext.getString(errorMessageId),
             )
+        } ?: run {
+            binding.textInputLayoutMobileNumber.hideError()
         }
     }
 
@@ -118,10 +115,9 @@ internal class MbWayView @JvmOverloads constructor(
 
         val phoneNumberState =
             (delegate.viewStateFlow as? MutableStateFlow<MBWayViewState>)?.value?.phoneNumberFieldState
-        val phoneNumberValidation = phoneNumberState?.validation
-        if (phoneNumberValidation is Validation.Invalid) {
+        phoneNumberState?.errorMessageId?.let { errorMessageId ->
             binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(phoneNumberValidation.reason),
+                localizedContext.getString(errorMessageId),
             )
         }
     }
