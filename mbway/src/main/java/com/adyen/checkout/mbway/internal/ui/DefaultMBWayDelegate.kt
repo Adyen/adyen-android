@@ -40,8 +40,12 @@ import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
@@ -54,13 +58,16 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var state: MBWayDelegateState = MBWayDelegateState()
+    private var state = MutableStateFlow(MBWayDelegateState())
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
 
-    private val _viewStateFlow: MutableStateFlow<MBWayViewState> = MutableStateFlow(state.toViewState())
-    override val viewStateFlow: Flow<MBWayViewState> = _viewStateFlow
+    override val viewStateFlow: Flow<MBWayViewState> by lazy {
+        state.map(
+            MBWayDelegateState::toViewState,
+        ).stateIn(coroutineScope, SharingStarted.Lazily, state.value.toViewState())
+    }
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
@@ -68,14 +75,18 @@ internal class DefaultMBWayDelegate(
     override val submitFlow: Flow<MBWayComponentState> = getTrackedSubmitFlow()
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
-
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
+
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     init {
         updateComponentState()
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
+
         initializeSubmitHandler(coroutineScope)
         initializeAnalytics(coroutineScope)
     }
@@ -125,13 +136,15 @@ internal class DefaultMBWayDelegate(
     private fun validateAllFields() {
         MBWayFieldId.entries.forEach { fieldId ->
             val value = when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> state.countryCodeFieldState.value
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.localPhoneNumberFieldState.value
+                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState.value
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState.value
             }
+            // TODO: Update only the fields which are not validated yet.
             updateField(fieldId, value = value)
         }
-
-        updateViewState()
+        state.update { state ->
+            state.copy(showValidationErrorsRegardlessFocus = true)
+        }
     }
 
     private fun updateField(
@@ -139,22 +152,29 @@ internal class DefaultMBWayDelegate(
         value: String? = null,
         hasFocus: Boolean? = null,
     ) {
-        state = when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> state.copy(
-                countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
-                    value = value,
-                    // TODO: This value manipulation should move somewhere else
-                    validation = value?.let { validationRegistry.validate(fieldId, it.trimStart('0')) },
-                    hasFocus = hasFocus,
-                ),
-            )
+        state.update { state ->
+            val updatedState = when (fieldId) {
+                MBWayFieldId.COUNTRY_CODE -> state.copy(
+                    countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
+                        value = value,
+                        // TODO: This value manipulation should move somewhere else
+                        validation = value?.let { validationRegistry.validate(fieldId, it.trimStart('0')) },
+                        hasFocus = hasFocus,
+                    ),
+                )
 
-            MBWayFieldId.LOCAL_PHONE_NUMBER -> state.copy(
-                localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
-                    value = value,
-                    validation = value?.let { validationRegistry.validate(fieldId, it) },
-                    hasFocus = hasFocus,
-                ),
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.copy(
+                    localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
+                        value = value,
+                        validation = value?.let { validationRegistry.validate(fieldId, it) },
+                        hasFocus = hasFocus,
+                    ),
+                )
+            }
+
+            // Resetting the showValidationErrorsRegardlessFocus flag, to hide error when focused on a field
+            updatedState.copy(
+                showValidationErrorsRegardlessFocus = false,
             )
         }
     }
@@ -164,21 +184,15 @@ internal class DefaultMBWayDelegate(
         onDataChanged()
     }
 
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
         updateField(fieldId, hasFocus = hasFocus)
-        updateViewState()
-    }
 
     private fun onDataChanged() {
         adyenLog(AdyenLogLevel.VERBOSE) { "onDataChanged" }
-        updateViewState()
         updateComponentState()
     }
 
-    private fun updateViewState() {
-        _viewStateFlow.value = state.toViewState()
-    }
-
+    // TODO: This has to be done regardless
     @VisibleForTesting
     internal fun updateComponentState() {
         val componentState = createComponentState()
@@ -190,7 +204,7 @@ internal class DefaultMBWayDelegate(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             // TODO: This value manipulation should move somewhere else
-            telephoneNumber = state.localPhoneNumberFieldState.value.trimStart('0'),
+            telephoneNumber = state.value.localPhoneNumberFieldState.value.trimStart('0'),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -201,7 +215,7 @@ internal class DefaultMBWayDelegate(
 
         return MBWayComponentState(
             data = paymentComponentData,
-            isInputValid = state.isValid,
+            isInputValid = state.value.isValid,
             isReady = true,
         )
     }
