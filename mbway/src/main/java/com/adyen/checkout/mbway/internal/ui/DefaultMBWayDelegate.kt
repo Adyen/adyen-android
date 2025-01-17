@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -98,20 +99,6 @@ internal class DefaultMBWayDelegate(
         analyticsManager.trackEvent(renderedEvent)
     }
 
-    private fun validateAllFields() {
-        state = state.copy(
-            countryCodeFieldState = state.countryCodeFieldState.run {
-                // TODO: This value manipulation should move somewhere else
-                copy(validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0')))
-            },
-            localPhoneNumberFieldState = state.localPhoneNumberFieldState.run {
-                copy(validation = validationRegistry.validate(MBWayFieldId.LOCAL_PHONE_NUMBER, value))
-            }
-        )
-
-        onDataChanged()
-    }
-
     override fun observe(
         lifecycleOwner: LifecycleOwner,
         coroutineScope: CoroutineScope,
@@ -135,48 +122,50 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) {
-        when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> updateCountryCodeValue(value)
-            MBWayFieldId.LOCAL_PHONE_NUMBER -> updateLocalPhoneNumberValue(value)
+    private fun validateAllFields() {
+        MBWayFieldId.entries.forEach { fieldId ->
+            val value = when (fieldId) {
+                MBWayFieldId.COUNTRY_CODE -> state.countryCodeFieldState.value
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.localPhoneNumberFieldState.value
+            }
+            updateField(fieldId, value = value)
         }
 
-        onDataChanged()
+        updateViewState()
     }
 
-    private fun updateCountryCodeValue(value: String) {
-        // TODO: This value manipulation should move somewhere else
-        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0'))
-
-        state = state.copy(
-            countryCodeFieldState = state.countryCodeFieldState.copy(
-                value = value,
-                validation = validation,
-            ),
-        )
-    }
-
-    private fun updateLocalPhoneNumberValue(value: String) {
-        val validation = validationRegistry.validate(MBWayFieldId.LOCAL_PHONE_NUMBER, value)
-
-        state = state.copy(
-            localPhoneNumberFieldState = state.localPhoneNumberFieldState.copy(
-                value = value,
-                validation = validation,
-            ),
-        )
-    }
-
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+    private fun updateField(
+        fieldId: MBWayFieldId,
+        value: String? = null,
+        hasFocus: Boolean? = null,
+    ) {
         state = when (fieldId) {
             MBWayFieldId.COUNTRY_CODE -> state.copy(
-                countryCodeFieldState = state.countryCodeFieldState.copy(hasFocus = hasFocus),
+                countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
+                    value = value,
+                    // TODO: This value manipulation should move somewhere else
+                    validation = value?.let { validationRegistry.validate(fieldId, it.trimStart('0')) },
+                    hasFocus = hasFocus,
+                ),
             )
 
             MBWayFieldId.LOCAL_PHONE_NUMBER -> state.copy(
-                localPhoneNumberFieldState = state.localPhoneNumberFieldState.copy(hasFocus = hasFocus),
+                localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
+                    value = value,
+                    validation = value?.let { validationRegistry.validate(fieldId, it) },
+                    hasFocus = hasFocus,
+                ),
             )
         }
+    }
+
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) {
+        updateField(fieldId, value = value)
+        onDataChanged()
+    }
+
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+        updateField(fieldId, hasFocus = hasFocus)
         updateViewState()
     }
 
