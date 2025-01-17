@@ -9,17 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 internal data class MBWayViewState(
     val phoneNumberFieldState: ComponentFieldViewState<String>,
-)
-
-internal fun MBWayState.toViewState() = MBWayViewState(
-    phoneNumberFieldState = ComponentFieldViewState(
-        value = this.localPhoneNumberFieldState.value,
-        errorMessageId = this.localPhoneNumberFieldState.takeUnless {
-            it.hasFocus
-        }?.validation.let { it as? Validation.Invalid }?.reason,
-    ),
 )

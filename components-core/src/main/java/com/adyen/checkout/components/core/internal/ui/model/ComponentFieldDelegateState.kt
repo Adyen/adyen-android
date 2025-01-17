@@ -11,7 +11,7 @@ package com.adyen.checkout.components.core.internal.ui.model
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class ComponentFieldState<T>(
+data class ComponentFieldDelegateState<T>(
     val value: T,
     val hasFocus: Boolean = false,
     val validation: Validation? = null
