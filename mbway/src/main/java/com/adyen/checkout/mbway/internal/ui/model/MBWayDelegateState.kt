@@ -13,9 +13,17 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewSt
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 internal data class MBWayDelegateState(
-    val countryCodeFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
+    val countryCodeFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
+        value = "",
+        validation = Validation.Valid,
+    ),
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
-)
+) {
+    val isValid: Boolean
+        get() =
+            countryCodeFieldState.validation?.isValid() == true &&
+                localPhoneNumberFieldState.validation?.isValid() == true
+}
 
 internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     phoneNumberFieldState = ComponentFieldViewState(
