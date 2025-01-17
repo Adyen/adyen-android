@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -34,10 +34,12 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.ui.model.SubmitHandlerEvent
 import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooManyFunctions")
@@ -73,8 +75,19 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        submitHandler.initialize(coroutineScope, componentStateFlow)
+        initializeSubmitHandler(coroutineScope)
         initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeSubmitHandler(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
+        submitHandler.submitEventFlow
+            .onEach { submitEvent ->
+                when (submitEvent) {
+                    // TODO: Focus on the first invalid field (can be in UI?)
+                    SubmitHandlerEvent.InvalidInput -> validateAllFields()
+                }
+            }.launchIn(coroutineScope)
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -83,6 +96,20 @@ internal class DefaultMBWayDelegate(
 
         val renderedEvent = GenericEvents.rendered(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(renderedEvent)
+    }
+
+    private fun validateAllFields() {
+        state = state.copy(
+            countryCodeFieldState = state.countryCodeFieldState.run {
+                // TODO: This value manipulation should move somewhere else
+                copy(validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0')))
+            },
+            localPhoneNumberFieldState = state.localPhoneNumberFieldState.run {
+                copy(validation = validationRegistry.validate(MBWayFieldId.LOCAL_PHONE_NUMBER, value))
+            }
+        )
+
+        onDataChanged()
     }
 
     override fun observe(
@@ -119,8 +146,7 @@ internal class DefaultMBWayDelegate(
 
     private fun updateCountryCodeValue(value: String) {
         // TODO: This value manipulation should move somewhere else
-        val validationValue = value.trimStart('0')
-        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, validationValue)
+        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0'))
 
         state = state.copy(
             countryCodeFieldState = state.countryCodeFieldState.copy(
@@ -186,7 +212,7 @@ internal class DefaultMBWayDelegate(
 
         return MBWayComponentState(
             data = paymentComponentData,
-            isInputValid = state.localPhoneNumberFieldState.validation?.isValid() ?: false,
+            isInputValid = state.isValid,
             isReady = true,
         )
     }
