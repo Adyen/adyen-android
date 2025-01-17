@@ -13,6 +13,17 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class ComponentFieldDelegateState<T>(
     val value: T,
+    val validation: Validation? = null,
     val hasFocus: Boolean = false,
-    val validation: Validation? = null
+)
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <T> ComponentFieldDelegateState<T>.updateFieldState(
+    value: T? = null,
+    validation: Validation? = null,
+    hasFocus: Boolean? = null
+): ComponentFieldDelegateState<T> = copy(
+    value = value ?: this.value,
+    validation = validation ?: this.validation,
+    hasFocus = hasFocus ?: this.hasFocus
 )
