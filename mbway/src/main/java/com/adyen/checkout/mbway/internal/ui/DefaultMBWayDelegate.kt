@@ -25,7 +25,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.model.MBWayState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -51,7 +51,7 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var state: MBWayState = MBWayState()
+    private var state: MBWayDelegateState = MBWayDelegateState()
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
@@ -118,7 +118,9 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun updateCountryCodeValue(value: String) {
-        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, value.trimStart('0'))
+        // TODO: This value manipulation should move somewhere else
+        val validationValue = value.trimStart('0')
+        val validation = validationRegistry.validate(MBWayFieldId.COUNTRY_CODE, validationValue)
 
         state = state.copy(
             countryCodeFieldState = state.countryCodeFieldState.copy(
@@ -172,7 +174,7 @@ internal class DefaultMBWayDelegate(
         val paymentMethod = MBWayPaymentMethod(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            // TODO: These value manipulation should move somewhere else
+            // TODO: This value manipulation should move somewhere else
             telephoneNumber = state.localPhoneNumberFieldState.value.trimStart('0'),
         )
 
