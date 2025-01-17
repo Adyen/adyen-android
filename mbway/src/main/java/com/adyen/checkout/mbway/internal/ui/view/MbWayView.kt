@@ -16,19 +16,15 @@ import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -109,17 +105,8 @@ internal class MbWayView @JvmOverloads constructor(
         }
     }
 
-    // TODO: This should potentially come from the viewmodel
     override fun highlightValidationErrors() {
-        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
-
-        val phoneNumberState =
-            (delegate.viewStateFlow as? MutableStateFlow<MBWayViewState>)?.value?.phoneNumberFieldState
-        phoneNumberState?.errorMessageId?.let { errorMessageId ->
-            binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(errorMessageId),
-            )
-        }
+        // Not used
     }
 
     override fun getView(): View = this
