@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.SavedStateHandleContainer
 import com.adyen.checkout.components.core.internal.SavedStateHandleProperty
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
+import com.adyen.checkout.ui.core.internal.ui.model.SubmitHandlerEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +40,9 @@ class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
     private val uiEventChannel: Channel<PaymentComponentUIEvent> = bufferedChannel()
     val uiEventFlow: Flow<PaymentComponentUIEvent> = uiEventChannel.receiveAsFlow()
 
+    private val _submitEventChannel: Channel<SubmitHandlerEvent> = bufferedChannel()
+    val submitEventFlow: Flow<SubmitHandlerEvent> = _submitEventChannel.receiveAsFlow()
+
     fun initialize(
         coroutineScope: CoroutineScope,
         componentStateFlow: Flow<ComponentStateT>,
@@ -59,7 +63,11 @@ class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
 
     fun onSubmit(state: ComponentStateT) {
         when {
-            !state.isInputValid -> uiEventChannel.trySend(PaymentComponentUIEvent.InvalidUI)
+            !state.isInputValid -> {
+                // TODO: This can be removed when all validation logic is moved out of the views
+                uiEventChannel.trySend(PaymentComponentUIEvent.InvalidUI)
+                _submitEventChannel.trySend(SubmitHandlerEvent.InvalidInput)
+            }
             state.isValid -> submitChannel.trySend(state)
             !state.isReady -> _uiStateFlow.tryEmit(PaymentComponentUIState.PendingSubmit)
             else -> resetUIState() // unreachable state
