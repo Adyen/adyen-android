@@ -11,27 +11,31 @@ package com.adyen.checkout.mbway.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayDelegateState(
-    val countryCodeFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
-        value = "",
-        validation = Validation.Valid,
-    ),
+    val countries: List<CountryModel>,
+    val initiallySelectedCountry: CountryModel?,
+    val countryCodeFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
 ) {
     val isValid: Boolean
-        get() =
-            countryCodeFieldState.validation?.isValid() == true &&
-                localPhoneNumberFieldState.validation?.isValid() == true
+        get() = countryCodeFieldState.validation?.isValid() == true &&
+            localPhoneNumberFieldState.validation?.isValid() == true
 }
 
 internal fun MBWayDelegateState.toViewState() = MBWayViewState(
-    phoneNumberFieldState = ComponentFieldViewState(
-        value = this.localPhoneNumberFieldState.value,
-        errorMessageId = this.localPhoneNumberFieldState.takeIf { fieldState ->
-            fieldState.shouldShowValidationError()
-        }?.validation.let { it as? Validation.Invalid }?.reason,
-    ),
+    countries = this.countries,
+    initiallySelectedCountry = initiallySelectedCountry,
+    phoneNumberFieldState = with(this.localPhoneNumberFieldState) {
+        ComponentFieldViewState(
+            value = value,
+            errorMessageId = takeIf { fieldState ->
+                fieldState.shouldShowValidationError()
+            }?.validation.let { it as? Validation.Invalid }?.reason,
+        )
+    },
 )
 
-internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() = !this.hasFocus || this.isValidationErrorCheckForced
+internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
+    !this.hasFocus || this.isValidationErrorCheckForced

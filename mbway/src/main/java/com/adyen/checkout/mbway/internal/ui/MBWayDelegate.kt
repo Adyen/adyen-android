@@ -15,7 +15,6 @@ import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.flow.Flow
 
 internal interface MBWayDelegate :
@@ -27,10 +26,6 @@ internal interface MBWayDelegate :
     val viewStateFlow: Flow<MBWayViewState>
 
     val componentStateFlow: Flow<MBWayComponentState>
-
-    fun getSupportedCountries(): List<CountryModel>
-
-    fun getInitiallySelectedCountry(): CountryModel?
 
     fun onFieldValueChanged(fieldId: MBWayFieldId, value: String)
 
