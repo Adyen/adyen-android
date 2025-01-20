@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewSt
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
@@ -42,6 +43,8 @@ internal class MbWayView @JvmOverloads constructor(
 
     private lateinit var delegate: MBWayDelegate
 
+    private lateinit var countryAdapter: CountryAdapter
+
     init {
         orientation = VERTICAL
 
@@ -54,17 +57,23 @@ internal class MbWayView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
-        observeDelegate(delegate, coroutineScope)
-
         initMobileNumberInput()
         initCountryInput()
+
+        observeDelegate(delegate, coroutineScope)
     }
 
-
-    private fun observeDelegate(delegate: MBWayDelegate, coroutineScope: CoroutineScope) {
-        delegate.viewStateFlow
-            .onEach { updateMobileNumberInput(it.phoneNumberFieldState) }
-            .launchIn(coroutineScope)
+    private fun initCountryInput() {
+        countryAdapter = CountryAdapter(context, localizedContext)
+        binding.autoCompleteTextViewCountry.apply {
+            // disable editing and hide cursor
+            inputType = 0
+            setAdapter(countryAdapter)
+            setOnItemClickListener { _, _, position, _ ->
+                val country = countryAdapter.getItem(position)
+                onCountrySelected(country)
+            }
+        }
     }
 
     private fun initMobileNumberInput() {
@@ -74,6 +83,17 @@ internal class MbWayView @JvmOverloads constructor(
         binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
             delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
         }
+    }
+
+    private fun observeDelegate(delegate: MBWayDelegate, coroutineScope: CoroutineScope) {
+        delegate.viewStateFlow
+            .onEach { viewStateUpdated(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun viewStateUpdated(mbWayViewState: MBWayViewState) {
+        updateMobileNumberInput(mbWayViewState.phoneNumberFieldState)
+        updateCountryInput(mbWayViewState.countries, mbWayViewState.initiallySelectedCountry)
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
@@ -86,23 +106,15 @@ internal class MbWayView @JvmOverloads constructor(
         }
     }
 
-    private fun initCountryInput() {
-        val countries = delegate.getSupportedCountries()
-        val adapter = CountryAdapter(context, localizedContext)
-        adapter.setItems(countries)
-        binding.autoCompleteTextViewCountry.apply {
-            // disable editing and hide cursor
-            inputType = 0
-            setAdapter(adapter)
-            setOnItemClickListener { _, _, position, _ ->
-                val country = adapter.getItem(position)
-                onCountrySelected(country)
+    private fun updateCountryInput(countries: List<CountryModel>, initiallySelectedCountry: CountryModel?) {
+        if (countryAdapter.isEmpty) {
+            initiallySelectedCountry?.let {
+                binding.autoCompleteTextViewCountry.setText(initiallySelectedCountry.toShortString())
+                onCountrySelected(initiallySelectedCountry)
             }
         }
-        delegate.getInitiallySelectedCountry()?.let {
-            binding.autoCompleteTextViewCountry.setText(it.toShortString())
-            onCountrySelected(it)
-        }
+
+        countryAdapter.setItems(countries)
     }
 
     override fun highlightValidationErrors() {
