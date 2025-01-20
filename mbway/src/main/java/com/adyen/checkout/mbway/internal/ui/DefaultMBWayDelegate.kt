@@ -140,10 +140,7 @@ internal class DefaultMBWayDelegate(
                 MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState.value
             }
             // TODO: Update only the fields which are not validated yet.
-            updateField(fieldId, value = value)
-        }
-        state.update { state ->
-            state.copy(showValidationErrorsRegardlessFocus = true)
+            updateField(fieldId, value = value, isValidationErrorCheckForced = true)
         }
     }
 
@@ -151,15 +148,18 @@ internal class DefaultMBWayDelegate(
         fieldId: MBWayFieldId,
         value: String? = null,
         hasFocus: Boolean? = null,
+        // By default isValidationErrorCheckForced will be false, to hide validation errors when the field gets updated
+        isValidationErrorCheckForced: Boolean = false,
     ) {
         state.update { state ->
-            val updatedState = when (fieldId) {
+            when (fieldId) {
                 MBWayFieldId.COUNTRY_CODE -> state.copy(
                     countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
                         value = value,
                         // TODO: This value manipulation should move somewhere else
                         validation = value?.let { validationRegistry.validate(fieldId, it.trimStart('0')) },
                         hasFocus = hasFocus,
+                        isValidationErrorCheckForced = isValidationErrorCheckForced,
                     ),
                 )
 
@@ -168,14 +168,10 @@ internal class DefaultMBWayDelegate(
                         value = value,
                         validation = value?.let { validationRegistry.validate(fieldId, it) },
                         hasFocus = hasFocus,
+                        isValidationErrorCheckForced = isValidationErrorCheckForced,
                     ),
                 )
             }
-
-            // Resetting the showValidationErrorsRegardlessFocus flag, to hide error when focused on a field
-            updatedState.copy(
-                showValidationErrorsRegardlessFocus = false,
-            )
         }
     }
 
