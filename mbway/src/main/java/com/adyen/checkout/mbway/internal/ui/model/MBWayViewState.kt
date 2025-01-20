@@ -9,7 +9,10 @@
 package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayViewState(
+    val countries: List<CountryModel>,
+    val initiallySelectedCountry: CountryModel?,
     val phoneNumberFieldState: ComponentFieldViewState<String>,
 )
