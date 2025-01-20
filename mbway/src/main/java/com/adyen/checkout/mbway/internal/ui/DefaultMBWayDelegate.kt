@@ -58,7 +58,10 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var state = MutableStateFlow(MBWayDelegateState())
+    private var state = MutableStateFlow(MBWayDelegateState(
+        countries = getSupportedCountries(),
+        initiallySelectedCountry = getInitiallySelectedCountry()
+    ))
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
@@ -139,7 +142,6 @@ internal class DefaultMBWayDelegate(
                 MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState.value
                 MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState.value
             }
-            // TODO: Update only the fields which are not validated yet.
             updateField(fieldId, value = value, isValidationErrorCheckForced = true)
         }
     }
@@ -220,10 +222,10 @@ internal class DefaultMBWayDelegate(
         _componentStateFlow.tryEmit(componentState)
     }
 
-    override fun getSupportedCountries(): List<CountryModel> =
+    private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
 
-    override fun getInitiallySelectedCountry(): CountryModel? {
+    private fun getInitiallySelectedCountry(): CountryModel? {
         val countries = getSupportedCountries()
         return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
     }
