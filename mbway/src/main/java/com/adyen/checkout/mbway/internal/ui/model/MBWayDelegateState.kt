@@ -18,8 +18,6 @@ internal data class MBWayDelegateState(
         validation = Validation.Valid,
     ),
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
-    // TODO: Find another way to optimise this and not trigger state change multiple times when field value changes
-    val showValidationErrorsRegardlessFocus:Boolean = false,
 ) {
     val isValid: Boolean
         get() =
@@ -31,7 +29,9 @@ internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     phoneNumberFieldState = ComponentFieldViewState(
         value = this.localPhoneNumberFieldState.value,
         errorMessageId = this.localPhoneNumberFieldState.takeIf { fieldState ->
-            !fieldState.hasFocus || this.showValidationErrorsRegardlessFocus
+            fieldState.shouldShowValidationError()
         }?.validation.let { it as? Validation.Invalid }?.reason,
     ),
 )
+
+internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() = !this.hasFocus || this.isValidationErrorCheckForced
