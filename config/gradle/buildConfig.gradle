@@ -8,7 +8,7 @@
 
 android {
     defaultConfig {
-        buildConfigField "String", "CHECKOUT_VERSION", "\"${libs.versions.version.name.get()}\""
+        buildConfigField "String", "CHECKOUT_VERSION", "\"$rootProject.ext.versionName\""
     }
 
     buildFeatures {

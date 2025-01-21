@@ -16,6 +16,11 @@ apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
 
 ext {
+    if (project.hasProperty("version-name")) {
+        versionName = project.property("version-name")
+    } else {
+        versionName = "develop"
+    }
     checkoutRedirectScheme = "adyencheckout"
 }
 

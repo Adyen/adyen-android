@@ -1,0 +1,70 @@
+name: Generate release notes
+
+on:
+  workflow_call:
+    inputs:
+      version-name:
+        required: true
+        type: string
+
+jobs:
+  get_allowed_labels:
+    runs-on: ubuntu-latest
+
+    outputs:
+      allowed-labels: ${{ steps.get_allowed_labels.outputs.allowed_labels }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the list of allowed pull request labels
+        id: get_allowed_labels
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}
+        run: |
+          RED='\033[0;31m'
+          FILE_NAME=.release_notes_allowed_labels_list
+          GITHUB_DIR=.github
+          FILE_PATH=$PROJECT_ROOT/$GITHUB_DIR/$FILE_NAME
+          if [[ ! -f "$FILE_PATH" ]]; then
+             echo -e "${RED}$FILE_NAME file doesn't exist in $GITHUB_DIR/"
+             exit 1
+          fi 
+          ALLOWED_LABELS=$(cat $FILE_PATH)
+          echo -e "allowed_labels=$ALLOWED_LABELS" >> $GITHUB_OUTPUT
+          echo -e "Allowed labels are: $ALLOWED_LABELS"
+
+  generate_release_notes:
+    runs-on: ubuntu-latest
+    needs: get_allowed_labels
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Generate release notes
+        id: generate_release_notes
+        env:
+          ALLOWED_LABELS: ${{ needs.get_allowed_labels.outputs.allowed-labels }}
+          VERSION_NAME: ${{ inputs.version-name }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          chmod +x scripts/generate_release_notes.py
+          RELEASE_NOTES_FILE_NAME="${VERSION_NAME}.md"
+          pip install requests toml
+          python scripts/generate_release_notes.py $RELEASE_NOTES_FILE_NAME
+
+      - name: Upload release notes artifact
+        uses: actions/upload-artifact@v3
+        env:
+          VERSION_NAME: ${{ inputs.version-name }}
+        with:
+          name: "${{ env.VERSION_NAME }}"
+          path: "${{ env.VERSION_NAME }}.md"
+          overwrite: true

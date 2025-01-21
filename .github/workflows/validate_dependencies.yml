@@ -1,0 +1,20 @@
+name: Validate dependencies
+
+on:
+  workflow_call:
+
+jobs:
+  validate_dependencies_for_release_notes:
+    runs-on: ubuntu-latest
+    name: Validate newly added dependencies for release notes
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate dependencies for release notes
+        run: |
+          chmod +x scripts/validate_dependencies_for_release_notes.py
+          pip install toml
+          python scripts/validate_dependencies_for_release_notes.py
