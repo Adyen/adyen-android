@@ -42,8 +42,8 @@ jobs:
       - name: Publish to Maven Central
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace --no-daemon
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
