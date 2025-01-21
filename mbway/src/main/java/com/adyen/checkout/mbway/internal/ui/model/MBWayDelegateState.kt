@@ -8,9 +8,15 @@
 
 package com.adyen.checkout.mbway.internal.ui.model
 
+import com.adyen.checkout.components.core.Amount
+import com.adyen.checkout.components.core.OrderRequest
+import com.adyen.checkout.components.core.PaymentComponentData
+import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayDelegateState(
@@ -32,8 +38,6 @@ internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     phoneNumberFieldState = this.localPhoneNumberFieldState.toComponentFieldViewState(),
 )
 
-// TODO: Create component state from MBWayDelegateState
-
 internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
     ComponentFieldViewState(
         value = value,
@@ -44,3 +48,28 @@ internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
 
 internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
     !this.hasFocus || this.isValidationErrorCheckForced
+
+internal fun MBWayDelegateState.toComponentState(
+    analyticsManager: AnalyticsManager,
+    order: OrderRequest?,
+    amount: Amount?,
+): MBWayComponentState {
+    val paymentMethod = MBWayPaymentMethod(
+        type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
+        checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+        // TODO: This value manipulation should move somewhere else
+        telephoneNumber = localPhoneNumberFieldState.value.trimStart('0'),
+    )
+
+    val paymentComponentData = PaymentComponentData(
+        paymentMethod = paymentMethod,
+        order = order,
+        amount = amount,
+    )
+
+    return MBWayComponentState(
+        data = paymentComponentData,
+        isInputValid = isValid,
+        isReady = true,
+    )
+}
