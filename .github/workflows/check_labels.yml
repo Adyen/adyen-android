@@ -1,6 +1,6 @@
 name: Check Labels
 
-# Every PR should have a label and some labels should include an update to the release notes
+# Every PR should have a label and some labels should include an update to the release notes.
 on:
   pull_request:
     types: [ synchronize, labeled, unlabeled ]
