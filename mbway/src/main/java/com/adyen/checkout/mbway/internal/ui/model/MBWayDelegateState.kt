@@ -16,26 +16,31 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 internal data class MBWayDelegateState(
     val countries: List<CountryModel>,
     val initiallySelectedCountry: CountryModel?,
-    val countryCodeFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
-    val localPhoneNumberFieldState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(value = ""),
+    val countryCodeFieldState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
+    val localPhoneNumberFieldState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
 ) {
     val isValid: Boolean
         get() = countryCodeFieldState.validation?.isValid() == true &&
-            localPhoneNumberFieldState.validation?.isValid() == true
+                localPhoneNumberFieldState.validation?.isValid() == true
 }
 
 internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     countries = this.countries,
     initiallySelectedCountry = initiallySelectedCountry,
-    phoneNumberFieldState = with(this.localPhoneNumberFieldState) {
-        ComponentFieldViewState(
-            value = value,
-            errorMessageId = takeIf { fieldState ->
-                fieldState.shouldShowValidationError()
-            }?.validation.let { it as? Validation.Invalid }?.reason,
-        )
-    },
+    phoneNumberFieldState = this.localPhoneNumberFieldState.toComponentFieldViewState(),
 )
+
+// TODO: Create component state from MBWayDelegateState
+
+internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
+    ComponentFieldViewState(
+        value = value,
+        errorMessageId = takeIf { fieldState ->
+            fieldState.shouldShowValidationError()
+        }?.validation.let { it as? Validation.Invalid }?.reason,
+    )
 
 internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
     !this.hasFocus || this.isValidationErrorCheckForced
