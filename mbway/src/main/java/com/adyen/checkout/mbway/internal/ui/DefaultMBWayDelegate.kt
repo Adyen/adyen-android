@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -21,13 +19,13 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.model.toComponentState
 import com.adyen.checkout.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -41,6 +39,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -65,8 +64,14 @@ internal class DefaultMBWayDelegate(
         ),
     )
 
-    private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
+    override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
+        val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
+            delegateState.toComponentState(analyticsManager, order, componentParams.amount)
+        }
+        state
+            .map(toComponentState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(state.value))
+    }
 
     override val viewStateFlow: Flow<MBWayViewState> by lazy {
         state
@@ -74,7 +79,8 @@ internal class DefaultMBWayDelegate(
             .stateIn(coroutineScope, SharingStarted.Lazily, state.value.toViewState())
     }
 
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> =
+        MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<MBWayComponentState> = getTrackedSubmitFlow()
@@ -84,10 +90,6 @@ internal class DefaultMBWayDelegate(
 
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
-
-    init {
-        updateComponentState()
-    }
 
     override fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
@@ -179,50 +181,11 @@ internal class DefaultMBWayDelegate(
         }
     }
 
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) {
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
         updateField(fieldId, value = value)
-        onDataChanged()
-    }
 
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
         updateField(fieldId, hasFocus = hasFocus)
-
-    private fun onDataChanged() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "onDataChanged" }
-        updateComponentState()
-    }
-
-    // TODO: This has to be done regardless
-    @VisibleForTesting
-    internal fun updateComponentState() {
-        val componentState = createComponentState()
-        componentStateChanged(componentState)
-    }
-
-    private fun createComponentState(): MBWayComponentState {
-        val paymentMethod = MBWayPaymentMethod(
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            // TODO: This value manipulation should move somewhere else
-            telephoneNumber = state.value.localPhoneNumberFieldState.value.trimStart('0'),
-        )
-
-        val paymentComponentData = PaymentComponentData(
-            paymentMethod = paymentMethod,
-            order = order,
-            amount = componentParams.amount,
-        )
-
-        return MBWayComponentState(
-            data = paymentComponentData,
-            isInputValid = state.value.isValid,
-            isReady = true,
-        )
-    }
-
-    private fun componentStateChanged(componentState: MBWayComponentState) {
-        _componentStateFlow.tryEmit(componentState)
-    }
 
     private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
@@ -238,13 +201,13 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
+        submitHandler.onSubmit(componentStateFlow.value)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
-    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+    override fun shouldShowSubmitButton(): Boolean =
+        isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
