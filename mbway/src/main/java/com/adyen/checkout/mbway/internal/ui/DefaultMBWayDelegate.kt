@@ -58,18 +58,20 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var state = MutableStateFlow(MBWayDelegateState(
-        countries = getSupportedCountries(),
-        initiallySelectedCountry = getInitiallySelectedCountry()
-    ))
+    private var state = MutableStateFlow(
+        MBWayDelegateState(
+            countries = getSupportedCountries(),
+            initiallySelectedCountry = getInitiallySelectedCountry(),
+        ),
+    )
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
     override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
 
     override val viewStateFlow: Flow<MBWayViewState> by lazy {
-        state.map(
-            MBWayDelegateState::toViewState,
-        ).stateIn(coroutineScope, SharingStarted.Lazily, state.value.toViewState())
+        state
+            .map(MBWayDelegateState::toViewState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, state.value.toViewState())
     }
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
