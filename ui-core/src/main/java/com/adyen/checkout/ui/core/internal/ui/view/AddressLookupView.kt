@@ -173,17 +173,15 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initManualEntryFields() {
-        binding.textViewManualEntryError.setOnClickListener {
+        val listener = OnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
+            removeFocusFromSearch()
         }
+        binding.textViewManualEntryError.setOnClickListener(listener)
 
-        binding.textViewManualEntryInitial.setOnClickListener {
-            addressLookupDelegate.onManualEntryModeSelected()
-        }
+        binding.textViewManualEntryInitial.setOnClickListener(listener)
 
-        binding.buttonManualEntry.setOnClickListener {
-            addressLookupDelegate.onManualEntryModeSelected()
-        }
+        binding.buttonManualEntry.setOnClickListener(listener)
     }
 
     private fun initSubmitAddressButton() {
