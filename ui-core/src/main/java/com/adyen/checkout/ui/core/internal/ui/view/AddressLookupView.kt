@@ -143,6 +143,7 @@ class AddressLookupView @JvmOverloads constructor(
             setOnQueryTextListener(
                 object : OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
+                        removeFocusFromSearch()
                         return true
                     }
 
