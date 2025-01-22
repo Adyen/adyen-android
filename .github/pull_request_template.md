@@ -4,7 +4,7 @@
 [//]: # (If this is a bug fix: include a reproduction path)
 
 ## Checklist <!-- Remove any line that's not applicable -->
-- [ ] PR is labelled <!-- Breaking change, Feature, Fix, Dependencies or Chore -->
+- [ ] If applicable, make sure Breaking change label is added.
 - [ ] Code is unit tested
 - [ ] Changes are tested manually
 - [ ] Related issues are linked

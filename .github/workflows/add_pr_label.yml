@@ -1,0 +1,54 @@
+name: Add Label to the Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - 'main'
+      - 'feature/**'
+      - 'chore/**'
+      - 'fix/**'
+      - 'hotfix/**'
+
+jobs:
+  get_label:
+    if: startsWith(github.event.pull_request.head.ref, 'feature/') || startsWith(github.event.pull_request.head.ref, 'fix/') || startsWith(github.event.pull_request.head.ref, 'chore/')
+    runs-on: ubuntu-latest
+    outputs:
+      label: ${{ steps.get_label.outputs.label }}
+
+    steps:
+      - name: Checkout to current branch
+        uses: actions/checkout@v3
+
+      - name: Get label
+        id: get_label
+        run: |
+          chmod +x scripts/generate_pr_label.sh
+          branch_name="${{github.event.pull_request.head.ref}}"
+          LABEL=$(./scripts/generate_pr_label.sh $branch_name)
+          echo -e "label=$LABEL" >> $GITHUB_OUTPUT
+          echo -e $LABEL
+
+  add_label_to_pr:
+    needs: get_label
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to current branch
+        uses: actions/checkout@v3
+
+      - name: Add label
+        uses: actions/github-script@v6
+        env:
+          LABEL: ${{ needs.get_label.outputs.label }}
+        with:
+          github-token: ${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}
+          script: |
+            github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: ['${{ env.LABEL }}']
+            })

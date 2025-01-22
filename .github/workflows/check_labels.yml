@@ -3,7 +3,7 @@ name: Check Labels
 # Every PR should have a label and some labels should include an update to the release notes
 on:
   pull_request:
-    types: [ synchronize, labeled, unlabeled ]
+    types: [ synchronize, labeled, unlabeled, edited ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
