@@ -41,6 +41,7 @@ internal fun MBWayDelegateState.toViewState() = MBWayViewState(
 internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
     ComponentFieldViewState(
         value = value,
+        hasFocus = hasFocus,
         errorMessageId = takeIf { fieldState ->
             fieldState.shouldShowValidationError()
         }?.validation.let { it as? Validation.Invalid }?.reason,
