@@ -97,6 +97,12 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
+        if (phoneNumberFieldState.hasFocus) {
+            binding.textInputLayoutMobileNumber.requestFocus()
+        } else {
+            binding.textInputLayoutMobileNumber.clearFocus()
+        }
+
         phoneNumberFieldState.errorMessageId?.let { errorMessageId ->
             binding.textInputLayoutMobileNumber.showError(
                 localizedContext.getString(errorMessageId),
