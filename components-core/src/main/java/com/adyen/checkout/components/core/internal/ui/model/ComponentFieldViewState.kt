@@ -14,5 +14,6 @@ import androidx.annotation.StringRes
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class ComponentFieldViewState<T>(
     val value: T,
+    val hasFocus: Boolean = false,
     @StringRes val errorMessageId: Int? = null,
 )
