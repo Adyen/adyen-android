@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.core.AdyenLogLevel
@@ -63,6 +64,9 @@ internal class DefaultMBWayDelegate(
             initiallySelectedCountry = getInitiallySelectedCountry(),
         ),
     )
+
+    // We store this flag to keep the error visible when the first invalid field gains focus
+    private var shouldErrorStayVisibleWhenInvalidFieldGetsFocus = false
 
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
@@ -141,12 +145,27 @@ internal class DefaultMBWayDelegate(
     }
 
     private fun validateAllFields() {
+        // Flag to focus only the first invalid field
+        var isErrorFocused = false
+
         MBWayFieldId.entries.forEach { fieldId ->
-            val value = when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState.value
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState.value
+            val fieldState = when (fieldId) {
+                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState
             }
-            updateField(fieldId, value = value, isValidationErrorCheckForced = true)
+
+            val shouldFocus = !isErrorFocused && fieldState.validation is Validation.Invalid
+            if (shouldFocus) {
+                isErrorFocused = true
+                shouldErrorStayVisibleWhenInvalidFieldGetsFocus = true
+            }
+
+            updateField(
+                fieldId = fieldId,
+                value = fieldState.value, // Ensure the current value is validated
+                hasFocus = shouldFocus,
+                isValidationErrorCheckForced = true,
+            )
         }
     }
 
@@ -154,7 +173,7 @@ internal class DefaultMBWayDelegate(
         fieldId: MBWayFieldId,
         value: String? = null,
         hasFocus: Boolean? = null,
-        // By default isValidationErrorCheckForced will be false, to hide validation errors when the field gets updated
+        // By default this flag will be false, to hide validation errors when the field gets updated
         isValidationErrorCheckForced: Boolean = false,
     ) {
         state.update { state ->
@@ -163,7 +182,12 @@ internal class DefaultMBWayDelegate(
                     countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
                         value = value,
                         // TODO: This value manipulation should move somewhere else
-                        validation = value?.let { validationRegistry.validate(fieldId, it.trimStart('0')) },
+                        validation = value?.let {
+                            validationRegistry.validate(
+                                fieldId,
+                                it.trimStart('0')
+                            )
+                        },
                         hasFocus = hasFocus,
                         isValidationErrorCheckForced = isValidationErrorCheckForced,
                     ),
@@ -184,8 +208,18 @@ internal class DefaultMBWayDelegate(
     override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
         updateField(fieldId, value = value)
 
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
-        updateField(fieldId, hasFocus = hasFocus)
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+        updateField(
+            fieldId,
+            hasFocus = hasFocus,
+            isValidationErrorCheckForced = shouldErrorStayVisibleWhenInvalidFieldGetsFocus
+        )
+
+        // When the field regained focus, because of the field validation we reset the flag
+        if (shouldErrorStayVisibleWhenInvalidFieldGetsFocus) {
+            shouldErrorStayVisibleWhenInvalidFieldGetsFocus = false
+        }
+    }
 
     private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
