@@ -76,7 +76,7 @@ internal class DefaultMBWayDelegate(
                 analyticsManager,
                 transformerRegistry,
                 order,
-                componentParams.amount
+                componentParams.amount,
             )
         }
         state
@@ -185,7 +185,7 @@ internal class DefaultMBWayDelegate(
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
-                transformerRegistry.transform(fieldId, value)
+                transformerRegistry.transform(fieldId, value),
             )
         }
 
@@ -223,7 +223,7 @@ internal class DefaultMBWayDelegate(
         updateField(
             fieldId,
             hasFocus = hasFocus,
-            isValidationErrorCheckForced = shouldErrorStayVisibleWhenInvalidFieldGetsFocus
+            isValidationErrorCheckForced = shouldErrorStayVisibleWhenInvalidFieldGetsFocus,
         )
 
         // When the field regained focus, because of the field validation we reset the flag
