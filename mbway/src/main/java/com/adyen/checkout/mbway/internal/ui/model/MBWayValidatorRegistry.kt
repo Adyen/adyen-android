@@ -16,10 +16,12 @@ import com.adyen.checkout.mbway.R
 
 internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayFieldId> {
 
-    private val validators = mapOf(
-        MBWayFieldId.LOCAL_PHONE_NUMBER to LocalPhoneNumberValidator(),
-        MBWayFieldId.COUNTRY_CODE to DefaultValidValidator(),
-    )
+    private val validators = MBWayFieldId.entries.associateWith { fieldId ->
+        when (fieldId) {
+            MBWayFieldId.COUNTRY_CODE -> DefaultValidValidator()
+            MBWayFieldId.LOCAL_PHONE_NUMBER -> LocalPhoneNumberValidator()
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> validate(key: MBWayFieldId, value: T): Validation {
