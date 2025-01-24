@@ -16,5 +16,6 @@ interface UIStateDelegate {
 
     val uiStateFlow: Flow<PaymentComponentUIState>
 
+    // TODO: This can be removed when all validation logic is moved out of the views
     val uiEventFlow: Flow<PaymentComponentUIEvent>
 }
