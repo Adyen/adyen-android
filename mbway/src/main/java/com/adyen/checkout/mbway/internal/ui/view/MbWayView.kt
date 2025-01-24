@@ -23,6 +23,7 @@ import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
@@ -97,6 +98,8 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
+        binding.editTextMobileNumber.updateText(phoneNumberFieldState.value)
+
         if (phoneNumberFieldState.hasFocus) {
             binding.textInputLayoutMobileNumber.requestFocus()
         } else {
@@ -121,6 +124,14 @@ internal class MbWayView @JvmOverloads constructor(
         }
 
         countryAdapter.setItems(countries)
+    }
+
+    private fun AdyenTextInputEditText.updateText(newValue: String) {
+        // Removing this condition will not cause cyclic triggers, but it is good to not make an update unless necessary
+        if (text?.toString() != newValue) {
+            setText(newValue)
+            setSelection(length())
+        }
     }
 
     override fun highlightValidationErrors() {
