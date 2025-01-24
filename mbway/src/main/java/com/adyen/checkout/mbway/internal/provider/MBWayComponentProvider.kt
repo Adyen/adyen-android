@@ -39,6 +39,7 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.getMBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
+import com.adyen.checkout.mbway.internal.ui.model.MBWayTransformerRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayValidatorRegistry
 import com.adyen.checkout.mbway.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
@@ -108,7 +109,8 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
-                validationRegistry = MBWayValidatorRegistry()
+                transformerRegistry = MBWayTransformerRegistry(),
+                validationRegistry = MBWayValidatorRegistry(),
             )
 
             val genericActionDelegate =
@@ -197,7 +199,8 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
-                validationRegistry = MBWayValidatorRegistry()
+                transformerRegistry = MBWayTransformerRegistry(),
+                validationRegistry = MBWayValidatorRegistry(),
             )
 
             val genericActionDelegate =

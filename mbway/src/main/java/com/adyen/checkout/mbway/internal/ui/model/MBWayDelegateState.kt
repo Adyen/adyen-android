@@ -15,6 +15,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
@@ -52,14 +53,17 @@ internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
 
 internal fun MBWayDelegateState.toComponentState(
     analyticsManager: AnalyticsManager,
+    fieldTransformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     order: OrderRequest?,
     amount: Amount?,
 ): MBWayComponentState {
     val paymentMethod = MBWayPaymentMethod(
         type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
         checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-        // TODO: This value manipulation should move somewhere else
-        telephoneNumber = localPhoneNumberFieldState.value.trimStart('0'),
+        telephoneNumber = fieldTransformerRegistry.transform(
+            MBWayFieldId.LOCAL_PHONE_NUMBER,
+            localPhoneNumberFieldState.value
+        ),
     )
 
     val paymentComponentData = PaymentComponentData(
