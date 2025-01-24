@@ -116,6 +116,7 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun updateCountryInput(countries: List<CountryModel>, initiallySelectedCountry: CountryModel?) {
+        // TODO: The selected state could be inside CountryModel or we could have a country field for the value
         if (countryAdapter.isEmpty) {
             initiallySelectedCountry?.let {
                 binding.autoCompleteTextViewCountry.setText(initiallySelectedCountry.toShortString())
