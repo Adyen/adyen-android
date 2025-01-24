@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.core.AdyenLogLevel
@@ -55,6 +56,7 @@ internal class DefaultMBWayDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
+    private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
@@ -70,7 +72,12 @@ internal class DefaultMBWayDelegate(
 
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
-            delegateState.toComponentState(analyticsManager, order, componentParams.amount)
+            delegateState.toComponentState(
+                analyticsManager,
+                transformerRegistry,
+                order,
+                componentParams.amount
+            )
         }
         state
             .map(toComponentState)
@@ -107,7 +114,6 @@ internal class DefaultMBWayDelegate(
         submitHandler.submitEventFlow
             .onEach { submitEvent ->
                 when (submitEvent) {
-                    // TODO: Focus on the first invalid field (can be in UI?)
                     SubmitHandlerEvent.InvalidInput -> validateAllFields()
                 }
             }.launchIn(coroutineScope)
@@ -176,31 +182,36 @@ internal class DefaultMBWayDelegate(
         // By default this flag will be false, to hide validation errors when the field gets updated
         isValidationErrorCheckForced: Boolean = false,
     ) {
+        val validation = value?.let {
+            validationRegistry.validate(
+                fieldId,
+                transformerRegistry.transform(fieldId, value)
+            )
+        }
+
         state.update { state ->
             when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> state.copy(
-                    countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
-                        value = value,
-                        // TODO: This value manipulation should move somewhere else
-                        validation = value?.let {
-                            validationRegistry.validate(
-                                fieldId,
-                                it.trimStart('0')
-                            )
-                        },
-                        hasFocus = hasFocus,
-                        isValidationErrorCheckForced = isValidationErrorCheckForced,
-                    ),
-                )
+                MBWayFieldId.COUNTRY_CODE -> {
+                    state.copy(
+                        countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
+                            value = value,
+                            validation = validation,
+                            hasFocus = hasFocus,
+                            isValidationErrorCheckForced = isValidationErrorCheckForced,
+                        ),
+                    )
+                }
 
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.copy(
-                    localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
-                        value = value,
-                        validation = value?.let { validationRegistry.validate(fieldId, it) },
-                        hasFocus = hasFocus,
-                        isValidationErrorCheckForced = isValidationErrorCheckForced,
-                    ),
-                )
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> {
+                    state.copy(
+                        localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
+                            value = value,
+                            validation = validation,
+                            hasFocus = hasFocus,
+                            isValidationErrorCheckForced = isValidationErrorCheckForced,
+                        ),
+                    )
+                }
             }
         }
     }
