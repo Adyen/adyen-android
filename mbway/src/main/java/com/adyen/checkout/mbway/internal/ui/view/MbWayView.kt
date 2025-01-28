@@ -93,8 +93,16 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun viewStateUpdated(mbWayViewState: MBWayViewState) {
+        updateCountries(mbWayViewState.countries)
+        updateCountryInput(mbWayViewState.countryCodeFieldState)
         updateMobileNumberInput(mbWayViewState.phoneNumberFieldState)
-        updateCountryInput(mbWayViewState.countries, mbWayViewState.initiallySelectedCountry)
+    }
+
+    private fun updateCountries(countries: List<CountryModel>) = countryAdapter.setItems(countries)
+
+    private fun updateCountryInput(countryCodeFieldState: ComponentFieldViewState<CountryModel>) {
+        val country = countryCodeFieldState.value
+        binding.autoCompleteTextViewCountry.setText(country.toShortString())
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
@@ -113,18 +121,6 @@ internal class MbWayView @JvmOverloads constructor(
         } ?: run {
             binding.textInputLayoutMobileNumber.hideError()
         }
-    }
-
-    private fun updateCountryInput(countries: List<CountryModel>, initiallySelectedCountry: CountryModel?) {
-        // TODO: The selected state could be inside CountryModel or we could have a country field for the value
-        if (countryAdapter.isEmpty) {
-            initiallySelectedCountry?.let {
-                binding.autoCompleteTextViewCountry.setText(initiallySelectedCountry.toShortString())
-                onCountrySelected(initiallySelectedCountry)
-            }
-        }
-
-        countryAdapter.setItems(countries)
     }
 
     private fun AdyenTextInputEditText.updateText(newValue: String) {
