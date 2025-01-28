@@ -13,6 +13,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayViewState(
     val countries: List<CountryModel>,
-    val initiallySelectedCountry: CountryModel?,
+    val countryCodeFieldState: ComponentFieldViewState<CountryModel>,
     val phoneNumberFieldState: ComponentFieldViewState<String>,
 )
