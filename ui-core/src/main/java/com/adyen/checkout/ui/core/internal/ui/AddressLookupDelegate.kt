@@ -13,10 +13,8 @@ import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
-import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupEvent
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -25,7 +23,6 @@ interface AddressLookupDelegate {
     val addressDelegate: AddressDelegate
 
     val addressLookupStateFlow: Flow<AddressLookupState>
-    val addressLookupEventChannel: Channel<AddressLookupEvent>
     val addressLookupSubmitFlow: Flow<AddressInputModel>
     val addressLookupErrorPopupFlow: Flow<String?>
 

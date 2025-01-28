@@ -61,7 +61,7 @@ class DefaultAddressLookupDelegate(
     private val currentAddressLookupState
         get() = mutableAddressLookupStateFlow.value
 
-    override val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
+    private val addressLookupEventChannel = bufferedChannel<AddressLookupEvent>()
     private val addressLookupEventFlow: Flow<AddressLookupEvent> = addressLookupEventChannel.receiveAsFlow()
 
     override val addressOutputData: AddressOutputData
