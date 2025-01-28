@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
@@ -63,7 +64,7 @@ internal class DefaultMBWayDelegate(
     private var state = MutableStateFlow(
         MBWayDelegateState(
             countries = getSupportedCountries(),
-            initiallySelectedCountry = getInitiallySelectedCountry(),
+            countryCodeFieldState = ComponentFieldDelegateState(getInitiallySelectedCountry()),
         ),
     )
 
@@ -175,9 +176,9 @@ internal class DefaultMBWayDelegate(
         }
     }
 
-    private fun updateField(
+    private fun <T> updateField(
         fieldId: MBWayFieldId,
-        value: String? = null,
+        value: T? = null,
         hasFocus: Boolean? = null,
         // By default this flag will be false, to hide validation errors when the field gets updated
         isValidationErrorCheckForced: Boolean = false,
@@ -194,7 +195,7 @@ internal class DefaultMBWayDelegate(
                 MBWayFieldId.COUNTRY_CODE -> {
                     state.copy(
                         countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
-                            value = value,
+                            value = value as? CountryModel,
                             validation = validation,
                             hasFocus = hasFocus,
                             isValidationErrorCheckForced = isValidationErrorCheckForced,
@@ -205,7 +206,7 @@ internal class DefaultMBWayDelegate(
                 MBWayFieldId.LOCAL_PHONE_NUMBER -> {
                     state.copy(
                         localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
-                            value = value,
+                            value = value as? String,
                             validation = validation,
                             hasFocus = hasFocus,
                             isValidationErrorCheckForced = isValidationErrorCheckForced,
@@ -220,7 +221,7 @@ internal class DefaultMBWayDelegate(
         updateField(fieldId, value = value)
 
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
-        updateField(
+        updateField<Unit>(
             fieldId,
             hasFocus = hasFocus,
             isValidationErrorCheckForced = shouldErrorStayVisibleWhenInvalidFieldGetsFocus,
@@ -235,9 +236,10 @@ internal class DefaultMBWayDelegate(
     private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
 
-    private fun getInitiallySelectedCountry(): CountryModel? {
+    private fun getInitiallySelectedCountry(): CountryModel {
         val countries = getSupportedCountries()
         return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+        ?: throw IllegalArgumentException("Countries list can not be null")
     }
 
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
