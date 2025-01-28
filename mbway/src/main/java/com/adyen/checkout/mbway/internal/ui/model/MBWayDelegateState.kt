@@ -22,20 +22,18 @@ import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayDelegateState(
     val countries: List<CountryModel>,
-    val initiallySelectedCountry: CountryModel?,
-    val countryCodeFieldState: ComponentFieldDelegateState<String> =
-        ComponentFieldDelegateState(value = ""),
+    val countryCodeFieldState: ComponentFieldDelegateState<CountryModel>,
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
 ) {
     val isValid: Boolean
         get() = countryCodeFieldState.validation?.isValid() == true &&
-                localPhoneNumberFieldState.validation?.isValid() == true
+            localPhoneNumberFieldState.validation?.isValid() == true
 }
 
 internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     countries = this.countries,
-    initiallySelectedCountry = initiallySelectedCountry,
+    countryCodeFieldState = this.countryCodeFieldState.toComponentFieldViewState(),
     phoneNumberFieldState = this.localPhoneNumberFieldState.toComponentFieldViewState(),
 )
 
@@ -62,7 +60,7 @@ internal fun MBWayDelegateState.toComponentState(
         checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
         telephoneNumber = fieldTransformerRegistry.transform(
             MBWayFieldId.LOCAL_PHONE_NUMBER,
-            localPhoneNumberFieldState.value
+            localPhoneNumberFieldState.value,
         ),
     )
 
