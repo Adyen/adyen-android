@@ -16,12 +16,12 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Inject
 
 class AddressLookupRepository @Inject constructor(
@@ -37,18 +37,18 @@ class AddressLookupRepository @Inject constructor(
         mockAddressLookupOptions = adapter.fromJson(json)?.options.orEmpty()
     }
 
-    private val addressLookupQueryFlow = MutableStateFlow<String?>(null)
+    private val addressLookupQueryChannel = Channel<String>(Channel.BUFFERED)
 
     @OptIn(FlowPreview::class)
-    val addressLookupOptionsFlow: Flow<List<LookupAddress>> = addressLookupQueryFlow
-        .filterNotNull()
+    val addressLookupOptionsFlow: Flow<List<LookupAddress>> = addressLookupQueryChannel
+        .receiveAsFlow()
         .debounce(ADDRESS_LOOKUP_QUERY_DEBOUNCE_DURATION)
         .map { query ->
             queryAddressLookupOptions(query)
         }
 
     fun onQuery(query: String) {
-        addressLookupQueryFlow.tryEmit(query)
+        addressLookupQueryChannel.trySend(query)
     }
 
     suspend fun onAddressLookupCompleted(lookupAddress: LookupAddress): AddressLookupCompletionResult {
