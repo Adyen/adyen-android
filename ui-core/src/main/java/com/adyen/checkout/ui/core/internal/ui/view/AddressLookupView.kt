@@ -25,6 +25,7 @@ import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.util.formatStringWithHyperlink
+import com.adyen.checkout.ui.core.internal.util.hideKeyboard
 import com.adyen.checkout.ui.core.internal.util.setLocalizedQueryHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showKeyboard
@@ -142,6 +143,7 @@ class AddressLookupView @JvmOverloads constructor(
             setOnQueryTextListener(
                 object : OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String): Boolean {
+                        removeFocusFromSearch()
                         return true
                     }
 
@@ -171,17 +173,15 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun initManualEntryFields() {
-        binding.textViewManualEntryError.setOnClickListener {
+        val listener = OnClickListener {
             addressLookupDelegate.onManualEntryModeSelected()
+            removeFocusFromSearch()
         }
+        binding.textViewManualEntryError.setOnClickListener(listener)
 
-        binding.textViewManualEntryInitial.setOnClickListener {
-            addressLookupDelegate.onManualEntryModeSelected()
-        }
+        binding.textViewManualEntryInitial.setOnClickListener(listener)
 
-        binding.buttonManualEntry.setOnClickListener {
-            addressLookupDelegate.onManualEntryModeSelected()
-        }
+        binding.buttonManualEntry.setOnClickListener(listener)
     }
 
     private fun initSubmitAddressButton() {
@@ -303,7 +303,13 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun onAddressSelected(lookupAddress: LookupAddress) {
+        removeFocusFromSearch()
         addressLookupDelegate.onAddressLookupCompletion(lookupAddress)
+    }
+
+    private fun removeFocusFromSearch() {
+        binding.textInputLayoutAddressLookupQuerySearch.hideKeyboard()
+        binding.textInputLayoutAddressLookupQuerySearch.clearFocus()
     }
 
     override fun getView(): View = this
