@@ -61,15 +61,12 @@ internal class DefaultMBWayDelegate(
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private var state = MutableStateFlow(
+    private val state = MutableStateFlow(
         MBWayDelegateState(
             countries = getSupportedCountries(),
             countryCodeFieldState = ComponentFieldDelegateState(getInitiallySelectedCountry()),
         ),
     )
-
-    // We store this flag to keep the error visible when the first invalid field gains focus
-    private var shouldErrorStayVisibleWhenInvalidFieldGetsFocus = false
 
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
@@ -164,7 +161,6 @@ internal class DefaultMBWayDelegate(
             val shouldFocus = !isErrorFocused && fieldState.validation is Validation.Invalid
             if (shouldFocus) {
                 isErrorFocused = true
-                shouldErrorStayVisibleWhenInvalidFieldGetsFocus = true
             }
 
             updateField(
@@ -220,18 +216,7 @@ internal class DefaultMBWayDelegate(
     override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
         updateField(fieldId, value = value)
 
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
-        updateField<Unit>(
-            fieldId,
-            hasFocus = hasFocus,
-            isValidationErrorCheckForced = shouldErrorStayVisibleWhenInvalidFieldGetsFocus,
-        )
-
-        // When the field regained focus, because of the field validation we reset the flag
-        if (shouldErrorStayVisibleWhenInvalidFieldGetsFocus) {
-            shouldErrorStayVisibleWhenInvalidFieldGetsFocus = false
-        }
-    }
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) = updateField<Unit>(fieldId, hasFocus = hasFocus)
 
     private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
