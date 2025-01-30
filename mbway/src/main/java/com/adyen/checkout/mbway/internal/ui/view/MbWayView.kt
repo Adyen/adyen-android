@@ -58,7 +58,6 @@ internal class MbWayView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
-        initMobileNumberInput()
         initCountryInput()
 
         observeDelegate(delegate, coroutineScope)
@@ -74,15 +73,6 @@ internal class MbWayView @JvmOverloads constructor(
                 val country = countryAdapter.getItem(position)
                 onCountrySelected(country)
             }
-        }
-    }
-
-    private fun initMobileNumberInput() {
-        binding.editTextMobileNumber.setOnChangeListener {
-            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
-        }
-        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
         }
     }
 
@@ -106,6 +96,9 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
+        binding.editTextMobileNumber.setOnChangeListener(null)
+        binding.editTextMobileNumber.onFocusChangeListener = null
+
         binding.editTextMobileNumber.updateText(phoneNumberFieldState.value)
 
         if (phoneNumberFieldState.hasFocus) {
@@ -115,20 +108,22 @@ internal class MbWayView @JvmOverloads constructor(
         }
 
         phoneNumberFieldState.errorMessageId?.let { errorMessageId ->
-            binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(errorMessageId),
-            )
+            binding.textInputLayoutMobileNumber.showError(localizedContext.getString(errorMessageId))
         } ?: run {
             binding.textInputLayoutMobileNumber.hideError()
+        }
+
+        binding.editTextMobileNumber.setOnChangeListener {
+            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
+        }
+        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+            delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
         }
     }
 
     private fun AdyenTextInputEditText.updateText(newValue: String) {
-        // Removing this condition will not cause cyclic triggers, but it is good to not make an update unless necessary
-        if (text?.toString() != newValue) {
-            setText(newValue)
-            setSelection(length())
-        }
+        setText(newValue)
+        setSelection(length())
     }
 
     override fun highlightValidationErrors() {
