@@ -10,5 +10,5 @@ package com.adyen.checkout.mbway.internal.ui.model
 
 internal enum class MBWayFieldId {
     COUNTRY_CODE,
-    LOCAL_PHONE_NUMBER
+    LOCAL_PHONE_NUMBER,
 }
