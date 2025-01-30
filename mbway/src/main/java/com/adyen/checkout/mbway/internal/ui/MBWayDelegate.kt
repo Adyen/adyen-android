@@ -13,6 +13,7 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIEventDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
@@ -21,15 +22,12 @@ internal interface MBWayDelegate :
     PaymentComponentDelegate<MBWayComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
-    UIStateDelegate {
+    UIStateDelegate,
+    UIEventDelegate<MBWayFieldId> {
 
     val viewStateFlow: Flow<MBWayViewState>
 
     val componentStateFlow: Flow<MBWayComponentState>
-
-    fun onFieldValueChanged(fieldId: MBWayFieldId, value: String)
-
-    fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
