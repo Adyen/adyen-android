@@ -68,12 +68,7 @@ internal class DefaultMBWayDelegate(
 
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
-            delegateState.toComponentState(
-                analyticsManager,
-                transformerRegistry,
-                order,
-                componentParams.amount,
-            )
+            delegateState.toComponentState(analyticsManager, transformerRegistry, order, componentParams.amount)
         }
         state
             .map(toComponentState)
@@ -140,6 +135,42 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
+        updateField(fieldId, value = value)
+
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
+        updateField<Unit>(fieldId, hasFocus = hasFocus)
+
+    override fun onSubmit() = if (state.value.isValid) {
+        submitHandler.onSubmit(componentStateFlow.value)
+    } else {
+        highlightAllFieldValidationErrors()
+    }
+
+    private fun highlightAllFieldValidationErrors() {
+        // Flag to focus only the first invalid field
+        var isErrorFieldFocused = false
+
+        MBWayFieldId.entries.forEach { fieldId ->
+            val fieldState = when (fieldId) {
+                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState
+            }
+
+            val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
+            if (shouldFocus) {
+                isErrorFieldFocused = true
+            }
+
+            updateField(
+                fieldId = fieldId,
+                value = fieldState.value, // Ensure the current value is validated
+                hasFocus = shouldFocus,
+                shouldHighlightValidationError = true,
+            )
+        }
+    }
+
     private fun <T> updateField(
         fieldId: MBWayFieldId,
         value: T? = null,
@@ -177,42 +208,6 @@ internal class DefaultMBWayDelegate(
                     )
                 }
             }
-        }
-    }
-
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
-        updateField(fieldId, value = value)
-
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
-        updateField<Unit>(fieldId, hasFocus = hasFocus)
-
-    override fun onSubmit() = if (state.value.isValid) {
-        submitHandler.onSubmit(componentStateFlow.value)
-    } else {
-        highlightAllFieldValidationErrors()
-    }
-
-    private fun highlightAllFieldValidationErrors() {
-        // Flag to focus only the first invalid field
-        var isErrorFocused = false
-
-        MBWayFieldId.entries.forEach { fieldId ->
-            val fieldState = when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState
-            }
-
-            val shouldFocus = !isErrorFocused && fieldState.validation is Validation.Invalid
-            if (shouldFocus) {
-                isErrorFocused = true
-            }
-
-            updateField(
-                fieldId = fieldId,
-                value = fieldState.value, // Ensure the current value is validated
-                hasFocus = shouldFocus,
-                shouldHighlightValidationError = true,
-            )
         }
     }
 
