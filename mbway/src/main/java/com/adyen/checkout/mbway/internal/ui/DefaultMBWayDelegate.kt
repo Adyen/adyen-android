@@ -28,8 +28,8 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
-import com.adyen.checkout.mbway.internal.ui.model.toComponentState
 import com.adyen.checkout.mbway.internal.ui.model.toViewState
+import com.adyen.checkout.mbway.toComponentState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
