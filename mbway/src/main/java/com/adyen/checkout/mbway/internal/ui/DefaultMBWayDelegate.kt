@@ -36,14 +36,12 @@ import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.ui.model.SubmitHandlerEvent
 import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -109,12 +107,6 @@ internal class DefaultMBWayDelegate(
 
     private fun initializeSubmitHandler(coroutineScope: CoroutineScope) {
         submitHandler.initialize(coroutineScope, componentStateFlow)
-        submitHandler.submitEventFlow
-            .onEach { submitEvent ->
-                when (submitEvent) {
-                    SubmitHandlerEvent.InvalidInput -> validateAllFields()
-                }
-            }.launchIn(coroutineScope)
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -148,7 +140,59 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    private fun validateAllFields() {
+    private fun <T> updateField(
+        fieldId: MBWayFieldId,
+        value: T? = null,
+        hasFocus: Boolean? = null,
+        shouldHighlightValidationError: Boolean = false,
+    ) {
+        val validation = value?.let {
+            validationRegistry.validate(
+                fieldId,
+                transformerRegistry.transform(fieldId, value),
+            )
+        }
+
+        state.update { state ->
+            when (fieldId) {
+                MBWayFieldId.COUNTRY_CODE -> {
+                    state.copy(
+                        countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
+                            value = value as? CountryModel,
+                            validation = validation,
+                            hasFocus = hasFocus,
+                            shouldHighlightValidationError = shouldHighlightValidationError,
+                        ),
+                    )
+                }
+
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> {
+                    state.copy(
+                        localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
+                            value = value as? String,
+                            validation = validation,
+                            hasFocus = hasFocus,
+                            shouldHighlightValidationError = shouldHighlightValidationError,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
+        updateField(fieldId, value = value)
+
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
+        updateField<Unit>(fieldId, hasFocus = hasFocus)
+
+    override fun onSubmit() = if (state.value.isValid) {
+        submitHandler.onSubmit(componentStateFlow.value)
+    } else {
+        highlightAllFieldValidationErrors()
+    }
+
+    private fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
         var isErrorFocused = false
 
@@ -167,56 +211,10 @@ internal class DefaultMBWayDelegate(
                 fieldId = fieldId,
                 value = fieldState.value, // Ensure the current value is validated
                 hasFocus = shouldFocus,
-                isValidationErrorCheckForced = true,
+                shouldHighlightValidationError = true,
             )
         }
     }
-
-    private fun <T> updateField(
-        fieldId: MBWayFieldId,
-        value: T? = null,
-        hasFocus: Boolean? = null,
-        // By default this flag will be false, to hide validation errors when the field gets updated
-        isValidationErrorCheckForced: Boolean = false,
-    ) {
-        val validation = value?.let {
-            validationRegistry.validate(
-                fieldId,
-                transformerRegistry.transform(fieldId, value),
-            )
-        }
-
-        state.update { state ->
-            when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> {
-                    state.copy(
-                        countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
-                            value = value as? CountryModel,
-                            validation = validation,
-                            hasFocus = hasFocus,
-                            isValidationErrorCheckForced = isValidationErrorCheckForced,
-                        ),
-                    )
-                }
-
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> {
-                    state.copy(
-                        localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
-                            value = value as? String,
-                            validation = validation,
-                            hasFocus = hasFocus,
-                            isValidationErrorCheckForced = isValidationErrorCheckForced,
-                        ),
-                    )
-                }
-            }
-        }
-    }
-
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
-        updateField(fieldId, value = value)
-
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) = updateField<Unit>(fieldId, hasFocus = hasFocus)
 
     private fun getSupportedCountries(): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
@@ -230,10 +228,6 @@ internal class DefaultMBWayDelegate(
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
-    }
-
-    override fun onSubmit() {
-        submitHandler.onSubmit(componentStateFlow.value)
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
