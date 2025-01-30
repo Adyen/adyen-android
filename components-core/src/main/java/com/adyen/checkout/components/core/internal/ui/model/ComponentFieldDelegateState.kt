@@ -15,7 +15,7 @@ data class ComponentFieldDelegateState<T>(
     val value: T,
     val validation: Validation? = null,
     val hasFocus: Boolean = false,
-    val isValidationErrorCheckForced: Boolean = false,
+    val shouldHighlightValidationError: Boolean = false,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -23,10 +23,10 @@ fun <T> ComponentFieldDelegateState<T>.updateFieldState(
     value: T? = null,
     validation: Validation? = null,
     hasFocus: Boolean? = null,
-    isValidationErrorCheckForced: Boolean? = null,
+    shouldHighlightValidationError: Boolean? = null,
 ): ComponentFieldDelegateState<T> = copy(
     value = value ?: this.value,
     validation = validation ?: this.validation,
     hasFocus = hasFocus ?: this.hasFocus,
-    isValidationErrorCheckForced = isValidationErrorCheckForced ?: this.isValidationErrorCheckForced,
+    shouldHighlightValidationError = shouldHighlightValidationError ?: this.shouldHighlightValidationError,
 )
