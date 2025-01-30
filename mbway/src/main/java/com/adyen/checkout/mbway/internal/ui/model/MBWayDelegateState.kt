@@ -47,7 +47,7 @@ internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
     )
 
 internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
-    !this.hasFocus || this.isValidationErrorCheckForced
+    !this.hasFocus || this.shouldHighlightValidationError
 
 internal fun MBWayDelegateState.toComponentState(
     analyticsManager: AnalyticsManager,
