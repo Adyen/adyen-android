@@ -135,6 +135,7 @@ constructor(
         private val PAYMENT_METHODS = listOf(
             PaymentMethodTypes.BLIK,
             PaymentMethodTypes.MB_WAY,
+            PaymentMethodTypes.PAY_TO,
             PaymentMethodTypes.UPI_COLLECT,
             PaymentMethodTypes.UPI_INTENT,
         )
