@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 29/01/2025.
+ */
+
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.parcelize
+}
+
+ext.mavenArtifactId = "payto"
+ext.mavenArtifactName = "Adyen checkout PayTo component"
+ext.mavenArtifactDescription = "Adyen checkout PayTo component client for Adyen's Checkout API."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    namespace 'com.adyen.checkout.payto'
+    compileSdk libs.versions.compile.sdk.get().toInteger()
+
+    defaultConfig {
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    // Checkout
+    api project(':action-core')
+    api project(':ui-core')
+    api project(':sessions-core')
+
+    // Dependencies
+    implementation libs.material
+
+    //Tests
+    testImplementation testFixtures(project(':test-core'))
+    testImplementation testFixtures(project(':components-core'))
+    testImplementation testFixtures(project(':ui-core'))
+    testImplementation libs.bundles.junit
+    testImplementation libs.bundles.kotlin.coroutines.test
+}
