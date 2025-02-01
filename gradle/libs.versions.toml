@@ -46,7 +46,7 @@ adyen3ds2 = "2.2.21"
 
 # External dependencies
 cash-app-pay = "2.5.0"
-google-pay-compose-button = "1.0.0"
+google-pay-compose-button = "1.1.0"
 okhttp = "4.12.0"
 play-services-wallet = "19.4.0"
 twint = "8.0.0"
