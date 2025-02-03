@@ -439,6 +439,8 @@ internal fun getComponentFor(
             )
         }
 
+        // TODO Add PayTo here when component provider is created
+
         checkCompileOnly { SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             SepaComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,

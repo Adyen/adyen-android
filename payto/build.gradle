@@ -50,4 +50,5 @@ dependencies {
     testImplementation testFixtures(project(':ui-core'))
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.kotlin.coroutines.test
+    testImplementation libs.bundles.mockito
 }
