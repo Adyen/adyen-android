@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
+import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
 import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdaterRegistry
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
@@ -15,20 +18,37 @@ import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.util.CountryUtils
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 internal class MBWayStateManager(
+    componentParams: ButtonComponentParams,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
     private val stateUpdaterRegistry: StateUpdaterRegistry<MBWayFieldId, MBWayDelegateState>,
 ) : StateManager<MBWayDelegateState, MBWayFieldId> {
 
+    private val _state = MutableStateFlow(
+        MBWayDelegateState(
+            countries = getSupportedCountries(componentParams),
+            countryCodeFieldState = ComponentFieldDelegateState(getInitiallySelectedCountry(componentParams)),
+        ),
+    )
+    override val state: StateFlow<MBWayDelegateState> = _state
+
+    override val isValid by lazy {
+        _state.value.isValid
+    }
+
     override fun <T> updateField(
-        state: MBWayDelegateState,
         fieldId: MBWayFieldId,
         value: T?,
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
-    ): MBWayDelegateState {
+    ) {
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
@@ -36,7 +56,7 @@ internal class MBWayStateManager(
             )
         }
 
-        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, state)
+        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, _state.value)
         val updatedFieldState = fieldState.updateFieldState(
             value = value,
             validation = validation,
@@ -44,6 +64,24 @@ internal class MBWayStateManager(
             shouldHighlightValidationError = shouldHighlightValidationError,
         )
 
-        return stateUpdaterRegistry.updateFieldState(fieldId, state, updatedFieldState)
+        _state.update {
+            stateUpdaterRegistry.updateFieldState(fieldId, _state.value, updatedFieldState)
+        }
+    }
+
+    private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
+        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
+
+    private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
+        val countries = getSupportedCountries(componentParams)
+        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+        ?: throw IllegalArgumentException("Countries list can not be null")
+    }
+
+    companion object {
+        private const val ISO_CODE_PORTUGAL = "PT"
+        private const val ISO_CODE_SPAIN = "ES"
+
+        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }

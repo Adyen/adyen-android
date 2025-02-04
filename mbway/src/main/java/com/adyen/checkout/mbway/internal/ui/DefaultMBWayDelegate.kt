@@ -17,7 +17,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
@@ -34,8 +33,6 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,7 +41,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 
 @Suppress("TooManyFunctions")
 internal class DefaultMBWayDelegate(
@@ -58,27 +54,19 @@ internal class DefaultMBWayDelegate(
     private val stateManager: StateManager<MBWayDelegateState, MBWayFieldId>,
 ) : MBWayDelegate {
 
-    // TODO: Probably move to the stateManager?
-    private val state = MutableStateFlow(
-        MBWayDelegateState(
-            countries = getSupportedCountries(),
-            countryCodeFieldState = ComponentFieldDelegateState(getInitiallySelectedCountry()),
-        ),
-    )
-
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
             delegateState.toComponentState(analyticsManager, transformerRegistry, order, componentParams.amount)
         }
-        state
+        stateManager.state
             .map(toComponentState)
-            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(state.value))
+            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(stateManager.state.value))
     }
 
     override val viewStateFlow: Flow<MBWayViewState> by lazy {
-        state
+        stateManager.state
             .map(MBWayDelegateState::toViewState)
-            .stateIn(coroutineScope, SharingStarted.Lazily, state.value.toViewState())
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 
     private val _viewFlow: MutableStateFlow<ComponentViewType?> =
@@ -142,7 +130,7 @@ internal class DefaultMBWayDelegate(
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
         updateField<Unit>(fieldId, hasFocus = hasFocus)
 
-    override fun onSubmit() = if (state.value.isValid) {
+    override fun onSubmit() = if (stateManager.isValid) {
         submitHandler.onSubmit(componentStateFlow.value)
     } else {
         highlightAllFieldValidationErrors()
@@ -155,8 +143,8 @@ internal class DefaultMBWayDelegate(
 
         MBWayFieldId.entries.forEach { fieldId ->
             val fieldState = when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> state.value.countryCodeFieldState
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> state.value.localPhoneNumberFieldState
+                MBWayFieldId.COUNTRY_CODE -> stateManager.state.value.countryCodeFieldState
+                MBWayFieldId.LOCAL_PHONE_NUMBER -> stateManager.state.value.localPhoneNumberFieldState
             }
 
             val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
@@ -179,18 +167,7 @@ internal class DefaultMBWayDelegate(
         hasFocus: Boolean? = null,
         shouldHighlightValidationError: Boolean = false,
     ) {
-        state.update { state ->
-            stateManager.updateField(state, fieldId, value, hasFocus, shouldHighlightValidationError)
-        }
-    }
-
-    private fun getSupportedCountries(): List<CountryModel> =
-        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
-
-    private fun getInitiallySelectedCountry(): CountryModel {
-        val countries = getSupportedCountries()
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
-        ?: throw IllegalArgumentException("Countries list can not be null")
+        stateManager.updateField(fieldId, value, hasFocus, shouldHighlightValidationError)
     }
 
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
@@ -210,12 +187,5 @@ internal class DefaultMBWayDelegate(
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
-    }
-
-    companion object {
-        private const val ISO_CODE_PORTUGAL = "PT"
-        private const val ISO_CODE_SPAIN = "ES"
-
-        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }
