@@ -115,9 +115,10 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 transformerRegistry = transformerRegistry,
                 stateManager = MBWayStateManager(
-                    transformerRegistry,
-                    MBWayValidatorRegistry(),
-                    MBWayStateUpdaterRegistry(),
+                    componentParams = componentParams,
+                    transformerRegistry = transformerRegistry,
+                    validationRegistry = MBWayValidatorRegistry(),
+                    stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
                 ),
             )
 
@@ -211,9 +212,10 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 transformerRegistry = transformerRegistry,
                 stateManager = MBWayStateManager(
-                    transformerRegistry,
-                    MBWayValidatorRegistry(),
-                    MBWayStateUpdaterRegistry(),
+                    componentParams = componentParams,
+                    transformerRegistry = transformerRegistry,
+                    validationRegistry = MBWayValidatorRegistry(),
+                    stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
                 ),
             )
 
