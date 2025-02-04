@@ -24,4 +24,6 @@ interface StateManager<S, FI> {
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
     )
+
+    fun highlightAllFieldValidationErrors()
 }
