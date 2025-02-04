@@ -122,8 +122,7 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
-        updateField(fieldId, value = value)
+    override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = updateField(fieldId, value = value)
 
     // TODO: Can we remove the Unit from here?
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
