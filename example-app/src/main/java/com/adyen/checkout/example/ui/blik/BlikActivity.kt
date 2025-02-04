@@ -18,8 +18,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityBlikBinding
+import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,10 +47,10 @@ class BlikActivity : AppCompatActivity() {
         binding = ActivityBlikBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        applyInsetsToRootLayout(binding)
+
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setTitle(R.string.blik_title)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {

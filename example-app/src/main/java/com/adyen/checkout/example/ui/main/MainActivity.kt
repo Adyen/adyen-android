@@ -24,6 +24,7 @@ import com.adyen.checkout.dropin.DropInCallback
 import com.adyen.checkout.dropin.SessionDropInCallback
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
+import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.service.ExampleAdvancedDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        applyInsetsToRootLayout(binding)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
