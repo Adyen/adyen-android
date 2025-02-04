@@ -9,14 +9,19 @@
 package com.adyen.checkout.components.core.internal.ui.model.field
 
 import androidx.annotation.RestrictTo
+import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface StateManager<S, FI> {
+
+    val state: StateFlow<S>
+
+    val isValid: Boolean
+
     fun <T> updateField(
-        state: S,
         fieldId: FI,
         value: T?,
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
-    ): S
+    )
 }
