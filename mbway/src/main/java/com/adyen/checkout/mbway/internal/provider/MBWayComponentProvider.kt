@@ -39,6 +39,8 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.getMBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
+import com.adyen.checkout.mbway.internal.ui.MBWayStateManager
+import com.adyen.checkout.mbway.internal.ui.model.MBWayStateUpdaterRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayTransformerRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayValidatorRegistry
 import com.adyen.checkout.mbway.toCheckoutConfiguration
@@ -102,6 +104,8 @@ constructor(
                 sessionId = null,
             )
 
+            val transformerRegistry = MBWayTransformerRegistry()
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
@@ -109,8 +113,12 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
-                transformerRegistry = MBWayTransformerRegistry(),
-                validationRegistry = MBWayValidatorRegistry(),
+                transformerRegistry = transformerRegistry,
+                stateManager = MBWayStateManager(
+                    transformerRegistry,
+                    MBWayValidatorRegistry(),
+                    MBWayStateUpdaterRegistry(),
+                ),
             )
 
             val genericActionDelegate =
@@ -192,6 +200,8 @@ constructor(
                 sessionId = checkoutSession.sessionSetupResponse.id,
             )
 
+            val transformerRegistry = MBWayTransformerRegistry()
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
@@ -199,8 +209,12 @@ constructor(
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
-                transformerRegistry = MBWayTransformerRegistry(),
-                validationRegistry = MBWayValidatorRegistry(),
+                transformerRegistry = transformerRegistry,
+                stateManager = MBWayStateManager(
+                    transformerRegistry,
+                    MBWayValidatorRegistry(),
+                    MBWayStateUpdaterRegistry(),
+                ),
             )
 
             val genericActionDelegate =
