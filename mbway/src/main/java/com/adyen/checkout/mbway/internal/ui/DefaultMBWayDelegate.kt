@@ -19,9 +19,8 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
-import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
-import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
@@ -56,9 +55,10 @@ internal class DefaultMBWayDelegate(
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
-    private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
+    private val stateManager: StateManager<MBWayDelegateState, MBWayFieldId>,
 ) : MBWayDelegate {
 
+    // TODO: Probably move to the stateManager?
     private val state = MutableStateFlow(
         MBWayDelegateState(
             countries = getSupportedCountries(),
@@ -138,6 +138,7 @@ internal class DefaultMBWayDelegate(
     override fun onFieldValueChanged(fieldId: MBWayFieldId, value: String) =
         updateField(fieldId, value = value)
 
+    // TODO: Can we remove the Unit from here?
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
         updateField<Unit>(fieldId, hasFocus = hasFocus)
 
@@ -147,6 +148,7 @@ internal class DefaultMBWayDelegate(
         highlightAllFieldValidationErrors()
     }
 
+    // TODO: Move this to the state manager
     private fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
         var isErrorFieldFocused = false
@@ -177,37 +179,8 @@ internal class DefaultMBWayDelegate(
         hasFocus: Boolean? = null,
         shouldHighlightValidationError: Boolean = false,
     ) {
-        val validation = value?.let {
-            validationRegistry.validate(
-                fieldId,
-                transformerRegistry.transform(fieldId, value),
-            )
-        }
-
         state.update { state ->
-            when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> {
-                    state.copy(
-                        countryCodeFieldState = state.countryCodeFieldState.updateFieldState(
-                            value = value as? CountryModel,
-                            validation = validation,
-                            hasFocus = hasFocus,
-                            shouldHighlightValidationError = shouldHighlightValidationError,
-                        ),
-                    )
-                }
-
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> {
-                    state.copy(
-                        localPhoneNumberFieldState = state.localPhoneNumberFieldState.updateFieldState(
-                            value = value as? String,
-                            validation = validation,
-                            hasFocus = hasFocus,
-                            shouldHighlightValidationError = shouldHighlightValidationError,
-                        ),
-                    )
-                }
-            }
+            stateManager.updateField(state, fieldId, value, hasFocus, shouldHighlightValidationError)
         }
     }
 
