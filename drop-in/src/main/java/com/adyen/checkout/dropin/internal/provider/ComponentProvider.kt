@@ -97,6 +97,9 @@ import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProv
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
+import com.adyen.checkout.payto.PayToComponent
+import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.internal.provider.PayToComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
@@ -439,7 +442,14 @@ internal fun getComponentFor(
             )
         }
 
-        // TODO Add PayTo here when component provider is created
+        checkCompileOnly { PayToComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            PayToComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayToComponentState>,
+            )
+        }
 
         checkCompileOnly { SepaComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
             SepaComponentProvider(dropInOverrideParams, analyticsManager).get(

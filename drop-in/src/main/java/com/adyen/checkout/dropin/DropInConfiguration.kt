@@ -47,6 +47,7 @@ import com.adyen.checkout.onlinebankingsk.OnlineBankingSKConfiguration
 import com.adyen.checkout.openbanking.OpenBankingConfiguration
 import com.adyen.checkout.paybybankus.PayByBankUSConfiguration
 import com.adyen.checkout.payeasy.PayEasyConfiguration
+import com.adyen.checkout.payto.PayToConfiguration
 import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.seveneleven.SevenElevenConfiguration
 import com.adyen.checkout.twint.TwintConfiguration
@@ -465,6 +466,14 @@ class DropInConfiguration private constructor(
          */
         fun addPayByBankUSConfiguration(payByBankUSConfiguration: PayByBankUSConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.PAY_BY_BANK_US] = payByBankUSConfiguration
+            return this
+        }
+
+        /**
+         * Add configuration for PAY TO payment method.
+         */
+        fun addPayToConfiguration(payToConfiguration: PayToConfiguration): Builder {
+            availablePaymentConfigs[PaymentMethodTypes.PAY_TO] = payToConfiguration
             return this
         }
 
