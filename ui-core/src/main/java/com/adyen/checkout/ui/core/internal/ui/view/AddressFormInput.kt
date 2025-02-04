@@ -24,6 +24,7 @@ import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
@@ -220,6 +221,8 @@ class AddressFormInput @JvmOverloads constructor(
             currentSpec = selectedSpecification
             autoCompleteTextViewCountry?.setText(selectedCountry?.name)
             populateFormFields(selectedSpecification)
+        } else {
+            updateInputFields(delegate.addressOutputData)
         }
     }
 
@@ -248,6 +251,7 @@ class AddressFormInput @JvmOverloads constructor(
         val hadFocus = hasFocus()
         formContainer?.removeAllViews()
         LayoutInflater.from(context).inflate(layoutResId, formContainer, true)
+        updateInputFields(delegate.addressOutputData)
         initForm(specification)
         if (hadFocus) requestFocus()
     }
@@ -314,7 +318,7 @@ class AddressFormInput @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_STREET_ADDRESS)
             }
-            setText(delegate.addressOutputData.street.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { street = it.toString() }
                 textInputLayoutStreet?.hideError()
@@ -333,7 +337,7 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initHouseNumberInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
-            setText(delegate.addressOutputData.houseNumberOrName.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { houseNumberOrName = it.toString() }
                 textInputLayoutHouseNumber?.hideError()
@@ -355,7 +359,7 @@ class AddressFormInput @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_APT_NUMBER)
             }
-            setText(delegate.addressOutputData.apartmentSuite.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { apartmentSuite = it.toString() }
             }
@@ -376,7 +380,7 @@ class AddressFormInput @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_CODE)
             }
-            setText(delegate.addressOutputData.postalCode.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { postalCode = it.toString() }
                 textInputLayoutPostalCode?.hideError()
@@ -398,7 +402,7 @@ class AddressFormInput @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_LOCALITY)
             }
-            setText(delegate.addressOutputData.city.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { city = it.toString() }
                 textInputLayoutCity?.hideError()
@@ -420,7 +424,7 @@ class AddressFormInput @JvmOverloads constructor(
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setAutofillHints(HintConstants.AUTOFILL_HINT_POSTAL_ADDRESS_REGION)
             }
-            setText(delegate.addressOutputData.stateOrProvince.value)
+
             setOnChangeListener {
                 delegate.updateAddressInputData { stateOrProvince = it.toString() }
                 textInputLayoutProvinceTerritory?.hideError()
@@ -449,6 +453,21 @@ class AddressFormInput @JvmOverloads constructor(
                 delegate.updateAddressInputData { stateOrProvince = statesAdapter.getItem(position).code }
                 textInputLayoutState?.hideError()
             }
+        }
+    }
+
+    private fun updateInputFields(outputData: AddressOutputData) {
+        editTextStreet?.setTextIfChanged(outputData.street.value)
+        editTextHouseNumber?.setTextIfChanged(outputData.houseNumberOrName.value)
+        editTextApartmentSuite?.setTextIfChanged(outputData.apartmentSuite.value)
+        editTextPostalCode?.setTextIfChanged(outputData.postalCode.value)
+        editTextCity?.setTextIfChanged(outputData.city.value)
+        editTextProvinceTerritory?.setTextIfChanged(outputData.stateOrProvince.value)
+    }
+
+    private fun TextView.setTextIfChanged(newText: String?) {
+        if (newText != text.toString()) {
+            text = newText
         }
     }
 
