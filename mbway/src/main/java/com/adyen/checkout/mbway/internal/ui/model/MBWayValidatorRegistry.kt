@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
@@ -18,7 +19,7 @@ internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayFieldId> {
 
     private val validators = MBWayFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> DefaultValidValidator()
+            MBWayFieldId.COUNTRY_CODE -> DefaultValidator()
             MBWayFieldId.LOCAL_PHONE_NUMBER -> LocalPhoneNumberValidator()
         }
     }
@@ -32,14 +33,10 @@ internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayFieldId> {
 }
 
 internal class LocalPhoneNumberValidator : FieldValidator<String> {
-    override fun validate(input: String) = if (input.isNotEmpty() && ValidationUtils.isPhoneNumberValid(input)) {
-        Validation.Valid
-    } else {
-        Validation.Invalid(R.string.checkout_mbway_phone_number_not_valid)
-    }
-}
-
-// TODO: Could this logic change?
-internal class DefaultValidValidator : FieldValidator<Any> {
-    override fun validate(input: Any) = Validation.Valid
+    override fun validate(input: String) =
+        if (input.isNotEmpty() && ValidationUtils.isPhoneNumberValid(input)) {
+            Validation.Valid
+        } else {
+            Validation.Invalid(R.string.checkout_mbway_phone_number_not_valid)
+        }
 }
