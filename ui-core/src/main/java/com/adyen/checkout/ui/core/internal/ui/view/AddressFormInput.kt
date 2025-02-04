@@ -338,7 +338,6 @@ class AddressFormInput @JvmOverloads constructor(
     private fun initHouseNumberInput(styleResId: Int?) {
         styleResId?.let { textInputLayoutHouseNumber?.setLocalizedHintFromStyle(it, localizedContext) }
         editTextHouseNumber?.apply {
-
             setOnChangeListener {
                 delegate.updateAddressInputData { houseNumberOrName = it.toString() }
                 textInputLayoutHouseNumber?.hideError()
