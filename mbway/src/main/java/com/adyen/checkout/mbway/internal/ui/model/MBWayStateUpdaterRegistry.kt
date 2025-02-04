@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdaterRe
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MBWayDelegateState> {
+
     private val updaters = MBWayFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
             MBWayFieldId.LOCAL_PHONE_NUMBER -> LocalPhoneNumberUpdater()

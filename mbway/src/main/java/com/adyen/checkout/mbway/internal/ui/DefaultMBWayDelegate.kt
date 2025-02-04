@@ -122,26 +122,20 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = updateField(fieldId, value = value)
+    override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) {
+        stateManager.updateField(fieldId, value = value)
+    }
 
     // TODO: Can we remove the Unit from here?
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
-        updateField<Unit>(fieldId, hasFocus = hasFocus)
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+        stateManager.updateField<Unit>(fieldId, hasFocus = hasFocus)
+    }
 
     // TODO: When fields are not all validated yet and we click Submit, we need to validate all non validated fields first before submitting
     override fun onSubmit() = if (stateManager.isValid) {
         submitHandler.onSubmit(componentStateFlow.value)
     } else {
         stateManager.highlightAllFieldValidationErrors()
-    }
-
-    private fun <T> updateField(
-        fieldId: MBWayFieldId,
-        value: T? = null,
-        hasFocus: Boolean? = null,
-        shouldHighlightValidationError: Boolean = false,
-    ) {
-        stateManager.updateField(fieldId, value, hasFocus, shouldHighlightValidationError)
     }
 
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
