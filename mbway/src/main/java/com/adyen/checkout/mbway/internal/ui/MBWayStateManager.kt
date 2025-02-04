@@ -41,7 +41,10 @@ internal class MBWayStateManager(
     override val state: StateFlow<MBWayDelegateState> = _state
 
     override val isValid
-        get() = _state.value.isValid
+        get() = run {
+            validateNonValidatedFields()
+            _state.value.isValid
+        }
 
     private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
         CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
@@ -50,6 +53,19 @@ internal class MBWayStateManager(
         val countries = getSupportedCountries(componentParams)
         return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
         ?: throw IllegalArgumentException("Countries list can not be null")
+    }
+
+    private fun validateNonValidatedFields() {
+        MBWayFieldId.entries.forEach { fieldId ->
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+
+            if (fieldState.validation == null) {
+                updateField(
+                    fieldId = fieldId,
+                    value = fieldState.value, // Ensure the current value is validated
+                )
+            }
+        }
     }
 
     override fun <T> updateField(
