@@ -22,7 +22,8 @@ interface StateManager<S, FI> {
         fieldId: FI,
         value: T? = null,
         hasFocus: Boolean? = null,
-        shouldHighlightValidationError: Boolean? = null,
+        // Default value is false, to make sure that errors are cleared when field is updated
+        shouldHighlightValidationError: Boolean? = false,
     )
 
     fun highlightAllFieldValidationErrors()
