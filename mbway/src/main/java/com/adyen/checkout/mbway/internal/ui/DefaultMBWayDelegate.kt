@@ -17,7 +17,6 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.AdyenLogLevel
@@ -130,35 +129,11 @@ internal class DefaultMBWayDelegate(
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) =
         updateField<Unit>(fieldId, hasFocus = hasFocus)
 
+    // TODO: When fields are not all validated yet and we click Submit, we need to validate all non validated fields first before submitting
     override fun onSubmit() = if (stateManager.isValid) {
         submitHandler.onSubmit(componentStateFlow.value)
     } else {
-        highlightAllFieldValidationErrors()
-    }
-
-    // TODO: Move this to the state manager
-    private fun highlightAllFieldValidationErrors() {
-        // Flag to focus only the first invalid field
-        var isErrorFieldFocused = false
-
-        MBWayFieldId.entries.forEach { fieldId ->
-            val fieldState = when (fieldId) {
-                MBWayFieldId.COUNTRY_CODE -> stateManager.state.value.countryCodeFieldState
-                MBWayFieldId.LOCAL_PHONE_NUMBER -> stateManager.state.value.localPhoneNumberFieldState
-            }
-
-            val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
-            if (shouldFocus) {
-                isErrorFieldFocused = true
-            }
-
-            updateField(
-                fieldId = fieldId,
-                value = fieldState.value, // Ensure the current value is validated
-                hasFocus = shouldFocus,
-                shouldHighlightValidationError = true,
-            )
-        }
+        stateManager.highlightAllFieldValidationErrors()
     }
 
     private fun <T> updateField(
