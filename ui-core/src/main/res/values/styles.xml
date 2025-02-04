@@ -356,6 +356,8 @@
 
     <style name="AdyenCheckout.AddressLookup.Loading" parent="Widget.AppCompat.ProgressBar">
         <item name="android:tint">@color/primaryColor</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
     </style>
 
     <style name="AdyenCheckout.AddressLookup.Item.Header" parent="AdyenCheckout.TextAppearance">

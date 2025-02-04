@@ -14,19 +14,26 @@
     android:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <SearchView
-        android:id="@+id/textInputLayout_addressLookupQuerySearch"
-        style="@style/AdyenCheckout.AddressLookup.Query"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/standard_margin" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="@style/AdyenCheckout.AddressLookup.Loading"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+        android:layout_marginBottom="@dimen/standard_margin">
+
+        <SearchView
+            android:id="@+id/textInputLayout_addressLookupQuerySearch"
+            style="@style/AdyenCheckout.AddressLookup.Query"
+            android:layout_width="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/AdyenCheckout.AddressLookup.Loading"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="-80dp"
+            android:layout_toEndOf="@id/textInputLayout_addressLookupQuerySearch"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/textView_error"
