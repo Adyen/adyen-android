@@ -122,7 +122,8 @@ class AddressFormInput @JvmOverloads constructor(
                 val selectedCountryCode = countryAdapter.getItem(position).code
                 if (delegate.addressOutputData.country.value != selectedCountryCode) {
                     delegate.updateAddressInputData {
-                        reset()
+                        // Only reset state/province, so filled in data is retained.
+                        stateOrProvince = ""
                         country = selectedCountryCode
                     }
                     populateFormFields(AddressSpecification.fromString(selectedCountryCode))
