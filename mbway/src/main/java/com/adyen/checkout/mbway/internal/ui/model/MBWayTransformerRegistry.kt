@@ -12,10 +12,12 @@ import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTra
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 
 internal class MBWayTransformerRegistry : FieldTransformerRegistry<MBWayFieldId> {
-    private val transformers = mapOf(
-        MBWayFieldId.LOCAL_PHONE_NUMBER to LocalPhoneNumberTransformer(),
-        MBWayFieldId.COUNTRY_CODE to DefaultTransformer(),
-    )
+    private val transformers = MBWayFieldId.entries.associateWith { fieldId ->
+        when (fieldId) {
+            MBWayFieldId.LOCAL_PHONE_NUMBER -> LocalPhoneNumberTransformer()
+            MBWayFieldId.COUNTRY_CODE -> DefaultTransformer()
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> transform(key: MBWayFieldId, value: T): T {
