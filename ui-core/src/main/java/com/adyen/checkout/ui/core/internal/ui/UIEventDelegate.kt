@@ -11,8 +11,8 @@ package com.adyen.checkout.ui.core.internal.ui
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface UIEventDelegate<T> {
-    fun onFieldValueChanged(fieldId: T, value: String)
+interface UIEventDelegate<FI> {
+    fun <T> onFieldValueChanged(fieldId: FI, value: T)
 
-    fun onFieldFocusChanged(fieldId: T, hasFocus: Boolean)
+    fun onFieldFocusChanged(fieldId: FI, hasFocus: Boolean)
 }

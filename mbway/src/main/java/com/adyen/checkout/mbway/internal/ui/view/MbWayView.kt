@@ -133,6 +133,6 @@ internal class MbWayView @JvmOverloads constructor(
     override fun getView(): View = this
 
     private fun onCountrySelected(countryModel: CountryModel) {
-        delegate.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, countryModel.callingCode)
+        delegate.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, countryModel)
     }
 }
