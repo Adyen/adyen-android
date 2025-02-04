@@ -20,9 +20,9 @@ interface StateManager<S, FI> {
 
     fun <T> updateField(
         fieldId: FI,
-        value: T?,
-        hasFocus: Boolean?,
-        shouldHighlightValidationError: Boolean?,
+        value: T? = null,
+        hasFocus: Boolean? = null,
+        shouldHighlightValidationError: Boolean? = null,
     )
 
     fun highlightAllFieldValidationErrors()
