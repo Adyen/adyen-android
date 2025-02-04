@@ -11,6 +11,7 @@ package com.adyen.checkout.mbway.internal.ui
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
 import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdaterRegistry
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
@@ -39,8 +40,16 @@ internal class MBWayStateManager(
     )
     override val state: StateFlow<MBWayDelegateState> = _state
 
-    override val isValid by lazy {
-        _state.value.isValid
+    override val isValid
+        get() = _state.value.isValid
+
+    private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
+        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
+
+    private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
+        val countries = getSupportedCountries(componentParams)
+        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+        ?: throw IllegalArgumentException("Countries list can not be null")
     }
 
     override fun <T> updateField(
@@ -69,13 +78,25 @@ internal class MBWayStateManager(
         }
     }
 
-    private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
-        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
+    override fun highlightAllFieldValidationErrors() {
+        // Flag to focus only the first invalid field
+        var isErrorFieldFocused = false
 
-    private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
-        val countries = getSupportedCountries(componentParams)
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
-        ?: throw IllegalArgumentException("Countries list can not be null")
+        MBWayFieldId.entries.forEach { fieldId ->
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+
+            val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
+            if (shouldFocus) {
+                isErrorFieldFocused = true
+            }
+
+            updateField(
+                fieldId = fieldId,
+                value = fieldState.value, // Ensure the current value is validated
+                hasFocus = shouldFocus,
+                shouldHighlightValidationError = true,
+            )
+        }
     }
 
     companion object {
