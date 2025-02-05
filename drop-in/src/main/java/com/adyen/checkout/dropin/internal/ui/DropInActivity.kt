@@ -149,7 +149,6 @@ internal class DropInActivity :
         adyenLog(AdyenLogLevel.DEBUG) { "onCreate - $savedInstanceState" }
         val binding = ActivityDropInBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        overridePendingTransition(0, 0)
 
         if (!DropInBundleHandler.assertBundleExists(intent.extras)) {
             terminateWithError("Initialization failed")
@@ -512,7 +511,6 @@ internal class DropInActivity :
         adyenLog(AdyenLogLevel.DEBUG) { "terminate" }
         stopDropInService()
         finish()
-        overridePendingTransition(0, R.anim.fade_out)
     }
 
     private fun handleIntent(intent: Intent) {
