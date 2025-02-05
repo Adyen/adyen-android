@@ -231,16 +231,7 @@ class AddressLookupView @JvmOverloads constructor(
     }
 
     private fun handleLoadingState() {
-        binding.recyclerViewAddressLookupOptions.isVisible = false
-        binding.textViewInitialDisclaimer.isVisible = false
-        binding.textViewError.isVisible = false
-        binding.textViewManualEntryError.isVisible = false
-        binding.textViewManualEntryInitial.isVisible = false
-        binding.addressFormInput.isVisible = false
         binding.progressBar.isVisible = true
-        binding.buttonManualEntry.isVisible = false
-        binding.divider.isVisible = false
-        binding.buttonSubmitAddress.isVisible = false
     }
 
     private fun handleFormState(addressLookupState: AddressLookupState.Form) {
