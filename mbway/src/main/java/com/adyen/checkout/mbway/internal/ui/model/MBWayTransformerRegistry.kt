@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.mbway.internal.ui.model
 
+import com.adyen.checkout.components.core.internal.ui.model.transformer.DefaultTransformer
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformer
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 
@@ -29,8 +30,4 @@ internal class MBWayTransformerRegistry : FieldTransformerRegistry<MBWayFieldId>
 
 internal class LocalPhoneNumberTransformer : FieldTransformer<String> {
     override fun transform(value: String) = value.trimStart('0')
-}
-
-internal class DefaultTransformer : FieldTransformer<Any> {
-    override fun transform(value: Any) = value
 }
