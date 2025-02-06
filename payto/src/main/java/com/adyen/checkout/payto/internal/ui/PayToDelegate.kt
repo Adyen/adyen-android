@@ -10,15 +10,26 @@ package com.adyen.checkout.payto.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.internal.ui.model.PayToInputData
+import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import kotlinx.coroutines.flow.Flow
 
 internal interface PayToDelegate :
     PaymentComponentDelegate<PayToComponentState>,
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate {
+
+    val outputData: PayToOutputData
+
+    val outputDataFlow: Flow<PayToOutputData>
+
+    val componentStateFlow: Flow<PayToComponentState>
+
+    fun updateInputData(update: PayToInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 }
