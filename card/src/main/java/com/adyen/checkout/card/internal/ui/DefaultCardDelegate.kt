@@ -507,6 +507,7 @@ class DefaultCardDelegate(
 
     override fun handleBackPress(): Boolean {
         return if (_viewFlow.value == CardComponentViewType.AddressLookup) {
+            addressDelegate.updateAddressInputData { reset() }
             _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
             true
         } else {

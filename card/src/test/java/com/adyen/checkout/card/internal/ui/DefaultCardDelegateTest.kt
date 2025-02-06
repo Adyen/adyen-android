@@ -64,6 +64,7 @@ import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
@@ -1231,6 +1232,7 @@ internal class DefaultCardDelegateTest(
     @Test
     fun `when view type is AddressLookup and handleBackPress() is called DefaultCardView should be emitted`() =
         runTest {
+            whenever(addressLookupDelegate.addressDelegate) doReturn mock()
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
             delegate.startAddressLookup()
             assertTrue(delegate.handleBackPress())
@@ -1238,6 +1240,19 @@ internal class DefaultCardDelegateTest(
                 assertEquals(CardComponentViewType.DefaultCardView, awaitItem())
                 expectNoEvents()
             }
+        }
+
+    @Test
+    fun `when view type is AddressLookup and handleBackPress() is called, then address form data should be reset`() =
+        runTest {
+            val addressDelegate = mock<AddressDelegate>()
+            whenever(addressLookupDelegate.addressDelegate) doReturn addressDelegate
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            delegate.startAddressLookup()
+
+            delegate.handleBackPress()
+
+            verify(addressDelegate).updateAddressInputData(any())
         }
 
     @Test
