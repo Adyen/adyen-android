@@ -30,7 +30,7 @@
             @bool/has_light_system_bars
         </item>
 
-        <item name="toolbarStyle">@style/Widget.Adyen.Toolbar</item>
+        <item name="appBarLayoutStyle">@style/Widget.Adyen.AppBarLayout</item>
 
         <item name="bottomSheetDialogTheme">@style/Widget.Adyen.BottomSheetDialogTheme</item>
 
