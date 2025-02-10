@@ -253,6 +253,23 @@ internal class DefaultTwintDelegateTest(
 
                 assertEquals(true, componentStateFlow.latestValue.data.storePaymentMethod)
             }
+
+        @Test
+        fun `store checkbox is not shown, then we leave it up to the api`() =
+            runTest {
+                delegate = createDefaultTwintDelegate(
+                    createCheckoutConfiguration(Amount("USD", 0L)) {
+                        setShowStorePaymentField(false)
+                    },
+                )
+                val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
+                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+                delegate.updateInputData { isStorePaymentSelected = true }
+
+                delegate.onSubmit()
+
+                assertNull(componentStateFlow.latestValue.data.storePaymentMethod)
+            }
     }
 
     @ParameterizedTest
