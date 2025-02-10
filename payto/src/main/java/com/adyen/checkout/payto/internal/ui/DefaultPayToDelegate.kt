@@ -45,7 +45,7 @@ internal class DefaultPayToDelegate(
     private val submitHandler: SubmitHandler<PayToComponentState>,
 ) : PayToDelegate {
 
-    private val inputData = PayToInputData()
+    private val inputData: PayToInputData = PayToInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<PayToOutputData> = _outputDataFlow
