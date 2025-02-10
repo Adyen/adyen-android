@@ -13,14 +13,17 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.databinding.PaytoViewBinding
 import com.adyen.checkout.payto.internal.ui.PayToDelegate
-import com.adyen.checkout.ui.core.R
+import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
+import com.adyen.checkout.ui.core.R as UICoreR
 
 internal class PayToView @JvmOverloads constructor(
     context: Context,
@@ -37,7 +40,7 @@ internal class PayToView @JvmOverloads constructor(
     init {
         orientation = VERTICAL
 
-        val padding = resources.getDimension(R.dimen.standard_margin).toInt()
+        val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         setPadding(padding, padding, padding, 0)
     }
 
@@ -46,7 +49,35 @@ internal class PayToView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
-        // TODO Initialize views
+        initModeSelector()
+    }
+
+    private fun initModeSelector() {
+        binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            when (checkedId) {
+                R.id.button_payId -> togglePayIdViews(isChecked)
+                R.id.button_bsb -> toggleBsbViews(isChecked)
+            }
+        }
+        binding.toggleButtonChoice.check(R.id.button_payId)
+    }
+
+    private fun togglePayIdViews(isChecked: Boolean) {
+        binding.textViewPayIdDescription.isVisible = isChecked
+        binding.textViewBsbDescription.isVisible = !isChecked
+
+        if (isChecked) {
+            delegate.updateInputData { mode = PayToMode.PAY_ID }
+        }
+    }
+
+    private fun toggleBsbViews(isChecked: Boolean) {
+        binding.textViewPayIdDescription.isVisible = !isChecked
+        binding.textViewBsbDescription.isVisible = isChecked
+
+        if (isChecked) {
+            delegate.updateInputData { mode = PayToMode.BSB }
+        }
     }
 
     override fun highlightValidationErrors() {
