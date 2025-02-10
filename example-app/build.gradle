@@ -98,8 +98,6 @@ dependencies {
     implementation libs.hilt
     ksp libs.hilt.compiler
 
-    implementation libs.google.pay.compose.button
-
     debugImplementation libs.leak.canary
     debugImplementation libs.compose.ui.tooling
     debugImplementation libs.compose.ui.test.manifest

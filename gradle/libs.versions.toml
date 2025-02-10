@@ -46,7 +46,6 @@ adyen3ds2 = "2.2.21"
 
 # External dependencies
 cash-app-pay = "2.5.0"
-google-pay-compose-button = "1.0.0"
 okhttp = "4.12.0"
 play-services-wallet = "19.4.0"
 twint = "8.0.0"
@@ -105,7 +104,6 @@ compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-mani
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-viewmodel" }
 # this unused dependency is needed so that renovate can update the compose compiler version. More info in: https://github.com/renovatebot/renovate/issues/18354
 compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
-google-pay-compose-button = { group = "com.google.pay.button", name = "compose-pay-button", version.ref = "google-pay-compose-button" }
 google-pay-play-services-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 google-pay-play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "play-services-wallet" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
