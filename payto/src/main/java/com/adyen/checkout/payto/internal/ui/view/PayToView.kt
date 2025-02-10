@@ -22,6 +22,7 @@ import com.adyen.checkout.payto.databinding.PaytoViewBinding
 import com.adyen.checkout.payto.internal.ui.PayToDelegate
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 
@@ -49,7 +50,31 @@ internal class PayToView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
+        initLocalizedStrings(localizedContext)
         initModeSelector()
+    }
+
+    private fun initLocalizedStrings(localizedContext: Context) {
+        binding.textViewModeSelection.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_ModeSelectionTextView,
+            localizedContext,
+        )
+        binding.buttonPayId.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayIdButton,
+            localizedContext,
+        )
+        binding.buttonBsb.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSBButton,
+            localizedContext,
+        )
+        binding.textViewPayIdDescription.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayIdDescriptionTextView,
+            localizedContext,
+        )
+        binding.textViewBsbDescription.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSBDescriptionTextView,
+            localizedContext,
+        )
     }
 
     private fun initModeSelector() {
