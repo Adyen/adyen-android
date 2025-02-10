@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 6/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection" translatable="false">How would you like to use Payto?</string>
+    <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>
+    <string name="checkout_payto_payid_description" translatable="false">Enter the PayID that is connected to your Payto account</string>
+    <string name="checkout_payto_bsb_tab_title" translatable="false">BSB</string>
+    <string name="checkout_payto_bsb_description" translatable="false">Enter the bank account number and the Bank State Branch that is connected to your account to continue</string>
+</resources>
