@@ -6,10 +6,19 @@
   ~ Created by ararat on 6/2/2025.
   -->
 
+<!-- TODO Add translations -->
 <resources>
     <string name="checkout_payto_mode_selection" translatable="false">How would you like to use Payto?</string>
     <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>
     <string name="checkout_payto_payid_description" translatable="false">Enter the PayID that is connected to your Payto account</string>
+    <string name="checkout_payto_payid_phone_number_hint" translatable="false">Phone number</string>
+    <string name="checkout_payto_payid_email_hint" translatable="false">Email address</string>
+    <string name="checkout_payto_payid_abn_hint" translatable="false">Abn</string>
+    <string name="checkout_payto_organization_id_hint" translatable="false">Organization id</string>
     <string name="checkout_payto_bsb_tab_title" translatable="false">BSB</string>
     <string name="checkout_payto_bsb_description" translatable="false">Enter the bank account number and the Bank State Branch that is connected to your account to continue</string>
+    <string name="checkout_payto_bsb_account_number_hint" translatable="false">Bank account number</string>
+    <string name="checkout_payto_bsb_state_branch_hint" translatable="false">Bank State branch</string>
+    <string name="checkout_payto_first_name_hint" translatable="false">Account holder first name</string>
+    <string name="checkout_payto_last_name_hint" translatable="false">Account holder last name</string>
 </resources>
