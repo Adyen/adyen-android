@@ -11,5 +11,6 @@ package com.adyen.checkout.payto.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.InputData
 
 internal data class PayToInputData(
-    var mode: PayToMode = PayToMode.PAY_ID
+    var mode: PayToMode = PayToMode.PAY_ID,
+    var payIdTypeModel: PayIdTypeModel? = null,
 ) : InputData
