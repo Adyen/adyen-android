@@ -170,7 +170,7 @@ internal class PayToView @JvmOverloads constructor(
     }
 
     private fun togglePayIdTypeViews(payIdTypeModel: PayIdTypeModel) = with(binding) {
-        textInputLayoutPayIdPhoneNumber.isVisible = payIdTypeModel.type == PayIdType.MOBILE
+        textInputLayoutPayIdPhoneNumber.isVisible = payIdTypeModel.type == PayIdType.PHONE
         textInputLayoutPayIdEmail.isVisible = payIdTypeModel.type == PayIdType.EMAIL
         textInputLayoutPayIdAbn.isVisible = payIdTypeModel.type == PayIdType.ABN
         textInputLayoutPayIdOrganizationId.isVisible = payIdTypeModel.type == PayIdType.ORGANIZATION_ID

@@ -9,7 +9,7 @@
 package com.adyen.checkout.payto.internal.ui.model
 
 internal enum class PayIdType {
-    MOBILE,
+    PHONE,
     EMAIL,
     ABN,
     ORGANIZATION_ID
