@@ -263,7 +263,7 @@ internal class DefaultGooglePayDelegate(
             }
 
             Activity.RESULT_CANCELED -> {
-                exceptionChannel.trySend(ComponentException("Payment canceled."))
+                exceptionChannel.trySend(GooglePayCancellationException("Payment canceled."))
             }
 
             AutoResolveHelper.RESULT_ERROR -> {
