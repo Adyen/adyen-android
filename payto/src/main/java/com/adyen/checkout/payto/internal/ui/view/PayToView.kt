@@ -59,20 +59,52 @@ internal class PayToView @JvmOverloads constructor(
             R.style.AdyenCheckout_PayTo_ModeSelectionTextView,
             localizedContext,
         )
-        binding.buttonPayId.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_PayTo_PayIdButton,
-            localizedContext,
-        )
-        binding.buttonBsb.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_PayTo_BSBButton,
+        binding.buttonTogglePayId.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayId_ToggleButton,
             localizedContext,
         )
         binding.textViewPayIdDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_PayTo_PayIdDescriptionTextView,
+            R.style.AdyenCheckout_PayTo_PayId_DescriptionTextView,
+            localizedContext,
+        )
+        binding.editTextPayIdPhoneNumber.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayId_PhoneNumberEditText,
+            localizedContext,
+        )
+        binding.editTextPayIdEmail.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayId_EmailEditText,
+            localizedContext,
+        )
+        binding.editTextPayIdAbn.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayId_AbnEditText,
+            localizedContext,
+        )
+        binding.editTextPayIdOrganizationId.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_PayId_OrganizationIdEditText,
+            localizedContext,
+        )
+        binding.buttonToggleBsb.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSB_ToggleButton,
             localizedContext,
         )
         binding.textViewBsbDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_PayTo_BSBDescriptionTextView,
+            R.style.AdyenCheckout_PayTo_BSB_DescriptionTextView,
+            localizedContext,
+        )
+        binding.editTextBsbAccountNumber.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSB_AccountNumberEditText,
+            localizedContext,
+        )
+        binding.editTextBsbStateBranch.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSB_StateBranchEditText,
+            localizedContext,
+        )
+        binding.editTextFirstName.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_FirstNameEditText,
+            localizedContext,
+        )
+        binding.editTextLastName.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_LastNameEditText,
             localizedContext,
         )
     }
@@ -80,16 +112,16 @@ internal class PayToView @JvmOverloads constructor(
     private fun initModeSelector() {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
-                R.id.button_payId -> togglePayIdViews(isChecked)
-                R.id.button_bsb -> toggleBsbViews(isChecked)
+                R.id.button_toggle_payId -> togglePayIdViews(isChecked)
+                R.id.button_toggle_bsb -> toggleBsbViews(isChecked)
             }
         }
-        binding.toggleButtonChoice.check(R.id.button_payId)
+        binding.toggleButtonChoice.check(R.id.button_toggle_payId)
     }
 
     private fun togglePayIdViews(isChecked: Boolean) {
-        binding.textViewPayIdDescription.isVisible = isChecked
-        binding.textViewBsbDescription.isVisible = !isChecked
+        binding.layoutPayIdContent.isVisible = isChecked
+        binding.layoutBsbContent.isVisible = !isChecked
 
         if (isChecked) {
             delegate.updateInputData { mode = PayToMode.PAY_ID }
@@ -97,8 +129,8 @@ internal class PayToView @JvmOverloads constructor(
     }
 
     private fun toggleBsbViews(isChecked: Boolean) {
-        binding.textViewPayIdDescription.isVisible = !isChecked
-        binding.textViewBsbDescription.isVisible = isChecked
+        binding.layoutPayIdContent.isVisible = !isChecked
+        binding.layoutBsbContent.isVisible = isChecked
 
         if (isChecked) {
             delegate.updateInputData { mode = PayToMode.BSB }
