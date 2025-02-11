@@ -89,7 +89,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_payId_email"
+            android:id="@+id/text_input_layout_pay_id_email_address"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,15 +97,15 @@
             tools:visibility="visible">
 
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-                android:id="@+id/editText_payId_email"
-                style="@style/AdyenCheckout.PayTo.PayId.EmailEditText"
+                android:id="@+id/edit_text_pay_id_email_address"
+                style="@style/AdyenCheckout.PayTo.PayId.EmailAddressEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_payId_abn"
+            android:id="@+id/text_input_layout_pay_id_abn_number"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -113,8 +113,8 @@
             tools:visibility="visible">
 
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-                android:id="@+id/editText_payId_abn"
-                style="@style/AdyenCheckout.PayTo.PayId.AbnEditText"
+                android:id="@+id/edit_text_pay_id_abn_number"
+                style="@style/AdyenCheckout.PayTo.PayId.AbnNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

@@ -12,6 +12,7 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 
+@Suppress("LongParameterList")
 internal class PayToOutputData(
     mobilePhoneNumber: String,
     emailAddress: String,
