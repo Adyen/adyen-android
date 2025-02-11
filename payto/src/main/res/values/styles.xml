@@ -45,13 +45,13 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.PayId.EmailEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_payto_payid_email_hint</item>
+    <style name="AdyenCheckout.PayTo.PayId.EmailAddressEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_email_address_hint</item>
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.PayId.AbnEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_payto_payid_abn_hint</item>
+    <style name="AdyenCheckout.PayTo.PayId.AbnNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_abn_number_hint</item>
         <item name="android:maxLines">1</item>
     </style>
 

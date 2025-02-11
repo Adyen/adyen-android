@@ -83,8 +83,8 @@ public final class com/adyen/checkout/payto/databinding/PaytoViewBinding : andro
 	public final field editTextBsbStateBranch Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
 	public final field editTextFirstName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
 	public final field editTextLastName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdAbn Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdEmail Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdAbnNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdEmailAddress Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
 	public final field editTextPayIdOrganizationId Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
 	public final field editTextPayIdPhoneNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
 	public final field layoutBsbContent Landroid/widget/LinearLayout;
@@ -93,8 +93,8 @@ public final class com/adyen/checkout/payto/databinding/PaytoViewBinding : andro
 	public final field textInputLayoutBsbStateBranch Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutFirstName Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutLastName Lcom/google/android/material/textfield/TextInputLayout;
-	public final field textInputLayoutPayIdAbn Lcom/google/android/material/textfield/TextInputLayout;
-	public final field textInputLayoutPayIdEmail Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdAbnNumber Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdEmailAddress Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutPayIdOrganizationId Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutPayIdPhoneNumber Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutPayIdType Lcom/google/android/material/textfield/TextInputLayout;
