@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.googlepay.GooglePayCancellationException
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.googlepay.GooglePayUnavailableException
@@ -349,6 +350,7 @@ internal class DefaultGooglePayDelegateTest(
     fun `when handling payment result, then success or error is emitted`(
         result: ApiTaskResult<PaymentData>,
         isSuccess: Boolean,
+        exceptionClass: Class<Exception>?,
     ) = runTest {
         val componentStateFlow = delegate.componentStateFlow.test(testScheduler)
         val exceptionFlow = delegate.exceptionFlow.test(testScheduler)
@@ -358,7 +360,7 @@ internal class DefaultGooglePayDelegateTest(
         if (isSuccess) {
             assertEquals(result.result, componentStateFlow.latestValue.paymentData)
         } else {
-            assertInstanceOf(ComponentException::class.java, exceptionFlow.latestValue)
+            assertInstanceOf(exceptionClass, exceptionFlow.latestValue)
         }
     }
 
@@ -424,12 +426,16 @@ internal class DefaultGooglePayDelegateTest(
 
         @JvmStatic
         fun paymentResultSource() = listOf(
-            arguments(ApiTaskResult(TEST_PAYMENT_DATA, Status.RESULT_SUCCESS), true),
-            arguments(ApiTaskResult(null, Status.RESULT_SUCCESS), false),
-            arguments(ApiTaskResult(null, Status.RESULT_CANCELED), false),
-            arguments(ApiTaskResult(null, Status.RESULT_INTERNAL_ERROR), false),
-            arguments(ApiTaskResult(null, Status.RESULT_INTERRUPTED), false),
-            arguments(ApiTaskResult(null, Status(AutoResolveHelper.RESULT_ERROR)), false),
+            arguments(ApiTaskResult(TEST_PAYMENT_DATA, Status.RESULT_SUCCESS), true, null),
+            arguments(ApiTaskResult(null, Status.RESULT_SUCCESS), false, ComponentException::class.java),
+            arguments(ApiTaskResult(null, Status.RESULT_CANCELED), false, GooglePayCancellationException::class.java),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERNAL_ERROR), false, ComponentException::class.java),
+            arguments(ApiTaskResult(null, Status.RESULT_INTERRUPTED), false, ComponentException::class.java),
+            arguments(
+                ApiTaskResult(null, Status(AutoResolveHelper.RESULT_ERROR)),
+                false,
+                ComponentException::class.java,
+            ),
         )
 
         @JvmStatic

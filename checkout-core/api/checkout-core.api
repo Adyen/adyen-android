@@ -151,7 +151,7 @@ public final class com/adyen/checkout/core/exception/BadModelException : com/ady
 	public fun <init> (Ljava/lang/Class;Ljava/lang/Throwable;)V
 }
 
-public final class com/adyen/checkout/core/exception/CancellationException : com/adyen/checkout/core/exception/CheckoutException {
+public class com/adyen/checkout/core/exception/CancellationException : com/adyen/checkout/core/exception/CheckoutException {
 	public fun <init> (Ljava/lang/String;)V
 }
 
