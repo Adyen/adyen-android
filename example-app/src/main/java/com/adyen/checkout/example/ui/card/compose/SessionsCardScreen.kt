@@ -10,8 +10,8 @@
 
 package com.adyen.checkout.example.ui.card.compose
 
-import android.app.Activity
 import android.widget.Toast
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -171,8 +171,8 @@ private fun CardComponent(
         )
     }
 
-    if (action != null) {
-        val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current
+    if (activity != null && action != null) {
         LaunchedEffect(action) {
             component.handleAction(action, activity)
             onActionConsumed()

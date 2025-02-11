@@ -10,7 +10,7 @@
 
 package com.adyen.checkout.example.ui.googlepay.compose
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
@@ -70,7 +69,7 @@ private fun SessionsGooglePayContent(
     googlePayEvents: SessionsGooglePayEvents,
     modifier: Modifier = Modifier,
 ) {
-    val activity = LocalContext.current as Activity
+    val activity = LocalActivity.current
     lateinit var googlePayComponent: GooglePayComponent
 
     when (googlePayEvents) {
@@ -80,7 +79,9 @@ private fun SessionsGooglePayContent(
 
         is SessionsGooglePayEvents.Action -> {
             LaunchedEffect(googlePayEvents.action) {
-                googlePayComponent.handleAction(googlePayEvents.action, activity)
+                if (activity != null) {
+                    googlePayComponent.handleAction(googlePayEvents.action, activity)
+                }
             }
         }
 
