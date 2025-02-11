@@ -116,8 +116,18 @@ internal class DefaultPayToDelegate(
     }
 
     private fun createOutputData(): PayToOutputData {
-        // TODO Add the output data fields
-        return PayToOutputData()
+        val sanitizedPhoneNumber = inputData.phoneNumber.trimStart('0')
+        return PayToOutputData(
+            // TODO Do not hardcode the +61 here
+            mobilePhoneNumber = "+61$sanitizedPhoneNumber",
+            emailAddress = inputData.emailAddress,
+            abnNumber = inputData.abnNumber,
+            organizationId = inputData.organizationId,
+            bsbAccountNumber = inputData.bsbAccountNumber,
+            bsbStateBranch = inputData.bsbStateBranch,
+            firstName = inputData.firstName,
+            lastName = inputData.lastName,
+        )
     }
 
     private fun outputDataChanged(outputData: PayToOutputData) {
@@ -181,7 +191,7 @@ internal class DefaultPayToDelegate(
 
     companion object {
         private val SUPPORTED_PAY_ID_TYPES = listOf(
-            PayIdTypeModel(PayIdType.MOBILE, R.string.checkout_payto_payid_type_phone_number),
+            PayIdTypeModel(PayIdType.PHONE, R.string.checkout_payto_payid_type_phone_number),
             PayIdTypeModel(PayIdType.EMAIL, R.string.checkout_payto_payid_type_email),
             PayIdTypeModel(PayIdType.ABN, R.string.checkout_payto_payid_type_abn),
             PayIdTypeModel(PayIdType.ORGANIZATION_ID, R.string.checkout_payto_payid_type_organization_id),
