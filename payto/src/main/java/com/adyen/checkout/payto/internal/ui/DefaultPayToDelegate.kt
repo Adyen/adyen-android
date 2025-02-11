@@ -192,8 +192,8 @@ internal class DefaultPayToDelegate(
     companion object {
         private val SUPPORTED_PAY_ID_TYPES = listOf(
             PayIdTypeModel(PayIdType.PHONE, R.string.checkout_payto_payid_type_phone_number),
-            PayIdTypeModel(PayIdType.EMAIL, R.string.checkout_payto_payid_type_email),
-            PayIdTypeModel(PayIdType.ABN, R.string.checkout_payto_payid_type_abn),
+            PayIdTypeModel(PayIdType.EMAIL, R.string.checkout_payto_payid_type_email_address),
+            PayIdTypeModel(PayIdType.ABN, R.string.checkout_payto_payid_type_abn_number),
             PayIdTypeModel(PayIdType.ORGANIZATION_ID, R.string.checkout_payto_payid_type_organization_id),
         )
     }
