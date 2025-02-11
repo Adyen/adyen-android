@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -20,8 +21,10 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.databinding.PaytoViewBinding
 import com.adyen.checkout.payto.internal.ui.PayToDelegate
+import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -33,6 +36,9 @@ internal class PayToView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     private val binding = PaytoViewBinding.inflate(LayoutInflater.from(context), this)
+
+    // TODO: We might need to support localization
+    private val payIdTypeAdapter: SimpleTextListAdapter<PayIdTypeModel> = SimpleTextListAdapter(context)
 
     private lateinit var localizedContext: Context
 
@@ -52,6 +58,7 @@ internal class PayToView @JvmOverloads constructor(
 
         initLocalizedStrings(localizedContext)
         initModeSelector()
+        initPayIdTypeSelector()
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -135,6 +142,30 @@ internal class PayToView @JvmOverloads constructor(
         if (isChecked) {
             delegate.updateInputData { mode = PayToMode.BSB }
         }
+    }
+
+    private fun initPayIdTypeSelector() {
+        val getPayIdTypes = delegate.getPayIdTypes()
+        payIdTypeAdapter.setItems(getPayIdTypes)
+
+        binding.autoCompleteTextViewPayIdType.apply {
+            inputType = 0
+            setAdapter(payIdTypeAdapter)
+            onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                val item = payIdTypeAdapter.getItem(position)
+                adyenLog(AdyenLogLevel.DEBUG) { "onItemSelected - ${item.name}" }
+                onPayIdTypeSelected(item)
+            }
+        }
+
+        getPayIdTypes.firstOrNull()?.let { payIdTypeModel ->
+            binding.autoCompleteTextViewPayIdType.setText(payIdTypeModel.name)
+            onPayIdTypeSelected(payIdTypeModel)
+        }
+    }
+
+    private fun onPayIdTypeSelected(payIdTypeModel: PayIdTypeModel) {
+        delegate.updateInputData { this.payIdTypeModel = payIdTypeModel }
     }
 
     override fun highlightValidationErrors() {

@@ -23,6 +23,8 @@ import com.adyen.checkout.components.core.paymentmethod.PayToPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.internal.ui.model.PayIdType
+import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
@@ -98,6 +100,8 @@ internal class DefaultPayToDelegate(
 
     override fun getPaymentMethodType() = paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
 
+    override fun getPayIdTypes(): List<PayIdTypeModel> = SUPPORTED_PAY_ID_TYPES
+
     override fun updateInputData(update: PayToInputData.() -> Unit) {
         inputData.update()
         onInputDataChanged()
@@ -172,5 +176,15 @@ internal class DefaultPayToDelegate(
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
+    }
+
+    companion object {
+        // TODO: Remove hardcoded values
+        private val SUPPORTED_PAY_ID_TYPES = listOf(
+            PayIdTypeModel(PayIdType.MOBILE, "Mobile"),
+            PayIdTypeModel(PayIdType.EMAIL, "Email"),
+            PayIdTypeModel(PayIdType.ABN, "ABN"),
+            PayIdTypeModel(PayIdType.ORGANIZATION_ID, "Organization ID"),
+        )
     }
 }
