@@ -6,7 +6,7 @@
  * Created by ararat on 4/2/2025.
  */
 
-package com.adyen.checkout.components.core.internal.ui.model.field
+package com.adyen.checkout.components.core.internal.ui.model.state
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState

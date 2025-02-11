@@ -6,13 +6,13 @@
  * Created by ararat on 4/2/2025.
  */
 
-package com.adyen.checkout.components.core.internal.ui.model.field
+package com.adyen.checkout.components.core.internal.ui.model.state
 
 import androidx.annotation.RestrictTo
 import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StateManager<S, FI> {
+interface DelegateStateManager<S, FI> {
 
     val state: StateFlow<S>
 

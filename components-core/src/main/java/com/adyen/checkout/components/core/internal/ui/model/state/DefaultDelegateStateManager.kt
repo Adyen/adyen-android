@@ -3,42 +3,31 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 4/2/2025.
+ * Created by ararat on 6/2/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.components.core.internal.ui.model.state
 
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
-import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
-import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdaterRegistry
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
-import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-internal class MBWayStateManager(
-    componentParams: ButtonComponentParams,
-    private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
-    private val validationRegistry: FieldValidatorRegistry<MBWayFieldId>,
-    private val stateUpdaterRegistry: StateUpdaterRegistry<MBWayFieldId, MBWayDelegateState>,
-) : StateManager<MBWayDelegateState, MBWayFieldId> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class DefaultDelegateStateManager<S : DelegateState, FI>(
+    private val factory: DelegateStateFactory<S, FI>,
+    private val transformerRegistry: FieldTransformerRegistry<FI>,
+    private val validationRegistry: FieldValidatorRegistry<FI>,
+    private val stateUpdaterRegistry: StateUpdaterRegistry<FI, S>,
+) : DelegateStateManager<S, FI> {
 
-    private val _state = MutableStateFlow(
-        MBWayDelegateState(
-            countries = getSupportedCountries(componentParams),
-            countryCodeFieldState = ComponentFieldDelegateState(getInitiallySelectedCountry(componentParams)),
-        ),
-    )
-    override val state: StateFlow<MBWayDelegateState> = _state
+    private val _state = MutableStateFlow(factory.createDefaultDelegateState())
+    override val state: StateFlow<S> = _state.asStateFlow()
 
     override val isValid
         get() = run {
@@ -46,17 +35,8 @@ internal class MBWayStateManager(
             _state.value.isValid
         }
 
-    private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
-        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
-
-    private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
-        val countries = getSupportedCountries(componentParams)
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
-        ?: throw IllegalArgumentException("Countries list can not be null")
-    }
-
     private fun validateNonValidatedFields() {
-        MBWayFieldId.entries.forEach { fieldId ->
+        factory.getFieldIds().forEach { fieldId ->
             val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
 
             if (fieldState.validation == null) {
@@ -68,8 +48,9 @@ internal class MBWayStateManager(
         }
     }
 
+    // A list can be added, which will show which other fields need to be validated or updated when a specific field is updated
     override fun <T> updateField(
-        fieldId: MBWayFieldId,
+        fieldId: FI,
         value: T?,
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
@@ -98,7 +79,7 @@ internal class MBWayStateManager(
         // Flag to focus only the first invalid field
         var isErrorFieldFocused = false
 
-        MBWayFieldId.entries.forEach { fieldId ->
+        factory.getFieldIds().forEach { fieldId ->
             val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
 
             val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
@@ -113,12 +94,5 @@ internal class MBWayStateManager(
                 shouldHighlightValidationError = true,
             )
         }
-    }
-
-    companion object {
-        private const val ISO_CODE_PORTUGAL = "PT"
-        private const val ISO_CODE_SPAIN = "ES"
-
-        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }
