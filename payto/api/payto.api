@@ -75,6 +75,15 @@ public final class com/adyen/checkout/payto/PayToConfigurationKt {
 	public static synthetic fun payTo$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/payto/databinding/PayIdTypeViewBinding : androidx/viewbinding/ViewBinding {
+	public final field textViewTitle Landroidx/appcompat/widget/AppCompatTextView;
+	public static fun bind (Landroid/view/View;)Lcom/adyen/checkout/payto/databinding/PayIdTypeViewBinding;
+	public synthetic fun getRoot ()Landroid/view/View;
+	public fun getRoot ()Landroid/widget/LinearLayout;
+	public static fun inflate (Landroid/view/LayoutInflater;)Lcom/adyen/checkout/payto/databinding/PayIdTypeViewBinding;
+	public static fun inflate (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;Z)Lcom/adyen/checkout/payto/databinding/PayIdTypeViewBinding;
+}
+
 public final class com/adyen/checkout/payto/databinding/PaytoViewBinding : androidx/viewbinding/ViewBinding {
 	public final field autoCompleteTextViewPayIdType Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field buttonToggleBsb Lcom/google/android/material/button/MaterialButton;
