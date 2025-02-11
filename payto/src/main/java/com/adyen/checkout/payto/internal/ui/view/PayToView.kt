@@ -21,6 +21,7 @@ import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.databinding.PaytoViewBinding
 import com.adyen.checkout.payto.internal.ui.PayToDelegate
+import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
@@ -141,9 +142,9 @@ internal class PayToView @JvmOverloads constructor(
     }
 
     private fun initPayIdTypeSelector() {
-        val getPayIdTypes = delegate.getPayIdTypes()
+        val payIdTypes = delegate.getPayIdTypes()
         val payIdTypeAdapter = PayIdTypeAdapter(context, localizedContext)
-        payIdTypeAdapter.setItems(getPayIdTypes)
+        payIdTypeAdapter.setItems(payIdTypes)
 
         binding.autoCompleteTextViewPayIdType.apply {
             inputType = 0
@@ -155,7 +156,7 @@ internal class PayToView @JvmOverloads constructor(
             }
         }
 
-        getPayIdTypes.firstOrNull()?.let { payIdTypeModel ->
+        payIdTypes.firstOrNull()?.let { payIdTypeModel ->
             val name = localizedContext.getString(payIdTypeModel.nameResId)
             binding.autoCompleteTextViewPayIdType.setText(name)
             onPayIdTypeSelected(payIdTypeModel)
@@ -163,7 +164,15 @@ internal class PayToView @JvmOverloads constructor(
     }
 
     private fun onPayIdTypeSelected(payIdTypeModel: PayIdTypeModel) {
+        togglePayIdTypeViews(payIdTypeModel)
         delegate.updateInputData { this.payIdTypeModel = payIdTypeModel }
+    }
+
+    private fun togglePayIdTypeViews(payIdTypeModel: PayIdTypeModel) = with(binding) {
+        textInputLayoutPayIdPhoneNumber.isVisible = payIdTypeModel.type == PayIdType.MOBILE
+        textInputLayoutPayIdEmail.isVisible = payIdTypeModel.type == PayIdType.EMAIL
+        textInputLayoutPayIdAbn.isVisible = payIdTypeModel.type == PayIdType.ABN
+        textInputLayoutPayIdOrganizationId.isVisible = payIdTypeModel.type == PayIdType.ORGANIZATION_ID
     }
 
     override fun highlightValidationErrors() {
