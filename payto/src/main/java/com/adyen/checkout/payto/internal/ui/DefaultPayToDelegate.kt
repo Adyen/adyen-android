@@ -23,6 +23,7 @@ import com.adyen.checkout.components.core.paymentmethod.PayToPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
@@ -179,12 +180,11 @@ internal class DefaultPayToDelegate(
     }
 
     companion object {
-        // TODO: Remove hardcoded values
         private val SUPPORTED_PAY_ID_TYPES = listOf(
-            PayIdTypeModel(PayIdType.MOBILE, "Mobile"),
-            PayIdTypeModel(PayIdType.EMAIL, "Email"),
-            PayIdTypeModel(PayIdType.ABN, "ABN"),
-            PayIdTypeModel(PayIdType.ORGANIZATION_ID, "Organization ID"),
+            PayIdTypeModel(PayIdType.MOBILE, R.string.checkout_payto_payid_type_phone_number),
+            PayIdTypeModel(PayIdType.EMAIL, R.string.checkout_payto_payid_type_email),
+            PayIdTypeModel(PayIdType.ABN, R.string.checkout_payto_payid_type_abn),
+            PayIdTypeModel(PayIdType.ORGANIZATION_ID, R.string.checkout_payto_payid_type_organization_id),
         )
     }
 }

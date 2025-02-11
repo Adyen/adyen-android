@@ -11,6 +11,10 @@
     <string name="checkout_payto_mode_selection" translatable="false">How would you like to use Payto?</string>
     <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>
     <string name="checkout_payto_payid_description" translatable="false">Enter the PayID that is connected to your Payto account</string>
+    <string name="checkout_payto_payid_type_phone_number" translatable="false">Mobile</string>
+    <string name="checkout_payto_payid_type_email" translatable="false">Email</string>
+    <string name="checkout_payto_payid_type_abn" translatable="false">Abn</string>
+    <string name="checkout_payto_payid_type_organization_id" translatable="false">Organization id</string>
     <string name="checkout_payto_payid_phone_number_hint" translatable="false">Phone number</string>
     <string name="checkout_payto_payid_email_hint" translatable="false">Email address</string>
     <string name="checkout_payto_payid_abn_hint" translatable="false">Abn</string>

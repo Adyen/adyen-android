@@ -24,7 +24,6 @@ import com.adyen.checkout.payto.internal.ui.PayToDelegate
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -36,9 +35,6 @@ internal class PayToView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr), ComponentView {
 
     private val binding = PaytoViewBinding.inflate(LayoutInflater.from(context), this)
-
-    // TODO: We might need to support localization
-    private val payIdTypeAdapter: SimpleTextListAdapter<PayIdTypeModel> = SimpleTextListAdapter(context)
 
     private lateinit var localizedContext: Context
 
@@ -146,6 +142,7 @@ internal class PayToView @JvmOverloads constructor(
 
     private fun initPayIdTypeSelector() {
         val getPayIdTypes = delegate.getPayIdTypes()
+        val payIdTypeAdapter = PayIdTypeAdapter(context, localizedContext)
         payIdTypeAdapter.setItems(getPayIdTypes)
 
         binding.autoCompleteTextViewPayIdType.apply {
@@ -153,13 +150,14 @@ internal class PayToView @JvmOverloads constructor(
             setAdapter(payIdTypeAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 val item = payIdTypeAdapter.getItem(position)
-                adyenLog(AdyenLogLevel.DEBUG) { "onItemSelected - ${item.name}" }
+                adyenLog(AdyenLogLevel.DEBUG) { "onItemSelected - ${item.type}" }
                 onPayIdTypeSelected(item)
             }
         }
 
         getPayIdTypes.firstOrNull()?.let { payIdTypeModel ->
-            binding.autoCompleteTextViewPayIdType.setText(payIdTypeModel.name)
+            val name = localizedContext.getString(payIdTypeModel.nameResId)
+            binding.autoCompleteTextViewPayIdType.setText(name)
             onPayIdTypeSelected(payIdTypeModel)
         }
     }
