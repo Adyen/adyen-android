@@ -130,7 +130,7 @@ internal class DefaultTwintDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            storePaymentMethod = shouldStorePaymentMethod(),
+            storePaymentMethod = if (componentParams.showStorePaymentField) outputData.isStorePaymentSelected else null,
         )
 
         return TwintComponentState(
@@ -146,9 +146,6 @@ internal class DefaultTwintDelegate(
             ActionHandlingMethod.PREFER_WEB -> null
         }
     }
-
-    private fun shouldStorePaymentMethod(): Boolean =
-        componentParams.showStorePaymentField && outputData.isStorePaymentSelected
 
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
