@@ -19,22 +19,66 @@
         <item name="singleSelection">true</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.PayIdButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="AdyenCheckout.PayTo.FirstNameEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_first_name_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.LastNameEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_last_name_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId" />
+
+    <style name="AdyenCheckout.PayTo.PayId.ToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:text">@string/checkout_payto_payid_tab_title</item>
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.BSBButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="AdyenCheckout.PayTo.PayId.DescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_payto_payid_description</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.PhoneNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_phone_number_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.EmailEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_email_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.AbnEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_abn_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.OrganizationIdEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_organization_id_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB" />
+
+    <style name="AdyenCheckout.PayTo.BSB.ToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:text">@string/checkout_payto_bsb_tab_title</item>
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.PayIdDescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:text">@string/checkout_payto_payid_description</item>
+    <style name="AdyenCheckout.PayTo.BSB.DescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_payto_bsb_description</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.BSBDescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:text">@string/checkout_payto_bsb_description</item>
+    <style name="AdyenCheckout.PayTo.BSB.AccountNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_account_number_hint</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB.StateBranchEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_state_branch_hint</item>
+        <item name="android:maxLines">1</item>
     </style>
 
 </resources>
