@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal data class MBWayDelegateState(
@@ -16,8 +17,8 @@ internal data class MBWayDelegateState(
     val countryCodeFieldState: ComponentFieldDelegateState<CountryModel>,
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
-) {
-    val isValid: Boolean
+) : DelegateState {
+    override val isValid: Boolean
         get() = countryCodeFieldState.validation?.isValid() == true &&
-            localPhoneNumberFieldState.validation?.isValid() == true
+                localPhoneNumberFieldState.validation?.isValid() == true
 }

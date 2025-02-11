@@ -9,8 +9,8 @@
 package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
-import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdater
-import com.adyen.checkout.components.core.internal.ui.model.field.StateUpdaterRegistry
+import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdater
+import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdaterRegistry
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
 internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MBWayDelegateState> {
