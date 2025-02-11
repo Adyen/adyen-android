@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.payto.internal.ui.model
 
-import com.adyen.checkout.ui.core.internal.ui.SimpleTextListItem
+import androidx.annotation.StringRes
 
 internal class PayIdTypeModel(
     val type: PayIdType,
-    val name: String
-) : SimpleTextListItem(name)
+    @StringRes val nameResId: Int
+)
