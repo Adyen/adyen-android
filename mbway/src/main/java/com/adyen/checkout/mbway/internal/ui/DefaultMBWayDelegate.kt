@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.internal.ui.model.field.StateManager
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -50,7 +50,7 @@ internal class DefaultMBWayDelegate(
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
-    private val stateManager: StateManager<MBWayDelegateState, MBWayFieldId>,
+    private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
 ) : MBWayDelegate {
 
     override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {

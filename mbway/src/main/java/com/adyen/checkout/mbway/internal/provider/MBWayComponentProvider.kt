@@ -29,6 +29,7 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.state.DefaultDelegateStateManager
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -39,7 +40,7 @@ import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.getMBWayConfiguration
 import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
-import com.adyen.checkout.mbway.internal.ui.MBWayStateManager
+import com.adyen.checkout.mbway.internal.ui.MBWayDelegateStateFactory
 import com.adyen.checkout.mbway.internal.ui.model.MBWayStateUpdaterRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayTransformerRegistry
 import com.adyen.checkout.mbway.internal.ui.model.MBWayValidatorRegistry
@@ -106,6 +107,10 @@ constructor(
 
             val transformerRegistry = MBWayTransformerRegistry()
 
+            val delegateStateFactory = MBWayDelegateStateFactory(
+                componentParams = componentParams,
+            )
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
@@ -114,8 +119,8 @@ constructor(
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
                 transformerRegistry = transformerRegistry,
-                stateManager = MBWayStateManager(
-                    componentParams = componentParams,
+                stateManager = DefaultDelegateStateManager(
+                    factory = delegateStateFactory,
                     transformerRegistry = transformerRegistry,
                     validationRegistry = MBWayValidatorRegistry(),
                     stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
@@ -203,6 +208,10 @@ constructor(
 
             val transformerRegistry = MBWayTransformerRegistry()
 
+            val delegateStateFactory = MBWayDelegateStateFactory(
+                componentParams = componentParams,
+            )
+
             val mbWayDelegate = DefaultMBWayDelegate(
                 observerRepository = PaymentObserverRepository(),
                 paymentMethod = paymentMethod,
@@ -211,8 +220,8 @@ constructor(
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
                 transformerRegistry = transformerRegistry,
-                stateManager = MBWayStateManager(
-                    componentParams = componentParams,
+                stateManager = DefaultDelegateStateManager(
+                    factory = delegateStateFactory,
                     transformerRegistry = transformerRegistry,
                     validationRegistry = MBWayValidatorRegistry(),
                     stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
