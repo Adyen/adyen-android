@@ -13,9 +13,10 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class AddressOutputDataTest {
+internal class AddressOutputDataTest {
+
     @Test
-    fun addressOutputDataToString() {
+    fun addressOutputDataFormatted() {
         val addressOutputData = AddressOutputData(
             postalCode = FieldState("postalCode", Validation.Valid),
             houseNumberOrName = FieldState("houseNumberOrName", Validation.Valid),
@@ -29,7 +30,7 @@ class AddressOutputDataTest {
             stateOptions = emptyList(),
         )
 
-        val expected = "street houseNumberOrName apartmentSuite postalCode city stateOrProvince country"
-        assertEquals(expected, addressOutputData.toString())
+        val expected = "street houseNumberOrName apartmentSuite\npostalCode, city, stateOrProvince, country"
+        assertEquals(expected, addressOutputData.formatted())
     }
 }

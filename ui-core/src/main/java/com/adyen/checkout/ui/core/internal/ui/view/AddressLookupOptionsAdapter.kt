@@ -62,27 +62,29 @@ data class LookupOption(
     val lookupAddress: LookupAddress,
     val isLoading: Boolean = false
 ) {
-    override fun toString(): String {
-        return listOf(
-            lookupAddress.address.street,
-            lookupAddress.address.houseNumberOrName,
-            lookupAddress.address.apartmentSuite,
-            lookupAddress.address.postalCode,
-            lookupAddress.address.city,
-            lookupAddress.address.stateOrProvince,
-            lookupAddress.address.country,
-        ).filter { !it.isNullOrBlank() }.joinToString(" ")
+
+    val title: String = formatTitle()
+
+    private fun formatTitle(): String = with(lookupAddress.address) {
+        arrayOf(
+            street,
+            houseNumberOrName,
+            apartmentSuite.orEmpty(),
+        )
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
     }
 
-    val title
-        get() = lookupAddress.address.street.ifBlank {
-            toString()
-        }
+    val subtitle = formatSubtitle()
 
-    val subtitle
-        get() = if (lookupAddress.address.street.isBlank()) {
-            ""
-        } else {
-            toString()
-        }
+    private fun formatSubtitle() = with(lookupAddress.address) {
+        arrayOf(
+            postalCode,
+            city,
+            stateOrProvince,
+            country,
+        )
+            .filter { it.isNotBlank() }
+            .joinToString(", ")
+    }
 }

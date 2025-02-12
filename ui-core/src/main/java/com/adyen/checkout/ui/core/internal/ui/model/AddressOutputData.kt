@@ -25,6 +25,7 @@ data class AddressOutputData(
     val countryOptions: List<AddressListItem>,
     val stateOptions: List<AddressListItem>
 ) : OutputData {
+
     override val isValid: Boolean
         get() = postalCode.validation.isValid() &&
             street.validation.isValid() &&
@@ -34,15 +35,26 @@ data class AddressOutputData(
             city.validation.isValid() &&
             country.validation.isValid()
 
-    override fun toString(): String {
-        return listOf(
+    fun formatted(): String {
+        val line1 = arrayOf(
             street.value,
             houseNumberOrName.value,
             apartmentSuite.value,
+        )
+            .filter { it.isNotBlank() }
+            .joinToString(" ")
+
+        val line2 = arrayOf(
             postalCode.value,
             city.value,
             stateOrProvince.value,
             country.value,
-        ).filter { it.isNotBlank() }.joinToString(" ")
+        )
+            .filter { it.isNotBlank() }
+            .joinToString(", ")
+
+        return arrayOf(line1, line2)
+            .filter { it.isNotBlank() }
+            .joinToString("\n")
     }
 }
