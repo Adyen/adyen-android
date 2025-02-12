@@ -135,7 +135,8 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
         if id in dependency_list['excluded']:
             continue
 
-        link = dependency_list['included'][id]
+        unformattedLink = dependency_list['included'][id]
+        link = unformattedLink.format(new_version)
 
         dependency_update = DependencyUpdate(id, link, new_version, old_version)
         updates.append(dependency_update)
