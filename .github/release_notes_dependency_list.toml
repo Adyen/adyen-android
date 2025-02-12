@@ -25,6 +25,7 @@
 "kotlin" = "[Kotlin](https://github.com/JetBrains/kotlin/releases)"
 "org.jetbrains.kotlinx:kotlinx-coroutines-android" = "[Kotlin Coroutines Android](https://github.com/Kotlin/kotlinx.coroutines/releases)"
 "org.jetbrains.kotlinx:kotlinx-coroutines-core" = "[Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines/releases)"
+"org.jetbrains.kotlinx:kotlinx-coroutines-play-services" = "[Kotlin Coroutines Play Services](https://github.com/Kotlin/kotlinx.coroutines/releases)"
 
 [excluded]
 # We only need the package name, but since toml files are key value base we set an empty value.
