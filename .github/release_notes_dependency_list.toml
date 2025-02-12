@@ -56,7 +56,6 @@
 "com.google.dagger:hilt-android-testing" = ""
 "com.google.dagger:hilt-compiler" = ""
 "com.google.devtools.ksp" = ""
-"com.google.pay.button:compose-pay-button" = ""
 "com.lemonappdev:konsist" = ""
 "com.pinterest.ktlint:ktlint-cli" = ""
 "com.squareup.leakcanary:leakcanary-android" = ""
