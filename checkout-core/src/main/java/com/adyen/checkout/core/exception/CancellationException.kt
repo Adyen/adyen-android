@@ -11,4 +11,4 @@ package com.adyen.checkout.core.exception
 /**
  * This exception indicates that the payment flow was manually cancelled by the user.
  */
-class CancellationException(errorMessage: String) : CheckoutException(errorMessage)
+open class CancellationException(errorMessage: String) : ComponentException(errorMessage)

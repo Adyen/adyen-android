@@ -28,6 +28,7 @@ import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
+import com.adyen.checkout.googlepay.GooglePayCancellationException
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.GooglePayUnavailableException
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
@@ -225,7 +226,7 @@ internal class DefaultGooglePayDelegate(
 
             CommonStatusCodes.CANCELED -> {
                 adyenLog(AdyenLogLevel.INFO) { "GooglePay payment canceled" }
-                exceptionChannel.trySend(ComponentException("GooglePay payment canceled"))
+                exceptionChannel.trySend(GooglePayCancellationException("GooglePay payment canceled"))
             }
 
             AutoResolveHelper.RESULT_ERROR -> {
@@ -262,7 +263,7 @@ internal class DefaultGooglePayDelegate(
             }
 
             Activity.RESULT_CANCELED -> {
-                exceptionChannel.trySend(ComponentException("Payment canceled."))
+                exceptionChannel.trySend(GooglePayCancellationException("Payment canceled."))
             }
 
             AutoResolveHelper.RESULT_ERROR -> {

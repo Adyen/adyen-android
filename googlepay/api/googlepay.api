@@ -117,6 +117,10 @@ public final class com/adyen/checkout/googlepay/GooglePayButtonType : java/lang/
 	public static fun values ()[Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 }
 
+public final class com/adyen/checkout/googlepay/GooglePayCancellationException : com/adyen/checkout/core/exception/CancellationException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
 public final class com/adyen/checkout/googlepay/GooglePayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ActivityResultHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/googlepay/GooglePayComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
