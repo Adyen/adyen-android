@@ -112,7 +112,7 @@ This repository is available under the [MIT license](LICENSE).
 [header.image]: https://user-images.githubusercontent.com/9079915/198013698-139bf6f1-a15a-447d-8eed-97ce1354b43f.png
 [shield.mavenCentral.image]: https://img.shields.io/maven-central/v/com.adyen.checkout/drop-in
 [shield.mavenCentral.link]: https://mvnrepository.com/artifact/com.adyen.checkout
-[shield.buildStatus.image]: https://github.com/Adyen/adyen-android/actions/workflows/check_release.yml/badge.svg
+[shield.buildStatus.image]: https://github.com/Adyen/adyen-android/actions/workflows/check_main.yml/badge.svg
 [shield.buildStatus.link]: https://github.com/Adyen/adyen-android/actions
 [shield.license.image]: https://img.shields.io/github/license/Adyen/adyen-android
 [shield.license.link]: LICENSE
