@@ -75,6 +75,38 @@ public final class com/adyen/checkout/payto/PayToConfigurationKt {
 	public static synthetic fun payTo$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/payto/databinding/PaytoViewBinding : androidx/viewbinding/ViewBinding {
+	public final field autoCompleteTextViewPayIdType Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
+	public final field buttonToggleBsb Lcom/google/android/material/button/MaterialButton;
+	public final field buttonTogglePayId Lcom/google/android/material/button/MaterialButton;
+	public final field editTextBsbAccountNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextBsbStateBranch Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextFirstName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextLastName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdAbn Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdEmail Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdOrganizationId Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdPhoneNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field layoutBsbContent Landroid/widget/LinearLayout;
+	public final field layoutPayIdContent Landroid/widget/LinearLayout;
+	public final field textInputLayoutBsbAccountNumber Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutBsbStateBranch Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutFirstName Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutLastName Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdAbn Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdEmail Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdOrganizationId Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdPhoneNumber Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textInputLayoutPayIdType Lcom/google/android/material/textfield/TextInputLayout;
+	public final field textViewBsbDescription Landroid/widget/TextView;
+	public final field textViewModeSelection Landroid/widget/TextView;
+	public final field textViewPayIdDescription Landroid/widget/TextView;
+	public final field toggleButtonChoice Lcom/google/android/material/button/MaterialButtonToggleGroup;
+	public static fun bind (Landroid/view/View;)Lcom/adyen/checkout/payto/databinding/PaytoViewBinding;
+	public fun getRoot ()Landroid/view/View;
+	public static fun inflate (Landroid/view/LayoutInflater;Landroid/view/ViewGroup;)Lcom/adyen/checkout/payto/databinding/PaytoViewBinding;
+}
+
 public final class com/adyen/checkout/payto/internal/provider/PayToComponentProvider : com/adyen/checkout/components/core/internal/provider/PaymentComponentProvider, com/adyen/checkout/sessions/core/internal/provider/SessionPaymentComponentProvider {
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/payto/PayToComponent;
