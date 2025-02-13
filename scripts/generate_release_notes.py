@@ -109,6 +109,19 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
         dependency_list = toml.load(file)
 
     for value in all_versions.values():
+        if 'version' in value:
+            version_ref = value['version']['ref']
+        else:
+            # If there is no explicit version defined the version probably comes from a BoM and it's safe to skip
+            continue
+
+        new_version = new_versions['versions'].get(version_ref, None)
+        old_version = old_versions['versions'].get(version_ref, None)
+
+        # If the versions isn't updated we can ignore the dependency
+        if new_version == None or new_version == old_version:
+            continue
+
         if 'group' in value and 'name' in value:
             id = value['group'] + ':' + value['name']
         elif 'module' in value:
@@ -122,19 +135,8 @@ def generate_dependency_updates(latest_tag: str) -> [DependencyUpdate]:
         if id in dependency_list['excluded']:
             continue
 
-        if 'version' in value:
-            version_ref = value['version']['ref']
-        else:
-            # If there is no explicit version defined the version probably comes from a BoM and it's safe to skip
-            continue
-
-        link = dependency_list['included'][id]
-        new_version = new_versions['versions'].get(version_ref, None)
-        old_version = old_versions['versions'].get(version_ref, None)
-
-        # If the versions isn't updated we can ignore the dependency
-        if new_version == old_version:
-            continue
+        unformattedLink = dependency_list['included'][id]
+        link = unformattedLink.format(new_version)
 
         dependency_update = DependencyUpdate(id, link, new_version, old_version)
         updates.append(dependency_update)
