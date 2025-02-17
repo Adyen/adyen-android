@@ -21,7 +21,7 @@ import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
+import com.adyen.checkout.ui.core.internal.ui.TextListAdapter
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
@@ -43,7 +43,7 @@ internal class OnlineBankingView @JvmOverloads constructor(
     private val binding: OnlineBankingViewBinding =
         OnlineBankingViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val issuersAdapter: SimpleTextListAdapter<OnlineBankingModel> = SimpleTextListAdapter(context)
+    private val issuersAdapter: TextListAdapter<OnlineBankingModel> = TextListAdapter(context)
 
     private lateinit var localizedContext: Context
 
