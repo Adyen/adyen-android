@@ -25,6 +25,7 @@ import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.internal.ui.LocalizedTextListAdapter
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
@@ -143,7 +144,7 @@ internal class PayToView @JvmOverloads constructor(
 
     private fun initPayIdTypeSelector() {
         val payIdTypes = delegate.getPayIdTypes()
-        val payIdTypeAdapter = PayIdTypeAdapter(context, localizedContext)
+        val payIdTypeAdapter = LocalizedTextListAdapter<PayIdTypeModel>(context, localizedContext)
         payIdTypeAdapter.setItems(payIdTypes)
 
         binding.autoCompleteTextViewPayIdType.apply {
