@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
@@ -155,6 +156,10 @@ internal class DefaultPayToDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
+            shopperName = ShopperName(
+                firstName = outputData.firstNameFieldState.value,
+                lastName = outputData.lastNameFieldState.value,
+            ),
         )
 
         return PayToComponentState(
