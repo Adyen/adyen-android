@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui
 
 import android.content.Context
+import android.view.LayoutInflater
 import com.adyen.checkout.card.internal.ui.view.CardView
 import com.adyen.checkout.card.internal.ui.view.StoredCardView
 import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
@@ -28,6 +29,18 @@ internal object CardViewProvider : ViewProvider {
             is CardComponentViewType.DefaultCardView -> CardView(context)
             is CardComponentViewType.StoredCardView -> StoredCardView(context)
             is CardComponentViewType.AddressLookup -> AddressLookupView(context)
+            else -> throw IllegalArgumentException("Unsupported view type")
+        }
+    }
+
+    override fun getView(
+        viewType: ComponentViewType,
+        layoutInflater: LayoutInflater,
+    ): ComponentView {
+        return when (viewType) {
+            is CardComponentViewType.DefaultCardView -> CardView(layoutInflater)
+            is CardComponentViewType.StoredCardView -> StoredCardView(layoutInflater.context)
+            is CardComponentViewType.AddressLookup -> AddressLookupView(layoutInflater.context)
             else -> throw IllegalArgumentException("Unsupported view type")
         }
     }
