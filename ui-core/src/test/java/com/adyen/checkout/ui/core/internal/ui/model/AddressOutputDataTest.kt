@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 internal class AddressOutputDataTest {
 
     @Test
-    fun addressOutputDataFormatted() {
+    fun `AddressOutputData is formatted, then a certain template is used`() {
         val addressOutputData = AddressOutputData(
             postalCode = FieldState("postalCode", Validation.Valid),
             houseNumberOrName = FieldState("houseNumberOrName", Validation.Valid),
