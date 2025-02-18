@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -74,10 +75,7 @@ class AdyenCardScanner {
     }
 
     fun startScanner(activity: Activity, requestCode: Int) {
-        val paymentCardRecognitionPendingIntent =
-            paymentCardRecognitionPendingIntent ?: error("isAvailable must be called before starting the scanner")
-
-        try {
+        startScanner { paymentCardRecognitionPendingIntent ->
             ActivityCompat.startIntentSenderForResult(
                 activity,
                 paymentCardRecognitionPendingIntent.intentSender,
@@ -88,6 +86,29 @@ class AdyenCardScanner {
                 0,
                 null,
             )
+        }
+    }
+
+    fun startScanner(fragment: Fragment, requestCode: Int) {
+        startScanner { paymentCardRecognitionPendingIntent ->
+            fragment.startIntentSenderForResult(
+                paymentCardRecognitionPendingIntent.intentSender,
+                requestCode,
+                null,
+                0,
+                0,
+                0,
+                null,
+            )
+        }
+    }
+
+    private fun startScanner(startIntentSender: (PendingIntent) -> Unit) {
+        val paymentCardRecognitionPendingIntent =
+            paymentCardRecognitionPendingIntent ?: error("isAvailable must be called before starting the scanner")
+
+        try {
+            startIntentSender(paymentCardRecognitionPendingIntent)
         } catch (e: IntentSender.SendIntentException) {
             throw CheckoutException("Failed to start payment card recognition.", e)
         }
