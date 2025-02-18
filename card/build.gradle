@@ -47,6 +47,7 @@ dependencies {
     api project(':cse')
     api project(':ui-core')
     api project(':sessions-core')
+    compileOnly project(':card-scanning')
 
     // Dependencies
     implementation libs.material
