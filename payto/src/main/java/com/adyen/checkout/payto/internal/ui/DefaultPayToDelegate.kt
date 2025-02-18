@@ -122,7 +122,7 @@ internal class DefaultPayToDelegate(
         return PayToOutputData(
             mode = inputData.mode,
             payIdTypeModel = inputData.payIdTypeModel,
-            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX$sanitizedPhoneNumber",
+            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX-$sanitizedPhoneNumber",
             emailAddress = inputData.emailAddress,
             abnNumber = inputData.abnNumber,
             organizationId = inputData.organizationId,
