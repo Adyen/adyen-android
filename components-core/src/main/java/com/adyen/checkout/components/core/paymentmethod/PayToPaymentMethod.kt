@@ -15,15 +15,17 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
-// TODO Add PayTo specific fields here
 @Parcelize
 class PayToPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
+    var shopperAccountIdentifier: String?,
 ) : PaymentMethodDetails() {
 
     companion object {
+
         const val PAYMENT_METHOD_TYPE = PaymentMethodTypes.PAY_TO
+        private const val SHOPPER_ACCOUNT_IDENTIFIER = "shopperAccountIdentifier"
 
         @JvmField
         val SERIALIZER: Serializer<PayToPaymentMethod> = object : Serializer<PayToPaymentMethod> {
@@ -32,6 +34,7 @@ class PayToPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SHOPPER_ACCOUNT_IDENTIFIER, modelObject.shopperAccountIdentifier)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PayToPaymentMethod::class.java, e)
@@ -42,6 +45,7 @@ class PayToPaymentMethod(
                 return PayToPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    shopperAccountIdentifier = jsonObject.getStringOrNull(SHOPPER_ACCOUNT_IDENTIFIER),
                 )
             }
         }
