@@ -22,7 +22,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
-import com.adyen.checkout.ui.core.internal.ui.SimpleTextListAdapter
+import com.adyen.checkout.ui.core.internal.ui.TextListAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
@@ -49,8 +49,8 @@ class AddressFormInput @JvmOverloads constructor(
 
     private var currentSpec: AddressSpecification? = null
 
-    private var countryAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
-    private var statesAdapter: SimpleTextListAdapter<AddressListItem> = SimpleTextListAdapter(context)
+    private var countryAdapter: TextListAdapter<AddressListItem> = TextListAdapter(context)
+    private var statesAdapter: TextListAdapter<AddressListItem> = TextListAdapter(context)
 
     private val textViewHeader: TextView?
         get() = rootView.findViewById(R.id.textView_header)

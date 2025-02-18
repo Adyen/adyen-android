@@ -10,6 +10,7 @@ package com.adyen.checkout.payto.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -28,6 +29,8 @@ internal interface PayToDelegate :
     val outputDataFlow: Flow<PayToOutputData>
 
     val componentStateFlow: Flow<PayToComponentState>
+
+    fun getPayIdTypes(): List<PayIdTypeModel>
 
     fun updateInputData(update: PayToInputData.() -> Unit)
 
