@@ -27,6 +27,7 @@ import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
+import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -118,6 +119,8 @@ internal class DefaultPayToDelegate(
     private fun createOutputData(): PayToOutputData {
         val sanitizedPhoneNumber = inputData.phoneNumber.trimStart('0')
         return PayToOutputData(
+            mode = inputData.mode,
+            payIdTypeModel = inputData.payIdTypeModel,
             mobilePhoneNumber = "$PHONE_NUMBER_PREFIX$sanitizedPhoneNumber",
             emailAddress = inputData.emailAddress,
             abnNumber = inputData.abnNumber,
@@ -142,10 +145,10 @@ internal class DefaultPayToDelegate(
     private fun createComponentState(
         outputData: PayToOutputData = this.outputData
     ): PayToComponentState {
-        // TODO Add PayTo specific fields
         val paymentMethod = PayToPaymentMethod(
             type = PayToPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            shopperAccountIdentifier = getShopperAccountIdentifier(outputData),
         )
 
         val paymentComponentData = PaymentComponentData(
@@ -160,6 +163,23 @@ internal class DefaultPayToDelegate(
             isReady = true,
         )
     }
+
+    private fun getShopperAccountIdentifier(outputData: PayToOutputData) = when (outputData.mode) {
+        PayToMode.PAY_ID -> getShopperAccountIdentifierForPayId(outputData)
+        PayToMode.BSB -> getShopperAccountIdentifierForBsb(outputData)
+    }
+
+    private fun getShopperAccountIdentifierForPayId(outputData: PayToOutputData) =
+        when (outputData.payIdTypeModel?.type) {
+            PayIdType.PHONE -> outputData.phoneNumberFieldState.value
+            PayIdType.EMAIL -> outputData.emailAddressFieldState.value
+            PayIdType.ABN -> outputData.abnNumberFieldState.value
+            PayIdType.ORGANIZATION_ID -> outputData.organizationIdFieldState.value
+            null -> ""
+        }
+
+    private fun getShopperAccountIdentifierForBsb(outputData: PayToOutputData) =
+        "${outputData.bsbAccountNumber}-${outputData.bsbStateBranch}"
 
     private fun componentStateChanged(componentState: PayToComponentState) {
         _componentStateFlow.tryEmit(componentState)
