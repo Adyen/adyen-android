@@ -118,8 +118,7 @@ internal class DefaultPayToDelegate(
     private fun createOutputData(): PayToOutputData {
         val sanitizedPhoneNumber = inputData.phoneNumber.trimStart('0')
         return PayToOutputData(
-            // TODO Do not hardcode the +61 here
-            mobilePhoneNumber = "+61$sanitizedPhoneNumber",
+            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX$sanitizedPhoneNumber",
             emailAddress = inputData.emailAddress,
             abnNumber = inputData.abnNumber,
             organizationId = inputData.organizationId,
@@ -196,5 +195,7 @@ internal class DefaultPayToDelegate(
             PayIdTypeModel(PayIdType.ABN, R.string.checkout_payto_payid_type_abn_number),
             PayIdTypeModel(PayIdType.ORGANIZATION_ID, R.string.checkout_payto_payid_type_organization_id),
         )
+
+        private const val PHONE_NUMBER_PREFIX = "+61"
     }
 }
