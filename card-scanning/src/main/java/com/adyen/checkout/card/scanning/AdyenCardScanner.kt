@@ -23,8 +23,8 @@ import com.google.android.gms.wallet.PaymentCardRecognitionResult
 import com.google.android.gms.wallet.PaymentsClient
 import com.google.android.gms.wallet.Wallet
 import com.google.android.gms.wallet.WalletConstants
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class AdyenCardScanner {
 
@@ -49,17 +49,26 @@ class AdyenCardScanner {
     suspend fun isAvailable(): Boolean {
         val paymentsClient = paymentsClient ?: error("initialize must be called before checking availability")
 
-        return suspendCoroutine { continuation ->
+        return suspendCancellableCoroutine { continuation ->
             val request = PaymentCardRecognitionIntentRequest.getDefaultInstance()
             paymentsClient
                 .getPaymentCardRecognitionIntent(request)
                 .addOnSuccessListener { intentResponse ->
-                    paymentCardRecognitionPendingIntent = intentResponse.paymentCardRecognitionPendingIntent
-                    continuation.resume(true)
+                    if (continuation.isActive) {
+                        paymentCardRecognitionPendingIntent = intentResponse.paymentCardRecognitionPendingIntent
+                        continuation.resume(true)
+                    }
                 }
                 .addOnFailureListener { e ->
                     adyenLog(AdyenLogLevel.WARN, e) { "Card scanning not available" }
-                    continuation.resume(false)
+                    if (continuation.isActive) {
+                        continuation.resume(false)
+                    }
+                }
+                .addOnCanceledListener {
+                    if (continuation.isActive) {
+                        continuation.cancel()
+                    }
                 }
         }
     }
@@ -99,6 +108,7 @@ class AdyenCardScanner {
     fun terminate() {
         paymentsClient = null
         isAvailable = false
+        paymentCardRecognitionPendingIntent?.cancel()
         paymentCardRecognitionPendingIntent = null
     }
 }
