@@ -17,14 +17,16 @@ import com.adyen.checkout.payto.internal.util.PayToValidationUtils
 
 @Suppress("LongParameterList")
 internal class PayToOutputData(
-    mobilePhoneNumber: String,
-    emailAddress: String,
-    abnNumber: String,
-    organizationId: String,
-    bsbAccountNumber: String,
-    bsbStateBranch: String,
-    firstName: String,
-    lastName: String,
+    val mode: PayToMode,
+    val payIdTypeModel: PayIdTypeModel?,
+    val mobilePhoneNumber: String,
+    val emailAddress: String,
+    val abnNumber: String,
+    val organizationId: String,
+    val bsbAccountNumber: String,
+    val bsbStateBranch: String,
+    val firstName: String,
+    val lastName: String,
 ) : OutputData {
 
     val phoneNumberFieldState: FieldState<String> = validateMobileNumber(mobilePhoneNumber)
