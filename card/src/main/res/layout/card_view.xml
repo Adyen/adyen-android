@@ -235,4 +235,12 @@
         android:descendantFocusability="afterDescendants"
         android:focusableInTouchMode="true"
         android:visibility="gone" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainer"
+        android:name="com.adyen.checkout.card.internal.ui.view.CardFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipChildren="false" />
+
 </merge>
