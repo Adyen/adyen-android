@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by josephj on 18/2/2025.
+ */
+
+tasks.register('dependencyList') {
+    doLast {
+        def includeModules = false
+        if (project.hasProperty("includeModules") && project.property("includeModules") == "true") {
+            includeModules = true
+        }
+
+        def groupedDependencies = subprojects
+            .findAll { subproject -> subproject.plugins.hasPlugin("maven-publish") }
+            .collect { subproject ->
+                subproject.configurations
+                    .releaseRuntimeClasspath
+                    .incoming
+                    .resolutionResult
+                    .allDependencies
+                    .collect { dependency ->
+                        [dependency: "${dependency.selected}", module: subproject.name]
+                    }
+            }.flatten()
+
+        if (!includeModules) {
+            groupedDependencies
+                .collect { it.dependency }
+                .unique()
+                .toSorted()
+                .each { println it }
+        } else {
+            groupedDependencies
+                .groupBy { it.dependency }
+                .collect { [dependency: it.key, modules: it.value.collect { it.module }.unique()] }
+                .sort { it.dependency }
+                .each { println "${it.dependency} - used by: ${it.modules}" }
+        }
+    }
+}
