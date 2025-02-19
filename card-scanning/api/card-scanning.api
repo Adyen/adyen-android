@@ -1,0 +1,32 @@
+public final class com/adyen/checkout/card/scanning/AdyenCardScanner {
+	public fun <init> ()V
+	public final fun getResult (Landroid/content/Intent;)Lcom/adyen/checkout/card/scanning/AdyenCardScannerResult;
+	public final fun initialize (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;)V
+	public final fun isAvailable (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun startScanner (Landroid/app/Activity;I)V
+	public final fun terminate ()V
+}
+
+public final class com/adyen/checkout/card/scanning/AdyenCardScannerResult {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Integer;
+	public final fun component3 ()Ljava/lang/Integer;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;)Lcom/adyen/checkout/card/scanning/AdyenCardScannerResult;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/card/scanning/AdyenCardScannerResult;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/card/scanning/AdyenCardScannerResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiryMonth ()Ljava/lang/Integer;
+	public final fun getExpiryYear ()Ljava/lang/Integer;
+	public final fun getPan ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/card/scanning/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field CHECKOUT_VERSION Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
