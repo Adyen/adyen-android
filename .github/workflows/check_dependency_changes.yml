@@ -51,6 +51,25 @@ jobs:
           comment-tag: dependency_changes
           mode: delete
 
+      - name: Delete previous review comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+
+          # Fetch review comments in the PR
+          COMMENT_ID=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/comments --jq '.[] | select(.body | contains("<!-- dependency-check-comment-tag -->")) | .id')
+
+          if [[ -z "$COMMENT_ID" ]]; then
+            echo "No existing review comment was found"
+            exit 0
+          fi
+
+          echo "Deleting previous review comment"
+
+          # Delete the comment
+          gh api repos/${{ github.repository }}/pulls/comments/$COMMENT_ID -X DELETE
+
       - name: Add PR review comment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -79,7 +98,7 @@ jobs:
           
           gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/comments \
             -X POST \
-            -F body="Some dependencies have been modified in this PR, review the modifications in the comments before merging." \
+            -F body="$(printf "Some dependencies have been modified in this PR, review the modifications in the comments before merging.\n\n<!-- dependency-check-comment-tag -->")" \
             -F commit_id=${{ github.event.pull_request.head.sha }} \
             -F path="$TARGET_FILE" \
             -F subject_type="file"
