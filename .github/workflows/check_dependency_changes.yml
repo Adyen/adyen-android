@@ -50,3 +50,36 @@ jobs:
         with:
           comment-tag: dependency_changes
           mode: delete
+
+      - name: Add PR review comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.compare_deps.outputs.has_changes == 'true'
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          # Fetch the list of modified files in the PR
+          FILES=$(gh api repos/$REPO/pulls/$PR_NUMBER/files --jq '.[].filename')
+
+          # Check if 'libs.versions.toml' is in the modified files
+          TARGET_FILE=$(echo "$FILES" | grep -m1 'libs.versions.toml' || echo "")
+
+          if [[ -z "$TARGET_FILE" ]]; then
+            echo "'libs.versions.toml' is not found in the PR, using first modified file instead."
+            TARGET_FILE=$(echo "$FILES" | head -n1)
+          fi
+
+          if [[ -z "$TARGET_FILE" ]]; then
+            echo "No files found in the PR. Exiting."
+            exit 1
+          fi
+          
+          echo "A review comment will be posted on file: $TARGET_FILE"
+          
+          gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/comments \
+            -X POST \
+            -F body="Some dependencies have been modified in this PR, review the modifications in the comments before merging." \
+            -F commit_id=${{ github.event.pull_request.head.sha }} \
+            -F path="$TARGET_FILE" \
+            -F subject_type="file"
