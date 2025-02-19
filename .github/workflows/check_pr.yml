@@ -31,3 +31,6 @@ jobs:
   verify_dependencies:
     name: Validate dependencies
     uses: ./.github/workflows/validate_dependencies.yml
+  check_dependency_changes:
+    name: Check dependency changes
+    uses: ./.github/workflows/check_dependency_changes.yml

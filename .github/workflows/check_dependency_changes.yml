@@ -1,0 +1,37 @@
+name: Check dependency changes
+
+on:
+  workflow_call:
+
+jobs:
+  check_dependency_changes:
+    runs-on: ubuntu-latest
+    name: Check dependency changes
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Compare dependencies between base and head
+        id: compare_deps
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          chmod +x scripts/check_dependency_changes.py
+          python scripts/check_dependency_changes.py dependency_changes.md
+
+      - name: Add comment on PR
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          file-path: "${{ github.workspace }}/dependency_changes.md"
+          comment-tag: dependency_changes
+          mode: recreate
