@@ -1,3 +1,7 @@
+import com.android.build.gradle.LibraryPlugin
+import org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias libs.plugins.android.application apply false
     alias libs.plugins.android.library apply false
@@ -14,6 +18,7 @@ plugins {
 apply from: "config/gradle/dokkaRoot.gradle"
 apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
+apply from: "config/gradle/dependencyList.gradle"
 
 ext {
     if (project.hasProperty("version-name")) {
@@ -54,19 +59,19 @@ subprojects {
         }
     }
 
-    plugins.withType(com.android.build.gradle.LibraryPlugin).configureEach {
+    plugins.withType(LibraryPlugin).configureEach {
         dependencies {
             lintChecks project(':lint')
         }
     }
 
-    plugins.withType(org.jetbrains.kotlin.gradle.plugin.KotlinAndroidPluginWrapper).configureEach {
+    plugins.withType(KotlinAndroidPluginWrapper).configureEach {
         kotlin {
             jvmToolchain(javaVersion)
         }
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
             freeCompilerArgs += [
                 '-opt-in=kotlin.RequiresOptIn',
