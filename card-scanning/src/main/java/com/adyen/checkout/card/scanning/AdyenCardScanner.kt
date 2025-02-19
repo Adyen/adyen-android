@@ -29,11 +29,14 @@ import kotlin.coroutines.resume
 
 class AdyenCardScanner {
 
-    private var paymentsClient: PaymentsClient? = null
-    private var isAvailable = false
     private var paymentCardRecognitionPendingIntent: PendingIntent? = null
 
-    fun initialize(context: Context, environment: Environment) {
+    suspend fun initialize(context: Context, environment: Environment): Boolean {
+        val paymentsClient = createPaymentsClient(context, environment)
+        return initializeCardRecognition(paymentsClient)
+    }
+
+    private fun createPaymentsClient(context: Context, environment: Environment): PaymentsClient {
         val googleEnv = if (environment == Environment.TEST) {
             WalletConstants.ENVIRONMENT_TEST
         } else {
@@ -44,12 +47,10 @@ class AdyenCardScanner {
             .setEnvironment(googleEnv)
             .build()
 
-        paymentsClient = Wallet.getPaymentsClient(context, walletOptions)
+        return Wallet.getPaymentsClient(context, walletOptions)
     }
 
-    suspend fun isAvailable(): Boolean {
-        val paymentsClient = paymentsClient ?: error("initialize must be called before checking availability")
-
+    private suspend fun initializeCardRecognition(paymentsClient: PaymentsClient): Boolean {
         return suspendCancellableCoroutine { continuation ->
             val request = PaymentCardRecognitionIntentRequest.getDefaultInstance()
             paymentsClient
@@ -105,12 +106,12 @@ class AdyenCardScanner {
 
     private fun startScanner(startIntentSender: (PendingIntent) -> Unit) {
         val paymentCardRecognitionPendingIntent =
-            paymentCardRecognitionPendingIntent ?: error("isAvailable must be called before starting the scanner")
+            paymentCardRecognitionPendingIntent ?: error("The scanner must be initialized before it can be started")
 
         try {
             startIntentSender(paymentCardRecognitionPendingIntent)
         } catch (e: IntentSender.SendIntentException) {
-            throw CheckoutException("Failed to start payment card recognition.", e)
+            throw CheckoutException("Failed to start payment card recognition", e)
         }
     }
 
@@ -127,9 +128,6 @@ class AdyenCardScanner {
     }
 
     fun terminate() {
-        paymentsClient = null
-        isAvailable = false
-        paymentCardRecognitionPendingIntent?.cancel()
         paymentCardRecognitionPendingIntent = null
     }
 }
