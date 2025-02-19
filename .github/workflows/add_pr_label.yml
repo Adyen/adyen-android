@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout to current branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Get label
         id: get_label
@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout to current branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Add label
         uses: actions/github-script@v6
