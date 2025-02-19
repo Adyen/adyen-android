@@ -61,7 +61,7 @@ jobs:
           python scripts/generate_release_notes.py $RELEASE_NOTES_FILE_NAME
 
       - name: Upload release notes artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         env:
           VERSION_NAME: ${{ inputs.version-name }}
         with:
