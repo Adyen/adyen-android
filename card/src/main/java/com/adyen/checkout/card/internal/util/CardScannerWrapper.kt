@@ -20,12 +20,8 @@ internal class CardScannerWrapper {
 
     private val cardScanner: AdyenCardScanner? = runCompileOnly { AdyenCardScanner() }
 
-    fun initialize(context: Context, environment: Environment) {
-        cardScanner?.initialize(context, environment)
-    }
-
-    suspend fun isAvailable(): Boolean {
-        return cardScanner?.isAvailable() ?: false
+    suspend fun initialize(context: Context, environment: Environment): Boolean {
+        return cardScanner?.initialize(context, environment) ?: false
     }
 
     fun startScanner(fragment: Fragment, requestCode: Int) {
