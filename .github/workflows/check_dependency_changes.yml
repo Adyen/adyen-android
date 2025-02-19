@@ -28,10 +28,25 @@ jobs:
         run: |
           chmod +x scripts/check_dependency_changes.py
           python scripts/check_dependency_changes.py dependency_changes.md
+          if [ -s dependency_changes.md ]; then
+            echo "Found dependency changes in this PR"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No dependency changes found in this PR"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Add comment on PR
         uses: thollander/actions-comment-pull-request@v3
+        if: steps.compare_deps.outputs.has_changes == 'true'
         with:
           file-path: "${{ github.workspace }}/dependency_changes.md"
           comment-tag: dependency_changes
           mode: recreate
+
+      - name: Delete comment from PR
+        uses: thollander/actions-comment-pull-request@v3
+        if: steps.compare_deps.outputs.has_changes == 'false'
+        with:
+          comment-tag: dependency_changes
+          mode: delete
