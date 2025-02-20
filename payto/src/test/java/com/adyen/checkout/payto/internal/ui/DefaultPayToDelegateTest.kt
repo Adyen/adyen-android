@@ -31,6 +31,7 @@ import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -72,7 +73,226 @@ internal class DefaultPayToDelegateTest(
     @Nested
     @DisplayName("when input data changes and")
     inner class InputDataChangedTest {
-        // TODO To be added later
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is null, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = null
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is PHONE and value is valid, then output should be valid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.PHONE, 0)
+                phoneNumber = "412345678"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is PHONE and value is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.PHONE, 0)
+                phoneNumber = "abc"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is EMAIL and value is valid, then output should be valid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.EMAIL, 0)
+                emailAddress = "test@example.com"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is EMAIL and value is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.EMAIL, 0)
+                emailAddress = "plainaddress"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is ABN and value is valid, then output should be valid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.ABN, 0)
+                abnNumber = "123456789"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is ABN and value is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.ABN, 0)
+                abnNumber = "9876543210"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is valid, then output should be valid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
+                organizationId = "12345678901"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
+                organizationId = "Invalid Org"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is BSB and account number is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.BSB
+                bsbAccountNumber = ""
+                bsbStateBranch = "Main Branch"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is BSB and state branch is invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.BSB
+                bsbAccountNumber = "123456"
+                bsbStateBranch = ""
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is BSB and account number and state branch are valid, then output should be valid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.BSB
+                bsbAccountNumber = "123456"
+                bsbStateBranch = "Main Branch"
+                firstName = "First name"
+                lastName = "Last name"
+            }
+
+            assertTrue(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
+
+        @Test
+        fun `mode is valid and first and last name are invalid, then output should be invalid`() = runTest {
+            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+
+            delegate.updateInputData {
+                mode = PayToMode.PAY_ID
+                payIdTypeModel = PayIdTypeModel(PayIdType.PHONE, 0)
+                phoneNumber = "412345678"
+                firstName = ""
+                lastName = ""
+            }
+
+            assertFalse(outputTestFlow.latestValue.isValid)
+
+            outputTestFlow.cancel()
+        }
     }
 
     @Nested
@@ -110,6 +330,8 @@ internal class DefaultPayToDelegateTest(
 
                 with(awaitItem()) {
                     assertEquals("+61-9876543210", data.paymentMethod?.shopperAccountIdentifier)
+                    assertEquals("First name", data.shopperName?.firstName)
+                    assertEquals("Last name", data.shopperName?.lastName)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                     assertEquals(TEST_ORDER, data.order)
@@ -136,6 +358,8 @@ internal class DefaultPayToDelegateTest(
 
                 with(awaitItem()) {
                     assertEquals("test@adyen.com", data.paymentMethod?.shopperAccountIdentifier)
+                    assertEquals("First name", data.shopperName?.firstName)
+                    assertEquals("Last name", data.shopperName?.lastName)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                     assertEquals(TEST_ORDER, data.order)
@@ -162,6 +386,8 @@ internal class DefaultPayToDelegateTest(
 
                 with(awaitItem()) {
                     assertEquals("000000000", data.paymentMethod?.shopperAccountIdentifier)
+                    assertEquals("First name", data.shopperName?.firstName)
+                    assertEquals("Last name", data.shopperName?.lastName)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                     assertEquals(TEST_ORDER, data.order)
@@ -188,6 +414,8 @@ internal class DefaultPayToDelegateTest(
 
                 with(awaitItem()) {
                     assertEquals("12345678901", data.paymentMethod?.shopperAccountIdentifier)
+                    assertEquals("First name", data.shopperName?.firstName)
+                    assertEquals("Last name", data.shopperName?.lastName)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                     assertEquals(TEST_ORDER, data.order)
@@ -214,6 +442,8 @@ internal class DefaultPayToDelegateTest(
 
                 with(awaitItem()) {
                     assertEquals("123456-Branch-123", data.paymentMethod?.shopperAccountIdentifier)
+                    assertEquals("First name", data.shopperName?.firstName)
+                    assertEquals("Last name", data.shopperName?.lastName)
                     assertTrue(isInputValid)
                     assertTrue(isValid)
                     assertEquals(TEST_ORDER, data.order)
