@@ -1,8 +1,7 @@
 name: CodeQL Analysis
 
 on:
-  pull_request:
-    types: [ opened, synchronize, reopened, labeled, unlabeled, edited ]
+  workflow_dispatch:
 
 jobs:
   codeql:
