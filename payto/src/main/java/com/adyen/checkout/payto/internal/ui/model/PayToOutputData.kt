@@ -56,7 +56,7 @@ internal class PayToOutputData(
             PayIdType.EMAIL -> emailAddressFieldState.validation.isValid()
             PayIdType.ABN -> abnNumberFieldState.validation.isValid()
             PayIdType.ORGANIZATION_ID -> organizationIdFieldState.validation.isValid()
-            null -> true
+            null -> false
         }
 
     private val isBsbValid: Boolean
