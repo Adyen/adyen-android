@@ -1,0 +1,104 @@
+name: Check dependency changes
+
+on:
+  workflow_call:
+
+jobs:
+  check_dependency_changes:
+    runs-on: ubuntu-latest
+    name: Check dependency changes
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Compare dependencies between base and head
+        id: compare_deps
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          chmod +x scripts/check_dependency_changes.py
+          python scripts/check_dependency_changes.py dependency_changes.md
+          if [ -s dependency_changes.md ]; then
+            echo "Found dependency changes in this PR"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "No dependency changes found in this PR"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add comment on PR
+        uses: thollander/actions-comment-pull-request@v3
+        if: steps.compare_deps.outputs.has_changes == 'true'
+        with:
+          file-path: "${{ github.workspace }}/dependency_changes.md"
+          comment-tag: dependency_changes
+          mode: recreate
+
+      - name: Delete comment from PR
+        uses: thollander/actions-comment-pull-request@v3
+        if: steps.compare_deps.outputs.has_changes == 'false'
+        with:
+          comment-tag: dependency_changes
+          mode: delete
+
+      - name: Delete previous review comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+
+          # Fetch review comments in the PR
+          COMMENT_ID=$(gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/comments --jq '.[] | select(.body | contains("<!-- dependency-check-comment-tag -->")) | .id')
+
+          if [[ -z "$COMMENT_ID" ]]; then
+            echo "No existing review comment was found"
+            exit 0
+          fi
+
+          echo "Deleting previous review comment"
+
+          # Delete the comment
+          gh api repos/${{ github.repository }}/pulls/comments/$COMMENT_ID -X DELETE
+
+      - name: Add PR review comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.compare_deps.outputs.has_changes == 'true'
+        run: |
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+          
+          # Fetch the list of modified files in the PR
+          FILES=$(gh api repos/$REPO/pulls/$PR_NUMBER/files --jq '.[].filename')
+
+          # Check if 'libs.versions.toml' is in the modified files
+          TARGET_FILE=$(echo "$FILES" | grep -m1 'libs.versions.toml' || echo "")
+
+          if [[ -z "$TARGET_FILE" ]]; then
+            echo "'libs.versions.toml' is not found in the PR, using first modified file instead."
+            TARGET_FILE=$(echo "$FILES" | head -n1)
+          fi
+
+          if [[ -z "$TARGET_FILE" ]]; then
+            echo "No files found in the PR. Exiting."
+            exit 1
+          fi
+          
+          echo "A review comment will be posted on file: $TARGET_FILE"
+          
+          gh api repos/${{ github.repository }}/pulls/$PR_NUMBER/comments \
+            -X POST \
+            -F body="$(printf "Some dependencies have been modified in this PR, review the modifications in the comments before merging.\n\n<!-- dependency-check-comment-tag -->")" \
+            -F commit_id=${{ github.event.pull_request.head.sha }} \
+            -F path="$TARGET_FILE" \
+            -F subject_type="file"
