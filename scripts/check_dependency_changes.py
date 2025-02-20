@@ -21,6 +21,8 @@ def compare_dependency_list(base_ref: str, head_ref: str):
 
 def get_dependency_list(git_ref: str) -> str:
     subprocess.Popen(["git", "checkout", "-f", git_ref])
+    # This is needed to avoid having the "downloading" wrapper progress text printed inside the output of the task
+    subprocess.Popen(["./gradlew", "wrapper", "-q"])
     return subprocess.check_output(["./gradlew", "dependencyList", "-q", "--no-configuration-cache"]
         ).decode(sys.stdout.encoding
         ).strip()
