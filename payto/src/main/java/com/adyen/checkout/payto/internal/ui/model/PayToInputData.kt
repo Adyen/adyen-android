@@ -13,4 +13,12 @@ import com.adyen.checkout.components.core.internal.ui.model.InputData
 internal data class PayToInputData(
     var mode: PayToMode = PayToMode.PAY_ID,
     var payIdTypeModel: PayIdTypeModel? = null,
+    var phoneNumber: String = "",
+    var emailAddress: String = "",
+    var abnNumber: String = "",
+    var organizationId: String = "",
+    var bsbAccountNumber: String = "",
+    var bsbStateBranch: String = "",
+    var firstName: String = "",
+    var lastName: String = "",
 ) : InputData
