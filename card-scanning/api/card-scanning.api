@@ -1,9 +1,9 @@
 public final class com/adyen/checkout/card/scanning/AdyenCardScanner {
 	public fun <init> ()V
 	public final fun getResult (Landroid/content/Intent;)Lcom/adyen/checkout/card/scanning/AdyenCardScannerResult;
-	public final fun initialize (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;)V
-	public final fun isAvailable (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun initialize (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun startScanner (Landroid/app/Activity;I)V
+	public final fun startScanner (Landroidx/fragment/app/Fragment;I)V
 	public final fun terminate ()V
 }
 
