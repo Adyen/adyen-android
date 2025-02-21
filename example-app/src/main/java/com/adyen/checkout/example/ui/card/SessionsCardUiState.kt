@@ -22,7 +22,7 @@ internal data class SessionsCardUiState(
     val oneTimeMessage: String? = null,
     val componentData: SessionsCardComponentData? = null,
     val action: Action? = null,
-    val addressLookupOptions: List<LookupAddress> = emptyList(),
+    val addressLookupOptions: List<LookupAddress>? = null,
     val addressLookupResult: AddressLookupResult? = null,
     val finalResult: ResultState? = null,
 )

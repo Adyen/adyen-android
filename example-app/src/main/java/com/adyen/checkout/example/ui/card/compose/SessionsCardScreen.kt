@@ -74,18 +74,22 @@ internal fun SessionsCardScreen(
             uiState = uiState,
             onOneTimeMessageConsumed = viewModel::oneTimeMessageConsumed,
             onActionConsumed = viewModel::actionConsumed,
+            onAddressLookupOptionsConsumed = viewModel::addressLookupOptionsConsumed,
+            onAddressLookupResultConsumed = viewModel::addressLookupResultConsumed,
             addressLookupCallback = viewModel as AddressLookupCallback,
             modifier = Modifier.padding(innerPadding),
         )
     }
 }
 
-@Suppress("DestructuringDeclarationWithTooManyEntries")
+@Suppress("DestructuringDeclarationWithTooManyEntries", "LongParameterList")
 @Composable
 private fun SessionsCardContent(
     uiState: SessionsCardUiState,
     onOneTimeMessageConsumed: () -> Unit,
     onActionConsumed: () -> Unit,
+    onAddressLookupOptionsConsumed: () -> Unit,
+    onAddressLookupResultConsumed: () -> Unit,
     addressLookupCallback: AddressLookupCallback,
     modifier: Modifier = Modifier,
 ) {
@@ -127,6 +131,8 @@ private fun SessionsCardContent(
                 addressLookupCallback = addressLookupCallback,
                 addressLookupOptions = addressLookupOptions,
                 addressLookupResult = addressLookupResult,
+                onAddressLookupOptionsConsumed = onAddressLookupOptionsConsumed,
+                onAddressLookupResultConsumed = onAddressLookupResultConsumed,
                 modifier = Modifier.fillMaxSize(),
             )
         }
@@ -141,8 +147,10 @@ private fun CardComponent(
     action: Action?,
     onActionConsumed: () -> Unit,
     addressLookupCallback: AddressLookupCallback,
-    addressLookupOptions: List<LookupAddress>,
+    addressLookupOptions: List<LookupAddress>?,
     addressLookupResult: AddressLookupResult?,
+    onAddressLookupOptionsConsumed: () -> Unit,
+    onAddressLookupResultConsumed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val component = CardComponent.PROVIDER.get(
@@ -153,12 +161,14 @@ private fun CardComponent(
         componentData.hashCode().toString(),
     )
 
-    if (addressLookupOptions.isNotEmpty()) {
+    if (addressLookupOptions != null) {
         component.updateAddressLookupOptions(addressLookupOptions)
+        onAddressLookupOptionsConsumed()
     }
 
     if (addressLookupResult != null) {
         component.setAddressLookupResult(addressLookupResult)
+        onAddressLookupResultConsumed()
     }
 
     component.setAddressLookupCallback(addressLookupCallback)
