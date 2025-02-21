@@ -1,6 +1,7 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.internal.data.api.AdyenApiResponse
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import com.adyen.checkout.test.LoggingExtension
@@ -37,11 +38,11 @@ internal class AnalyticsServiceTest(
             platform = "android",
             info = emptyList(),
             logs = emptyList(),
-            errors = emptyList()
+            errors = emptyList(),
         )
         val checkoutAttemptId = "testtest"
         whenever(httpClient.post(eq("v3/analytics/$checkoutAttemptId"), any(), any(), any()))
-            .doReturn(ByteArray(0))
+            .doReturn(AdyenApiResponse("", 0, emptyMap(), ""))
 
         val response = analyticsService.sendEvents(request, checkoutAttemptId, TEST_CLIENT_KEY)
 

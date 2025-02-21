@@ -34,14 +34,14 @@ internal class OkHttpClient(
         path: String,
         queryParameters: Map<String, String>,
         headers: Map<String, String>
-    ): ByteArray {
+    ): AdyenApiResponse {
         val request = Request.Builder()
             .headers(headers.combineToHeaders())
             .url(buildURL(path, queryParameters))
             .get()
             .build()
 
-        return executeRequest(request)
+        return executeRequest(request, path)
     }
 
     override suspend fun post(
@@ -49,14 +49,14 @@ internal class OkHttpClient(
         jsonBody: String,
         queryParameters: Map<String, String>,
         headers: Map<String, String>
-    ): ByteArray {
+    ): AdyenApiResponse {
         val request = Request.Builder()
             .headers(headers.combineToHeaders())
             .url(buildURL(path, queryParameters))
             .post(jsonBody.toRequestBody(MEDIA_TYPE_JSON))
             .build()
 
-        return executeRequest(request)
+        return executeRequest(request, path)
     }
 
     private fun buildURL(path: String, queryParameters: Map<String, String>): String {
@@ -70,7 +70,7 @@ internal class OkHttpClient(
         return builder.toString()
     }
 
-    private fun executeRequest(request: Request): ByteArray {
+    private fun executeRequest(request: Request, path: String): AdyenApiResponse {
         val call = client.newCall(request)
 
         try {
@@ -81,7 +81,12 @@ internal class OkHttpClient(
                     ?.bytes()
                     ?: ByteArray(0)
                 response.body?.close()
-                return bytes
+                return AdyenApiResponse(
+                    path = path,
+                    statusCode = response.code,
+                    headers = response.headers.toMap(),
+                    body = String(bytes, Charsets.UTF_8),
+                )
             } else {
                 val exception = response.getHttpException()
                 response.body?.close()
