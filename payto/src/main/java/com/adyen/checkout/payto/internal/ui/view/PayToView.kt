@@ -179,11 +179,16 @@ internal class PayToView @JvmOverloads constructor(
     }
 
     private fun onPayIdTypeSelected(payIdTypeModel: PayIdTypeModel) {
-        togglePayIdTypeViews(payIdTypeModel)
+        clearErrorsAndTogglePayIdTypeViews(payIdTypeModel)
         delegate.updateInputData { this.payIdTypeModel = payIdTypeModel }
     }
 
-    private fun togglePayIdTypeViews(payIdTypeModel: PayIdTypeModel) = with(binding) {
+    private fun clearErrorsAndTogglePayIdTypeViews(payIdTypeModel: PayIdTypeModel) = with(binding) {
+        textInputLayoutPayIdPhoneNumber.hideError()
+        textInputLayoutPayIdEmailAddress.hideError()
+        textInputLayoutPayIdAbnNumber.hideError()
+        textInputLayoutPayIdOrganizationId.hideError()
+
         textInputLayoutPayIdPhoneNumber.isVisible = payIdTypeModel.type == PayIdType.PHONE
         textInputLayoutPayIdEmailAddress.isVisible = payIdTypeModel.type == PayIdType.EMAIL
         textInputLayoutPayIdAbnNumber.isVisible = payIdTypeModel.type == PayIdType.ABN
