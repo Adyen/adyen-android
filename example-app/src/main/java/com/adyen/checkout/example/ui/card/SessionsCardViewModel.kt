@@ -179,6 +179,14 @@ internal class SessionsCardViewModel @Inject constructor(
         updateUiState { it.copy(action = null) }
     }
 
+    fun addressLookupOptionsConsumed() {
+        updateUiState { it.copy(addressLookupOptions = null) }
+    }
+
+    fun addressLookupResultConsumed() {
+        updateUiState { it.copy(addressLookupResult = null) }
+    }
+
     override fun onQueryChanged(query: String) {
         addressLookupRepository.onQuery(query)
     }
