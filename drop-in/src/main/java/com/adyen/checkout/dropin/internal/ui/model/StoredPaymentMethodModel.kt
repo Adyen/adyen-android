@@ -52,6 +52,16 @@ internal data class StoredPayByBankUSModel(
     val environment: Environment,
 ) : StoredPaymentMethodModel()
 
+internal data class StoredPayToModel(
+    override val id: String,
+    override val imageId: String,
+    override val isRemovable: Boolean,
+    val name: String,
+    val description: String?,
+    // We need the environment to load the logo
+    val environment: Environment,
+) : StoredPaymentMethodModel()
+
 internal data class GenericStoredModel(
     override val id: String,
     override val imageId: String,
@@ -101,6 +111,16 @@ internal fun StoredPaymentMethodModel.mapToStoredPaymentMethodItem(context: Cont
                 imageId = imageId,
                 environment = environment,
                 popUpMessage = context.getString(R.string.last_four_digits_format, lastFour),
+            )
+        }
+
+        is StoredPayToModel -> {
+            StoredPaymentMethodItem(
+                title = name,
+                subtitle = description,
+                imageId = imageId,
+                environment = environment,
+                popUpMessage = name,
             )
         }
     }
