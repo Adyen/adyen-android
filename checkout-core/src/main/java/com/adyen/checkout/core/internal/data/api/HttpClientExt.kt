@@ -27,12 +27,11 @@ suspend fun <T : ModelObject> HttpClient.get(
 ): T {
     adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
 
-    val result = runAndLogHttpException { get(path, queryParameters) }
-    val resultJson = result.toJSONObject()
+    val response = runAndLogHttpException { get(path, queryParameters) }
 
-    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
+    logResponse(response)
 
-    return responseSerializer.deserialize(resultJson)
+    return responseSerializer.deserialize(response.body.toJSONObject())
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -43,12 +42,11 @@ suspend fun <T : ModelObject> HttpClient.getList(
 ): List<T> {
     adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
 
-    val result = runAndLogHttpException { get(path, queryParameters) }
-    val resultJson = JSONArray(String(result, Charsets.UTF_8))
+    val response = runAndLogHttpException { get(path, queryParameters) }
 
-    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
+    logResponse(response)
 
-    return ModelUtils.deserializeOptList(resultJson, responseSerializer).orEmpty()
+    return ModelUtils.deserializeOptList(JSONArray(response.body), responseSerializer).orEmpty()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -65,12 +63,11 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
 
     adyenLog(AdyenLogLevel.VERBOSE) { "request - ${requestJson.toStringPretty()}" }
 
-    val result = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
-    val resultJson = result.toJSONObject()
+    val response = runAndLogHttpException { post(path, requestJson.toString(), queryParameters) }
 
-    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${resultJson.toStringPretty()}" }
+    logResponse(response)
 
-    return responseSerializer.deserialize(resultJson)
+    return responseSerializer.deserialize(response.body.toJSONObject())
 }
 
 private inline fun <T : Any, R> T.runAndLogHttpException(block: T.() -> R): R {
@@ -90,10 +87,19 @@ private fun HttpException.getLogMessage(): String {
     }
 }
 
-private fun ByteArray.toJSONObject(): JSONObject {
+private fun String.toJSONObject(): JSONObject {
     return if (isEmpty()) {
         JSONObject()
     } else {
-        JSONObject(String(this, Charsets.UTF_8))
+        JSONObject(this)
     }
+}
+
+private fun Any.logResponse(response: AdyenApiResponse) {
+    adyenLog(AdyenLogLevel.VERBOSE) { "response - ${response.statusCode} .../${response.path}" }
+    response.headers.forEach { (key, value) ->
+        adyenLog(AdyenLogLevel.VERBOSE) { "$key: $value" }
+    }
+    adyenLog(AdyenLogLevel.VERBOSE) { response.body.toJSONObject().toStringPretty() }
+    adyenLog(AdyenLogLevel.VERBOSE) { "response - END" }
 }

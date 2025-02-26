@@ -17,12 +17,12 @@ interface HttpClient {
         path: String,
         queryParameters: Map<String, String> = emptyMap(),
         headers: Map<String, String> = emptyMap()
-    ): ByteArray
+    ): AdyenApiResponse
 
     suspend fun post(
         path: String,
         jsonBody: String,
         queryParameters: Map<String, String> = emptyMap(),
         headers: Map<String, String> = emptyMap()
-    ): ByteArray
+    ): AdyenApiResponse
 }
