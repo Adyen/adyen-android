@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">How would you like to use Payto?</string>
+
+    <string name="checkout_payto_payid_description">Enter the PayID and account details that are connected to your Payto account.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobile</string>
+    <string name="checkout_payto_payid_type_email_address">Email</string>
+    <string name="checkout_payto_payid_type_organization_id">Organization ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobile phone</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Enter a correct Mobile phone number</string>
+    <string name="checkout_payto_payid_email_address_hint">Email address</string>
+    <string name="checkout_payto_payid_email_address_invalid">Enter a correct Email address</string>
+    <string name="checkout_payto_payid_abn_number_hint">Australian Business Number</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Enter a correct Australian Business Number</string>
+    <string name="checkout_payto_payid_organization_id_hint">Organization ID number</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Enter a correct Organization ID number</string>
+
+    <string name="checkout_payto_bsb_description">Enter the bank account number and the Bank State Branch that is connected to your account to continue</string>
+    <string name="checkout_payto_bsb_account_number_hint">Bank account number</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Enter a correct Bank account number</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Bank state branch</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Enter a correct Bank state branch</string>
+
+    <string name="checkout_payto_first_name_hint">Account holder first name</string>
+    <string name="checkout_payto_first_name_invalid">Enter a correct First name</string>
+    <string name="checkout_payto_last_name_hint">Account holder last name</string>
+    <string name="checkout_payto_last_name_invalid">Enter a correct Last name</string>
+
+    <!-- Untranslatable strings -->
+    <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>
+    <string name="checkout_payto_payid_type_abn_number" translatable="false">ABN</string>
+    <string name="checkout_payto_bsb_tab_title" translatable="false">BSB</string>
+</resources>

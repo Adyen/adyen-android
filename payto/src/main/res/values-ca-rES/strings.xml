@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Com us agradaria utilitzar Payto?</string>
+
+    <string name="checkout_payto_payid_description">Introduïu el PayID i les dades del compte que estan connectades al vostre compte Payto.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mòbil</string>
+    <string name="checkout_payto_payid_type_email_address">Correu electrònic</string>
+    <string name="checkout_payto_payid_type_organization_id">Identificació de l\'organització</string>
+    <string name="checkout_payto_payid_phone_number_hint">Telèfon mòbil</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Introduïu un número de telèfon mòbil correcte</string>
+    <string name="checkout_payto_payid_email_address_hint">Adreça de correu electrònic</string>
+    <string name="checkout_payto_payid_email_address_invalid">Introduïu una adreça de correu electrònic correcta</string>
+    <string name="checkout_payto_payid_abn_number_hint">Número d\'empresa australiana</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Introduïu un número d\'empresa australiana correcte</string>
+    <string name="checkout_payto_payid_organization_id_hint">Número d\'identificació de l\'organització</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Introduïu un número d\'identificació de l\'organització correcte</string>
+
+    <string name="checkout_payto_bsb_description">Introduïu el número de compte bancari i la sucursal bancària estatal que està associada al vostre compte per continuar</string>
+    <string name="checkout_payto_bsb_account_number_hint">Número de compte bancari</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Introduïu un número de compte bancari correcte</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Sucursal bancària estatal</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Introduïu una sucursal bancària estatal correcta</string>
+
+    <string name="checkout_payto_first_name_hint">Nom del titular del compte</string>
+    <string name="checkout_payto_first_name_invalid">Introduïu un nom correcte</string>
+    <string name="checkout_payto_last_name_hint">Cognom del titular del compte</string>
+    <string name="checkout_payto_last_name_invalid">Introduïu un cognom correcte</string>
+
+</resources>

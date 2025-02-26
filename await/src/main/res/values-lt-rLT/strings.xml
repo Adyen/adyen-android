@@ -10,7 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Atidarykite savo bankininkystės programą, kad patvirtintumėte mokėjimą.</string>
     <string name="checkout_await_message_mbway">Patvirtinkite mokėjimą MB WAY programoje</string>
-    <string name="checkout_await_message_payto">﻿Prisijunkite prie „PayTo“ banko programėlės@Autorizuokite „PayTo“ sutartį@Patvirtinkite mokėjimo sąlygas@Užbaikite operaciją﻿</string>
+    <string name="checkout_await_message_payto">Prisijunkite prie „PayTo“ banko programėlės@Autorizuokite „PayTo“ sutartį@Patvirtinkite mokėjimo sąlygas@Užbaikite operaciją</string>
     <string name="checkout_await_message_upi">Atidarykite savo UPI programą, kad patvirtintumėte mokėjimą</string>
     <string name="checkout_await_waiting_confirmation">Laukiama patvirtinimo</string>
 </resources>
