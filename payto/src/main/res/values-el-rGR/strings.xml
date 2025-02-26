@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Πώς θα θέλατε να χρησιμοποιήσετε το Payto;</string>
+
+    <string name="checkout_payto_payid_description">Εισαγάγετε το PayID και τα στοιχεία λογαριασμού που είναι συνδεδεμένα με τον λογαριασμό Payto που διαθέτετε.</string>
+    <string name="checkout_payto_payid_type_phone_number">Κινητό</string>
+    <string name="checkout_payto_payid_type_email_address">Email</string>
+    <string name="checkout_payto_payid_type_organization_id">Αναγνωριστικό οργανισμού</string>
+    <string name="checkout_payto_payid_phone_number_hint">Κινητό τηλέφωνο</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Εισαγάγετε σωστό αριθμό κινητού τηλεφώνου</string>
+    <string name="checkout_payto_payid_email_address_hint">Διεύθυνση email</string>
+    <string name="checkout_payto_payid_email_address_invalid">Εισαγάγετε σωστή διεύθυνση email</string>
+    <string name="checkout_payto_payid_abn_number_hint">Αριθμός επιχειρήσεων Αυστραλίας</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Εισαγάγετε έναν σωστό Αριθμό επιχειρήσεων Αυστραλίας</string>
+    <string name="checkout_payto_payid_organization_id_hint">Αριθμός αναγνωριστικού οργανισμού</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Εισαγάγετε σωστό αριθμό αναγνωριστικού οργανισμού</string>
+
+    <string name="checkout_payto_bsb_description">Εισαγάγετε τον αριθμό τραπεζικού λογαριασμού και το υποκατάστημα της τράπεζας που συνδέεται με τον λογαριασμό σας για να συνεχίσετε.</string>
+    <string name="checkout_payto_bsb_account_number_hint">Αριθμός τραπεζικού λογαριασμού</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Εισαγάγετε σωστό αριθμό τραπεζικού λογαριασμού</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Υποκατάστημα τράπεζας</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Εισαγάγετε σωστό υποκατάστημα τράπεζας</string>
+
+    <string name="checkout_payto_first_name_hint">Όνομα κατόχου λογαριασμού</string>
+    <string name="checkout_payto_first_name_invalid">Εισαγάγετε σωστό όνομα</string>
+    <string name="checkout_payto_last_name_hint">Επώνυμο κατόχου λογαριασμού</string>
+    <string name="checkout_payto_last_name_invalid">Εισαγάγετε σωστό επώνυμο</string>
+
+</resources>
