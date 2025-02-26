@@ -30,14 +30,14 @@
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@id/editText_expiryDate"
                 android:nextFocusForward="@id/editText_expiryDate" />
-        </com.google.android.material.textfield.TextInputLayout>
 
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/cardBrandLogo_container"
             style="@style/AdyenCheckout.Card.BrandRecognitionLogoContainerGroup"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -67,7 +67,16 @@
                     app:adyenStrokeColor="@color/stroke_color"
                     app:adyenStrokeWidth="0dp" />
             </FrameLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragmentContainer"
+                android:name="com.adyen.checkout.card.internal.ui.view.CardFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_card" />
+
         </LinearLayout>
+
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -263,12 +272,5 @@
         android:descendantFocusability="afterDescendants"
         android:focusableInTouchMode="true"
         android:visibility="gone" />
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainer"
-        android:name="com.adyen.checkout.card.internal.ui.view.CardFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false" />
 
 </merge>

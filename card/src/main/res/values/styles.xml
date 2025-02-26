@@ -21,23 +21,21 @@
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainerGroup">
-        <item name="android:layout_marginStart">@dimen/standard_quarter_margin</item>
-        <item name="android:layout_marginLeft">@dimen/standard_quarter_margin</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:layout_marginEnd">@dimen/standard_half_margin</item>
         <item name="android:layout_gravity">end|top</item>
-        <item name="android:layout_marginTop">@dimen/cardList_top_margin</item>
-        <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
-        <item name="android:layout_marginRight">@dimen/standard_three_quarters_margin</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogo" parent="AdyenCheckout.Image.CardLogo">
-        <item name="android:src">@drawable/ic_card</item>
+        <item name="srcCompat">@drawable/ic_card</item>
     </style>
 
     <style name="AdyenCheckout.Card.BrandRecognitionLogoContainer">
+        <item name="android:paddingTop">@dimen/standard_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_margin</item>
         <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
         <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
-        <item name="android:paddingTop">@dimen/standard_half_margin</item>
-        <item name="android:paddingBottom">@dimen/standard_half_margin</item>
     </style>
 
     <style name="AdyenCheckout.Card.CardNumberInput" parent="AdyenCheckout.TextInputEditText">
@@ -145,5 +143,17 @@
         <item name="android:minWidth">24dp</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.ScanButton">
+        <item name="android:paddingTop">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_three_quarters_margin</item>
+        <item name="android:paddingStart">@dimen/standard_quarter_margin</item>
+        <item name="android:paddingEnd">@dimen/standard_quarter_margin</item>
+        <!--  TODO add translations for content description  -->
+        <item name="android:contentDescription">Scan your card</item>
+        <item name="srcCompat">@drawable/ic_camera</item>
+        <item name="android:tint">#1A73E8</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 </resources>
