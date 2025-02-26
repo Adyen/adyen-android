@@ -20,7 +20,7 @@
     <string name="checkout_payto_payid_abn_number_hint">%%payto.payid.abn.hint%%</string>
     <string name="checkout_payto_payid_abn_number_invalid">%%payto.payid.abn.invalid%%</string>
     <string name="checkout_payto_payid_organization_id_hint">%%payto.payid.orgid.hint%%</string>
-    <string name="checkout_payto_payid_organization_id_invalid">%%ppayto.payid.orgid.invalid%%</string>
+    <string name="checkout_payto_payid_organization_id_invalid">%%payto.payid.orgid.invalid%%</string>
 
     <string name="checkout_payto_bsb_description">%%payto.bsb.description%%</string>
     <string name="checkout_payto_bsb_account_number_hint">%%payto.bsb.label.bankAccountNumber%%</string>

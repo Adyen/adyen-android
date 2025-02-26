@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">كيف تود استخدام Payto؟</string>
+
+    <string name="checkout_payto_payid_description">أدخل معرف PayID وتفاصيل الحساب المرتبطة بحساب Payto الخاص بك.</string>
+    <string name="checkout_payto_payid_type_phone_number">الهاتف المحمول</string>
+    <string name="checkout_payto_payid_type_email_address">البريد الإلكتروني</string>
+    <string name="checkout_payto_payid_type_organization_id">معرف المنظمة</string>
+    <string name="checkout_payto_payid_phone_number_hint">الهاتف المحمول</string>
+    <string name="checkout_payto_payid_phone_number_invalid">أدخل رقم هاتف محمول صحيحًا</string>
+    <string name="checkout_payto_payid_email_address_hint">عنوان البريد الإلكتروني</string>
+    <string name="checkout_payto_payid_email_address_invalid">أدخل عنوان بريد إلكتروني صحيحًا</string>
+    <string name="checkout_payto_payid_abn_number_hint">رقم أعمال أسترالي</string>
+    <string name="checkout_payto_payid_abn_number_invalid">أدخل رقم أعمال أستراليًا صحيحًا</string>
+    <string name="checkout_payto_payid_organization_id_hint">رقم معرّف المنظمة</string>
+    <string name="checkout_payto_payid_organization_id_invalid">أدخل معرِّف منظمة صحيحًا</string>
+
+    <string name="checkout_payto_bsb_description">أدخل رقم الحساب المصرفي وفرع البنك في الولاية المرتبط بحسابك للمتابعة</string>
+    <string name="checkout_payto_bsb_account_number_hint">رقم الحساب البنكي</string>
+    <string name="checkout_payto_bsb_account_number_invalid">أدخل رقم حساب مصرفي صحيحًا</string>
+    <string name="checkout_payto_bsb_state_branch_hint">رمز فرع البنك</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">أدخل رمز فرع بنك صحيحًا</string>
+
+    <string name="checkout_payto_first_name_hint">الاسم الأول لصاحب الحساب</string>
+    <string name="checkout_payto_first_name_invalid">أدخل اسمًا أولًا صحيحًا</string>
+    <string name="checkout_payto_last_name_hint">اسم العائلة لصاحب الحساب</string>
+    <string name="checkout_payto_last_name_invalid">أدخل اسم عائلة صحيحًا</string>
+
+</resources>
