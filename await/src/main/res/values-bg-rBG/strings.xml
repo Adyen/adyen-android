@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Отворете вашето банково приложение, за да потвърдите плащането.</string>
     <string name="checkout_await_message_mbway">Потвърдете плащането си в приложението MB WAY</string>
+    <string name="checkout_await_message_payto">Влезте в приложението за банкиране PayTo@Приемете споразумението с PayTo@Одобрете условията на плащането@Завършете транзакцията</string>
     <string name="checkout_await_message_upi">Отворете приложението UPI, за да потвърдите плащането</string>
     <string name="checkout_await_waiting_confirmation">В очакване на потвърждение</string>
 </resources>

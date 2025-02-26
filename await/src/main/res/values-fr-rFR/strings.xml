@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Ouvrez votre application bancaire pour confirmer le paiement.</string>
     <string name="checkout_await_message_mbway">Confirmez votre paiement sur l\'application MB WAY</string>
+    <string name="checkout_await_message_payto">Connectez-vous à votre application bancaire PayTo@Autorisez l\'accord PayTo@Approuvez les conditions de paiement@Finalisez la transaction</string>
     <string name="checkout_await_message_upi">Ouvrez votre application UPI pour confirmer le paiement</string>
     <string name="checkout_await_waiting_confirmation">En attente de confirmation</string>
 </resources>

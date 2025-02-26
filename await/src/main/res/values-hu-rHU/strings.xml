@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">A fizetés jóváhagyásához nyissa meg a banki alkalmazást.</string>
     <string name="checkout_await_message_mbway">Fizetés jóváhagyása az MB WAY alkalmazásban</string>
+    <string name="checkout_await_message_payto">Jelentkezzen be PayTo banki alkalmazásába@Hagyja jóvá a PayTo megállapodást@Fogadja el a fizetési feltételeket@Fejezze be a tranzakciót</string>
     <string name="checkout_await_message_upi">A fizetés megerősítéséhez nyissa meg UPI-alkalmazást</string>
     <string name="checkout_await_waiting_confirmation">Várakozás a jóváhagyásra</string>
 </resources>
