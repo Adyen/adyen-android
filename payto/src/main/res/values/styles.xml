@@ -56,7 +56,7 @@
     </style>
 
     <style name="AdyenCheckout.PayTo.PayId.OrganizationIdEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_payto_organization_id_hint</item>
+        <item name="android:hint">@string/checkout_payto_payid_organization_id_hint</item>
         <item name="android:maxLines">1</item>
     </style>
 
