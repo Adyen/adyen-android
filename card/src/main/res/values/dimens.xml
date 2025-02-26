@@ -8,7 +8,6 @@
   -->
 
 <resources>
-    <dimen name="cardList_top_margin">16dp</dimen>
     <dimen name="brand_logo_width">24dp</dimen>
     <dimen name="brand_logo_height">16dp</dimen>
 
