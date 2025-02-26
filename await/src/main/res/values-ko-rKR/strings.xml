@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">뱅킹 앱을 열어서 결제를 확인하세요.</string>
     <string name="checkout_await_message_mbway">MB WAY 앱에서 결제를 확인하십시오</string>
+    <string name="checkout_await_message_payto">PayTo 뱅킹 앱에 로그인하세요@PayTo 이용 약관을 승인하세요@결제 조건을 승인하세요@거래를 완료하세요</string>
     <string name="checkout_await_message_upi">UPI 앱을 열어 결제를 확인하세요</string>
     <string name="checkout_await_waiting_confirmation">확인 대기중</string>
 </resources>
