@@ -7,8 +7,8 @@
   -->
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -78,16 +78,17 @@
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:prefixText="+61"
-            app:expandedHintEnabled="false"
             android:visibility="gone"
+            app:expandedHintEnabled="false"
+            app:prefixText="+61"
             tools:visibility="visible">
 
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_payId_phone_number"
                 style="@style/AdyenCheckout.PayTo.PayId.PhoneNumberEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:autofillHints="phoneNational" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +104,8 @@
                 android:id="@+id/edit_text_pay_id_email_address"
                 style="@style/AdyenCheckout.PayTo.PayId.EmailAddressEditText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,7 +199,8 @@
             android:id="@+id/editText_first_name"
             style="@style/AdyenCheckout.PayTo.FirstNameEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:autofillHints="personGivenName" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -211,7 +214,8 @@
             android:id="@+id/editText_last_name"
             style="@style/AdyenCheckout.PayTo.LastNameEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:autofillHints="personFamilyName" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

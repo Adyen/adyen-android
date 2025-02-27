@@ -109,8 +109,7 @@ internal class AwaitView @JvmOverloads constructor(
         return when (paymentMethodType) {
             PaymentMethodTypes.BLIK -> R.string.checkout_await_message_blik
             PaymentMethodTypes.MB_WAY -> R.string.checkout_await_message_mbway
-            // TODO Change PAY_TO text
-            PaymentMethodTypes.PAY_TO -> R.string.checkout_await_message_mbway
+            PaymentMethodTypes.PAY_TO -> R.string.checkout_await_message_payto
             PaymentMethodTypes.UPI_COLLECT -> R.string.checkout_await_message_upi
             else -> null
         }

@@ -17,14 +17,16 @@ import com.adyen.checkout.payto.internal.util.PayToValidationUtils
 
 @Suppress("LongParameterList")
 internal class PayToOutputData(
-    mobilePhoneNumber: String,
-    emailAddress: String,
-    abnNumber: String,
-    organizationId: String,
-    bsbAccountNumber: String,
-    bsbStateBranch: String,
-    firstName: String,
-    lastName: String,
+    val mode: PayToMode,
+    val payIdTypeModel: PayIdTypeModel?,
+    val mobilePhoneNumber: String,
+    val emailAddress: String,
+    val abnNumber: String,
+    val organizationId: String,
+    val bsbAccountNumber: String,
+    val bsbStateBranch: String,
+    val firstName: String,
+    val lastName: String,
 ) : OutputData {
 
     val phoneNumberFieldState: FieldState<String> = validateMobileNumber(mobilePhoneNumber)
@@ -36,15 +38,30 @@ internal class PayToOutputData(
     val firstNameFieldState: FieldState<String> = validateFirstName(firstName)
     val lastNameFieldState: FieldState<String> = validateLastName(lastName)
 
-    override val isValid: Boolean =
-        phoneNumberFieldState.validation.isValid() &&
-            emailAddressFieldState.validation.isValid() &&
-            abnNumberFieldState.validation.isValid() &&
-            organizationIdFieldState.validation.isValid() &&
-            bsbAccountNumberFieldState.validation.isValid() &&
-            bsbStateBranchFieldState.validation.isValid() &&
-            firstNameFieldState.validation.isValid() &&
-            lastNameFieldState.validation.isValid()
+    override val isValid: Boolean
+        get() {
+            val isModeValid = when (mode) {
+                PayToMode.PAY_ID -> isPayIdValid
+                PayToMode.BSB -> isBsbValid
+            }
+
+            return isModeValid &&
+                firstNameFieldState.validation.isValid() &&
+                lastNameFieldState.validation.isValid()
+        }
+
+    private val isPayIdValid: Boolean
+        get() = when (payIdTypeModel?.type) {
+            PayIdType.PHONE -> phoneNumberFieldState.validation.isValid()
+            PayIdType.EMAIL -> emailAddressFieldState.validation.isValid()
+            PayIdType.ABN -> abnNumberFieldState.validation.isValid()
+            PayIdType.ORGANIZATION_ID -> organizationIdFieldState.validation.isValid()
+            null -> false
+        }
+
+    private val isBsbValid: Boolean
+        get() = bsbAccountNumberFieldState.validation.isValid() &&
+            bsbStateBranchFieldState.validation.isValid()
 
     private fun validateMobileNumber(phoneNumber: String): FieldState<String> =
         if (phoneNumber.isNotBlank() && PayToValidationUtils.isPhoneNumberValid(phoneNumber)) {

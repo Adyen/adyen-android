@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.components.core.ShopperName
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
@@ -27,6 +28,7 @@ import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
+import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -118,7 +120,9 @@ internal class DefaultPayToDelegate(
     private fun createOutputData(): PayToOutputData {
         val sanitizedPhoneNumber = inputData.phoneNumber.trimStart('0')
         return PayToOutputData(
-            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX$sanitizedPhoneNumber",
+            mode = inputData.mode,
+            payIdTypeModel = inputData.payIdTypeModel,
+            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX-$sanitizedPhoneNumber",
             emailAddress = inputData.emailAddress,
             abnNumber = inputData.abnNumber,
             organizationId = inputData.organizationId,
@@ -142,16 +146,20 @@ internal class DefaultPayToDelegate(
     private fun createComponentState(
         outputData: PayToOutputData = this.outputData
     ): PayToComponentState {
-        // TODO Add PayTo specific fields
         val paymentMethod = PayToPaymentMethod(
             type = PayToPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            shopperAccountIdentifier = getShopperAccountIdentifier(outputData),
         )
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
+            shopperName = ShopperName(
+                firstName = outputData.firstNameFieldState.value,
+                lastName = outputData.lastNameFieldState.value,
+            ),
         )
 
         return PayToComponentState(
@@ -160,6 +168,23 @@ internal class DefaultPayToDelegate(
             isReady = true,
         )
     }
+
+    private fun getShopperAccountIdentifier(outputData: PayToOutputData) = when (outputData.mode) {
+        PayToMode.PAY_ID -> getShopperAccountIdentifierForPayId(outputData)
+        PayToMode.BSB -> getShopperAccountIdentifierForBsb(outputData)
+    }
+
+    private fun getShopperAccountIdentifierForPayId(outputData: PayToOutputData) =
+        when (outputData.payIdTypeModel?.type) {
+            PayIdType.PHONE -> outputData.phoneNumberFieldState.value
+            PayIdType.EMAIL -> outputData.emailAddressFieldState.value
+            PayIdType.ABN -> outputData.abnNumberFieldState.value
+            PayIdType.ORGANIZATION_ID -> outputData.organizationIdFieldState.value
+            null -> ""
+        }
+
+    private fun getShopperAccountIdentifierForBsb(outputData: PayToOutputData) =
+        "${outputData.bsbAccountNumber}-${outputData.bsbStateBranch}"
 
     private fun componentStateChanged(componentState: PayToComponentState) {
         _componentStateFlow.tryEmit(componentState)
