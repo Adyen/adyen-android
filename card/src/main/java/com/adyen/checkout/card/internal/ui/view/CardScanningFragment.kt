@@ -16,22 +16,22 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.card.databinding.FragmentCardBinding
+import com.adyen.checkout.card.databinding.FragmentCardScanningBinding
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import kotlinx.coroutines.launch
 
-internal class CardFragment : Fragment() {
+internal class CardScanningFragment : Fragment() {
 
-    private var _binding: FragmentCardBinding? = null
-    private val binding: FragmentCardBinding get() = requireNotNull(_binding)
+    private var _binding: FragmentCardScanningBinding? = null
+    private val binding: FragmentCardScanningBinding get() = requireNotNull(_binding)
 
     private var delegate: CardDelegate? = null
     private var cardScanner: CardScannerWrapper? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentCardBinding.inflate(inflater, container, false)
+        _binding = FragmentCardScanningBinding.inflate(inflater, container, false)
         return binding.root
     }
 
