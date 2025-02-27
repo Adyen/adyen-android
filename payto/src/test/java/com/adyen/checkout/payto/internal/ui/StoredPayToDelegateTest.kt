@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 28/11/2024.
+ * Created by ararat on 25/2/2025.
  */
 
-package com.adyen.checkout.paybybankus.internal.ui
+package com.adyen.checkout.payto.internal.ui
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -18,11 +18,9 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.paybybankus.PayByBankUSConfiguration
-import com.adyen.checkout.paybybankus.getPayByBankUSConfiguration
-import com.adyen.checkout.paybybankus.internal.PayByBankUSDelegate
-import com.adyen.checkout.paybybankus.internal.StoredPayByBankUSDelegate
-import com.adyen.checkout.paybybankus.payByBankUS
+import com.adyen.checkout.payto.PayToConfiguration
+import com.adyen.checkout.payto.getPayToConfiguration
+import com.adyen.checkout.payto.payTo
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import kotlinx.coroutines.CoroutineScope
@@ -41,15 +39,15 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
-internal class StoredPayByBankUSDelegateTest {
+internal class StoredPayToDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var delegate: PayByBankUSDelegate
+    private lateinit var delegate: PayToDelegate
 
     @BeforeEach
     fun beforeEach() {
         analyticsManager = TestAnalyticsManager()
-        delegate = createPayByBankUSDelegate()
+        delegate = createDelegate()
     }
 
     @Test
@@ -108,16 +106,16 @@ internal class StoredPayByBankUSDelegateTest {
         }
     }
 
-    private fun createPayByBankUSDelegate(
+    private fun createDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
-    ) = StoredPayByBankUSDelegate(
+    ) = StoredPayToDelegate(
         observerRepository = PaymentObserverRepository(),
         componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = configuration,
             deviceLocale = Locale.US,
             dropInOverrideParams = null,
             componentSessionParams = null,
-            componentConfiguration = configuration.getPayByBankUSConfiguration(),
+            componentConfiguration = configuration.getPayToConfiguration(),
         ),
         storedPaymentMethod = StoredPaymentMethod(
             id = STORED_ID,
@@ -129,20 +127,20 @@ internal class StoredPayByBankUSDelegateTest {
 
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
-        configuration: PayByBankUSConfiguration.Builder.() -> Unit = {}
+        configuration: PayToConfiguration.Builder.() -> Unit = {}
     ) = CheckoutConfiguration(
         shopperLocale = Locale.US,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY,
         amount = amount,
     ) {
-        payByBankUS(configuration)
+        payTo(configuration)
     }
 
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
-        private const val STORED_ID = "Stored_id"
+        private const val STORED_ID = "stored_id"
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
     }
 }
