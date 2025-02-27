@@ -135,7 +135,7 @@ class CardView @JvmOverloads constructor(
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
         initAddressLookup()
-        initFeatureFragment(delegate)
+        initCardScanning(delegate)
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
@@ -599,8 +599,8 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun initFeatureFragment(delegate: CardDelegate) {
-        binding.fragmentContainer.getFragment<CardFragment?>()?.initialize(delegate)
+    private fun initCardScanning(delegate: CardDelegate) {
+        binding.fragmentContainerCardScanning.getFragment<CardScanningFragment?>()?.initialize(delegate)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {
