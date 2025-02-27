@@ -69,11 +69,11 @@
             </FrameLayout>
 
             <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragmentContainer"
-                android:name="com.adyen.checkout.card.internal.ui.view.CardFragment"
+                android:id="@+id/fragmentContainer_cardScanning"
+                android:name="com.adyen.checkout.card.internal.ui.view.CardScanningFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:layout="@layout/fragment_card" />
+                tools:layout="@layout/fragment_card_scanning" />
 
         </LinearLayout>
 
