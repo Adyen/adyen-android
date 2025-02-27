@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Come vorresti utilizzare Payto?</string>
+
+    <string name="checkout_payto_payid_description">Immettere la PayID e i dettagli del conto collegati al conto Payto.</string>
+    <string name="checkout_payto_payid_type_phone_number">Cellulare</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail</string>
+    <string name="checkout_payto_payid_type_organization_id">ID dell\'organizzazione</string>
+    <string name="checkout_payto_payid_phone_number_hint">Telefono cellulare</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Inserisci un numero di cellulare corretto</string>
+    <string name="checkout_payto_payid_email_address_hint">Indirizzo e-mail</string>
+    <string name="checkout_payto_payid_email_address_invalid">Inserisci un indirizzo e-mail corretto</string>
+    <string name="checkout_payto_payid_abn_number_hint">Codice ABN (Australian Business Number)</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Inserisci un codice ABN corretto</string>
+    <string name="checkout_payto_payid_organization_id_hint">Numero ID dell\'organizzazione</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Inserisci un ID dell\'organizzazione corretto</string>
+
+    <string name="checkout_payto_bsb_description">Per continuare, immettere il numero di conto bancario e la filiale della banca collegata al tuo conto</string>
+    <string name="checkout_payto_bsb_account_number_hint">Numero di conto bancario</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Inserisci un numero di conto bancario corretto</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Codice identificativo di filiale</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Inserisci una filiale bancaria statale corretta</string>
+
+    <string name="checkout_payto_first_name_hint">Nome del titolare del conto</string>
+    <string name="checkout_payto_first_name_invalid">Inserisci un nome corretto</string>
+    <string name="checkout_payto_last_name_hint">Cognome del titolare del conto</string>
+    <string name="checkout_payto_last_name_invalid">Inserisci un cognome corretto</string>
+
+</resources>

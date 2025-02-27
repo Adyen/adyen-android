@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Comment souhaitez-vous utiliser Payto ?</string>
+
+    <string name="checkout_payto_payid_description">Veuillez saisir le PayID et les détails du compte qui sont connectés à votre compte Payto.</string>
+    <string name="checkout_payto_payid_type_phone_number">Portable</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail</string>
+    <string name="checkout_payto_payid_type_organization_id">Identifiant de l\'organisation</string>
+    <string name="checkout_payto_payid_phone_number_hint">Téléphone mobile</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Veuillez saisir un numéro de téléphone mobile valide</string>
+    <string name="checkout_payto_payid_email_address_hint">Adresse e-mail</string>
+    <string name="checkout_payto_payid_email_address_invalid">Veuillez saisir une adresse e-mail valide</string>
+    <string name="checkout_payto_payid_abn_number_hint">Numéro d\'entreprise australien</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Veuillez saisir un numéro d\'entreprise australien valide</string>
+    <string name="checkout_payto_payid_organization_id_hint">Numéro d\'identification de l\'organisation</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Veuillez saisir un numéro d\'identification d\'organisation valide</string>
+
+    <string name="checkout_payto_bsb_description">Saisissez le numéro de compte bancaire et la succursale bancaire qui est liée à votre compte pour continuer.</string>
+    <string name="checkout_payto_bsb_account_number_hint">Numéro du compte bancaire</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Veuillez saisir un numéro de compte bancaire valide</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Agence bancaire d\'État</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Veuillez saisir une agence bancaire valide</string>
+
+    <string name="checkout_payto_first_name_hint">Prénom du titulaire du compte</string>
+    <string name="checkout_payto_first_name_invalid">Veuillez saisir un prénom valide</string>
+    <string name="checkout_payto_last_name_hint">Nom de famille du titulaire du compte</string>
+    <string name="checkout_payto_last_name_invalid">Veuillez saisir un nom de famille valide</string>
+
+</resources>

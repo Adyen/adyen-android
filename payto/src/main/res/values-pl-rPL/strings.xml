@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Jak chcesz korzystać z Payto?</string>
+
+    <string name="checkout_payto_payid_description">Wprowadź PayID i dane konta powiązane z Twoim kontem Payto.</string>
+    <string name="checkout_payto_payid_type_phone_number">Telefon komórkowy</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail</string>
+    <string name="checkout_payto_payid_type_organization_id">Identyfikator organizacji</string>
+    <string name="checkout_payto_payid_phone_number_hint">Telefon komórkowy</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Wprowadź prawidłowy numer telefonu komórkowego</string>
+    <string name="checkout_payto_payid_email_address_hint">Adres e-mail</string>
+    <string name="checkout_payto_payid_email_address_invalid">Wprowadź poprawny adres e-mail</string>
+    <string name="checkout_payto_payid_abn_number_hint">Australijski numer firmy</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Wprowadź prawidłowy australijski numer firmy</string>
+    <string name="checkout_payto_payid_organization_id_hint">Numer identyfikacyjny organizacji</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Wprowadź prawidłowy numer identyfikacyjny organizacji</string>
+
+    <string name="checkout_payto_bsb_description">Aby kontynuować, wprowadź numer konta bankowego i oddział banku, który jest powiązany z Twoim kontem</string>
+    <string name="checkout_payto_bsb_account_number_hint">Numer rachunku</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Wprowadź prawidłowy numer rachunku bankowego</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Oddział stanowy banku</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Wprowadź poprawny oddział stanowy banku</string>
+
+    <string name="checkout_payto_first_name_hint">Imię posiadacza rachunku</string>
+    <string name="checkout_payto_first_name_invalid">Wprowadź prawidłowe imię</string>
+    <string name="checkout_payto_last_name_hint">Nazwisko posiadacza rachunku</string>
+    <string name="checkout_payto_last_name_invalid">Wprowadź prawidłowe nazwisko</string>
+
+</resources>

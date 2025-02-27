@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Paytoをどのように使用しますか？</string>
+
+    <string name="checkout_payto_payid_description">Paytoアカウントに接続されているPayIDとアカウントの詳細を入力してください。</string>
+    <string name="checkout_payto_payid_type_phone_number">携帯</string>
+    <string name="checkout_payto_payid_type_email_address">メールアドレス</string>
+    <string name="checkout_payto_payid_type_organization_id">組織ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">携帯電話</string>
+    <string name="checkout_payto_payid_phone_number_invalid">正しい携帯電話番号を入力してください</string>
+    <string name="checkout_payto_payid_email_address_hint">Eメールアドレス</string>
+    <string name="checkout_payto_payid_email_address_invalid">正しいメールアドレスを入力してください</string>
+    <string name="checkout_payto_payid_abn_number_hint">オーストラリア事業者番号</string>
+    <string name="checkout_payto_payid_abn_number_invalid">正しいオーストラリア事業者番号を入力してください</string>
+    <string name="checkout_payto_payid_organization_id_hint">組織ID番号</string>
+    <string name="checkout_payto_payid_organization_id_invalid">正しい組織ID番号を入力してください</string>
+
+    <string name="checkout_payto_bsb_description">アカウントに接続されている銀行口座番号と銀行支店コードを入力して、続行してください。</string>
+    <string name="checkout_payto_bsb_account_number_hint">銀行口座番号</string>
+    <string name="checkout_payto_bsb_account_number_invalid">正しい銀行口座番号を入力してください</string>
+    <string name="checkout_payto_bsb_state_branch_hint">銀行の州支店</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">正しい銀行の州支店を入力してください</string>
+
+    <string name="checkout_payto_first_name_hint">口座名義人の名</string>
+    <string name="checkout_payto_first_name_invalid">正しい名を入力してください</string>
+    <string name="checkout_payto_last_name_hint">口座名義人の姓</string>
+    <string name="checkout_payto_last_name_invalid">正しい姓を入力してください</string>
+
+</resources>

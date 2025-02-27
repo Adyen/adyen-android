@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Za potrditev plačila odprite svojo bančno aplikacijo.</string>
     <string name="checkout_await_message_mbway">Potrdite svoje plačilo v aplikaciji MB WAY</string>
+    <string name="checkout_await_message_payto">Prijavite se v bančno aplikacijo PayTo@Sprejmite pogodbo PayTo@Potrdite plačilne pogoje@Zaključite transakcijo</string>
     <string name="checkout_await_message_upi">Za potrditev plačila odprite svojo aplikacijo UPI</string>
     <string name="checkout_await_waiting_confirmation">Čakanje na potrditev</string>
 </resources>

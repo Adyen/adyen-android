@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Kako bi želeli uporabljati Payto?</string>
+
+    <string name="checkout_payto_payid_description">Vnesite PayID in podrobnosti o računu, ki so povezani z vašim računom PayTo.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobilni telefon</string>
+    <string name="checkout_payto_payid_type_email_address">E-pošta</string>
+    <string name="checkout_payto_payid_type_organization_id">ID organizacije</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobilni telefon</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Vnesite pravilno številko mobilnega telefona</string>
+    <string name="checkout_payto_payid_email_address_hint">Elektronski naslov</string>
+    <string name="checkout_payto_payid_email_address_invalid">Vnesite pravilen e-poštni naslov</string>
+    <string name="checkout_payto_payid_abn_number_hint">Številka ABN (Australian Business Number)</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Vnesite pravilno številko ABN</string>
+    <string name="checkout_payto_payid_organization_id_hint">ID-številka organizacije</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Vnesite pravilno ID-številko organizacije</string>
+
+    <string name="checkout_payto_bsb_description">Za nadaljevanje vnesite številko bančnega računa in podružnico banke, ki sta povezani z vašim računom</string>
+    <string name="checkout_payto_bsb_account_number_hint">Številka bančnega računa</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Vnesite pravilno številko bančnega računa</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Podružnica banke</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Vnesite pravilno podružnico banke</string>
+
+    <string name="checkout_payto_first_name_hint">Ime imetnika računa</string>
+    <string name="checkout_payto_first_name_invalid">Vnesite pravilno ime</string>
+    <string name="checkout_payto_last_name_hint">Priimek imetnika računa</string>
+    <string name="checkout_payto_last_name_invalid">Vnesite pravilen priimek</string>
+
+</resources>

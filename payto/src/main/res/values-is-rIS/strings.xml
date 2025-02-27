@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Hvernig viltu nota Payto?</string>
+
+    <string name="checkout_payto_payid_description">Sláðu inn PayID og reikningsupplýsingar sem eru tengjast Payto-reikningnum þínum.</string>
+    <string name="checkout_payto_payid_type_phone_number">Farsími</string>
+    <string name="checkout_payto_payid_type_email_address">Netfang</string>
+    <string name="checkout_payto_payid_type_organization_id">Auðkenni fyrirtækis</string>
+    <string name="checkout_payto_payid_phone_number_hint">Farsími</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Sláðu inn rétt farsímanúmer</string>
+    <string name="checkout_payto_payid_email_address_hint">Netfang</string>
+    <string name="checkout_payto_payid_email_address_invalid">Sláðu inn rétt netfang</string>
+    <string name="checkout_payto_payid_abn_number_hint">Ástralskt fyrirtækjanúmer</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Sláðu inn rétt ástralskt fyrirtækjanúmer</string>
+    <string name="checkout_payto_payid_organization_id_hint">Auðkennisnúmer fyrirtækis</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Sláðu inn rétt auðkennisnúmer fyrirtækis</string>
+
+    <string name="checkout_payto_bsb_description">Sláðu inn bankareikningsnúmerið og bankaútibúið sem er tengt við reikninginn til að halda áfram</string>
+    <string name="checkout_payto_bsb_account_number_hint">Bankareikningsnúmer</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Sláðu inn rétt bankareikningsnúmer</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Bankanúmer banka</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Sláðu inn rétt bankanúmer banka</string>
+
+    <string name="checkout_payto_first_name_hint">Fornafn reikningshafa</string>
+    <string name="checkout_payto_first_name_invalid">Sláðu inn rétt fornafn</string>
+    <string name="checkout_payto_last_name_hint">Eftirnafn reikningshafa</string>
+    <string name="checkout_payto_last_name_invalid">Sláðu inn rétt eftirnafn</string>
+
+</resources>

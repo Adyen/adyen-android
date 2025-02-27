@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Как вы хотите использовать Payto?</string>
+
+    <string name="checkout_payto_payid_description">Введите PayID и данные счета, которые связаны с вашей учетной записью Payto.</string>
+    <string name="checkout_payto_payid_type_phone_number">Мобильный</string>
+    <string name="checkout_payto_payid_type_email_address">Эл. почта</string>
+    <string name="checkout_payto_payid_type_organization_id">Идентификатор организации</string>
+    <string name="checkout_payto_payid_phone_number_hint">Мобильный телефон</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Введите правильный номер мобильного телефона</string>
+    <string name="checkout_payto_payid_email_address_hint">Адрес эл. почты</string>
+    <string name="checkout_payto_payid_email_address_invalid">Введите правильный адрес электронной почты</string>
+    <string name="checkout_payto_payid_abn_number_hint">Номер австралийского предприятия</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Введите правильный номер австралийского предприятия</string>
+    <string name="checkout_payto_payid_organization_id_hint">Идентификационный номер организации</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Введите правильный идентификационный номер организации</string>
+
+    <string name="checkout_payto_bsb_description">Введите номер банковского счета и отделение банка, связанное с вашим счетом, чтобы продолжить</string>
+    <string name="checkout_payto_bsb_account_number_hint">Номер банковского счета</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Введите правильный номер банковского счета</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Отделение банка в штате</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Введите правильное отделение банка</string>
+
+    <string name="checkout_payto_first_name_hint">Имя владельца счета</string>
+    <string name="checkout_payto_first_name_invalid">Введите правильное имя</string>
+    <string name="checkout_payto_last_name_hint">Фамилия владельца счета</string>
+    <string name="checkout_payto_last_name_invalid">Введите правильную фамилию</string>
+
+</resources>

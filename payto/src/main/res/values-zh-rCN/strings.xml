@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">您打算如何使用 Payto？</string>
+
+    <string name="checkout_payto_payid_description">请输入与您的 Payto 账户关联的 PayID 和账户详细信息。</string>
+    <string name="checkout_payto_payid_type_phone_number">移动设备</string>
+    <string name="checkout_payto_payid_type_email_address">电子邮件</string>
+    <string name="checkout_payto_payid_type_organization_id">组织 ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">移动电话</string>
+    <string name="checkout_payto_payid_phone_number_invalid">输入正确的手机号码</string>
+    <string name="checkout_payto_payid_email_address_hint">电子邮件地址</string>
+    <string name="checkout_payto_payid_email_address_invalid">输入正确的电子邮件地址</string>
+    <string name="checkout_payto_payid_abn_number_hint">澳大利亚商业编号</string>
+    <string name="checkout_payto_payid_abn_number_invalid">输入正确的澳大利亚商业编号</string>
+    <string name="checkout_payto_payid_organization_id_hint">组织 ID 号</string>
+    <string name="checkout_payto_payid_organization_id_invalid">请输入正确的组织 ID 号</string>
+
+    <string name="checkout_payto_bsb_description">请输入银行账号和与您的账户关联的银行州分行以继续</string>
+    <string name="checkout_payto_bsb_account_number_hint">银行账号</string>
+    <string name="checkout_payto_bsb_account_number_invalid">输入正确的银行账号</string>
+    <string name="checkout_payto_bsb_state_branch_hint">银行州分行</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">输入正确的银行州分行</string>
+
+    <string name="checkout_payto_first_name_hint">账户持有人名字</string>
+    <string name="checkout_payto_first_name_invalid">输入正确的名字</string>
+    <string name="checkout_payto_last_name_hint">账户持有人姓氏</string>
+    <string name="checkout_payto_last_name_invalid">输入正确的姓氏</string>
+
+</resources>
