@@ -72,7 +72,8 @@ class PayToComponent internal constructor(
         genericActionDelegate.removeObserver()
     }
 
-    override fun isConfirmationRequired(): Boolean = payToDelegate.isConfirmationRequired()
+    override fun isConfirmationRequired(): Boolean =
+        (payToDelegate as? ButtonDelegate)?.isConfirmationRequired() ?: false
 
     override fun submit() {
         (delegate as? ButtonDelegate)?.onSubmit()

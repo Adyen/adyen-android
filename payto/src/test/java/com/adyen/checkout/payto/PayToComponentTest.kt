@@ -15,8 +15,9 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
+import com.adyen.checkout.payto.internal.ui.DefaultPayToDelegate
 import com.adyen.checkout.payto.internal.ui.PayToComponentViewType
-import com.adyen.checkout.payto.internal.ui.PayToDelegate
+import com.adyen.checkout.payto.internal.ui.StoredPayToDelegate
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
@@ -39,21 +40,31 @@ import org.mockito.kotlin.whenever
 
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class, LoggingExtension::class)
 internal class PayToComponentTest(
-    @Mock private val payToDelegate: PayToDelegate,
+    @Mock private val defaultPayToDelegate: DefaultPayToDelegate,
+    @Mock private val storedPayToDelegate: StoredPayToDelegate,
     @Mock private val genericActionDelegate: GenericActionDelegate,
     @Mock private val actionHandlingComponent: DefaultActionHandlingComponent,
     @Mock private val componentEventHandler: ComponentEventHandler<PayToComponentState>,
 ) {
 
-    private lateinit var component: PayToComponent
+    private lateinit var defaultComponent: PayToComponent
+    private lateinit var storedComponent: PayToComponent
 
     @BeforeEach
     fun before() {
-        whenever(payToDelegate.viewFlow) doReturn MutableStateFlow(PayToComponentViewType)
+        whenever(defaultPayToDelegate.viewFlow) doReturn MutableStateFlow(PayToComponentViewType)
+        whenever(storedPayToDelegate.viewFlow) doReturn MutableStateFlow(null)
         whenever(genericActionDelegate.viewFlow) doReturn MutableStateFlow(null)
 
-        component = PayToComponent(
-            payToDelegate,
+        defaultComponent = PayToComponent(
+            defaultPayToDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler,
+        )
+
+        storedComponent = PayToComponent(
+            storedPayToDelegate,
             genericActionDelegate,
             actionHandlingComponent,
             componentEventHandler,
@@ -62,16 +73,32 @@ internal class PayToComponentTest(
 
     @Test
     fun `when component is created, then delegates are initialized`() {
-        verify(payToDelegate).initialize(component.viewModelScope)
-        verify(genericActionDelegate).initialize(component.viewModelScope)
-        verify(componentEventHandler).initialize(component.viewModelScope)
+        verify(defaultPayToDelegate).initialize(defaultComponent.viewModelScope)
+        verify(genericActionDelegate).initialize(defaultComponent.viewModelScope)
+        verify(componentEventHandler).initialize(defaultComponent.viewModelScope)
+    }
+
+    @Test
+    fun `when stored component is created then delegates are initialized`() {
+        verify(storedPayToDelegate).initialize(storedComponent.viewModelScope)
+        verify(genericActionDelegate).initialize(storedComponent.viewModelScope)
+        verify(componentEventHandler).initialize(storedComponent.viewModelScope)
     }
 
     @Test
     fun `when component is cleared, then delegates are cleared`() {
-        component.invokeOnCleared()
+        defaultComponent.invokeOnCleared()
 
-        verify(payToDelegate).onCleared()
+        verify(defaultPayToDelegate).onCleared()
+        verify(genericActionDelegate).onCleared()
+        verify(componentEventHandler).onCleared()
+    }
+
+    @Test
+    fun `when stored component is cleared then delegates are cleared`() {
+        storedComponent.invokeOnCleared()
+
+        verify(storedPayToDelegate).onCleared()
         verify(genericActionDelegate).onCleared()
         verify(componentEventHandler).onCleared()
     }
@@ -81,23 +108,23 @@ internal class PayToComponentTest(
         val lifecycleOwner = mock<LifecycleOwner>()
         val callback: (PaymentComponentEvent<PayToComponentState>) -> Unit = {}
 
-        component.observe(lifecycleOwner, callback)
+        defaultComponent.observe(lifecycleOwner, callback)
 
-        verify(payToDelegate).observe(lifecycleOwner, component.viewModelScope, callback)
-        verify(genericActionDelegate).observe(eq(lifecycleOwner), eq(component.viewModelScope), any())
+        verify(defaultPayToDelegate).observe(lifecycleOwner, defaultComponent.viewModelScope, callback)
+        verify(genericActionDelegate).observe(eq(lifecycleOwner), eq(defaultComponent.viewModelScope), any())
     }
 
     @Test
     fun `when removeObserver is called, then removeObserver in delegates is called`() {
-        component.removeObserver()
+        defaultComponent.removeObserver()
 
-        verify(payToDelegate).removeObserver()
+        verify(defaultPayToDelegate).removeObserver()
         verify(genericActionDelegate).removeObserver()
     }
 
     @Test
     fun `when component is initialized, then view flow should match delegate view flow`() = runTest {
-        component.viewFlow.test {
+        defaultComponent.viewFlow.test {
             assertEquals(PayToComponentViewType, awaitItem())
             expectNoEvents()
         }
@@ -106,10 +133,11 @@ internal class PayToComponentTest(
     @Test
     fun `when delegate view flow emits a value, then component view flow should match that value`() = runTest {
         val payToDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
-        whenever(payToDelegate.viewFlow) doReturn payToDelegateViewFlow
-        component = PayToComponent(payToDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        whenever(defaultPayToDelegate.viewFlow) doReturn payToDelegateViewFlow
+        defaultComponent =
+            PayToComponent(defaultPayToDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
-        component.viewFlow.test {
+        defaultComponent.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
 
             payToDelegateViewFlow.emit(TestComponentViewType.VIEW_TYPE_2)
@@ -123,9 +151,10 @@ internal class PayToComponentTest(
     fun `when action delegate view flow emits a value, then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = PayToComponent(payToDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        defaultComponent =
+            PayToComponent(defaultPayToDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
 
-        component.viewFlow.test {
+        defaultComponent.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate
             // and in practice the initial value of the action delegate view flow is always null so it should be ignored
             assertEquals(PayToComponentViewType, awaitItem())
@@ -139,21 +168,21 @@ internal class PayToComponentTest(
 
     @Test
     fun `when isConfirmationRequired, then delegate is called`() {
-        component.isConfirmationRequired()
-        verify(payToDelegate).isConfirmationRequired()
+        defaultComponent.isConfirmationRequired()
+        verify(defaultPayToDelegate).isConfirmationRequired()
     }
 
     @Test
     fun `when submit is called and active delegate is the payment delegate, then delegate onSubmit is called`() {
-        whenever(component.delegate).thenReturn(payToDelegate)
-        component.submit()
-        verify(payToDelegate).onSubmit()
+        whenever(defaultComponent.delegate).thenReturn(defaultPayToDelegate)
+        defaultComponent.submit()
+        verify(defaultPayToDelegate).onSubmit()
     }
 
     @Test
     fun `when submit is called and active delegate is the action delegate, then delegate onSubmit is not called`() {
-        whenever(component.delegate).thenReturn(genericActionDelegate)
-        component.submit()
-        verify(payToDelegate, never()).onSubmit()
+        whenever(defaultComponent.delegate).thenReturn(genericActionDelegate)
+        defaultComponent.submit()
+        verify(defaultPayToDelegate, never()).onSubmit()
     }
 }

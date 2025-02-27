@@ -181,6 +181,16 @@ internal fun getComponentFor(
             )
         }
 
+        checkCompileOnly { PayToComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            PayToComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayToComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
         checkCompileOnly { TwintComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
             TwintComponentProvider(dropInOverrideParams, analyticsManager).get(
                 fragment = fragment,

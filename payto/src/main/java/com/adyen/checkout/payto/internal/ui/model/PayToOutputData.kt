@@ -16,7 +16,7 @@ import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.internal.util.PayToValidationUtils
 
 @Suppress("LongParameterList")
-internal class PayToOutputData(
+internal data class PayToOutputData(
     val mode: PayToMode,
     val payIdTypeModel: PayIdTypeModel?,
     val mobilePhoneNumber: String,

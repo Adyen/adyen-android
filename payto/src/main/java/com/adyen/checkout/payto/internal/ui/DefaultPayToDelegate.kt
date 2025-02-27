@@ -31,10 +31,12 @@ import com.adyen.checkout.payto.internal.ui.model.PayToInputData
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +50,7 @@ internal class DefaultPayToDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<PayToComponentState>,
-) : PayToDelegate {
+) : PayToDelegate, ButtonDelegate, UIStateDelegate {
 
     private val inputData: PayToInputData = PayToInputData()
 
@@ -147,7 +149,7 @@ internal class DefaultPayToDelegate(
         outputData: PayToOutputData = this.outputData
     ): PayToComponentState {
         val paymentMethod = PayToPaymentMethod(
-            type = PayToPaymentMethod.PAYMENT_METHOD_TYPE,
+            type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             shopperAccountIdentifier = getShopperAccountIdentifier(outputData),
         )
