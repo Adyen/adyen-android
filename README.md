@@ -18,11 +18,11 @@ For an overview of how you can integrate with Adyen on Android check out the [do
 
 ## Drop-in/Components lifecycle
 
-| Major version | State      | Deprecated   | End-of-life  |
-|---------------|------------|--------------|--------------|
-| 5.x.x         | Active     | ---          | ---          |
-| 4.x.x         | Inactive   | TBA          | TBA          |
-| 3.x.x         | Deprecated | October 2023 | October 2024 |
+| Major version | State       | Deprecated   | End-of-life  |
+|---------------|-------------|--------------|--------------|
+| 5.x.x         | Active      | ---          | ---          |
+| 4.x.x         | Inactive    | TBA          | TBA          |
+| 3.x.x         | End-of-life | October 2023 | October 2024 |
 
 More information about our versioning and the Drop-in/Components lifecycle can be found [here](https://docs.adyen.com/online-payments/upgrade-your-integration/#lifecycle).
 
