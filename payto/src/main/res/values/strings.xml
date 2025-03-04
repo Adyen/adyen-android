@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">How would you like to use Payto?</string>
+    <string name="checkout_payto_mode_selection">How would you like to use PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Enter the PayID and account details that are connected to your Payto account.</string>
+    <string name="checkout_payto_payid_description">Enter the PayID and account details that are connected to your PayTo account.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobile</string>
     <string name="checkout_payto_payid_type_email_address">Email</string>
     <string name="checkout_payto_payid_type_organization_id">Organization ID</string>

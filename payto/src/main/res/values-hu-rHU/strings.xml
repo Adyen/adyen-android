@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Hogyan szeretné használni a Payto szolgáltatást?</string>
+    <string name="checkout_payto_mode_selection">Hogyan szeretné használni a PayTo szolgáltatást?</string>
 
-    <string name="checkout_payto_payid_description">Adja meg a Payto-fiókjához kapcsolódó PayID-t és a számlaadatait.</string>
+    <string name="checkout_payto_payid_description">Adja meg a PayTo-fiókjához kapcsolódó PayID-t és a számlaadatait.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobiltelefon</string>
     <string name="checkout_payto_payid_type_email_address">E-mail-cím</string>
     <string name="checkout_payto_payid_type_organization_id">Szervezeti azonosító</string>

@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Hvernig viltu nota Payto?</string>
+    <string name="checkout_payto_mode_selection">Hvernig viltu nota PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Sláðu inn PayID og reikningsupplýsingar sem eru tengjast Payto-reikningnum þínum.</string>
+    <string name="checkout_payto_payid_description">Sláðu inn PayID og reikningsupplýsingar sem eru tengjast PayTo-reikningnum þínum.</string>
     <string name="checkout_payto_payid_type_phone_number">Farsími</string>
     <string name="checkout_payto_payid_type_email_address">Netfang</string>
     <string name="checkout_payto_payid_type_organization_id">Auðkenni fyrirtækis</string>

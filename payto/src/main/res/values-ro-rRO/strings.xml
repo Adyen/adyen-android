@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Cum dorești să utilizezi Payto?</string>
+    <string name="checkout_payto_mode_selection">Cum dorești să utilizezi PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Completați PayID și detaliile contului care sunt conectate la contul dvs. Payto.</string>
+    <string name="checkout_payto_payid_description">Completați PayID și detaliile contului care sunt conectate la contul dvs. PayTo.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobil</string>
     <string name="checkout_payto_payid_type_email_address">E-mail</string>
     <string name="checkout_payto_payid_type_organization_id">ID organizație</string>

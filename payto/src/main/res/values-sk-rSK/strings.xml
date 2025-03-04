@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Ako by ste chceli používať Payto?</string>
+    <string name="checkout_payto_mode_selection">Ako by ste chceli používať PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Zadajte PayID a údaje o účte, ktoré sú pripojené k vášmu účtu Payto.</string>
+    <string name="checkout_payto_payid_description">Zadajte PayID a údaje o účte, ktoré sú pripojené k vášmu účtu PayTo.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobilný telefón</string>
     <string name="checkout_payto_payid_type_email_address">E-mail</string>
     <string name="checkout_payto_payid_type_organization_id">ID organizácie</string>

@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Hoe wilt u Payto gebruiken?</string>
+    <string name="checkout_payto_mode_selection">Hoe wilt u PayTo gebruiken?</string>
 
-    <string name="checkout_payto_payid_description">Voer de PayID en accountgegevens in die gekoppeld zijn aan uw Payto-account.</string>
+    <string name="checkout_payto_payid_description">Voer de PayID en accountgegevens in die gekoppeld zijn aan uw PayTo-account.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobiele telefoon</string>
     <string name="checkout_payto_payid_type_email_address">E-mail</string>
     <string name="checkout_payto_payid_type_organization_id">Organisatie-ID</string>
