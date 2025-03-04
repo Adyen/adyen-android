@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Πώς θα θέλατε να χρησιμοποιήσετε το Payto;</string>
+    <string name="checkout_payto_mode_selection">Πώς θα θέλατε να χρησιμοποιήσετε το PayTo;</string>
 
-    <string name="checkout_payto_payid_description">Εισαγάγετε το PayID και τα στοιχεία λογαριασμού που είναι συνδεδεμένα με τον λογαριασμό Payto που διαθέτετε.</string>
+    <string name="checkout_payto_payid_description">Εισαγάγετε το PayID και τα στοιχεία λογαριασμού που είναι συνδεδεμένα με τον λογαριασμό PayTo που διαθέτετε.</string>
     <string name="checkout_payto_payid_type_phone_number">Κινητό</string>
     <string name="checkout_payto_payid_type_email_address">Email</string>
     <string name="checkout_payto_payid_type_organization_id">Αναγνωριστικό οργανισμού</string>

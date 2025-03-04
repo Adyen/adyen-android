@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Miten haluat käyttää Paytoa?</string>
+    <string name="checkout_payto_mode_selection">Miten haluat käyttää PayToa?</string>
 
-    <string name="checkout_payto_payid_description">Anna Payto-tilisi PayID ja tilitiedot</string>
+    <string name="checkout_payto_payid_description">Anna PayTo-tilisi PayID ja tilitiedot</string>
     <string name="checkout_payto_payid_type_phone_number">Matkapuhelinnumero</string>
     <string name="checkout_payto_payid_type_email_address">Sähköposti</string>
     <string name="checkout_payto_payid_type_organization_id">Organisaation tunnus</string>

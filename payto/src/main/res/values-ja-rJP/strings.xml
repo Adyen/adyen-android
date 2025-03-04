@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Paytoをどのように使用しますか？</string>
+    <string name="checkout_payto_mode_selection">PayToをどのように使用しますか？</string>
 
-    <string name="checkout_payto_payid_description">Paytoアカウントに接続されているPayIDとアカウントの詳細を入力してください。</string>
+    <string name="checkout_payto_payid_description">PayToアカウントに接続されているPayIDとアカウントの詳細を入力してください。</string>
     <string name="checkout_payto_payid_type_phone_number">携帯</string>
     <string name="checkout_payto_payid_type_email_address">メールアドレス</string>
     <string name="checkout_payto_payid_type_organization_id">組織ID</string>

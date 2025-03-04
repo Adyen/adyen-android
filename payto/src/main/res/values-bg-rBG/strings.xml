@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Как бихте искали да използвате Payto?</string>
+    <string name="checkout_payto_mode_selection">Как бихте искали да използвате PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Въведете PayID и данните за сметката, които са свързани с Вашия Payto акаунт.</string>
+    <string name="checkout_payto_payid_description">Въведете PayID и данните за сметката, които са свързани с Вашия PayTo акаунт.</string>
     <string name="checkout_payto_payid_type_phone_number">Мобилно устройство</string>
     <string name="checkout_payto_payid_type_email_address">Имейл</string>
     <string name="checkout_payto_payid_type_organization_id">OrganizationID</string>

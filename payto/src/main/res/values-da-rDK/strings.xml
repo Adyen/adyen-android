@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Hvordan vil du bruge Payto?</string>
+    <string name="checkout_payto_mode_selection">Hvordan vil du bruge PayTo?</string>
 
     <string name="checkout_payto_payid_description">Indtast PayID og kontooplysninger, der er knyttet til din PayTo-konto.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobil</string>

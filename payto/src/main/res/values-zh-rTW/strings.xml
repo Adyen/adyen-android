@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">您想如何使用 Payto 呢？</string>
+    <string name="checkout_payto_mode_selection">您想如何使用 PayTo 呢？</string>
 
-    <string name="checkout_payto_payid_description">請輸入與 Payto 帳戶相連的 PayID 和帳戶詳情。</string>
+    <string name="checkout_payto_payid_description">請輸入與 PayTo 帳戶相連的 PayID 和帳戶詳情。</string>
     <string name="checkout_payto_payid_type_phone_number">手機</string>
     <string name="checkout_payto_payid_type_email_address">電子郵件</string>
     <string name="checkout_payto_payid_type_organization_id">組織 ID</string>

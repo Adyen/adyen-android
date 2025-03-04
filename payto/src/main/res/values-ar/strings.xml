@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">كيف تود استخدام Payto؟</string>
+    <string name="checkout_payto_mode_selection">كيف تود استخدام PayTo؟</string>
 
-    <string name="checkout_payto_payid_description">أدخل معرف PayID وتفاصيل الحساب المرتبطة بحساب Payto الخاص بك.</string>
+    <string name="checkout_payto_payid_description">أدخل معرف PayID وتفاصيل الحساب المرتبطة بحساب PayTo الخاص بك.</string>
     <string name="checkout_payto_payid_type_phone_number">الهاتف المحمول</string>
     <string name="checkout_payto_payid_type_email_address">البريد الإلكتروني</string>
     <string name="checkout_payto_payid_type_organization_id">معرف المنظمة</string>
