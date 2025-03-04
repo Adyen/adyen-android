@@ -33,13 +33,16 @@ internal fun MBWayDelegateState.toComponentState(
     order: OrderRequest?,
     amount: Amount?,
 ): MBWayComponentState {
+    val sanitizedTelephoneNumber = fieldTransformerRegistry.transform(
+        MBWayFieldId.LOCAL_PHONE_NUMBER,
+        localPhoneNumberFieldState.value,
+    )
+    val telephoneNumber = "${countryCodeFieldState.value.callingCode}$sanitizedTelephoneNumber"
+
     val paymentMethod = MBWayPaymentMethod(
         type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
         checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-        telephoneNumber = fieldTransformerRegistry.transform(
-            MBWayFieldId.LOCAL_PHONE_NUMBER,
-            localPhoneNumberFieldState.value,
-        ),
+        telephoneNumber = telephoneNumber,
     )
 
     val paymentComponentData = PaymentComponentData(
