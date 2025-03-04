@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.ui.model.state
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.transformer.DefaultTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.updateFieldState
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
@@ -21,9 +22,9 @@ import kotlinx.coroutines.flow.update
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDelegateStateManager<S : DelegateState, FI>(
     private val factory: DelegateStateFactory<S, FI>,
-    private val transformerRegistry: FieldTransformerRegistry<FI>,
     private val validationRegistry: FieldValidatorRegistry<FI>,
     private val stateUpdaterRegistry: StateUpdaterRegistry<FI, S>,
+    private val transformerRegistry: FieldTransformerRegistry<FI> = DefaultTransformerRegistry(),
 ) : DelegateStateManager<S, FI> {
 
     private val _state = MutableStateFlow(factory.createDefaultDelegateState())
