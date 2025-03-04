@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Hur vill du använda Payto?</string>
+    <string name="checkout_payto_mode_selection">Hur vill du använda PayTo?</string>
 
-    <string name="checkout_payto_payid_description">Ange PayID och kontouppgifter för Payto-kontot.</string>
+    <string name="checkout_payto_payid_description">Ange PayID och kontouppgifter för PayTo-kontot.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobil</string>
     <string name="checkout_payto_payid_type_email_address">E-postadress</string>
     <string name="checkout_payto_payid_type_organization_id">Organisations-id</string>

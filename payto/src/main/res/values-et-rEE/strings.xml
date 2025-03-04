@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Kuidas soovite Paytot kasutada?</string>
+    <string name="checkout_payto_mode_selection">Kuidas soovite PayTot kasutada?</string>
 
-    <string name="checkout_payto_payid_description">Sisestage PayID ja teie Payto kontoga ühendatud konto andmed.</string>
+    <string name="checkout_payto_payid_description">Sisestage PayID ja teie PayTo kontoga ühendatud konto andmed.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobiil</string>
     <string name="checkout_payto_payid_type_email_address">E-post</string>
     <string name="checkout_payto_payid_type_organization_id">Organisatsiooni ID</string>

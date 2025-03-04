@@ -7,7 +7,7 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Kako bi želeli uporabljati Payto?</string>
+    <string name="checkout_payto_mode_selection">Kako bi želeli uporabljati PayTo?</string>
 
     <string name="checkout_payto_payid_description">Vnesite PayID in podrobnosti o računu, ki so povezani z vašim računom PayTo.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobilni telefon</string>

@@ -7,9 +7,9 @@
   -->
 
 <resources>
-    <string name="checkout_payto_mode_selection">Kaip norėtumėte naudoti „Payto“?</string>
+    <string name="checkout_payto_mode_selection">Kaip norėtumėte naudoti „PayTo“?</string>
 
-    <string name="checkout_payto_payid_description">Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „Payto“ sąskaita.</string>
+    <string name="checkout_payto_payid_description">Įveskite „PayID“ ir sąskaitos duomenis, susietus su jūsų „PayTo“ sąskaita.</string>
     <string name="checkout_payto_payid_type_phone_number">Mobilusis telefonas</string>
     <string name="checkout_payto_payid_type_email_address">El. paštas</string>
     <string name="checkout_payto_payid_type_organization_id">Organizacijos ID</string>
