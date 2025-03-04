@@ -16,7 +16,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-class PayToPaymentMethod(
+data class PayToPaymentMethod(
     override var type: String?,
     override var checkoutAttemptId: String?,
     var shopperAccountIdentifier: String? = null,
