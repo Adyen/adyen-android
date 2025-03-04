@@ -121,9 +121,9 @@ constructor(
                 transformerRegistry = transformerRegistry,
                 stateManager = DefaultDelegateStateManager(
                     factory = delegateStateFactory,
-                    transformerRegistry = transformerRegistry,
                     validationRegistry = MBWayValidatorRegistry(),
                     stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
+                    transformerRegistry = transformerRegistry,
                 ),
             )
 
@@ -222,9 +222,9 @@ constructor(
                 transformerRegistry = transformerRegistry,
                 stateManager = DefaultDelegateStateManager(
                     factory = delegateStateFactory,
-                    transformerRegistry = transformerRegistry,
                     validationRegistry = MBWayValidatorRegistry(),
                     stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
+                    transformerRegistry = transformerRegistry,
                 ),
             )
 
