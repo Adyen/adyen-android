@@ -54,7 +54,6 @@ internal class LocalPhoneNumberUpdater : StateUpdater<MBWayDelegateState, Compon
         )
 }
 
-
 internal class CountryCodeUpdater : StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<CountryModel>> {
     override fun getFieldState(state: MBWayDelegateState): ComponentFieldDelegateState<CountryModel> =
         state.countryCodeFieldState
