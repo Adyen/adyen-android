@@ -36,6 +36,8 @@
     <string name="checkout_card_installments_option_one_time">%%installments.oneTime%%</string>
     <string name="checkout_card_installments_option_revolving">%%installments.revolving%%</string>
 
+    <string name="checkout_card_scan_button">%%card.scanButton%%</string>
+
     <string name="store_payment_method">%%storeDetails%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>
