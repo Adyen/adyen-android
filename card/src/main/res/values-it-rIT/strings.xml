@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Pagamento una tantum</string>
     <string name="checkout_card_installments_option_revolving">Pagamento ricorrente</string>
 
+    <string name="checkout_card_scan_button">Scansiona la tua carta</string>
+
     <string name="store_payment_method">Salva per il prossimo pagamento</string>
 </resources>

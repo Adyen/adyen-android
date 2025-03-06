@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Ühekordne makse</string>
     <string name="checkout_card_installments_option_revolving">Vaba tagasimakse</string>
 
+    <string name="checkout_card_scan_button">Skannige oma kaart</string>
+
     <string name="store_payment_method">Salvesta mu järgmise makse jaoks</string>
 </resources>

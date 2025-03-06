@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Одноразовый платеж</string>
     <string name="checkout_card_installments_option_revolving">Повторяющаяся оплата</string>
 
+    <string name="checkout_card_scan_button">Отсканируйте свою карту</string>
+
     <string name="store_payment_method">Сохранить для следующего платежа</string>
 </resources>

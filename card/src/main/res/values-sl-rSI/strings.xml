@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>
     <string name="checkout_card_installments_option_revolving">Revolving plačilo</string>
 
+    <string name="checkout_card_scan_button">Poskenirajte svojo kartico</string>
+
     <string name="store_payment_method">Shrani za moje naslednje plačilo</string>
 </resources>

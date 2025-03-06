@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">الدفع مرة واحدة</string>
     <string name="checkout_card_installments_option_revolving">الدفع الدوري</string>
 
+    <string name="checkout_card_scan_button">امسح بطاقتك ضوئيًا</string>
+
     <string name="store_payment_method">حفظ لمدفوعاتي القادمة</string>
 </resources>
