@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Engångsbetalning</string>
     <string name="checkout_card_installments_option_revolving">Uppdelad betalning</string>
 
+    <string name="checkout_card_scan_button">Skanna ditt kort</string>
+
     <string name="store_payment_method">Spara till min nästa betalning</string>
 </resources>

@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Еднократно плащане</string>
     <string name="checkout_card_installments_option_revolving">Револвиращо плащане</string>
 
+    <string name="checkout_card_scan_button">Сканирайте Вашата карта</string>
+
     <string name="store_payment_method">Запазване за следващото ми плащане</string>
 </resources>

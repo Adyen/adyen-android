@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">全款支付</string>
     <string name="checkout_card_installments_option_revolving">循环支付</string>
 
+    <string name="checkout_card_scan_button">扫描您的卡片</string>
+
     <string name="store_payment_method">保存以便下次支付使用</string>
 </resources>

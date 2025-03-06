@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Vienkartinis mokėjimas</string>
     <string name="checkout_card_installments_option_revolving">Atnaujinamasis mokėjimas</string>
 
+    <string name="checkout_card_scan_button">Nuskaitykite savo kortelę</string>
+
     <string name="store_payment_method">Išsaugoti kitam mokėjimui</string>
 </resources>

@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Paiement unique</string>
     <string name="checkout_card_installments_option_revolving">Paiement en plusieurs fois</string>
 
+    <string name="checkout_card_scan_button">Scannez votre carte</string>
+
     <string name="store_payment_method">Sauvegarder pour mon prochain paiement</string>
 </resources>
