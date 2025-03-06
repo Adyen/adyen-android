@@ -36,6 +36,8 @@
     <string name="checkout_card_installments_option_one_time">One time payment</string>
     <string name="checkout_card_installments_option_revolving">Revolving payment</string>
 
+    <string name="checkout_card_scan_button">Scan your card</string>
+
     <string name="store_payment_method">Save for my next payment</string>
     <!-- Untranslatable strings -->
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>

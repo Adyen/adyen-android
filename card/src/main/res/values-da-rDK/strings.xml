@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Engangsbetaling</string>
     <string name="checkout_card_installments_option_revolving">Løbende betaling</string>
 
+    <string name="checkout_card_scan_button">Scan dit kort</string>
+
     <string name="store_payment_method">Gem til min næste betaling</string>
 </resources>

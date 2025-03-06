@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Pago único</string>
     <string name="checkout_card_installments_option_revolving">Pago rotativo</string>
 
+    <string name="checkout_card_scan_button">Escanee su tarjeta</string>
+
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

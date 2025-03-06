@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Einmalige Zahlung</string>
     <string name="checkout_card_installments_option_revolving">Ratenzahlung</string>
 
+    <string name="checkout_card_scan_button">Scannen Sie Ihre Karte</string>
+
     <string name="store_payment_method">Für zukünftige Zahlvorgänge speichern</string>
 </resources>

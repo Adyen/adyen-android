@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Eingreiðsla</string>
     <string name="checkout_card_installments_option_revolving">Veltigreiðsla</string>
 
+    <string name="checkout_card_scan_button">Skannaðu kortið þitt</string>
+
     <string name="store_payment_method">Spara fyrir næstu greiðslu</string>
 </resources>

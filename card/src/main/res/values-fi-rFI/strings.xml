@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Kertamaksu</string>
     <string name="checkout_card_installments_option_revolving">Toistuva maksu</string>
 
+    <string name="checkout_card_scan_button">Skannaa korttisi</string>
+
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

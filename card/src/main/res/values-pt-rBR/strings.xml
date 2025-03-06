@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Pagamento à vista</string>
     <string name="checkout_card_installments_option_revolving">Pagamento rotativo</string>
 
+    <string name="checkout_card_scan_button">Passe o seu cartão</string>
+
     <string name="store_payment_method">Salvar para meu próximo pagamento</string>
 </resources>
