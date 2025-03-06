@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Jednorázová platba</string>
     <string name="checkout_card_installments_option_revolving">Opakující se platba</string>
 
+    <string name="checkout_card_scan_button">Naskenujte svou kartu</string>
+
     <string name="store_payment_method">Uložit pro příští platby</string>
 </resources>

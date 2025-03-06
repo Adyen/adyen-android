@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Εφάπαξ πληρωμή</string>
     <string name="checkout_card_installments_option_revolving">Ανακυκλούμενη πληρωμή</string>
 
+    <string name="checkout_card_scan_button">Σαρώστε την κάρτα σας</string>
+
     <string name="store_payment_method">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

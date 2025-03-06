@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Plată unică</string>
     <string name="checkout_card_installments_option_revolving">Plată recurentă</string>
 
+    <string name="checkout_card_scan_button">Scanați-vă cardul</string>
+
     <string name="store_payment_method">Salvează pentru următoarea mea plată</string>
 </resources>

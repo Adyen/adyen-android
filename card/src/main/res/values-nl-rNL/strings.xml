@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Eenmalige betaling</string>
     <string name="checkout_card_installments_option_revolving">Terugkerende betaling</string>
 
+    <string name="checkout_card_scan_button">Scan uw kaart</string>
+
     <string name="store_payment_method">Bewaar voor mijn volgende betaling</string>
 </resources>

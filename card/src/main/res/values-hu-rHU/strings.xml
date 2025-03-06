@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Egyösszegű fizetés</string>
     <string name="checkout_card_installments_option_revolving">Többösszegű fizetés</string>
 
+    <string name="checkout_card_scan_button">Kártya beolvasása</string>
+
     <string name="store_payment_method">Mentés a következő fizetéshez</string>
 </resources>

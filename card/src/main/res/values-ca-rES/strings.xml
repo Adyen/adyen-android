@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">Pagament únic</string>
     <string name="checkout_card_installments_option_revolving">Pagament rotatiu</string>
 
+    <string name="checkout_card_scan_button">Escanegeu la vostra targeta</string>
+
     <string name="store_payment_method">Desa\'l per al meu proper pagament</string>
 </resources>

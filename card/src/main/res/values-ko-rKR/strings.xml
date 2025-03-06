@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">일시불 결제</string>
     <string name="checkout_card_installments_option_revolving">리볼빙 결제</string>
 
+    <string name="checkout_card_scan_button">카드 스캔</string>
+
     <string name="store_payment_method">다음 결제를 위해 이 수단 저장</string>
 </resources>

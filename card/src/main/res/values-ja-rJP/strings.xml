@@ -36,5 +36,7 @@
     <string name="checkout_card_installments_option_one_time">一括払い</string>
     <string name="checkout_card_installments_option_revolving">リボ払い</string>
 
+    <string name="checkout_card_scan_button">カードをスキャンしてください</string>
+
     <string name="store_payment_method">次回のお支払いのため詳細を保存</string>
 </resources>
