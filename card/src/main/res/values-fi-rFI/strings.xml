@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Korttibrändi</string>
     <string name="checkout_card_dual_brand_description">Valitse ensisijainen maksukorttisi. Tämä on vapaaehtoista.</string>
 
+    <string name="checkout_card_scan_button">Skannaa korttisi</string>
+
     <string name="store_payment_method">Tallenna seuraavaa maksuani varten</string>
 </resources>

@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Značka karty</string>
     <string name="checkout_card_dual_brand_description">Vyberte značku karty, kterou preferujete pro platbu. Je to volitelné.</string>
 
+    <string name="checkout_card_scan_button">Naskenujte svou kartu</string>
+
     <string name="store_payment_method">Uložit pro příští platby</string>
 </resources>

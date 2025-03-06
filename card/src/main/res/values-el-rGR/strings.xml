@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Επωνυμία κάρτας</string>
     <string name="checkout_card_dual_brand_description">Επιλέξτε την επωνυμία της κάρτας με την οποία προτιμάτε να πληρώσετε. Αυτό είναι προαιρετικό.</string>
 
+    <string name="checkout_card_scan_button">Σαρώστε την κάρτα σας</string>
+
     <string name="store_payment_method">Αποθήκευση για την επόμενη πληρωμή μου</string>
 </resources>

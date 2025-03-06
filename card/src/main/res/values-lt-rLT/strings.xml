@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kortelės prekių ženklas</string>
     <string name="checkout_card_dual_brand_description">Pasirinkite kortelės, kuria pageidaujate atsiskaityti, prekių ženklą. Tai neprivaloma.</string>
 
+    <string name="checkout_card_scan_button">Nuskaitykite savo kortelę</string>
+
     <string name="store_payment_method">Išsaugoti kitam mokėjimui</string>
 </resources>

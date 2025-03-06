@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Merk van kaart</string>
     <string name="checkout_card_dual_brand_description">Selecteer het merk van de kaart waarmee u het liefst wilt betalen. Dit is optioneel.</string>
 
+    <string name="checkout_card_scan_button">Scan uw kaart</string>
+
     <string name="store_payment_method">Bewaar voor mijn volgende betaling</string>
 </resources>

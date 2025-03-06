@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">العلامة التجارية للبطاقة</string>
     <string name="checkout_card_dual_brand_description">اختر العلامة التجارية للبطاقة التي تفضل الدفع بها. هذا البيان اختياري.</string>
 
+    <string name="checkout_card_scan_button">امسح بطاقتك ضوئيًا</string>
+
     <string name="store_payment_method">حفظ لمدفوعاتي القادمة</string>
 </resources>

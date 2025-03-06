@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kortafyrirtæki</string>
     <string name="checkout_card_dual_brand_description">Veldu kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.</string>
 
+    <string name="checkout_card_scan_button">Skannaðu kortið þitt</string>
+
     <string name="store_payment_method">Spara fyrir næstu greiðslu</string>
 </resources>

@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Brandul cardului</string>
     <string name="checkout_card_dual_brand_description">Selectați brandul cardului cu care preferați să plătiți. Acest lucru este opțional.</string>
 
+    <string name="checkout_card_scan_button">Scanați-vă cardul</string>
+
     <string name="store_payment_method">Salvează pentru următoarea mea plată</string>
 </resources>

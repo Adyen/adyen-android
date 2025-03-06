@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">カードブランド</string>
     <string name="checkout_card_dual_brand_description">お支払いに使用するカードブランドをお選びください。これは任意です。</string>
 
+    <string name="checkout_card_scan_button">カードをスキャンしてください</string>
+
     <string name="store_payment_method">次回のお支払いのため詳細を保存</string>
 </resources>

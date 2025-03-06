@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kartes zīmols</string>
     <string name="checkout_card_dual_brand_description">Atlasiet kartes zīmolu, ar kuru vēlaties maksāt. Tas nav obligāti.</string>
 
+    <string name="checkout_card_scan_button">Skenējiet savu karti</string>
+
     <string name="store_payment_method">Saglabāt manam nākamajam maksājumam</string>
 </resources>

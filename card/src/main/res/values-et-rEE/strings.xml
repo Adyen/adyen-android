@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kaardi bränd</string>
     <string name="checkout_card_dual_brand_description">Valige kaardibränd, millega eelistate maksta. See on valikuline.</string>
 
+    <string name="checkout_card_scan_button">Skannige oma kaart</string>
+
     <string name="store_payment_method">Salvesta mu järgmise makse jaoks</string>
 </resources>
