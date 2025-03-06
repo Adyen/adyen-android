@@ -20,5 +20,5 @@ internal data class MBWayDelegateState(
 ) : DelegateState {
     override val isValid: Boolean
         get() = countryCodeFieldState.validation?.isValid() == true &&
-                localPhoneNumberFieldState.validation?.isValid() == true
+            localPhoneNumberFieldState.validation?.isValid() == true
 }

@@ -49,7 +49,8 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         }
     }
 
-    // A list can be added, which will show which other fields need to be validated or updated when a specific field is updated
+    // A list can be added, which will show which other fields need to be validated
+    // or updated when a specific field is updated
     override fun <T> updateField(
         fieldId: FI,
         value: T?,
