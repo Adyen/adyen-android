@@ -59,7 +59,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
-                transformerRegistry.transform(fieldId, value),
+                transformerRegistry.transform(fieldId, it),
             )
         }
 
