@@ -6,6 +6,7 @@
  * Created by josephj on 18/2/2025.
  */
 
+// sample call from command line: ./gradlew dependencyList --no-configuration-cache -PoutputFileName=deps.txt -PincludeModules=true
 tasks.register('dependencyList') {
     doLast {
         def includeModules = false
@@ -26,18 +27,29 @@ tasks.register('dependencyList') {
                     }
             }.flatten()
 
+        def outputFileName = "dependency_list.txt"
+        if (project.hasProperty("outputFileName")) {
+            outputFileName = project.property("outputFileName")
+        }
+
+        def file = new File(outputFileName)
+        def fileWriter = file.newWriter()
+
         if (!includeModules) {
             groupedDependencies
                 .collect { it.dependency }
                 .unique()
                 .toSorted()
-                .each { println it }
+                .each { fileWriter.writeLine(it) }
         } else {
             groupedDependencies
                 .groupBy { it.dependency }
                 .collect { [dependency: it.key, modules: it.value.collect { it.module }.unique()] }
                 .sort { it.dependency }
-                .each { println "${it.dependency} - used by: ${it.modules}" }
+                .each { fileWriter.writeLine("${it.dependency} - used by: ${it.modules}") }
         }
+
+        fileWriter.flush()
+        fileWriter.close()
     }
 }
