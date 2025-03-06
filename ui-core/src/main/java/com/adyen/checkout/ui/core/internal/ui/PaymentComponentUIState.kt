@@ -32,7 +32,7 @@ sealed class PaymentComponentUIState {
     }
 }
 
-// TODO: This can be removed when all validation logic is moved out of the views
+// TODO This can be removed when all validation logic is moved out of the views
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentUIEvent {
     object InvalidUI : PaymentComponentUIEvent()
