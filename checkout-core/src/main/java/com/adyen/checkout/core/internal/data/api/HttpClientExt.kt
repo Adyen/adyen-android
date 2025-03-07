@@ -100,6 +100,12 @@ private fun Any.logResponse(response: AdyenApiResponse) {
     response.headers.forEach { (key, value) ->
         adyenLog(AdyenLogLevel.VERBOSE) { "$key: $value" }
     }
-    adyenLog(AdyenLogLevel.VERBOSE) { response.body.toJSONObject().toStringPretty() }
+    adyenLog(AdyenLogLevel.VERBOSE) { response.body.tryToFormatJson() }
     adyenLog(AdyenLogLevel.VERBOSE) { "response - END" }
+}
+
+private fun String.tryToFormatJson(): String = when {
+    startsWith("{") -> JSONObject(this).toStringPretty()
+    startsWith("[") -> JSONArray(this).toStringPretty()
+    else -> this
 }
