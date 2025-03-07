@@ -135,7 +135,7 @@ class CardView @JvmOverloads constructor(
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
         initAddressLookup()
-        initFeatureFragment(delegate)
+        initCardScanning(delegate)
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
@@ -400,22 +400,19 @@ class CardView @JvmOverloads constructor(
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
         val shouldNotShowError = hasFocus && !showErrorWhileEditing
         if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = outputData.isDualBranded
-            setCardNumberError(null, shouldShowSecondaryLogo)
+            setCardNumberError(null)
         } else if (cardNumberValidation is Validation.Invalid) {
             setCardNumberError(cardNumberValidation.reason)
         }
     }
 
-    private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
+    private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.hideError()
-            binding.cardBrandLogoContainerPrimary.isVisible = true
-            binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
+            binding.cardBrandLogoContainer.isVisible = true
         } else {
             binding.textInputLayoutCardNumber.showError(localizedContext.getString(stringResId))
-            binding.cardBrandLogoContainerPrimary.isVisible = false
-            binding.cardBrandLogoContainerSecondary.isVisible = false
+            binding.cardBrandLogoContainer.isVisible = false
         }
     }
 
@@ -602,8 +599,8 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun initFeatureFragment(delegate: CardDelegate) {
-        binding.fragmentContainer.getFragment<CardFragment?>()?.initialize(delegate)
+    private fun initCardScanning(delegate: CardDelegate) {
+        binding.fragmentContainerCardScanning.getFragment<CardScanningFragment?>()?.initialize(delegate)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {
