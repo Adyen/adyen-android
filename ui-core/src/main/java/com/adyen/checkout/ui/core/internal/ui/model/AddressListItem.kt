@@ -9,11 +9,11 @@
 package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.ui.core.internal.ui.SimpleTextListItem
+import com.adyen.checkout.ui.core.internal.ui.TextListItem
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AddressListItem(
     val name: String,
     val code: String,
     val selected: Boolean
-) : SimpleTextListItem(name)
+) : TextListItem(name)

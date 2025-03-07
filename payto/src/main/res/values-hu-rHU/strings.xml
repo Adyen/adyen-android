@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Hogyan szeretné használni a PayTo szolgáltatást?</string>
+
+    <string name="checkout_payto_payid_description">Adja meg a PayTo-fiókjához kapcsolódó PayID-t és a számlaadatait.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobiltelefon</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail-cím</string>
+    <string name="checkout_payto_payid_type_organization_id">Szervezeti azonosító</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobiltelefon</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Adja meg a helyes mobiltelefonszámot</string>
+    <string name="checkout_payto_payid_email_address_hint">E-mail-cím</string>
+    <string name="checkout_payto_payid_email_address_invalid">Adja meg a helyes e-mail-címet</string>
+    <string name="checkout_payto_payid_abn_number_hint">Ausztrál vállalkozói azonosító</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Adja meg a helyes ausztrál vállalkozói azonosítót</string>
+    <string name="checkout_payto_payid_organization_id_hint">Szervezeti azonosítószám</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Adja meg a helyes szervezeti azonosítószámot</string>
+
+    <string name="checkout_payto_bsb_description">A folytatáshoz adja meg a bankszámlaszámot és a számlájához kapcsolódó bankfiók azonosító (BSB) kódját</string>
+    <string name="checkout_payto_bsb_account_number_hint">Bankszámlaszám</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Adja meg a helyes bankszámlaszámot</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Bankfiókkód</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Adja meg a helyes bankfiókkódot</string>
+
+    <string name="checkout_payto_first_name_hint">Számlatulajdonos utóneve</string>
+    <string name="checkout_payto_first_name_invalid">Adja meg a helyes utónevet</string>
+    <string name="checkout_payto_last_name_hint">Számlatulajdonos vezetékneve</string>
+    <string name="checkout_payto_last_name_invalid">Adja meg a helyes vezetéknevet</string>
+
+</resources>

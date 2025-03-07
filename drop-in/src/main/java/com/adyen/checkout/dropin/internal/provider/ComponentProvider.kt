@@ -97,6 +97,9 @@ import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProv
 import com.adyen.checkout.payeasy.PayEasyComponent
 import com.adyen.checkout.payeasy.PayEasyComponentState
 import com.adyen.checkout.payeasy.internal.provider.PayEasyComponentProvider
+import com.adyen.checkout.payto.PayToComponent
+import com.adyen.checkout.payto.PayToComponentState
+import com.adyen.checkout.payto.internal.provider.PayToComponentProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.provider.SepaComponentProvider
@@ -174,6 +177,16 @@ internal fun getComponentFor(
                 storedPaymentMethod = storedPaymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<PayByBankUSComponentState>,
+                key = storedPaymentMethod.id,
+            )
+        }
+
+        checkCompileOnly { PayToComponent.PROVIDER.isPaymentMethodSupported(storedPaymentMethod) } -> {
+            PayToComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                storedPaymentMethod = storedPaymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayToComponentState>,
                 key = storedPaymentMethod.id,
             )
         }
@@ -436,6 +449,15 @@ internal fun getComponentFor(
                 paymentMethod = paymentMethod,
                 checkoutConfiguration = checkoutConfiguration,
                 callback = componentCallback as ComponentCallback<PayEasyComponentState>,
+            )
+        }
+
+        checkCompileOnly { PayToComponent.PROVIDER.isPaymentMethodSupported(paymentMethod) } -> {
+            PayToComponentProvider(dropInOverrideParams, analyticsManager).get(
+                fragment = fragment,
+                paymentMethod = paymentMethod,
+                checkoutConfiguration = checkoutConfiguration,
+                callback = componentCallback as ComponentCallback<PayToComponentState>,
             )
         }
 

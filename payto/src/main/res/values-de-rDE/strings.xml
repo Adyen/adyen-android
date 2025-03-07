@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Wie möchten Sie PayTo verwenden?</string>
+
+    <string name="checkout_payto_payid_description">Geben Sie die PayID und die Kontodaten ein, die mit Ihrem PayTo-Konto verknüpft sind.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobil</string>
+    <string name="checkout_payto_payid_type_email_address">E-Mail-Adresse</string>
+    <string name="checkout_payto_payid_type_organization_id">Organisations-ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobiltelefon</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Geben Sie eine korrekte Mobiltelefonnummer ein</string>
+    <string name="checkout_payto_payid_email_address_hint">E-Mail-Adresse</string>
+    <string name="checkout_payto_payid_email_address_invalid">Geben Sie eine korrekte E-Mail-Adresse ein</string>
+    <string name="checkout_payto_payid_abn_number_hint">Australische Unternehmensnummer</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Geben Sie eine korrekte australische Unternehmensnummer ein</string>
+    <string name="checkout_payto_payid_organization_id_hint">Organisations-ID-Nummer</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Geben Sie eine korrekte Organisations-ID ein</string>
+
+    <string name="checkout_payto_bsb_description">Geben Sie die Bankkontonummer und die dazugehörige Bankleitzahl ein, um fortzufahren</string>
+    <string name="checkout_payto_bsb_account_number_hint">Bankkontonummer</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Geben Sie eine korrekte Kontonummer ein</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Bankfiliale des Bundesstaates</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Geben Sie die korrekte Bankleitzahl ein</string>
+
+    <string name="checkout_payto_first_name_hint">Vorname des Kontoinhabers</string>
+    <string name="checkout_payto_first_name_invalid">Geben Sie einen korrekten Vornamen ein</string>
+    <string name="checkout_payto_last_name_hint">Nachname des Kontoinhabers</string>
+    <string name="checkout_payto_last_name_invalid">Bitte geben Sie einen korrekten Nachnamen ein</string>
+
+</resources>
