@@ -1,0 +1,38 @@
+name: Get dependency list
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      artifact-name:
+        required: true
+        type: string
+
+jobs:
+  get_dependency_list:
+    runs-on: ubuntu-latest
+    name: Fetch dependency list
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref:  ${{ inputs.ref }}
+
+      - name: Setup gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Fetch dependency list
+        env:
+          ARTIFACT_NAME: ${{ inputs.artifact-name }}
+        run: |
+          DEPENDENCY_LIST_FILE_NAME=$(echo "${ARTIFACT_NAME}")
+          ./gradlew dependencyList -q --no-configuration-cache -PoutputFileName=$DEPENDENCY_LIST_FILE_NAME
+
+      - name: Upload dependency list artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "${{ inputs.artifact-name }}"
+          path: "${{ inputs.artifact-name }}"
+          overwrite: true
