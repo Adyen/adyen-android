@@ -19,12 +19,14 @@ internal data class MBWayViewState(
     val phoneNumberFieldState: ComponentFieldViewState<String>,
 )
 
+// TODO: Write a test for this
 internal fun MBWayDelegateState.toViewState() = MBWayViewState(
     countries = this.countries,
     countryCodeFieldState = this.countryCodeFieldState.toComponentFieldViewState(),
     phoneNumberFieldState = this.localPhoneNumberFieldState.toComponentFieldViewState(),
 )
 
+// TODO: Write a test for this
 internal fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
     ComponentFieldViewState(
         value = value,

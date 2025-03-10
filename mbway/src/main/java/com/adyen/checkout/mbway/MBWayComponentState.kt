@@ -27,6 +27,7 @@ data class MBWayComponentState(
     override val isReady: Boolean
 ) : PaymentComponentState<MBWayPaymentMethod>
 
+// TODO: Write a test for this
 internal fun MBWayDelegateState.toComponentState(
     analyticsManager: AnalyticsManager,
     fieldTransformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
