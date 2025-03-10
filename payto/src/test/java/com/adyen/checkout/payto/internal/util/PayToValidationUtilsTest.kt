@@ -10,7 +10,7 @@ package com.adyen.checkout.payto.internal.util
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 internal class PayToValidationUtilsTest {
@@ -50,66 +50,66 @@ internal class PayToValidationUtilsTest {
         @JvmStatic
         fun getPhoneNumberTestCases() = listOf(
             // phoneNumber, expectedValidationResult
-            Arguments.of("+1-123456789", true),
-            Arguments.of("+44-789456123", true),
-            Arguments.of("+91-9876543210", true),
-            Arguments.of("+33-145678912", true),
-            Arguments.of("+49-1523456789", true),
-            Arguments.of("+61-412345678", true),
-            Arguments.of("+81-9076543210", true),
-            Arguments.of("123456789", false),
-            Arguments.of("+1-", false),
-            Arguments.of("+1-abc", false),
-            Arguments.of("++1-123456789", false),
-            Arguments.of("+123-000000000000000000000000000000", false),
-            Arguments.of("+1-00000000000000000000000000000", false),
+            arguments("+1-123456789", true),
+            arguments("+44-789456123", true),
+            arguments("+91-9876543210", true),
+            arguments("+33-145678912", true),
+            arguments("+49-1523456789", true),
+            arguments("+61-412345678", true),
+            arguments("+81-9076543210", true),
+            arguments("123456789", false),
+            arguments("+1-", false),
+            arguments("+1-abc", false),
+            arguments("++1-123456789", false),
+            arguments("+123-000000000000000000000000000000", false),
+            arguments("+1-00000000000000000000000000000", false),
         )
 
         @JvmStatic
         fun getAbnNumberTestCases() = listOf(
             // abnNumber, expectedValidationResult
-            Arguments.of("123456789", true),
-            Arguments.of("12345678901", true),
-            Arguments.of("00000000000", true),
-            Arguments.of("99999999999", true),
-            Arguments.of("9876543210", false),
-            Arguments.of("abcdefghijk", false),
-            Arguments.of("12345", false),
+            arguments("123456789", true),
+            arguments("12345678901", true),
+            arguments("00000000000", true),
+            arguments("99999999999", true),
+            arguments("9876543210", false),
+            arguments("abcdefghijk", false),
+            arguments("12345", false),
         )
 
         @JvmStatic
         fun getOrganizationIdTestCases() = listOf(
             // organizationId, expectedValidationResult
-            Arguments.of("companysearch83n293c8", true),
-            Arguments.of("12345678901", true),
-            Arguments.of("123456789", true),
-            Arguments.of("Org_#Valid", false),
-            Arguments.of("Invalid Org", false),
-            Arguments.of("Org#Invalid", false),
+            arguments("companysearch83n293c8", true),
+            arguments("12345678901", true),
+            arguments("123456789", true),
+            arguments("Org_#Valid", false),
+            arguments("Invalid Org", false),
+            arguments("Org#Invalid", false),
         )
 
         @JvmStatic
         fun getBsbAccountNumberTestCases() = listOf(
             // bsbAccountNumber, expectedValidationResult
-            Arguments.of("123456", true),
-            Arguments.of("987654", true),
-            Arguments.of("000000", true),
-            Arguments.of("654321", true),
-            Arguments.of("555555", true),
-            Arguments.of("12345", false),
-            Arguments.of("abcdef", false),
+            arguments("123456", true),
+            arguments("987654", true),
+            arguments("000000", true),
+            arguments("654321", true),
+            arguments("555555", true),
+            arguments("12345", false),
+            arguments("abcdef", false),
         )
 
         @JvmStatic
         fun getBsbStateBranchTestCases() = listOf(
             // bsbStateBranch, expectedValidationResult
-            Arguments.of("Main Branch", true),
-            Arguments.of("Branch-123", true),
-            Arguments.of("1234", true),
-            Arguments.of("Central Branch", true),
-            Arguments.of("Northside Bank", true),
-            Arguments.of("", false),
-            Arguments.of("This is a very long branch name that exceeds 28 characters", false),
+            arguments("Main Branch", true),
+            arguments("Branch-123", true),
+            arguments("1234", true),
+            arguments("Central Branch", true),
+            arguments("Northside Bank", true),
+            arguments("", false),
+            arguments("This is a very long branch name that exceeds 28 characters", false),
         )
     }
 }
