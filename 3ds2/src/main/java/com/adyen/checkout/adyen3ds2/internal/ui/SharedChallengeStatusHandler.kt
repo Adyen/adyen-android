@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui
 
-import androidx.annotation.VisibleForTesting
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
 
@@ -32,8 +31,7 @@ internal object SharedChallengeStatusHandler : ChallengeStatusHandler {
         }
     }
 
-    @VisibleForTesting
-    internal fun reset() {
+    fun reset() {
         onCompletionListener = null
         queuedResult = null
     }
