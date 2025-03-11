@@ -8,17 +8,20 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-internal enum class CardFieldId {
+import androidx.annotation.RestrictTo
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardFieldId {
     CARD_NUMBER,
-    CARD_EXPIRY_DATE,
-    CARD_SECURITY_CODE,
-    CARD_HOLDER_NAME,
-    ADDRESS_POSTAL_CODE,
-    ADDRESS_LOOKUP,
-    SOCIAL_SECURITY_NUMBER,
+//    CARD_EXPIRY_DATE,
+//    CARD_SECURITY_CODE,
+//    CARD_HOLDER_NAME,
+//    ADDRESS_POSTAL_CODE,
+//    ADDRESS_LOOKUP,
+//    SOCIAL_SECURITY_NUMBER,
     // TODO: Do these need to be separated?
-    BIRTH_DATE_OR_TAX_NUMBER,
-    CARD_PASSWORD,
-    INSTALLMENTS,
-    STORE_PAYMENT_SWITCH,
+//    BIRTH_DATE_OR_TAX_NUMBER,
+//    CARD_PASSWORD,
+//    INSTALLMENTS,
+//    STORE_PAYMENT_SWITCH,
 }

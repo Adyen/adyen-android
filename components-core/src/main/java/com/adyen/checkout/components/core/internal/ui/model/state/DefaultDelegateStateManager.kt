@@ -49,6 +49,8 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         }
     }
 
+    override fun updateState(update: S.() -> S) = _state.update(update)
+
     // A list can be added, which will show which other fields need to be validated
     // or updated when a specific field is updated
     override fun <T> updateField(
@@ -56,11 +58,13 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         value: T?,
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
+        validationContext: ValidationContext?
     ) {
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
                 transformerRegistry.transform(fieldId, it),
+                validationContext,
             )
         }
 
@@ -98,3 +102,6 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         }
     }
 }
+
+// TODO: Move this out?
+interface ValidationContext

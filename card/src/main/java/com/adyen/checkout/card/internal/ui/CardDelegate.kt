@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.AddressLookupCallback
@@ -20,6 +21,7 @@ import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.internal.ui.UIEventDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +33,8 @@ interface CardDelegate :
     ViewProvidingDelegate,
     ButtonDelegate,
     UIStateDelegate,
-    AddressDelegate {
+    AddressDelegate,
+    UIEventDelegate<CardFieldId> {
 
     val outputData: CardOutputData
 

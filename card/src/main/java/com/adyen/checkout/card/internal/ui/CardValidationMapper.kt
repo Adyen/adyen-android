@@ -41,6 +41,22 @@ class CardValidationMapper {
         return FieldState(cardNumber, fieldStateValidation)
     }
 
+    fun mapCardNumberValidation(validation: CardNumberValidation) = when (validation) {
+        CardNumberValidation.INVALID_ILLEGAL_CHARACTERS ->
+            Validation.Invalid(R.string.checkout_card_number_not_valid)
+
+        CardNumberValidation.INVALID_TOO_SHORT -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+        CardNumberValidation.INVALID_TOO_LONG -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+        CardNumberValidation.INVALID_UNSUPPORTED_BRAND -> Validation.Invalid(
+            reason = R.string.checkout_card_brand_not_supported,
+            showErrorWhileEditing = true,
+        )
+
+        CardNumberValidation.INVALID_LUHN_CHECK -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+        CardNumberValidation.INVALID_OTHER_REASON -> Validation.Invalid(R.string.checkout_card_number_not_valid)
+        CardNumberValidation.VALID -> Validation.Valid
+    }
+
     fun mapExpiryDateValidation(
         expiryDate: ExpiryDate,
         validationResult: CardExpiryDateValidation,

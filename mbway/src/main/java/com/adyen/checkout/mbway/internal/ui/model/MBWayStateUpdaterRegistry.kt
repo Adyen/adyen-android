@@ -27,8 +27,9 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MB
         key: MBWayFieldId,
         state: MBWayDelegateState
     ): ComponentFieldDelegateState<T> {
-        val updater = updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
-            ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
+        val updater =
+            updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
+                ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.getFieldState(state)
     }
 
@@ -38,28 +39,35 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MB
         state: MBWayDelegateState,
         fieldState: ComponentFieldDelegateState<T>
     ): MBWayDelegateState {
-        val updater = updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
-            ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
+        val updater =
+            updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
+                ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.updateFieldState(state, fieldState)
     }
 }
 
-internal class LocalPhoneNumberUpdater : StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<String>> {
+internal class LocalPhoneNumberUpdater :
+    StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<String>> {
     override fun getFieldState(state: MBWayDelegateState): ComponentFieldDelegateState<String> =
         state.localPhoneNumberFieldState
 
-    override fun updateFieldState(state: MBWayDelegateState, fieldState: ComponentFieldDelegateState<String>) =
-        state.copy(
-            localPhoneNumberFieldState = fieldState,
-        )
+    override fun updateFieldState(
+        state: MBWayDelegateState,
+        fieldState: ComponentFieldDelegateState<String>
+    ) = state.copy(
+        localPhoneNumberFieldState = fieldState,
+    )
 }
 
-internal class CountryCodeUpdater : StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<CountryModel>> {
+internal class CountryCodeUpdater :
+    StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<CountryModel>> {
     override fun getFieldState(state: MBWayDelegateState): ComponentFieldDelegateState<CountryModel> =
         state.countryCodeFieldState
 
-    override fun updateFieldState(state: MBWayDelegateState, fieldState: ComponentFieldDelegateState<CountryModel>) =
-        state.copy(
-            countryCodeFieldState = fieldState,
-        )
+    override fun updateFieldState(
+        state: MBWayDelegateState,
+        fieldState: ComponentFieldDelegateState<CountryModel>
+    ) = state.copy(
+        countryCodeFieldState = fieldState,
+    )
 }

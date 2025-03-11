@@ -15,6 +15,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
@@ -435,6 +436,14 @@ internal class StoredCardDelegate(
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         // no ops
+    }
+
+    override fun <T> onFieldValueChanged(fieldId: CardFieldId, value: T) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onFieldFocusChanged(fieldId: CardFieldId, hasFocus: Boolean) {
+        TODO("Not yet implemented")
     }
 
     // Bin doesn't change for stored cards

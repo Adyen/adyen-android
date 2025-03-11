@@ -21,9 +21,12 @@ import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardDelegateState
+import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.CardValidationContext
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
@@ -49,6 +52,8 @@ import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
+import com.adyen.checkout.components.core.internal.ui.model.state.ValidationContext
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -109,6 +114,8 @@ class DefaultCardDelegate(
     private val submitHandler: SubmitHandler<CardComponentState>,
     private val addressLookupDelegate: AddressLookupDelegate,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
+    // TODO: Should not be nullable
+    private val stateManager: DelegateStateManager<CardDelegateState, CardFieldId>? = null,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
     private val inputData: CardInputData = CardInputData()
@@ -267,6 +274,7 @@ class DefaultCardDelegate(
                 if (detectedCardTypes != outputData.detectedCardTypes) {
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
+                stateManager!!.updateState { copy(detectedCardTypes = detectedCardTypes) }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
@@ -493,6 +501,48 @@ class DefaultCardDelegate(
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
+    }
+
+    override fun <T> onFieldValueChanged(fieldId: CardFieldId, value: T) {
+        val validationContext = getValidationContext(fieldId)
+
+        stateManager!!.updateField(fieldId, value = value, validationContext = validationContext)
+    }
+
+    private fun getValidationContext(fieldId: CardFieldId): ValidationContext {
+        return when (fieldId) {
+            CardFieldId.CARD_NUMBER -> getCardNumberValidationContext()
+        }
+    }
+
+    private fun getCardNumberValidationContext(): CardValidationContext {
+        val detectedCardTypes = stateManager!!.state.value.detectedCardTypes
+
+        val isReliable = detectedCardTypes.any { it.isReliable }
+
+        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
+            detectedCardTypes,
+            inputData.selectedCardIndex,
+        )
+        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+            detectedCardTypes = filteredDetectedCardTypes,
+        )
+
+        // perform a Luhn Check if no brands are detected
+        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+
+        // when no supported cards are detected, only show an error if the brand detection was reliable
+        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
+
+        return CardValidationContext(
+            enableLuhnCheck = enableLuhnCheck,
+            isBrandSupported = !shouldFailWithUnsupportedBrand,
+            validationMapper = cardValidationMapper,
+        )
+    }
+
+    override fun onFieldFocusChanged(fieldId: CardFieldId, hasFocus: Boolean) {
+        stateManager!!.updateField<Unit>(fieldId, hasFocus = hasFocus)
     }
 
     override fun onSubmit() {

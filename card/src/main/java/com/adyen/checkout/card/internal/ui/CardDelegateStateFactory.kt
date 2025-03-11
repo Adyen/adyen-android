@@ -8,10 +8,17 @@
 
 package com.adyen.checkout.card.internal.ui
 
-import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.internal.ui.model.CardDelegateState
+import com.adyen.checkout.card.internal.ui.model.CardFieldId
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateFactory
 
 // TODO: Implement
 class CardDelegateStateFactory(
-    private val componentParams: ButtonComponentParams
-) {
+    private val componentParams: CardComponentParams
+) : DelegateStateFactory<CardDelegateState, CardFieldId> {
+
+    override fun createDefaultDelegateState() = CardDelegateState()
+
+    override fun getFieldIds(): List<CardFieldId> = CardFieldId.entries
 }

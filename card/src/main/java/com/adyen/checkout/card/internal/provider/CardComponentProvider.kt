@@ -21,10 +21,13 @@ import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.CardConfigDataGenerator
+import com.adyen.checkout.card.internal.ui.CardDelegateStateFactory
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.model.CardStateUpdaterRegistry
+import com.adyen.checkout.card.internal.ui.model.CardValidatorRegistry
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.card.toCheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
@@ -43,6 +46,8 @@ import com.adyen.checkout.components.core.internal.provider.PaymentComponentProv
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
+import com.adyen.checkout.components.core.internal.ui.model.state.DefaultDelegateStateManager
+import com.adyen.checkout.components.core.internal.ui.model.transformer.DefaultTransformerRegistry
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.exception.ComponentException
@@ -160,6 +165,12 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                stateManager = DefaultDelegateStateManager(
+                    factory = CardDelegateStateFactory(componentParams),
+                    validationRegistry = CardValidatorRegistry(),
+                    stateUpdaterRegistry = CardStateUpdaterRegistry(),
+                    transformerRegistry = DefaultTransformerRegistry()
+                ),
             )
 
             val genericActionDelegate =
@@ -271,6 +282,12 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                stateManager = DefaultDelegateStateManager(
+                    factory = CardDelegateStateFactory(componentParams),
+                    validationRegistry = CardValidatorRegistry(),
+                    stateUpdaterRegistry = CardStateUpdaterRegistry(),
+                    transformerRegistry = DefaultTransformerRegistry()
+                ),
             )
 
             val genericActionDelegate =

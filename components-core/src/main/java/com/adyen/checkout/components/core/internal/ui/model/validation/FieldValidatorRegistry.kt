@@ -10,6 +10,7 @@ package com.adyen.checkout.components.core.internal.ui.model.validation
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.state.ValidationContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface FieldValidatorRegistry<K> {

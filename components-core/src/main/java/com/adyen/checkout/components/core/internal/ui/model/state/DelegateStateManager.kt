@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.ui.model.state
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -17,6 +18,8 @@ interface DelegateStateManager<S, FI> {
     val state: StateFlow<S>
 
     val isValid: Boolean
+
+    fun updateState(update: S.() -> S)
 
     fun <T> updateField(
         fieldId: FI,

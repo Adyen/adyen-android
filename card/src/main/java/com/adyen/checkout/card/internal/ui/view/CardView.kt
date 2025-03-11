@@ -28,6 +28,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
@@ -371,6 +372,8 @@ class CardView @JvmOverloads constructor(
         binding.editTextCardNumber.setOnChangeListener {
             setCardErrorState(true)
             cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
+            // TODO: Value needs to be changed
+            cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             setCardErrorState(hasFocus)
