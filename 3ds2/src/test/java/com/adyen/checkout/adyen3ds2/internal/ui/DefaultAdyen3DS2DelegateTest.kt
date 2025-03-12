@@ -683,7 +683,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             delegate.handleAction(Threeds2FingerprintAction(token = null), Activity())
 
             val expectedEvent = ThreeDS2Events.threeDS2FingerprintError(
-                event = ErrorEvent.THREEDS2_TOKEN_MISSING
+                event = ErrorEvent.THREEDS2_TOKEN_MISSING,
             )
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
@@ -959,7 +959,7 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         delegate.onCompletion(ChallengeResult.Completed("test"))
 
-        assertNull(savedStateHandle[DefaultAdyen3DS2Delegate.ACTION_KEY])
+        assertStateCleared(savedStateHandle)
     }
 
     @Test
@@ -970,7 +970,12 @@ internal class DefaultAdyen3DS2DelegateTest(
 
         delegate.handleAction(Threeds2Action(paymentMethodType = "test", paymentData = "paymentData"), Activity())
 
+        assertStateCleared(savedStateHandle)
+    }
+
+    private fun assertStateCleared(savedStateHandle: SavedStateHandle) {
         assertNull(savedStateHandle[DefaultAdyen3DS2Delegate.ACTION_KEY])
+        SharedChallengeStatusHandler.onCompletionListener = null
     }
 
     private fun getAuthenticationRequestParams() = TestAuthenticationRequestParameters(
