@@ -23,8 +23,8 @@ internal data class PayToOutputData(
     val emailAddress: String,
     val abnNumber: String,
     val organizationId: String,
-    val bsbAccountNumber: String,
     val bsbStateBranch: String,
+    val bsbAccountNumber: String,
     val firstName: String,
     val lastName: String,
 ) : OutputData {
@@ -33,8 +33,8 @@ internal data class PayToOutputData(
     val emailAddressFieldState: FieldState<String> = validateEmailAddress(emailAddress)
     val abnNumberFieldState: FieldState<String> = validateAbnNumber(abnNumber)
     val organizationIdFieldState: FieldState<String> = validateOrganizationId(organizationId)
-    val bsbAccountNumberFieldState: FieldState<String> = validateBsbAccountNumber(bsbAccountNumber)
     val bsbStateBranchFieldState: FieldState<String> = validateBsbStateBranch(bsbStateBranch)
+    val bsbAccountNumberFieldState: FieldState<String> = validateBsbAccountNumber(bsbAccountNumber)
     val firstNameFieldState: FieldState<String> = validateFirstName(firstName)
     val lastNameFieldState: FieldState<String> = validateLastName(lastName)
 
@@ -60,8 +60,8 @@ internal data class PayToOutputData(
         }
 
     private val isBsbValid: Boolean
-        get() = bsbAccountNumberFieldState.validation.isValid() &&
-            bsbStateBranchFieldState.validation.isValid()
+        get() = bsbStateBranchFieldState.validation.isValid() &&
+            bsbAccountNumberFieldState.validation.isValid()
 
     private fun validateMobileNumber(phoneNumber: String): FieldState<String> =
         if (phoneNumber.isNotBlank() && PayToValidationUtils.isPhoneNumberValid(phoneNumber)) {
@@ -103,16 +103,6 @@ internal data class PayToOutputData(
             )
         }
 
-    private fun validateBsbAccountNumber(bsbAccountNumber: String): FieldState<String> =
-        if (bsbAccountNumber.isNotBlank() && PayToValidationUtils.isBsbAccountNumberValid(bsbAccountNumber)) {
-            FieldState(bsbAccountNumber, Validation.Valid)
-        } else {
-            FieldState(
-                bsbAccountNumber,
-                Validation.Invalid(R.string.checkout_payto_bsb_account_number_invalid),
-            )
-        }
-
     private fun validateBsbStateBranch(bsbStateBranch: String): FieldState<String> =
         if (bsbStateBranch.isNotBlank() && PayToValidationUtils.isBsbStateBranchValid(bsbStateBranch)) {
             FieldState(bsbStateBranch, Validation.Valid)
@@ -120,6 +110,16 @@ internal data class PayToOutputData(
             FieldState(
                 bsbStateBranch,
                 Validation.Invalid(R.string.checkout_payto_bsb_state_branch_invalid),
+            )
+        }
+
+    private fun validateBsbAccountNumber(bsbAccountNumber: String): FieldState<String> =
+        if (bsbAccountNumber.isNotBlank() && PayToValidationUtils.isBsbAccountNumberValid(bsbAccountNumber)) {
+            FieldState(bsbAccountNumber, Validation.Valid)
+        } else {
+            FieldState(
+                bsbAccountNumber,
+                Validation.Invalid(R.string.checkout_payto_bsb_account_number_invalid),
             )
         }
 
