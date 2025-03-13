@@ -10,7 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Makse kinnitamiseks avage oma pangarakendus.</string>
     <string name="checkout_await_message_mbway">Kinnitage oma makse MB WAY rakenduses</string>
-    <string name="checkout_await_message_payto">Logige sisse oma PayTo pangarakendusse@Kinnitage PayTo leping@Kinnitage maksetingimused@Lõpetage kanne</string>
+    <string name="checkout_await_message_payto">Täname teid ostu eest, viige makse lõpule, logides sisse oma pangakontole, kinnitage PayTo leping ja nõustuge maksetingimustega.</string>
     <string name="checkout_await_message_upi">Makse kinnitamiseks avage oma UPI rakendus</string>
     <string name="checkout_await_waiting_confirmation">Kinnituse ootel</string>
 </resources>

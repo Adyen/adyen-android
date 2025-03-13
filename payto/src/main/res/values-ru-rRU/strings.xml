@@ -14,13 +14,13 @@
     <string name="checkout_payto_payid_type_email_address">Эл. почта</string>
     <string name="checkout_payto_payid_type_organization_id">Идентификатор организации</string>
     <string name="checkout_payto_payid_phone_number_hint">Мобильный телефон</string>
-    <string name="checkout_payto_payid_phone_number_invalid">Введите правильный номер мобильного телефона</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Введите правильный мобильный номер</string>
     <string name="checkout_payto_payid_email_address_hint">Адрес эл. почты</string>
     <string name="checkout_payto_payid_email_address_invalid">Введите правильный адрес электронной почты</string>
     <string name="checkout_payto_payid_abn_number_hint">Номер австралийского предприятия</string>
     <string name="checkout_payto_payid_abn_number_invalid">Введите правильный номер австралийского предприятия</string>
-    <string name="checkout_payto_payid_organization_id_hint">Идентификационный номер организации</string>
-    <string name="checkout_payto_payid_organization_id_invalid">Введите правильный идентификационный номер организации</string>
+    <string name="checkout_payto_payid_organization_id_hint">Идентификатор организации</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Введите правильный идентификатор организации</string>
 
     <string name="checkout_payto_bsb_description">Введите номер банковского счета и отделение банка, связанное с вашим счетом, чтобы продолжить</string>
     <string name="checkout_payto_bsb_account_number_hint">Номер банковского счета</string>

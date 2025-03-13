@@ -10,7 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">バンキングアプリを開いて、支払を確認してください。</string>
     <string name="checkout_await_message_mbway">MB WAYアプリで支払を確認する</string>
-    <string name="checkout_await_message_payto">PayTo銀行アプリにログインしてPayTo契約を承認し、支払い条件を確認して、取引を完了してください</string>
+    <string name="checkout_await_message_payto">ご購入いただきありがとうございます。銀行口座にログインして支払いを完了し、PayTo契約を承認し、支払い条件を承認してください。</string>
     <string name="checkout_await_message_upi">UPIアプリを開いて、支払を確認してください</string>
     <string name="checkout_await_waiting_confirmation">確認を待っています</string>
 </resources>

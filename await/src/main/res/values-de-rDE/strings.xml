@@ -10,7 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Öffnen Sie Ihre Banking-App, um die Zahlung zu bestätigen.</string>
     <string name="checkout_await_message_mbway">Bestätigen Sie Ihre Zahlung in der MB WAY-App</string>
-    <string name="checkout_await_message_payto">Melden Sie sich bei Ihrer PayTo-Banking-App an@Genehmigen Sie die PayTo-Vereinbarung@Stimmen Sie den Zahlungsbedingungen zu@Schließen Sie die Transaktion ab</string>
+    <string name="checkout_await_message_payto">Vielen Dank für Ihren Einkauf. Schließen Sie Ihre Zahlung ab, indem Sie sich in Ihr Bankkonto einloggen, die PayTo-Vereinbarung autorisieren und die Zahlungsbedingungen genehmigen.</string>
     <string name="checkout_await_message_upi">Öffnen Sie Ihre UPI-App, um die Zahlung zu bestätigen.</string>
     <string name="checkout_await_waiting_confirmation">Warten auf Bestätigung</string>
 </resources>
