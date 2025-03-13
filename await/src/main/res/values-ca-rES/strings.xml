@@ -10,7 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Obriu la vostra aplicació bancària per confirmar el pagament.</string>
     <string name="checkout_await_message_mbway">Confirmeu el vostre pagament a l\'aplicació MB WAY</string>
-    <string name="checkout_await_message_payto">Inicieu sessió a la vostra aplicació bancària PayTo @Autoritzeu l\'acord PayTo @Aproveu els termes de pagament @Completeu la transacció</string>
+    <string name="checkout_await_message_payto">Gràcies per la compra, completeu el pagament iniciant sessió al vostre compte bancari, autoritzeu l\'acord PayTo i aproveu les condicions de pagament.</string>
     <string name="checkout_await_message_upi">Obriu la vostra aplicació UPI per confirmar el pagament</string>
     <string name="checkout_await_waiting_confirmation">A l\'espera de confirmació</string>
 </resources>
