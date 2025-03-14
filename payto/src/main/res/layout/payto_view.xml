@@ -160,20 +160,6 @@
             android:layout_marginBottom="@dimen/standard_margin" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout_bsb_account_number"
-            style="@style/AdyenCheckout.TextInputLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-                android:id="@+id/editText_bsb_account_number"
-                style="@style/AdyenCheckout.PayTo.BSB.AccountNumberEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout_bsb_state_branch"
             style="@style/AdyenCheckout.TextInputLayout"
             android:layout_width="match_parent"
@@ -182,6 +168,20 @@
             <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_bsb_state_branch"
                 style="@style/AdyenCheckout.PayTo.BSB.StateBranchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout_bsb_account_number"
+            style="@style/AdyenCheckout.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+                android:id="@+id/editText_bsb_account_number"
+                style="@style/AdyenCheckout.PayTo.BSB.AccountNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

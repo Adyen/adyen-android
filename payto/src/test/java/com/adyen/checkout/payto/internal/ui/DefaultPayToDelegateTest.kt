@@ -193,38 +193,40 @@ internal class DefaultPayToDelegateTest(
         }
 
         @Test
-        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is valid, then output should be valid`() = runTest {
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is valid, then output should be valid`() =
+            runTest {
+                val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
-            delegate.updateInputData {
-                mode = PayToMode.PAY_ID
-                payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
-                organizationId = "12345678901"
-                firstName = "First name"
-                lastName = "Last name"
+                delegate.updateInputData {
+                    mode = PayToMode.PAY_ID
+                    payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
+                    organizationId = "12345678901"
+                    firstName = "First name"
+                    lastName = "Last name"
+                }
+
+                assertTrue(outputTestFlow.latestValue.isValid)
+
+                outputTestFlow.cancel()
             }
-
-            assertTrue(outputTestFlow.latestValue.isValid)
-
-            outputTestFlow.cancel()
-        }
 
         @Test
-        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is invalid, then output should be invalid`() = runTest {
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
+        fun `mode is PAY_ID and PayIdType is ORGANIZATION_ID and value is invalid, then output should be invalid`() =
+            runTest {
+                val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
-            delegate.updateInputData {
-                mode = PayToMode.PAY_ID
-                payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
-                organizationId = "Invalid Org"
-                firstName = "First name"
-                lastName = "Last name"
+                delegate.updateInputData {
+                    mode = PayToMode.PAY_ID
+                    payIdTypeModel = PayIdTypeModel(PayIdType.ORGANIZATION_ID, 0)
+                    organizationId = "Invalid Org"
+                    firstName = "First name"
+                    lastName = "Last name"
+                }
+
+                assertFalse(outputTestFlow.latestValue.isValid)
+
+                outputTestFlow.cancel()
             }
-
-            assertFalse(outputTestFlow.latestValue.isValid)
-
-            outputTestFlow.cancel()
-        }
 
         @Test
         fun `mode is BSB and account number is invalid, then output should be invalid`() = runTest {
@@ -266,8 +268,8 @@ internal class DefaultPayToDelegateTest(
 
             delegate.updateInputData {
                 mode = PayToMode.BSB
-                bsbAccountNumber = "123456"
-                bsbStateBranch = "Main Branch"
+                bsbStateBranch = "123456"
+                bsbAccountNumber = "Main Branch"
                 firstName = "First name"
                 lastName = "Last name"
             }
@@ -433,8 +435,8 @@ internal class DefaultPayToDelegateTest(
                 delegate.updateComponentState(
                     createOutputData(
                         mode = PayToMode.BSB,
-                        bsbAccountNumber = "123456",
-                        bsbStateBranch = "Branch-123",
+                        bsbStateBranch = "123456",
+                        bsbAccountNumber = "Branch-123",
                         firstName = "First name",
                         lastName = "Last name",
                     ),

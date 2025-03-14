@@ -34,15 +34,15 @@ internal class PayToValidationUtilsTest {
     }
 
     @ParameterizedTest
-    @MethodSource("getBsbAccountNumberTestCases")
-    fun `when BSB account number is tested, then return expected result`(bsbAccountNumber: String, expected: Boolean) {
-        assertEquals(expected, PayToValidationUtils.isBsbAccountNumberValid(bsbAccountNumber))
-    }
-
-    @ParameterizedTest
     @MethodSource("getBsbStateBranchTestCases")
     fun `when BSB state branch is tested, then return expected result`(bsbStateBranch: String, expected: Boolean) {
         assertEquals(expected, PayToValidationUtils.isBsbStateBranchValid(bsbStateBranch))
+    }
+
+    @ParameterizedTest
+    @MethodSource("getBsbAccountNumberTestCases")
+    fun `when BSB account number is tested, then return expected result`(bsbAccountNumber: String, expected: Boolean) {
+        assertEquals(expected, PayToValidationUtils.isBsbAccountNumberValid(bsbAccountNumber))
     }
 
     companion object {
@@ -89,7 +89,7 @@ internal class PayToValidationUtilsTest {
         )
 
         @JvmStatic
-        fun getBsbAccountNumberTestCases() = listOf(
+        fun getBsbStateBranchTestCases() = listOf(
             // bsbAccountNumber, expectedValidationResult
             arguments("123456", true),
             arguments("987654", true),
@@ -101,15 +101,15 @@ internal class PayToValidationUtilsTest {
         )
 
         @JvmStatic
-        fun getBsbStateBranchTestCases() = listOf(
+        fun getBsbAccountNumberTestCases() = listOf(
             // bsbStateBranch, expectedValidationResult
-            arguments("Main Branch", true),
-            arguments("Branch-123", true),
+            arguments("Main Account number", true),
+            arguments("Account-123", true),
             arguments("1234", true),
-            arguments("Central Branch", true),
-            arguments("Northside Bank", true),
+            arguments("Account Number", true),
+            arguments("Northside Bank 123", true),
             arguments("", false),
-            arguments("This is a very long branch name that exceeds 28 characters", false),
+            arguments("This is a very long account number that exceeds 28 characters", false),
         )
     }
 }

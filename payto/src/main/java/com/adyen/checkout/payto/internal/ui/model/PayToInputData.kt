@@ -17,8 +17,8 @@ internal data class PayToInputData(
     var emailAddress: String = "",
     var abnNumber: String = "",
     var organizationId: String = "",
-    var bsbAccountNumber: String = "",
     var bsbStateBranch: String = "",
+    var bsbAccountNumber: String = "",
     var firstName: String = "",
     var lastName: String = "",
 ) : InputData

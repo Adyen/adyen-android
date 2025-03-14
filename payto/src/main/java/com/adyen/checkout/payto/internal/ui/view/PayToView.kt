@@ -67,8 +67,8 @@ internal class PayToView @JvmOverloads constructor(
         initPayIdEmailAddressInput()
         initPayIdAbnNumberInput()
         initPayIdOrganizationIdInput()
-        initBsbAccountNumberInput()
         initBsbStateBranchInput()
+        initBsbAccountNumberInput()
         initFirstNameInput()
         initLastNameInput()
     }
@@ -110,12 +110,12 @@ internal class PayToView @JvmOverloads constructor(
             R.style.AdyenCheckout_PayTo_BSB_DescriptionTextView,
             localizedContext,
         )
-        binding.editTextBsbAccountNumber.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_PayTo_BSB_AccountNumberEditText,
-            localizedContext,
-        )
         binding.editTextBsbStateBranch.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_PayTo_BSB_StateBranchEditText,
+            localizedContext,
+        )
+        binding.editTextBsbAccountNumber.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_PayTo_BSB_AccountNumberEditText,
             localizedContext,
         )
         binding.editTextFirstName.setLocalizedTextFromStyle(
@@ -255,21 +255,6 @@ internal class PayToView @JvmOverloads constructor(
         }
     }
 
-    private fun initBsbAccountNumberInput() {
-        binding.editTextBsbAccountNumber.setOnChangeListener {
-            delegate.updateInputData { bsbAccountNumber = binding.editTextBsbAccountNumber.rawValue }
-            binding.textInputLayoutBsbAccountNumber.hideError()
-        }
-        binding.editTextBsbAccountNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val validation = delegate.outputData.bsbAccountNumberFieldState.validation
-            if (hasFocus) {
-                binding.textInputLayoutBsbAccountNumber.hideError()
-            } else if (validation is Validation.Invalid) {
-                binding.textInputLayoutBsbAccountNumber.showError(localizedContext.getString(validation.reason))
-            }
-        }
-    }
-
     private fun initBsbStateBranchInput() {
         binding.editTextBsbStateBranch.setOnChangeListener {
             delegate.updateInputData { bsbStateBranch = binding.editTextBsbStateBranch.rawValue }
@@ -281,6 +266,21 @@ internal class PayToView @JvmOverloads constructor(
                 binding.textInputLayoutBsbStateBranch.hideError()
             } else if (validation is Validation.Invalid) {
                 binding.textInputLayoutBsbStateBranch.showError(localizedContext.getString(validation.reason))
+            }
+        }
+    }
+
+    private fun initBsbAccountNumberInput() {
+        binding.editTextBsbAccountNumber.setOnChangeListener {
+            delegate.updateInputData { bsbAccountNumber = binding.editTextBsbAccountNumber.rawValue }
+            binding.textInputLayoutBsbAccountNumber.hideError()
+        }
+        binding.editTextBsbAccountNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val validation = delegate.outputData.bsbAccountNumberFieldState.validation
+            if (hasFocus) {
+                binding.textInputLayoutBsbAccountNumber.hideError()
+            } else if (validation is Validation.Invalid) {
+                binding.textInputLayoutBsbAccountNumber.showError(localizedContext.getString(validation.reason))
             }
         }
     }
@@ -373,20 +373,6 @@ internal class PayToView @JvmOverloads constructor(
                 )
             }
 
-            val bsbAccountNumberValidation = it.bsbAccountNumberFieldState.validation
-            if (isBsbContentVisible() &&
-                binding.textInputLayoutBsbAccountNumber.isVisible &&
-                bsbAccountNumberValidation is Validation.Invalid
-            ) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutBsbAccountNumber.requestFocus()
-                }
-                binding.textInputLayoutBsbAccountNumber.showError(
-                    localizedContext.getString(bsbAccountNumberValidation.reason),
-                )
-            }
-
             val bsbStateBranchValidation = it.bsbStateBranchFieldState.validation
             if (isBsbContentVisible() &&
                 binding.textInputLayoutBsbStateBranch.isVisible &&
@@ -398,6 +384,20 @@ internal class PayToView @JvmOverloads constructor(
                 }
                 binding.textInputLayoutBsbStateBranch.showError(
                     localizedContext.getString(bsbStateBranchValidation.reason),
+                )
+            }
+
+            val bsbAccountNumberValidation = it.bsbAccountNumberFieldState.validation
+            if (isBsbContentVisible() &&
+                binding.textInputLayoutBsbAccountNumber.isVisible &&
+                bsbAccountNumberValidation is Validation.Invalid
+            ) {
+                if (!isErrorFocused) {
+                    isErrorFocused = true
+                    binding.textInputLayoutBsbAccountNumber.requestFocus()
+                }
+                binding.textInputLayoutBsbAccountNumber.showError(
+                    localizedContext.getString(bsbAccountNumberValidation.reason),
                 )
             }
 

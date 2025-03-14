@@ -128,8 +128,8 @@ internal class DefaultPayToDelegate(
             emailAddress = inputData.emailAddress,
             abnNumber = inputData.abnNumber,
             organizationId = inputData.organizationId,
-            bsbAccountNumber = inputData.bsbAccountNumber,
             bsbStateBranch = inputData.bsbStateBranch,
+            bsbAccountNumber = inputData.bsbAccountNumber,
             firstName = inputData.firstName,
             lastName = inputData.lastName,
         )
@@ -186,7 +186,7 @@ internal class DefaultPayToDelegate(
         }
 
     private fun getShopperAccountIdentifierForBsb(outputData: PayToOutputData) =
-        "${outputData.bsbAccountNumber}-${outputData.bsbStateBranch}"
+        "${outputData.bsbStateBranch}-${outputData.bsbAccountNumber}"
 
     private fun componentStateChanged(componentState: PayToComponentState) {
         _componentStateFlow.tryEmit(componentState)

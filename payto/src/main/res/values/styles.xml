@@ -77,14 +77,14 @@
         <item name="android:text">@string/checkout_payto_bsb_description</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.BSB.AccountNumberEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_payto_bsb_account_number_hint</item>
+    <style name="AdyenCheckout.PayTo.BSB.StateBranchEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_state_branch_hint</item>
         <item name="android:inputType">number</item>
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AdyenCheckout.PayTo.BSB.StateBranchEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_payto_bsb_state_branch_hint</item>
+    <style name="AdyenCheckout.PayTo.BSB.AccountNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_account_number_hint</item>
         <item name="android:inputType">text</item>
         <item name="android:maxLines">1</item>
     </style>

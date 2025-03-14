@@ -21,11 +21,11 @@ internal object PayToValidationUtils {
     private const val ORGANIZATION_ID_REGEX = "^[!-@\\[-~][ -@\\[-~]{0,254}[!-@\\[-~]\$"
     private val ORGANIZATION_ID_PATTERN = Pattern.compile(ORGANIZATION_ID_REGEX)
 
-    private const val BSB_ACCOUNT_NUMBER_REGEX = "^\\d{6}\$"
-    private val BSB_ACCOUNT_NUMBER_PATTERN = Pattern.compile(BSB_ACCOUNT_NUMBER_REGEX)
-
-    private const val BSB_STATE_BRANCH_REGEX = "^[ -~]{1,28}\$"
+    private const val BSB_STATE_BRANCH_REGEX = "^\\d{6}\$"
     private val BSB_STATE_BRANCH_PATTERN = Pattern.compile(BSB_STATE_BRANCH_REGEX)
+
+    private const val BSB_ACCOUNT_NUMBER_REGEX = "^[ -~]{1,28}\$"
+    private val BSB_ACCOUNT_NUMBER_PATTERN = Pattern.compile(BSB_ACCOUNT_NUMBER_REGEX)
 
     fun isPhoneNumberValid(phoneNumber: String): Boolean {
         return PHONE_NUMBER_PATTERN.matcher(phoneNumber).matches()
@@ -39,11 +39,11 @@ internal object PayToValidationUtils {
         return ORGANIZATION_ID_PATTERN.matcher(organizationId).matches()
     }
 
-    fun isBsbAccountNumberValid(bsbAccountNumber: String): Boolean {
-        return BSB_ACCOUNT_NUMBER_PATTERN.matcher(bsbAccountNumber).matches()
-    }
-
     fun isBsbStateBranchValid(bsbStateBranch: String): Boolean {
         return BSB_STATE_BRANCH_PATTERN.matcher(bsbStateBranch).matches()
+    }
+
+    fun isBsbAccountNumberValid(bsbAccountNumber: String): Boolean {
+        return BSB_ACCOUNT_NUMBER_PATTERN.matcher(bsbAccountNumber).matches()
     }
 }
