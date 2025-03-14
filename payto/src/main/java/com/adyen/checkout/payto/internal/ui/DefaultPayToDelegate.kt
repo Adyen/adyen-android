@@ -119,21 +119,18 @@ internal class DefaultPayToDelegate(
         updateComponentState(outputData)
     }
 
-    private fun createOutputData(): PayToOutputData {
-        val sanitizedPhoneNumber = inputData.phoneNumber.trimStart('0')
-        return PayToOutputData(
-            mode = inputData.mode,
-            payIdTypeModel = inputData.payIdTypeModel,
-            mobilePhoneNumber = "$PHONE_NUMBER_PREFIX-$sanitizedPhoneNumber",
-            emailAddress = inputData.emailAddress,
-            abnNumber = inputData.abnNumber,
-            organizationId = inputData.organizationId,
-            bsbStateBranch = inputData.bsbStateBranch,
-            bsbAccountNumber = inputData.bsbAccountNumber,
-            firstName = inputData.firstName,
-            lastName = inputData.lastName,
-        )
-    }
+    private fun createOutputData() = PayToOutputData(
+        mode = inputData.mode,
+        payIdTypeModel = inputData.payIdTypeModel,
+        mobilePhoneNumber = inputData.phoneNumber.trimStart('0'),
+        emailAddress = inputData.emailAddress,
+        abnNumber = inputData.abnNumber,
+        organizationId = inputData.organizationId,
+        bsbStateBranch = inputData.bsbStateBranch,
+        bsbAccountNumber = inputData.bsbAccountNumber,
+        firstName = inputData.firstName,
+        lastName = inputData.lastName,
+    )
 
     private fun outputDataChanged(outputData: PayToOutputData) {
         _outputDataFlow.tryEmit(outputData)
@@ -178,7 +175,7 @@ internal class DefaultPayToDelegate(
 
     private fun getShopperAccountIdentifierForPayId(outputData: PayToOutputData) =
         when (outputData.payIdTypeModel?.type) {
-            PayIdType.PHONE -> outputData.phoneNumberFieldState.value
+            PayIdType.PHONE -> "$PHONE_NUMBER_PREFIX-${outputData.phoneNumberFieldState.value}"
             PayIdType.EMAIL -> outputData.emailAddressFieldState.value
             PayIdType.ABN -> outputData.abnNumberFieldState.value
             PayIdType.ORGANIZATION_ID -> outputData.organizationIdFieldState.value
