@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Open uw bankapp om de betaling te bevestigen.</string>
     <string name="checkout_await_message_mbway">Bevestig uw betaling via de MB WAY-app</string>
+    <string name="checkout_await_message_payto">Bedankt voor uw aankoop. Rond uw betaling af door in te loggen bij uw bankrekening, de PayTo-overeenkomst te autoriseren en akkoord te gaan met de betalingsvoorwaarden.</string>
     <string name="checkout_await_message_upi">Open je UPI-app om de betaling te bevestigen</string>
     <string name="checkout_await_waiting_confirmation">Wacht op bevestiging</string>
 </resources>

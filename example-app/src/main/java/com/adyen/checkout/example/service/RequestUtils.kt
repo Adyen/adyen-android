@@ -162,7 +162,7 @@ private const val CARD_BASED_INSTALLMENT_OPTION = "visa"
 private const val ATTEMPT_AUTHENTICATION_TRUE_VALUE = "always"
 private const val ATTEMPT_AUTHENTICATION_FALSE_VALUE = "never"
 
-private fun getReference() = "android-test-components_${System.currentTimeMillis()}"
+private fun getReference() = "android-test-${System.currentTimeMillis()}"
 private fun getAuthenticationData(threeDSMode: ThreeDSMode): AuthenticationData {
     return when (threeDSMode) {
         ThreeDSMode.PREFER_NATIVE -> AuthenticationData(

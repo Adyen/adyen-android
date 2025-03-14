@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Öppna din bankapp för att bekräfta betalningen.</string>
     <string name="checkout_await_message_mbway">Bekräfta din betalning i appen MB WAY</string>
+    <string name="checkout_await_message_payto">Tack för ditt köp! Slutför betalningen genom att logga in på ditt bankkonto och godkänna PayTo-avtalet och betalningsvillkoren.</string>
     <string name="checkout_await_message_upi">Öppna din UPI-app för att bekräfta betalningen</string>
     <string name="checkout_await_waiting_confirmation">Väntar på bekräftelse</string>
 </resources>

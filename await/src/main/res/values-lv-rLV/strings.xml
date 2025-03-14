@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Atveriet savu bankas lietotni, lai apstiprinātu maksājumu.</string>
     <string name="checkout_await_message_mbway">Apstipriniet maksājumu lietotnē MB WAY</string>
+    <string name="checkout_await_message_payto">Paldies par jūsu pirkumu, lūdzu, pabeidziet maksājumu, pieslēdzoties savam bankas kontam, autorizējot PayTo līgumu un apstiprinot maksājuma noteikumus.</string>
     <string name="checkout_await_message_upi">Atveriet UPI lietotni, lai apstiprinātu maksājumu</string>
     <string name="checkout_await_waiting_confirmation">Gaidām apstiprinājumu</string>
 </resources>

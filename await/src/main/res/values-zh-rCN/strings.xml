@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">打开您的银行应用以确认支付。</string>
     <string name="checkout_await_message_mbway">在 MB WAY 应用上确认您的付款</string>
+    <string name="checkout_await_message_payto">感谢您的购买，请登录您的银行账户完成支付，授权 PayTo 协议并批准支付条款。</string>
     <string name="checkout_await_message_upi">打开您的 UPI 应用以确认付款</string>
     <string name="checkout_await_waiting_confirmation">等待确认</string>
 </resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">¿Cómo le gustaría usar PayTo?</string>
+
+    <string name="checkout_payto_payid_description">Introduzca el PayID y los detalles de la cuenta que están conectados a su cuenta PayTo.</string>
+    <string name="checkout_payto_payid_type_phone_number">Teléfono móvil</string>
+    <string name="checkout_payto_payid_type_email_address">Correo electrónico</string>
+    <string name="checkout_payto_payid_type_organization_id">ID de la organización</string>
+    <string name="checkout_payto_payid_phone_number_hint">Teléfono móvil</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Escriba un número de teléfono móvil correcto</string>
+    <string name="checkout_payto_payid_email_address_hint">Dirección de correo electrónico</string>
+    <string name="checkout_payto_payid_email_address_invalid">Escriba una dirección de correo electrónico correcta</string>
+    <string name="checkout_payto_payid_abn_number_hint">Número de empresa australiano</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Escriba un número de empresa australiano válido</string>
+    <string name="checkout_payto_payid_organization_id_hint">Número de identificación de la organización</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Escriba un NIF correcto</string>
+
+    <string name="checkout_payto_bsb_description">Introduzca el número de cuenta bancaria y la sucursal del banco estatal que está vinculada a su cuenta para continuar</string>
+    <string name="checkout_payto_bsb_account_number_hint">Número de cuenta bancaria</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Escriba un número de cuenta bancaria correcto</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Sucursal del banco estatal</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Escriba una sucursal bancaria estatal correcta</string>
+
+    <string name="checkout_payto_first_name_hint">Nombre del titular de la cuenta</string>
+    <string name="checkout_payto_first_name_invalid">Escriba un nombre correcto</string>
+    <string name="checkout_payto_last_name_hint">Apellidos del titular de la cuenta</string>
+    <string name="checkout_payto_last_name_invalid">Escriba unos apellidos correctos</string>
+
+</resources>

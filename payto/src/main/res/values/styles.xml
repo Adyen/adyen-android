@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 6/2/2025.
+  -->
+
+<resources>
+
+    <style name="AdyenCheckout.PayTo" />
+
+    <style name="AdyenCheckout.PayTo.ModeSelectionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_payto_mode_selection</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.ButtonToggleGroup" parent="AdyenCheckout">
+        <item name="selectionRequired">true</item>
+        <item name="singleSelection">true</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.FirstNameEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_first_name_hint</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.LastNameEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_last_name_hint</item>
+        <item name="android:inputType">text|textPersonName|textCapWords</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId" />
+
+    <style name="AdyenCheckout.PayTo.PayId.ToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_payto_payid_tab_title</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.DescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_payto_payid_description</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.PhoneNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_phone_number_hint</item>
+        <item name="android:inputType">phone</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.EmailAddressEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_email_address_hint</item>
+        <item name="android:inputType">text|textEmailAddress</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.AbnNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_abn_number_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.PayId.OrganizationIdEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_payid_organization_id_hint</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB" />
+
+    <style name="AdyenCheckout.PayTo.BSB.ToggleButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:text">@string/checkout_payto_bsb_tab_title</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB.DescriptionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_payto_bsb_description</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB.StateBranchEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_state_branch_hint</item>
+        <item name="android:inputType">number</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="AdyenCheckout.PayTo.BSB.AccountNumberEditText" parent="AdyenCheckout.TextInputEditText">
+        <item name="android:hint">@string/checkout_payto_bsb_account_number_hint</item>
+        <item name="android:inputType">text</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+</resources>

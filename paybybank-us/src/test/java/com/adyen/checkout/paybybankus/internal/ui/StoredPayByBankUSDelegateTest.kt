@@ -41,7 +41,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
-class StoredPayByBankUSDelegateTest {
+internal class StoredPayByBankUSDelegateTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: PayByBankUSDelegate

@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Ανοίξτε την εφαρμογή τραπεζικής σας για να επιβεβαιώσετε την πληρωμή.</string>
     <string name="checkout_await_message_mbway">Επιβεβαιώστε την πληρωμή στην εφαρμογή MB WAY</string>
+    <string name="checkout_await_message_payto">Σας ευχαριστούμε για την αγορά σας. Ολοκληρώστε την πληρωμή σας συνδεόμενοι στον τραπεζικό λογαριασμό σας. Εξουσιοδοτήστε τη συμφωνία PayTo και εγκρίνετε τους όρους πληρωμής.</string>
     <string name="checkout_await_message_upi">Ανοίξτε την εφαρμογή UPI για επιβεβαίωση της πληρωμής</string>
     <string name="checkout_await_waiting_confirmation">Αναμονή για επιβεβαίωση…</string>
 </resources>

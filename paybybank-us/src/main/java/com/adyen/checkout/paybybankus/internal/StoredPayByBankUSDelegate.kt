@@ -75,12 +75,12 @@ internal class StoredPayByBankUSDelegate(
         analyticsManager.trackEvent(event)
     }
 
-    private fun onState(achDirectDebitComponentState: PayByBankUSComponentState) {
-        if (achDirectDebitComponentState.isValid) {
+    private fun onState(payByBankUSComponentState: PayByBankUSComponentState) {
+        if (payByBankUSComponentState.isValid) {
             val event = GenericEvents.submit(storedPaymentMethod.type.orEmpty())
             analyticsManager.trackEvent(event)
 
-            submitChannel.trySend(achDirectDebitComponentState)
+            submitChannel.trySend(payByBankUSComponentState)
         }
     }
 
