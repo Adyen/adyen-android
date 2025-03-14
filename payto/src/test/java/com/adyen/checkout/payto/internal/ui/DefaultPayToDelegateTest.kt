@@ -324,7 +324,7 @@ internal class DefaultPayToDelegateTest(
                     createOutputData(
                         mode = PayToMode.PAY_ID,
                         payIdTypeModel = PayIdTypeModel(PayIdType.PHONE, 0),
-                        mobilePhoneNumber = "+61-9876543210",
+                        mobilePhoneNumber = "9876543210",
                         firstName = "First name",
                         lastName = "Last name",
                     ),

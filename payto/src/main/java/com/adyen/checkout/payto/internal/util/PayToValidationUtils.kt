@@ -12,7 +12,7 @@ import java.util.regex.Pattern
 
 internal object PayToValidationUtils {
 
-    private const val PHONE_NUMBER_REGEX = "^\\+[0-9]{1,3}-[1-9]{1,1}[0-9]{1,29}\$"
+    private const val PHONE_NUMBER_REGEX = "^[1-9]{1,1}[0-9]{1,29}$"
     private val PHONE_NUMBER_PATTERN = Pattern.compile(PHONE_NUMBER_REGEX)
 
     private const val ABN_NUMBER_REGEX = "^((\\d{9})|(\\d{11}))\$"
