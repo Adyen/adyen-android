@@ -26,6 +26,7 @@ import com.adyen.checkout.payto.internal.ui.PayToDelegate
 import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
+import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LocalizedTextListAdapter
 import com.adyen.checkout.ui.core.internal.util.hideError
@@ -59,10 +60,12 @@ internal class PayToView @JvmOverloads constructor(
         require(delegate is PayToDelegate) { "Unsupported delegate type" }
         this.delegate = delegate
         this.localizedContext = localizedContext
-
         initLocalizedStrings(localizedContext)
-        initModeSelector()
-        initPayIdTypeSelector()
+
+        updateInputFields(delegate.outputData)
+
+        initModeSelector(delegate.outputData)
+        initPayIdTypeSelector(delegate.outputData)
         initPayIdPhoneNumberInput()
         initPayIdEmailAddressInput()
         initPayIdAbnNumberInput()
@@ -71,6 +74,18 @@ internal class PayToView @JvmOverloads constructor(
         initBsbAccountNumberInput()
         initFirstNameInput()
         initLastNameInput()
+    }
+
+    // This can be removed after the state is moved to the Delegate
+    private fun updateInputFields(payToOutputData: PayToOutputData) {
+        binding.editTextPayIdPhoneNumber.setText(payToOutputData.mobilePhoneNumber)
+        binding.editTextPayIdEmailAddress.setText(payToOutputData.emailAddress)
+        binding.editTextPayIdAbnNumber.setText(payToOutputData.abnNumber)
+        binding.editTextPayIdOrganizationId.setText(payToOutputData.organizationId)
+        binding.editTextBsbStateBranch.setText(payToOutputData.bsbStateBranch)
+        binding.editTextBsbAccountNumber.setText(payToOutputData.bsbAccountNumber)
+        binding.editTextFirstName.setText(payToOutputData.firstName)
+        binding.editTextLastName.setText(payToOutputData.lastName)
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -128,14 +143,18 @@ internal class PayToView @JvmOverloads constructor(
         )
     }
 
-    private fun initModeSelector() {
+    private fun initModeSelector(outputData: PayToOutputData) {
         binding.toggleButtonChoice.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.button_toggle_payId -> togglePayIdViews(isChecked)
                 R.id.button_toggle_bsb -> toggleBsbViews(isChecked)
             }
         }
-        binding.toggleButtonChoice.check(R.id.button_toggle_payId)
+
+        when (outputData.mode) {
+            PayToMode.PAY_ID -> binding.toggleButtonChoice.check(R.id.button_toggle_payId)
+            PayToMode.BSB -> binding.toggleButtonChoice.check(R.id.button_toggle_bsb)
+        }
     }
 
     private fun togglePayIdViews(isChecked: Boolean) {
@@ -156,7 +175,7 @@ internal class PayToView @JvmOverloads constructor(
         }
     }
 
-    private fun initPayIdTypeSelector() {
+    private fun initPayIdTypeSelector(outputData: PayToOutputData) {
         val payIdTypes = delegate.getPayIdTypes()
         val payIdTypeAdapter = LocalizedTextListAdapter<PayIdTypeModel>(context, localizedContext)
         payIdTypeAdapter.setItems(payIdTypes)
@@ -171,7 +190,8 @@ internal class PayToView @JvmOverloads constructor(
             }
         }
 
-        payIdTypes.firstOrNull()?.let { payIdTypeModel ->
+        val selectedPayIdType = outputData.payIdTypeModel ?: payIdTypes.firstOrNull()
+        selectedPayIdType?.let { payIdTypeModel ->
             val name = localizedContext.getString(payIdTypeModel.nameResId)
             binding.autoCompleteTextViewPayIdType.setText(name)
             onPayIdTypeSelected(payIdTypeModel)
