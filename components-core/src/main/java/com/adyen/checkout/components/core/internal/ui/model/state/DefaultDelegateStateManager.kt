@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.update
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDelegateStateManager<S : DelegateState, FI>(
     private val factory: DelegateStateFactory<S, FI>,
-    private val validationRegistry: FieldValidatorRegistry<FI>,
+    private val validationRegistry: FieldValidatorRegistry<FI, S>,
     private val stateUpdaterRegistry: StateUpdaterRegistry<FI, S>,
     private val transformerRegistry: FieldTransformerRegistry<FI> = DefaultTransformerRegistry(),
 ) : DelegateStateManager<S, FI> {
@@ -58,13 +58,12 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         value: T?,
         hasFocus: Boolean?,
         shouldHighlightValidationError: Boolean?,
-        validationContext: ValidationContext?
     ) {
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
                 transformerRegistry.transform(fieldId, it),
-                validationContext,
+                _state.value,
             )
         }
 

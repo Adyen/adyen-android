@@ -10,13 +10,14 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardDelegateState(
     val cardNumberDelegateState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
-        value = ""
+        value = "",
     ),
 //    val expiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate>,
 //    val securityCodeDelegateState: ComponentFieldDelegateState<String>,
@@ -27,6 +28,8 @@ data class CardDelegateState(
 //    val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String>,
 //    val installmentDelegateState: ComponentFieldDelegateState<InstallmentModel?>,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
+    val enableLuhnCheck: Boolean = false,
+    val isBrandSupported: Boolean = false,
 ) : DelegateState {
     override val isValid: Boolean = true
 }

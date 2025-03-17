@@ -26,7 +26,6 @@ import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
-import com.adyen.checkout.card.internal.ui.model.CardValidationContext
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
@@ -504,41 +503,7 @@ class DefaultCardDelegate(
     }
 
     override fun <T> onFieldValueChanged(fieldId: CardFieldId, value: T) {
-        val validationContext = getValidationContext(fieldId)
-
-        stateManager!!.updateField(fieldId, value = value, validationContext = validationContext)
-    }
-
-    private fun getValidationContext(fieldId: CardFieldId): ValidationContext {
-        return when (fieldId) {
-            CardFieldId.CARD_NUMBER -> getCardNumberValidationContext()
-        }
-    }
-
-    private fun getCardNumberValidationContext(): CardValidationContext {
-        val detectedCardTypes = stateManager!!.state.value.detectedCardTypes
-
-        val isReliable = detectedCardTypes.any { it.isReliable }
-
-        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-            detectedCardTypes,
-            inputData.selectedCardIndex,
-        )
-        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = filteredDetectedCardTypes,
-        )
-
-        // perform a Luhn Check if no brands are detected
-        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
-
-        // when no supported cards are detected, only show an error if the brand detection was reliable
-        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
-
-        return CardValidationContext(
-            enableLuhnCheck = enableLuhnCheck,
-            isBrandSupported = !shouldFailWithUnsupportedBrand,
-            validationMapper = cardValidationMapper,
-        )
+        stateManager!!.updateField(fieldId, value = value)
     }
 
     override fun onFieldFocusChanged(fieldId: CardFieldId, hasFocus: Boolean) {

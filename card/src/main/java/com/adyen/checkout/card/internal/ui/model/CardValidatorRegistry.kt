@@ -11,15 +11,17 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.ui.model.state.ValidationContext
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 
-internal class CardValidatorRegistry : FieldValidatorRegistry<CardFieldId> {
+internal class CardValidatorRegistry(
+    // TODO: We might need to move this to a specific validator
+    private val validationMapper: CardValidationMapper = CardValidationMapper()
+) : FieldValidatorRegistry<CardFieldId, CardDelegateState> {
 
     private val validators = CardFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
-            CardFieldId.CARD_NUMBER -> CardNumberValidator()
+            CardFieldId.CARD_NUMBER -> CardNumberValidator(validationMapper)
 //            CardFieldId.CARD_EXPIRY_DATE -> TODO()
 //            CardFieldId.CARD_SECURITY_CODE -> TODO()
 //            CardFieldId.CARD_HOLDER_NAME -> TODO()
@@ -37,32 +39,23 @@ internal class CardValidatorRegistry : FieldValidatorRegistry<CardFieldId> {
     override fun <T> validate(
         key: CardFieldId,
         value: T,
-        validationContext: ValidationContext?
+        state: CardDelegateState
     ): Validation {
-        val validator = validators[key] as? FieldValidator<T>
+        val validator = validators[key] as? FieldValidator<T, CardDelegateState>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
-        return validator.validate(value, validationContext)
+        return validator.validate(value, state)
     }
 }
 
-internal class CardNumberValidator : FieldValidator<String> {
-    override fun validate(input: String, context: ValidationContext?): Validation {
-        val cardContext = context as? CardValidationContext
-            ?: throw IllegalArgumentException("CardValidationContext required")
-
-        val validation =
-            CardValidationUtils.validateCardNumber(
-                input,
-                cardContext.enableLuhnCheck,
-                cardContext.isBrandSupported
-            )
-        return cardContext.validationMapper.mapCardNumberValidation(validation)
+internal class CardNumberValidator(
+    private val validationMapper: CardValidationMapper
+) : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        val validation = CardValidationUtils.validateCardNumber(
+            input,
+            state.enableLuhnCheck,
+            state.isBrandSupported,
+        )
+        return validationMapper.mapCardNumberValidation(validation)
     }
 }
-
-// TODO: Could this move somewhere else?
-internal data class CardValidationContext(
-    val enableLuhnCheck: Boolean,
-    val isBrandSupported: Boolean,
-    val validationMapper: CardValidationMapper,
-) : ValidationContext

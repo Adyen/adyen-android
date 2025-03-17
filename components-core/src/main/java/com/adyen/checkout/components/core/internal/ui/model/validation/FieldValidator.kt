@@ -10,14 +10,8 @@ package com.adyen.checkout.components.core.internal.ui.model.validation
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.components.core.internal.ui.model.state.ValidationContext
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldValidator<T> {
-    fun validate(input: T, context: ValidationContext?): Validation
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldValidatorWithContext<T, VC> {
-    fun validate(input: T, validationContext: VC): Validation
+interface FieldValidator<T, S> {
+    fun validate(input: T, state: S): Validation
 }
