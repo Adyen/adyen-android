@@ -31,9 +31,11 @@ import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.CardBrand
@@ -48,6 +50,7 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
+import com.adyen.checkout.ui.core.internal.ui.view.updateText
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.isVisible
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
@@ -118,11 +121,11 @@ class CardView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        updateInputFields(cardDelegate.outputData)
+//        updateInputFields(cardDelegate.outputData)
 
-        initCardNumberInput()
+//        initCardNumberInput()
         initExpiryDateInput()
-        initSecurityCodeInput()
+//        initSecurityCodeInput()
         initHolderNameInput()
         initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
@@ -187,10 +190,75 @@ class CardView @JvmOverloads constructor(
         delegate.outputDataFlow
             .onEach { outputDataChanged(it) }
             .launchIn(coroutineScope)
+
+        delegate.viewStateFlow
+            .onEach { viewStateUpdated(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun viewStateUpdated(cardViewState: CardViewState) {
+        updateCardNumber(cardViewState.cardNumberFieldState)
+        updateSecurityCode(cardViewState.securityCodeFieldState)
+    }
+
+    private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
+        binding.editTextCardNumber.setOnChangeListener(null)
+        binding.editTextCardNumber.onFocusChangeListener = null
+
+        binding.editTextCardNumber.updateText(cardNumberFieldState.value)
+
+        if (cardNumberFieldState.hasFocus) {
+            binding.textInputLayoutCardNumber.requestFocus()
+        } else {
+            binding.textInputLayoutCardNumber.clearFocus()
+        }
+
+        cardNumberFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutCardNumber.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutCardNumber.hideError()
+        }
+
+        binding.editTextCardNumber.setOnChangeListener {
+            setCardErrorState(true)
+            cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
+        }
+        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.CARD_NUMBER, hasFocus)
+        }
+    }
+
+    private fun updateSecurityCode(securityCodeFieldState: ComponentFieldViewState<String>) {
+        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
+
+        securityCodeEditText?.setOnChangeListener(null)
+        securityCodeEditText?.onFocusChangeListener = null
+
+        securityCodeEditText?.updateText(securityCodeFieldState.value)
+
+        if (securityCodeFieldState.hasFocus) {
+            binding.textInputLayoutSecurityCode.requestFocus()
+        } else {
+            binding.textInputLayoutSecurityCode.clearFocus()
+        }
+
+        securityCodeFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutSecurityCode.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutSecurityCode.hideError()
+        }
+
+        securityCodeEditText?.setOnChangeListener {
+            setCardErrorState(true)
+            cardDelegate.onFieldValueChanged(CardFieldId.SECURITY_CODE, securityCodeEditText.rawValue)
+        }
+        securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.SECURITY_CODE, hasFocus)
+        }
     }
 
     private fun outputDataChanged(cardOutputData: CardOutputData) {
-        onCardNumberValidated(cardOutputData)
+//        onCardNumberValidated(cardOutputData)
         onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
         setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
@@ -417,12 +485,14 @@ class CardView @JvmOverloads constructor(
 
     private fun initBrandSelectionListeners() {
         binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            cardDelegate.updateInputData { selectedCardIndex = PRIMARY_BRAND_INDEX }
+//            cardDelegate.updateInputData { selectedCardIndex = PRIMARY_BRAND_INDEX }
+            cardDelegate.onFieldValueChanged(CardFieldId.SELECTED_CARD_INDEX, PRIMARY_BRAND_INDEX)
             selectPrimaryBrand()
         }
 
         binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            cardDelegate.updateInputData { selectedCardIndex = SECONDARY_BRAND_INDEX }
+//            cardDelegate.updateInputData { selectedCardIndex = SECONDARY_BRAND_INDEX }
+            cardDelegate.onFieldValueChanged(CardFieldId.SELECTED_CARD_INDEX, SECONDARY_BRAND_INDEX)
             selectSecondaryBrand()
         }
     }

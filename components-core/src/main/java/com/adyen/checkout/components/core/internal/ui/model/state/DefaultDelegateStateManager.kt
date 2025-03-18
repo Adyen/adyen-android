@@ -83,11 +83,11 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
     }
 
     override fun updateState(update: S.() -> S) {
-        val oldState = _state.value
+//        val oldState = _state.value
         _state.update(update)
-        val newState = _state.value
+//        val newState = _state.value
 
-        triggerReValidation(oldState, newState)
+//        triggerReValidation(oldState, newState)
     }
 
     private fun triggerReValidation(oldState: S, newState: S) {

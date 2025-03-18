@@ -18,6 +18,7 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.card.internal.util.CardValidationUtils
@@ -83,6 +84,9 @@ internal class StoredCardDelegate(
     private val cardConfigDataGenerator: CardConfigDataGenerator,
     private val cardValidationMapper: CardValidationMapper
 ) : CardDelegate {
+
+    override val viewStateFlow: Flow<CardViewState>
+        get() = TODO("Not yet implemented")
 
     private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
 

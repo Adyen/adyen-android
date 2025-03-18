@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 
@@ -22,8 +23,9 @@ internal class CardValidatorRegistry(
     private val validators = CardFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
             CardFieldId.CARD_NUMBER -> CardNumberValidator(validationMapper)
+            CardFieldId.SELECTED_CARD_INDEX -> DefaultValidator()
+            CardFieldId.SECURITY_CODE -> SecurityCodeValidator(validationMapper)
 //            CardFieldId.CARD_EXPIRY_DATE -> TODO()
-//            CardFieldId.CARD_SECURITY_CODE -> TODO()
 //            CardFieldId.CARD_HOLDER_NAME -> TODO()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
@@ -58,5 +60,18 @@ internal class CardNumberValidator(
             state.isBrandSupported ?: false,
         )
         return validationMapper.mapCardNumberValidation(validation)
+    }
+}
+
+internal class SecurityCodeValidator(
+    private val validationMapper: CardValidationMapper
+) : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        val validation = CardValidationUtils.validateSecurityCode(
+            input,
+            state.selectedOrFirstCardType,
+            state.cvcUIState,
+        )
+        return validationMapper.mapSecurityCodeValidation(validation)
     }
 }

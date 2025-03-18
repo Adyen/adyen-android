@@ -78,3 +78,8 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
         protected const val NO_MAX_LENGTH = -1
     }
 }
+
+fun AdyenTextInputEditText.updateText(newValue: String) {
+    setText(newValue)
+    setSelection(length())
+}

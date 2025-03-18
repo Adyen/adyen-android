@@ -13,8 +13,8 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 enum class CardFieldId {
     CARD_NUMBER,
-//    SELECTED_CARD_INDEX,
-//    CARD_SECURITY_CODE,
+    SELECTED_CARD_INDEX,
+    SECURITY_CODE,
 //    CARD_HOLDER_NAME,
 //    ADDRESS_POSTAL_CODE,
 //    ADDRESS_LOOKUP,

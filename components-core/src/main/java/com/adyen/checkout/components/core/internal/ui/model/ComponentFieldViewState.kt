@@ -17,3 +17,18 @@ data class ComponentFieldViewState<T>(
     val hasFocus: Boolean = false,
     @StringRes val errorMessageId: Int? = null,
 )
+
+// TODO: Write a test for this
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <T> ComponentFieldDelegateState<T>.toComponentFieldViewState() =
+    ComponentFieldViewState(
+        value = value,
+        hasFocus = hasFocus,
+        errorMessageId = takeIf { fieldState ->
+            fieldState.shouldShowValidationError()
+        }?.validation.let { it as? Validation.Invalid }?.reason,
+    )
+
+// Validation error should be shown, when the field loses its focus or when we manually trigger a validation
+internal fun <T> ComponentFieldDelegateState<T>.shouldShowValidationError() =
+    !this.hasFocus || this.shouldHighlightValidationError

@@ -90,4 +90,13 @@ class CardValidationMapper {
 
         return FieldState(normalizedSecurityCode, validation)
     }
+
+    fun mapSecurityCodeValidation(validationResult: CardSecurityCodeValidation): Validation {
+        return when (validationResult) {
+            CardSecurityCodeValidation.VALID -> Validation.Valid
+            CardSecurityCodeValidation.VALID_HIDDEN -> Validation.Valid
+            CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY -> Validation.Valid
+            CardSecurityCodeValidation.INVALID -> Validation.Invalid(R.string.checkout_security_code_not_valid)
+        }
+    }
 }

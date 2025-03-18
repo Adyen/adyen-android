@@ -23,6 +23,11 @@ class CardDependencyRegistry : StateDependencyRegistry<CardFieldId, CardDelegate
                     { state -> state.isBrandSupported },
                     { state -> state.detectedCardTypes },
                 )
+
+                // TODO To be removed
+                else -> {
+                    listOf()
+                }
             }
         }
 

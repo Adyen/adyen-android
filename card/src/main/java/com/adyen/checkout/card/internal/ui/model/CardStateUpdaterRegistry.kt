@@ -17,13 +17,19 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
     private val updaters = CardFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
             CardFieldId.CARD_NUMBER -> CardNumberUpdater()
+            CardFieldId.SELECTED_CARD_INDEX -> SelectedCardIndexUpdater()
+            CardFieldId.SECURITY_CODE -> SecurityCodeUpdater()
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getFieldState(key: CardFieldId, state: CardDelegateState): ComponentFieldDelegateState<T> {
-        val updater = updaters[key] as? StateUpdater<CardDelegateState, ComponentFieldDelegateState<T>>
-            ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
+    override fun <T> getFieldState(
+        key: CardFieldId,
+        state: CardDelegateState
+    ): ComponentFieldDelegateState<T> {
+        val updater =
+            updaters[key] as? StateUpdater<CardDelegateState, ComponentFieldDelegateState<T>>
+                ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.getFieldState(state)
     }
 
@@ -33,19 +39,48 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
         state: CardDelegateState,
         fieldState: ComponentFieldDelegateState<T>
     ): CardDelegateState {
-        val updater = updaters[key] as? StateUpdater<CardDelegateState, ComponentFieldDelegateState<T>>
-            ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
+        val updater =
+            updaters[key] as? StateUpdater<CardDelegateState, ComponentFieldDelegateState<T>>
+                ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.updateFieldState(state, fieldState)
     }
 }
 
-internal class CardNumberUpdater : StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
-    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> = state.cardNumberDelegateState
+internal class CardNumberUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
+        state.cardNumberDelegateState
 
     override fun updateFieldState(
         state: CardDelegateState,
         fieldState: ComponentFieldDelegateState<String>
     ) = state.copy(
         cardNumberDelegateState = fieldState,
+    )
+}
+
+internal class SelectedCardIndexUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<Int>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<Int> =
+        state.selectedCardIndexDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<Int>
+    ) = state.copy(
+        selectedCardIndexDelegateState = fieldState,
+    )
+}
+
+internal class SecurityCodeUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
+        state.securityCodeDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<String>
+    ) = state.copy(
+        securityCodeDelegateState = fieldState,
     )
 }

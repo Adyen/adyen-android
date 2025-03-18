@@ -26,8 +26,10 @@ import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.internal.ui.model.toViewState
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
@@ -115,6 +117,12 @@ class DefaultCardDelegate(
     // TODO: Should not be nullable
     private val stateManager: DelegateStateManager<CardDelegateState, CardFieldId>? = null,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
+
+    override val viewStateFlow: Flow<CardViewState> by lazy {
+        stateManager!!.state
+            .map(CardDelegateState::toViewState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager!!.state.value.toViewState())
+    }
 
     private val inputData: CardInputData = CardInputData()
 
@@ -236,7 +244,7 @@ class DefaultCardDelegate(
 
     override fun updateInputData(update: CardInputData.() -> Unit) {
         inputData.update()
-        onInputDataChanged()
+//        onInputDataChanged()
     }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
@@ -249,10 +257,11 @@ class DefaultCardDelegate(
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
+    // TODO Eventually needs to be removed
     private fun onInputDataChanged() {
         adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
         detectCardTypeRepository.detectCardType(
-            cardNumber = inputData.cardNumber,
+            cardNumber = stateManager!!.state.value.cardNumberDelegateState.value,
             publicKey = publicKey,
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
@@ -269,15 +278,16 @@ class DefaultCardDelegate(
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 }
-                if (detectedCardTypes != outputData.detectedCardTypes) {
+                if (detectedCardTypes != stateManager!!.state.value.detectedCardTypes) {
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
                 detectedCardTypesUpdated(detectedCardTypes)
                 // TODO: To remove this later
-                updateOutputData(detectedCardTypes = detectedCardTypes)
+//                updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
             .distinctUntilChanged()
+            // TODO: Why do we have this?
             .onEach { inputData.selectedCardIndex = -1 }
             .launchIn(coroutineScope)
     }
@@ -287,8 +297,7 @@ class DefaultCardDelegate(
 
         val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
             detectedCardTypes,
-            // TODO: Decide where to read the selectedCardIndex
-            inputData.selectedCardIndex,
+            stateManager!!.state.value.selectedCardIndexDelegateState.value,
         )
         val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
             detectedCardTypes = filteredDetectedCardTypes,
@@ -300,11 +309,22 @@ class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
-        stateManager!!.updateState { copy(
-            detectedCardTypes = filteredDetectedCardTypes,
-            enableLuhnCheck = enableLuhnCheck,
-            isBrandSupported = !shouldFailWithUnsupportedBrand,
-        ) }
+        stateManager.updateState {
+            copy(
+                detectedCardTypes = filteredDetectedCardTypes,
+                selectedOrFirstCardType = selectedOrFirstCardType,
+                cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+                enableLuhnCheck = enableLuhnCheck,
+                isBrandSupported = !shouldFailWithUnsupportedBrand,
+            )
+        }
+
+        // TODO Create a new function to re-validate the field?
+        stateManager.updateField(CardFieldId.CARD_NUMBER, stateManager.state.value.cardNumberDelegateState.value)
+        stateManager.updateField(
+            CardFieldId.SECURITY_CODE,
+            stateManager.state.value.securityCodeDelegateState.value,
+        )
     }
 
     private fun subscribeToCountryList() {
@@ -529,6 +549,7 @@ class DefaultCardDelegate(
 
     override fun <T> onFieldValueChanged(fieldId: CardFieldId, value: T) {
         stateManager!!.updateField(fieldId, value = value)
+        onInputDataChanged()
     }
 
     override fun onFieldFocusChanged(fieldId: CardFieldId, hasFocus: Boolean) {

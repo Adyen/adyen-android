@@ -14,6 +14,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
@@ -43,6 +44,8 @@ interface CardDelegate :
     val componentStateFlow: Flow<CardComponentState>
 
     val exceptionFlow: Flow<CheckoutException>
+
+    val viewStateFlow: Flow<CardViewState>
 
     fun updateInputData(update: CardInputData.() -> Unit)
 
