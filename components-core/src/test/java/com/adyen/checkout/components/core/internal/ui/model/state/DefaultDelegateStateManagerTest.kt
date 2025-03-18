@@ -13,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.mock
 
 internal class DefaultDelegateStateManagerTest {
 
@@ -32,6 +33,7 @@ internal class DefaultDelegateStateManagerTest {
             validationRegistry = validationRegistry,
             stateUpdaterRegistry = stateUpdaterRegistry,
             transformerRegistry = transformerRegistry,
+            stateDependencyRegistry = mock()
         )
     }
 

@@ -26,6 +26,7 @@ import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
+import com.adyen.checkout.card.internal.ui.model.CardDependencyRegistry
 import com.adyen.checkout.card.internal.ui.model.CardStateUpdaterRegistry
 import com.adyen.checkout.card.internal.ui.model.CardValidatorRegistry
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
@@ -286,7 +287,8 @@ constructor(
                     factory = CardDelegateStateFactory(componentParams),
                     validationRegistry = CardValidatorRegistry(),
                     stateUpdaterRegistry = CardStateUpdaterRegistry(),
-                    transformerRegistry = DefaultTransformerRegistry()
+                    transformerRegistry = DefaultTransformerRegistry(),
+                    stateDependencyRegistry = CardDependencyRegistry()
                 ),
             )
 

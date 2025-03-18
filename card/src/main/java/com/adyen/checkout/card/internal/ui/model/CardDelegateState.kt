@@ -27,9 +27,10 @@ data class CardDelegateState(
 //    val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String>,
 //    val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String>,
 //    val installmentDelegateState: ComponentFieldDelegateState<InstallmentModel?>,
+    // TODO: We should make sure that this is updated correctly and perhaps also when card number changes?
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
-    val enableLuhnCheck: Boolean = false,
-    val isBrandSupported: Boolean = false,
+    val enableLuhnCheck: Boolean? = null,
+    val isBrandSupported: Boolean? = null,
 ) : DelegateState {
     override val isValid: Boolean = true
 }

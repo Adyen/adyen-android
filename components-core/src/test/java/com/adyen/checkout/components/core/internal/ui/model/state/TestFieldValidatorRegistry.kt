@@ -13,10 +13,10 @@ import com.adyen.checkout.components.core.internal.ui.model.validation.FieldVali
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 
-internal class TestFieldValidatorRegistry : FieldValidatorRegistry<TestFieldId> {
+internal class TestFieldValidatorRegistry : FieldValidatorRegistry<TestFieldId, TestDelegateState> {
     private val validatedFields = mutableSetOf<TestFieldId>()
 
-    override fun <T> validate(key: TestFieldId, value: T): Validation {
+    override fun <T> validate(key: TestFieldId, value: T, state: TestDelegateState): Validation {
         validatedFields.add(key)
         return Validation.Valid
     }

@@ -52,7 +52,6 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
-import com.adyen.checkout.components.core.internal.ui.model.state.ValidationContext
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -273,13 +272,39 @@ class DefaultCardDelegate(
                 if (detectedCardTypes != outputData.detectedCardTypes) {
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
-                stateManager!!.updateState { copy(detectedCardTypes = detectedCardTypes) }
+                detectedCardTypesUpdated(detectedCardTypes)
+                // TODO: To remove this later
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
             .distinctUntilChanged()
             .onEach { inputData.selectedCardIndex = -1 }
             .launchIn(coroutineScope)
+    }
+
+    private fun detectedCardTypesUpdated(detectedCardTypes: List<DetectedCardType>) {
+        val isReliable = detectedCardTypes.any { it.isReliable }
+
+        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
+            detectedCardTypes,
+            // TODO: Decide where to read the selectedCardIndex
+            inputData.selectedCardIndex,
+        )
+        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+            detectedCardTypes = filteredDetectedCardTypes,
+        )
+
+        // perform a Luhn Check if no brands are detected
+        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+
+        // when no supported cards are detected, only show an error if the brand detection was reliable
+        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
+
+        stateManager!!.updateState { copy(
+            detectedCardTypes = filteredDetectedCardTypes,
+            enableLuhnCheck = enableLuhnCheck,
+            isBrandSupported = !shouldFailWithUnsupportedBrand,
+        ) }
     }
 
     private fun subscribeToCountryList() {

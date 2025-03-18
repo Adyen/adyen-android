@@ -53,8 +53,9 @@ internal class CardNumberValidator(
     override fun validate(input: String, state: CardDelegateState): Validation {
         val validation = CardValidationUtils.validateCardNumber(
             input,
-            state.enableLuhnCheck,
-            state.isBrandSupported,
+            // TODO: Probably we should not have default values?
+            state.enableLuhnCheck ?: false,
+            state.isBrandSupported ?: false,
         )
         return validationMapper.mapCardNumberValidation(validation)
     }
