@@ -27,8 +27,8 @@ enum class ErrorEvent(val errorType: Type, val errorCode: String) {
     // API
     API_PAYMENTS(Type.API_ERROR, "620"),
     API_THREEDS2(Type.API_ERROR, "622"),
-    API_PUBLIC_KEY(Type.API_ERROR, "624"),
-    API_NATIVE_REDIRECT(Type.API_ERROR, "625"),
+    API_PUBLIC_KEY(Type.API_ERROR, "625"),
+    API_NATIVE_REDIRECT(Type.API_ERROR, "626"),
 
     // 3DS2
     THREEDS2_TOKEN_MISSING(Type.THREEDS2, "701"),
