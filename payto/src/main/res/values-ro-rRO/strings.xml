@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Cum dorești să utilizezi PayTo?</string>
+
+    <string name="checkout_payto_payid_description">Completați PayID și detaliile contului care sunt conectate la contul dvs. PayTo.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobil</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail</string>
+    <string name="checkout_payto_payid_type_organization_id">ID organizație</string>
+    <string name="checkout_payto_payid_phone_number_hint">Telefon mobil</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Completează un număr de telefon mobil corect</string>
+    <string name="checkout_payto_payid_email_address_hint">Adresă de e-mail</string>
+    <string name="checkout_payto_payid_email_address_invalid">Completează o adresă de e-mail corectă</string>
+    <string name="checkout_payto_payid_abn_number_hint">Număr de la birou din Australia</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Completează un număr corect de la birou din Australia</string>
+    <string name="checkout_payto_payid_organization_id_hint">Număr de identificare al organizației</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Completează un număr corect de identificare al organizației</string>
+
+    <string name="checkout_payto_bsb_description">Pentru a continua, introduceți numărul contului bancar și sucursala băncii de stat care este asociată cu contul dvs.</string>
+    <string name="checkout_payto_bsb_account_number_hint">Numărul contului bancar</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Completează un număr de cont bancar corect</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Sucursala bancară statală</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Completează o sucursală bancară statală corectă</string>
+
+    <string name="checkout_payto_first_name_hint">Prenumele titularului de cont</string>
+    <string name="checkout_payto_first_name_invalid">Completează un prenume corect</string>
+    <string name="checkout_payto_last_name_hint">Numele de familie al titularului de cont</string>
+    <string name="checkout_payto_last_name_invalid">Completează un nume de familie corect</string>
+
+</resources>

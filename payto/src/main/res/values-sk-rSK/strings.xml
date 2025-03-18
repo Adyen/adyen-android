@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Ako by ste chceli používať PayTo?</string>
+
+    <string name="checkout_payto_payid_description">Zadajte PayID a údaje o účte, ktoré sú pripojené k vášmu účtu PayTo.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobilný telefón</string>
+    <string name="checkout_payto_payid_type_email_address">E-mail</string>
+    <string name="checkout_payto_payid_type_organization_id">ID organizácie</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobilný telefón</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Zadajte správne číslo mobilného telefónu</string>
+    <string name="checkout_payto_payid_email_address_hint">E-mailová adresa</string>
+    <string name="checkout_payto_payid_email_address_invalid">Zadajte správnu e-mailovú adresu</string>
+    <string name="checkout_payto_payid_abn_number_hint">Austrálske číslo organizácie</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Zadajte správne austrálske číslo organizácie</string>
+    <string name="checkout_payto_payid_organization_id_hint">Identifikačné číslo organizácie</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Zadajte správne identifikačné číslo organizácie</string>
+
+    <string name="checkout_payto_bsb_description">Pokračujte zadaním čísla bankového účtu a pobočky banky, ktorá je pripojená k vášmu účtu</string>
+    <string name="checkout_payto_bsb_account_number_hint">Číslo bankového účtu</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Zadajte správne číslo bankového účtu</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Štátna pobočka banky</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Zadajte správnu štátnu pobočku banky</string>
+
+    <string name="checkout_payto_first_name_hint">Krstné meno majiteľa účtu</string>
+    <string name="checkout_payto_first_name_invalid">Zadajte správne krstné meno</string>
+    <string name="checkout_payto_last_name_hint">Priezvisko majiteľa účtu</string>
+    <string name="checkout_payto_last_name_invalid">Zadajte správne priezvisko</string>
+
+</resources>

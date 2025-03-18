@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Как бихте искали да използвате PayTo?</string>
+
+    <string name="checkout_payto_payid_description">Въведете PayID и данните за сметката, които са свързани с Вашия PayTo акаунт.</string>
+    <string name="checkout_payto_payid_type_phone_number">Мобилно устройство</string>
+    <string name="checkout_payto_payid_type_email_address">Имейл</string>
+    <string name="checkout_payto_payid_type_organization_id">OrganizationID</string>
+    <string name="checkout_payto_payid_phone_number_hint">Мобилен телефон</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Въведете правилен номер на мобилен телефон</string>
+    <string name="checkout_payto_payid_email_address_hint">Имейл адрес</string>
+    <string name="checkout_payto_payid_email_address_invalid">Въведете правилен имейл адрес</string>
+    <string name="checkout_payto_payid_abn_number_hint">Австралийски номер на юридическо лице</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Въведете правилен австралийски номер на юридическо лице</string>
+    <string name="checkout_payto_payid_organization_id_hint">Идентификационен номер на организация</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Въведете правилен идентификационен номер на организация</string>
+
+    <string name="checkout_payto_bsb_description">Въведете номера на банковата сметка и банковия клон, които са свързани с вашия акаунт, за да продължите</string>
+    <string name="checkout_payto_bsb_account_number_hint">Номер на банкова сметка</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Въведете правилен номер на банкова сметка</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Щатски банков клон</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Въведете правилния щатски банков клон</string>
+
+    <string name="checkout_payto_first_name_hint">Име на титуляра на сметката</string>
+    <string name="checkout_payto_first_name_invalid">Въведете правилно собствено име</string>
+    <string name="checkout_payto_last_name_hint">Фамилия на титуляра на сметката</string>
+    <string name="checkout_payto_last_name_invalid">Въведете правилно фамилно име</string>
+
+</resources>

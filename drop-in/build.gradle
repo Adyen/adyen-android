@@ -73,6 +73,7 @@ dependencies {
     api project(':payeasy')
     api project(':paybybank')
     api project(':paybybank-us')
+    api project(':payto')
     api project(':sepa')
     api project(':seven-eleven')
     api project(':sessions-core')

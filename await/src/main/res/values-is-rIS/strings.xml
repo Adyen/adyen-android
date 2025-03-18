@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Opnaðu bankaforritið þitt til að staðfesta greiðsluna.</string>
     <string name="checkout_await_message_mbway">Staðfestu greiðsluna þína í MB WAY-forritinu</string>
+    <string name="checkout_await_message_payto">Takk fyrir kaupin. Ljúktu við greiðsluna með því að skrá þig inn á bankareikninginn, heimila PayTo-samninginn og samþykkja greiðsluskilmálana.</string>
     <string name="checkout_await_message_upi">Opnaðu UPI-forritið þitt til að staðfesta greiðsluna</string>
     <string name="checkout_await_waiting_confirmation">Bíður eftir staðfestingu</string>
 </resources>

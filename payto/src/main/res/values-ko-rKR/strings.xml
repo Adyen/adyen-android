@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">PayTo를 어떻게 사용하시겠습니까?</string>
+
+    <string name="checkout_payto_payid_description">PayTo 계정에 연결된 PayID와 계정 세부 정보를 입력하세요.</string>
+    <string name="checkout_payto_payid_type_phone_number">휴대폰</string>
+    <string name="checkout_payto_payid_type_email_address">이메일</string>
+    <string name="checkout_payto_payid_type_organization_id">조직 ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">휴대폰</string>
+    <string name="checkout_payto_payid_phone_number_invalid">올바른 휴대폰 번호를 입력하세요.</string>
+    <string name="checkout_payto_payid_email_address_hint">이메일 주소</string>
+    <string name="checkout_payto_payid_email_address_invalid">올바른 이메일 주소를 입력하세요.</string>
+    <string name="checkout_payto_payid_abn_number_hint">호주 사업자 번호</string>
+    <string name="checkout_payto_payid_abn_number_invalid">올바른 호주 사업자 번호를 입력하세요.</string>
+    <string name="checkout_payto_payid_organization_id_hint">조직 ID 번호</string>
+    <string name="checkout_payto_payid_organization_id_invalid">올바른 조직 ID 번호를 입력하세요.</string>
+
+    <string name="checkout_payto_bsb_description">계속하려면 계정에 연결된 은행 계좌 번호와 은행 지점을 입력하세요.</string>
+    <string name="checkout_payto_bsb_account_number_hint">계좌 번호</string>
+    <string name="checkout_payto_bsb_account_number_invalid">올바른 은행 계좌 번호를 입력하세요.</string>
+    <string name="checkout_payto_bsb_state_branch_hint">은행 주 지점</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">올바른 은행 주 지점을 입력하세요.</string>
+
+    <string name="checkout_payto_first_name_hint">계좌 소유자 이름(이름)</string>
+    <string name="checkout_payto_first_name_invalid">올바른 이름을 입력하세요.</string>
+    <string name="checkout_payto_last_name_hint">계좌 소유자 성</string>
+    <string name="checkout_payto_last_name_invalid">올바른 성을 입력하세요.</string>
+
+</resources>

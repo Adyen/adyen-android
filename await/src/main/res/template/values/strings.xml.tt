@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">%%blik.confirmPayment%%</string>
     <string name="checkout_await_message_mbway">%%mbway.confirmPayment%%</string>
+    <string name="checkout_await_message_payto">%%payto.await.description%%</string>
     <string name="checkout_await_message_upi">%%upi.vpaWaitingMessage%%</string>
     <string name="checkout_await_waiting_confirmation">%%await.waitForConfirmation%%</string>
 </resources>

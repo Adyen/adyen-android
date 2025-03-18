@@ -17,13 +17,13 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.ui.core.databinding.SimpleTextItemViewBinding
+import com.adyen.checkout.ui.core.databinding.TextItemViewBinding
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SimpleTextListAdapter<T : SimpleTextListItem>(private val context: Context) : BaseAdapter(), Filterable {
+class TextListAdapter<T : TextListItem>(private val context: Context) : BaseAdapter(), Filterable {
 
     private val itemList: MutableList<T> = mutableListOf()
-    private val simpleTextListFilter = SimpleTextListFilter(itemList)
+    private val textListFilter = TextListFilter(itemList)
 
     fun setItems(itemList: List<T>) {
         this.itemList.clear()
@@ -43,28 +43,28 @@ class SimpleTextListAdapter<T : SimpleTextListItem>(private val context: Context
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
-        val viewHolder: SimpleTextViewHolder
-        val binding: SimpleTextItemViewBinding
+        val viewHolder: TextViewHolder
+        val binding: TextItemViewBinding
         if (convertView == null) {
-            binding = SimpleTextItemViewBinding.inflate(LayoutInflater.from(context), parent, false)
+            binding = TextItemViewBinding.inflate(LayoutInflater.from(context), parent, false)
             view = binding.root
-            viewHolder = SimpleTextViewHolder(binding)
+            viewHolder = TextViewHolder(binding)
             view.tag = viewHolder
         } else {
             view = convertView
-            viewHolder = view.tag as SimpleTextViewHolder
+            viewHolder = view.tag as TextViewHolder
         }
         viewHolder.bindItem(getItem(position))
         return view
     }
 
     override fun getFilter(): Filter {
-        return simpleTextListFilter
+        return textListFilter
     }
 }
 
-internal class SimpleTextListFilter(
-    private val itemList: List<SimpleTextListItem>
+internal class TextListFilter(
+    private val itemList: List<TextListItem>
 ) : Filter() {
 
     override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -79,18 +79,18 @@ internal class SimpleTextListFilter(
     }
 
     override fun convertResultToString(resultValue: Any?): CharSequence {
-        return (resultValue as? SimpleTextListItem)?.text.orEmpty()
+        return (resultValue as? TextListItem)?.text.orEmpty()
     }
 }
 
-internal class SimpleTextViewHolder(
-    private val binding: SimpleTextItemViewBinding
+internal class TextViewHolder(
+    private val binding: TextItemViewBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bindItem(item: SimpleTextListItem) {
+    fun bindItem(item: TextListItem) {
         binding.textViewTitle.text = item.text
     }
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-open class SimpleTextListItem(val text: String)
+open class TextListItem(val text: String)

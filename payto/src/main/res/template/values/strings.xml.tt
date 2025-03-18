@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">%%payto.mode.selection%%</string>
+
+    <string name="checkout_payto_payid_description">%%payto.payid.description%%</string>
+    <string name="checkout_payto_payid_type_phone_number">%%payto.payid.option.phone%%</string>
+    <string name="checkout_payto_payid_type_email_address">%%payto.payid.option.email%%</string>
+    <string name="checkout_payto_payid_type_organization_id">%%payto.payid.option.orgid%%</string>
+    <string name="checkout_payto_payid_phone_number_hint">%%payto.payid.phone.hint%%</string>
+    <string name="checkout_payto_payid_phone_number_invalid">%%payto.payid.phone.invalid%%</string>
+    <string name="checkout_payto_payid_email_address_hint">%%payto.payid.email.hint%%</string>
+    <string name="checkout_payto_payid_email_address_invalid">%%payto.payid.email.invalid%%</string>
+    <string name="checkout_payto_payid_abn_number_hint">%%payto.payid.abn.hint%%</string>
+    <string name="checkout_payto_payid_abn_number_invalid">%%payto.payid.abn.invalid%%</string>
+    <string name="checkout_payto_payid_organization_id_hint">%%payto.payid.orgid.hint%%</string>
+    <string name="checkout_payto_payid_organization_id_invalid">%%payto.payid.orgid.invalid%%</string>
+
+    <string name="checkout_payto_bsb_description">%%payto.bsb.description%%</string>
+    <string name="checkout_payto_bsb_account_number_hint">%%payto.bsb.label.bankAccountNumber%%</string>
+    <string name="checkout_payto_bsb_account_number_invalid">%%payto.bsb.bankAccountNumber.invalid%%</string>
+    <string name="checkout_payto_bsb_state_branch_hint">%%payto.bsb.bankStateBranch.hint%%</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">%%payto.bsb.bankStateBranch.invalid%%</string>
+
+    <string name="checkout_payto_first_name_hint">%%payto.label.firstName%%</string>
+    <string name="checkout_payto_first_name_invalid">%%payto.firstName.invalid%%</string>
+    <string name="checkout_payto_last_name_hint">%%payto.label.lastName%%</string>
+    <string name="checkout_payto_last_name_invalid">%%payto.lastName.invalid%%</string>
+
+    <!-- Untranslatable strings -->
+    <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>
+    <string name="checkout_payto_payid_type_abn_number" translatable="false">ABN</string>
+    <string name="checkout_payto_bsb_tab_title" translatable="false">BSB</string>
+</resources>

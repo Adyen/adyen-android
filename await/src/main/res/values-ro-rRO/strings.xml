@@ -10,6 +10,7 @@
 <resources>
     <string name="checkout_await_message_blik">Deschideți aplicația dvs. de banking pentru a confirma plata.</string>
     <string name="checkout_await_message_mbway">Confirmați plata în aplicația MB WAY</string>
+    <string name="checkout_await_message_payto">Vă mulțumim pentru achiziție! Finalizați plata conectându-vă la contul dvs. bancar, autorizând acordul PayTo și aprobând condițiile de plată.</string>
     <string name="checkout_await_message_upi">Deschideți aplicația UPI pentru a confirma plata</string>
     <string name="checkout_await_waiting_confirmation">Se așteaptă confirmarea</string>
 </resources>

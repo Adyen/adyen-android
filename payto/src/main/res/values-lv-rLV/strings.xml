@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 21/2/2025.
+  -->
+
+<resources>
+    <string name="checkout_payto_mode_selection">Kā jūs vēlaties izmantot PayTo?</string>
+
+    <string name="checkout_payto_payid_description">Ievadiet PayID un konta informāciju, kas ir savienota ar Jūsu PayTo kontu.</string>
+    <string name="checkout_payto_payid_type_phone_number">Mobilais</string>
+    <string name="checkout_payto_payid_type_email_address">E-pasts</string>
+    <string name="checkout_payto_payid_type_organization_id">Organizācijas ID</string>
+    <string name="checkout_payto_payid_phone_number_hint">Mobilais tālrunis</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Ievadiet pareizu mobilā tālruņa numuru</string>
+    <string name="checkout_payto_payid_email_address_hint">E-pasta adrese</string>
+    <string name="checkout_payto_payid_email_address_invalid">Ievadiet pareizu e-pasta adresi</string>
+    <string name="checkout_payto_payid_abn_number_hint">Austrālijas uzņēmuma reģistrācijas numurs</string>
+    <string name="checkout_payto_payid_abn_number_invalid">Ievadiet pareizu Austrālijas uzņēmuma reģistrācijas numuru</string>
+    <string name="checkout_payto_payid_organization_id_hint">Organizācijas ID numurs</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Ievadiet pareizu organizācijas ID numuru</string>
+
+    <string name="checkout_payto_bsb_description">Ievadiet bankas konta numuru un bankas valsts filiāli, kas ir saistīta ar jūsu kontu, lai turpinātu</string>
+    <string name="checkout_payto_bsb_account_number_hint">Bankas konta numurs</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Ievadiet pareizu bankas konta numuru</string>
+    <string name="checkout_payto_bsb_state_branch_hint">Bankas valsts filiāle</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Ievadiet pareizu bankas valsts filiāli</string>
+
+    <string name="checkout_payto_first_name_hint">Konta īpašnieka vārds</string>
+    <string name="checkout_payto_first_name_invalid">Ievadiet pareizu vārdu</string>
+    <string name="checkout_payto_last_name_hint">Konta īpašnieka uzvārds</string>
+    <string name="checkout_payto_last_name_invalid">Ievadiet pareizu uzvārdu</string>
+
+</resources>
