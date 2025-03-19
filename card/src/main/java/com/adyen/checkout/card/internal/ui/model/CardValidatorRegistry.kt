@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -27,7 +28,7 @@ internal class CardValidatorRegistry(
             CardFieldId.SELECTED_CARD_INDEX -> DefaultValidator()
             CardFieldId.CARD_SECURITY_CODE -> CardSecurityCodeValidator(validationMapper)
             CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateValidator(validationMapper)
-//            CardFieldId.CARD_HOLDER_NAME -> TODO()
+            CardFieldId.CARD_HOLDER_NAME -> CardHolderNameValidator()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
 //            CardFieldId.SOCIAL_SECURITY_NUMBER -> TODO()
@@ -86,5 +87,15 @@ internal class CardExpiryDateValidator(
             state.selectedOrFirstCardType?.expiryDatePolicy
         )
         return validationMapper.mapExpiryDateValidation(validation)
+    }
+}
+
+internal class CardHolderNameValidator : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        return if (state.isHolderNameRequired && input.isBlank()) {
+            Validation.Invalid(R.string.checkout_holder_name_not_valid)
+        } else {
+            Validation.Valid
+        }
     }
 }

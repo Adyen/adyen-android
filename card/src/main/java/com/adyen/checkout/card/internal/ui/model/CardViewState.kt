@@ -18,10 +18,12 @@ data class CardViewState(
     val cardNumberFieldState: ComponentFieldViewState<String>,
     val cardSecurityCodeFieldState: ComponentFieldViewState<String>,
     val cardExpiryDateFieldState: ComponentFieldViewState<ExpiryDate>,
+    val cardHolderNameFieldState: ComponentFieldViewState<String>,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
     cardNumberFieldState = this.cardNumberDelegateState.toComponentFieldViewState(),
     cardSecurityCodeFieldState = this.cardSecurityCodeDelegateState.toComponentFieldViewState(),
     cardExpiryDateFieldState = this.cardExpiryDateDelegateState.toComponentFieldViewState(),
+    cardHolderNameFieldState = this.cardHolderNameDelegateState.toComponentFieldViewState(),
 )

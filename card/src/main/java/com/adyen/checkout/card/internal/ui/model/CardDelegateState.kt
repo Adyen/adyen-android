@@ -17,21 +17,16 @@ import com.adyen.checkout.core.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardDelegateState(
-    val cardNumberDelegateState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
-        value = "",
-    ),
-    val selectedCardIndexDelegateState: ComponentFieldDelegateState<Int> = ComponentFieldDelegateState(
-        value = -1,
-    ),
-    val cardSecurityCodeDelegateState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
-        value = "",
-    ),
-    val cardExpiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate> = ComponentFieldDelegateState(
-        value = EMPTY_DATE,
-    ),
-//    val expiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate>,
-//    val securityCodeDelegateState: ComponentFieldDelegateState<String>,
-//    val holderNameDelegateState: ComponentFieldDelegateState<String>,
+    val cardNumberDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
+    val selectedCardIndexDelegateState: ComponentFieldDelegateState<Int> =
+        ComponentFieldDelegateState(value = -1),
+    val cardSecurityCodeDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
+    val cardExpiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate> =
+        ComponentFieldDelegateState(value = EMPTY_DATE),
+    val cardHolderNameDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
 //    val socialSecurityNumberDelegateState: ComponentFieldDelegateState<String>,
     // TODO: Should these be separated?
 //    val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String>,
@@ -42,6 +37,7 @@ data class CardDelegateState(
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val enableLuhnCheck: Boolean? = null,
     val isBrandSupported: Boolean? = null,
+    val isHolderNameRequired: Boolean = false,
 ) : DelegateState {
     override val isValid: Boolean = true
 }

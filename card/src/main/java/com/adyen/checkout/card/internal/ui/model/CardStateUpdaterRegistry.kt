@@ -21,6 +21,7 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
             CardFieldId.SELECTED_CARD_INDEX -> SelectedCardIndexUpdater()
             CardFieldId.CARD_SECURITY_CODE -> CardSecurityCodeUpdater()
             CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateUpdater()
+            CardFieldId.CARD_HOLDER_NAME -> CardHolderNameUpdater()
         }
     }
 
@@ -87,7 +88,6 @@ internal class CardSecurityCodeUpdater :
     )
 }
 
-
 internal class CardExpiryDateUpdater :
     StateUpdater<CardDelegateState, ComponentFieldDelegateState<ExpiryDate>> {
     override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<ExpiryDate> =
@@ -98,5 +98,18 @@ internal class CardExpiryDateUpdater :
         fieldState: ComponentFieldDelegateState<ExpiryDate>
     ) = state.copy(
         cardExpiryDateDelegateState = fieldState,
+    )
+}
+
+internal class CardHolderNameUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
+        state.cardHolderNameDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<String>
+    ) = state.copy(
+        cardHolderNameDelegateState = fieldState,
     )
 }

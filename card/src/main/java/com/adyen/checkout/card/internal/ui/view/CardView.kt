@@ -126,7 +126,7 @@ class CardView @JvmOverloads constructor(
 //        initCardNumberInput()
 //        initExpiryDateInput()
 //        initSecurityCodeInput()
-        initHolderNameInput()
+//        initHolderNameInput()
         initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
         initPostalCodeInput()
@@ -200,6 +200,7 @@ class CardView @JvmOverloads constructor(
         updateCardNumber(cardViewState.cardNumberFieldState)
         updateSecurityCode(cardViewState.cardSecurityCodeFieldState)
         updateExpiryDate(cardViewState.cardExpiryDateFieldState)
+        updateHolderName(cardViewState.cardHolderNameFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -283,6 +284,34 @@ class CardView @JvmOverloads constructor(
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             cardDelegate.onFieldFocusChanged(CardFieldId.CARD_EXPIRY_DATE, hasFocus)
+        }
+    }
+
+    private fun updateHolderName(holderNameFieldState: ComponentFieldViewState<String>) {
+        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
+
+        cardHolderEditText?.setOnChangeListener(null)
+        cardHolderEditText?.onFocusChangeListener = null
+
+        cardHolderEditText?.updateText(holderNameFieldState.value)
+
+        if (holderNameFieldState.hasFocus) {
+            binding.textInputLayoutCardHolder.requestFocus()
+        } else {
+            binding.textInputLayoutCardHolder.clearFocus()
+        }
+
+        holderNameFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutCardHolder.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutCardHolder.hideError()
+        }
+
+        cardHolderEditText?.setOnChangeListener {
+            cardDelegate.onFieldValueChanged(CardFieldId.CARD_HOLDER_NAME, cardHolderEditText.rawValue)
+        }
+        cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.CARD_HOLDER_NAME, hasFocus)
         }
     }
 
