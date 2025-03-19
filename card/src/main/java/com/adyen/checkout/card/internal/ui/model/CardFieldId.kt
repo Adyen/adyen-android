@@ -20,7 +20,7 @@ enum class CardFieldId {
     SOCIAL_SECURITY_NUMBER,
     KCP_BIRTH_DATE_OR_TAX_NUMBER,
     KCP_CARD_PASSWORD,
-//    ADDRESS_POSTAL_CODE,
+    ADDRESS_POSTAL_CODE,
 //    ADDRESS_LOOKUP,
     // TODO: Do these need to be separated?
 //    BIRTH_DATE_OR_TAX_NUMBER,

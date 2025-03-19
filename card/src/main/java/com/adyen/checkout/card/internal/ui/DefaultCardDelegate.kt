@@ -345,9 +345,22 @@ class DefaultCardDelegate(
                     inputData.address.country = it.code
                     requestStateList(it.code)
                 }
-                updateOutputData(countryOptions = countryOptions)
+
+                countryOptionsUpdated(countryOptions)
             }
             .launchIn(coroutineScope)
+    }
+
+    private fun countryOptionsUpdated(countryOptions: List<AddressListItem>) {
+        val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
+            countryOptions,
+            // TODO: Read from state
+            inputData.address.country,
+        )
+
+        stateManager?.updateState {
+            copy(updatedCountryOptions = updatedCountryOptions)
+        }
     }
 
     private fun subscribeToStatesList() {
@@ -356,9 +369,22 @@ class DefaultCardDelegate(
             .onEach { states ->
                 adyenLog(AdyenLogLevel.DEBUG) { "New states emitted - states: ${states.size}" }
                 val stateOptions = AddressFormUtils.initializeStateOptions(states)
-                updateOutputData(stateOptions = stateOptions)
+
+                stateOptionsUpdated(stateOptions)
             }
             .launchIn(coroutineScope)
+    }
+
+    private fun stateOptionsUpdated(stateOptions: List<AddressListItem>) {
+        val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
+            stateOptions,
+            // TODO: Read from state
+            inputData.address.stateOrProvince,
+        )
+
+        stateManager?.updateState {
+            copy(updatedStateOptions = updatedStateOptions)
+        }
     }
 
     private fun updateOutputData(

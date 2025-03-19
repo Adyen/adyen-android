@@ -9,12 +9,13 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
 import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardDelegateState(
@@ -34,12 +35,19 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = ""),
     val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
+    val addressPostalCodeDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val enableLuhnCheck: Boolean? = null,
     val isBrandSupported: Boolean? = null,
+    val updatedCountryOptions: List<AddressListItem> = emptyList(),
+    val updatedStateOptions: List<AddressListItem> = emptyList(),
+    val addressFormUIState: AddressFormUIState = AddressFormUIState.fromAddressParams(
+        componentParams.addressParams
+    ),
 ) : DelegateState {
     override val isValid: Boolean = true
 }

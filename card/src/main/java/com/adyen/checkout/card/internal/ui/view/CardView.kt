@@ -204,6 +204,7 @@ class CardView @JvmOverloads constructor(
         updateSocialSecurityNumber(cardViewState.socialSecurityNumberFieldState)
         updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState)
         updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState)
+        updateAddressPostalCode(cardViewState.addressPostalCodeFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -405,6 +406,34 @@ class CardView @JvmOverloads constructor(
         }
         kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             cardDelegate.onFieldFocusChanged(CardFieldId.KCP_CARD_PASSWORD, hasFocus)
+        }
+    }
+
+    private fun updateAddressPostalCode(addressPostalCodeFieldState: ComponentFieldViewState<String>) {
+        val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
+
+        postalCodeEditText?.setOnChangeListener(null)
+        postalCodeEditText?.onFocusChangeListener = null
+
+        postalCodeEditText?.updateText(addressPostalCodeFieldState.value)
+
+        if (addressPostalCodeFieldState.hasFocus) {
+            binding.textInputLayoutPostalCode.requestFocus()
+        } else {
+            binding.textInputLayoutPostalCode.clearFocus()
+        }
+
+        addressPostalCodeFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutPostalCode.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutPostalCode.hideError()
+        }
+
+        postalCodeEditText?.setOnChangeListener {
+            cardDelegate.onFieldValueChanged(CardFieldId.ADDRESS_POSTAL_CODE, postalCodeEditText.rawValue)
+        }
+        postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.ADDRESS_POSTAL_CODE, hasFocus)
         }
     }
 

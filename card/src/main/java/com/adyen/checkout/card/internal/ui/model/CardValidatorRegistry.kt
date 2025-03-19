@@ -12,13 +12,16 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
+import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 
 internal class CardValidatorRegistry(
@@ -36,7 +39,7 @@ internal class CardValidatorRegistry(
             CardFieldId.SOCIAL_SECURITY_NUMBER -> SocialSecurityNumberValidator()
             CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> KcpBirthDateOrTaxNumberValidator()
             CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordValidator()
-//            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
+            CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeValidator()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
 //            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
 //            CardFieldId.CARD_PASSWORD -> TODO()
@@ -134,5 +137,23 @@ internal class KcpCardPasswordValidator : FieldValidator<String, CardDelegateSta
         } else {
             Validation.Valid
         }
+    }
+}
+
+internal class AddressPostalCodeValidator : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        val isOptional = CardAddressValidationUtils.isAddressOptional(
+            addressParams = state.componentParams.addressParams,
+            cardType = state.selectedOrFirstCardType?.cardBrand?.txVariant,
+        )
+
+        return AddressValidationUtils.validateAddressInput(
+            // TODO: Try not to create the model here
+            AddressInputModel(postalCode = input),
+            state.addressFormUIState,
+            state.updatedCountryOptions,
+            state.updatedStateOptions,
+            isOptional,
+        ).postalCode.validation
     }
 }

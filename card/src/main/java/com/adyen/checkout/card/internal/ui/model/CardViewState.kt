@@ -22,6 +22,7 @@ data class CardViewState(
     val socialSecurityNumberFieldState: ComponentFieldViewState<String>,
     val kcpBirthDateOrTaxNumberFieldState: ComponentFieldViewState<String>,
     val kcpCardPasswordFieldState: ComponentFieldViewState<String>,
+    val addressPostalCodeFieldState: ComponentFieldViewState<String>,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
@@ -32,4 +33,5 @@ internal fun CardDelegateState.toViewState() = CardViewState(
     socialSecurityNumberFieldState = this.socialSecurityNumberDelegateState.toComponentFieldViewState(),
     kcpBirthDateOrTaxNumberFieldState = this.kcpBirthDateOrTaxNumberDelegateState.toComponentFieldViewState(),
     kcpCardPasswordFieldState = this.kcpCardPasswordDelegateState.toComponentFieldViewState(),
+    addressPostalCodeFieldState = this.addressPostalCodeDelegateState.toComponentFieldViewState(),
 )
