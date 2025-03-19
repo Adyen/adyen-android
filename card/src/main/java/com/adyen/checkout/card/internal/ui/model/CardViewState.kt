@@ -19,6 +19,7 @@ data class CardViewState(
     val cardSecurityCodeFieldState: ComponentFieldViewState<String>,
     val cardExpiryDateFieldState: ComponentFieldViewState<ExpiryDate>,
     val cardHolderNameFieldState: ComponentFieldViewState<String>,
+    val socialSecurityNumberFieldState: ComponentFieldViewState<String>,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
@@ -26,4 +27,5 @@ internal fun CardDelegateState.toViewState() = CardViewState(
     cardSecurityCodeFieldState = this.cardSecurityCodeDelegateState.toComponentFieldViewState(),
     cardExpiryDateFieldState = this.cardExpiryDateDelegateState.toComponentFieldViewState(),
     cardHolderNameFieldState = this.cardHolderNameDelegateState.toComponentFieldViewState(),
+    socialSecurityNumberFieldState = this.socialSecurityNumberDelegateState.toComponentFieldViewState(),
 )

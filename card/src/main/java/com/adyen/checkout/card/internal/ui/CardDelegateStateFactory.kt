@@ -18,7 +18,7 @@ class CardDelegateStateFactory(
     private val componentParams: CardComponentParams
 ) : DelegateStateFactory<CardDelegateState, CardFieldId> {
 
-    override fun createDefaultDelegateState() = CardDelegateState()
+    override fun createDefaultDelegateState() = CardDelegateState(componentParams = componentParams)
 
     override fun getFieldIds(): List<CardFieldId> = CardFieldId.entries
 }

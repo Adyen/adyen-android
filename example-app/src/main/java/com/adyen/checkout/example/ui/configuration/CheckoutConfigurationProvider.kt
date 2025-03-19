@@ -8,6 +8,7 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.CardType
 import com.adyen.checkout.card.InstallmentConfiguration
 import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.card
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.cashAppPay
@@ -75,6 +76,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setAddressConfiguration(getAddressConfiguration())
                 setInstallmentConfigurations(getInstallmentConfiguration())
                 setHolderNameRequired(true)
+                setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
             }
 
             cashAppPay {

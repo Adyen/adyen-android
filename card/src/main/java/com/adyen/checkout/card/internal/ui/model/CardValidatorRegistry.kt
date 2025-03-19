@@ -9,13 +9,16 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.util.CardValidationUtils
+import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
 import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 
 internal class CardValidatorRegistry(
     // TODO: We might need to move this to a specific validator
@@ -29,9 +32,10 @@ internal class CardValidatorRegistry(
             CardFieldId.CARD_SECURITY_CODE -> CardSecurityCodeValidator(validationMapper)
             CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateValidator(validationMapper)
             CardFieldId.CARD_HOLDER_NAME -> CardHolderNameValidator()
+            CardFieldId.SOCIAL_SECURITY_NUMBER -> SocialSecurityNumberValidator()
+//            CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> TODO()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
-//            CardFieldId.SOCIAL_SECURITY_NUMBER -> TODO()
 //            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
 //            CardFieldId.CARD_PASSWORD -> TODO()
 //            CardFieldId.INSTALLMENTS -> TODO()
@@ -92,8 +96,19 @@ internal class CardExpiryDateValidator(
 
 internal class CardHolderNameValidator : FieldValidator<String, CardDelegateState> {
     override fun validate(input: String, state: CardDelegateState): Validation {
-        return if (state.isHolderNameRequired && input.isBlank()) {
+        return if (state.componentParams.isHolderNameRequired && input.isBlank()) {
             Validation.Invalid(R.string.checkout_holder_name_not_valid)
+        } else {
+            Validation.Valid
+        }
+    }
+}
+
+internal class SocialSecurityNumberValidator : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        return if (state.componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW) {
+            // TODO To be fixed later to take the transformation into account if necessary
+            SocialSecurityNumberUtils.validateSocialSecurityNumber(input).validation
         } else {
             Validation.Valid
         }

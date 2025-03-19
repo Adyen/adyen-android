@@ -127,7 +127,7 @@ class CardView @JvmOverloads constructor(
 //        initExpiryDateInput()
 //        initSecurityCodeInput()
 //        initHolderNameInput()
-        initSocialSecurityNumberInput()
+//        initSocialSecurityNumberInput()
         initKcpAuthenticationInput()
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
@@ -201,6 +201,7 @@ class CardView @JvmOverloads constructor(
         updateSecurityCode(cardViewState.cardSecurityCodeFieldState)
         updateExpiryDate(cardViewState.cardExpiryDateFieldState)
         updateHolderName(cardViewState.cardHolderNameFieldState)
+        updateSocialSecurityNumber(cardViewState.socialSecurityNumberFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -312,6 +313,35 @@ class CardView @JvmOverloads constructor(
         }
         cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             cardDelegate.onFieldFocusChanged(CardFieldId.CARD_HOLDER_NAME, hasFocus)
+        }
+    }
+
+    private fun updateSocialSecurityNumber(socialSecurityNumberFieldState: ComponentFieldViewState<String>) {
+        val socialSecurityNumberEditText =
+            binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+
+        socialSecurityNumberEditText?.setOnChangeListener(null)
+        socialSecurityNumberEditText?.onFocusChangeListener = null
+
+        socialSecurityNumberEditText?.updateText(socialSecurityNumberFieldState.value)
+
+        if (socialSecurityNumberFieldState.hasFocus) {
+            binding.textInputLayoutSocialSecurityNumber.requestFocus()
+        } else {
+            binding.textInputLayoutSocialSecurityNumber.clearFocus()
+        }
+
+        socialSecurityNumberFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutSocialSecurityNumber.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutSocialSecurityNumber.hideError()
+        }
+
+        socialSecurityNumberEditText?.setOnChangeListener {
+            cardDelegate.onFieldValueChanged(CardFieldId.SOCIAL_SECURITY_NUMBER, socialSecurityNumberEditText.rawValue)
+        }
+        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.SOCIAL_SECURITY_NUMBER, hasFocus)
         }
     }
 

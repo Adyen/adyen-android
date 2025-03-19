@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
@@ -27,17 +28,18 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = EMPTY_DATE),
     val cardHolderNameDelegateState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
-//    val socialSecurityNumberDelegateState: ComponentFieldDelegateState<String>,
+    val socialSecurityNumberDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
     // TODO: Should these be separated?
 //    val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String>,
 //    val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String>,
 //    val installmentDelegateState: ComponentFieldDelegateState<InstallmentModel?>,
+    val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val enableLuhnCheck: Boolean? = null,
     val isBrandSupported: Boolean? = null,
-    val isHolderNameRequired: Boolean = false,
 ) : DelegateState {
     override val isValid: Boolean = true
 }
