@@ -202,6 +202,7 @@ class CardView @JvmOverloads constructor(
         updateExpiryDate(cardViewState.cardExpiryDateFieldState)
         updateHolderName(cardViewState.cardHolderNameFieldState)
         updateSocialSecurityNumber(cardViewState.socialSecurityNumberFieldState)
+        updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -345,11 +346,44 @@ class CardView @JvmOverloads constructor(
         }
     }
 
+    private fun updateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumberFieldState: ComponentFieldViewState<String>) {
+        val kcpBirthDateOrRegistrationNumberEditText =
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
+
+        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener(null)
+        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = null
+
+        kcpBirthDateOrRegistrationNumberEditText?.updateText(kcpBirthDateOrTaxNumberFieldState.value)
+
+        if (kcpBirthDateOrTaxNumberFieldState.hasFocus) {
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
+        } else {
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.clearFocus()
+        }
+
+        kcpBirthDateOrTaxNumberFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
+        }
+
+        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
+            cardDelegate.onFieldValueChanged(
+                CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER,
+                kcpBirthDateOrRegistrationNumberEditText.rawValue,
+            )
+        }
+        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener =
+            OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+                cardDelegate.onFieldFocusChanged(CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER, hasFocus)
+            }
+    }
+
     private fun outputDataChanged(cardOutputData: CardOutputData) {
 //        onCardNumberValidated(cardOutputData)
 //        onExpiryDateValidated(cardOutputData.expiryDateState)
-        setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
-        setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
+//        setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
+//        setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
         setKcpHint(cardOutputData.kcpBirthDateOrTaxNumberHint)
         setAddressInputVisibility(cardOutputData.addressUIState)
         handleCvcUIState(cardOutputData.cvcUIState)
@@ -673,7 +707,7 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initKcpAuthenticationInput() {
-        initKcpBirthDateOrTaxNumberInput()
+//        initKcpBirthDateOrTaxNumberInput()
         initKcpCardPasswordInput()
     }
 

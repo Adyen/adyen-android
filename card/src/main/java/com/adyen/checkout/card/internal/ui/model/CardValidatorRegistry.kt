@@ -8,11 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.util.CardValidationUtils
-import com.adyen.checkout.components.core.internal.ui.model.FieldState
+import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
@@ -33,7 +34,7 @@ internal class CardValidatorRegistry(
             CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateValidator(validationMapper)
             CardFieldId.CARD_HOLDER_NAME -> CardHolderNameValidator()
             CardFieldId.SOCIAL_SECURITY_NUMBER -> SocialSecurityNumberValidator()
-//            CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> TODO()
+            CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> KcpBirthDateOrTaxNumberValidator()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
 //            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
@@ -109,6 +110,16 @@ internal class SocialSecurityNumberValidator : FieldValidator<String, CardDelega
         return if (state.componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW) {
             // TODO To be fixed later to take the transformation into account if necessary
             SocialSecurityNumberUtils.validateSocialSecurityNumber(input).validation
+        } else {
+            Validation.Valid
+        }
+    }
+}
+
+internal class KcpBirthDateOrTaxNumberValidator : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        return if (state.componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW) {
+            KcpValidationUtils.validateKcpBirthDateOrTaxNumber(input).validation
         } else {
             Validation.Valid
         }

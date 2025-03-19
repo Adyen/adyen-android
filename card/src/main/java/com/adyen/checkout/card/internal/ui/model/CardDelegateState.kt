@@ -30,9 +30,8 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = ""),
     val socialSecurityNumberDelegateState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
-    // TODO: Should these be separated?
-//    val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String>,
-//    val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String>,
+    val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
 //    val installmentDelegateState: ComponentFieldDelegateState<InstallmentModel?>,
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),

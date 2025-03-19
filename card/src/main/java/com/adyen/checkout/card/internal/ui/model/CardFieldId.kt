@@ -18,7 +18,7 @@ enum class CardFieldId {
     CARD_EXPIRY_DATE,
     CARD_HOLDER_NAME,
     SOCIAL_SECURITY_NUMBER,
-//    KCP_BIRTH_DATE_OR_TAX_NUMBER,
+    KCP_BIRTH_DATE_OR_TAX_NUMBER,
 //    ADDRESS_POSTAL_CODE,
 //    ADDRESS_LOOKUP,
     // TODO: Do these need to be separated?
