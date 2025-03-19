@@ -11,14 +11,17 @@ package com.adyen.checkout.card.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.toComponentFieldViewState
+import com.adyen.checkout.core.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardViewState(
     val cardNumberFieldState: ComponentFieldViewState<String>,
-    val securityCodeFieldState: ComponentFieldViewState<String>,
+    val cardSecurityCodeFieldState: ComponentFieldViewState<String>,
+    val cardExpiryDateFieldState: ComponentFieldViewState<ExpiryDate>,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
     cardNumberFieldState = this.cardNumberDelegateState.toComponentFieldViewState(),
-    securityCodeFieldState = this.securityCodeDelegateState.toComponentFieldViewState(),
+    cardSecurityCodeFieldState = this.cardSecurityCodeDelegateState.toComponentFieldViewState(),
+    cardExpiryDateFieldState = this.cardExpiryDateDelegateState.toComponentFieldViewState(),
 )

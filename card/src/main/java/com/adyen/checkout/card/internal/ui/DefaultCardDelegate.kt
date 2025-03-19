@@ -322,8 +322,12 @@ class DefaultCardDelegate(
         // TODO Create a new function to re-validate the field?
         stateManager.updateField(CardFieldId.CARD_NUMBER, stateManager.state.value.cardNumberDelegateState.value)
         stateManager.updateField(
-            CardFieldId.SECURITY_CODE,
-            stateManager.state.value.securityCodeDelegateState.value,
+            CardFieldId.CARD_SECURITY_CODE,
+            stateManager.state.value.cardSecurityCodeDelegateState.value,
+        )
+        stateManager.updateField(
+            CardFieldId.CARD_EXPIRY_DATE,
+            stateManager.state.value.cardExpiryDateDelegateState.value,
         )
     }
 

@@ -10,10 +10,10 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardDelegateState(
@@ -23,8 +23,11 @@ data class CardDelegateState(
     val selectedCardIndexDelegateState: ComponentFieldDelegateState<Int> = ComponentFieldDelegateState(
         value = -1,
     ),
-    val securityCodeDelegateState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
+    val cardSecurityCodeDelegateState: ComponentFieldDelegateState<String> = ComponentFieldDelegateState(
         value = "",
+    ),
+    val cardExpiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate> = ComponentFieldDelegateState(
+        value = EMPTY_DATE,
     ),
 //    val expiryDateDelegateState: ComponentFieldDelegateState<ExpiryDate>,
 //    val securityCodeDelegateState: ComponentFieldDelegateState<String>,

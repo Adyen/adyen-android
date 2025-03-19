@@ -14,6 +14,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.validation.DefaultValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidator
 import com.adyen.checkout.components.core.internal.ui.model.validation.FieldValidatorRegistry
+import com.adyen.checkout.core.ui.model.ExpiryDate
 
 internal class CardValidatorRegistry(
     // TODO: We might need to move this to a specific validator
@@ -24,8 +25,8 @@ internal class CardValidatorRegistry(
         when (fieldId) {
             CardFieldId.CARD_NUMBER -> CardNumberValidator(validationMapper)
             CardFieldId.SELECTED_CARD_INDEX -> DefaultValidator()
-            CardFieldId.SECURITY_CODE -> SecurityCodeValidator(validationMapper)
-//            CardFieldId.CARD_EXPIRY_DATE -> TODO()
+            CardFieldId.CARD_SECURITY_CODE -> CardSecurityCodeValidator(validationMapper)
+            CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateValidator(validationMapper)
 //            CardFieldId.CARD_HOLDER_NAME -> TODO()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
@@ -63,7 +64,7 @@ internal class CardNumberValidator(
     }
 }
 
-internal class SecurityCodeValidator(
+internal class CardSecurityCodeValidator(
     private val validationMapper: CardValidationMapper
 ) : FieldValidator<String, CardDelegateState> {
     override fun validate(input: String, state: CardDelegateState): Validation {
@@ -73,5 +74,17 @@ internal class SecurityCodeValidator(
             state.cvcUIState,
         )
         return validationMapper.mapSecurityCodeValidation(validation)
+    }
+}
+
+internal class CardExpiryDateValidator(
+    private val validationMapper: CardValidationMapper
+) : FieldValidator<ExpiryDate, CardDelegateState> {
+    override fun validate(input: ExpiryDate, state: CardDelegateState): Validation {
+        val validation = CardValidationUtils.validateExpiryDate(
+            input,
+            state.selectedOrFirstCardType?.expiryDatePolicy
+        )
+        return validationMapper.mapExpiryDateValidation(validation)
     }
 }

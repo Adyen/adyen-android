@@ -124,7 +124,7 @@ class CardView @JvmOverloads constructor(
 //        updateInputFields(cardDelegate.outputData)
 
 //        initCardNumberInput()
-        initExpiryDateInput()
+//        initExpiryDateInput()
 //        initSecurityCodeInput()
         initHolderNameInput()
         initSocialSecurityNumberInput()
@@ -198,7 +198,8 @@ class CardView @JvmOverloads constructor(
 
     private fun viewStateUpdated(cardViewState: CardViewState) {
         updateCardNumber(cardViewState.cardNumberFieldState)
-        updateSecurityCode(cardViewState.securityCodeFieldState)
+        updateSecurityCode(cardViewState.cardSecurityCodeFieldState)
+        updateExpiryDate(cardViewState.cardExpiryDateFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -250,16 +251,44 @@ class CardView @JvmOverloads constructor(
 
         securityCodeEditText?.setOnChangeListener {
             setCardErrorState(true)
-            cardDelegate.onFieldValueChanged(CardFieldId.SECURITY_CODE, securityCodeEditText.rawValue)
+            cardDelegate.onFieldValueChanged(CardFieldId.CARD_SECURITY_CODE, securityCodeEditText.rawValue)
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            cardDelegate.onFieldFocusChanged(CardFieldId.SECURITY_CODE, hasFocus)
+            cardDelegate.onFieldFocusChanged(CardFieldId.CARD_SECURITY_CODE, hasFocus)
+        }
+    }
+
+    private fun updateExpiryDate(securityCodeFieldState: ComponentFieldViewState<ExpiryDate>) {
+        binding.editTextExpiryDate.setOnChangeListener(null)
+        binding.editTextExpiryDate.onFocusChangeListener = null
+
+        // TODO To be fixed in the ExpiryDateInput, it currently shows a wrong value when set
+//        binding.editTextExpiryDate.date = securityCodeFieldState.value
+
+        if (securityCodeFieldState.hasFocus) {
+            binding.textInputLayoutExpiryDate.requestFocus()
+        } else {
+            binding.textInputLayoutExpiryDate.clearFocus()
+        }
+
+        securityCodeFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutExpiryDate.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutExpiryDate.hideError()
+        }
+
+        binding.editTextExpiryDate.setOnChangeListener {
+            setCardErrorState(true)
+            cardDelegate.onFieldValueChanged(CardFieldId.CARD_EXPIRY_DATE, binding.editTextExpiryDate.date)
+        }
+        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.CARD_EXPIRY_DATE, hasFocus)
         }
     }
 
     private fun outputDataChanged(cardOutputData: CardOutputData) {
 //        onCardNumberValidated(cardOutputData)
-        onExpiryDateValidated(cardOutputData.expiryDateState)
+//        onExpiryDateValidated(cardOutputData.expiryDateState)
         setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
         setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
         setKcpHint(cardOutputData.kcpBirthDateOrTaxNumberHint)

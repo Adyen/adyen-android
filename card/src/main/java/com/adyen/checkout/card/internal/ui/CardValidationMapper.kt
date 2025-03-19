@@ -75,6 +75,22 @@ class CardValidationMapper {
         return FieldState(expiryDate, validation)
     }
 
+    fun mapExpiryDateValidation(
+        validationResult: CardExpiryDateValidation,
+    ): Validation {
+        return when (validationResult) {
+            CardExpiryDateValidation.VALID -> Validation.Valid
+            CardExpiryDateValidation.VALID_NOT_REQUIRED -> Validation.Valid
+            CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_far_in_future)
+
+            CardExpiryDateValidation.INVALID_TOO_OLD ->
+                Validation.Invalid(R.string.checkout_expiry_date_not_valid_too_old)
+
+            CardExpiryDateValidation.INVALID_OTHER_REASON -> Validation.Invalid(R.string.checkout_expiry_date_not_valid)
+        }
+    }
+
     fun mapSecurityCodeValidation(
         securityCode: String,
         validationResult: CardSecurityCodeValidation

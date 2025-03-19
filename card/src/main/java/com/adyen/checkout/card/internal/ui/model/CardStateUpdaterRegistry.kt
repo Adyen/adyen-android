@@ -11,6 +11,7 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdater
 import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdaterRegistry
+import com.adyen.checkout.core.ui.model.ExpiryDate
 
 internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, CardDelegateState> {
 
@@ -18,7 +19,8 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
         when (fieldId) {
             CardFieldId.CARD_NUMBER -> CardNumberUpdater()
             CardFieldId.SELECTED_CARD_INDEX -> SelectedCardIndexUpdater()
-            CardFieldId.SECURITY_CODE -> SecurityCodeUpdater()
+            CardFieldId.CARD_SECURITY_CODE -> CardSecurityCodeUpdater()
+            CardFieldId.CARD_EXPIRY_DATE -> CardExpiryDateUpdater()
         }
     }
 
@@ -72,15 +74,29 @@ internal class SelectedCardIndexUpdater :
     )
 }
 
-internal class SecurityCodeUpdater :
+internal class CardSecurityCodeUpdater :
     StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
     override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
-        state.securityCodeDelegateState
+        state.cardSecurityCodeDelegateState
 
     override fun updateFieldState(
         state: CardDelegateState,
         fieldState: ComponentFieldDelegateState<String>
     ) = state.copy(
-        securityCodeDelegateState = fieldState,
+        cardSecurityCodeDelegateState = fieldState,
+    )
+}
+
+
+internal class CardExpiryDateUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<ExpiryDate>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<ExpiryDate> =
+        state.cardExpiryDateDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<ExpiryDate>
+    ) = state.copy(
+        cardExpiryDateDelegateState = fieldState,
     )
 }

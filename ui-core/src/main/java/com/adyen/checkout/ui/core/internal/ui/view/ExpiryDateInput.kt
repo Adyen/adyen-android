@@ -82,6 +82,7 @@ constructor(
                 // first day of month, GregorianCalendar month is 0 based.
                 calendar[expiryDate.expiryYear, expiryDate.expiryMonth - 1] = 1
                 setText(dateFormat.format(calendar.time))
+                setSelection(length())
             } else {
                 setText("")
             }

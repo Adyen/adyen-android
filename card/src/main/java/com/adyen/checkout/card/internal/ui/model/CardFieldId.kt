@@ -14,7 +14,8 @@ import androidx.annotation.RestrictTo
 enum class CardFieldId {
     CARD_NUMBER,
     SELECTED_CARD_INDEX,
-    SECURITY_CODE,
+    CARD_SECURITY_CODE,
+    CARD_EXPIRY_DATE,
 //    CARD_HOLDER_NAME,
 //    ADDRESS_POSTAL_CODE,
 //    ADDRESS_LOOKUP,
