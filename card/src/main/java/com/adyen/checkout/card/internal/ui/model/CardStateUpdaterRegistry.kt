@@ -24,6 +24,7 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
             CardFieldId.CARD_HOLDER_NAME -> CardHolderNameUpdater()
             CardFieldId.SOCIAL_SECURITY_NUMBER -> SocialSecurityNumberUpdater()
             CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> KcpBirthDateOrTaxNumberUpdater()
+            CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordUpdater()
         }
     }
 
@@ -139,5 +140,18 @@ internal class KcpBirthDateOrTaxNumberUpdater :
         fieldState: ComponentFieldDelegateState<String>
     ) = state.copy(
         kcpBirthDateOrTaxNumberDelegateState = fieldState,
+    )
+}
+
+internal class KcpCardPasswordUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
+        state.kcpCardPasswordDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<String>
+    ) = state.copy(
+        kcpCardPasswordDelegateState = fieldState,
     )
 }

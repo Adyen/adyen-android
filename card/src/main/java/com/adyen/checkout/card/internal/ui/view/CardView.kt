@@ -128,7 +128,7 @@ class CardView @JvmOverloads constructor(
 //        initSecurityCodeInput()
 //        initHolderNameInput()
 //        initSocialSecurityNumberInput()
-        initKcpAuthenticationInput()
+//        initKcpAuthenticationInput()
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
         initAddressLookup()
@@ -203,6 +203,7 @@ class CardView @JvmOverloads constructor(
         updateHolderName(cardViewState.cardHolderNameFieldState)
         updateSocialSecurityNumber(cardViewState.socialSecurityNumberFieldState)
         updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState)
+        updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -377,6 +378,34 @@ class CardView @JvmOverloads constructor(
             OnFocusChangeListener { _: View?, hasFocus: Boolean ->
                 cardDelegate.onFieldFocusChanged(CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER, hasFocus)
             }
+    }
+
+    private fun updateKcpCardPassword(kcpCardPasswordFieldState: ComponentFieldViewState<String>) {
+        val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
+
+        kcpPasswordEditText?.setOnChangeListener(null)
+        kcpPasswordEditText?.onFocusChangeListener = null
+
+        kcpPasswordEditText?.updateText(kcpCardPasswordFieldState.value)
+
+        if (kcpCardPasswordFieldState.hasFocus) {
+            binding.textInputLayoutKcpCardPassword.requestFocus()
+        } else {
+            binding.textInputLayoutKcpCardPassword.clearFocus()
+        }
+
+        kcpCardPasswordFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutKcpCardPassword.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutKcpCardPassword.hideError()
+        }
+
+        kcpPasswordEditText?.setOnChangeListener {
+            cardDelegate.onFieldValueChanged(CardFieldId.KCP_CARD_PASSWORD, kcpPasswordEditText.rawValue)
+        }
+        kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.KCP_CARD_PASSWORD, hasFocus)
+        }
     }
 
     private fun outputDataChanged(cardOutputData: CardOutputData) {
@@ -708,7 +737,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initKcpAuthenticationInput() {
 //        initKcpBirthDateOrTaxNumberInput()
-        initKcpCardPasswordInput()
+//        initKcpCardPasswordInput()
     }
 
     private fun initKcpBirthDateOrTaxNumberInput() {

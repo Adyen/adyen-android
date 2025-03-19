@@ -32,7 +32,8 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = ""),
     val kcpBirthDateOrTaxNumberDelegateState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
-//    val installmentDelegateState: ComponentFieldDelegateState<InstallmentModel?>,
+    val kcpCardPasswordDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,

@@ -35,6 +35,7 @@ internal class CardValidatorRegistry(
             CardFieldId.CARD_HOLDER_NAME -> CardHolderNameValidator()
             CardFieldId.SOCIAL_SECURITY_NUMBER -> SocialSecurityNumberValidator()
             CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> KcpBirthDateOrTaxNumberValidator()
+            CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordValidator()
 //            CardFieldId.ADDRESS_POSTAL_CODE -> TODO()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
 //            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
@@ -120,6 +121,16 @@ internal class KcpBirthDateOrTaxNumberValidator : FieldValidator<String, CardDel
     override fun validate(input: String, state: CardDelegateState): Validation {
         return if (state.componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW) {
             KcpValidationUtils.validateKcpBirthDateOrTaxNumber(input).validation
+        } else {
+            Validation.Valid
+        }
+    }
+}
+
+internal class KcpCardPasswordValidator : FieldValidator<String, CardDelegateState> {
+    override fun validate(input: String, state: CardDelegateState): Validation {
+        return if (state.componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW) {
+            KcpValidationUtils.validateKcpCardPassword(input).validation
         } else {
             Validation.Valid
         }
