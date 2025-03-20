@@ -34,6 +34,7 @@ import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
+import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -206,6 +207,12 @@ class CardView @JvmOverloads constructor(
         updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState)
         updateAddressPostalCode(cardViewState.addressPostalCodeFieldState)
         updateSwitchStorePaymentMethod(cardViewState.storedPaymentMethodSwitchFieldState)
+
+        setAddressInputVisibility(cardViewState.addressUIState)
+        handleCvcUIState(cardViewState.cvcUIState)
+        handleExpiryDateUIState(cardViewState.expiryDateUIState)
+        handleHolderNameUIState(cardViewState.holderNameUIState)
+        setStorePaymentSwitchVisibility(cardViewState.showStorePaymentField)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -356,7 +363,14 @@ class CardView @JvmOverloads constructor(
         kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener(null)
         kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = null
 
+        val hintResId = when {
+            kcpBirthDateOrTaxNumberFieldState.value.length > KcpValidationUtils.KCP_BIRTH_DATE_LENGTH ->
+                R.string.checkout_kcp_tax_number_hint
+
+            else -> R.string.checkout_kcp_birth_date_or_tax_number_hint
+        }
         kcpBirthDateOrRegistrationNumberEditText?.updateText(kcpBirthDateOrTaxNumberFieldState.value)
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(hintResId)
 
         if (kcpBirthDateOrTaxNumberFieldState.hasFocus) {
             binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
@@ -463,12 +477,12 @@ class CardView @JvmOverloads constructor(
 //        onExpiryDateValidated(cardOutputData.expiryDateState)
 //        setSocialSecurityNumberVisibility(cardOutputData.isSocialSecurityNumberRequired)
 //        setKcpAuthVisibility(cardOutputData.isKCPAuthRequired)
-        setKcpHint(cardOutputData.kcpBirthDateOrTaxNumberHint)
-        setAddressInputVisibility(cardOutputData.addressUIState)
-        handleCvcUIState(cardOutputData.cvcUIState)
-        handleExpiryDateUIState(cardOutputData.expiryDateUIState)
-        handleHolderNameUIState(cardOutputData.holderNameUIState)
-        setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
+//        setKcpHint(cardOutputData.kcpBirthDateOrTaxNumberHint)
+//        setAddressInputVisibility(cardOutputData.addressUIState)
+//        handleCvcUIState(cardOutputData.cvcUIState)
+//        handleExpiryDateUIState(cardOutputData.expiryDateUIState)
+//        handleHolderNameUIState(cardOutputData.holderNameUIState)
+//        setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
         updateInstallments(cardOutputData)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)

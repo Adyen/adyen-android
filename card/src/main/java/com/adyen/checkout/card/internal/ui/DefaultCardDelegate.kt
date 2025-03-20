@@ -311,6 +311,7 @@ class DefaultCardDelegate(
                 detectedCardTypes = filteredDetectedCardTypes,
                 selectedOrFirstCardType = selectedOrFirstCardType,
                 cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+                expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
                 enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true,
                 isBrandSupported = !shouldFailWithUnsupportedBrand,
             )

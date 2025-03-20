@@ -43,6 +43,12 @@ data class CardDelegateState(
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
+    val expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
+    val holderNameUIState: InputFieldUIState = if (componentParams.isHolderNameRequired) {
+        InputFieldUIState.REQUIRED
+    } else {
+        InputFieldUIState.HIDDEN
+    },
     val enableLuhnCheck: Boolean = true,
     val isBrandSupported: Boolean? = null,
     val updatedCountryOptions: List<AddressListItem> = emptyList(),
@@ -50,6 +56,7 @@ data class CardDelegateState(
     val addressFormUIState: AddressFormUIState = AddressFormUIState.fromAddressParams(
         componentParams.addressParams
     ),
+    val showStorePaymentField: Boolean = componentParams.isStorePaymentFieldVisible,
 ) : DelegateState {
     override val isValid: Boolean = true
 }
