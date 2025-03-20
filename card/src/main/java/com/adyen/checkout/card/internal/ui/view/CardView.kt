@@ -678,17 +678,17 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun initCardNumberInput() {
-        binding.editTextCardNumber.setOnChangeListener {
-            setCardErrorState(true)
-            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
-            // TODO: Value needs to be changed
-            cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
-        }
-        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            setCardErrorState(hasFocus)
-        }
-    }
+//    private fun initCardNumberInput() {
+//        binding.editTextCardNumber.setOnChangeListener {
+//            setCardErrorState(true)
+//            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
+//            // TODO: Value needs to be changed
+//            cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
+//        }
+//        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+//            setCardErrorState(hasFocus)
+//        }
+//    }
 
     private fun setCardErrorState(hasFocus: Boolean) {
         val outputData = cardDelegate.outputData
@@ -759,133 +759,133 @@ class CardView @JvmOverloads constructor(
         binding.cardBrandLogoImageViewSecondary.alpha = SELECTED_BRAND_LOGO_ALPHA
     }
 
-    private fun initExpiryDateInput() {
-        binding.editTextExpiryDate.setOnChangeListener {
-            val date = binding.editTextExpiryDate.date
-            cardDelegate.updateInputData { expiryDate = date }
-            binding.textInputLayoutExpiryDate.hideError()
-        }
-        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val expiryDateValidation = cardDelegate.outputData.expiryDateState.validation
-            if (hasFocus) {
-                binding.textInputLayoutExpiryDate.hideError()
-            } else if (expiryDateValidation is Validation.Invalid) {
-                binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
-            }
-        }
-    }
+//    private fun initExpiryDateInput() {
+//        binding.editTextExpiryDate.setOnChangeListener {
+//            val date = binding.editTextExpiryDate.date
+//            cardDelegate.updateInputData { expiryDate = date }
+//            binding.textInputLayoutExpiryDate.hideError()
+//        }
+//        binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val expiryDateValidation = cardDelegate.outputData.expiryDateState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutExpiryDate.hideError()
+//            } else if (expiryDateValidation is Validation.Invalid) {
+//                binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
+//            }
+//        }
+//    }
+//
+//    private fun initSecurityCodeInput() {
+//        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
+//        securityCodeEditText?.setOnChangeListener { editable: Editable ->
+//            cardDelegate.updateInputData { securityCode = editable.toString() }
+//            binding.textInputLayoutSecurityCode.hideError()
+//        }
+//        securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val securityCodeValidation = cardDelegate.outputData.securityCodeState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutSecurityCode.hideError()
+//            } else if (securityCodeValidation is Validation.Invalid) {
+//                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
+//            }
+//        }
+//    }
+//
+//    private fun initHolderNameInput() {
+//        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
+//        cardHolderEditText?.setOnChangeListener { editable: Editable ->
+//            cardDelegate.updateInputData { holderName = editable.toString() }
+//            binding.textInputLayoutCardHolder.hideError()
+//        }
+//        cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val holderNameValidation = cardDelegate.outputData.holderNameState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutCardHolder.hideError()
+//            } else if (holderNameValidation is Validation.Invalid) {
+//                binding.textInputLayoutCardHolder.showError(localizedContext.getString(holderNameValidation.reason))
+//            }
+//        }
+//    }
+//
+//    private fun initSocialSecurityNumberInput() {
+//        val socialSecurityNumberEditText =
+//            binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
+//        socialSecurityNumberEditText?.setOnChangeListener { editable ->
+//            cardDelegate.updateInputData { socialSecurityNumber = editable.toString() }
+//            binding.textInputLayoutSocialSecurityNumber.hideError()
+//        }
+//        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val socialSecurityNumberValidation = cardDelegate.outputData.socialSecurityNumberState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutSocialSecurityNumber.hideError()
+//            } else if (socialSecurityNumberValidation is Validation.Invalid) {
+//                binding.textInputLayoutSocialSecurityNumber.showError(
+//                    localizedContext.getString(socialSecurityNumberValidation.reason),
+//                )
+//            }
+//        }
+//    }
 
-    private fun initSecurityCodeInput() {
-        val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
-        securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            cardDelegate.updateInputData { securityCode = editable.toString() }
-            binding.textInputLayoutSecurityCode.hideError()
-        }
-        securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val securityCodeValidation = cardDelegate.outputData.securityCodeState.validation
-            if (hasFocus) {
-                binding.textInputLayoutSecurityCode.hideError()
-            } else if (securityCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
-            }
-        }
-    }
+//    private fun initKcpAuthenticationInput() {
+////        initKcpBirthDateOrTaxNumberInput()
+////        initKcpCardPasswordInput()
+//    }
 
-    private fun initHolderNameInput() {
-        val cardHolderEditText = binding.textInputLayoutCardHolder.editText as? AdyenTextInputEditText
-        cardHolderEditText?.setOnChangeListener { editable: Editable ->
-            cardDelegate.updateInputData { holderName = editable.toString() }
-            binding.textInputLayoutCardHolder.hideError()
-        }
-        cardHolderEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val holderNameValidation = cardDelegate.outputData.holderNameState.validation
-            if (hasFocus) {
-                binding.textInputLayoutCardHolder.hideError()
-            } else if (holderNameValidation is Validation.Invalid) {
-                binding.textInputLayoutCardHolder.showError(localizedContext.getString(holderNameValidation.reason))
-            }
-        }
-    }
-
-    private fun initSocialSecurityNumberInput() {
-        val socialSecurityNumberEditText =
-            binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
-        socialSecurityNumberEditText?.setOnChangeListener { editable ->
-            cardDelegate.updateInputData { socialSecurityNumber = editable.toString() }
-            binding.textInputLayoutSocialSecurityNumber.hideError()
-        }
-        socialSecurityNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val socialSecurityNumberValidation = cardDelegate.outputData.socialSecurityNumberState.validation
-            if (hasFocus) {
-                binding.textInputLayoutSocialSecurityNumber.hideError()
-            } else if (socialSecurityNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason),
-                )
-            }
-        }
-    }
-
-    private fun initKcpAuthenticationInput() {
-//        initKcpBirthDateOrTaxNumberInput()
-//        initKcpCardPasswordInput()
-    }
-
-    private fun initKcpBirthDateOrTaxNumberInput() {
-        val kcpBirthDateOrRegistrationNumberEditText =
-            binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
-        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
-            cardDelegate.updateInputData { kcpBirthDateOrTaxNumber = it.toString() }
-            binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
-        }
-
-        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrTaxNumberValidation = cardDelegate.outputData.kcpBirthDateOrTaxNumberState.validation
-            if (hasFocus) {
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
-            } else if (kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
-                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
-                )
-            }
-        }
-    }
-
-    private fun initKcpCardPasswordInput() {
-        val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
-        kcpPasswordEditText?.setOnChangeListener {
-            cardDelegate.updateInputData { kcpCardPassword = it.toString() }
-            binding.textInputLayoutKcpCardPassword.hideError()
-        }
-
-        kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val kcpBirthDateOrRegistrationNumberValidation = cardDelegate.outputData.kcpCardPasswordState.validation
-            if (hasFocus) {
-                binding.textInputLayoutKcpCardPassword.hideError()
-            } else if (kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutKcpCardPassword.showError(
-                    localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason),
-                )
-            }
-        }
-    }
-
-    private fun initPostalCodeInput() {
-        val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
-        postalCodeEditText?.setOnChangeListener {
-            cardDelegate.updateInputData { address.postalCode = it.toString() }
-            binding.textInputLayoutPostalCode.hideError()
-        }
-
-        postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val postalCodeValidation = cardDelegate.outputData.addressState.postalCode.validation
-            if (hasFocus) {
-                binding.textInputLayoutPostalCode.hideError()
-            } else if (postalCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutPostalCode.showError(localizedContext.getString(postalCodeValidation.reason))
-            }
-        }
-    }
+//    private fun initKcpBirthDateOrTaxNumberInput() {
+//        val kcpBirthDateOrRegistrationNumberEditText =
+//            binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
+//        kcpBirthDateOrRegistrationNumberEditText?.setOnChangeListener {
+//            cardDelegate.updateInputData { kcpBirthDateOrTaxNumber = it.toString() }
+//            binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
+//        }
+//
+//        kcpBirthDateOrRegistrationNumberEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val kcpBirthDateOrTaxNumberValidation = cardDelegate.outputData.kcpBirthDateOrTaxNumberState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutKcpBirthDateOrTaxNumber.hideError()
+//            } else if (kcpBirthDateOrTaxNumberValidation is Validation.Invalid) {
+//                binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
+//                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
+//                )
+//            }
+//        }
+//    }
+//
+//    private fun initKcpCardPasswordInput() {
+//        val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
+//        kcpPasswordEditText?.setOnChangeListener {
+//            cardDelegate.updateInputData { kcpCardPassword = it.toString() }
+//            binding.textInputLayoutKcpCardPassword.hideError()
+//        }
+//
+//        kcpPasswordEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val kcpBirthDateOrRegistrationNumberValidation = cardDelegate.outputData.kcpCardPasswordState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutKcpCardPassword.hideError()
+//            } else if (kcpBirthDateOrRegistrationNumberValidation is Validation.Invalid) {
+//                binding.textInputLayoutKcpCardPassword.showError(
+//                    localizedContext.getString(kcpBirthDateOrRegistrationNumberValidation.reason),
+//                )
+//            }
+//        }
+//    }
+//
+//    private fun initPostalCodeInput() {
+//        val postalCodeEditText = binding.textInputLayoutPostalCode.editText as? AdyenTextInputEditText
+//        postalCodeEditText?.setOnChangeListener {
+//            cardDelegate.updateInputData { address.postalCode = it.toString() }
+//            binding.textInputLayoutPostalCode.hideError()
+//        }
+//
+//        postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+//            val postalCodeValidation = cardDelegate.outputData.addressState.postalCode.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutPostalCode.hideError()
+//            } else if (postalCodeValidation is Validation.Invalid) {
+//                binding.textInputLayoutPostalCode.showError(localizedContext.getString(postalCodeValidation.reason))
+//            }
+//        }
+//    }
 
     private fun initAddressFormInput(coroutineScope: CoroutineScope) {
         binding.addressFormInput.attachDelegate(cardDelegate, coroutineScope)
@@ -998,19 +998,19 @@ class CardView @JvmOverloads constructor(
         binding.switchStorePaymentMethod.isVisible = showStorePaymentField
     }
 
-    private fun setSocialSecurityNumberVisibility(shouldShowSocialSecurityNumber: Boolean) {
-        binding.textInputLayoutSocialSecurityNumber.isVisible = shouldShowSocialSecurityNumber
-    }
-
-    private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
-        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
-        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
-    }
-
-    private fun setKcpHint(kcpBirthDateOrTaxNumberHint: Int?) {
-        kcpBirthDateOrTaxNumberHint ?: return
-        binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(kcpBirthDateOrTaxNumberHint)
-    }
+//    private fun setSocialSecurityNumberVisibility(shouldShowSocialSecurityNumber: Boolean) {
+//        binding.textInputLayoutSocialSecurityNumber.isVisible = shouldShowSocialSecurityNumber
+//    }
+//
+//    private fun setKcpAuthVisibility(shouldShowKCPAuth: Boolean) {
+//        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = shouldShowKCPAuth
+//        binding.textInputLayoutKcpCardPassword.isVisible = shouldShowKCPAuth
+//    }
+//
+//    private fun setKcpHint(kcpBirthDateOrTaxNumberHint: Int?) {
+//        kcpBirthDateOrTaxNumberHint ?: return
+//        binding.textInputLayoutKcpBirthDateOrTaxNumber.hint = localizedContext.getString(kcpBirthDateOrTaxNumberHint)
+//    }
 
     private fun setAddressInputVisibility(addressFormUIState: AddressFormUIState) {
         when (addressFormUIState) {
@@ -1066,20 +1066,20 @@ class CardView @JvmOverloads constructor(
         cardDelegate.onFieldValueChanged(CardFieldId.INSTALLMENT_OPTION, installmentModel)
     }
 
-    private fun updateInputFields(cardOutputData: CardOutputData?) {
-        cardOutputData?.let { outputData ->
-            binding.editTextCardNumber.setText(outputData.cardNumberState.value)
-            binding.editTextExpiryDate.date = outputData.expiryDateState.value
-            binding.editTextSecurityCode.setText(outputData.securityCodeState.value)
-            binding.editTextCardHolder.setText(outputData.holderNameState.value)
-            binding.editTextSocialSecurityNumber.setSocialSecurityNumber(outputData.socialSecurityNumberState.value)
-            binding.editTextKcpBirthDateOrTaxNumber.setText(outputData.kcpBirthDateOrTaxNumberState.value)
-            binding.editTextKcpCardPassword.setText(outputData.kcpCardPasswordState.value)
-            binding.autoCompleteTextViewInstallments.setText(
-                InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value),
-            )
-        }
-    }
+//    private fun updateInputFields(cardOutputData: CardOutputData?) {
+//        cardOutputData?.let { outputData ->
+//            binding.editTextCardNumber.setText(outputData.cardNumberState.value)
+//            binding.editTextExpiryDate.date = outputData.expiryDateState.value
+//            binding.editTextSecurityCode.setText(outputData.securityCodeState.value)
+//            binding.editTextCardHolder.setText(outputData.holderNameState.value)
+//            binding.editTextSocialSecurityNumber.setSocialSecurityNumber(outputData.socialSecurityNumberState.value)
+//            binding.editTextKcpBirthDateOrTaxNumber.setText(outputData.kcpBirthDateOrTaxNumberState.value)
+//            binding.editTextKcpCardPassword.setText(outputData.kcpCardPasswordState.value)
+//            binding.autoCompleteTextViewInstallments.setText(
+//                InstallmentUtils.getTextForInstallmentOption(localizedContext, outputData.installmentState.value),
+//            )
+//        }
+//    }
 
     private fun getActivity(context: Context): Activity? {
         return when (context) {

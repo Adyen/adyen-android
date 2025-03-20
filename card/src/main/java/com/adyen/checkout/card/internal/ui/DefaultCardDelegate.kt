@@ -476,24 +476,24 @@ class DefaultCardDelegate(
             kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
             kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
             addressState = addressState,
-            installmentState = makeInstallmentFieldState(inputData.installmentOption),
-            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
-            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
-            expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
-            holderNameUIState = getHolderNameUIState(),
-            showStorePaymentField = showStorePaymentField(),
+//            installmentState = makeInstallmentFieldState(inputData.installmentOption),
+//            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
+//            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+//            expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+//            holderNameUIState = getHolderNameUIState(),
+//            showStorePaymentField = showStorePaymentField(),
             detectedCardTypes = filteredDetectedCardTypes,
-            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
-            isKCPAuthRequired = isKCPAuthRequired(),
+//            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
+//            isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
-            installmentOptions = getInstallmentOptions(
-                installmentParams = componentParams.installmentParams,
-                cardBrand = selectedOrFirstCardType?.cardBrand,
-                isCardTypeReliable = isReliable,
-            ),
+//            installmentOptions = getInstallmentOptions(
+//                installmentParams = componentParams.installmentParams,
+//                cardBrand = selectedOrFirstCardType?.cardBrand,
+//                isCardTypeReliable = isReliable,
+//            ),
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
-            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
+//            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
         )
     }
@@ -716,7 +716,7 @@ class DefaultCardDelegate(
         )
     }
 
-    private fun isCvcHidden(cvcUIState: InputFieldUIState = outputData.cvcUIState): Boolean {
+    private fun isCvcHidden(cvcUIState: InputFieldUIState = stateManager!!.state.value.cvcUIState): Boolean {
         return cvcUIState == InputFieldUIState.HIDDEN
     }
 
@@ -893,7 +893,7 @@ class DefaultCardDelegate(
     ): PaymentComponentData<CardPaymentMethod> {
         return PaymentComponentData(
             paymentMethod = cardPaymentMethod,
-            storePaymentMethod = if (showStorePaymentField()) stateOutputData.shouldStorePaymentMethod else null,
+            storePaymentMethod = if (showStorePaymentField()) stateManager!!.state.value.storedPaymentMethodSwitchDelegateState.value else null,
             shopperReference = componentParams.shopperReference,
             order = order,
             amount = componentParams.amount,
@@ -908,13 +908,14 @@ class DefaultCardDelegate(
                 )
             }
             if (isInstallmentsRequired(stateOutputData)) {
-                installments = InstallmentUtils.makeInstallmentModelObject(stateOutputData.installmentState.value)
+                installments =
+                    InstallmentUtils.makeInstallmentModelObject(stateManager!!.state.value.installmentOptionDelegateState.value)
             }
         }
     }
 
     private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
-        return cardOutputData.installmentOptions.isNotEmpty()
+        return stateManager!!.state.value.installmentOptions.isNotEmpty()
     }
 
     private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {

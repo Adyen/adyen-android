@@ -239,20 +239,20 @@ internal class StoredCardDelegate(
             kcpBirthDateOrTaxNumberState = FieldState(kcpBirthDateOrTaxNumber, Validation.Valid),
             kcpCardPasswordState = FieldState(kcpCardPassword, Validation.Valid),
             addressState = AddressValidationUtils.makeValidEmptyAddressOutput(inputData.address),
-            installmentState = FieldState(inputData.installmentOption, Validation.Valid),
-            shouldStorePaymentMethod = isStorePaymentMethodSwitchChecked,
-            cvcUIState = makeCvcUIState(storedDetectedCardTypes.cvcPolicy),
-            expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes.expiryDatePolicy),
-            holderNameUIState = InputFieldUIState.HIDDEN,
-            showStorePaymentField = false,
+//            installmentState = FieldState(inputData.installmentOption, Validation.Valid),
+//            shouldStorePaymentMethod = isStorePaymentMethodSwitchChecked,
+//            cvcUIState = makeCvcUIState(storedDetectedCardTypes.cvcPolicy),
+//            expiryDateUIState = makeExpiryDateUIState(storedDetectedCardTypes.expiryDatePolicy),
+//            holderNameUIState = InputFieldUIState.HIDDEN,
+//            showStorePaymentField = false,
             detectedCardTypes = listOf(storedDetectedCardTypes),
-            isSocialSecurityNumberRequired = false,
-            isKCPAuthRequired = false,
+//            isSocialSecurityNumberRequired = false,
+//            isKCPAuthRequired = false,
             addressUIState = AddressFormUIState.NONE,
-            installmentOptions = emptyList(),
+//            installmentOptions = emptyList(),
             cardBrands = emptyList(),
             isDualBranded = false,
-            kcpBirthDateOrTaxNumberHint = null,
+//            kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
         )
     }
@@ -351,7 +351,8 @@ internal class StoredCardDelegate(
     }
 
     private fun isCvcHidden(): Boolean {
-        return outputData.cvcUIState == InputFieldUIState.HIDDEN
+//        return outputData.cvcUIState == InputFieldUIState.HIDDEN
+        return true
     }
 
     private fun mapComponentState(

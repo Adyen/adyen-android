@@ -164,7 +164,7 @@ internal class StoredCardDelegateTest(
                     assertTrue(socialSecurityNumberState.validation is Validation.Valid)
                     assertTrue(kcpBirthDateOrTaxNumberState.validation is Validation.Valid)
                     assertTrue(kcpCardPasswordState.validation is Validation.Valid)
-                    assertTrue(installmentState.validation is Validation.Valid)
+//                    assertTrue(installmentState.validation is Validation.Valid)
                     assertTrue(addressState.isValid)
                 }
             }
@@ -190,7 +190,7 @@ internal class StoredCardDelegateTest(
                     assertTrue(socialSecurityNumberState.validation is Validation.Valid)
                     assertTrue(kcpBirthDateOrTaxNumberState.validation is Validation.Valid)
                     assertTrue(kcpCardPasswordState.validation is Validation.Valid)
-                    assertTrue(installmentState.validation is Validation.Valid)
+//                    assertTrue(installmentState.validation is Validation.Valid)
                     assertTrue(addressState.isValid)
                 }
             }
@@ -620,20 +620,20 @@ internal class StoredCardDelegateTest(
             kcpBirthDateOrTaxNumberState = kcpBirthDateOrTaxNumberState,
             kcpCardPasswordState = kcpCardPasswordState,
             addressState = addressState,
-            installmentState = installmentState,
-            shouldStorePaymentMethod = shouldStorePaymentMethod,
-            cvcUIState = cvcUIState,
-            expiryDateUIState = expiryDateUIState,
-            holderNameUIState = holderNameUIState,
-            showStorePaymentField = showStorePaymentField,
+//            installmentState = installmentState,
+//            shouldStorePaymentMethod = shouldStorePaymentMethod,
+//            cvcUIState = cvcUIState,
+//            expiryDateUIState = expiryDateUIState,
+//            holderNameUIState = holderNameUIState,
+//            showStorePaymentField = showStorePaymentField,
             detectedCardTypes = detectedCardTypes,
-            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
-            isKCPAuthRequired = isKCPAuthRequired,
+//            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired,
+//            isKCPAuthRequired = isKCPAuthRequired,
             addressUIState = addressUIState,
-            installmentOptions = installmentOptions,
+//            installmentOptions = installmentOptions,
             cardBrands = cardBrands,
             isDualBranded = false,
-            kcpBirthDateOrTaxNumberHint = null,
+//            kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
         )
     }

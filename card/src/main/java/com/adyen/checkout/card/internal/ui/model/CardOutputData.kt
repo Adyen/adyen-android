@@ -27,21 +27,10 @@ data class CardOutputData(
     val kcpBirthDateOrTaxNumberState: FieldState<String>,
     val kcpCardPasswordState: FieldState<String>,
     val addressState: AddressOutputData,
-    val installmentState: FieldState<InstallmentModel?>,
-    val shouldStorePaymentMethod: Boolean,
-    val cvcUIState: InputFieldUIState,
-    val expiryDateUIState: InputFieldUIState,
-    val holderNameUIState: InputFieldUIState,
-    val showStorePaymentField: Boolean,
     val detectedCardTypes: List<DetectedCardType>,
-    val isSocialSecurityNumberRequired: Boolean,
-    val isKCPAuthRequired: Boolean,
     val addressUIState: AddressFormUIState,
-    val installmentOptions: List<InstallmentModel>,
     val cardBrands: List<CardListItem>,
     val isDualBranded: Boolean,
-    @StringRes
-    val kcpBirthDateOrTaxNumberHint: Int?,
     val isCardListVisible: Boolean,
 ) : OutputData {
 
@@ -54,6 +43,6 @@ data class CardOutputData(
                 socialSecurityNumberState.validation.isValid() &&
                 kcpBirthDateOrTaxNumberState.validation.isValid() &&
                 kcpCardPasswordState.validation.isValid() &&
-                installmentState.validation.isValid() &&
+//                installmentState.validation.isValid() &&
                 addressState.isValid
 }
