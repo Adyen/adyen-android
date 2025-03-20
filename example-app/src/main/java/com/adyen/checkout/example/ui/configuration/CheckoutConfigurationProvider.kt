@@ -79,6 +79,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 setHolderNameRequired(true)
                 setSocialSecurityNumberVisibility(SocialSecurityNumberVisibility.SHOW)
                 setKcpAuthVisibility(KCPAuthVisibility.SHOW)
+                setShowStorePaymentField(true)
             }
 
             cashAppPay {

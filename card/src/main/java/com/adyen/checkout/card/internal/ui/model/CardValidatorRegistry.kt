@@ -40,6 +40,7 @@ internal class CardValidatorRegistry(
             CardFieldId.KCP_BIRTH_DATE_OR_TAX_NUMBER -> KcpBirthDateOrTaxNumberValidator()
             CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordValidator()
             CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeValidator()
+            CardFieldId.STORED_PAYMENT_METHOD_SWITCH -> DefaultValidator()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
 //            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
 //            CardFieldId.CARD_PASSWORD -> TODO()

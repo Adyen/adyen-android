@@ -129,13 +129,13 @@ class CardView @JvmOverloads constructor(
 //        initHolderNameInput()
 //        initSocialSecurityNumberInput()
 //        initKcpAuthenticationInput()
-        initPostalCodeInput()
+//        initPostalCodeInput()
         initAddressFormInput(coroutineScope)
         initAddressLookup()
 
-        binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
-            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
-        }
+//        binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
+//            delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
+//        }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -205,6 +205,7 @@ class CardView @JvmOverloads constructor(
         updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState)
         updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState)
         updateAddressPostalCode(cardViewState.addressPostalCodeFieldState)
+        updateSwitchStorePaymentMethod(cardViewState.storedPaymentMethodSwitchFieldState)
     }
 
     private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
@@ -434,6 +435,26 @@ class CardView @JvmOverloads constructor(
         }
         postalCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             cardDelegate.onFieldFocusChanged(CardFieldId.ADDRESS_POSTAL_CODE, hasFocus)
+        }
+    }
+
+    private fun updateSwitchStorePaymentMethod(switchStorePaymentMethodFieldState: ComponentFieldViewState<Boolean>) {
+        binding.switchStorePaymentMethod.setOnCheckedChangeListener(null)
+        binding.switchStorePaymentMethod.onFocusChangeListener = null
+
+        binding.switchStorePaymentMethod.isChecked = switchStorePaymentMethodFieldState.value
+
+        if (switchStorePaymentMethodFieldState.hasFocus) {
+            binding.switchStorePaymentMethod.requestFocus()
+        } else {
+            binding.switchStorePaymentMethod.clearFocus()
+        }
+
+        binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
+            cardDelegate.onFieldValueChanged(CardFieldId.STORED_PAYMENT_METHOD_SWITCH, isChecked)
+        }
+        binding.switchStorePaymentMethod.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            cardDelegate.onFieldFocusChanged(CardFieldId.STORED_PAYMENT_METHOD_SWITCH, hasFocus)
         }
     }
 

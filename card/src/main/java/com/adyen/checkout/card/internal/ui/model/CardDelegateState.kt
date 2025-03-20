@@ -37,11 +37,13 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = ""),
     val addressPostalCodeDelegateState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
+    val storedPaymentMethodSwitchDelegateState: ComponentFieldDelegateState<Boolean> =
+        ComponentFieldDelegateState(value = false),
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
-    val enableLuhnCheck: Boolean? = null,
+    val enableLuhnCheck: Boolean = true,
     val isBrandSupported: Boolean? = null,
     val updatedCountryOptions: List<AddressListItem> = emptyList(),
     val updatedStateOptions: List<AddressListItem> = emptyList(),

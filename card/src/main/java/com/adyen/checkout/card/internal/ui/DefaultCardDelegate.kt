@@ -303,9 +303,6 @@ class DefaultCardDelegate(
             detectedCardTypes = filteredDetectedCardTypes,
         )
 
-        // perform a Luhn Check if no brands are detected
-        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
-
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
@@ -314,10 +311,25 @@ class DefaultCardDelegate(
                 detectedCardTypes = filteredDetectedCardTypes,
                 selectedOrFirstCardType = selectedOrFirstCardType,
                 cvcUIState = makeCvcUIState(selectedOrFirstCardType),
-                enableLuhnCheck = enableLuhnCheck,
+                enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true,
                 isBrandSupported = !shouldFailWithUnsupportedBrand,
             )
         }
+
+//        stateManager.updateState {
+//            copy(
+//                selectedOrFirstCardType = DetectedCardType(
+//                    cardBrand = CardBrand("scheme"),
+//                    isReliable = true,
+//                    enableLuhnCheck = false,
+//                    cvcPolicy = Brand.FieldPolicy.REQUIRED,
+//                    expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
+//                    isSupported = true,
+//                    panLength = 10,
+//                    paymentMethodVariant = "",
+//                ),
+//            )
+//        }
 
         // TODO Create a new function to re-validate the field?
         stateManager.updateField(CardFieldId.CARD_NUMBER, stateManager.state.value.cardNumberDelegateState.value)

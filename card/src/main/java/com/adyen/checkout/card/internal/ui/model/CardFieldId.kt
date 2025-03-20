@@ -22,9 +22,6 @@ enum class CardFieldId {
     KCP_CARD_PASSWORD,
     ADDRESS_POSTAL_CODE,
 //    ADDRESS_LOOKUP,
-    // TODO: Do these need to be separated?
-//    BIRTH_DATE_OR_TAX_NUMBER,
-//    CARD_PASSWORD,
-//    INSTALLMENTS,
-//    STORE_PAYMENT_SWITCH,
+// TODO: Just started adding it
+    STORED_PAYMENT_METHOD_SWITCH,
 }
