@@ -24,4 +24,5 @@ enum class CardFieldId {
 //    ADDRESS_LOOKUP,
 // TODO: Just started adding it
     STORED_PAYMENT_METHOD_SWITCH,
+    INSTALLMENT_OPTION,
 }

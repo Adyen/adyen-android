@@ -24,6 +24,7 @@ data class CardInputData(
     var kcpBirthDateOrTaxNumber: String = "",
     var kcpCardPassword: String = "",
     var postalCode: String = "",
+    // TODO: Needs to still be moved
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
     var selectedCardIndex: Int = -1,

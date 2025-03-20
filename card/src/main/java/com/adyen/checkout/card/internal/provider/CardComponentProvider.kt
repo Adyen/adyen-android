@@ -167,7 +167,7 @@ constructor(
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
                 stateManager = DefaultDelegateStateManager(
-                    factory = CardDelegateStateFactory(componentParams),
+                    factory = CardDelegateStateFactory(componentParams, paymentMethod),
                     validationRegistry = CardValidatorRegistry(),
                     stateUpdaterRegistry = CardStateUpdaterRegistry(),
                     transformerRegistry = DefaultTransformerRegistry()
@@ -284,7 +284,7 @@ constructor(
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
                 stateManager = DefaultDelegateStateManager(
-                    factory = CardDelegateStateFactory(componentParams),
+                    factory = CardDelegateStateFactory(componentParams, paymentMethod),
                     validationRegistry = CardValidatorRegistry(),
                     stateUpdaterRegistry = CardStateUpdaterRegistry(),
                     transformerRegistry = DefaultTransformerRegistry(),

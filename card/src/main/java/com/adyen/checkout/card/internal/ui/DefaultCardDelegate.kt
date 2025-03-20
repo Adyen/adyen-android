@@ -306,6 +306,14 @@ class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
+        val installmentOptions = getInstallmentOptions(
+            installmentParams = componentParams.installmentParams,
+            cardBrand = selectedOrFirstCardType?.cardBrand,
+            isCardTypeReliable = isReliable,
+        )
+        val installmentOptionValue =
+            stateManager.state.value.installmentOptionDelegateState.value ?: installmentOptions.firstOrNull()
+
         stateManager.updateState {
             copy(
                 detectedCardTypes = filteredDetectedCardTypes,
@@ -314,6 +322,8 @@ class DefaultCardDelegate(
                 expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
                 enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true,
                 isBrandSupported = !shouldFailWithUnsupportedBrand,
+                installmentOptions = installmentOptions,
+                installmentOptionDelegateState = installmentOptionDelegateState.copy(value = installmentOptionValue),
             )
         }
 

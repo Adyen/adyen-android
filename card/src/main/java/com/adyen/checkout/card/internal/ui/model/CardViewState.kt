@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.toComponentFieldViewState
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -25,11 +26,13 @@ data class CardViewState(
     val kcpCardPasswordFieldState: ComponentFieldViewState<String>,
     val addressPostalCodeFieldState: ComponentFieldViewState<String>,
     val storedPaymentMethodSwitchFieldState: ComponentFieldViewState<Boolean>,
+    val installmentOptionFieldState: ComponentFieldViewState<InstallmentModel?>,
     val addressUIState: AddressFormUIState,
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
     val holderNameUIState: InputFieldUIState,
     val showStorePaymentField: Boolean,
+    val installmentOptions: List<InstallmentModel>,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
@@ -42,9 +45,11 @@ internal fun CardDelegateState.toViewState() = CardViewState(
     kcpCardPasswordFieldState = this.kcpCardPasswordDelegateState.toComponentFieldViewState(),
     addressPostalCodeFieldState = this.addressPostalCodeDelegateState.toComponentFieldViewState(),
     storedPaymentMethodSwitchFieldState = this.storedPaymentMethodSwitchDelegateState.toComponentFieldViewState(),
+    installmentOptionFieldState = this.installmentOptionDelegateState.toComponentFieldViewState(),
     addressUIState = this.addressFormUIState,
     cvcUIState = this.cvcUIState,
     expiryDateUIState = this.expiryDateUIState,
     holderNameUIState = this.holderNameUIState,
     showStorePaymentField = this.showStorePaymentField,
+    installmentOptions = this.installmentOptions,
 )

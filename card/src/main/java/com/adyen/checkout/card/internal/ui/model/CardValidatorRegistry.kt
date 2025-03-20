@@ -41,11 +41,8 @@ internal class CardValidatorRegistry(
             CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordValidator()
             CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeValidator()
             CardFieldId.STORED_PAYMENT_METHOD_SWITCH -> DefaultValidator()
+            CardFieldId.INSTALLMENT_OPTION -> DefaultValidator()
 //            CardFieldId.ADDRESS_LOOKUP -> TODO()
-//            CardFieldId.BIRTH_DATE_OR_TAX_NUMBER -> TODO()
-//            CardFieldId.CARD_PASSWORD -> TODO()
-//            CardFieldId.INSTALLMENTS -> TODO()
-//            CardFieldId.STORE_PAYMENT_SWITCH -> TODO()
         }
     }
 
@@ -68,7 +65,7 @@ internal class CardNumberValidator(
         val validation = CardValidationUtils.validateCardNumber(
             input,
             // TODO: Probably we should not have default values?
-            state.enableLuhnCheck ?: false,
+            state.enableLuhnCheck,
             state.isBrandSupported ?: false,
         )
         return validationMapper.mapCardNumberValidation(validation)

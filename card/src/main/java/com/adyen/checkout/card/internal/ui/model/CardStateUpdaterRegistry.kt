@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdater
 import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdaterRegistry
@@ -27,6 +28,7 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
             CardFieldId.KCP_CARD_PASSWORD -> KcpCardPasswordUpdater()
             CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeUpdater()
             CardFieldId.STORED_PAYMENT_METHOD_SWITCH -> StorePaymentMethodSwitchUpdater()
+            CardFieldId.INSTALLMENT_OPTION -> InstallmentOptionUpdater()
         }
     }
 
@@ -58,6 +60,7 @@ internal class CardNumberUpdater :
     StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
     override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
         state.cardNumberDelegateState
+
 
     override fun updateFieldState(
         state: CardDelegateState,
@@ -181,5 +184,18 @@ internal class StorePaymentMethodSwitchUpdater :
         fieldState: ComponentFieldDelegateState<Boolean>
     ) = state.copy(
         storedPaymentMethodSwitchDelegateState = fieldState,
+    )
+}
+
+internal class InstallmentOptionUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<InstallmentModel?>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<InstallmentModel?> =
+        state.installmentOptionDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<InstallmentModel?>
+    ) = state.copy(
+        installmentOptionDelegateState = fieldState,
     )
 }

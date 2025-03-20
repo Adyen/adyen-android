@@ -10,6 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
 import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
@@ -39,6 +40,8 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = ""),
     val storedPaymentMethodSwitchDelegateState: ComponentFieldDelegateState<Boolean> =
         ComponentFieldDelegateState(value = false),
+    val installmentOptionDelegateState: ComponentFieldDelegateState<InstallmentModel?> =
+        ComponentFieldDelegateState(value = null),
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
@@ -57,6 +60,7 @@ data class CardDelegateState(
         componentParams.addressParams
     ),
     val showStorePaymentField: Boolean = componentParams.isStorePaymentFieldVisible,
+    val installmentOptions: List<InstallmentModel>,
 ) : DelegateState {
     override val isValid: Boolean = true
 }
