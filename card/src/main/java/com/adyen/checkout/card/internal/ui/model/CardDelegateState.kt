@@ -87,6 +87,5 @@ data class CardDelegateState(
                 socialSecurityNumberDelegateState.validation?.isValid() == true &&
                 kcpBirthDateOrTaxNumberDelegateState.validation?.isValid() == true &&
                 kcpCardPasswordDelegateState.validation?.isValid() == true &&
-                installmentOptionDelegateState.validation?.isValid() == true &&
                 addressState.isValid
 }
