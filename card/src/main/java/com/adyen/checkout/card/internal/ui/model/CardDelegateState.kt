@@ -11,12 +11,14 @@ package com.adyen.checkout.card.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateState
 import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardDelegateState(
@@ -42,6 +44,8 @@ data class CardDelegateState(
         ComponentFieldDelegateState(value = false),
     val installmentOptionDelegateState: ComponentFieldDelegateState<InstallmentModel?> =
         ComponentFieldDelegateState(value = null),
+    val addressLookupDelegateState: ComponentFieldDelegateState<String> =
+        ComponentFieldDelegateState(value = ""),
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
@@ -61,6 +65,9 @@ data class CardDelegateState(
     ),
     val showStorePaymentField: Boolean = componentParams.isStorePaymentFieldVisible,
     val installmentOptions: List<InstallmentModel>,
+    val address: AddressInputModel = AddressInputModel(),
+    val addressState: AddressOutputData,
+    val isAddressOptional: Boolean = false,
 ) : DelegateState {
     override val isValid: Boolean = true
 }

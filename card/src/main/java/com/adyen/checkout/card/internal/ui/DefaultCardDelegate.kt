@@ -121,7 +121,7 @@ class DefaultCardDelegate(
     override val viewStateFlow: Flow<CardViewState> by lazy {
         stateManager!!.state
             .map(CardDelegateState::toViewState)
-            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager!!.state.value.toViewState())
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 
     private val inputData: CardInputData = CardInputData()
@@ -132,12 +132,12 @@ class DefaultCardDelegate(
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
     override val addressOutputData: AddressOutputData
-        get() = outputData.addressState
+        get() = stateManager!!.state.value.addressState
 
     override val addressOutputDataFlow: Flow<AddressOutputData> by lazy {
-        outputDataFlow.map {
+        stateManager!!.state.map {
             it.addressState
-        }.stateIn(coroutineScope, SharingStarted.Lazily, outputData.addressState)
+        }.stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.addressState)
     }
 
     override val outputData: CardOutputData
@@ -182,8 +182,10 @@ class DefaultCardDelegate(
         addressLookupDelegate.addressLookupSubmitFlow
             .onEach {
                 _viewFlow.tryEmit(CardComponentViewType.DefaultCardView)
-                inputData.address.set(it)
-                updateOutputData()
+                stateManager?.updateState {
+                    copy(address = it)
+                }
+                validateAndUpdateAddress()
             }
             .launchIn(coroutineScope)
     }
@@ -248,8 +250,11 @@ class DefaultCardDelegate(
     }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
-        updateInputData {
-            this.address.update()
+        val currentAddress = stateManager!!.state.value.address.copy()
+        currentAddress.update()
+
+        stateManager.updateState {
+            copy(address = currentAddress)
         }
     }
 
@@ -268,7 +273,7 @@ class DefaultCardDelegate(
             coroutineScope = coroutineScope,
             type = paymentMethod.type,
         )
-        requestStateList(inputData.address.country)
+        requestStateList(stateManager.state.value.address.country)
     }
 
     private fun subscribeToDetectedCardTypes() {
@@ -324,23 +329,13 @@ class DefaultCardDelegate(
                 isBrandSupported = !shouldFailWithUnsupportedBrand,
                 installmentOptions = installmentOptions,
                 installmentOptionDelegateState = installmentOptionDelegateState.copy(value = installmentOptionValue),
+                isAddressOptional = CardAddressValidationUtils.isAddressOptional(
+                    addressParams = componentParams.addressParams,
+                    cardType = selectedOrFirstCardType?.cardBrand?.txVariant,
+                )
             )
         }
-
-//        stateManager.updateState {
-//            copy(
-//                selectedOrFirstCardType = DetectedCardType(
-//                    cardBrand = CardBrand("scheme"),
-//                    isReliable = true,
-//                    enableLuhnCheck = false,
-//                    cvcPolicy = Brand.FieldPolicy.REQUIRED,
-//                    expiryDatePolicy = Brand.FieldPolicy.REQUIRED,
-//                    isSupported = true,
-//                    panLength = 10,
-//                    paymentMethodVariant = "",
-//                ),
-//            )
-//        }
+        validateAndUpdateAddress()
 
         // TODO Create a new function to re-validate the field?
         stateManager.updateField(CardFieldId.CARD_NUMBER, stateManager.state.value.cardNumberDelegateState.value)
@@ -365,7 +360,9 @@ class DefaultCardDelegate(
                     countryList = countries,
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
-                    inputData.address.country = it.code
+                    stateManager?.updateState {
+                        copy(address = address.copy(country = it.code))
+                    }
                     requestStateList(it.code)
                 }
 
@@ -377,13 +374,13 @@ class DefaultCardDelegate(
     private fun countryOptionsUpdated(countryOptions: List<AddressListItem>) {
         val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
             countryOptions,
-            // TODO: Read from state
-            inputData.address.country,
+            stateManager!!.state.value.address.country,
         )
 
-        stateManager?.updateState {
+        stateManager.updateState {
             copy(updatedCountryOptions = updatedCountryOptions)
         }
+        validateAndUpdateAddress()
     }
 
     private fun subscribeToStatesList() {
@@ -401,25 +398,43 @@ class DefaultCardDelegate(
     private fun stateOptionsUpdated(stateOptions: List<AddressListItem>) {
         val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
             stateOptions,
-            // TODO: Read from state
-            inputData.address.stateOrProvince,
+            stateManager!!.state.value.address.stateOrProvince,
         )
 
-        stateManager?.updateState {
+        stateManager.updateState {
             copy(updatedStateOptions = updatedStateOptions)
         }
+        validateAndUpdateAddress()
     }
 
-    private fun updateOutputData(
-        detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
-        countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
-        stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
-    ) {
-        val newOutputData =
-            createOutputData(detectedCardTypes, countryOptions, stateOptions)
-        _outputDataFlow.tryEmit(newOutputData)
-        updateComponentState(newOutputData)
+    private fun validateAndUpdateAddress() = with(stateManager!!.state.value) {
+        val addressState = validateAddress(
+            address,
+            addressFormUIState,
+            selectedOrFirstCardType,
+            updatedCountryOptions,
+            updatedStateOptions,
+        )
+
+        stateManager.updateState {
+            copy(addressState = addressState)
+        }
+        stateManager.updateField(
+            CardFieldId.ADDRESS_LOOKUP,
+            addressState.formatted(),
+        )
     }
+
+//    private fun updateOutputData(
+//        detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
+//        countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
+//        stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
+//    ) {
+//        val newOutputData =
+//            createOutputData(detectedCardTypes, countryOptions, stateOptions)
+//        _outputDataFlow.tryEmit(newOutputData)
+//        updateComponentState(newOutputData)
+//    }
 
     @Suppress("LongMethod")
     private fun createOutputData(
@@ -615,7 +630,7 @@ class DefaultCardDelegate(
     }
 
     override fun startAddressLookup() {
-        addressLookupDelegate.initialize(coroutineScope, inputData.address)
+        addressLookupDelegate.initialize(coroutineScope, stateManager!!.state.value.address)
         _viewFlow.tryEmit(CardComponentViewType.AddressLookup)
     }
 

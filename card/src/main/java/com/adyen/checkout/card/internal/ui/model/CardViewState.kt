@@ -27,12 +27,14 @@ data class CardViewState(
     val addressPostalCodeFieldState: ComponentFieldViewState<String>,
     val storedPaymentMethodSwitchFieldState: ComponentFieldViewState<Boolean>,
     val installmentOptionFieldState: ComponentFieldViewState<InstallmentModel?>,
+    val addressLookupFieldState: ComponentFieldViewState<String>,
     val addressUIState: AddressFormUIState,
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
     val holderNameUIState: InputFieldUIState,
     val showStorePaymentField: Boolean,
     val installmentOptions: List<InstallmentModel>,
+    val isAddressOptional: Boolean,
 )
 
 internal fun CardDelegateState.toViewState() = CardViewState(
@@ -46,10 +48,12 @@ internal fun CardDelegateState.toViewState() = CardViewState(
     addressPostalCodeFieldState = this.addressPostalCodeDelegateState.toComponentFieldViewState(),
     storedPaymentMethodSwitchFieldState = this.storedPaymentMethodSwitchDelegateState.toComponentFieldViewState(),
     installmentOptionFieldState = this.installmentOptionDelegateState.toComponentFieldViewState(),
+    addressLookupFieldState = this.addressLookupDelegateState.toComponentFieldViewState(),
     addressUIState = this.addressFormUIState,
     cvcUIState = this.cvcUIState,
     expiryDateUIState = this.expiryDateUIState,
     holderNameUIState = this.holderNameUIState,
     showStorePaymentField = this.showStorePaymentField,
     installmentOptions = this.installmentOptions,
+    isAddressOptional = this.isAddressOptional,
 )

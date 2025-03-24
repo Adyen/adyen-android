@@ -42,7 +42,7 @@ internal class CardValidatorRegistry(
             CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeValidator()
             CardFieldId.STORED_PAYMENT_METHOD_SWITCH -> DefaultValidator()
             CardFieldId.INSTALLMENT_OPTION -> DefaultValidator()
-//            CardFieldId.ADDRESS_LOOKUP -> TODO()
+            CardFieldId.ADDRESS_LOOKUP -> DefaultValidator()
         }
     }
 

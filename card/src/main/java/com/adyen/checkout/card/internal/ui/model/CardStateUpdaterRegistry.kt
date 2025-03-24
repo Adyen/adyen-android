@@ -29,6 +29,7 @@ internal class CardStateUpdaterRegistry : StateUpdaterRegistry<CardFieldId, Card
             CardFieldId.ADDRESS_POSTAL_CODE -> AddressPostalCodeUpdater()
             CardFieldId.STORED_PAYMENT_METHOD_SWITCH -> StorePaymentMethodSwitchUpdater()
             CardFieldId.INSTALLMENT_OPTION -> InstallmentOptionUpdater()
+            CardFieldId.ADDRESS_LOOKUP -> AddressLookupUpdater()
         }
     }
 
@@ -197,5 +198,19 @@ internal class InstallmentOptionUpdater :
         fieldState: ComponentFieldDelegateState<InstallmentModel?>
     ) = state.copy(
         installmentOptionDelegateState = fieldState,
+    )
+}
+
+
+internal class AddressLookupUpdater :
+    StateUpdater<CardDelegateState, ComponentFieldDelegateState<String>> {
+    override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
+        state.addressLookupDelegateState
+
+    override fun updateFieldState(
+        state: CardDelegateState,
+        fieldState: ComponentFieldDelegateState<String>
+    ) = state.copy(
+        addressLookupDelegateState = fieldState,
     )
 }

@@ -11,7 +11,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import android.text.Editable
 import android.text.InputType
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -47,7 +46,6 @@ import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
@@ -221,6 +219,8 @@ class CardView @JvmOverloads constructor(
         updateSwitchStorePaymentMethod(cardViewState.storedPaymentMethodSwitchFieldState)
         updateInstallmentOptions(cardViewState.installmentOptions)
         updateInstallmentOption(cardViewState.installmentOptionFieldState)
+        updateAddressHint(cardViewState.addressUIState, cardViewState.isAddressOptional)
+        updateAddressLookup(cardViewState.addressLookupFieldState)
 
         setAddressInputVisibility(cardViewState.addressUIState)
         handleCvcUIState(cardViewState.cvcUIState)
@@ -499,6 +499,28 @@ class CardView @JvmOverloads constructor(
         binding.autoCompleteTextViewInstallments.setText(installmentOptionText)
     }
 
+    private fun updateAddressLookup(addressLookupFieldState: ComponentFieldViewState<String>) {
+        binding.autoCompleteTextViewAddressLookup.setText(addressLookupFieldState.value)
+    }
+
+    private fun updateAddressHint(addressFormUIState: AddressFormUIState, isOptional: Boolean) {
+        when (addressFormUIState) {
+            AddressFormUIState.FULL_ADDRESS -> binding.addressFormInput.updateAddressHint(isOptional)
+            AddressFormUIState.POSTAL_CODE -> {
+                val postalCodeStyleResId = if (isOptional) {
+                    UICoreR.style.AdyenCheckout_PostalCodeInput_Optional
+                } else {
+                    UICoreR.style.AdyenCheckout_PostalCodeInput
+                }
+                binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
+            }
+
+            else -> {
+                // no ops
+            }
+        }
+    }
+
     private fun outputDataChanged(cardOutputData: CardOutputData) {
 //        onCardNumberValidated(cardOutputData)
 //        onExpiryDateValidated(cardOutputData.expiryDateState)
@@ -511,96 +533,96 @@ class CardView @JvmOverloads constructor(
 //        handleHolderNameUIState(cardOutputData.holderNameUIState)
 //        setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
 //        updateInstallments(cardOutputData)
-        updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
+//        updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
-        updateAddressLookupInputText(cardOutputData.addressState)
+//        updateAddressLookupInputText(cardOutputData.addressState)
     }
 
     @Suppress("ComplexMethod", "LongMethod")
     override fun highlightValidationErrors() {
-        cardDelegate.outputData.let {
-            var isErrorFocused = false
-            val cardNumberValidation = it.cardNumberState.validation
-            if (cardNumberValidation is Validation.Invalid) {
-                isErrorFocused = true
-                binding.editTextCardNumber.requestFocus()
-                setCardNumberError(cardNumberValidation.reason)
-            }
-            val expiryDateValidation = it.expiryDateState.validation
-            if (expiryDateValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutExpiryDate.requestFocus()
-                }
-                binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
-            }
-            val securityCodeValidation = it.securityCodeState.validation
-            if (securityCodeValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutSecurityCode.requestFocus()
-                }
-                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
-            }
-            val holderNameValidation = it.holderNameState.validation
-            if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutCardHolder.requestFocus()
-                }
-                binding.textInputLayoutCardHolder.showError(localizedContext.getString(holderNameValidation.reason))
-            }
-            val postalCodeValidation = it.addressState.postalCode.validation
-            if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutPostalCode.requestFocus()
-                }
-                binding.textInputLayoutPostalCode.showError(localizedContext.getString(postalCodeValidation.reason))
-            }
-            val socialSecurityNumberValidation = it.socialSecurityNumberState.validation
-            if (binding.textInputLayoutSocialSecurityNumber.isVisible &&
-                socialSecurityNumberValidation is Validation.Invalid
-            ) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutSocialSecurityNumber.requestFocus()
-                }
-                binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason),
-                )
-            }
-            val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
-            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible &&
-                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
-            ) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
-                }
-                binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
-                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
-                )
-            }
-            val kcpPasswordValidation = it.kcpCardPasswordState.validation
-            if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {
-                if (!isErrorFocused) {
-                    isErrorFocused = true
-                    binding.textInputLayoutKcpCardPassword.requestFocus()
-                }
-                binding.textInputLayoutKcpCardPassword.showError(
-                    localizedContext.getString(kcpPasswordValidation.reason),
-                )
-            }
-            if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
-                binding.addressFormInput.highlightValidationErrors(isErrorFocused)
-            }
-            if (binding.textInputLayoutAddressLookup.isVisible && !it.addressState.isValid) {
-                binding.textInputLayoutAddressLookup.showError(
-                    localizedContext.getString(UICoreR.string.checkout_address_lookup_validation_empty),
-                )
-            }
-        }
+//        cardDelegate.outputData.let {
+//            var isErrorFocused = false
+//            val cardNumberValidation = it.cardNumberState.validation
+//            if (cardNumberValidation is Validation.Invalid) {
+//                isErrorFocused = true
+//                binding.editTextCardNumber.requestFocus()
+//                setCardNumberError(cardNumberValidation.reason)
+//            }
+//            val expiryDateValidation = it.expiryDateState.validation
+//            if (expiryDateValidation is Validation.Invalid) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutExpiryDate.requestFocus()
+//                }
+//                binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
+//            }
+//            val securityCodeValidation = it.securityCodeState.validation
+//            if (securityCodeValidation is Validation.Invalid) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutSecurityCode.requestFocus()
+//                }
+//                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
+//            }
+//            val holderNameValidation = it.holderNameState.validation
+//            if (binding.textInputLayoutCardHolder.isVisible && holderNameValidation is Validation.Invalid) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutCardHolder.requestFocus()
+//                }
+//                binding.textInputLayoutCardHolder.showError(localizedContext.getString(holderNameValidation.reason))
+//            }
+//            val postalCodeValidation = it.addressState.postalCode.validation
+//            if (binding.textInputLayoutPostalCode.isVisible && postalCodeValidation is Validation.Invalid) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutPostalCode.requestFocus()
+//                }
+//                binding.textInputLayoutPostalCode.showError(localizedContext.getString(postalCodeValidation.reason))
+//            }
+//            val socialSecurityNumberValidation = it.socialSecurityNumberState.validation
+//            if (binding.textInputLayoutSocialSecurityNumber.isVisible &&
+//                socialSecurityNumberValidation is Validation.Invalid
+//            ) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutSocialSecurityNumber.requestFocus()
+//                }
+//                binding.textInputLayoutSocialSecurityNumber.showError(
+//                    localizedContext.getString(socialSecurityNumberValidation.reason),
+//                )
+//            }
+//            val kcpBirthDateOrTaxNumberValidation = it.kcpBirthDateOrTaxNumberState.validation
+//            if (binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible &&
+//                kcpBirthDateOrTaxNumberValidation is Validation.Invalid
+//            ) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutKcpBirthDateOrTaxNumber.requestFocus()
+//                }
+//                binding.textInputLayoutKcpBirthDateOrTaxNumber.showError(
+//                    localizedContext.getString(kcpBirthDateOrTaxNumberValidation.reason),
+//                )
+//            }
+//            val kcpPasswordValidation = it.kcpCardPasswordState.validation
+//            if (binding.textInputLayoutKcpCardPassword.isVisible && kcpPasswordValidation is Validation.Invalid) {
+//                if (!isErrorFocused) {
+//                    isErrorFocused = true
+//                    binding.textInputLayoutKcpCardPassword.requestFocus()
+//                }
+//                binding.textInputLayoutKcpCardPassword.showError(
+//                    localizedContext.getString(kcpPasswordValidation.reason),
+//                )
+//            }
+//            if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
+//                binding.addressFormInput.highlightValidationErrors(isErrorFocused)
+//            }
+//            if (binding.textInputLayoutAddressLookup.isVisible && !it.addressState.isValid) {
+//                binding.textInputLayoutAddressLookup.showError(
+//                    localizedContext.getString(UICoreR.string.checkout_address_lookup_validation_empty),
+//                )
+//            }
+//        }
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
@@ -1036,28 +1058,6 @@ class CardView @JvmOverloads constructor(
                 binding.addressFormInput.isVisible = false
                 binding.textInputLayoutPostalCode.isVisible = false
                 binding.textInputLayoutAddressLookup.isVisible = true
-            }
-        }
-    }
-
-    private fun updateAddressLookupInputText(addressOutputData: AddressOutputData) {
-        binding.autoCompleteTextViewAddressLookup.setText(addressOutputData.formatted())
-    }
-
-    private fun updateAddressHint(addressFormUIState: AddressFormUIState, isOptional: Boolean) {
-        when (addressFormUIState) {
-            AddressFormUIState.FULL_ADDRESS -> binding.addressFormInput.updateAddressHint(isOptional)
-            AddressFormUIState.POSTAL_CODE -> {
-                val postalCodeStyleResId = if (isOptional) {
-                    UICoreR.style.AdyenCheckout_PostalCodeInput_Optional
-                } else {
-                    UICoreR.style.AdyenCheckout_PostalCodeInput
-                }
-                binding.textInputLayoutPostalCode.setLocalizedHintFromStyle(postalCodeStyleResId, localizedContext)
-            }
-
-            else -> {
-                // no ops
             }
         }
     }

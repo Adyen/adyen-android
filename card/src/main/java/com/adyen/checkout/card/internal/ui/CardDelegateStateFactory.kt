@@ -12,9 +12,14 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardDelegateState
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
+import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.PaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateFactory
+import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 
 // TODO: Move many of the hardcoded values from the delegate state to the factory
 class CardDelegateStateFactory(
@@ -25,6 +30,7 @@ class CardDelegateStateFactory(
     override fun createDefaultDelegateState() = CardDelegateState(
         componentParams = componentParams,
         installmentOptions = getDefaultInstallmentOptions(),
+        addressState = getDefaultAddressOutputData()
     )
 
     private fun getDefaultInstallmentOptions(): List<InstallmentModel> {
@@ -38,6 +44,23 @@ class CardDelegateStateFactory(
                 isCardTypeReliable = false,
             )
         }
+    }
+
+    private fun getDefaultAddressOutputData(): AddressOutputData {
+        val isOptional =
+            CardAddressValidationUtils.isAddressOptional(
+                addressParams = componentParams.addressParams,
+                cardType = null,
+            )
+        val uiState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
+
+        return AddressValidationUtils.validateAddressInput(
+            AddressInputModel(),
+            uiState,
+            emptyList(),
+            emptyList(),
+            isOptional,
+        )
     }
 
     override fun getFieldIds(): List<CardFieldId> = CardFieldId.entries

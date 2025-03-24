@@ -8,9 +8,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.StringRes
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -42,7 +40,7 @@ data class CardOutputData(
                 holderNameState.validation.isValid() &&
                 socialSecurityNumberState.validation.isValid() &&
                 kcpBirthDateOrTaxNumberState.validation.isValid() &&
-                kcpCardPasswordState.validation.isValid() &&
+                kcpCardPasswordState.validation.isValid()
 //                installmentState.validation.isValid() &&
-                addressState.isValid
+//                addressState.isValid
 }
