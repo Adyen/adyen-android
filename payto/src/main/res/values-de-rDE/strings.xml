@@ -26,11 +26,11 @@
     <string name="checkout_payto_bsb_account_number_hint">Bankkontonummer</string>
     <string name="checkout_payto_bsb_account_number_invalid">Geben Sie eine korrekte Kontonummer ein</string>
     <string name="checkout_payto_bsb_state_branch_hint">Bankfiliale des Bundesstaates</string>
-    <string name="checkout_payto_bsb_state_branch_invalid">Geben Sie die korrekte Bankleitzahl ein</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Geben Sie eine korrekte Bankleitzahl ein</string>
 
     <string name="checkout_payto_first_name_hint">Vorname des Kontoinhabers</string>
     <string name="checkout_payto_first_name_invalid">Geben Sie einen korrekten Vornamen ein</string>
     <string name="checkout_payto_last_name_hint">Nachname des Kontoinhabers</string>
-    <string name="checkout_payto_last_name_invalid">Bitte geben Sie einen korrekten Nachnamen ein</string>
+    <string name="checkout_payto_last_name_invalid">Geben Sie einen korrekten Nachnamen ein</string>
 
 </resources>

@@ -14,19 +14,19 @@
     <string name="checkout_payto_payid_type_email_address">電子郵件</string>
     <string name="checkout_payto_payid_type_organization_id">組織 ID</string>
     <string name="checkout_payto_payid_phone_number_hint">手機</string>
-    <string name="checkout_payto_payid_phone_number_invalid">請輸入一組正確的手機號碼</string>
+    <string name="checkout_payto_payid_phone_number_invalid">請輸入正確的手機號碼</string>
     <string name="checkout_payto_payid_email_address_hint">電子郵件地址</string>
-    <string name="checkout_payto_payid_email_address_invalid">請輸入一組正確的電子郵件地址</string>
+    <string name="checkout_payto_payid_email_address_invalid">請輸入正確的電子郵件地址</string>
     <string name="checkout_payto_payid_abn_number_hint">澳洲商業登記號碼</string>
     <string name="checkout_payto_payid_abn_number_invalid">請輸入一組正確的澳洲商務編號</string>
     <string name="checkout_payto_payid_organization_id_hint">組織 ID 編號</string>
-    <string name="checkout_payto_payid_organization_id_invalid">請輸入一組正確的組織 ID 編號</string>
+    <string name="checkout_payto_payid_organization_id_invalid">請輸入正確的組織識別碼</string>
 
     <string name="checkout_payto_bsb_description">請輸入銀行帳號以及您帳戶的銀行分行代碼以繼續至下一步</string>
     <string name="checkout_payto_bsb_account_number_hint">銀行帳戶號碼</string>
     <string name="checkout_payto_bsb_account_number_invalid">請輸入正確的銀行帳戶號碼</string>
     <string name="checkout_payto_bsb_state_branch_hint">銀行州郡分行</string>
-    <string name="checkout_payto_bsb_state_branch_invalid">請輸入正確的銀行州分行</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">請輸入正確的銀行下屬州分行</string>
 
     <string name="checkout_payto_first_name_hint">帳戶持有人名字</string>
     <string name="checkout_payto_first_name_invalid">請輸入正確的名字</string>

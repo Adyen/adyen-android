@@ -14,24 +14,24 @@
     <string name="checkout_payto_payid_type_email_address">Email</string>
     <string name="checkout_payto_payid_type_organization_id">Organization ID</string>
     <string name="checkout_payto_payid_phone_number_hint">Mobile phone</string>
-    <string name="checkout_payto_payid_phone_number_invalid">Enter a correct Mobile phone number</string>
+    <string name="checkout_payto_payid_phone_number_invalid">Enter a correct mobile phone number</string>
     <string name="checkout_payto_payid_email_address_hint">Email address</string>
-    <string name="checkout_payto_payid_email_address_invalid">Enter a correct Email address</string>
+    <string name="checkout_payto_payid_email_address_invalid">Enter a correct email address</string>
     <string name="checkout_payto_payid_abn_number_hint">Australian Business Number</string>
     <string name="checkout_payto_payid_abn_number_invalid">Enter a correct Australian Business Number</string>
     <string name="checkout_payto_payid_organization_id_hint">Organization ID number</string>
-    <string name="checkout_payto_payid_organization_id_invalid">Enter a correct Organization ID number</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Enter a correct organization ID number</string>
 
     <string name="checkout_payto_bsb_description">Enter the bank account number and the Bank State Branch that is connected to your account to continue</string>
     <string name="checkout_payto_bsb_account_number_hint">Bank account number</string>
-    <string name="checkout_payto_bsb_account_number_invalid">Enter a correct Bank account number</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Enter a correct bank account number</string>
     <string name="checkout_payto_bsb_state_branch_hint">Bank state branch</string>
-    <string name="checkout_payto_bsb_state_branch_invalid">Enter a correct Bank state branch</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Enter a correct Bank State Branch</string>
 
     <string name="checkout_payto_first_name_hint">Account holder first name</string>
-    <string name="checkout_payto_first_name_invalid">Enter a correct First name</string>
+    <string name="checkout_payto_first_name_invalid">Enter a correct first name</string>
     <string name="checkout_payto_last_name_hint">Account holder last name</string>
-    <string name="checkout_payto_last_name_invalid">Enter a correct Last name</string>
+    <string name="checkout_payto_last_name_invalid">Enter a correct last name</string>
 
     <!-- Untranslatable strings -->
     <string name="checkout_payto_payid_tab_title" translatable="false">PayID</string>

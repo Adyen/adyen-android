@@ -24,13 +24,13 @@
 
     <string name="checkout_payto_bsb_description">Indtast bankkontonummeret og bankafdeling (Bank State Branch, BSB), der er knyttet til din konto, for at fortsætte</string>
     <string name="checkout_payto_bsb_account_number_hint">Bankkontonummer</string>
-    <string name="checkout_payto_bsb_account_number_invalid">Indtast et korrekt kontonummer</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Angiv et korrekt bankkontonummer</string>
     <string name="checkout_payto_bsb_state_branch_hint">Bankafdeling</string>
     <string name="checkout_payto_bsb_state_branch_invalid">Angiv en korrekt bankafdeling</string>
 
     <string name="checkout_payto_first_name_hint">Kontohavers fornavn</string>
-    <string name="checkout_payto_first_name_invalid">Indtast et korrekt fornavn</string>
+    <string name="checkout_payto_first_name_invalid">Angiv et korrekt fornavn</string>
     <string name="checkout_payto_last_name_hint">Kontohavers efternavn</string>
-    <string name="checkout_payto_last_name_invalid">Indtast et korrekt efternavn</string>
+    <string name="checkout_payto_last_name_invalid">Angiv et korrekt efternavn</string>
 
 </resources>
