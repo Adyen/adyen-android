@@ -16,7 +16,7 @@
     <string name="checkout_payto_payid_phone_number_hint">Celular</string>
     <string name="checkout_payto_payid_phone_number_invalid">Introduza um número de telemóvel correto</string>
     <string name="checkout_payto_payid_email_address_hint">Endereço de correio eletrónico</string>
-    <string name="checkout_payto_payid_email_address_invalid">Insira um endereço de e-mail correto</string>
+    <string name="checkout_payto_payid_email_address_invalid">Introduza um endereço de e-mail correto</string>
     <string name="checkout_payto_payid_abn_number_hint">Número comercial australiano</string>
     <string name="checkout_payto_payid_abn_number_invalid">Introduza um número comercial australiano correto</string>
     <string name="checkout_payto_payid_organization_id_hint">Número de ID da organização</string>
@@ -24,13 +24,13 @@
 
     <string name="checkout_payto_bsb_description">Para continuar, insira o número da conta e a agência bancária associadas à sua conta</string>
     <string name="checkout_payto_bsb_account_number_hint">Número da conta bancária</string>
-    <string name="checkout_payto_bsb_account_number_invalid">Insira um número de conta bancária correto</string>
+    <string name="checkout_payto_bsb_account_number_invalid">Introduza um número de conta bancária correto</string>
     <string name="checkout_payto_bsb_state_branch_hint">Sucursal estatal do banco</string>
     <string name="checkout_payto_bsb_state_branch_invalid">Introduza uma sucursal estatal do banco correta</string>
 
     <string name="checkout_payto_first_name_hint">Nome próprio do titular da conta</string>
-    <string name="checkout_payto_first_name_invalid">Insira um nome correto</string>
+    <string name="checkout_payto_first_name_invalid">Introduza um nome correto</string>
     <string name="checkout_payto_last_name_hint">Sobrenome do titular da conta</string>
-    <string name="checkout_payto_last_name_invalid">Insira um sobrenome correto</string>
+    <string name="checkout_payto_last_name_invalid">Introduza um sobrenome correto</string>
 
 </resources>

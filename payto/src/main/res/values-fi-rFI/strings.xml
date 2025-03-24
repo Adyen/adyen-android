@@ -26,7 +26,7 @@
     <string name="checkout_payto_bsb_account_number_hint">Pankkitilinumero</string>
     <string name="checkout_payto_bsb_account_number_invalid">Anna oikea pankkitilinumero</string>
     <string name="checkout_payto_bsb_state_branch_hint">Pankkikonttorin osavaltio</string>
-    <string name="checkout_payto_bsb_state_branch_invalid">Anna oikea pankkikonttorin osavaltio</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Anna oikea pankkikonttorin osavaltion sivuliike</string>
 
     <string name="checkout_payto_first_name_hint">Tilinhaltijan etunimi</string>
     <string name="checkout_payto_first_name_invalid">Anna oikea etunimi</string>

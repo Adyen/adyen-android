@@ -20,17 +20,17 @@
     <string name="checkout_payto_payid_abn_number_hint">Número de empresa australiano</string>
     <string name="checkout_payto_payid_abn_number_invalid">Escriba un número de empresa australiano válido</string>
     <string name="checkout_payto_payid_organization_id_hint">Número de identificación de la organización</string>
-    <string name="checkout_payto_payid_organization_id_invalid">Escriba un NIF correcto</string>
+    <string name="checkout_payto_payid_organization_id_invalid">Escriba un número de identificación de la organización correcto</string>
 
     <string name="checkout_payto_bsb_description">Introduzca el número de cuenta bancaria y la sucursal del banco estatal que está vinculada a su cuenta para continuar</string>
     <string name="checkout_payto_bsb_account_number_hint">Número de cuenta bancaria</string>
     <string name="checkout_payto_bsb_account_number_invalid">Escriba un número de cuenta bancaria correcto</string>
     <string name="checkout_payto_bsb_state_branch_hint">Sucursal del banco estatal</string>
-    <string name="checkout_payto_bsb_state_branch_invalid">Escriba una sucursal bancaria estatal correcta</string>
+    <string name="checkout_payto_bsb_state_branch_invalid">Escriba una sucursal estatal bancaria correcta</string>
 
     <string name="checkout_payto_first_name_hint">Nombre del titular de la cuenta</string>
     <string name="checkout_payto_first_name_invalid">Escriba un nombre correcto</string>
     <string name="checkout_payto_last_name_hint">Apellidos del titular de la cuenta</string>
-    <string name="checkout_payto_last_name_invalid">Escriba unos apellidos correctos</string>
+    <string name="checkout_payto_last_name_invalid">Escriba un apellido correcto</string>
 
 </resources>
