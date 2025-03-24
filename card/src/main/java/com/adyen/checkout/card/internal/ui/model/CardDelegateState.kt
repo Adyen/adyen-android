@@ -49,6 +49,9 @@ data class CardDelegateState(
     val componentParams: CardComponentParams,
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
+    val cardBrands: List<CardListItem> = emptyList(),
+    val isCardBrandListVisible: Boolean = false,
+    val isDualBranded: Boolean = false,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val holderNameUIState: InputFieldUIState = if (componentParams.isHolderNameRequired) {

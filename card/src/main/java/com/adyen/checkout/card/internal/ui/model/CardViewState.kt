@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.toComponentFieldViewState
@@ -28,6 +29,10 @@ data class CardViewState(
     val storedPaymentMethodSwitchFieldState: ComponentFieldViewState<Boolean>,
     val installmentOptionFieldState: ComponentFieldViewState<InstallmentModel?>,
     val addressLookupFieldState: ComponentFieldViewState<String>,
+    val detectedCardTypes: List<DetectedCardType>,
+    val cardBrands: List<CardListItem>,
+    val isCardBrandListVisible: Boolean,
+    val isDualBranded: Boolean,
     val addressUIState: AddressFormUIState,
     val cvcUIState: InputFieldUIState,
     val expiryDateUIState: InputFieldUIState,
@@ -49,6 +54,10 @@ internal fun CardDelegateState.toViewState() = CardViewState(
     storedPaymentMethodSwitchFieldState = this.storedPaymentMethodSwitchDelegateState.toComponentFieldViewState(),
     installmentOptionFieldState = this.installmentOptionDelegateState.toComponentFieldViewState(),
     addressLookupFieldState = this.addressLookupDelegateState.toComponentFieldViewState(),
+    detectedCardTypes = this.detectedCardTypes,
+    cardBrands = this.cardBrands,
+    isCardBrandListVisible = this.isCardBrandListVisible,
+    isDualBranded = this.isDualBranded,
     addressUIState = this.addressFormUIState,
     cvcUIState = this.cvcUIState,
     expiryDateUIState = this.expiryDateUIState,

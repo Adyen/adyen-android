@@ -79,7 +79,7 @@ class CardView @JvmOverloads constructor(
 
     private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private var cardListAdapter: CardListAdapter? = null
+    private lateinit var cardListAdapter: CardListAdapter
     private lateinit var installmentListAdapter: InstallmentListAdapter
 
     private lateinit var localizedContext: Context
@@ -117,6 +117,7 @@ class CardView @JvmOverloads constructor(
 
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
+        initCardBrandList()
         initInstallmentsInput()
 
         observeDelegate(delegate, coroutineScope)
@@ -186,6 +187,11 @@ class CardView @JvmOverloads constructor(
         binding.addressFormInput.initLocalizedContext(localizedContext)
     }
 
+    private fun initCardBrandList() {
+        cardListAdapter = CardListAdapter()
+        binding.recyclerViewCardList.adapter = cardListAdapter
+    }
+
     private fun initInstallmentsInput() {
         installmentListAdapter = InstallmentListAdapter(context, localizedContext)
         binding.autoCompleteTextViewInstallments.apply {
@@ -208,7 +214,11 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun viewStateUpdated(cardViewState: CardViewState) {
-        updateCardNumber(cardViewState.cardNumberFieldState)
+        updateCardNumber(
+            cardViewState.cardNumberFieldState,
+            cardViewState.detectedCardTypes,
+            cardViewState.isDualBranded,
+        )
         updateSecurityCode(cardViewState.cardSecurityCodeFieldState)
         updateExpiryDate(cardViewState.cardExpiryDateFieldState)
         updateHolderName(cardViewState.cardHolderNameFieldState)
@@ -221,6 +231,7 @@ class CardView @JvmOverloads constructor(
         updateInstallmentOption(cardViewState.installmentOptionFieldState)
         updateAddressHint(cardViewState.addressUIState, cardViewState.isAddressOptional)
         updateAddressLookup(cardViewState.addressLookupFieldState)
+        updateCardBrandList(cardViewState.cardBrands, cardViewState.isCardBrandListVisible)
 
         setAddressInputVisibility(cardViewState.addressUIState)
         handleCvcUIState(cardViewState.cvcUIState)
@@ -229,7 +240,11 @@ class CardView @JvmOverloads constructor(
         setStorePaymentSwitchVisibility(cardViewState.showStorePaymentField)
     }
 
-    private fun updateCardNumber(cardNumberFieldState: ComponentFieldViewState<String>) {
+    private fun updateCardNumber(
+        cardNumberFieldState: ComponentFieldViewState<String>,
+        detectedCardTypes: List<DetectedCardType>,
+        isDualBranded: Boolean,
+    ) {
         binding.editTextCardNumber.setOnChangeListener(null)
         binding.editTextCardNumber.onFocusChangeListener = null
 
@@ -241,18 +256,30 @@ class CardView @JvmOverloads constructor(
             binding.textInputLayoutCardNumber.clearFocus()
         }
 
+        updateCardBrandLogos(detectedCardTypes, cardNumberFieldState)
+
         cardNumberFieldState.errorMessageId?.let { errorMessageId ->
             binding.textInputLayoutCardNumber.showError(localizedContext.getString(errorMessageId))
+            setCardNumberError(errorMessageId)
         } ?: run {
             binding.textInputLayoutCardNumber.hideError()
+            setCardNumberError(null, isDualBranded)
         }
 
         binding.editTextCardNumber.setOnChangeListener {
-            setCardErrorState(true)
+//            setCardErrorState(true)
             cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
         }
         binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+//            setCardErrorState(hasFocus)
             cardDelegate.onFieldFocusChanged(CardFieldId.CARD_NUMBER, hasFocus)
+        }
+    }
+
+    private fun updateCardBrandList(cards: List<CardListItem>, isCardListVisible: Boolean) {
+        binding.recyclerViewCardList.isVisible = isCardListVisible
+        if (isCardListVisible) {
+            cardListAdapter.submitList(cards)
         }
     }
 
@@ -277,7 +304,6 @@ class CardView @JvmOverloads constructor(
         }
 
         securityCodeEditText?.setOnChangeListener {
-            setCardErrorState(true)
             cardDelegate.onFieldValueChanged(CardFieldId.CARD_SECURITY_CODE, securityCodeEditText.rawValue)
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
@@ -305,7 +331,6 @@ class CardView @JvmOverloads constructor(
         }
 
         binding.editTextExpiryDate.setOnChangeListener {
-            setCardErrorState(true)
             cardDelegate.onFieldValueChanged(CardFieldId.CARD_EXPIRY_DATE, binding.editTextExpiryDate.date)
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
@@ -534,7 +559,7 @@ class CardView @JvmOverloads constructor(
 //        setStorePaymentSwitchVisibility(cardOutputData.showStorePaymentField)
 //        updateInstallments(cardOutputData)
 //        updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
-        setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
+//        setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
 //        updateAddressLookupInputText(cardOutputData.addressState)
     }
 
@@ -625,8 +650,11 @@ class CardView @JvmOverloads constructor(
 //        }
     }
 
-    private fun onCardNumberValidated(cardOutputData: CardOutputData) {
-        val detectedCardTypes = cardOutputData.detectedCardTypes
+    // TODO: Check how do we show error for card number field above
+    private fun updateCardBrandLogos(
+        detectedCardTypes: List<DetectedCardType>,
+        cardNumberFieldState: ComponentFieldViewState<String>
+    ) {
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageViewPrimary.apply {
                 strokeWidth = 0f
@@ -637,7 +665,7 @@ class CardView @JvmOverloads constructor(
             binding.editTextCardNumber.setAmexCardFormat(false)
             resetBrandSelectionInput()
         } else {
-            val firtDetectedCardType = detectedCardTypes.first()
+            val firstDetectedCardType = detectedCardTypes.first()
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
             binding.cardBrandLogoImageViewPrimary.loadLogo(
                 environment = cardDelegate.componentParams.environment,
@@ -645,18 +673,17 @@ class CardView @JvmOverloads constructor(
                 placeholder = R.drawable.ic_card,
                 errorFallback = R.drawable.ic_card,
             )
-            setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
+            setDualBrandedCardImages(detectedCardTypes, cardNumberFieldState)
 
             // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 
             if (detectedCardTypes.size == 1 &&
-                firtDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
+                firstDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
             ) {
-                val cardNumberValidation = cardOutputData.cardNumberState.validation
-                if (cardNumberValidation is Validation.Invalid) {
-                    setCardNumberError(cardNumberValidation.reason)
+                if (cardNumberFieldState.errorMessageId != null) {
+                    setCardNumberError(cardNumberFieldState.errorMessageId)
                 } else {
                     goToNextInputIfFocus(binding.editTextCardNumber)
                 }
@@ -664,10 +691,13 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setDualBrandedCardImages(detectedCardTypes: List<DetectedCardType>, validation: Validation) {
+    private fun setDualBrandedCardImages(
+        detectedCardTypes: List<DetectedCardType>,
+        cardNumberFieldState: ComponentFieldViewState<String>
+    ) {
         val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
-        if (validation is Validation.Invalid && !cardNumberHasFocus) {
-            setCardNumberError(validation.reason)
+        if (cardNumberFieldState.errorMessageId != null && !cardNumberHasFocus) {
+            setCardNumberError(cardNumberFieldState.errorMessageId)
         } else {
             detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let { detectedCardType ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
@@ -713,17 +743,17 @@ class CardView @JvmOverloads constructor(
 //    }
 
     private fun setCardErrorState(hasFocus: Boolean) {
-        val outputData = cardDelegate.outputData
-
-        val cardNumberValidation = outputData.cardNumberState.validation
-        val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
-        val shouldNotShowError = hasFocus && !showErrorWhileEditing
-        if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = outputData.isDualBranded
-            setCardNumberError(null, shouldShowSecondaryLogo)
-        } else if (cardNumberValidation is Validation.Invalid) {
-            setCardNumberError(cardNumberValidation.reason)
-        }
+//        val outputData = cardDelegate.outputData
+//
+//        val cardNumberValidation = outputData.cardNumberState.validation
+//        val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
+//        val shouldNotShowError = hasFocus && !showErrorWhileEditing
+//        if (shouldNotShowError) {
+//            val shouldShowSecondaryLogo = outputData.isDualBranded
+//            setCardNumberError(null, shouldShowSecondaryLogo)
+//        } else if (cardNumberValidation is Validation.Invalid) {
+//            setCardNumberError(cardNumberValidation.reason)
+//        }
     }
 
     private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
@@ -1086,17 +1116,6 @@ class CardView @JvmOverloads constructor(
             is Activity -> context
             is ContextWrapper -> getActivity(context.baseContext)
             else -> null
-        }
-    }
-
-    private fun setCardList(cards: List<CardListItem>, isCardListVisible: Boolean) {
-        binding.recyclerViewCardList.isVisible = isCardListVisible
-        if (isCardListVisible) {
-            if (cardListAdapter == null) {
-                cardListAdapter = CardListAdapter()
-                binding.recyclerViewCardList.adapter = cardListAdapter
-            }
-            cardListAdapter?.submitList(cards)
         }
     }
 

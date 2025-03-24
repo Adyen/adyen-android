@@ -287,8 +287,6 @@ class DefaultCardDelegate(
                     onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
                 }
                 detectedCardTypesUpdated(detectedCardTypes)
-                // TODO: To remove this later
-//                updateOutputData(detectedCardTypes = detectedCardTypes)
             }
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
             .distinctUntilChanged()
@@ -311,6 +309,10 @@ class DefaultCardDelegate(
         // when no supported cards are detected, only show an error if the brand detection was reliable
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
+        val cardBrands = getCardBrands(filteredDetectedCardTypes)
+        val isCardBrandListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes)
+        val isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes)
+
         val installmentOptions = getInstallmentOptions(
             installmentParams = componentParams.installmentParams,
             cardBrand = selectedOrFirstCardType?.cardBrand,
@@ -323,6 +325,9 @@ class DefaultCardDelegate(
             copy(
                 detectedCardTypes = filteredDetectedCardTypes,
                 selectedOrFirstCardType = selectedOrFirstCardType,
+                cardBrands = cardBrands,
+                isCardBrandListVisible = isCardBrandListVisible,
+                isDualBranded = isDualBranded,
                 cvcUIState = makeCvcUIState(selectedOrFirstCardType),
                 expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
                 enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true,
@@ -424,17 +429,6 @@ class DefaultCardDelegate(
             addressState.formatted(),
         )
     }
-
-//    private fun updateOutputData(
-//        detectedCardTypes: List<DetectedCardType> = outputData.detectedCardTypes,
-//        countryOptions: List<AddressListItem> = outputData.addressState.countryOptions,
-//        stateOptions: List<AddressListItem> = outputData.addressState.stateOptions,
-//    ) {
-//        val newOutputData =
-//            createOutputData(detectedCardTypes, countryOptions, stateOptions)
-//        _outputDataFlow.tryEmit(newOutputData)
-//        updateComponentState(newOutputData)
-//    }
 
     @Suppress("LongMethod")
     private fun createOutputData(
