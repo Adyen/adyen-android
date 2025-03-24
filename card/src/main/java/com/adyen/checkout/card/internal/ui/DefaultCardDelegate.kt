@@ -9,7 +9,6 @@
 package com.adyen.checkout.card.internal.ui
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.card.CardComponentState
@@ -37,6 +36,7 @@ import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
+import com.adyen.checkout.card.toComponentState
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
@@ -60,13 +60,8 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.cse.EncryptedCard
-import com.adyen.checkout.cse.EncryptionException
-import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
@@ -83,12 +78,12 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
-import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -118,6 +113,23 @@ class DefaultCardDelegate(
     private val stateManager: DelegateStateManager<CardDelegateState, CardFieldId>? = null,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
+    override val componentStateFlow: StateFlow<CardComponentState> by lazy {
+        val toComponentState: (CardDelegateState) -> CardComponentState = { delegateState ->
+            delegateState.toComponentState(
+                paymentMethod = paymentMethod,
+                order = order,
+                analyticsManager = analyticsManager,
+                cardEncryptor = cardEncryptor,
+                genericEncryptor = genericEncryptor,
+                exceptionChannel = exceptionChannel,
+                onBinValueListener = onBinValueListener,
+            )
+        }
+        stateManager!!.state
+            .map(toComponentState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(stateManager.state.value))
+    }
+
     override val viewStateFlow: Flow<CardViewState> by lazy {
         stateManager!!.state
             .map(CardDelegateState::toViewState)
@@ -125,8 +137,6 @@ class DefaultCardDelegate(
     }
 
     private val inputData: CardInputData = CardInputData()
-
-    private var publicKey: String? = null
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
     override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
@@ -142,9 +152,6 @@ class DefaultCardDelegate(
 
     override val outputData: CardOutputData
         get() = _outputDataFlow.value
-
-    private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<CardComponentState> = _componentStateFlow
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
@@ -229,8 +236,9 @@ class DefaultCardDelegate(
             ).fold(
                 onSuccess = { key ->
                     adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
-                    publicKey = key
-                    updateComponentState(outputData)
+                    stateManager?.updateState {
+                        copy(publicKey = publicKey)
+                    }
                 },
                 onFailure = { e ->
                     adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
@@ -262,12 +270,10 @@ class DefaultCardDelegate(
         submitHandler.setInteractionBlocked(isInteractionBlocked)
     }
 
-    // TODO Eventually needs to be removed
-    private fun onInputDataChanged() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
+    private fun detectCardType() {
         detectCardTypeRepository.detectCardType(
             cardNumber = stateManager!!.state.value.cardNumberDelegateState.value,
-            publicKey = publicKey,
+            publicKey = stateManager.state.value.publicKey,
             supportedCardBrands = componentParams.supportedCardBrands,
             clientKey = componentParams.clientKey,
             coroutineScope = coroutineScope,
@@ -337,7 +343,7 @@ class DefaultCardDelegate(
                 isAddressOptional = CardAddressValidationUtils.isAddressOptional(
                     addressParams = componentParams.addressParams,
                     cardType = selectedOrFirstCardType?.cardBrand?.txVariant,
-                )
+                ),
             )
         }
         validateAndUpdateAddress()
@@ -518,92 +524,6 @@ class DefaultCardDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    @VisibleForTesting
-    internal fun updateComponentState(outputData: CardOutputData) {
-        adyenLog(AdyenLogLevel.VERBOSE) { "updateComponentState" }
-        val componentState = createComponentState(outputData)
-        _componentStateFlow.tryEmit(componentState)
-    }
-
-    @Suppress("ReturnCount", "LongMethod")
-    private fun createComponentState(
-        outputData: CardOutputData = this.outputData
-    ): CardComponentState {
-        val cardNumber = outputData.cardNumberState.value
-
-        val firstCardBrand = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = outputData.detectedCardTypes,
-        )?.cardBrand
-
-        val binValue =
-            if (outputData.cardNumberState.validation.isValid() && cardNumber.length >= EXTENDED_CARD_NUMBER_LENGTH) {
-                cardNumber.take(BIN_VALUE_EXTENDED_LENGTH)
-            } else {
-                cardNumber.take(BIN_VALUE_LENGTH)
-            }
-
-        // This safe call is needed because _componentStateFlow is null while this is called the first time.
-        @Suppress("UNNECESSARY_SAFE_CALL")
-        if (_componentStateFlow?.value?.binValue != binValue) {
-            onBinValueListener?.invoke(binValue)
-        }
-
-        val publicKey = publicKey
-
-        // If data is not valid we just return empty object, encryption would fail and we don't pass unencrypted data.
-        if (!outputData.isValid || publicKey == null) {
-            return CardComponentState(
-                data = PaymentComponentData(null, null, null),
-                isInputValid = outputData.isValid,
-                isReady = publicKey != null,
-                cardBrand = firstCardBrand,
-                binValue = binValue,
-                lastFourDigits = null,
-            )
-        }
-
-        val unencryptedCardBuilder = UnencryptedCard.Builder()
-
-        val encryptedCard: EncryptedCard = try {
-            unencryptedCardBuilder.setNumber(outputData.cardNumberState.value)
-            if (!isCvcHidden()) {
-                val cvc = outputData.securityCodeState.value
-                if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
-            }
-            val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != EMPTY_DATE) {
-                unencryptedCardBuilder.setExpiryDate(
-                    expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString(),
-                )
-            }
-
-            cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
-        } catch (e: EncryptionException) {
-            val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.ENCRYPTION)
-            analyticsManager.trackEvent(event)
-
-            exceptionChannel.trySend(e)
-
-            return CardComponentState(
-                data = PaymentComponentData(null, null, null),
-                isInputValid = false,
-                isReady = true,
-                cardBrand = firstCardBrand,
-                binValue = binValue,
-                lastFourDigits = null,
-            )
-        }
-
-        return mapComponentState(
-            encryptedCard,
-            outputData,
-            cardNumber,
-            firstCardBrand,
-            binValue,
-        )
-    }
-
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
         val event = GenericEvents.submit(paymentMethod.type.orEmpty())
         analyticsManager.trackEvent(event)
@@ -611,16 +531,17 @@ class DefaultCardDelegate(
 
     override fun <T> onFieldValueChanged(fieldId: CardFieldId, value: T) {
         stateManager!!.updateField(fieldId, value = value)
-        onInputDataChanged()
+        detectCardType()
     }
 
     override fun onFieldFocusChanged(fieldId: CardFieldId, hasFocus: Boolean) {
         stateManager!!.updateField<Unit>(fieldId, hasFocus = hasFocus)
     }
 
-    override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state = state)
+    override fun onSubmit() = if (stateManager!!.isValid) {
+        submitHandler.onSubmit(componentStateFlow.value)
+    } else {
+        stateManager.highlightAllFieldValidationErrors()
     }
 
     override fun startAddressLookup() {
@@ -825,61 +746,6 @@ class DefaultCardDelegate(
         return FieldState(installmentModel, Validation.Valid)
     }
 
-    private fun mapComponentState(
-        encryptedCard: EncryptedCard,
-        stateOutputData: CardOutputData,
-        cardNumber: String,
-        firstCardBrand: CardBrand?,
-        binValue: String
-    ): CardComponentState {
-        val cardPaymentMethod = CardPaymentMethod(
-            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-        ).apply {
-            encryptedCardNumber = encryptedCard.encryptedCardNumber
-            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
-            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
-
-            if (!isCvcHidden()) {
-                encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-            }
-
-            if (isHolderNameRequired()) {
-                holderName = stateOutputData.holderNameState.value
-            }
-
-            if (isKCPAuthRequired()) {
-                publicKey?.let { publicKey ->
-                    encryptedPassword = genericEncryptor.encryptField(
-                        ENCRYPTION_KEY_FOR_KCP_PASSWORD,
-                        stateOutputData.kcpCardPasswordState.value,
-                        publicKey,
-                    )
-                } ?: throw CheckoutException("Encryption failed because public key cannot be found.")
-                taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
-            }
-
-            brand = getCardBrand(stateOutputData.detectedCardTypes)
-
-            fundingSource = getFundingSource()
-
-            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
-        }
-
-        val paymentComponentData = makePaymentComponentData(cardPaymentMethod, stateOutputData)
-
-        val lastFour = cardNumber.takeLast(LAST_FOUR_LENGTH)
-
-        return CardComponentState(
-            data = paymentComponentData,
-            isInputValid = true,
-            isReady = true,
-            cardBrand = firstCardBrand,
-            binValue = binValue,
-            lastFourDigits = lastFour,
-        )
-    }
-
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
         val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
         return reliableDetectedCards.size > 1
@@ -986,14 +852,5 @@ class DefaultCardDelegate(
 
     companion object {
         private const val DEBIT_FUNDING_SOURCE = "debit"
-
-        @VisibleForTesting
-        internal const val BIN_VALUE_LENGTH = 6
-
-        @VisibleForTesting
-        internal const val BIN_VALUE_EXTENDED_LENGTH = 8
-        private const val EXTENDED_CARD_NUMBER_LENGTH = 16
-        private const val LAST_FOUR_LENGTH = 4
-        private const val ENCRYPTION_KEY_FOR_KCP_PASSWORD = "password"
     }
 }

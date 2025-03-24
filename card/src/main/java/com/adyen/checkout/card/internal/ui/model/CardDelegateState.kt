@@ -50,6 +50,7 @@ data class CardDelegateState(
     val detectedCardTypes: List<DetectedCardType> = emptyList(),
     val selectedOrFirstCardType: DetectedCardType? = null,
     val cardBrands: List<CardListItem> = emptyList(),
+    val publicKey: String? = null,
     val isCardBrandListVisible: Boolean = false,
     val isDualBranded: Boolean = false,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
@@ -64,7 +65,7 @@ data class CardDelegateState(
     val updatedCountryOptions: List<AddressListItem> = emptyList(),
     val updatedStateOptions: List<AddressListItem> = emptyList(),
     val addressFormUIState: AddressFormUIState = AddressFormUIState.fromAddressParams(
-        componentParams.addressParams
+        componentParams.addressParams,
     ),
     val showStorePaymentField: Boolean = componentParams.isStorePaymentFieldVisible,
     val installmentOptions: List<InstallmentModel>,
@@ -72,5 +73,16 @@ data class CardDelegateState(
     val addressState: AddressOutputData,
     val isAddressOptional: Boolean = false,
 ) : DelegateState {
-    override val isValid: Boolean = true
+
+    override val isValid: Boolean
+        get() =
+            cardNumberDelegateState.validation?.isValid() == true &&
+                cardExpiryDateDelegateState.validation?.isValid() == true &&
+                cardSecurityCodeDelegateState.validation?.isValid() == true &&
+                cardHolderNameDelegateState.validation?.isValid() == true &&
+                socialSecurityNumberDelegateState.validation?.isValid() == true &&
+                kcpBirthDateOrTaxNumberDelegateState.validation?.isValid() == true &&
+                kcpCardPasswordDelegateState.validation?.isValid() == true &&
+                installmentOptionDelegateState.validation?.isValid() == true &&
+                addressState.isValid
 }

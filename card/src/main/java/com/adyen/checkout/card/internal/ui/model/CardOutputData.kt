@@ -41,6 +41,4 @@ data class CardOutputData(
                 socialSecurityNumberState.validation.isValid() &&
                 kcpBirthDateOrTaxNumberState.validation.isValid() &&
                 kcpCardPasswordState.validation.isValid()
-//                installmentState.validation.isValid() &&
-//                addressState.isValid
 }
