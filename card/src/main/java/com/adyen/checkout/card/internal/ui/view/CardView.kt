@@ -37,7 +37,6 @@ import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
@@ -222,9 +221,12 @@ class CardView @JvmOverloads constructor(
         updateSecurityCode(cardViewState.cardSecurityCodeFieldState)
         updateExpiryDate(cardViewState.cardExpiryDateFieldState)
         updateHolderName(cardViewState.cardHolderNameFieldState)
-        updateSocialSecurityNumber(cardViewState.socialSecurityNumberFieldState)
-        updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState)
-        updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState)
+        updateSocialSecurityNumber(
+            cardViewState.socialSecurityNumberFieldState,
+            cardViewState.isSocialSecurityNumberRequired,
+        )
+        updateKcpBirthDateOrTaxNumber(cardViewState.kcpBirthDateOrTaxNumberFieldState, cardViewState.isKCPAuthRequired)
+        updateKcpCardPassword(cardViewState.kcpCardPasswordFieldState, cardViewState.isKCPAuthRequired)
         updateAddressPostalCode(cardViewState.addressPostalCodeFieldState)
         updateSwitchStorePaymentMethod(cardViewState.storedPaymentMethodSwitchFieldState)
         updateInstallmentOptions(cardViewState.installmentOptions)
@@ -366,7 +368,12 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun updateSocialSecurityNumber(socialSecurityNumberFieldState: ComponentFieldViewState<String>) {
+    private fun updateSocialSecurityNumber(
+        socialSecurityNumberFieldState: ComponentFieldViewState<String>,
+        isSocialSecurityNumberRequired: Boolean
+    ) {
+        binding.textInputLayoutSocialSecurityNumber.isVisible = isSocialSecurityNumberRequired
+
         val socialSecurityNumberEditText =
             binding.textInputLayoutSocialSecurityNumber.editText as? AdyenTextInputEditText
 
@@ -395,7 +402,12 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun updateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumberFieldState: ComponentFieldViewState<String>) {
+    private fun updateKcpBirthDateOrTaxNumber(
+        kcpBirthDateOrTaxNumberFieldState: ComponentFieldViewState<String>,
+        isKCPAuthRequired: Boolean
+    ) {
+        binding.textInputLayoutKcpBirthDateOrTaxNumber.isVisible = isKCPAuthRequired
+
         val kcpBirthDateOrRegistrationNumberEditText =
             binding.textInputLayoutKcpBirthDateOrTaxNumber.editText as? AdyenTextInputEditText
 
@@ -435,7 +447,12 @@ class CardView @JvmOverloads constructor(
             }
     }
 
-    private fun updateKcpCardPassword(kcpCardPasswordFieldState: ComponentFieldViewState<String>) {
+    private fun updateKcpCardPassword(
+        kcpCardPasswordFieldState: ComponentFieldViewState<String>,
+        isKCPAuthRequired: Boolean
+    ) {
+        binding.textInputLayoutKcpCardPassword.isVisible = isKCPAuthRequired
+
         val kcpPasswordEditText = binding.textInputLayoutKcpCardPassword.editText as? AdyenTextInputEditText
 
         kcpPasswordEditText?.setOnChangeListener(null)

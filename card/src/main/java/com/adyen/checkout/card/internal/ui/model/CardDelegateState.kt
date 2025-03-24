@@ -9,6 +9,8 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.KCPAuthVisibility
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
@@ -53,6 +55,8 @@ data class CardDelegateState(
     val publicKey: String? = null,
     val isCardBrandListVisible: Boolean = false,
     val isDualBranded: Boolean = false,
+    val isKCPAuthRequired: Boolean = componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW,
+    val isSocialSecurityNumberRequired: Boolean = componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val holderNameUIState: InputFieldUIState = if (componentParams.isHolderNameRequired) {
