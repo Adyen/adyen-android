@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlin.reflect.KProperty1
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDelegateStateManager<S : DelegateState, FI>(
@@ -83,18 +82,16 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
     }
 
     override fun updateState(update: S.() -> S) {
-//        val oldState = _state.value
+        val oldState = _state.value
         _state.update(update)
-//        val newState = _state.value
+        val newState = _state.value
 
-//        triggerReValidation(oldState, newState)
+        triggerReValidation(oldState, newState)
     }
 
     private fun triggerReValidation(oldState: S, newState: S) {
         factory.getFieldIds().forEach { fieldId ->
             val dependents = stateDependencyRegistry.getDependencies(fieldId)
-            // TODO: Make sure to update the field only once and stop checking other dependents if it is updated
-            // TODO: We need to test this
             dependents?.forEach { dependency ->
                 val newValue = dependency(newState)
                 val oldValue = dependency(oldState)

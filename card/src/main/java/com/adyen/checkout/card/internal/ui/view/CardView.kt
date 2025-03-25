@@ -203,9 +203,9 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
+//        delegate.outputDataFlow
+//            .onEach { outputDataChanged(it) }
+//            .launchIn(coroutineScope)
 
         delegate.viewStateFlow
             .onEach { viewStateUpdated(it) }
@@ -751,8 +751,6 @@ class CardView @JvmOverloads constructor(
 //        binding.editTextCardNumber.setOnChangeListener {
 //            setCardErrorState(true)
 //            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
-//            // TODO: Value needs to be changed
-//            cardDelegate.onFieldValueChanged(CardFieldId.CARD_NUMBER, binding.editTextCardNumber.rawValue)
 //        }
 //        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
 //            setCardErrorState(hasFocus)

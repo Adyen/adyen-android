@@ -110,7 +110,7 @@ internal class StoredCardDelegate(
     private val inputData: CardInputData = CardInputData()
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
+    val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
 
     override val addressOutputData: AddressOutputData
         get() = _outputDataFlow.value.addressState
@@ -131,7 +131,7 @@ internal class StoredCardDelegate(
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
-    override val outputData: CardOutputData get() = _outputDataFlow.value
+    val outputData: CardOutputData get() = _outputDataFlow.value
 
     private var publicKey: String? = null
 
@@ -212,10 +212,10 @@ internal class StoredCardDelegate(
         }
     }
 
-    override fun updateInputData(update: CardInputData.() -> Unit) {
-        inputData.update()
-        onInputDataChanged()
-    }
+//    override fun updateInputData(update: CardInputData.() -> Unit) {
+//        inputData.update()
+//        onInputDataChanged()
+//    }
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)

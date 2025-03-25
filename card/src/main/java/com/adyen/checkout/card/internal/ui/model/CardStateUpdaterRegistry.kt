@@ -62,7 +62,6 @@ internal class CardNumberUpdater :
     override fun getFieldState(state: CardDelegateState): ComponentFieldDelegateState<String> =
         state.cardNumberDelegateState
 
-
     override fun updateFieldState(
         state: CardDelegateState,
         fieldState: ComponentFieldDelegateState<String>

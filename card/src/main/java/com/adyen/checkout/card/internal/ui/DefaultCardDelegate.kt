@@ -22,16 +22,13 @@ import com.adyen.checkout.card.internal.ui.model.CVCVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardDelegateState
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
-import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
-import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.card.internal.ui.model.CardViewState
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.model.toViewState
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
-import com.adyen.checkout.card.internal.util.CardValidationUtils
 import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
@@ -41,7 +38,6 @@ import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -55,13 +51,11 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
 import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
@@ -77,7 +71,6 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
-import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -136,11 +129,6 @@ class DefaultCardDelegate(
             .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 
-    private val inputData: CardInputData = CardInputData()
-
-    private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<CardOutputData> = _outputDataFlow
-
     override val addressOutputData: AddressOutputData
         get() = stateManager!!.state.value.addressState
 
@@ -149,9 +137,6 @@ class DefaultCardDelegate(
             it.addressState
         }.stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.addressState)
     }
-
-    override val outputData: CardOutputData
-        get() = _outputDataFlow.value
 
     private val exceptionChannel: Channel<CheckoutException> = bufferedChannel()
     override val exceptionFlow: Flow<CheckoutException> = exceptionChannel.receiveAsFlow()
@@ -252,10 +237,10 @@ class DefaultCardDelegate(
         }
     }
 
-    override fun updateInputData(update: CardInputData.() -> Unit) {
-        inputData.update()
-//        onInputDataChanged()
-    }
+//    override fun updateInputData(update: CardInputData.() -> Unit) {
+////        inputData.update()
+////        onInputDataChanged()
+//    }
 
     override fun updateAddressInputData(update: AddressInputModel.() -> Unit) {
         val currentAddress = stateManager!!.state.value.address.copy()
@@ -297,7 +282,11 @@ class DefaultCardDelegate(
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
             .distinctUntilChanged()
             // TODO: Why do we have this?
-            .onEach { inputData.selectedCardIndex = -1 }
+            .onEach {
+                stateManager!!.updateState {
+                    copy(selectedCardIndexDelegateState = selectedCardIndexDelegateState.copy(value = -1))
+                }
+            }
             .launchIn(coroutineScope)
     }
 
@@ -436,82 +425,82 @@ class DefaultCardDelegate(
         )
     }
 
-    @Suppress("LongMethod")
-    private fun createOutputData(
-        detectedCardTypes: List<DetectedCardType> = emptyList(),
-        countryOptions: List<AddressListItem> = emptyList(),
-        stateOptions: List<AddressListItem> = emptyList(),
-    ): CardOutputData {
-        adyenLog(AdyenLogLevel.VERBOSE) { "createOutputData" }
-        val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
-            countryOptions,
-            inputData.address.country,
-        )
-        val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
-            stateOptions,
-            inputData.address.stateOrProvince,
-        )
-
-        val isReliable = detectedCardTypes.any { it.isReliable }
-
-        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-            detectedCardTypes,
-            inputData.selectedCardIndex,
-        )
-        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = filteredDetectedCardTypes,
-        )
-
-        // perform a Luhn Check if no brands are detected
-        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
-
-        // when no supported cards are detected, only show an error if the brand detection was reliable
-        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
-
-        val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
-
-        val addressState = validateAddress(
-            inputData.address,
-            addressFormUIState,
-            selectedOrFirstCardType,
-            updatedCountryOptions,
-            updatedStateOptions,
-        )
-
-        return CardOutputData(
-            cardNumberState = validateCardNumber(
-                cardNumber = inputData.cardNumber,
-                enableLuhnCheck = enableLuhnCheck,
-                isBrandSupported = !shouldFailWithUnsupportedBrand,
-            ),
-            expiryDateState = validateExpiryDate(inputData.expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
-            securityCodeState = validateSecurityCode(inputData.securityCode, selectedOrFirstCardType),
-            holderNameState = validateHolderName(inputData.holderName),
-            socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
-            kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
-            kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
-            addressState = addressState,
-//            installmentState = makeInstallmentFieldState(inputData.installmentOption),
-//            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
-//            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
-//            expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
-//            holderNameUIState = getHolderNameUIState(),
-//            showStorePaymentField = showStorePaymentField(),
-            detectedCardTypes = filteredDetectedCardTypes,
-//            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
-//            isKCPAuthRequired = isKCPAuthRequired(),
-            addressUIState = addressFormUIState,
-//            installmentOptions = getInstallmentOptions(
-//                installmentParams = componentParams.installmentParams,
-//                cardBrand = selectedOrFirstCardType?.cardBrand,
-//                isCardTypeReliable = isReliable,
+//    @Suppress("LongMethod")
+//    private fun createOutputData(
+//        detectedCardTypes: List<DetectedCardType> = emptyList(),
+//        countryOptions: List<AddressListItem> = emptyList(),
+//        stateOptions: List<AddressListItem> = emptyList(),
+//    ): CardOutputData {
+//        adyenLog(AdyenLogLevel.VERBOSE) { "createOutputData" }
+//        val updatedCountryOptions = AddressFormUtils.markAddressListItemSelected(
+//            countryOptions,
+//            inputData.address.country,
+//        )
+//        val updatedStateOptions = AddressFormUtils.markAddressListItemSelected(
+//            stateOptions,
+//            inputData.address.stateOrProvince,
+//        )
+//
+//        val isReliable = detectedCardTypes.any { it.isReliable }
+//
+//        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
+//            detectedCardTypes,
+//            inputData.selectedCardIndex,
+//        )
+//        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+//            detectedCardTypes = filteredDetectedCardTypes,
+//        )
+//
+//        // perform a Luhn Check if no brands are detected
+//        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+//
+//        // when no supported cards are detected, only show an error if the brand detection was reliable
+//        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
+//
+//        val addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams)
+//
+//        val addressState = validateAddress(
+//            inputData.address,
+//            addressFormUIState,
+//            selectedOrFirstCardType,
+//            updatedCountryOptions,
+//            updatedStateOptions,
+//        )
+//
+//        return CardOutputData(
+//            cardNumberState = validateCardNumber(
+//                cardNumber = inputData.cardNumber,
+//                enableLuhnCheck = enableLuhnCheck,
+//                isBrandSupported = !shouldFailWithUnsupportedBrand,
 //            ),
-            cardBrands = getCardBrands(filteredDetectedCardTypes),
-            isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
-//            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
-            isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
-        )
-    }
+//            expiryDateState = validateExpiryDate(inputData.expiryDate, selectedOrFirstCardType?.expiryDatePolicy),
+//            securityCodeState = validateSecurityCode(inputData.securityCode, selectedOrFirstCardType),
+//            holderNameState = validateHolderName(inputData.holderName),
+//            socialSecurityNumberState = validateSocialSecurityNumber(inputData.socialSecurityNumber),
+//            kcpBirthDateOrTaxNumberState = validateKcpBirthDateOrTaxNumber(inputData.kcpBirthDateOrTaxNumber),
+//            kcpCardPasswordState = validateKcpCardPassword(inputData.kcpCardPassword),
+//            addressState = addressState,
+////            installmentState = makeInstallmentFieldState(inputData.installmentOption),
+////            shouldStorePaymentMethod = inputData.isStorePaymentMethodSwitchChecked,
+////            cvcUIState = makeCvcUIState(selectedOrFirstCardType),
+////            expiryDateUIState = makeExpiryDateUIState(selectedOrFirstCardType?.expiryDatePolicy),
+////            holderNameUIState = getHolderNameUIState(),
+////            showStorePaymentField = showStorePaymentField(),
+//            detectedCardTypes = filteredDetectedCardTypes,
+////            isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
+////            isKCPAuthRequired = isKCPAuthRequired(),
+//            addressUIState = addressFormUIState,
+////            installmentOptions = getInstallmentOptions(
+////                installmentParams = componentParams.installmentParams,
+////                cardBrand = selectedOrFirstCardType?.cardBrand,
+////                isCardTypeReliable = isReliable,
+////            ),
+//            cardBrands = getCardBrands(filteredDetectedCardTypes),
+//            isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
+////            kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
+//            isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+//        )
+//    }
 
     private fun isCardListVisible(
         cardBrands: List<CardListItem>,
@@ -559,70 +548,70 @@ class DefaultCardDelegate(
         }
     }
 
-    // Validation
-    private fun validateCardNumber(
-        cardNumber: String,
-        enableLuhnCheck: Boolean,
-        isBrandSupported: Boolean
-    ): FieldState<String> {
-        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
-        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
-    }
-
-    private fun validateExpiryDate(
-        expiryDate: ExpiryDate,
-        expiryDatePolicy: Brand.FieldPolicy?
-    ): FieldState<ExpiryDate> {
-        val validation = CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
-        return cardValidationMapper.mapExpiryDateValidation(expiryDate, validation)
-    }
-
-    private fun validateSecurityCode(
-        securityCode: String,
-        cardType: DetectedCardType?
-    ): FieldState<String> {
-        val cvcUIState = makeCvcUIState(cardType)
-        val validation = CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
-        return cardValidationMapper.mapSecurityCodeValidation(securityCode, validation)
-    }
-
-    private fun validateHolderName(holderName: String): FieldState<String> {
-        return if (componentParams.isHolderNameRequired && holderName.isBlank()) {
-            FieldState(
-                holderName,
-                Validation.Invalid(R.string.checkout_holder_name_not_valid),
-            )
-        } else {
-            FieldState(
-                holderName,
-                Validation.Valid,
-            )
-        }
-    }
-
-    private fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
-        return if (isSocialSecurityNumberRequired()) {
-            SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
-        } else {
-            FieldState(socialSecurityNumber, Validation.Valid)
-        }
-    }
-
-    private fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
-        return if (isKCPAuthRequired()) {
-            KcpValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
-        } else {
-            FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
-        }
-    }
-
-    private fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
-        return if (isKCPAuthRequired()) {
-            KcpValidationUtils.validateKcpCardPassword(kcpCardPassword)
-        } else {
-            FieldState(kcpCardPassword, Validation.Valid)
-        }
-    }
+//    // Validation
+//    private fun validateCardNumber(
+//        cardNumber: String,
+//        enableLuhnCheck: Boolean,
+//        isBrandSupported: Boolean
+//    ): FieldState<String> {
+//        val validation = CardValidationUtils.validateCardNumber(cardNumber, enableLuhnCheck, isBrandSupported)
+//        return cardValidationMapper.mapCardNumberValidation(cardNumber, validation)
+//    }
+//
+//    private fun validateExpiryDate(
+//        expiryDate: ExpiryDate,
+//        expiryDatePolicy: Brand.FieldPolicy?
+//    ): FieldState<ExpiryDate> {
+//        val validation = CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
+//        return cardValidationMapper.mapExpiryDateValidation(expiryDate, validation)
+//    }
+//
+//    private fun validateSecurityCode(
+//        securityCode: String,
+//        cardType: DetectedCardType?
+//    ): FieldState<String> {
+//        val cvcUIState = makeCvcUIState(cardType)
+//        val validation = CardValidationUtils.validateSecurityCode(securityCode, cardType, cvcUIState)
+//        return cardValidationMapper.mapSecurityCodeValidation(securityCode, validation)
+//    }
+//
+//    private fun validateHolderName(holderName: String): FieldState<String> {
+//        return if (componentParams.isHolderNameRequired && holderName.isBlank()) {
+//            FieldState(
+//                holderName,
+//                Validation.Invalid(R.string.checkout_holder_name_not_valid),
+//            )
+//        } else {
+//            FieldState(
+//                holderName,
+//                Validation.Valid,
+//            )
+//        }
+//    }
+//
+//    private fun validateSocialSecurityNumber(socialSecurityNumber: String): FieldState<String> {
+//        return if (isSocialSecurityNumberRequired()) {
+//            SocialSecurityNumberUtils.validateSocialSecurityNumber(socialSecurityNumber)
+//        } else {
+//            FieldState(socialSecurityNumber, Validation.Valid)
+//        }
+//    }
+//
+//    private fun validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber: String): FieldState<String> {
+//        return if (isKCPAuthRequired()) {
+//            KcpValidationUtils.validateKcpBirthDateOrTaxNumber(kcpBirthDateOrTaxNumber)
+//        } else {
+//            FieldState(kcpBirthDateOrTaxNumber, Validation.Valid)
+//        }
+//    }
+//
+//    private fun validateKcpCardPassword(kcpCardPassword: String): FieldState<String> {
+//        return if (isKCPAuthRequired()) {
+//            KcpValidationUtils.validateKcpCardPassword(kcpCardPassword)
+//        } else {
+//            FieldState(kcpCardPassword, Validation.Valid)
+//        }
+//    }
 
     private fun validateAddress(
         addressInputModel: AddressInputModel,
@@ -762,36 +751,36 @@ class DefaultCardDelegate(
         }
     }
 
-    private fun makePaymentComponentData(
-        cardPaymentMethod: CardPaymentMethod,
-        stateOutputData: CardOutputData,
-    ): PaymentComponentData<CardPaymentMethod> {
-        return PaymentComponentData(
-            paymentMethod = cardPaymentMethod,
-            storePaymentMethod = if (showStorePaymentField()) stateManager!!.state.value.storedPaymentMethodSwitchDelegateState.value else null,
-            shopperReference = componentParams.shopperReference,
-            order = order,
-            amount = componentParams.amount,
-        ).apply {
-            if (isSocialSecurityNumberRequired()) {
-                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
-            }
-            if (isAddressRequired(stateOutputData.addressUIState)) {
-                billingAddress = AddressFormUtils.makeAddressData(
-                    addressOutputData = stateOutputData.addressState,
-                    addressFormUIState = stateOutputData.addressUIState,
-                )
-            }
-            if (isInstallmentsRequired(stateOutputData)) {
-                installments =
-                    InstallmentUtils.makeInstallmentModelObject(stateManager!!.state.value.installmentOptionDelegateState.value)
-            }
-        }
-    }
+//    private fun makePaymentComponentData(
+//        cardPaymentMethod: CardPaymentMethod,
+//        stateOutputData: CardOutputData,
+//    ): PaymentComponentData<CardPaymentMethod> {
+//        return PaymentComponentData(
+//            paymentMethod = cardPaymentMethod,
+//            storePaymentMethod = if (showStorePaymentField()) stateManager!!.state.value.storedPaymentMethodSwitchDelegateState.value else null,
+//            shopperReference = componentParams.shopperReference,
+//            order = order,
+//            amount = componentParams.amount,
+//        ).apply {
+//            if (isSocialSecurityNumberRequired()) {
+//                socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
+//            }
+//            if (isAddressRequired(stateOutputData.addressUIState)) {
+//                billingAddress = AddressFormUtils.makeAddressData(
+//                    addressOutputData = stateOutputData.addressState,
+//                    addressFormUIState = stateOutputData.addressUIState,
+//                )
+//            }
+//            if (isInstallmentsRequired(stateOutputData)) {
+//                installments =
+//                    InstallmentUtils.makeInstallmentModelObject(stateManager!!.state.value.installmentOptionDelegateState.value)
+//            }
+//        }
+//    }
 
-    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
-        return stateManager!!.state.value.installmentOptions.isNotEmpty()
-    }
+//    private fun isInstallmentsRequired(cardOutputData: CardOutputData): Boolean {
+//        return stateManager!!.state.value.installmentOptions.isNotEmpty()
+//    }
 
     private fun getCardBrands(detectedCardTypes: List<DetectedCardType>): List<CardListItem> {
         val noCardDetected = detectedCardTypes.isEmpty()
@@ -804,17 +793,17 @@ class DefaultCardDelegate(
         }
     }
 
-    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
-        return if (isDualBrandedFlow(detectedCardTypes)) {
-            DetectedCardTypesUtils.getSelectedCardType(
-                detectedCardTypes = detectedCardTypes,
-            )
-        } else {
-            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
-            val firstDetectedBrand = detectedCardTypes.firstOrNull()
-            reliableCardBrand ?: firstDetectedBrand
-        }?.cardBrand?.txVariant
-    }
+//    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
+//        return if (isDualBrandedFlow(detectedCardTypes)) {
+//            DetectedCardTypesUtils.getSelectedCardType(
+//                detectedCardTypes = detectedCardTypes,
+//            )
+//        } else {
+//            val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
+//            val firstDetectedBrand = detectedCardTypes.firstOrNull()
+//            reliableCardBrand ?: firstDetectedBrand
+//        }?.cardBrand?.txVariant
+//    }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 

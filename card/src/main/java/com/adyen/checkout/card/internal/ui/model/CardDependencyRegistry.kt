@@ -12,9 +12,6 @@ import com.adyen.checkout.components.core.internal.ui.model.validation.StateDepe
 
 class CardDependencyRegistry : StateDependencyRegistry<CardFieldId, CardDelegateState> {
 
-    //    private val dependencies = mutableMapOf<CardFieldId, List<KProperty1<CardDelegateState, *>>>()
-//    private val dependencies = mutableMapOf<FI, List<FieldDependency<S, FI>>>()
-
     private val dependencies: Map<CardFieldId, List<(CardDelegateState) -> Any?>> =
         CardFieldId.entries.associateWith { fieldId ->
             when (fieldId) {
@@ -22,25 +19,15 @@ class CardDependencyRegistry : StateDependencyRegistry<CardFieldId, CardDelegate
                     { state -> state.enableLuhnCheck },
                     { state -> state.isBrandSupported },
                     { state -> state.detectedCardTypes },
+                    { state -> state.cardBrands },
                 )
 
-                // TODO To be removed
                 else -> {
                     listOf()
                 }
             }
         }
 
-    //
-//    private val dependencies: mutableMapOf<CardFieldId, List<(CardDelegateState) -> Any?>> = CardFieldId.entries.associateWith { fieldId ->
-//        when (fieldId) {
-//            CardFieldId.CARD_NUMBER -> listOf(
-//                state.detectedCardTypes,
-//                state.enableLuhnCheck,
-//                state.isBrandSupported,
-//            )
-//        }
-//    }
     override fun getDependencies(fieldId: CardFieldId): List<(CardDelegateState) -> Any?>? {
         return dependencies[fieldId]
     }

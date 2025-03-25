@@ -21,7 +21,6 @@ import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
 
-// TODO: Move many of the hardcoded values from the delegate state to the factory
 class CardDelegateStateFactory(
     private val componentParams: CardComponentParams,
     private val paymentMethod: PaymentMethod,
