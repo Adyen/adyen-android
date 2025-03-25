@@ -18,15 +18,22 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
+import com.adyen.checkout.components.core.internal.ui.model.transformer.DefaultTransformerRegistry
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.mbway.MBWayComponentState
 import com.adyen.checkout.mbway.MBWayConfiguration
 import com.adyen.checkout.mbway.getMBWayConfiguration
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
 import com.adyen.checkout.mbway.mbWay
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -35,7 +42,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -45,7 +51,9 @@ import org.junit.jupiter.params.provider.MethodSource
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Locale
@@ -54,6 +62,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultMBWayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<MBWayComponentState>,
+    @Mock private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -65,140 +74,64 @@ internal class DefaultMBWayDelegateTest(
         delegate = createMBWayDelegate()
     }
 
-    @Nested
-    @DisplayName("when input data changes and")
-    inner class InputDataChangedTest {
+    @Test
+    fun `when state is updated, then component state should be created`() = runTest {
+        val delegateState = createMBWayDelegateState(
+            countryCodeValue = CountryModel("NL", "Netherlands", "+31"),
+            countryCodeValidation = Validation.Valid,
+            localPhoneNumberValue = "2345678901",
+            localPhoneNumberValidation = Validation.Valid,
+        )
+        initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()), delegateState)
 
-        @Test
-        fun `input is invalid, then output data should be invalid`() = runTest {
-            delegate.outputDataFlow.test {
-                skipItems(1)
-                delegate.updateInputData {
-                    countryCode = "+1"
-                    localPhoneNumber = "04023456"
-                }
-
-                with(awaitItem()) {
-                    assertEquals("+14023456", mobilePhoneNumberFieldState.value)
-                    assertFalse(isValid)
-                }
-
-                cancelAndIgnoreRemainingEvents()
+        delegate.componentStateFlow.test {
+            with(awaitItem()) {
+                assertEquals("+312345678901", data.paymentMethod?.telephoneNumber)
+                assertTrue(isInputValid)
+                assertTrue(isValid)
             }
-        }
 
-        @Test
-        fun `input is invalid, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateInputData {
-                    countryCode = "+23"
-                    localPhoneNumber = "0056778"
-                }
-
-                with(awaitItem()) {
-                    assertEquals("+2356778", data.paymentMethod?.telephoneNumber)
-                    assertFalse(isInputValid)
-                    assertFalse(isValid)
-                }
-
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-        @Test
-        fun `input is valid, then output data should be propagated`() = runTest {
-            delegate.outputDataFlow.test {
-                skipItems(1)
-                delegate.updateInputData {
-                    countryCode = "+351"
-                    localPhoneNumber = "234567890"
-                }
-
-                with(awaitItem()) {
-                    assertEquals("+351234567890", mobilePhoneNumberFieldState.value)
-                    assertTrue(isValid)
-                }
-
-                cancelAndIgnoreRemainingEvents()
-            }
-        }
-
-        @Test
-        fun `input is valid, then component state should be propagated`() = runTest {
-            delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateInputData {
-                    countryCode = "+1"
-                    localPhoneNumber = "9257348920"
-                }
-
-                with(awaitItem()) {
-                    assertEquals("+19257348920", data.paymentMethod?.telephoneNumber)
-                    assertTrue(isInputValid)
-                    assertTrue(isValid)
-                }
-
-                cancelAndIgnoreRemainingEvents()
-            }
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
-    @Nested
-    @DisplayName("when creating component state and")
-    inner class CreateComponentStateTest {
+    @Test
+    fun `when state is updated, then view state should be created`() = runTest {
+        val delegateState = createMBWayDelegateState(
+            countries = listOf(
+                CountryModel("PT", "Portugal", "+351"),
+                CountryModel("NL", "Netherlands", "+31"),
+            ),
+            countryCodeValue = CountryModel("NL", "Netherlands", "+31"),
+            localPhoneNumberValue = "+312345678901",
+        )
+        initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()), delegateState)
 
-        @Test
-        fun `output data is invalid, then component state should be invalid`() = runTest {
-            delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateComponentState(MBWayOutputData("+7867676"))
-
-                with(awaitItem()) {
-                    assertEquals("+7867676", data.paymentMethod?.telephoneNumber)
-                    assertFalse(isInputValid)
-                    assertFalse(isValid)
-                }
-
-                cancelAndIgnoreRemainingEvents()
+        delegate.viewStateFlow.test {
+            with(awaitItem()) {
+                assertEquals(delegateState.countries, countries)
+                assertEquals(delegateState.countryCodeFieldState.value, countryCodeFieldState.value)
+                assertEquals(delegateState.localPhoneNumberFieldState.value, phoneNumberFieldState.value)
             }
+
+            cancelAndIgnoreRemainingEvents()
         }
+    }
 
-        @Test
-        fun `output data is valid, then component state should be propagated`() = runTest {
-            delegate.componentStateFlow.test {
-                skipItems(1)
-                delegate.updateComponentState(MBWayOutputData("+31666666666"))
-
-                with(awaitItem()) {
-                    assertEquals("+31666666666", data.paymentMethod?.telephoneNumber)
-                    assertTrue(isInputValid)
-                    assertTrue(isValid)
-                    assertEquals(TEST_ORDER, data.order)
-                }
-
-                cancelAndIgnoreRemainingEvents()
-            }
+    @ParameterizedTest
+    @MethodSource("com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegateTest#amountSource")
+    fun `when state is valid then amount is propagated in component state if set`(
+        configurationValue: Amount?,
+        expectedComponentStateValue: Amount?,
+    ) = runTest {
+        if (configurationValue != null) {
+            val configuration = createCheckoutConfiguration(configurationValue)
+            delegate = createMBWayDelegate(configuration = configuration)
         }
-
-        @ParameterizedTest
-        @MethodSource("com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegateTest#amountSource")
-        fun `when input data is valid then amount is propagated in component state if set`(
-            configurationValue: Amount?,
-            expectedComponentStateValue: Amount?,
-        ) = runTest {
-            if (configurationValue != null) {
-                val configuration = createCheckoutConfiguration(configurationValue)
-                delegate = createMBWayDelegate(configuration = configuration)
-            }
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
-            delegate.componentStateFlow.test {
-                delegate.updateInputData {
-                    countryCode = "+351"
-                    localPhoneNumber = "234567890"
-                }
-                assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
-            }
+        initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
+        delegate.componentStateFlow.test {
+            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, "234567890")
+            assertEquals(expectedComponentStateValue, expectMostRecentItem().data.amount)
         }
     }
 
@@ -234,7 +167,7 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `when delegate is initialized then submit handler event is initialized`() = runTest {
             val coroutineScope = CoroutineScope(UnconfinedTestDispatcher())
-            delegate.initialize(coroutineScope)
+            initializeDelegate(coroutineScope)
             verify(submitHandler).initialize(coroutineScope, delegate.componentStateFlow)
         }
 
@@ -246,13 +179,29 @@ internal class DefaultMBWayDelegateTest(
             }
 
         @Test
-        fun `when delegate onSubmit is called then submit handler onSubmit is called`() = runTest {
+        fun `when delegate onSubmit is called and state is valid, then submit handler onSubmit is called`() = runTest {
+            initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
+            whenever(stateManager.isValid) doReturn true
+
             delegate.componentStateFlow.test {
-                delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
                 delegate.onSubmit()
                 verify(submitHandler).onSubmit(expectMostRecentItem())
+                verify(stateManager, never()).highlightAllFieldValidationErrors()
             }
         }
+
+        @Test
+        fun `when delegate onSubmit is called and state is invalid, then validation errors are highlighted`() =
+            runTest {
+                initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
+                whenever(stateManager.isValid) doReturn false
+
+                delegate.componentStateFlow.test {
+                    delegate.onSubmit()
+                    verify(submitHandler, never()).onSubmit(expectMostRecentItem())
+                    verify(stateManager).highlightAllFieldValidationErrors()
+                }
+            }
     }
 
     @Nested
@@ -260,14 +209,14 @@ internal class DefaultMBWayDelegateTest(
 
         @Test
         fun `when delegate is initialized then analytics manager is initialized`() {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
 
             analyticsManager.assertIsInitialized()
         }
 
         @Test
         fun `when delegate is initialized, then render event is tracked`() {
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
 
             val expectedEvent = GenericEvents.rendered(TEST_PAYMENT_METHOD_TYPE)
             analyticsManager.assertLastEventEquals(expectedEvent)
@@ -288,15 +237,14 @@ internal class DefaultMBWayDelegateTest(
         @Test
         fun `when component state is valid then PaymentMethodDetails should contain checkoutAttemptId`() = runTest {
             analyticsManager.setCheckoutAttemptId(TEST_CHECKOUT_ATTEMPT_ID)
+            val delegateState = createMBWayDelegateState(
+                countryCodeValidation = Validation.Valid,
+                localPhoneNumberValidation = Validation.Valid,
+            )
 
-            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+            initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()), delegateState)
 
             delegate.componentStateFlow.test {
-                delegate.updateInputData {
-                    countryCode = "+1"
-                    localPhoneNumber = "9257348920"
-                }
-
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
             }
         }
@@ -310,11 +258,58 @@ internal class DefaultMBWayDelegateTest(
     }
 
     @Test
-    fun `when getting initially selected country, then Portugal should be returned`() {
-        val result = delegate.getInitiallySelectedCountry()
+    fun `when field value changes, then field is updated in the state`() {
+        initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
 
-        assertEquals("PT", result?.isoCode)
+        delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, value = "123456789")
+
+        verify(stateManager).updateField(
+            fieldId = eq(MBWayFieldId.LOCAL_PHONE_NUMBER),
+            value = eq("123456789"),
+            hasFocus = eq(null),
+            shouldHighlightValidationError = eq(false),
+        )
     }
+
+    @Test
+    fun `when field focus changes, then field is updated in the state`() {
+        initializeDelegate(CoroutineScope(UnconfinedTestDispatcher()))
+
+        delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus = true)
+
+        verify(stateManager).updateField(
+            fieldId = eq(MBWayFieldId.LOCAL_PHONE_NUMBER),
+            value = eq(null),
+            hasFocus = eq(true),
+            shouldHighlightValidationError = eq(false),
+        )
+    }
+
+    private fun initializeDelegate(
+        coroutineScope: CoroutineScope,
+        delegateState: MBWayDelegateState = createMBWayDelegateState()
+    ) {
+        whenever(stateManager.state) doReturn MutableStateFlow(delegateState)
+        delegate.initialize(coroutineScope)
+    }
+
+    private fun createMBWayDelegateState(
+        countries: List<CountryModel> = emptyList(),
+        countryCodeValue: CountryModel = CountryModel("", "", ""),
+        countryCodeValidation: Validation = Validation.Valid,
+        localPhoneNumberValue: String = "",
+        localPhoneNumberValidation: Validation = Validation.Valid,
+    ) = MBWayDelegateState(
+        countries = countries,
+        countryCodeFieldState = ComponentFieldDelegateState(
+            value = countryCodeValue,
+            validation = countryCodeValidation,
+        ),
+        localPhoneNumberFieldState = ComponentFieldDelegateState(
+            value = localPhoneNumberValue,
+            validation = localPhoneNumberValidation,
+        ),
+    )
 
     private fun createMBWayDelegate(
         configuration: CheckoutConfiguration = createCheckoutConfiguration(),
@@ -331,6 +326,8 @@ internal class DefaultMBWayDelegateTest(
         ),
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        transformerRegistry = DefaultTransformerRegistry(),
+        stateManager = stateManager,
     )
 
     private fun createCheckoutConfiguration(

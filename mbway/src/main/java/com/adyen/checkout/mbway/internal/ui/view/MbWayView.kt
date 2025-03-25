@@ -15,19 +15,23 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
 import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import com.adyen.checkout.ui.core.R as UICoreR
 
+@Suppress("TooManyFunctions")
 internal class MbWayView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -41,6 +45,8 @@ internal class MbWayView @JvmOverloads constructor(
 
     private lateinit var delegate: MBWayDelegate
 
+    private lateinit var countryAdapter: CountryAdapter
+
     init {
         orientation = VERTICAL
 
@@ -53,64 +59,81 @@ internal class MbWayView @JvmOverloads constructor(
         this.delegate = delegate
         this.localizedContext = localizedContext
 
-        initMobileNumberInput()
         initCountryInput()
-    }
 
-    private fun initMobileNumberInput() {
-        binding.editTextMobileNumber.setOnChangeListener {
-            delegate.updateInputData {
-                localPhoneNumber = it.toString()
-            }
-            binding.textInputLayoutMobileNumber.hideError()
-        }
-        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            val outputData = delegate.outputData
-            val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
-            if (hasFocus) {
-                binding.textInputLayoutMobileNumber.hideError()
-            } else if (mobilePhoneNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMobileNumber.showError(
-                    localizedContext.getString(mobilePhoneNumberValidation.reason),
-                )
-            }
-        }
+        observeDelegate(delegate, coroutineScope)
     }
 
     private fun initCountryInput() {
-        val countries = delegate.getSupportedCountries()
-        val adapter = CountryAdapter(context, localizedContext)
-        adapter.setItems(countries)
+        countryAdapter = CountryAdapter(context, localizedContext)
         binding.autoCompleteTextViewCountry.apply {
             // disable editing and hide cursor
             inputType = 0
-            setAdapter(adapter)
+            setAdapter(countryAdapter)
             setOnItemClickListener { _, _, position, _ ->
-                val country = adapter.getItem(position)
+                val country = countryAdapter.getItem(position)
                 onCountrySelected(country)
             }
         }
-        delegate.getInitiallySelectedCountry()?.let {
-            binding.autoCompleteTextViewCountry.setText(it.toShortString())
-            onCountrySelected(it)
+    }
+
+    private fun observeDelegate(delegate: MBWayDelegate, coroutineScope: CoroutineScope) {
+        delegate.viewStateFlow
+            .onEach { viewStateUpdated(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun viewStateUpdated(mbWayViewState: MBWayViewState) {
+        updateCountries(mbWayViewState.countries)
+        updateCountryInput(mbWayViewState.countryCodeFieldState)
+        updateMobileNumberInput(mbWayViewState.phoneNumberFieldState)
+    }
+
+    private fun updateCountries(countries: List<CountryModel>) = countryAdapter.setItems(countries)
+
+    private fun updateCountryInput(countryCodeFieldState: ComponentFieldViewState<CountryModel>) {
+        val country = countryCodeFieldState.value
+        binding.autoCompleteTextViewCountry.setText(country.toShortString())
+    }
+
+    private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
+        binding.editTextMobileNumber.setOnChangeListener(null)
+        binding.editTextMobileNumber.onFocusChangeListener = null
+
+        binding.editTextMobileNumber.updateText(phoneNumberFieldState.value)
+
+        if (phoneNumberFieldState.hasFocus) {
+            binding.textInputLayoutMobileNumber.requestFocus()
+        } else {
+            binding.textInputLayoutMobileNumber.clearFocus()
+        }
+
+        phoneNumberFieldState.errorMessageId?.let { errorMessageId ->
+            binding.textInputLayoutMobileNumber.showError(localizedContext.getString(errorMessageId))
+        } ?: run {
+            binding.textInputLayoutMobileNumber.hideError()
+        }
+
+        binding.editTextMobileNumber.setOnChangeListener {
+            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
+        }
+        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+            delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
         }
     }
 
+    private fun AdyenTextInputEditText.updateText(newValue: String) {
+        setText(newValue)
+        setSelection(length())
+    }
+
     override fun highlightValidationErrors() {
-        adyenLog(AdyenLogLevel.DEBUG) { "highlightValidationErrors" }
-        val mobilePhoneNumberValidation = delegate.outputData.mobilePhoneNumberFieldState.validation
-        if (mobilePhoneNumberValidation is Validation.Invalid) {
-            binding.textInputLayoutMobileNumber.showError(
-                localizedContext.getString(mobilePhoneNumberValidation.reason),
-            )
-        }
+        // Not used
     }
 
     override fun getView(): View = this
 
     private fun onCountrySelected(countryModel: CountryModel) {
-        delegate.updateInputData {
-            countryCode = countryModel.callingCode
-        }
+        delegate.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, countryModel)
     }
 }
