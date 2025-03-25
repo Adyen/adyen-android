@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.ui.model.state
 
+import com.adyen.checkout.components.core.internal.internal.ui.model.TestFieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -22,7 +23,7 @@ internal class DefaultDelegateStateManagerTest {
     private val delegateStateFactory = TestDelegateStateFactory(defaultDelegateState)
     private val validationRegistry = TestFieldValidatorRegistry()
     private val stateUpdaterRegistry = TestStateUpdaterRegistry()
-    private val transformerRegistry = TestFieldTransformerRegistry()
+    private val transformerRegistry = TestFieldTransformerRegistry<TestFieldId>()
 
     @BeforeEach
     fun setup() {
