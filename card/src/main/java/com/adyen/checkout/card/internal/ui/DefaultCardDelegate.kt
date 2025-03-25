@@ -237,7 +237,7 @@ class DefaultCardDelegate(
                 onSuccess = { key ->
                     adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
                     stateManager?.updateState {
-                        copy(publicKey = publicKey)
+                        copy(publicKey = key)
                     }
                 },
                 onFailure = { e ->
