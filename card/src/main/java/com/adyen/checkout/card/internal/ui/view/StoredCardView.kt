@@ -109,24 +109,24 @@ internal class StoredCardView @JvmOverloads constructor(
     }
 
     private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
+//        delegate.outputDataFlow
+//            .onEach { outputDataChanged(it) }
+//            .launchIn(coroutineScope)
     }
 
     private fun initSecurityCodeInput() {
         val securityCodeEditText = binding.textInputLayoutSecurityCode.editText as? SecurityCodeInput
         securityCodeEditText?.setOnChangeListener { editable: Editable ->
-            cardDelegate.updateInputData { securityCode = editable.toString() }
+//            cardDelegate.updateInputData { securityCode = editable.toString() }
             binding.textInputLayoutSecurityCode.hideError()
         }
         securityCodeEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val securityCodeValidation = cardDelegate.outputData.securityCodeState.validation
-            if (hasFocus) {
-                binding.textInputLayoutSecurityCode.hideError()
-            } else if (securityCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
-            }
+//            val securityCodeValidation = cardDelegate.outputData.securityCodeState.validation
+//            if (hasFocus) {
+//                binding.textInputLayoutSecurityCode.hideError()
+//            } else if (securityCodeValidation is Validation.Invalid) {
+//                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
+//            }
         }
         binding.textInputLayoutSecurityCode.takeIf { isVisible }?.requestFocus()
     }
@@ -156,13 +156,13 @@ internal class StoredCardView @JvmOverloads constructor(
     }
 
     override fun highlightValidationErrors() {
-        cardDelegate.outputData.let {
-            val securityCodeValidation = it.securityCodeState.validation
-            if (securityCodeValidation is Validation.Invalid) {
-                binding.textInputLayoutSecurityCode.requestFocus()
-                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
-            }
-        }
+//        cardDelegate.outputData.let {
+//            val securityCodeValidation = it.securityCodeState.validation
+//            if (securityCodeValidation is Validation.Invalid) {
+//                binding.textInputLayoutSecurityCode.requestFocus()
+//                binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
+//            }
+//        }
     }
 
     override fun getView(): View = this

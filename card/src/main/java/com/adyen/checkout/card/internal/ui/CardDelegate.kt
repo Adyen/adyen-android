@@ -37,9 +37,9 @@ interface CardDelegate :
     AddressDelegate,
     UIEventDelegate<CardFieldId> {
 
-    val outputData: CardOutputData
+//    val outputData: CardOutputData
 
-    val outputDataFlow: Flow<CardOutputData>
+//    val outputDataFlow: Flow<CardOutputData>
 
     val componentStateFlow: Flow<CardComponentState>
 
@@ -47,7 +47,7 @@ interface CardDelegate :
 
     val viewStateFlow: Flow<CardViewState>
 
-    fun updateInputData(update: CardInputData.() -> Unit)
+//    fun updateInputData(update: CardInputData.() -> Unit)
 
     fun setInteractionBlocked(isInteractionBlocked: Boolean)
 

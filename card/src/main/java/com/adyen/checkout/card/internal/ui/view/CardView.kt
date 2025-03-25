@@ -203,9 +203,9 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun observeDelegate(delegate: CardDelegate, coroutineScope: CoroutineScope) {
-        delegate.outputDataFlow
-            .onEach { outputDataChanged(it) }
-            .launchIn(coroutineScope)
+//        delegate.outputDataFlow
+//            .onEach { outputDataChanged(it) }
+//            .launchIn(coroutineScope)
 
         delegate.viewStateFlow
             .onEach { viewStateUpdated(it) }
