@@ -14,6 +14,7 @@ import androidx.annotation.RestrictTo
 data class ComponentFieldDelegateState<T>(
     val value: T,
     val validation: Validation? = null,
+    // Can we move this up to the delegate state and it just keeps the fieldId of the focused field?
     val hasFocus: Boolean = false,
     val shouldHighlightValidationError: Boolean = false,
 )

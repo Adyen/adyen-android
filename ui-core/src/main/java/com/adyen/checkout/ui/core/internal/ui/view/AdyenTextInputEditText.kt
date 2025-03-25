@@ -79,6 +79,7 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
     }
 }
 
+// TODO: Pass the listeners and remove and set them in this function?
 fun AdyenTextInputEditText.updateText(newValue: String) {
     setText(newValue)
     setSelection(length())

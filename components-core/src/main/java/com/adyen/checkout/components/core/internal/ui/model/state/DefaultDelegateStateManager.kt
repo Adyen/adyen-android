@@ -58,8 +58,12 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         fieldId: FI,
         value: T?,
         hasFocus: Boolean?,
+        // This is not necessary for the public function
         shouldHighlightValidationError: Boolean?,
     ) {
+        // Can we make sure it does not validate every time value changes, but only when it is necessary?
+        // Like separate updateField() from getValidation()
+        // Keep the validation separate for the focus changed or submit button click event stream
         val validation = value?.let {
             validationRegistry.validate(
                 fieldId,
@@ -116,6 +120,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
                 isErrorFieldFocused = true
             }
 
+            // Could we separate updateField calls from outside and inside. To have maybe private functions?
             updateField(
                 fieldId = fieldId,
                 value = fieldState.value, // Ensure the current value is validated

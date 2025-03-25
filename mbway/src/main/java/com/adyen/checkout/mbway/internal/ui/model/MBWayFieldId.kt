@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.mbway.internal.ui.model
 
+// What if we specify a type for each fieldId
 internal enum class MBWayFieldId {
     COUNTRY_CODE,
     LOCAL_PHONE_NUMBER,
