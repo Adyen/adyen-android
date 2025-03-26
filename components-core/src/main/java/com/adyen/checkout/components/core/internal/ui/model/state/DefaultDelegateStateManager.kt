@@ -43,39 +43,17 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
             if (fieldState.validation == null) {
                 updateField(
                     fieldId = fieldId,
-                    value = fieldState.value, // Ensure the current value is validated
+                    value = fieldState.value, // Ensure the current value is validated,
+                    hasFocus = fieldState.hasFocus,
                 )
             }
         }
     }
 
-    // A list can be added, which will show which other fields need to be validated
-    // or updated when a specific field is updated
-    override fun <T> updateField(
-        fieldId: FI,
-        value: T?,
-        hasFocus: Boolean?,
-        shouldHighlightValidationError: Boolean?,
-    ) {
-        val validation = value?.let {
-            validationRegistry.validate(
-                fieldId,
-                transformerRegistry.transform(fieldId, it),
-            )
-        }
+    override fun <T> updateFieldValue(fieldId: FI, value: T?) = updateField(fieldId, value = value)
 
-        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, _state.value)
-        val updatedFieldState = fieldState.updateFieldState(
-            value = value,
-            validation = validation,
-            hasFocus = hasFocus,
-            shouldHighlightValidationError = shouldHighlightValidationError,
-        )
-
-        _state.update {
-            stateUpdaterRegistry.updateFieldState(fieldId, _state.value, updatedFieldState)
-        }
-    }
+    override fun updateFieldFocus(fieldId: FI, hasFocus: Boolean) =
+        updateField<Unit>(fieldId, hasFocus = hasFocus)
 
     override fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
@@ -95,6 +73,32 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
                 hasFocus = shouldFocus,
                 shouldHighlightValidationError = true,
             )
+        }
+    }
+
+    private fun <T> updateField(
+        fieldId: FI,
+        value: T? = null,
+        hasFocus: Boolean? = null,
+        shouldHighlightValidationError: Boolean? = null,
+    ) {
+        val validation = value?.let {
+            validationRegistry.validate(
+                fieldId,
+                transformerRegistry.transform(fieldId, it),
+            )
+        }
+
+        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, _state.value)
+        val updatedFieldState = fieldState.updateFieldState(
+            value = value,
+            validation = validation,
+            hasFocus = hasFocus,
+            shouldHighlightValidationError = shouldHighlightValidationError,
+        )
+
+        _state.update {
+            stateUpdaterRegistry.updateFieldState(fieldId, _state.value, updatedFieldState)
         }
     }
 }

@@ -52,23 +52,23 @@ internal class DefaultDelegateStateManagerTest {
     }
 
     @Test
-    fun `when updateField is called and value is not null, then validate is called`() {
-        stateManager.updateField(TestFieldId.FIELD_1, value = "Some value")
+    fun `when updateFieldValue is called and value is not null, then validate is called`() {
+        stateManager.updateFieldValue(TestFieldId.FIELD_1, value = "Some value")
 
         transformerRegistry.assertIsTransformed(TestFieldId.FIELD_1)
         validationRegistry.assertIsValidated(TestFieldId.FIELD_1)
     }
 
     @Test
-    fun `when updateField is called and value is null, then validate is not called`() {
-        stateManager.updateField(TestFieldId.FIELD_1, value = null)
+    fun `when updateFieldValue is called and value is null, then validate is not called`() {
+        stateManager.updateFieldValue(TestFieldId.FIELD_1, value = null)
 
         transformerRegistry.assertNotTransformed(TestFieldId.FIELD_1)
         validationRegistry.assertNotValidated(TestFieldId.FIELD_1)
     }
 
     @Test
-    fun `when updateField is called, then field state should be updated`() {
+    fun `when updateFieldValue is called, then field state should be updated`() {
         val initialFieldState = ComponentFieldDelegateState(
             value = "",
             validation = null,
@@ -77,16 +77,33 @@ internal class DefaultDelegateStateManagerTest {
         )
         stateUpdaterRegistry.updateFieldState(TestFieldId.FIELD_1, defaultDelegateState, initialFieldState)
 
-        stateManager.updateField(
+        stateManager.updateFieldValue(
             fieldId = TestFieldId.FIELD_1,
             value = "New value",
-            hasFocus = true,
-            shouldHighlightValidationError = true,
         )
 
         val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(TestFieldId.FIELD_1, defaultDelegateState)
         assertEquals("New value", updatedFieldState.value)
+        assertEquals(false, updatedFieldState.hasFocus)
+    }
+
+    @Test
+    fun `when updateFieldFocus is called, then field state should be updated`() {
+        val initialFieldState = ComponentFieldDelegateState(
+            value = "",
+            validation = null,
+            hasFocus = false,
+            shouldHighlightValidationError = false,
+        )
+        stateUpdaterRegistry.updateFieldState(TestFieldId.FIELD_1, defaultDelegateState, initialFieldState)
+
+        stateManager.updateFieldFocus(
+            fieldId = TestFieldId.FIELD_1,
+            hasFocus = true,
+        )
+
+        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(TestFieldId.FIELD_1, defaultDelegateState)
+        assertEquals("", updatedFieldState.value)
         assertEquals(true, updatedFieldState.hasFocus)
-        assertEquals(true, updatedFieldState.shouldHighlightValidationError)
     }
 }
