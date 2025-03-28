@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.update
 class DefaultDelegateStateManager<S : DelegateState, FI>(
     private val factory: DelegateStateFactory<S, FI>,
     private val validationRegistry: FieldValidatorRegistry<FI>,
-    private val stateUpdaterRegistry: StateUpdaterRegistry<FI, S>,
+    private val stateUpdaterRegistry: StateUpdaterRegistry<S, FI>,
     private val transformerRegistry: FieldTransformerRegistry<FI> = DefaultTransformerRegistry(),
 ) : DelegateStateManager<S, FI> {
 
@@ -38,7 +38,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
 
     private fun validateNonValidatedFields() {
         factory.getFieldIds().forEach { fieldId ->
-            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
 
             if (fieldState.validation == null) {
                 updateField(
@@ -60,7 +60,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         var isErrorFieldFocused = false
 
         factory.getFieldIds().forEach { fieldId ->
-            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
 
             val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
             if (shouldFocus) {
@@ -89,7 +89,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
             )
         }
 
-        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, _state.value)
+        val fieldState = stateUpdaterRegistry.getFieldState<T>(_state.value, fieldId)
         val updatedFieldState = fieldState.updateFieldState(
             value = value,
             validation = validation,
@@ -98,7 +98,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
         )
 
         _state.update {
-            stateUpdaterRegistry.updateFieldState(fieldId, _state.value, updatedFieldState)
+            stateUpdaterRegistry.updateFieldState(_state.value, fieldId, updatedFieldState)
         }
     }
 }

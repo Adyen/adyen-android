@@ -44,7 +44,7 @@ internal class DefaultDelegateStateManagerTest {
     @Test
     fun `when isValid is accessed, then non-validated fields should be validated`() = runTest {
         val fieldState = ComponentFieldDelegateState(value = "test", validation = null)
-        stateUpdaterRegistry.updateFieldState(TestFieldId.FIELD_1, defaultDelegateState, fieldState)
+        stateUpdaterRegistry.updateFieldState(defaultDelegateState, TestFieldId.FIELD_1, fieldState)
 
         stateManager.isValid
 
@@ -75,14 +75,14 @@ internal class DefaultDelegateStateManagerTest {
             hasFocus = false,
             shouldHighlightValidationError = false,
         )
-        stateUpdaterRegistry.updateFieldState(TestFieldId.FIELD_1, defaultDelegateState, initialFieldState)
+        stateUpdaterRegistry.updateFieldState(defaultDelegateState, TestFieldId.FIELD_1, initialFieldState)
 
         stateManager.updateFieldValue(
             fieldId = TestFieldId.FIELD_1,
             value = "New value",
         )
 
-        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(TestFieldId.FIELD_1, defaultDelegateState)
+        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
         assertEquals("New value", updatedFieldState.value)
         assertEquals(false, updatedFieldState.hasFocus)
     }
@@ -95,14 +95,14 @@ internal class DefaultDelegateStateManagerTest {
             hasFocus = false,
             shouldHighlightValidationError = false,
         )
-        stateUpdaterRegistry.updateFieldState(TestFieldId.FIELD_1, defaultDelegateState, initialFieldState)
+        stateUpdaterRegistry.updateFieldState(defaultDelegateState, TestFieldId.FIELD_1, initialFieldState)
 
         stateManager.updateFieldFocus(
             fieldId = TestFieldId.FIELD_1,
             hasFocus = true,
         )
 
-        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(TestFieldId.FIELD_1, defaultDelegateState)
+        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
         assertEquals("", updatedFieldState.value)
         assertEquals(true, updatedFieldState.hasFocus)
     }

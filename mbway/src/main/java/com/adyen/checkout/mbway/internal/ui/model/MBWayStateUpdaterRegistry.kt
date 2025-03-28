@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdater
 import com.adyen.checkout.components.core.internal.ui.model.state.StateUpdaterRegistry
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
 
-internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MBWayDelegateState> {
+internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateState, MBWayFieldId> {
 
     private val updaters = MBWayFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
@@ -24,8 +24,8 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MB
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> getFieldState(
+        state: MBWayDelegateState,
         key: MBWayFieldId,
-        state: MBWayDelegateState
     ): ComponentFieldDelegateState<T> {
         val updater = updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
@@ -34,9 +34,9 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayFieldId, MB
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> updateFieldState(
-        key: MBWayFieldId,
         state: MBWayDelegateState,
-        fieldState: ComponentFieldDelegateState<T>
+        key: MBWayFieldId,
+        fieldState: ComponentFieldDelegateState<T>,
     ): MBWayDelegateState {
         val updater = updaters[key] as? StateUpdater<MBWayDelegateState, ComponentFieldDelegateState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
