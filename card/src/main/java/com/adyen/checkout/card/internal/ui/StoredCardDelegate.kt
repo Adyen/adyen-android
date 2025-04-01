@@ -451,6 +451,8 @@ internal class StoredCardDelegate(
 
     override fun onCardScanningAvailability(isAvailable: Boolean) = Unit
 
+    override fun onCardScanningDisplayed(didDisplay: Boolean) = Unit
+
     override fun onCardScanningResult(resultCode: Int, pan: String?, expiryMonth: Int?, expiryYear: Int?) = Unit
 
     override fun onCleared() {

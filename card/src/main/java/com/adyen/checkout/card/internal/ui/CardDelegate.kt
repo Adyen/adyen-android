@@ -61,6 +61,8 @@ interface CardDelegate :
 
     fun onCardScanningAvailability(isAvailable: Boolean)
 
+    fun onCardScanningDisplayed(didDisplay: Boolean)
+
     fun onCardScanningResult(
         resultCode: Int,
         pan: String?,
