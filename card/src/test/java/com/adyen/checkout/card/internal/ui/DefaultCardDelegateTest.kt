@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.app.Activity
 import androidx.annotation.StringRes
 import app.cash.turbine.test
 import com.adyen.checkout.card.AddressConfiguration
@@ -19,6 +20,7 @@ import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.card
+import com.adyen.checkout.card.internal.analytics.CardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
@@ -1293,6 +1295,106 @@ internal class DefaultCardDelegateTest(
         delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
         delegate.onCleared()
         verify(addressLookupDelegate).clear()
+    }
+
+    @Nested
+    inner class CardScanningTest {
+
+        @Test
+        fun `when card scanning is available, then an event is tracked`() {
+            delegate.onCardScanningAvailability(true)
+
+            val expected = CardEvents.cardScannerAvailable("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning is not available, then an event is tracked`() {
+            delegate.onCardScanningAvailability(false)
+
+            val expected = CardEvents.cardScannerUnavailable("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning is displayed, then an event is tracked`() {
+            delegate.onCardScanningDisplayed(true)
+
+            val expected = CardEvents.cardScannerPresented("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning is not displayed, then an event is tracked`() {
+            delegate.onCardScanningDisplayed(false)
+
+            val expected = CardEvents.cardScannerFailure("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning result is ok, then a success event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onCardScanningResult(Activity.RESULT_OK, "1234", 1, 1)
+
+            val expected = CardEvents.cardScannerSuccess("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning result is ok, then input data is updated`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                delegate.onCardScanningResult(Activity.RESULT_OK, "1234", 1, 2)
+
+                with(expectMostRecentItem()) {
+                    assertEquals("1234", cardNumberState.value)
+                    assertEquals(ExpiryDate(1, 2), expiryDateState.value)
+                }
+            }
+        }
+
+        @Test
+        fun `when card scanning result is cancelled, then a cancelled event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onCardScanningResult(Activity.RESULT_CANCELED, null, null, null)
+
+            val expected = CardEvents.cardScannerCancelled("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning result is null values, then a failure event is tracked`() {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.onCardScanningResult(Activity.RESULT_OK, null, null, null)
+
+            val expected = CardEvents.cardScannerFailure("scheme")
+            analyticsManager.assertLastEventEquals(expected)
+        }
+
+        @Test
+        fun `when card scanning result is null values, then input data is not updated`() = runTest {
+            delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
+
+            delegate.outputDataFlow.test {
+                // Set initial state
+                delegate.updateInputData {
+                    cardNumber = "5454"
+                    expiryDate = ExpiryDate(12, 4)
+                }
+
+                delegate.onCardScanningResult(Activity.RESULT_OK, null, null, null)
+
+                with(expectMostRecentItem()) {
+                    assertEquals("5454", cardNumberState.value)
+                    assertEquals(ExpiryDate(12, 4), expiryDateState.value)
+                }
+            }
+        }
     }
 
     @Suppress("LongParameterList")
