@@ -59,6 +59,8 @@ interface CardDelegate :
 
     fun startAddressLookup()
 
+    fun onCardScanningAvailability(isAvailable: Boolean)
+
     fun onCardScanningResult(
         resultCode: Int,
         pan: String?,
