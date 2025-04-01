@@ -55,6 +55,7 @@ internal class CardScanningFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             val didInitialize = cardScanner.initialize(requireContext(), delegate.componentParams.environment)
             binding.scanButton.isVisible = didInitialize
+            delegate.onCardScanningAvailability(didInitialize)
         }
     }
 
