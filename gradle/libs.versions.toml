@@ -11,7 +11,7 @@ version-code = "1"
 android-gradle-plugin = "8.8.0"
 kotlin = "1.9.25"
 ksp = "1.9.25-1.0.20"
-dokka = "1.9.20"
+dokka = "2.0.0"
 hilt = "2.55"
 compose-compiler = "1.5.15"
 
