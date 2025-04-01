@@ -901,6 +901,15 @@ class DefaultCardDelegate(
         analyticsManager.trackEvent(event)
     }
 
+    override fun onCardScanningDisplayed(didDisplay: Boolean) {
+        val event = if (didDisplay) {
+            CardEvents.cardScannerPresented(getPaymentMethodType())
+        } else {
+            CardEvents.cardScannerFailure(getPaymentMethodType())
+        }
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onCardScanningResult(resultCode: Int, pan: String?, expiryMonth: Int?, expiryYear: Int?) {
         val event = when {
             resultCode == Activity.RESULT_OK -> CardEvents.cardScannerSuccess(getPaymentMethodType())

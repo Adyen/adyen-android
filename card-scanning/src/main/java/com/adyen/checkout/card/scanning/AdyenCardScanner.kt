@@ -17,7 +17,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.google.android.gms.wallet.PaymentCardRecognitionIntentRequest
 import com.google.android.gms.wallet.PaymentCardRecognitionResult
@@ -75,8 +74,8 @@ class AdyenCardScanner {
         }
     }
 
-    fun startScanner(activity: Activity, requestCode: Int) {
-        startScanner { paymentCardRecognitionPendingIntent ->
+    fun startScanner(activity: Activity, requestCode: Int): Boolean {
+        return startScanner { paymentCardRecognitionPendingIntent ->
             ActivityCompat.startIntentSenderForResult(
                 activity,
                 paymentCardRecognitionPendingIntent.intentSender,
@@ -90,8 +89,8 @@ class AdyenCardScanner {
         }
     }
 
-    fun startScanner(fragment: Fragment, requestCode: Int) {
-        startScanner { paymentCardRecognitionPendingIntent ->
+    fun startScanner(fragment: Fragment, requestCode: Int): Boolean {
+        return startScanner { paymentCardRecognitionPendingIntent ->
             fragment.startIntentSenderForResult(
                 paymentCardRecognitionPendingIntent.intentSender,
                 requestCode,
@@ -104,14 +103,16 @@ class AdyenCardScanner {
         }
     }
 
-    private fun startScanner(startIntentSender: (PendingIntent) -> Unit) {
+    private fun startScanner(startIntentSender: (PendingIntent) -> Unit): Boolean {
         val paymentCardRecognitionPendingIntent =
             paymentCardRecognitionPendingIntent ?: error("The scanner must be initialized before it can be started")
 
-        try {
+        return try {
             startIntentSender(paymentCardRecognitionPendingIntent)
+            true
         } catch (e: IntentSender.SendIntentException) {
-            throw CheckoutException("Failed to start payment card recognition", e)
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to start payment card recognition" }
+            false
         }
     }
 
