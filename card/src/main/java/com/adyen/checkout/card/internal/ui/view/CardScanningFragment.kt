@@ -38,7 +38,11 @@ internal class CardScanningFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.scanButton.setOnClickListener {
-            cardScanner?.startScanner(this, REQUEST_CODE)
+            cardScanner
+                ?.startScanner(this, REQUEST_CODE)
+                .also { didDisplay ->
+                    delegate?.onCardScanningDisplayed(didDisplay ?: false)
+                }
         }
     }
 
