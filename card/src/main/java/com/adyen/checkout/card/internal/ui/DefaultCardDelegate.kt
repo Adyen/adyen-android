@@ -873,11 +873,11 @@ class DefaultCardDelegate(
 
     override fun onCardScanningResult(resultCode: Int, pan: String?, expiryMonth: Int?, expiryYear: Int?) {
         val event = when {
-            resultCode == Activity.RESULT_OK -> CardEvents.cardScannerSuccess(getPaymentMethodType())
             resultCode == Activity.RESULT_CANCELED -> CardEvents.cardScannerCancelled(getPaymentMethodType())
             pan == null && expiryMonth == null && expiryYear == null ->
                 CardEvents.cardScannerFailure(getPaymentMethodType())
 
+            resultCode == Activity.RESULT_OK -> CardEvents.cardScannerSuccess(getPaymentMethodType())
             else -> null
         }
         event?.let { analyticsManager.trackEvent(event) }
