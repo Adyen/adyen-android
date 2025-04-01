@@ -19,7 +19,6 @@ import androidx.lifecycle.lifecycleScope
 import com.adyen.checkout.card.databinding.FragmentCardScanningBinding
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.util.CardScannerWrapper
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import kotlinx.coroutines.launch
 
 internal class CardScanningFragment : Fragment() {
@@ -65,16 +64,12 @@ internal class CardScanningFragment : Fragment() {
         if (requestCode != REQUEST_CODE) return
 
         val result = cardScanner?.getResult(data)
-
-        result?.let {
-            delegate?.updateInputData {
-                val (pan, expiryMonth, expiryYear) = result
-                cardNumber = pan.orEmpty()
-                if (expiryMonth != null && expiryYear != null) {
-                    expiryDate = ExpiryDate(expiryMonth, expiryYear)
-                }
-            }
-        }
+        delegate?.onCardScanningResult(
+            resultCode,
+            result?.pan,
+            result?.expiryMonth,
+            result?.expiryYear,
+        )
         resetScanner()
     }
 

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import android.app.Activity
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -16,6 +17,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.internal.analytics.CardEvents
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
@@ -849,6 +851,25 @@ class DefaultCardDelegate(
 
     override fun setAddressLookupResult(addressLookupResult: AddressLookupResult) {
         addressLookupDelegate.setAddressLookupResult(addressLookupResult)
+    }
+
+    override fun onCardScanningResult(resultCode: Int, pan: String?, expiryMonth: Int?, expiryYear: Int?) {
+        val event = when {
+            resultCode == Activity.RESULT_OK -> CardEvents.cardScannerSuccess(getPaymentMethodType())
+            resultCode == Activity.RESULT_CANCELED -> CardEvents.cardScannerCancelled(getPaymentMethodType())
+            pan == null && expiryMonth == null && expiryYear == null ->
+                CardEvents.cardScannerFailure(getPaymentMethodType())
+
+            else -> null
+        }
+        event?.let { analyticsManager.trackEvent(event) }
+
+        updateInputData {
+            pan?.let { cardNumber = pan }
+            if (expiryMonth != null && expiryYear != null) {
+                expiryDate = ExpiryDate(expiryMonth, expiryYear)
+            }
+        }
     }
 
     override fun onCleared() {
