@@ -853,6 +853,15 @@ class DefaultCardDelegate(
         addressLookupDelegate.setAddressLookupResult(addressLookupResult)
     }
 
+    override fun onCardScanningAvailability(isAvailable: Boolean) {
+        val event = if (isAvailable) {
+            CardEvents.cardScannerAvailable(getPaymentMethodType())
+        } else {
+            CardEvents.cardScannerUnavailable(getPaymentMethodType())
+        }
+        analyticsManager.trackEvent(event)
+    }
+
     override fun onCardScanningResult(resultCode: Int, pan: String?, expiryMonth: Int?, expiryYear: Int?) {
         val event = when {
             resultCode == Activity.RESULT_OK -> CardEvents.cardScannerSuccess(getPaymentMethodType())
