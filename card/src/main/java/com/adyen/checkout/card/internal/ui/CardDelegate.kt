@@ -58,4 +58,11 @@ interface CardDelegate :
     fun handleBackPress(): Boolean
 
     fun startAddressLookup()
+
+    fun onCardScanningResult(
+        resultCode: Int,
+        pan: String?,
+        expiryMonth: Int?,
+        expiryYear: Int?,
+    )
 }
