@@ -36,7 +36,7 @@ recyclerview = "1.4.0"
 constraintlayout = "2.2.1"
 
 # Compose dependencies
-compose-activity = "1.10.0"
+compose-activity = "1.10.1"
 compose-bom = "2024.12.01"
 compose-hilt = "1.2.0"
 compose-viewmodel = "2.8.7"
