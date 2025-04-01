@@ -24,8 +24,8 @@ internal class CardScannerWrapper {
         return cardScanner?.initialize(context, environment) ?: false
     }
 
-    fun startScanner(fragment: Fragment, requestCode: Int) {
-        cardScanner?.startScanner(fragment, requestCode)
+    fun startScanner(fragment: Fragment, requestCode: Int): Boolean {
+        return cardScanner?.startScanner(fragment, requestCode) ?: false
     }
 
     fun getResult(data: Intent?): AdyenCardScannerResult? {

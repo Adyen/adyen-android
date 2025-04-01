@@ -65,6 +65,7 @@ sealed interface AnalyticsEvent {
         @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
         enum class Type(val value: String) {
             ACTION("action"),
+            CARD_SCANNER("CardScanner"),
             SUBMIT("submit"),
             CLOSED("closed"),
             THREEDS2("ThreeDS2"),
