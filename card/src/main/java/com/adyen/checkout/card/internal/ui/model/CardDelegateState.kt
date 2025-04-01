@@ -55,23 +55,17 @@ data class CardDelegateState(
     val publicKey: String? = null,
     val isCardBrandListVisible: Boolean = false,
     val isDualBranded: Boolean = false,
-    val isKCPAuthRequired: Boolean = componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW,
-    val isSocialSecurityNumberRequired: Boolean = componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW,
+    val isKCPAuthRequired: Boolean,
+    val isSocialSecurityNumberRequired: Boolean,
     val cvcUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
     val expiryDateUIState: InputFieldUIState = InputFieldUIState.REQUIRED,
-    val holderNameUIState: InputFieldUIState = if (componentParams.isHolderNameRequired) {
-        InputFieldUIState.REQUIRED
-    } else {
-        InputFieldUIState.HIDDEN
-    },
+    val holderNameUIState: InputFieldUIState,
     val enableLuhnCheck: Boolean = true,
     val isBrandSupported: Boolean? = null,
     val updatedCountryOptions: List<AddressListItem> = emptyList(),
     val updatedStateOptions: List<AddressListItem> = emptyList(),
-    val addressFormUIState: AddressFormUIState = AddressFormUIState.fromAddressParams(
-        componentParams.addressParams,
-    ),
-    val showStorePaymentField: Boolean = componentParams.isStorePaymentFieldVisible,
+    val addressFormUIState: AddressFormUIState,
+    val showStorePaymentField: Boolean,
     val installmentOptions: List<InstallmentModel>,
     val address: AddressInputModel = AddressInputModel(),
     val addressState: AddressOutputData,

@@ -8,9 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.KCPAuthVisibility
+import com.adyen.checkout.card.SocialSecurityNumberVisibility
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardDelegateState
 import com.adyen.checkout.card.internal.ui.model.CardFieldId
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.InstallmentUtils
@@ -28,9 +31,20 @@ class CardDelegateStateFactory(
 
     override fun createDefaultDelegateState() = CardDelegateState(
         componentParams = componentParams,
+        isKCPAuthRequired = componentParams.kcpAuthVisibility == KCPAuthVisibility.SHOW,
+        isSocialSecurityNumberRequired = componentParams.socialSecurityNumberVisibility == SocialSecurityNumberVisibility.SHOW,
+        holderNameUIState = getDefaultHolderNameUIState(),
+        addressFormUIState = AddressFormUIState.fromAddressParams(componentParams.addressParams),
+        showStorePaymentField = componentParams.isStorePaymentFieldVisible,
         installmentOptions = getDefaultInstallmentOptions(),
-        addressState = getDefaultAddressOutputData()
+        addressState = getDefaultAddressOutputData(),
     )
+
+    private fun getDefaultHolderNameUIState() = if (componentParams.isHolderNameRequired) {
+        InputFieldUIState.REQUIRED
+    } else {
+        InputFieldUIState.HIDDEN
+    }
 
     private fun getDefaultInstallmentOptions(): List<InstallmentModel> {
         val isDebit = paymentMethod.fundingSource == DEBIT_FUNDING_SOURCE
