@@ -16,7 +16,7 @@ hilt = "2.55"
 compose-compiler = "1.5.15"
 
 # Code quality
-detekt = "1.23.7"
+detekt = "1.23.8"
 jacoco = "0.8.12"
 ktlint = "1.5.0"
 sonarqube = "5.1.0.4882"
