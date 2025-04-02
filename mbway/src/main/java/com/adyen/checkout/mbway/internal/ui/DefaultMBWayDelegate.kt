@@ -123,11 +123,11 @@ internal class DefaultMBWayDelegate(
     }
 
     override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) {
-        stateManager.updateField(fieldId, value = value)
+        stateManager.updateFieldValue(fieldId, value = value)
     }
 
     override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
-        stateManager.updateField<Unit>(fieldId, hasFocus = hasFocus)
+        stateManager.updateFieldFocus(fieldId, hasFocus = hasFocus)
     }
 
     override fun onSubmit() = if (stateManager.isValid) {

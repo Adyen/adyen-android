@@ -263,11 +263,9 @@ internal class DefaultMBWayDelegateTest(
 
         delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, value = "123456789")
 
-        verify(stateManager).updateField(
+        verify(stateManager).updateFieldValue(
             fieldId = eq(MBWayFieldId.LOCAL_PHONE_NUMBER),
             value = eq("123456789"),
-            hasFocus = eq(null),
-            shouldHighlightValidationError = eq(false),
         )
     }
 
@@ -277,11 +275,9 @@ internal class DefaultMBWayDelegateTest(
 
         delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus = true)
 
-        verify(stateManager).updateField(
+        verify(stateManager).updateFieldFocus(
             fieldId = eq(MBWayFieldId.LOCAL_PHONE_NUMBER),
-            value = eq(null),
             hasFocus = eq(true),
-            shouldHighlightValidationError = eq(false),
         )
     }
 

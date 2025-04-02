@@ -13,7 +13,10 @@ import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.view.View.OnFocusChangeListener
 import androidx.annotation.CallSuper
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.ui.core.internal.ui.UIEventDelegate
 import com.google.android.material.R
 import com.google.android.material.textfield.TextInputEditText
 
@@ -76,5 +79,25 @@ open class AdyenTextInputEditText @JvmOverloads constructor(
 
     companion object {
         protected const val NO_MAX_LENGTH = -1
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun <FI> AdyenTextInputEditText.safeUpdateText(
+    delegate: UIEventDelegate<FI>,
+    fieldId: FI,
+    value: String,
+) {
+    setOnChangeListener(null)
+    onFocusChangeListener = null
+
+    setText(value)
+    setSelection(length())
+
+    setOnChangeListener {
+        delegate.onFieldValueChanged(fieldId, it.toString())
+    }
+    onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+        delegate.onFieldFocusChanged(fieldId, hasFocus)
     }
 }

@@ -12,7 +12,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.widget.LinearLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldViewState
@@ -23,7 +22,7 @@ import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.ui.view.safeUpdateText
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
@@ -97,10 +96,11 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun updateMobileNumberInput(phoneNumberFieldState: ComponentFieldViewState<String>) {
-        binding.editTextMobileNumber.setOnChangeListener(null)
-        binding.editTextMobileNumber.onFocusChangeListener = null
-
-        binding.editTextMobileNumber.updateText(phoneNumberFieldState.value)
+        binding.editTextMobileNumber.safeUpdateText(
+            delegate = delegate,
+            fieldId = MBWayFieldId.LOCAL_PHONE_NUMBER,
+            value = phoneNumberFieldState.value,
+        )
 
         if (phoneNumberFieldState.hasFocus) {
             binding.textInputLayoutMobileNumber.requestFocus()
@@ -113,18 +113,6 @@ internal class MbWayView @JvmOverloads constructor(
         } ?: run {
             binding.textInputLayoutMobileNumber.hideError()
         }
-
-        binding.editTextMobileNumber.setOnChangeListener {
-            delegate.onFieldValueChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, it.toString())
-        }
-        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-            delegate.onFieldFocusChanged(MBWayFieldId.LOCAL_PHONE_NUMBER, hasFocus)
-        }
-    }
-
-    private fun AdyenTextInputEditText.updateText(newValue: String) {
-        setText(newValue)
-        setSelection(length())
     }
 
     override fun highlightValidationErrors() {

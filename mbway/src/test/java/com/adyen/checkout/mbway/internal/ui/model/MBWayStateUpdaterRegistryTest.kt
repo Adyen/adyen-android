@@ -39,14 +39,14 @@ internal class MBWayStateUpdaterRegistryTest {
 
     @Test
     fun `when getFieldState is called for phone number, then correct field state should be returned`() {
-        val fieldState = stateUpdaterRegistry.getFieldState<String>(MBWayFieldId.LOCAL_PHONE_NUMBER, initialState)
+        val fieldState = stateUpdaterRegistry.getFieldState<String>(initialState, MBWayFieldId.LOCAL_PHONE_NUMBER)
 
         assertEquals(localPhoneNumberFieldState, fieldState)
     }
 
     @Test
     fun `when getFieldState is called for country code, then correct field state should be returned`() {
-        val fieldState = stateUpdaterRegistry.getFieldState<CountryModel>(MBWayFieldId.COUNTRY_CODE, initialState)
+        val fieldState = stateUpdaterRegistry.getFieldState<CountryModel>(initialState, MBWayFieldId.COUNTRY_CODE)
 
         assertEquals(countryCodeFieldState, fieldState)
     }
@@ -56,8 +56,8 @@ internal class MBWayStateUpdaterRegistryTest {
         val newPhoneNumberState = ComponentFieldDelegateState(value = "987654321")
 
         val updatedState = stateUpdaterRegistry.updateFieldState(
-            MBWayFieldId.LOCAL_PHONE_NUMBER,
             initialState,
+            MBWayFieldId.LOCAL_PHONE_NUMBER,
             newPhoneNumberState,
         )
 
@@ -69,8 +69,8 @@ internal class MBWayStateUpdaterRegistryTest {
         val newCountryCodeState = ComponentFieldDelegateState(value = countryModel.copy(callingCode = "+123"))
 
         val updatedState = stateUpdaterRegistry.updateFieldState(
-            MBWayFieldId.COUNTRY_CODE,
             initialState,
+            MBWayFieldId.COUNTRY_CODE,
             newCountryCodeState,
         )
 

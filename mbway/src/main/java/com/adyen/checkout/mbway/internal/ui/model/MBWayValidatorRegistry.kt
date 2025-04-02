@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.internal.ui.model.validation.FieldVali
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.mbway.R
 
-internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayFieldId> {
+internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayDelegateState, MBWayFieldId> {
 
     private val validators = MBWayFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
@@ -25,15 +25,15 @@ internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayFieldId> {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> validate(key: MBWayFieldId, value: T): Validation {
-        val validator = validators[key] as? FieldValidator<T>
+    override fun <T> validate(state: MBWayDelegateState, key: MBWayFieldId, value: T): Validation {
+        val validator = validators[key] as? FieldValidator<MBWayDelegateState, T>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
-        return validator.validate(value)
+        return validator.validate(state, value)
     }
 }
 
-internal class LocalPhoneNumberValidator : FieldValidator<String> {
-    override fun validate(input: String) =
+internal class LocalPhoneNumberValidator : FieldValidator<MBWayDelegateState, String> {
+    override fun validate(state: MBWayDelegateState, input: String) =
         if (input.isNotEmpty() && ValidationUtils.isPhoneNumberValid(input)) {
             Validation.Valid
         } else {

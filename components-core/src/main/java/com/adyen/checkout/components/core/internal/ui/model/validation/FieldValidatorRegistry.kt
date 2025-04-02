@@ -12,6 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldValidatorRegistry<K> {
-    fun <T> validate(key: K, value: T): Validation
+interface FieldValidatorRegistry<S, K> {
+    fun <T> validate(state: S, key: K, value: T): Validation
 }
