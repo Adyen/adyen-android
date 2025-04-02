@@ -9,6 +9,7 @@
 package com.adyen.checkout.components.core.internal.ui.model.state
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.ui.model.transformer.DefaultTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
@@ -30,24 +31,33 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
     private val _state = MutableStateFlow(factory.createDefaultDelegateState())
     override val state: StateFlow<S> = _state.asStateFlow()
 
-    override val isValid
-        get() = run {
-            validateNonValidatedFields()
-            _state.value.isValid
+    override val isValid: Boolean
+        get() {
+            validateFields { fieldState -> fieldState.validation == null }
+            return _state.value.isValid
         }
 
-    private fun validateNonValidatedFields() {
-        factory.getFieldIds().forEach { fieldId ->
-            val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
+    // TODO Write test for this function
+    override fun updateState(update: S.() -> S) {
+        _state.update(update)
 
-            if (fieldState.validation == null) {
+        // Revalidate all validated fields, to make sure they take the new state values
+        validateFields { fieldState -> fieldState.validation != null }
+    }
+
+    private fun validateFields(validationPredicate: (ComponentFieldDelegateState<Any>) -> Boolean) {
+        factory.getFieldIds()
+            .filter { fieldId ->
+                val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
+                validationPredicate.invoke(fieldState)
+            }
+            .forEach { fieldId ->
+                val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
                 updateField(
                     fieldId = fieldId,
                     value = fieldState.value, // Ensure the current value is validated,
-                    hasFocus = fieldState.hasFocus,
                 )
             }
-        }
     }
 
     override fun <T> updateFieldValue(fieldId: FI, value: T?) = updateField(fieldId, value = value)
@@ -55,6 +65,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
     override fun updateFieldFocus(fieldId: FI, hasFocus: Boolean) =
         updateField<Unit>(fieldId, hasFocus = hasFocus)
 
+    // TODO Write test for this function
     override fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
         var isErrorFieldFocused = false
