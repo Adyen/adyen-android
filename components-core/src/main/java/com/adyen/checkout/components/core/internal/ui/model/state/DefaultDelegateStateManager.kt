@@ -37,7 +37,6 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
             return _state.value.isValid
         }
 
-    // TODO Write test for this function
     override fun updateState(update: S.() -> S) {
         _state.update(update)
 
@@ -65,7 +64,6 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
     override fun updateFieldFocus(fieldId: FI, hasFocus: Boolean) =
         updateField<Unit>(fieldId, hasFocus = hasFocus)
 
-    // TODO Write test for this function
     override fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
         var isErrorFieldFocused = false
