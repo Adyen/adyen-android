@@ -18,6 +18,8 @@ interface DelegateStateManager<S, FI> {
 
     val isValid: Boolean
 
+    fun updateState(update: S.() -> S)
+
     fun <T> updateFieldValue(
         fieldId: FI,
         value: T? = null,

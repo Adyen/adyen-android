@@ -11,4 +11,5 @@ package com.adyen.checkout.components.core.internal.ui.model.state
 internal enum class TestFieldId {
     FIELD_1,
     FIELD_2,
+    FIELD_3,
 }
