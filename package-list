@@ -155,6 +155,9 @@ com.adyen.checkout.paybybankus.internal.ui.model
 module:payeasy
 com.adyen.checkout.payeasy
 com.adyen.checkout.payeasy.internal.provider
+module:payto
+com.adyen.checkout.payto
+com.adyen.checkout.payto.internal.provider
 module:qr-code
 com.adyen.checkout.qrcode
 com.adyen.checkout.qrcode.internal.provider
