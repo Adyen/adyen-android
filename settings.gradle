@@ -75,3 +75,4 @@ include ':3ds2',
         ':upi',
         ':voucher',
         ':wechatpay'
+include ':core'
