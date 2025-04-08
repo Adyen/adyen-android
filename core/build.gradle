@@ -33,8 +33,22 @@ android {
     testFixtures {
         enable = true
     }
+
+    buildFeatures {
+        compose true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+    }
 }
 
 dependencies {
-    // TODO
+
+    api libs.bundles.androidx.lifecycle
+
+    implementation platform(libs.compose.bom)
+    implementation libs.bundles.compose.ui
+    implementation libs.compose.hilt
+    implementation libs.compose.viewmodel
 }
