@@ -140,6 +140,7 @@ class AdyenComponentView @JvmOverloads constructor(
 
             uiStateDelegate?.uiEventFlow?.onEach {
                 when (it) {
+                    // TODO This can be removed when all validation logic is moved out of the views
                     PaymentComponentUIEvent.InvalidUI -> highlightValidationErrors()
                 }
             }?.launchIn(coroutineScope)
@@ -211,6 +212,7 @@ class AdyenComponentView @JvmOverloads constructor(
      * Highlight and focus on the current validation errors for the user to take action.
      * If the component doesn't need validation or if everything is already valid, nothing will happen.
      */
+    // TODO This can be removed when all validation logic is moved out of the views
     fun highlightValidationErrors() {
         componentView?.highlightValidationErrors()
     }

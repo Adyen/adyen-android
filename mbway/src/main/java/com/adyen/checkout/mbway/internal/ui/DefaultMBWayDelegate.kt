@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
 import com.adyen.checkout.components.core.OrderRequest
-import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
@@ -19,25 +17,31 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.components.core.internal.ui.model.state.DelegateStateManager
+import com.adyen.checkout.components.core.internal.ui.model.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.model.toViewState
+import com.adyen.checkout.mbway.toComponentState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 
-@Suppress("TooManyFunctions")
+@Suppress("LongParameterList", "TooManyFunctions")
 internal class DefaultMBWayDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -45,34 +49,46 @@ internal class DefaultMBWayDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<MBWayComponentState>,
+    private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
+    private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
 ) : MBWayDelegate {
 
-    private val inputData = MBWayInputData()
+    override val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
+        val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
+            delegateState.toComponentState(analyticsManager, transformerRegistry, order, componentParams.amount)
+        }
+        stateManager.state
+            .map(toComponentState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(stateManager.state.value))
+    }
 
-    private val _outputDataFlow = MutableStateFlow(createOutputData())
-    override val outputDataFlow: Flow<MBWayOutputData> = _outputDataFlow
+    override val viewStateFlow: Flow<MBWayViewState> by lazy {
+        stateManager.state
+            .map(MBWayDelegateState::toViewState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
+    }
 
-    private val _componentStateFlow = MutableStateFlow(createComponentState())
-    override val componentStateFlow: Flow<MBWayComponentState> = _componentStateFlow
-
-    override val outputData: MBWayOutputData get() = _outputDataFlow.value
-
-    private val _viewFlow: MutableStateFlow<ComponentViewType?> = MutableStateFlow(MbWayComponentViewType)
+    private val _viewFlow: MutableStateFlow<ComponentViewType?> =
+        MutableStateFlow(MbWayComponentViewType)
     override val viewFlow: Flow<ComponentViewType?> = _viewFlow
 
     override val submitFlow: Flow<MBWayComponentState> = getTrackedSubmitFlow()
 
     override val uiStateFlow: Flow<PaymentComponentUIState> = submitHandler.uiStateFlow
-
     override val uiEventFlow: Flow<PaymentComponentUIEvent> = submitHandler.uiEventFlow
 
-    init {
-        updateComponentState(outputData)
-    }
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     override fun initialize(coroutineScope: CoroutineScope) {
-        submitHandler.initialize(coroutineScope, componentStateFlow)
+        _coroutineScope = coroutineScope
+
+        initializeSubmitHandler(coroutineScope)
         initializeAnalytics(coroutineScope)
+    }
+
+    private fun initializeSubmitHandler(coroutineScope: CoroutineScope) {
+        submitHandler.initialize(coroutineScope, componentStateFlow)
     }
 
     private fun initializeAnalytics(coroutineScope: CoroutineScope) {
@@ -106,65 +122,18 @@ internal class DefaultMBWayDelegate(
         return paymentMethod.type ?: PaymentMethodTypes.UNKNOWN
     }
 
-    override fun updateInputData(update: MBWayInputData.() -> Unit) {
-        inputData.update()
-        onInputDataChanged()
+    override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) {
+        stateManager.updateField(fieldId, value = value)
     }
 
-    private fun onInputDataChanged() {
-        adyenLog(AdyenLogLevel.VERBOSE) { "onInputDataChanged" }
-        val outputData = createOutputData()
-        outputDataChanged(outputData)
-        updateComponentState(outputData)
+    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+        stateManager.updateField<Unit>(fieldId, hasFocus = hasFocus)
     }
 
-    private fun createOutputData(): MBWayOutputData {
-        val sanitizedNumber = inputData.localPhoneNumber.trimStart('0')
-        return MBWayOutputData(inputData.countryCode + sanitizedNumber)
-    }
-
-    private fun outputDataChanged(outputData: MBWayOutputData) {
-        _outputDataFlow.tryEmit(outputData)
-    }
-
-    @VisibleForTesting
-    internal fun updateComponentState(outputData: MBWayOutputData) {
-        val componentState = createComponentState(outputData)
-        componentStateChanged(componentState)
-    }
-
-    private fun createComponentState(
-        outputData: MBWayOutputData = this.outputData
-    ): MBWayComponentState {
-        val paymentMethod = MBWayPaymentMethod(
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
-        )
-
-        val paymentComponentData = PaymentComponentData(
-            paymentMethod = paymentMethod,
-            order = order,
-            amount = componentParams.amount,
-        )
-
-        return MBWayComponentState(
-            data = paymentComponentData,
-            isInputValid = outputData.isValid,
-            isReady = true,
-        )
-    }
-
-    private fun componentStateChanged(componentState: MBWayComponentState) {
-        _componentStateFlow.tryEmit(componentState)
-    }
-
-    override fun getSupportedCountries(): List<CountryModel> =
-        CountryUtils.getLocalizedCountries(componentParams.shopperLocale, SUPPORTED_COUNTRIES)
-
-    override fun getInitiallySelectedCountry(): CountryModel? {
-        val countries = getSupportedCountries()
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+    override fun onSubmit() = if (stateManager.isValid) {
+        submitHandler.onSubmit(componentStateFlow.value)
+    } else {
+        stateManager.highlightAllFieldValidationErrors()
     }
 
     private fun getTrackedSubmitFlow() = submitHandler.submitFlow.onEach {
@@ -172,14 +141,10 @@ internal class DefaultMBWayDelegate(
         analyticsManager.trackEvent(event)
     }
 
-    override fun onSubmit() {
-        val state = _componentStateFlow.value
-        submitHandler.onSubmit(state)
-    }
-
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
-    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+    override fun shouldShowSubmitButton(): Boolean =
+        isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     override fun setInteractionBlocked(isInteractionBlocked: Boolean) {
         submitHandler.setInteractionBlocked(isInteractionBlocked)
@@ -188,12 +153,5 @@ internal class DefaultMBWayDelegate(
     override fun onCleared() {
         removeObserver()
         analyticsManager.clear(this)
-    }
-
-    companion object {
-        private const val ISO_CODE_PORTUGAL = "PT"
-        private const val ISO_CODE_SPAIN = "ES"
-
-        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }
