@@ -18,6 +18,7 @@ internal data class MBWayDelegateState(
     val localPhoneNumberFieldState: ComponentFieldDelegateState<String> =
         ComponentFieldDelegateState(value = ""),
 ) : DelegateState {
+
     override val isValid: Boolean
         get() = countryCodeFieldState.validation?.isValid() == true &&
             localPhoneNumberFieldState.validation?.isValid() == true
