@@ -10,8 +10,11 @@ package com.adyen.checkout.components.core.internal.ui.model.state
 
 import com.adyen.checkout.components.core.internal.internal.ui.model.TestFieldTransformerRegistry
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
+import com.adyen.checkout.components.core.internal.ui.model.Validation
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -52,6 +55,25 @@ internal class DefaultDelegateStateManagerTest {
     }
 
     @Test
+    fun `when updateState is called, then the state is updated and fields are revalidated`() {
+        val stateUpdaterRegistry = TestStateUpdaterRegistry().apply {
+            initialize(ComponentFieldDelegateState(value = "", validation = Validation.Valid))
+        }
+        val stateManager = DefaultDelegateStateManager(
+            factory = TestDelegateStateFactory(defaultDelegateState),
+            validationRegistry = validationRegistry,
+            stateUpdaterRegistry = stateUpdaterRegistry,
+            transformerRegistry = transformerRegistry,
+        )
+        val newState = TestDelegateState(isValid = false)
+
+        stateManager.updateState { newState }
+
+        assertEquals(newState, stateManager.state.value)
+        validationRegistry.assertIsValidated(TestFieldId.FIELD_1)
+    }
+
+    @Test
     fun `when updateFieldValue is called and value is not null, then validate is called`() {
         stateManager.updateFieldValue(TestFieldId.FIELD_1, value = "Some value")
 
@@ -75,14 +97,19 @@ internal class DefaultDelegateStateManagerTest {
             hasFocus = false,
             shouldHighlightValidationError = false,
         )
-        stateUpdaterRegistry.updateFieldState(defaultDelegateState, TestFieldId.FIELD_1, initialFieldState)
+        stateUpdaterRegistry.updateFieldState(
+            defaultDelegateState,
+            TestFieldId.FIELD_1,
+            initialFieldState
+        )
 
         stateManager.updateFieldValue(
             fieldId = TestFieldId.FIELD_1,
             value = "New value",
         )
 
-        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
+        val updatedFieldState =
+            stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
         assertEquals("New value", updatedFieldState.value)
         assertEquals(false, updatedFieldState.hasFocus)
     }
@@ -95,15 +122,61 @@ internal class DefaultDelegateStateManagerTest {
             hasFocus = false,
             shouldHighlightValidationError = false,
         )
-        stateUpdaterRegistry.updateFieldState(defaultDelegateState, TestFieldId.FIELD_1, initialFieldState)
+        stateUpdaterRegistry.updateFieldState(
+            defaultDelegateState,
+            TestFieldId.FIELD_1,
+            initialFieldState
+        )
 
         stateManager.updateFieldFocus(
             fieldId = TestFieldId.FIELD_1,
             hasFocus = true,
         )
 
-        val updatedFieldState = stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
+        val updatedFieldState =
+            stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
         assertEquals("", updatedFieldState.value)
         assertEquals(true, updatedFieldState.hasFocus)
+    }
+
+    @Test
+    fun `when highlightAllFieldValidationErrors is called, then invalid fields should be highlighted and focused`() {
+        val field1State =
+            ComponentFieldDelegateState(value = "invalid", validation = Validation.Invalid(1))
+        val field2State =
+            ComponentFieldDelegateState(value = "valid", validation = Validation.Valid)
+        val field3State =
+            ComponentFieldDelegateState(value = "invalid", validation = Validation.Invalid(2))
+
+        stateUpdaterRegistry.updateFieldState(
+            defaultDelegateState,
+            TestFieldId.FIELD_1,
+            field1State
+        )
+        stateUpdaterRegistry.updateFieldState(
+            defaultDelegateState,
+            TestFieldId.FIELD_2,
+            field2State
+        )
+        stateUpdaterRegistry.updateFieldState(
+            defaultDelegateState,
+            TestFieldId.FIELD_3,
+            field3State
+        )
+
+        stateManager.highlightAllFieldValidationErrors()
+
+        val updatedField1State =
+            stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_1)
+        val updatedField2State =
+            stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_2)
+        val updatedField3State =
+            stateUpdaterRegistry.getFieldState<String>(defaultDelegateState, TestFieldId.FIELD_3)
+        assertTrue(updatedField1State.hasFocus)
+        assertTrue(updatedField1State.shouldHighlightValidationError)
+        assertFalse(updatedField2State.hasFocus)
+        assertTrue(updatedField2State.shouldHighlightValidationError)
+        assertFalse(updatedField3State.hasFocus)
+        assertTrue(updatedField3State.shouldHighlightValidationError)
     }
 }
