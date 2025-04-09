@@ -12,6 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultValidator : FieldValidator<Any> {
-    override fun validate(input: Any) = Validation.Valid
+class DefaultValidator : FieldValidator<Any, Any> {
+    override fun validate(state: Any, input: Any) = Validation.Valid
 }

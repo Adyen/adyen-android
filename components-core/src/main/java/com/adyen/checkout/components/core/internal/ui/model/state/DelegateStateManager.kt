@@ -18,12 +18,14 @@ interface DelegateStateManager<S, FI> {
 
     val isValid: Boolean
 
-    fun <T> updateField(
+    fun <T> updateFieldValue(
         fieldId: FI,
         value: T? = null,
-        hasFocus: Boolean? = null,
-        // Default value is false, to make sure that errors are cleared when field is updated
-        shouldHighlightValidationError: Boolean? = false,
+    )
+
+    fun updateFieldFocus(
+        fieldId: FI,
+        hasFocus: Boolean,
     )
 
     fun highlightAllFieldValidationErrors()

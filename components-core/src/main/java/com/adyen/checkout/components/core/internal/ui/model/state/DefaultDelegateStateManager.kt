@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.update
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDelegateStateManager<S : DelegateState, FI>(
     private val factory: DelegateStateFactory<S, FI>,
-    private val validationRegistry: FieldValidatorRegistry<FI>,
-    private val stateUpdaterRegistry: StateUpdaterRegistry<FI, S>,
+    private val validationRegistry: FieldValidatorRegistry<S, FI>,
+    private val stateUpdaterRegistry: StateUpdaterRegistry<S, FI>,
     private val transformerRegistry: FieldTransformerRegistry<FI> = DefaultTransformerRegistry(),
 ) : DelegateStateManager<S, FI> {
 
@@ -38,51 +38,29 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
 
     private fun validateNonValidatedFields() {
         factory.getFieldIds().forEach { fieldId ->
-            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
 
             if (fieldState.validation == null) {
                 updateField(
                     fieldId = fieldId,
-                    value = fieldState.value, // Ensure the current value is validated
+                    value = fieldState.value, // Ensure the current value is validated,
+                    hasFocus = fieldState.hasFocus,
                 )
             }
         }
     }
 
-    // A list can be added, which will show which other fields need to be validated
-    // or updated when a specific field is updated
-    override fun <T> updateField(
-        fieldId: FI,
-        value: T?,
-        hasFocus: Boolean?,
-        shouldHighlightValidationError: Boolean?,
-    ) {
-        val validation = value?.let {
-            validationRegistry.validate(
-                fieldId,
-                transformerRegistry.transform(fieldId, it),
-            )
-        }
+    override fun <T> updateFieldValue(fieldId: FI, value: T?) = updateField(fieldId, value = value)
 
-        val fieldState = stateUpdaterRegistry.getFieldState<T>(fieldId, _state.value)
-        val updatedFieldState = fieldState.updateFieldState(
-            value = value,
-            validation = validation,
-            hasFocus = hasFocus,
-            shouldHighlightValidationError = shouldHighlightValidationError,
-        )
-
-        _state.update {
-            stateUpdaterRegistry.updateFieldState(fieldId, _state.value, updatedFieldState)
-        }
-    }
+    override fun updateFieldFocus(fieldId: FI, hasFocus: Boolean) =
+        updateField<Unit>(fieldId, hasFocus = hasFocus)
 
     override fun highlightAllFieldValidationErrors() {
         // Flag to focus only the first invalid field
         var isErrorFieldFocused = false
 
         factory.getFieldIds().forEach { fieldId ->
-            val fieldState = stateUpdaterRegistry.getFieldState<Any>(fieldId, _state.value)
+            val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)
 
             val shouldFocus = !isErrorFieldFocused && fieldState.validation is Validation.Invalid
             if (shouldFocus) {
@@ -95,6 +73,33 @@ class DefaultDelegateStateManager<S : DelegateState, FI>(
                 hasFocus = shouldFocus,
                 shouldHighlightValidationError = true,
             )
+        }
+    }
+
+    private fun <T> updateField(
+        fieldId: FI,
+        value: T? = null,
+        hasFocus: Boolean? = null,
+        shouldHighlightValidationError: Boolean? = null,
+    ) {
+        val validation = value?.let {
+            validationRegistry.validate(
+                _state.value,
+                fieldId,
+                transformerRegistry.transform(fieldId, it),
+            )
+        }
+
+        val fieldState = stateUpdaterRegistry.getFieldState<T>(_state.value, fieldId)
+        val updatedFieldState = fieldState.updateFieldState(
+            value = value,
+            validation = validation,
+            hasFocus = hasFocus,
+            shouldHighlightValidationError = shouldHighlightValidationError,
+        )
+
+        _state.update {
+            stateUpdaterRegistry.updateFieldState(_state.value, fieldId, updatedFieldState)
         }
     }
 }

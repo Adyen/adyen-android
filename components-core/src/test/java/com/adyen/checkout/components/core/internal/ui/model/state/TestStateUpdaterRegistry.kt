@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.ui.model.state
 
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 
-internal class TestStateUpdaterRegistry : StateUpdaterRegistry<TestFieldId, TestDelegateState> {
+internal class TestStateUpdaterRegistry : StateUpdaterRegistry<TestDelegateState, TestFieldId> {
 
     private val fieldStates = mutableMapOf<TestFieldId, ComponentFieldDelegateState<*>>()
 
@@ -21,15 +21,15 @@ internal class TestStateUpdaterRegistry : StateUpdaterRegistry<TestFieldId, Test
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getFieldState(key: TestFieldId, state: TestDelegateState): ComponentFieldDelegateState<T> {
+    override fun <T> getFieldState(state: TestDelegateState, key: TestFieldId): ComponentFieldDelegateState<T> {
         return fieldStates[key] as ComponentFieldDelegateState<T>
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> updateFieldState(
-        key: TestFieldId,
         state: TestDelegateState,
-        fieldState: ComponentFieldDelegateState<T>
+        key: TestFieldId,
+        fieldState: ComponentFieldDelegateState<T>,
     ): TestDelegateState {
         fieldStates[key] = fieldState as ComponentFieldDelegateState<Any>
         return state

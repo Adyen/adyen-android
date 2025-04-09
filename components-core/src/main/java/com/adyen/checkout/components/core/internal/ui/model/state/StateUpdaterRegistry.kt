@@ -12,8 +12,8 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.ComponentFieldDelegateState
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StateUpdaterRegistry<K, S> {
-    fun <T> getFieldState(key: K, state: S): ComponentFieldDelegateState<T>
+interface StateUpdaterRegistry<S, K> {
+    fun <T> getFieldState(state: S, key: K): ComponentFieldDelegateState<T>
 
-    fun <T> updateFieldState(key: K, state: S, fieldState: ComponentFieldDelegateState<T>): S
+    fun <T> updateFieldState(state: S, key: K, fieldState: ComponentFieldDelegateState<T>): S
 }
