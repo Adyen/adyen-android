@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.theme
 
 data class AdyenCheckoutTheme(
-    val colors: AdyenColors,
+    val colors: AdyenColors = adyenCheckoutLightColors(),
     val textStyles: AdyenTextStyles,
     val elements: AdyenElements,
 )
