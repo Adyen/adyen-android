@@ -8,4 +8,4 @@
 
 package com.adyen.checkout.ui
 
-class Placeholder
+private class Placeholder
