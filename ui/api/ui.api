@@ -208,39 +208,44 @@ public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type : java/l
 	public static fun values ()[Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
 }
 
-public final class com/adyen/checkout/ui/theme/AdyenTextStyles {
-	public fun <init> (Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;)V
-	public final fun component1 ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun component2 ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun component3 ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun component4 ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun component5 ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun copy (Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/AdyenTextStyles;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;Lcom/adyen/checkout/ui/theme/TextStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBody ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun getCaption ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun getLabel ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun getSubtitle ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public final fun getTitle ()Lcom/adyen/checkout/ui/theme/TextStyle;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/ui/theme/TextStyle {
-	public fun <init> (IIII)V
+public final class com/adyen/checkout/ui/theme/AdyenTextStyle {
+	public fun <init> (IIILjava/lang/Integer;)V
 	public final fun component1 ()I
 	public final fun component2 ()I
 	public final fun component3 ()I
-	public final fun component4 ()I
-	public final fun copy (IIII)Lcom/adyen/checkout/ui/theme/TextStyle;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/TextStyle;IIIIILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/TextStyle;
+	public final fun component4 ()Ljava/lang/Integer;
+	public final fun copy (IIILjava/lang/Integer;)Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;IIILjava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getFontResId ()I
+	public final fun getFontResId ()Ljava/lang/Integer;
 	public final fun getLineHeight ()I
 	public final fun getSize ()I
 	public final fun getWeight ()I
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/ui/theme/AdyenTextStyles {
+	public fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;)V
+	public final fun component1 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun component2 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun component3 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun component4 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun component5 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun copy (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/AdyenTextStyles;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBody ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun getCaption ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun getLabel ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun getSubtitle ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public final fun getTitle ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/ui/theme/AdyenTextStylesKt {
+	public static final fun adyenCheckoutTextStyles (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
+	public static synthetic fun adyenCheckoutTextStyles$default (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextStyles;
 }
 
