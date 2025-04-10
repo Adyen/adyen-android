@@ -6,6 +6,10 @@
  * Created by oscars on 10/4/2025.
  */
 
-package com.adyen.checkout.ui
+package com.adyen.checkout.ui.theme
 
-private class Placeholder
+data class AdyenCheckoutTheme(
+    val colors: AdyenColors,
+    val textStyles: AdyenTextStyles,
+    val elements: AdyenElements,
+)
