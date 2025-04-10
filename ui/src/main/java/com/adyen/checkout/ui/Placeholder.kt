@@ -8,4 +8,5 @@
 
 package com.adyen.checkout.ui
 
-class Placeholder
+@Suppress("UnusedPrivateClass")
+private class Placeholder
