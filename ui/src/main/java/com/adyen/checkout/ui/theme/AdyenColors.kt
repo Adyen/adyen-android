@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.ui.theme
 
+import com.adyen.checkout.ui.internal.DefaultColorsDark
+import com.adyen.checkout.ui.internal.DefaultColorsLight
+
 data class AdyenColors(
     val background: AdyenColor,
     val container: AdyenColor,
@@ -26,19 +29,20 @@ data class AdyenColors(
 @JvmInline
 value class AdyenColor(val value: Long)
 
+@Suppress("LongParameterList")
 fun adyenCheckoutLightColors(
-    background: AdyenColor = AdyenColor(0xFFFFFFFF),
-    container: AdyenColor = AdyenColor(0xFFF7F7F8),
-    primary: AdyenColor = AdyenColor(0xFF00112C),
-    textOnPrimary: AdyenColor = AdyenColor(0xFFFFFFFF),
-    action: AdyenColor = AdyenColor(0xFF0070F5),
-    destructive: AdyenColor = AdyenColor(0xFFE22D2D),
-    textOnDestructive: AdyenColor = AdyenColor(0xFFFFFFFF),
-    disabled: AdyenColor = AdyenColor(0xFFEEEFF1),
-    textOnDisabled: AdyenColor = AdyenColor(0xFF00112C),
-    outline: AdyenColor = AdyenColor(0xFFDBDEE2),
-    text: AdyenColor = AdyenColor(0xFF00112C),
-    textSecondary: AdyenColor = AdyenColor(0xFF5C687C),
+    background: AdyenColor = DefaultColorsLight.Background,
+    container: AdyenColor = DefaultColorsLight.Container,
+    primary: AdyenColor = DefaultColorsLight.Primary,
+    textOnPrimary: AdyenColor = DefaultColorsLight.TextOnPrimary,
+    action: AdyenColor = DefaultColorsLight.Action,
+    destructive: AdyenColor = DefaultColorsLight.Destructive,
+    textOnDestructive: AdyenColor = DefaultColorsLight.TextOnDestructive,
+    disabled: AdyenColor = DefaultColorsLight.Disabled,
+    textOnDisabled: AdyenColor = DefaultColorsLight.TextOnDisabled,
+    outline: AdyenColor = DefaultColorsLight.Outline,
+    text: AdyenColor = DefaultColorsLight.Text,
+    textSecondary: AdyenColor = DefaultColorsLight.TextSecondary,
 ) = AdyenColors(
     background = background,
     container = container,
@@ -54,19 +58,20 @@ fun adyenCheckoutLightColors(
     textSecondary = textSecondary,
 )
 
+@Suppress("LongParameterList")
 fun adyenCheckoutDarkColors(
-    background: AdyenColor = AdyenColor(0xFF121212),
-    container: AdyenColor = AdyenColor(0xFF2A2A2A),
-    primary: AdyenColor = AdyenColor(0xFFEFEFEF),
-    textOnPrimary: AdyenColor = AdyenColor(0xFF121212),
-    action: AdyenColor = AdyenColor(0xFF7DB9FF),
-    destructive: AdyenColor = AdyenColor(0xFFF99C9C),
-    textOnDestructive: AdyenColor = AdyenColor(0xFF121212),
-    disabled: AdyenColor = AdyenColor(0xFF373737),
-    textOnDisabled: AdyenColor = AdyenColor(0xFFEFEFEF),
-    outline: AdyenColor = AdyenColor(0xFF454545),
-    text: AdyenColor = AdyenColor(0xFFEFEFEF),
-    textSecondary: AdyenColor = AdyenColor(0xFFEFEFEF),
+    background: AdyenColor = DefaultColorsDark.Background,
+    container: AdyenColor = DefaultColorsDark.Container,
+    primary: AdyenColor = DefaultColorsDark.Primary,
+    textOnPrimary: AdyenColor = DefaultColorsDark.TextOnPrimary,
+    action: AdyenColor = DefaultColorsDark.Action,
+    destructive: AdyenColor = DefaultColorsDark.Destructive,
+    textOnDestructive: AdyenColor = DefaultColorsDark.TextOnDestructive,
+    disabled: AdyenColor = DefaultColorsDark.Disabled,
+    textOnDisabled: AdyenColor = DefaultColorsDark.TextOnDisabled,
+    outline: AdyenColor = DefaultColorsDark.Outline,
+    text: AdyenColor = DefaultColorsDark.Text,
+    textSecondary: AdyenColor = DefaultColorsDark.TextSecondary,
 ) = AdyenColors(
     background = background,
     container = container,
