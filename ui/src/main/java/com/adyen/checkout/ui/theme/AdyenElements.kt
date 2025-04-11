@@ -17,7 +17,7 @@ data class AdyenElements(
 )
 
 fun adyenCheckoutElements(
-    cornerRadius: Int = 8,
+    cornerRadius: Int = DEFAULT_CORNER_RADIUS,
     buttons: AdyenButtonStyles = AdyenButtonStyles(),
     switch: AdyenSwitchStyle = AdyenSwitchStyle(),
     textField: AdyenTextFieldStyle = AdyenTextFieldStyle(),
@@ -29,3 +29,5 @@ fun adyenCheckoutElements(
     textField = textField,
     segmentedButton = segmentedButton,
 )
+
+private const val DEFAULT_CORNER_RADIUS = 8
