@@ -11,5 +11,5 @@ package com.adyen.checkout.ui.theme
 data class AdyenCheckoutTheme(
     val colors: AdyenColors = adyenCheckoutLightColors(),
     val textStyles: AdyenTextStyles = adyenCheckoutTextStyles(),
-    val elements: AdyenElements,
+    val elements: AdyenElements = adyenCheckoutElements(),
 )
