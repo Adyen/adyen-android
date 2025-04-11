@@ -15,3 +15,17 @@ data class AdyenElements(
     val textField: AdyenTextFieldStyle,
     val segmentedButton: AdyenSegmentedButtonStyle,
 )
+
+fun adyenCheckoutElements(
+    cornerRadius: Int = 8,
+    buttons: AdyenButtonStyles = AdyenButtonStyles(),
+    switch: AdyenSwitchStyle = AdyenSwitchStyle(),
+    textField: AdyenTextFieldStyle = AdyenTextFieldStyle(),
+    segmentedButton: AdyenSegmentedButtonStyle = AdyenSegmentedButtonStyle(),
+) = AdyenElements(
+    cornerRadius = cornerRadius,
+    buttons = buttons,
+    switch = switch,
+    textField = textField,
+    segmentedButton = segmentedButton,
+)
