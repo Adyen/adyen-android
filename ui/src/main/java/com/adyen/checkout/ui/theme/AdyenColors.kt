@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.theme
 import com.adyen.checkout.ui.internal.DefaultColorsDark
 import com.adyen.checkout.ui.internal.DefaultColorsLight
 
+// TODO - Add KDocs
 data class AdyenColors(
     val background: AdyenColor,
     val container: AdyenColor,
