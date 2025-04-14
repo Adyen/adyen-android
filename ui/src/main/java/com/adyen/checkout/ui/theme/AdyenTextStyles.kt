@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.ui.theme
 
+import androidx.compose.runtime.Immutable
+
 // TODO - Add KDocs
+@Immutable
 data class AdyenTextStyle(
     val size: Int,
     val weight: Int,
@@ -16,6 +19,7 @@ data class AdyenTextStyle(
     val fontResId: Int?,
 )
 
+@Immutable
 data class AdyenTextStyles(
     val title: AdyenTextStyle,
     val subtitle: AdyenTextStyle,

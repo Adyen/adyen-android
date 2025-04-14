@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.ui.theme
 
+import androidx.compose.runtime.Immutable
+
 // TODO - Add KDocs
+@Immutable
 data class AdyenTextFieldStyle(
     val type: Type = Type.OUTLINED,
     val backgroundColor: AdyenColor? = null,

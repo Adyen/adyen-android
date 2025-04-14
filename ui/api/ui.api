@@ -1,4 +1,4 @@
-public final class com/adyen/checkout/ui/core/BuildConfig {
+public final class com/adyen/checkout/test/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
 	public static final field DEBUG Z
@@ -7,6 +7,7 @@ public final class com/adyen/checkout/ui/core/BuildConfig {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenButtonStyle {
+	public static final field $stable I
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
@@ -25,6 +26,7 @@ public final class com/adyen/checkout/ui/theme/AdyenButtonStyle {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenButtonStyles {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;)V
 	public synthetic fun <init> (Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;Lcom/adyen/checkout/ui/theme/AdyenButtonStyle;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -46,6 +48,7 @@ public final class com/adyen/checkout/ui/theme/AdyenButtonStyles {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenCheckoutTheme {
+	public static final field $stable I
 	public fun <init> ()V
 	public fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColors;Lcom/adyen/checkout/ui/theme/AdyenTextStyles;Lcom/adyen/checkout/ui/theme/AdyenElements;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColors;Lcom/adyen/checkout/ui/theme/AdyenTextStyles;Lcom/adyen/checkout/ui/theme/AdyenElements;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -77,6 +80,7 @@ public final class com/adyen/checkout/ui/theme/AdyenColor {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenColors {
+	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/ui/theme/AdyenColors$Companion;
 	public synthetic fun <init> (JJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-Q-qc3mI ()J
@@ -118,6 +122,7 @@ public final class com/adyen/checkout/ui/theme/AdyenColors$Companion {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenElements {
+	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/ui/theme/AdyenElements$Companion;
 	public fun <init> (ILcom/adyen/checkout/ui/theme/AdyenButtonStyles;Lcom/adyen/checkout/ui/theme/AdyenSwitchStyle;Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;Lcom/adyen/checkout/ui/theme/AdyenSegmentedButtonStyle;)V
 	public final fun component1 ()I
@@ -143,6 +148,7 @@ public final class com/adyen/checkout/ui/theme/AdyenElements$Companion {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenSegmentedButtonStyle {
+	public static final field $stable I
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
@@ -165,6 +171,7 @@ public final class com/adyen/checkout/ui/theme/AdyenSegmentedButtonStyle {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenSwitchStyle {
+	public static final field $stable I
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
@@ -183,6 +190,7 @@ public final class com/adyen/checkout/ui/theme/AdyenSwitchStyle {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle {
+	public static final field $stable I
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
@@ -217,6 +225,7 @@ public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type : java/l
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenTextStyle {
+	public static final field $stable I
 	public fun <init> (IIILjava/lang/Integer;)V
 	public final fun component1 ()I
 	public final fun component2 ()I
@@ -234,6 +243,7 @@ public final class com/adyen/checkout/ui/theme/AdyenTextStyle {
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenTextStyles {
+	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/ui/theme/AdyenTextStyles$Companion;
 	public fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;Lcom/adyen/checkout/ui/theme/AdyenTextStyle;)V
 	public final fun component1 ()Lcom/adyen/checkout/ui/theme/AdyenTextStyle;
