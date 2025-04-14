@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.theme
 
 // TODO - Add KDocs
 data class AdyenCheckoutTheme(
-    val colors: AdyenColors = adyenCheckoutLightColors(),
-    val textStyles: AdyenTextStyles = adyenCheckoutTextStyles(),
-    val elements: AdyenElements = adyenCheckoutElements(),
+    val colors: AdyenColors = AdyenColors.light(),
+    val textStyles: AdyenTextStyles = AdyenTextStyles.default(),
+    val elements: AdyenElements = AdyenElements.default(),
 )

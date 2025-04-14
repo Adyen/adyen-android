@@ -12,6 +12,9 @@ import com.adyen.checkout.ui.internal.DefaultColorsDark
 import com.adyen.checkout.ui.internal.DefaultColorsLight
 
 // TODO - Add KDocs
+@JvmInline
+value class AdyenColor(val value: Long)
+
 data class AdyenColors(
     val background: AdyenColor,
     val container: AdyenColor,
@@ -25,65 +28,66 @@ data class AdyenColors(
     val outline: AdyenColor,
     val text: AdyenColor,
     val textSecondary: AdyenColor,
-)
+) {
 
-@JvmInline
-value class AdyenColor(val value: Long)
+    companion object {
 
-@Suppress("LongParameterList")
-fun adyenCheckoutLightColors(
-    background: AdyenColor = DefaultColorsLight.Background,
-    container: AdyenColor = DefaultColorsLight.Container,
-    primary: AdyenColor = DefaultColorsLight.Primary,
-    textOnPrimary: AdyenColor = DefaultColorsLight.TextOnPrimary,
-    action: AdyenColor = DefaultColorsLight.Action,
-    destructive: AdyenColor = DefaultColorsLight.Destructive,
-    textOnDestructive: AdyenColor = DefaultColorsLight.TextOnDestructive,
-    disabled: AdyenColor = DefaultColorsLight.Disabled,
-    textOnDisabled: AdyenColor = DefaultColorsLight.TextOnDisabled,
-    outline: AdyenColor = DefaultColorsLight.Outline,
-    text: AdyenColor = DefaultColorsLight.Text,
-    textSecondary: AdyenColor = DefaultColorsLight.TextSecondary,
-) = AdyenColors(
-    background = background,
-    container = container,
-    primary = primary,
-    textOnPrimary = textOnPrimary,
-    action = action,
-    destructive = destructive,
-    textOnDestructive = textOnDestructive,
-    disabled = disabled,
-    textOnDisabled = textOnDisabled,
-    outline = outline,
-    text = text,
-    textSecondary = textSecondary,
-)
+        @Suppress("LongParameterList")
+        fun light(
+            background: AdyenColor = DefaultColorsLight.Background,
+            container: AdyenColor = DefaultColorsLight.Container,
+            primary: AdyenColor = DefaultColorsLight.Primary,
+            textOnPrimary: AdyenColor = DefaultColorsLight.TextOnPrimary,
+            action: AdyenColor = DefaultColorsLight.Action,
+            destructive: AdyenColor = DefaultColorsLight.Destructive,
+            textOnDestructive: AdyenColor = DefaultColorsLight.TextOnDestructive,
+            disabled: AdyenColor = DefaultColorsLight.Disabled,
+            textOnDisabled: AdyenColor = DefaultColorsLight.TextOnDisabled,
+            outline: AdyenColor = DefaultColorsLight.Outline,
+            text: AdyenColor = DefaultColorsLight.Text,
+            textSecondary: AdyenColor = DefaultColorsLight.TextSecondary,
+        ) = AdyenColors(
+            background = background,
+            container = container,
+            primary = primary,
+            textOnPrimary = textOnPrimary,
+            action = action,
+            destructive = destructive,
+            textOnDestructive = textOnDestructive,
+            disabled = disabled,
+            textOnDisabled = textOnDisabled,
+            outline = outline,
+            text = text,
+            textSecondary = textSecondary,
+        )
 
-@Suppress("LongParameterList")
-fun adyenCheckoutDarkColors(
-    background: AdyenColor = DefaultColorsDark.Background,
-    container: AdyenColor = DefaultColorsDark.Container,
-    primary: AdyenColor = DefaultColorsDark.Primary,
-    textOnPrimary: AdyenColor = DefaultColorsDark.TextOnPrimary,
-    action: AdyenColor = DefaultColorsDark.Action,
-    destructive: AdyenColor = DefaultColorsDark.Destructive,
-    textOnDestructive: AdyenColor = DefaultColorsDark.TextOnDestructive,
-    disabled: AdyenColor = DefaultColorsDark.Disabled,
-    textOnDisabled: AdyenColor = DefaultColorsDark.TextOnDisabled,
-    outline: AdyenColor = DefaultColorsDark.Outline,
-    text: AdyenColor = DefaultColorsDark.Text,
-    textSecondary: AdyenColor = DefaultColorsDark.TextSecondary,
-) = AdyenColors(
-    background = background,
-    container = container,
-    primary = primary,
-    textOnPrimary = textOnPrimary,
-    action = action,
-    destructive = destructive,
-    textOnDestructive = textOnDestructive,
-    disabled = disabled,
-    textOnDisabled = textOnDisabled,
-    outline = outline,
-    text = text,
-    textSecondary = textSecondary,
-)
+        @Suppress("LongParameterList")
+        fun dark(
+            background: AdyenColor = DefaultColorsDark.Background,
+            container: AdyenColor = DefaultColorsDark.Container,
+            primary: AdyenColor = DefaultColorsDark.Primary,
+            textOnPrimary: AdyenColor = DefaultColorsDark.TextOnPrimary,
+            action: AdyenColor = DefaultColorsDark.Action,
+            destructive: AdyenColor = DefaultColorsDark.Destructive,
+            textOnDestructive: AdyenColor = DefaultColorsDark.TextOnDestructive,
+            disabled: AdyenColor = DefaultColorsDark.Disabled,
+            textOnDisabled: AdyenColor = DefaultColorsDark.TextOnDisabled,
+            outline: AdyenColor = DefaultColorsDark.Outline,
+            text: AdyenColor = DefaultColorsDark.Text,
+            textSecondary: AdyenColor = DefaultColorsDark.TextSecondary,
+        ) = AdyenColors(
+            background = background,
+            container = container,
+            primary = primary,
+            textOnPrimary = textOnPrimary,
+            action = action,
+            destructive = destructive,
+            textOnDestructive = textOnDestructive,
+            disabled = disabled,
+            textOnDisabled = textOnDisabled,
+            outline = outline,
+            text = text,
+            textSecondary = textSecondary,
+        )
+    }
+}
