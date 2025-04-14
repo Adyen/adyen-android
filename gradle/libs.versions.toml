@@ -9,11 +9,10 @@ version-code = "1"
 
 # Build script
 android-gradle-plugin = "8.8.1"
-kotlin = "1.9.25"
-ksp = "1.9.25-1.0.20"
+kotlin = "2.1.10"
+ksp = "2.1.10-1.0.30"
 dokka = "1.9.20"
 hilt = "2.55"
-compose-compiler = "1.5.15"
 
 # Code quality
 detekt = "1.23.8"
@@ -37,7 +36,7 @@ constraintlayout = "2.2.1"
 
 # Compose dependencies
 compose-activity = "1.10.1"
-compose-bom = "2025.03.00"
+compose-bom = "2025.04.00"
 compose-hilt = "1.2.0"
 compose-viewmodel = "2.8.7"
 
@@ -102,8 +101,6 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 compose-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "compose-viewmodel" }
-# this unused dependency is needed so that renovate can update the compose compiler version. More info in: https://github.com/renovatebot/renovate/issues/18354
-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
 google-pay-play-services-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
 google-pay-play-services-wallet = { group = "com.google.android.gms", name = "play-services-wallet", version.ref = "play-services-wallet" }
 hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
@@ -175,11 +172,11 @@ mockito-android = ["mockito-android-main", "mockito-kotlin"]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlin = { id = "kotlin" }
-kotlin-android = { id = "kotlin-android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
