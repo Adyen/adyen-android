@@ -9,6 +9,7 @@
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
 }
 
@@ -20,7 +21,7 @@ ext.mavenArtifactDescription = "UI and styling foundation for Adyen Checkout."
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    namespace 'com.adyen.checkout.ui.core'
+    namespace 'com.adyen.checkout.ui'
     compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
@@ -30,8 +31,14 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         consumerProguardFiles "consumer-rules.pro"
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
-
+    implementation platform(libs.compose.bom)
+    implementation libs.compose.ui.main
+    implementation libs.compose.ui.graphics
 }
