@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ui.theme
 
+// TODO - Add KDocs
 data class AdyenSwitchStyle(
     val checkedHandleColor: AdyenColor? = null,
     val checkedTrackColor: AdyenColor? = null,
