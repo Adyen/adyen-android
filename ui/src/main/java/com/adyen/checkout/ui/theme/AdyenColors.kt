@@ -8,13 +8,16 @@
 
 package com.adyen.checkout.ui.theme
 
+import androidx.compose.runtime.Immutable
 import com.adyen.checkout.ui.internal.DefaultColorsDark
 import com.adyen.checkout.ui.internal.DefaultColorsLight
 
 // TODO - Add KDocs
+@Immutable
 @JvmInline
 value class AdyenColor(val value: Long)
 
+@Immutable
 data class AdyenColors(
     val background: AdyenColor,
     val container: AdyenColor,

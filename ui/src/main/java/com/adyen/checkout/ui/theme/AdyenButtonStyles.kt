@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.ui.theme
 
+import androidx.compose.runtime.Immutable
+
 // TODO - Add KDocs
+@Immutable
 data class AdyenButtonStyles(
     val cornerRadius: Int? = null,
     val primary: AdyenButtonStyle? = null,
@@ -17,6 +20,7 @@ data class AdyenButtonStyles(
     val destructive: AdyenButtonStyle? = null,
 )
 
+@Immutable
 data class AdyenButtonStyle(
     val backgroundColor: AdyenColor? = null,
     val textColor: AdyenColor? = null,
