@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ui.theme
 
+// TODO - Add KDocs
 data class AdyenSegmentedButtonStyle(
     val selectedContainerColor: AdyenColor? = null,
     val selectedTextColor: AdyenColor? = null,
