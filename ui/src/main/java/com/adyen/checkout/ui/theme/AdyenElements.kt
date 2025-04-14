@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ui.theme
 
+// TODO - Add KDocs
 data class AdyenElements(
     val cornerRadius: Int,
     val buttons: AdyenButtonStyles,
