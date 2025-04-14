@@ -80,7 +80,7 @@ public final class com/adyen/checkout/sessions/core/SessionModel : com/adyen/che
 	public final fun getSessionData ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/sessions/core/SessionModel$Companion {
@@ -104,7 +104,7 @@ public final class com/adyen/checkout/sessions/core/SessionPaymentResult : andro
 	public final fun component5 ()Lcom/adyen/checkout/components/core/OrderResponse;
 	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderResponse;)Lcom/adyen/checkout/sessions/core/SessionPaymentResult;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderResponse;ILjava/lang/Object;)Lcom/adyen/checkout/sessions/core/SessionPaymentResult;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getOrder ()Lcom/adyen/checkout/components/core/OrderResponse;
 	public final fun getResultCode ()Ljava/lang/String;
@@ -113,7 +113,7 @@ public final class com/adyen/checkout/sessions/core/SessionPaymentResult : andro
 	public final fun getSessionResult ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/sessions/core/SessionPaymentResult$Creator : android/os/Parcelable$Creator {
@@ -144,7 +144,7 @@ public final class com/adyen/checkout/sessions/core/SessionSetupConfiguration : 
 	public final fun getShowRemovePaymentMethodButton ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/sessions/core/SessionSetupConfiguration$Companion {
@@ -174,7 +174,7 @@ public final class com/adyen/checkout/sessions/core/SessionSetupInstallmentOptio
 	public final fun getValues ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/sessions/core/SessionSetupInstallmentOptions$Companion {
@@ -214,7 +214,7 @@ public final class com/adyen/checkout/sessions/core/SessionSetupResponse : com/a
 	public final fun getShopperLocale ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/sessions/core/SessionSetupResponse$Companion {

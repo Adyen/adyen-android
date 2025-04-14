@@ -32,7 +32,7 @@ public final class com/adyen/checkout/googlepay/BillingAddressParameters : com/a
 	public final fun setFormat (Ljava/lang/String;)V
 	public final fun setPhoneNumberRequired (Z)V
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/googlepay/BillingAddressParameters$Companion {
@@ -75,14 +75,14 @@ public final class com/adyen/checkout/googlepay/GooglePayButtonStyling : android
 	public final fun component3 ()Ljava/lang/Integer;
 	public final fun copy (Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;)Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;Lcom/adyen/checkout/googlepay/GooglePayButtonType;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getButtonTheme ()Lcom/adyen/checkout/googlepay/GooglePayButtonTheme;
 	public final fun getButtonType ()Lcom/adyen/checkout/googlepay/GooglePayButtonType;
 	public final fun getCornerRadius ()Ljava/lang/Integer;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayButtonStyling$Creator : android/os/Parcelable$Creator {
@@ -163,7 +163,7 @@ public final class com/adyen/checkout/googlepay/GooglePayComponentState : com/ad
 public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/googlepay/MerchantInfo;Ljava/util/List;Ljava/util/List;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/ShippingAddressParameters;Ljava/lang/Boolean;Lcom/adyen/checkout/googlepay/BillingAddressParameters;Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public final fun getAllowedAuthMethods ()Ljava/util/List;
 	public final fun getAllowedCardNetworks ()Ljava/util/List;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
@@ -187,7 +187,7 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration : com/ady
 	public final fun isExistingPaymentMethodRequired ()Ljava/lang/Boolean;
 	public final fun isShippingAddressRequired ()Ljava/lang/Boolean;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
@@ -255,7 +255,7 @@ public final class com/adyen/checkout/googlepay/MerchantInfo : com/adyen/checkou
 	public final fun setMerchantId (Ljava/lang/String;)V
 	public final fun setMerchantName (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/googlepay/MerchantInfo$Companion {
@@ -287,7 +287,7 @@ public final class com/adyen/checkout/googlepay/ShippingAddressParameters : com/
 	public final fun setAllowedCountryCodes (Ljava/util/List;)V
 	public final fun setPhoneNumberRequired (Z)V
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/googlepay/ShippingAddressParameters$Companion {

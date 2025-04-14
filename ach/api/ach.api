@@ -7,12 +7,12 @@ public final class com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$Ful
 	public final fun component1 ()Ljava/util/List;
 	public final fun copy (Ljava/util/List;)Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$FullAddress;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$FullAddress;Ljava/util/List;ILjava/lang/Object;)Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$FullAddress;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getSupportedCountryCodes ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$FullAddress$Creator : android/os/Parcelable$Creator {
@@ -26,8 +26,8 @@ public final class com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$Ful
 public final class com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$None : com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field INSTANCE Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$None;
-	public fun describeContents ()I
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/ach/ACHDirectDebitAddressConfiguration$None$Creator : android/os/Parcelable$Creator {
@@ -75,7 +75,7 @@ public final class com/adyen/checkout/ach/ACHDirectDebitComponentState : com/ady
 public final class com/adyen/checkout/ach/ACHDirectDebitConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public final fun getAddressConfiguration ()Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
@@ -84,7 +84,7 @@ public final class com/adyen/checkout/ach/ACHDirectDebitConfiguration : com/adye
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/ach/ACHDirectDebitConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
