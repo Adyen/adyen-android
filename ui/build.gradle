@@ -21,7 +21,8 @@ ext.mavenArtifactDescription = "UI and styling foundation for Adyen Checkout."
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    namespace 'com.adyen.checkout.ui'
+    // TODO - change to com.adyen.checkout.ui once we get rid of ui-core
+    namespace 'com.adyen.checkout.test'
     compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
