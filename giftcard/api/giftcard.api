@@ -12,8 +12,8 @@ public abstract class com/adyen/checkout/giftcard/GiftCardAction : android/os/Pa
 public final class com/adyen/checkout/giftcard/GiftCardAction$CheckBalance : com/adyen/checkout/giftcard/GiftCardAction {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field INSTANCE Lcom/adyen/checkout/giftcard/GiftCardAction$CheckBalance;
-	public fun describeContents ()I
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardAction$CheckBalance$Creator : android/os/Parcelable$Creator {
@@ -27,8 +27,8 @@ public final class com/adyen/checkout/giftcard/GiftCardAction$CheckBalance$Creat
 public final class com/adyen/checkout/giftcard/GiftCardAction$CreateOrder : com/adyen/checkout/giftcard/GiftCardAction {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field INSTANCE Lcom/adyen/checkout/giftcard/GiftCardAction$CreateOrder;
-	public fun describeContents ()I
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardAction$CreateOrder$Creator : android/os/Parcelable$Creator {
@@ -42,8 +42,8 @@ public final class com/adyen/checkout/giftcard/GiftCardAction$CreateOrder$Creato
 public final class com/adyen/checkout/giftcard/GiftCardAction$Idle : com/adyen/checkout/giftcard/GiftCardAction {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field INSTANCE Lcom/adyen/checkout/giftcard/GiftCardAction$Idle;
-	public fun describeContents ()I
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardAction$Idle$Creator : android/os/Parcelable$Creator {
@@ -57,8 +57,8 @@ public final class com/adyen/checkout/giftcard/GiftCardAction$Idle$Creator : and
 public final class com/adyen/checkout/giftcard/GiftCardAction$SendPayment : com/adyen/checkout/giftcard/GiftCardAction {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field INSTANCE Lcom/adyen/checkout/giftcard/GiftCardAction$SendPayment;
-	public fun describeContents ()I
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardAction$SendPayment$Creator : android/os/Parcelable$Creator {
@@ -111,7 +111,7 @@ public final class com/adyen/checkout/giftcard/GiftCardComponentState : android/
 	public final fun component6 ()Lcom/adyen/checkout/giftcard/GiftCardAction;
 	public final fun copy (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLjava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/giftcard/GiftCardAction;)Lcom/adyen/checkout/giftcard/GiftCardComponentState;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/giftcard/GiftCardComponentState;Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLjava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/giftcard/GiftCardAction;ILjava/lang/Object;)Lcom/adyen/checkout/giftcard/GiftCardComponentState;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getData ()Lcom/adyen/checkout/components/core/PaymentComponentData;
 	public final fun getGiftCardAction ()Lcom/adyen/checkout/giftcard/GiftCardAction;
@@ -122,7 +122,7 @@ public final class com/adyen/checkout/giftcard/GiftCardComponentState : android/
 	public fun isReady ()Z
 	public fun isValid ()Z
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardComponentState$Creator : android/os/Parcelable$Creator {
@@ -136,7 +136,7 @@ public final class com/adyen/checkout/giftcard/GiftCardComponentState$Creator : 
 public final class com/adyen/checkout/giftcard/GiftCardConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
@@ -144,7 +144,7 @@ public final class com/adyen/checkout/giftcard/GiftCardConfiguration : com/adyen
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public final fun isPinRequired ()Ljava/lang/Boolean;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
