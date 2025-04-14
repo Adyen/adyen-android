@@ -15,20 +15,24 @@ data class AdyenElements(
     val switch: AdyenSwitchStyle,
     val textField: AdyenTextFieldStyle,
     val segmentedButton: AdyenSegmentedButtonStyle,
-)
+) {
 
-fun adyenCheckoutElements(
-    cornerRadius: Int = DEFAULT_CORNER_RADIUS,
-    buttons: AdyenButtonStyles = AdyenButtonStyles(),
-    switch: AdyenSwitchStyle = AdyenSwitchStyle(),
-    textField: AdyenTextFieldStyle = AdyenTextFieldStyle(),
-    segmentedButton: AdyenSegmentedButtonStyle = AdyenSegmentedButtonStyle(),
-) = AdyenElements(
-    cornerRadius = cornerRadius,
-    buttons = buttons,
-    switch = switch,
-    textField = textField,
-    segmentedButton = segmentedButton,
-)
+    companion object {
 
-private const val DEFAULT_CORNER_RADIUS = 8
+        private const val DEFAULT_CORNER_RADIUS = 8
+
+        fun default(
+            cornerRadius: Int = DEFAULT_CORNER_RADIUS,
+            buttons: AdyenButtonStyles = AdyenButtonStyles(),
+            switch: AdyenSwitchStyle = AdyenSwitchStyle(),
+            textField: AdyenTextFieldStyle = AdyenTextFieldStyle(),
+            segmentedButton: AdyenSegmentedButtonStyle = AdyenSegmentedButtonStyle(),
+        ) = AdyenElements(
+            cornerRadius = cornerRadius,
+            buttons = buttons,
+            switch = switch,
+            textField = textField,
+            segmentedButton = segmentedButton,
+        )
+    }
+}
