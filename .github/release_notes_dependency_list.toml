@@ -75,6 +75,7 @@
 "org.junit.jupiter:junit-jupiter-api" = ""
 "org.junit.jupiter:junit-jupiter-engine" = ""
 "org.junit.jupiter:junit-jupiter-params" = ""
+"org.junit.platform:junit-platform-launcher" = ""
 "org.junit.vintage:junit-vintage-engine" = ""
 "org.mockito.kotlin:mockito-kotlin" = ""
 "org.mockito:mockito-android" = ""
