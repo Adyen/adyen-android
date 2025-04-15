@@ -86,4 +86,5 @@
 "kotlin-android" = ""
 "kotlin-parcelize" = ""
 "org.jetbrains.kotlin.android" = ""
+"org.jetbrains.kotlin.plugin.compose" = ""
 "org.jetbrains.kotlin:kotlin-parcelize-runtime" = ""
