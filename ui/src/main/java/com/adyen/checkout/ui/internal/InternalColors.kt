@@ -31,7 +31,7 @@ data class InternalColors(
     val textSecondary: Color,
 ) {
 
-    companion object {
+    internal companion object {
 
         fun from(colors: AdyenColors) = with(colors) {
             InternalColors(
