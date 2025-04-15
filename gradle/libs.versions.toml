@@ -65,7 +65,7 @@ barista = "4.3.0"
 espresso = "3.6.1"
 json = "20250107"
 jose4j = "0.9.6"
-junit-jupiter = "5.11.4"
+junit-jupiter = "5.12.1"
 konsist = "0.17.3"
 lint = "31.8.0"
 mockito-kotlin = "5.4.0"
@@ -140,6 +140,7 @@ json = { group = "org.json", name = "json", version.ref = "json" }
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit-jupiter" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit-jupiter" }
+junit-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
 junit-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit-jupiter" }
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 kotlinx-test-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
@@ -165,7 +166,7 @@ retrofit = ["retrofit-main", "retrofit-converter-moshi"]
 # Test bundles
 androidx-test = ["androidx-test-rules", "androidx-test-junit-ktx", "androidx-test-uiautomator"]
 espresso = ["espresso-contrib", "espresso-core", "espresso-intents"]
-junit = ["junit-jupiter-api", "junit-jupiter-engine", "junit-jupiter-params", "junit-vintage-engine"]
+junit = ["junit-jupiter-api", "junit-jupiter-engine", "junit-launcher", "junit-jupiter-params", "junit-vintage-engine"]
 kotlin-coroutines-test = ["kotlinx-test-coroutines", "cash-app-turbine"]
 mockito = ["mockito-junit-jupiter", "mockito-kotlin"]
 mockito-android = ["mockito-android-main", "mockito-kotlin"]
@@ -184,5 +185,3 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
-
-
