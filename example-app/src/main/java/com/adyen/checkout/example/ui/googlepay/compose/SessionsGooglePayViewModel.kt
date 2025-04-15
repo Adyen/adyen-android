@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -35,6 +36,7 @@ import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,7 +51,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
-    checkoutConfigurationProvider: CheckoutConfigurationProvider,
+    private val checkoutConfigurationProvider: CheckoutConfigurationProvider,
 ) : ViewModel(),
     SessionComponentCallback<GooglePayComponentState> {
 
@@ -62,12 +64,22 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     val stateEvents: StateFlow<SessionsGooglePayEvents> = _stateEvents.asStateFlow()
 
     init {
-        viewModelScope.launch { fetchSession() }
+        viewModelScope.launch {
+            fetchSession(checkoutConfiguration)
+
+            delay(5000)
+
+            val amount = Amount("EUR", 1001)
+            fetchSession(checkoutConfigurationProvider.create(amount), amount)
+        }
     }
 
-    private suspend fun fetchSession() = withContext(IODispatcher) {
+    private suspend fun fetchSession(
+        checkoutConfiguration: CheckoutConfiguration,
+        amount: Amount = keyValueStorage.getAmount(),
+    ) = withContext(IODispatcher) {
         val paymentMethodType = PaymentMethodTypes.GOOGLE_PAY
-        val checkoutSession = getSession(paymentMethodType)
+        val checkoutSession = getSession(paymentMethodType, amount)
         if (checkoutSession == null) {
             Log.e(TAG, "Failed to fetch session")
             onError()
@@ -91,12 +103,12 @@ internal class SessionsGooglePayViewModel @Inject constructor(
         updateState { SessionsGooglePayState.ShowButton }
     }
 
-    private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
+    private suspend fun getSession(paymentMethodType: String, amount: Amount): CheckoutSession? {
         val sessionModel = paymentsRepository.createSession(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
+                amount = amount,
                 countryCode = keyValueStorage.getCountry(),
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),

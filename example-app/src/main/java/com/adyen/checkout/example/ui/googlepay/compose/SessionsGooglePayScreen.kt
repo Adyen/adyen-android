@@ -12,6 +12,7 @@ package com.adyen.checkout.example.ui.googlepay.compose
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,8 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.components.compose.AdyenComponent
 import com.adyen.checkout.components.compose.get
 import com.adyen.checkout.example.ui.compose.ResultContent
@@ -96,17 +104,27 @@ private fun SessionsGooglePayContent(
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
-        when (googlePayState) {
-            SessionsGooglePayState.Loading -> {
-                CircularProgressIndicator()
+        Column {
+            var counter by remember { mutableIntStateOf(0) }
+            Button({ counter++ }) {
+                Text("plus")
             }
 
-            is SessionsGooglePayState.ShowButton -> {
-                AdyenComponent(googlePayComponent)
-            }
+            Text(counter.toString())
+            when (googlePayState) {
+                SessionsGooglePayState.Loading -> {
+                    CircularProgressIndicator()
+                }
 
-            is SessionsGooglePayState.FinalResult -> {
-                ResultContent(googlePayState.finalResult)
+                is SessionsGooglePayState.ShowButton -> {
+                    key(googlePayComponent.hashCode()) {
+                        AdyenComponent(googlePayComponent, Modifier.padding(counter.dp))
+                    }
+                }
+
+                is SessionsGooglePayState.FinalResult -> {
+                    ResultContent(googlePayState.finalResult)
+                }
             }
         }
     }

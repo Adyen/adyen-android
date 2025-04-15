@@ -52,56 +52,58 @@ internal class CheckoutConfigurationProvider @Inject constructor(
     private val environment = Environment.TEST
 
     override val checkoutConfig: CheckoutConfiguration
-        get() = CheckoutConfiguration(
-            environment = environment,
-            clientKey = clientKey,
-            shopperLocale = shopperLocale,
-            amount = amount,
-            analyticsConfiguration = getAnalyticsConfiguration(),
-        ) {
-            // Drop-in
-            dropIn {
-                setEnableRemovingStoredPaymentMethods(keyValueStorage.isRemoveStoredPaymentMethodEnabled())
-            }
+        get() = create()
 
-            // Payment methods
-            bcmc {
-                setShopperReference(keyValueStorage.getShopperReference())
-                setShowStorePaymentField(true)
-            }
-
-            card {
-                setShopperReference(keyValueStorage.getShopperReference())
-                setAddressConfiguration(getAddressConfiguration())
-                setInstallmentConfigurations(getInstallmentConfiguration())
-            }
-
-            cashAppPay {
-                setReturnUrl(CashAppPayComponent.getReturnUrl(context))
-            }
-
-            giftCard {
-                setPinRequired(true)
-            }
-
-            mealVoucherFR {
-                setSecurityCodeRequired(true)
-            }
-
-            googlePay {
-                setSubmitButtonVisible(true)
-                setCountryCode(keyValueStorage.getCountry())
-            }
-
-            instantPayment {
-                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
-            }
-
-            // Actions
-            adyen3DS2 {
-                setThreeDSRequestorAppURL("https://www.adyen.com")
-            }
+    fun create(amount: Amount? = null) = CheckoutConfiguration(
+        environment = environment,
+        clientKey = clientKey,
+        shopperLocale = shopperLocale,
+        amount = amount ?: this.amount,
+        analyticsConfiguration = getAnalyticsConfiguration(),
+    ) {
+        // Drop-in
+        dropIn {
+            setEnableRemovingStoredPaymentMethods(keyValueStorage.isRemoveStoredPaymentMethodEnabled())
         }
+
+        // Payment methods
+        bcmc {
+            setShopperReference(keyValueStorage.getShopperReference())
+            setShowStorePaymentField(true)
+        }
+
+        card {
+            setShopperReference(keyValueStorage.getShopperReference())
+            setAddressConfiguration(getAddressConfiguration())
+            setInstallmentConfigurations(getInstallmentConfiguration())
+        }
+
+        cashAppPay {
+            setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+        }
+
+        giftCard {
+            setPinRequired(true)
+        }
+
+        mealVoucherFR {
+            setSecurityCodeRequired(true)
+        }
+
+        googlePay {
+            setSubmitButtonVisible(true)
+            setCountryCode(keyValueStorage.getCountry())
+        }
+
+        instantPayment {
+            setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
+        }
+
+        // Actions
+        adyen3DS2 {
+            setThreeDSRequestorAppURL("https://www.adyen.com")
+        }
+    }
 
     private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
         val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {
