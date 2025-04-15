@@ -25,7 +25,7 @@ fun AdyenCheckoutTheme(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalColors provides theme.colors,
+        LocalColors provides InternalColors.from(theme.colors),
         LocalTextStyles provides theme.textStyles,
         LocalElements provides theme.elements,
     ) {
@@ -36,7 +36,7 @@ fun AdyenCheckoutTheme(
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object AdyenCheckoutTheme {
 
-    val colors: AdyenColors
+    val colors: InternalColors
         @Composable @ReadOnlyComposable get() = LocalColors.current
 
     val textStyles: AdyenTextStyles
@@ -46,6 +46,6 @@ object AdyenCheckoutTheme {
         @Composable @ReadOnlyComposable get() = LocalElements.current
 }
 
-private val LocalColors = staticCompositionLocalOf { AdyenColors.light() }
+private val LocalColors = staticCompositionLocalOf { InternalColors.from(AdyenColors.light()) }
 private val LocalTextStyles = staticCompositionLocalOf { AdyenTextStyles.default() }
 private val LocalElements = staticCompositionLocalOf { AdyenElements.default() }
