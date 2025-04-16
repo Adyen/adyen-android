@@ -32,8 +32,6 @@ fun <T> DelegateFieldState<T>.updateFieldState(
         ?: this.shouldHighlightValidationError,
 )
 
-// TODO Remove unused suppression
-@Suppress("unused")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <T> DelegateFieldState<T>.toViewFieldState() = ViewFieldState(
     value = value,
