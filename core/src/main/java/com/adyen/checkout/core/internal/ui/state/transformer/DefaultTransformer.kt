@@ -10,8 +10,6 @@ package com.adyen.checkout.core.internal.ui.state.transformer
 
 import androidx.annotation.RestrictTo
 
-// TODO Remove unused suppression
-@Suppress("unused")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultTransformer : FieldTransformer<Any> {
     override fun transform(value: Any) = value
