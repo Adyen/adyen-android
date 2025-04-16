@@ -3,26 +3,25 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 10/4/2025.
+ * Created by ozgur on 8/4/2025.
  */
-
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
-    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.compose
 }
 
 // Maven artifact
-ext.mavenArtifactId = "ui"
-ext.mavenArtifactName = "Adyen Checkout UI"
-ext.mavenArtifactDescription = "UI and styling foundation for Adyen Checkout."
+ext.mavenArtifactId = "core"
+ext.mavenArtifactName = "Adyen Checkout Core"
+ext.mavenArtifactDescription = "Adyen Checkout Core module."
 
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
-    // TODO - change to com.adyen.checkout.ui once we get rid of ui-core
-    namespace 'com.adyen.checkout.test'
+    // TODO fix the namespace since we're already using this
+    namespace 'com.adyen.checkout.core'
     compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
@@ -33,17 +32,22 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    testFixtures {
+        enable = true
+    }
+
     buildFeatures {
-        compose = true
+        compose true
     }
 }
 
 dependencies {
-    implementation platform(libs.compose.bom)
-    api libs.compose.material
-    api libs.compose.ui.graphics
-    api libs.compose.ui.main
-    api libs.compose.ui.tooling.preview
+    api project(":ui")
 
-    debugImplementation libs.compose.ui.tooling
+    api libs.bundles.androidx.lifecycle
+
+    implementation platform(libs.compose.bom)
+    implementation libs.bundles.compose.ui
+    implementation libs.compose.hilt
+    implementation libs.compose.viewmodel
 }

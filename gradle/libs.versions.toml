@@ -74,6 +74,9 @@ test-ext = "1.2.1"
 test-rules = "1.6.1"
 turbine = "1.2.0"
 uiautomator = "2.3.0"
+core-ktx = "1.15.0"
+junit = "4.13.2"
+junit-version = "1.2.1"
 
 [libraries]
 
@@ -149,6 +152,9 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 mockito-android-main = { group = "org.mockito", name = "mockito-android", version.ref = "mockito" }
 mock-web-server = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit-version" }
 
 [bundles]
 
