@@ -22,8 +22,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-// TODO Remove unused suppression
-@Suppress("unused")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultDelegateStateManager<S : DelegateState, FI : FieldId>(
     private val factory: DelegateStateFactory<S, FI>,
