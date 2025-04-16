@@ -10,4 +10,7 @@ package com.adyen.checkout.core.internal.ui
 
 // TODO - Some delegates might not be composable,
 //  Move ComposableDelegate to PaymentMethod specific delegate later
-internal interface PaymentDelegate : ComposableDelegate
+internal interface PaymentDelegate : ComposableDelegate {
+
+    fun submit()
+}
