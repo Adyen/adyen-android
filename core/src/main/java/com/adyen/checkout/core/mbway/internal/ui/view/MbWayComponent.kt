@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 16/4/2025.
+ * Created by ararat on 16/4/2025.
  */
 
-package com.adyen.checkout.core.internal.ui.view
+package com.adyen.checkout.core.mbway.internal.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.OutlinedTextField
@@ -15,10 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
-import com.adyen.checkout.core.internal.ui.state.FieldId
+import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 
 @Composable
-fun MbWayComponent(
+internal fun MbWayComponent(
     fieldChangeListener: FieldChangeListener<MBWayFieldId>,
     modifier: Modifier = Modifier,
 ) {
@@ -55,7 +55,3 @@ fun MbWayComponent(
     }
 }
 
-enum class MBWayFieldId : FieldId {
-    COUNTRY_CODE,
-    PHONE_NUMBER
-}
