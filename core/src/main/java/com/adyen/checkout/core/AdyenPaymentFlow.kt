@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.core
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
+import com.adyen.checkout.core.internal.ui.view.PayButton
 
 // TODO - Change Name?
 @Suppress("UnusedParameter")
@@ -25,5 +27,10 @@ fun AdyenPaymentFlow(
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent()
     }
-    adyenComponent.ViewFactory()
+    Column {
+        adyenComponent.ViewFactory()
+        PayButton(
+            onClick = adyenComponent::submit
+        )
+    }
 }
