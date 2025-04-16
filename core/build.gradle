@@ -9,6 +9,7 @@ plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.compose
 }
 
 // Maven artifact
@@ -19,6 +20,7 @@ ext.mavenArtifactDescription = "Adyen Checkout Core module."
 apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
 
 android {
+    // TODO fix the namespace since we're already using this
     namespace 'com.adyen.checkout.core'
     compileSdk libs.versions.compile.sdk.get().toInteger()
 
@@ -37,13 +39,10 @@ android {
     buildFeatures {
         compose true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
-    }
 }
 
 dependencies {
+    api project(":ui")
 
     api libs.bundles.androidx.lifecycle
 
