@@ -6,9 +6,14 @@
  * Created by ararat on 16/4/2025.
  */
 
-package com.adyen.checkout.core.internal.ui.state
+package com.adyen.checkout.core.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.StringRes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldId
+data class ViewFieldState<T>(
+    val value: T,
+    val hasFocus: Boolean = false,
+    @StringRes val errorMessageId: Int? = null,
+)
