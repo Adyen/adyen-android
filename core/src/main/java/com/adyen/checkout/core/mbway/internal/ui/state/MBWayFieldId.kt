@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.state
 
-import com.adyen.checkout.core.internal.ui.state.FieldId
+import com.adyen.checkout.core.internal.ui.state.model.FieldId
 
 internal enum class MBWayFieldId : FieldId {
     COUNTRY_CODE,
