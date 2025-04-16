@@ -25,4 +25,8 @@ internal class AdyenComponent : ViewModel() {
     internal fun ViewFactory(modifier: Modifier = Modifier) {
         paymentFacilitator.ViewFactory(modifier)
     }
+
+    fun submit() {
+        paymentFacilitator.submit()
+    }
 }

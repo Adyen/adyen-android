@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    api project(":ui")
 
     api libs.bundles.androidx.lifecycle
 

@@ -21,4 +21,8 @@ internal class PaymentFacilitator {
     fun ViewFactory(modifier: Modifier = Modifier) {
         paymentDelegate.ViewFactory(modifier)
     }
+
+    fun submit() {
+        paymentDelegate.submit()
+    }
 }
