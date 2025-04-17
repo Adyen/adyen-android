@@ -20,9 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.ui.theme.AdyenTextStyle
+import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -101,8 +103,10 @@ private fun AdyenText(
 
 @Preview
 @Composable
-private fun TextPreview() {
-    AdyenCheckoutTheme {
+private fun TextPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+) {
+    AdyenCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
