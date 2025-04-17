@@ -27,10 +27,10 @@ fun AdyenPaymentFlow(
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent()
     }
-    Column {
+    Column(modifier = modifier) {
         adyenComponent.ViewFactory()
         PayButton(
-            onClick = adyenComponent::submit
+            onClick = adyenComponent::submit,
         )
     }
 }
