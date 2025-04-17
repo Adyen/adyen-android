@@ -37,13 +37,19 @@ fun AdyenCheckoutTheme(
 object AdyenCheckoutTheme {
 
     val colors: InternalColors
-        @Composable @ReadOnlyComposable get() = LocalColors.current
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalColors.current
 
     val textStyles: AdyenTextStyles
-        @Composable @ReadOnlyComposable get() = LocalTextStyles.current
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalTextStyles.current
 
     val elements: AdyenElements
-        @Composable @ReadOnlyComposable get() = LocalElements.current
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalElements.current
 }
 
 private val LocalColors = staticCompositionLocalOf { InternalColors.from(AdyenColors.light()) }

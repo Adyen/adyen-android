@@ -25,3 +25,10 @@ public final class com/adyen/checkout/core/internal/ui/view/PayButtonKt {
 	public static final fun PayButton (Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt {
+	public static final field INSTANCE Lcom/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt;
+	public fun <init> ()V
+	public final fun getLambda-1$core_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda-2$core_release ()Lkotlin/jvm/functions/Function2;
+}
+
