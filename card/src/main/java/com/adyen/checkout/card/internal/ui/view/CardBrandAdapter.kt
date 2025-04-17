@@ -8,37 +8,48 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.CardBrandItemBinding
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
+import com.adyen.checkout.ui.core.internal.ui.loadLogo
 
 internal class CardBrandAdapter : ListAdapter<CardBrandItem, CardBrandItemViewHolder>(CardBrandItemDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardBrandItemViewHolder {
-        TODO("Not yet implemented")
+        val binding = CardBrandItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CardBrandItemViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CardBrandItemViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val cardBrandItem = currentList[position]
+        holder.bind(cardBrandItem)
     }
 }
 
-internal class CardBrandItemViewHolder(binding: CardBrandItemBinding) : RecyclerView.ViewHolder(binding.root) {
+internal class CardBrandItemViewHolder(
+    private val binding: CardBrandItemBinding
+) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind() {
-        TODO("Not yet implemented")
+    fun bind(cardBrandItem: CardBrandItem) {
+        binding.imageViewCardBrandLogo.loadLogo(
+            cardBrandItem.environment,
+            cardBrandItem.brand.txVariant,
+        )
+        binding.textViewCardBrandName.text = cardBrandItem.name
+        binding.radioButtonCardBrand.isSelected = cardBrandItem.isSelected
     }
 }
 
 internal object CardBrandItemDiffCallback : DiffUtil.ItemCallback<CardBrandItem>() {
     override fun areItemsTheSame(oldItem: CardBrandItem, newItem: CardBrandItem): Boolean {
-        TODO("Not yet implemented")
+        return oldItem.brand.txVariant == newItem.brand.txVariant
     }
 
     override fun areContentsTheSame(oldItem: CardBrandItem, newItem: CardBrandItem): Boolean {
-        TODO("Not yet implemented")
+        return oldItem == newItem
     }
 }
