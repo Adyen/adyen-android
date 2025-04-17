@@ -17,7 +17,9 @@ import com.adyen.checkout.card.databinding.CardBrandItemBinding
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 
-internal class CardBrandAdapter : ListAdapter<CardBrandItem, CardBrandItemViewHolder>(CardBrandItemDiffCallback) {
+internal class CardBrandAdapter(
+    private val onItemClicked: (CardBrandItem) -> Unit,
+) : ListAdapter<CardBrandItem, CardBrandItemViewHolder>(CardBrandItemDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardBrandItemViewHolder {
         val binding = CardBrandItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -26,15 +28,18 @@ internal class CardBrandAdapter : ListAdapter<CardBrandItem, CardBrandItemViewHo
 
     override fun onBindViewHolder(holder: CardBrandItemViewHolder, position: Int) {
         val cardBrandItem = currentList[position]
-        holder.bind(cardBrandItem)
+        holder.bind(cardBrandItem, onItemClicked)
     }
 }
 
 internal class CardBrandItemViewHolder(
-    private val binding: CardBrandItemBinding
+    private val binding: CardBrandItemBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(cardBrandItem: CardBrandItem) {
+    fun bind(cardBrandItem: CardBrandItem, onItemClicked: (CardBrandItem) -> Unit) {
+        binding.root.setOnClickListener {
+            onItemClicked(cardBrandItem)
+        }
         binding.imageViewCardBrandLogo.loadLogo(
             cardBrandItem.environment,
             cardBrandItem.brand.txVariant,
