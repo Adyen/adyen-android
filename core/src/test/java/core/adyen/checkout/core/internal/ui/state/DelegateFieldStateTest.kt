@@ -66,7 +66,7 @@ internal class DelegateFieldStateTest {
     }
 
     @Test
-    fun `when toComponentFieldViewState is called with valid validation, then errorMessageId should be null`() {
+    fun `when toViewFieldState is called with valid validation, then errorMessageId should be null`() {
         val viewState = initialState.toViewFieldState()
 
         assertEquals("initial", viewState.value)
@@ -75,7 +75,7 @@ internal class DelegateFieldStateTest {
     }
 
     @Test
-    fun `when toComponentFieldViewState is called with invalid validation and shouldHighlightValidationError is true, then errorMessageId should be set`() {
+    fun `when toViewFieldState is called with invalid validation and shouldHighlightValidationError is true, then errorMessageId should be set`() {
         val updatedState = initialState.copy(
             validation = Validation.Invalid(456),
             shouldHighlightValidationError = true,
@@ -88,7 +88,7 @@ internal class DelegateFieldStateTest {
     }
 
     @Test
-    fun `when toComponentFieldViewState is called with invalid validation and shouldHighlightValidationError is false, then errorMessageId should be null`() {
+    fun `when toViewFieldState is called with invalid validation and shouldHighlightValidationError is false, then errorMessageId should be null`() {
         val updatedState = initialState.copy(
             validation = Validation.Invalid(456),
             shouldHighlightValidationError = false,

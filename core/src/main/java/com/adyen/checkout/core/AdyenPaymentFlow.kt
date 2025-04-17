@@ -10,6 +10,8 @@ package com.adyen.checkout.core
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
@@ -24,13 +26,18 @@ fun AdyenPaymentFlow(
     modifier: Modifier = Modifier,
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
+    // TODO - Decide where to create the coroutineScope
+    val coroutineScope = rememberCoroutineScope()
     val adyenComponent = viewModel(key = txVariant) {
-        AdyenComponent()
+        AdyenComponent(coroutineScope)
     }
-    Column {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         adyenComponent.ViewFactory()
         PayButton(
-            onClick = adyenComponent::submit
+            onClick = adyenComponent::submit,
         )
     }
 }
