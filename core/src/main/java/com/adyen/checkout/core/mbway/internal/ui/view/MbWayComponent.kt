@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.mbway.internal.ui.view
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 
 @Composable
 internal fun MbWayComponent(
@@ -28,11 +30,22 @@ internal fun MbWayComponent(
         // CountryCode
         OutlinedTextField(
             modifier = Modifier
+                .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     fieldChangeListener.onFieldFocusChanged(MBWayFieldId.COUNTRY_CODE, focusState.hasFocus)
                 },
             label = {
                 Text("Country Code")
+            },
+            isError = viewState.countryCodeFieldState.errorMessageId != null,
+            supportingText = {
+                if (viewState.countryCodeFieldState.errorMessageId != null) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "The country code is invalid",
+                        color = AdyenCheckoutTheme.colors.destructive,
+                    )
+                }
             },
             value = viewState.countryCodeFieldState.value,
             onValueChange = { value ->
@@ -43,11 +56,22 @@ internal fun MbWayComponent(
         // PhoneNumber
         OutlinedTextField(
             modifier = Modifier
+                .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     fieldChangeListener.onFieldFocusChanged(MBWayFieldId.PHONE_NUMBER, focusState.hasFocus)
                 },
             label = {
                 Text("Phone Number")
+            },
+            isError = viewState.phoneNumberFieldState.errorMessageId != null,
+            supportingText = {
+                if (viewState.phoneNumberFieldState.errorMessageId != null) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "The phone number is invalid",
+                        color = AdyenCheckoutTheme.colors.destructive,
+                    )
+                }
             },
             value = viewState.phoneNumberFieldState.value,
             onValueChange = { value ->
