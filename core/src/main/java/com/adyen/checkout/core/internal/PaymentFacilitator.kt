@@ -11,11 +11,13 @@ package com.adyen.checkout.core.internal
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegate
+import kotlinx.coroutines.CoroutineScope
 
-internal class PaymentFacilitator {
+internal class PaymentFacilitator(coroutineScope: CoroutineScope) {
 
-    // TODO - Make it a val, initialize it
-    private lateinit var paymentDelegate: PaymentDelegate
+    // TODO - Make it a val, initialize it based on txVariant?
+    private val paymentDelegate: PaymentDelegate = MBWayDelegate(coroutineScope)
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
