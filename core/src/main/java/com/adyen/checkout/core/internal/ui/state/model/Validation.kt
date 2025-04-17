@@ -14,6 +14,8 @@ import androidx.annotation.StringRes
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class Validation {
 
+    fun isValid(): Boolean = this is Valid
+
     /**
      * Field is valid and can be accepted.
      */
