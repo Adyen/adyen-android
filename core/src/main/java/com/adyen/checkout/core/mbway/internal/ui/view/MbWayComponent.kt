@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
+import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 
 @Composable
 internal fun MbWayComponent(
+    viewState: MBWayViewState,
     fieldChangeListener: FieldChangeListener<MBWayFieldId>,
     modifier: Modifier = Modifier,
 ) {
@@ -32,7 +34,7 @@ internal fun MbWayComponent(
             label = {
                 Text("Country Code")
             },
-            value = "",
+            value = viewState.countryCodeFieldState.value,
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, value)
             },
@@ -47,7 +49,7 @@ internal fun MbWayComponent(
             label = {
                 Text("Phone Number")
             },
-            value = "",
+            value = viewState.phoneNumberFieldState.value,
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
             },
