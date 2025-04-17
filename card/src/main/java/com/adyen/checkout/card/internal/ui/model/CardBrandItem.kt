@@ -8,4 +8,13 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-internal class CardBrandItem
+import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.Environment
+
+internal data class CardBrandItem(
+    val name: String,
+    val brand: CardBrand,
+    val isSelected: Boolean,
+    // We need the environment to load the logo
+    val environment: Environment,
+)
