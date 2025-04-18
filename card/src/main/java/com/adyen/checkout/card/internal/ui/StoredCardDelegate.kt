@@ -249,6 +249,7 @@ internal class StoredCardDelegate(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
+            dualBrandCardBrands = emptyList(),
         )
     }
 

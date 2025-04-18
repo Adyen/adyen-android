@@ -136,6 +136,19 @@
             android:nextFocusForward="@id/editText_postalCode" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_cobadgeBrands"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/standard_one_half_margin"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:visibility="visible" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout_postalCode"
         style="@style/AdyenCheckout.TextInputLayout"

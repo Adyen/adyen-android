@@ -45,7 +45,7 @@ internal class CardBrandItemViewHolder(
             cardBrandItem.brand.txVariant,
         )
         binding.textViewCardBrandName.text = cardBrandItem.name
-        binding.radioButtonCardBrand.isSelected = cardBrandItem.isSelected
+        binding.radioButtonCardBrand.isChecked = cardBrandItem.isSelected
     }
 }
 
