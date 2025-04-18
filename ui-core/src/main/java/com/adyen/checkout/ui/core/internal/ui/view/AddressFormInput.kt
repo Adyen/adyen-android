@@ -119,14 +119,15 @@ class AddressFormInput @JvmOverloads constructor(
             inputType = 0
             setAdapter(countryAdapter)
             onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                val selectedCountryCode = countryAdapter.getItem(position).code
-                if (delegate.addressOutputData.country.value != selectedCountryCode) {
+                val selectedCountry = countryAdapter.getItem(position)
+                if (delegate.addressOutputData.country.value != selectedCountry.code) {
                     delegate.updateAddressInputData {
                         // Only reset state/province, so filled in data is retained.
                         stateOrProvince = ""
-                        country = selectedCountryCode
+                        country = selectedCountry.code
+                        countryDisplayName = selectedCountry.name
                     }
-                    populateFormFields(AddressSpecification.fromString(selectedCountryCode))
+                    populateFormFields(AddressSpecification.fromString(selectedCountry.code))
                 }
                 textInputLayoutCountry?.hideError()
             }

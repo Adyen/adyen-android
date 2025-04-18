@@ -69,6 +69,7 @@ object AddressValidationUtils {
                 isOptional = isOptional,
                 countryOptions = countryOptions,
                 stateOptions = stateOptions,
+                countryDisplayName = countryDisplayName,
             )
         }
     }
@@ -92,6 +93,7 @@ object AddressValidationUtils {
                 isOptional = isOptional,
                 countryOptions = countryOptions,
                 stateOptions = stateOptions,
+                countryDisplayName = countryDisplayName,
             )
         }
     }
@@ -112,6 +114,7 @@ object AddressValidationUtils {
                 isOptional = true,
                 countryOptions = emptyList(),
                 stateOptions = emptyList(),
+                countryDisplayName = countryDisplayName,
             )
         }
     }

@@ -613,7 +613,8 @@ internal class DefaultCardDelegateTest(
                         houseNumberOrName = "6"
                         apartmentSuite = "apt"
                         city = "Amsterdam"
-                        country = "Netherlands"
+                        country = "NL"
+                        countryDisplayName = "Netherlands"
                     }
                 }
 
@@ -625,7 +626,7 @@ internal class DefaultCardDelegateTest(
 
                 val expectedCountries = AddressFormUtils.markAddressListItemSelected(
                     list = countryOptions,
-                    code = null,
+                    code = "NL",
                 )
 
                 val expectedAddressOutputData = createAddressOutputData(
@@ -635,10 +636,11 @@ internal class DefaultCardDelegateTest(
                     houseNumberOrName = FieldState("6", Validation.Valid),
                     apartmentSuite = FieldState("apt", Validation.Valid),
                     city = FieldState("Amsterdam", Validation.Valid),
-                    country = FieldState("Netherlands", Validation.Valid),
+                    country = FieldState("NL", Validation.Valid),
                     isOptional = false,
                     countryOptions = expectedCountries,
                     stateOptions = AddressFormUtils.initializeStateOptions(TestAddressRepository.STATES),
+                    countryDisplayName = "Netherlands",
                 )
 
                 val expectedDetectedCardTypes = detectCardTypeRepository.getDetectedCardTypesLocal(supportedCardBrands)
@@ -1448,7 +1450,8 @@ internal class DefaultCardDelegateTest(
         country: FieldState<String> = FieldState("", Validation.Valid),
         isOptional: Boolean = true,
         countryOptions: List<AddressListItem> = emptyList(),
-        stateOptions: List<AddressListItem> = emptyList()
+        stateOptions: List<AddressListItem> = emptyList(),
+        countryDisplayName: String = "",
     ): AddressOutputData {
         return AddressOutputData(
             postalCode = postalCode,
@@ -1461,6 +1464,7 @@ internal class DefaultCardDelegateTest(
             isOptional = isOptional,
             countryOptions = countryOptions,
             stateOptions = stateOptions,
+            countryDisplayName = countryDisplayName,
         )
     }
 

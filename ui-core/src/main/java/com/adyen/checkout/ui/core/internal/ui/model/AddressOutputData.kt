@@ -23,7 +23,8 @@ data class AddressOutputData(
     val country: FieldState<String>,
     val isOptional: Boolean,
     val countryOptions: List<AddressListItem>,
-    val stateOptions: List<AddressListItem>
+    val stateOptions: List<AddressListItem>,
+    val countryDisplayName: String,
 ) : OutputData {
 
     override val isValid: Boolean
@@ -48,7 +49,7 @@ data class AddressOutputData(
             postalCode.value,
             city.value,
             stateOrProvince.value,
-            country.value,
+            countryDisplayName,
         )
             .filter { it.isNotBlank() }
             .joinToString(", ")
