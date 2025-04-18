@@ -100,6 +100,7 @@ internal class StoredCardDelegate(
         isSupported = true,
         panLength = null,
         paymentMethodVariant = null,
+        localizedBrand = null
     )
 
     private val inputData: CardInputData = CardInputData()
