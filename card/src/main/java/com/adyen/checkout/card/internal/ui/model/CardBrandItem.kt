@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.Environment
 
-internal data class CardBrandItem(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+data class CardBrandItem(
     val name: String,
     val brand: CardBrand,
     val isSelected: Boolean,

@@ -635,6 +635,7 @@ internal class StoredCardDelegateTest(
             isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
+            dualBrandCardBrands = emptyList(), // TODO
         )
     }
 
@@ -648,7 +649,6 @@ internal class StoredCardDelegateTest(
         isSupported: Boolean = true,
         panLength: Int? = null,
         paymentMethodVariant: String? = null,
-        isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
             cardBrand = cardBrand,
@@ -659,7 +659,6 @@ internal class StoredCardDelegateTest(
             isSupported = isSupported,
             panLength = panLength,
             paymentMethodVariant = paymentMethodVariant,
-            isSelected = isSelected,
         )
     }
 

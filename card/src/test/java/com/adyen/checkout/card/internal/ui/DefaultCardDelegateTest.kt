@@ -25,6 +25,7 @@ import com.adyen.checkout.card.internal.data.api.TestDetectedCardType
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
@@ -450,18 +451,28 @@ internal class DefaultCardDelegateTest(
                     cardNumber = invalidLuhnCardNumber
                 }
 
-                // we need to update selectedCardIndex separate from cardNumber to simulate the actual use case
-                delegate.updateInputData {
-                    selectedCardIndex = 1
-                }
-
-                val expectedDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-                    detectedCardTypes = detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardBrands),
-                    selectedCardIndex = 1,
+                val selectedCardItem = CardBrandItem(
+                    name = "Maestro",
+                    brand = CardBrand(CardType.MAESTRO),
+                    isSelected = true,
+                    environment = Environment.TEST,
                 )
 
+                // we need to update selectedCardIndex separate from cardNumber to simulate the actual use case
+                delegate.updateInputData {
+                    this.selectedCardItem = selectedCardItem
+                }
+
+                val expectedDetectedCardTypes =
+                    detectCardTypeRepository.getDetectedCardTypesDualBranded(supportedCardBrands)
+
                 val selectedCard =
-                    requireNotNull(DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(expectedDetectedCardTypes))
+                    requireNotNull(
+                        DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
+                            expectedDetectedCardTypes,
+                            selectedCardItem,
+                        ),
+                    )
 
                 assertFalse(selectedCard.enableLuhnCheck)
                 assertEquals(Brand.FieldPolicy.HIDDEN, selectedCard.expiryDatePolicy)
@@ -604,7 +615,6 @@ internal class DefaultCardDelegateTest(
                     kcpBirthDateOrTaxNumber = "9011672845"
                     kcpCardPassword = "12"
                     isStorePaymentMethodSwitchChecked = true
-                    selectedCardIndex = 0
                     installmentOption = installmentModel
                     address.apply {
                         postalCode = "1011 DJ"
@@ -846,7 +856,6 @@ internal class DefaultCardDelegateTest(
                 val detectedCardTypes = listOf(
                     createDetectedCardType(),
                     createDetectedCardType(
-                        isSelected = true,
                         cardBrand = CardBrand(cardType = CardType.VISA),
                     ),
                 )
@@ -871,6 +880,20 @@ internal class DefaultCardDelegateTest(
                             CardListItem(CardBrand(cardType = CardType.VISA), false, Environment.TEST),
                             CardListItem(CardBrand(cardType = CardType.MASTERCARD), false, Environment.TEST),
                             CardListItem(CardBrand(cardType = CardType.AMERICAN_EXPRESS), false, Environment.TEST),
+                        ),
+                        dualBrandedCardBrands = listOf(
+                            CardBrandItem(
+                                name = "Visa",
+                                brand = CardBrand(cardType = CardType.VISA),
+                                isSelected = true,
+                                environment = Environment.TEST,
+                            ),
+                            CardBrandItem(
+                                name = "MasterCard",
+                                brand = CardBrand(cardType = CardType.MASTERCARD),
+                                isSelected = false,
+                                environment = Environment.TEST,
+                            ),
                         ),
                     ),
                 )
@@ -1385,7 +1408,8 @@ internal class DefaultCardDelegateTest(
                 Environment.TEST,
             ),
         ),
-        isCardListVisible: Boolean = true
+        isCardListVisible: Boolean = true,
+        dualBrandedCardBrands: List<CardBrandItem> = emptyList(),
     ): CardOutputData {
         return CardOutputData(
             cardNumberState = cardNumberState,
@@ -1411,6 +1435,7 @@ internal class DefaultCardDelegateTest(
             isDualBranded = isDualBranded,
             kcpBirthDateOrTaxNumberHint = kcpBirthDateOrTaxNumberHint,
             isCardListVisible = isCardListVisible,
+            dualBrandCardBrands = dualBrandedCardBrands,
         )
     }
 
@@ -1424,7 +1449,6 @@ internal class DefaultCardDelegateTest(
         isSupported: Boolean = true,
         panLength: Int? = null,
         paymentMethodVariant: String? = null,
-        isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
             cardBrand = cardBrand,
@@ -1435,7 +1459,6 @@ internal class DefaultCardDelegateTest(
             isSupported = isSupported,
             panLength = panLength,
             paymentMethodVariant = paymentMethodVariant,
-            isSelected = isSelected,
         )
     }
 

@@ -20,6 +20,7 @@ import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
@@ -271,7 +272,7 @@ class DefaultCardDelegate(
             }
             .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
             .distinctUntilChanged()
-            .onEach { inputData.selectedCardIndex = -1 }
+            .onEach { inputData.selectedCardItem = null }
             .launchIn(coroutineScope)
     }
 
@@ -335,12 +336,10 @@ class DefaultCardDelegate(
 
         val isReliable = detectedCardTypes.any { it.isReliable }
 
-        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-            detectedCardTypes,
-            inputData.selectedCardIndex,
-        )
+        val filteredDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
         val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
             detectedCardTypes = filteredDetectedCardTypes,
+            inputData.selectedCardItem,
         )
 
         // perform a Luhn Check if no brands are detected
@@ -379,6 +378,10 @@ class DefaultCardDelegate(
             holderNameUIState = getHolderNameUIState(),
             showStorePaymentField = showStorePaymentField(),
             detectedCardTypes = filteredDetectedCardTypes,
+            dualBrandCardBrands = mapToCardBrandItemList(
+                getReliableDetectedCards(filteredDetectedCardTypes),
+                inputData.selectedCardItem,
+            ),
             isSocialSecurityNumberRequired = isSocialSecurityNumberRequired(),
             isKCPAuthRequired = isKCPAuthRequired(),
             addressUIState = addressFormUIState,
@@ -420,6 +423,7 @@ class DefaultCardDelegate(
 
         val firstCardBrand = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
             detectedCardTypes = outputData.detectedCardTypes,
+            selectedCardBrandItem = outputData.dualBrandCardBrands.firstOrNull { it.isSelected },
         )?.cardBrand
 
         val binValue =
@@ -737,7 +741,7 @@ class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            brand = getCardBrand(stateOutputData.detectedCardTypes)
+            brand = getCardBrand(stateOutputData.detectedCardTypes, stateOutputData.dualBrandCardBrands)
 
             fundingSource = getFundingSource()
 
@@ -759,9 +763,29 @@ class DefaultCardDelegate(
     }
 
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
-        val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
-        return reliableDetectedCards.size > 1
+        return getReliableDetectedCards(detectedCardTypes).size > 1
     }
+
+    private fun getReliableDetectedCards(detectedCardTypes: List<DetectedCardType>) =
+        detectedCardTypes.filter { it.isReliable }.takeIf { it.size > 1 }.orEmpty()
+
+    private fun mapToCardBrandItemList(detectedCardTypes: List<DetectedCardType>, selectedCardBrand: CardBrandItem?) =
+        detectedCardTypes.mapIndexed { index, detectedCardType ->
+            if (selectedCardBrand == null) {
+                detectedCardType.mapToCardBrandItem(index == 0)
+            } else {
+                detectedCardType.mapToCardBrandItem(
+                    detectedCardType.cardBrand.txVariant == selectedCardBrand.brand.txVariant,
+                )
+            }
+        }
+
+    private fun DetectedCardType.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
+        name = paymentMethodVariant.orEmpty(),
+        brand = cardBrand,
+        isSelected = isSelected,
+        environment = componentParams.environment,
+    )
 
     private fun showStorePaymentField(): Boolean {
         return componentParams.isStorePaymentFieldVisible
@@ -815,10 +839,14 @@ class DefaultCardDelegate(
         }
     }
 
-    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
+    private fun getCardBrand(
+        detectedCardTypes: List<DetectedCardType>,
+        dualBrandCardBrands: List<CardBrandItem>,
+    ): String? {
         return if (isDualBrandedFlow(detectedCardTypes)) {
             DetectedCardTypesUtils.getSelectedCardType(
                 detectedCardTypes = detectedCardTypes,
+                selectedCardBrandItem = dualBrandCardBrands.firstOrNull { it.isSelected },
             )
         } else {
             val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
