@@ -452,6 +452,7 @@ internal class AddressFormUtilsTest {
             isOptional = false,
             countryOptions = emptyList(),
             stateOptions = emptyList(),
+            countryDisplayName = "",
         )
 
         @JvmStatic

@@ -19,6 +19,7 @@ data class AddressInputModel(
     var apartmentSuite: String = "",
     var city: String = "",
     var country: String = "",
+    var countryDisplayName: String = "",
 ) {
 
     fun set(addressInputModel: AddressInputModel) {
@@ -29,6 +30,7 @@ data class AddressInputModel(
         apartmentSuite = addressInputModel.apartmentSuite
         city = addressInputModel.city
         country = addressInputModel.country
+        countryDisplayName = addressInputModel.countryDisplayName
     }
 
     /**
@@ -44,6 +46,7 @@ data class AddressInputModel(
         houseNumberOrName = ""
         apartmentSuite = ""
         city = ""
+        countryDisplayName = ""
     }
 
     /**
@@ -59,6 +62,7 @@ data class AddressInputModel(
         houseNumberOrName = ""
         apartmentSuite = ""
         city = ""
+        countryDisplayName = ""
     }
 
     val isEmpty

@@ -28,9 +28,10 @@ internal class AddressOutputDataTest {
             isOptional = false,
             countryOptions = emptyList(),
             stateOptions = emptyList(),
+            countryDisplayName = "countryDisplayName",
         )
 
-        val expected = "street houseNumberOrName apartmentSuite\npostalCode, city, stateOrProvince, country"
+        val expected = "street houseNumberOrName apartmentSuite\npostalCode, city, stateOrProvince, countryDisplayName"
         assertEquals(expected, addressOutputData.formatted())
     }
 }

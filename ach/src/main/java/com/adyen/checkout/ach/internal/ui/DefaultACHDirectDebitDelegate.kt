@@ -223,6 +223,7 @@ internal class DefaultACHDirectDebitDelegate(
                 )
                 countryOptions.firstOrNull { it.selected }?.let {
                     inputData.address.country = it.code
+                    inputData.address.countryDisplayName = it.name
                     requestStateList(it.code)
                 }
                 updateOutputData(countryOptions = countryOptions)

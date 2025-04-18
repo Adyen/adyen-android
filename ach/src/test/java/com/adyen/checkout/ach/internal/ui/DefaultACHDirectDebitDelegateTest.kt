@@ -488,6 +488,7 @@ internal class DefaultACHDirectDebitDelegateTest(
                     city = FieldState(adddressInputModel.city, Validation.Valid),
                     country = FieldState(adddressInputModel.country, Validation.Valid),
                     isOptional = false,
+                    countryDisplayName = adddressInputModel.countryDisplayName,
                 )
 
                 val addressUIState = AddressFormUIState.FULL_ADDRESS
@@ -717,7 +718,8 @@ internal class DefaultACHDirectDebitDelegateTest(
         country: FieldState<String> = FieldState("", Validation.Valid),
         isOptional: Boolean = true,
         countryOptions: List<AddressListItem> = emptyList(),
-        stateOptions: List<AddressListItem> = emptyList()
+        stateOptions: List<AddressListItem> = emptyList(),
+        countryDisplayName: String = "",
     ): AddressOutputData {
         return AddressOutputData(
             postalCode = postalCode,
@@ -730,6 +732,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             isOptional = isOptional,
             countryOptions = countryOptions,
             stateOptions = stateOptions,
+            countryDisplayName = countryDisplayName,
         )
     }
 
@@ -776,7 +779,8 @@ internal class DefaultACHDirectDebitDelegateTest(
             houseNumberOrName = "44",
             apartmentSuite = "apartment",
             city = "Istanbul",
-            country = "Turkey",
+            country = "TR",
+            countryDisplayName = "Turkey"
         )
     }
 
