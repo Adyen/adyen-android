@@ -52,4 +52,4 @@ data class InternalColors(
     }
 }
 
-private fun AdyenColor.toCompose() = Color(value)
+internal fun AdyenColor.toCompose() = Color(value)
