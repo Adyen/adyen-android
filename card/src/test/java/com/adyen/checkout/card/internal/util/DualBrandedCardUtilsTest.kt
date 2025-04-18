@@ -35,6 +35,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
         assertEquals(detectedCards, DualBrandedCardUtils.sortBrands(detectedCards))
@@ -52,6 +53,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.VISA),
@@ -62,6 +64,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -75,6 +78,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -85,6 +89,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -103,6 +108,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -113,6 +119,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -126,6 +133,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.CARTEBANCAIRE),
@@ -136,6 +144,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -154,6 +163,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(txVariant = "plcc_mastercard"),
@@ -164,6 +174,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -177,6 +188,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -187,6 +199,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -205,6 +218,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -215,6 +229,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 
@@ -228,6 +243,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = CardBrand(cardType = CardType.MASTERCARD),
@@ -238,6 +254,7 @@ internal class DualBrandedCardUtilsTest {
                 isSupported = true,
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
 

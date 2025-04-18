@@ -781,7 +781,7 @@ class DefaultCardDelegate(
         }
 
     private fun DetectedCardType.mapToCardBrandItem(isSelected: Boolean) = CardBrandItem(
-        name = paymentMethodVariant.orEmpty(),
+        name = localizedBrand ?: cardBrand.txVariant,
         brand = cardBrand,
         isSelected = isSelected,
         environment = componentParams.environment,
