@@ -20,11 +20,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -36,7 +34,6 @@ fun PrimaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    icon: Int? = null,
     isLoading: Boolean = false,
 ) {
     val buttonStyles = AdyenCheckoutTheme.elements.buttons
@@ -44,7 +41,6 @@ fun PrimaryButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        icon = icon,
         isLoading = isLoading,
         cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
         style = ButtonDefaults.primaryButtonStyle(buttonStyles.primary),
@@ -65,7 +61,7 @@ private fun PrimaryButtonPreview(
         ) {
             PrimaryButton(
                 onClick = {},
-                text = "Click",
+                text = "Primary",
                 isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -85,7 +81,6 @@ fun SecondaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    icon: Int? = null,
     isLoading: Boolean = false,
 ) {
     val buttonStyles = AdyenCheckoutTheme.elements.buttons
@@ -93,7 +88,6 @@ fun SecondaryButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        icon = icon,
         isLoading = isLoading,
         cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
         style = ButtonDefaults.secondaryButtonStyle(buttonStyles.secondary),
@@ -114,7 +108,7 @@ private fun SecondaryButtonPreview(
         ) {
             SecondaryButton(
                 onClick = {},
-                text = "Click",
+                text = "Secondary",
                 isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -134,7 +128,6 @@ fun TertiaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    icon: Int? = null,
     isLoading: Boolean = false,
 ) {
     val buttonStyles = AdyenCheckoutTheme.elements.buttons
@@ -142,7 +135,6 @@ fun TertiaryButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        icon = icon,
         isLoading = isLoading,
         cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
         style = ButtonDefaults.tertiaryButtonStyle(buttonStyles.tertiary),
@@ -163,7 +155,7 @@ private fun TertiaryButtonPreview(
         ) {
             TertiaryButton(
                 onClick = {},
-                text = "Click",
+                text = "Tertiary",
                 isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -183,7 +175,6 @@ fun DestructiveButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
-    icon: Int? = null,
     isLoading: Boolean = false,
 ) {
     val buttonStyles = AdyenCheckoutTheme.elements.buttons
@@ -191,7 +182,6 @@ fun DestructiveButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
-        icon = icon,
         isLoading = isLoading,
         cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
         style = ButtonDefaults.destructiveButtonStyle(buttonStyles.destructive),
@@ -212,7 +202,7 @@ private fun DestructiveButtonPreview(
         ) {
             DestructiveButton(
                 onClick = {},
-                text = "Click",
+                text = "Destructive",
                 isLoading = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -232,7 +222,6 @@ private fun AdyenButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier,
-    icon: Int?,
     isLoading: Boolean,
     cornerRadius: Int,
     style: InternalButtonStyle,
@@ -260,10 +249,6 @@ private fun AdyenButton(
             }
 
             Label(text, color = contentColor)
-            icon?.let {
-                Spacer(Modifier.size(8.dp))
-                Icon(painterResource(id = it), null, tint = contentColor)
-            }
         },
         modifier = modifier,
     )
