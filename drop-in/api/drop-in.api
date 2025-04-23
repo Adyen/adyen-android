@@ -161,6 +161,10 @@ public final class com/adyen/checkout/dropin/DropInConfigurationKt {
 	public static synthetic fun dropIn$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/dropin/DropInRedirectHandlingActivity : androidx/appcompat/app/AppCompatActivity {
+	public fun <init> ()V
+}
+
 public abstract class com/adyen/checkout/dropin/DropInResult {
 }
 
