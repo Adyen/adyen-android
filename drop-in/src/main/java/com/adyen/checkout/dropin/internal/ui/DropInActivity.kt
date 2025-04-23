@@ -60,7 +60,6 @@ import com.adyen.checkout.dropin.internal.ui.model.GiftCardPaymentConfirmationDa
 import com.adyen.checkout.dropin.internal.util.DropInPrefs
 import com.adyen.checkout.dropin.internal.util.checkCompileOnly
 import com.adyen.checkout.giftcard.GiftCardComponentState
-import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionPaymentResult
 import com.adyen.checkout.wechatpay.WeChatPayUtils
@@ -526,7 +525,7 @@ internal class DropInActivity :
             // Redirect response
             Intent.ACTION_VIEW -> {
                 val data = intent.data
-                if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
+                if (data != null) {
                     handleActionIntentResponse(intent)
                 } else {
                     adyenLog(AdyenLogLevel.ERROR) { "Unexpected response from ACTION_VIEW - ${intent.data}" }
