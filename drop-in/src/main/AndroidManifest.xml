@@ -5,16 +5,19 @@
     <application android:supportsRtl="true">
         <activity
             android:name=".internal.ui.DropInActivity"
-            android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/AdyenCheckout.Translucent"
-            android:enableOnBackInvokedCallback="false">
+            android:enableOnBackInvokedCallback="false" />
+
+        <activity
+            android:name=".DropInRedirectHandlingActivity"
+            android:exported="true"
+            android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
 
                 <data
                     android:host="${applicationId}"
