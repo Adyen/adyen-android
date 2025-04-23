@@ -12,5 +12,5 @@ import androidx.annotation.Keep
 
 @Keep
 data class ThreeDSRequestData(
-    val nativeThreeDS: String = "preferred"
+    val nativeThreeDS: String,
 )
