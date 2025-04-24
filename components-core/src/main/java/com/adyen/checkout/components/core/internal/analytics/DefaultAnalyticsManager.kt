@@ -34,8 +34,7 @@ internal class DefaultAnalyticsManager(
 
     private var isInitialized: Boolean = false
 
-    private var _coroutineScope: CoroutineScope? = null
-    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
+    private var coroutineScope: CoroutineScope? = null
 
     private var timerJob: Job? = null
 
@@ -49,7 +48,7 @@ internal class DefaultAnalyticsManager(
         isInitialized = true
 
         ownerReference = owner::class.qualifiedName
-        _coroutineScope = coroutineScope
+        this.coroutineScope = coroutineScope
 
         coroutineScope.launch(coroutineDispatcher) {
             runSuspendCatching {
@@ -75,7 +74,7 @@ internal class DefaultAnalyticsManager(
             adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
-        coroutineScope.launch(coroutineDispatcher) {
+        coroutineScope?.launch(coroutineDispatcher) {
             runSuspendCatching {
                 analyticsRepository.storeEvent(event)
 
@@ -87,12 +86,16 @@ internal class DefaultAnalyticsManager(
                 onSuccess = { /* Not necessary */ },
                 onFailure = { throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" } },
             )
-        }
+        } ?: adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null. Tracking event failed." }
     }
 
     private fun startTimer() {
         stopTimer()
-        timerJob = coroutineScope.launch(coroutineDispatcher) {
+        if (coroutineScope == null) {
+            adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null." }
+            return
+        }
+        timerJob = coroutineScope?.launch(coroutineDispatcher) {
             while (isActive) {
                 delay(DISPATCH_INTERVAL_MILLIS)
                 sendEvents()
@@ -135,7 +138,7 @@ internal class DefaultAnalyticsManager(
 
         adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
-        _coroutineScope = null
+        coroutineScope = null
         checkoutAttemptIdState = CheckoutAttemptIdState.NotAvailable
         ownerReference = null
         isInitialized = false
