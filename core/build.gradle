@@ -52,4 +52,5 @@ dependencies {
     implementation libs.compose.viewmodel
 
     testImplementation libs.bundles.junit
+    testImplementation libs.bundles.mockito
 }
