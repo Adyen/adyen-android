@@ -76,20 +76,24 @@ internal class MealVoucherFRView @JvmOverloads constructor(
             localizedContext,
         )
 
-        binding.editTextMealVoucherFRCardNumber.setOnChangeListener {
-            giftCardDelegate.updateInputData { cardNumber = binding.editTextMealVoucherFRCardNumber.rawValue }
-            binding.textInputLayoutMealVoucherFRCardNumber.hideError()
-        }
-
-        binding.editTextMealVoucherFRCardNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
-            if (hasFocus) {
+        binding.editTextMealVoucherFRCardNumber.apply {
+            setOnChangeListener {
+                giftCardDelegate.updateInputData { cardNumber = binding.editTextMealVoucherFRCardNumber.rawValue }
                 binding.textInputLayoutMealVoucherFRCardNumber.hideError()
-            } else if (cardNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutMealVoucherFRCardNumber.showError(
-                    localizedContext.getString(cardNumberValidation.reason),
-                )
             }
+
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
+                if (hasFocus) {
+                    binding.textInputLayoutMealVoucherFRCardNumber.hideError()
+                } else if (cardNumberValidation is Validation.Invalid) {
+                    binding.textInputLayoutMealVoucherFRCardNumber.showError(
+                        localizedContext.getString(cardNumberValidation.reason),
+                    )
+                }
+            }
+
+            requestFocus()
         }
     }
 
