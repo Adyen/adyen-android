@@ -74,18 +74,24 @@ internal class GiftCardView @JvmOverloads constructor(
             localizedContext,
         )
 
-        binding.editTextGiftcardNumber.setOnChangeListener {
-            giftCardDelegate.updateInputData { cardNumber = binding.editTextGiftcardNumber.rawValue }
-            binding.textInputLayoutGiftcardNumber.hideError()
-        }
-
-        binding.editTextGiftcardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
-            if (hasFocus) {
+        binding.editTextGiftcardNumber.apply {
+            setOnChangeListener {
+                giftCardDelegate.updateInputData { cardNumber = binding.editTextGiftcardNumber.rawValue }
                 binding.textInputLayoutGiftcardNumber.hideError()
-            } else if (cardNumberValidation is Validation.Invalid) {
-                binding.textInputLayoutGiftcardNumber.showError(localizedContext.getString(cardNumberValidation.reason))
             }
+
+            onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+                val cardNumberValidation = giftCardDelegate.outputData.numberFieldState.validation
+                if (hasFocus) {
+                    binding.textInputLayoutGiftcardNumber.hideError()
+                } else if (cardNumberValidation is Validation.Invalid) {
+                    binding.textInputLayoutGiftcardNumber.showError(
+                        localizedContext.getString(cardNumberValidation.reason),
+                    )
+                }
+            }
+
+            requestFocus()
         }
     }
 
