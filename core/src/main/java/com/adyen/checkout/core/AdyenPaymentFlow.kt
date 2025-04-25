@@ -10,6 +10,7 @@ package com.adyen.checkout.core
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
@@ -27,10 +28,13 @@ fun AdyenPaymentFlow(
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent()
     }
-    Column {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         adyenComponent.ViewFactory()
         PayButton(
-            onClick = adyenComponent::submit
+            onClick = adyenComponent::submit,
         )
     }
 }

@@ -10,6 +10,7 @@ package com.adyen.checkout.core.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.state.DefaultDelegateStateManager
 import com.adyen.checkout.core.internal.ui.state.DelegateStateManager
@@ -18,13 +19,31 @@ import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayStateUpdaterRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayValidatorRegistry
+import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.core.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.core.mbway.internal.ui.view.MbWayComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
-internal class MBWayDelegate : PaymentDelegate, FieldChangeListener<MBWayFieldId> {
+internal class MBWayDelegate(
+    private val coroutineScope: CoroutineScope
+) : PaymentDelegate, FieldChangeListener<MBWayFieldId> {
 
     private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId> =
         createStateManager()
+
+    // TODO Here we can add a componentStateFlow and generate it, like we generate the
+    //  viewStateFlow. The `chore/state_management` branch has its implementation.
+
+    private val viewStateFlow: StateFlow<MBWayViewState> by lazy {
+        stateManager.state
+            .map(MBWayDelegateState::toViewState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
+    }
 
     override fun submit() = if (stateManager.isValid) {
         // TODO Implement the submit logic
@@ -34,7 +53,10 @@ internal class MBWayDelegate : PaymentDelegate, FieldChangeListener<MBWayFieldId
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
+        val viewState = viewStateFlow.collectAsStateWithLifecycle()
+
         MbWayComponent(
+            viewState.value,
             fieldChangeListener = this,
         )
     }
