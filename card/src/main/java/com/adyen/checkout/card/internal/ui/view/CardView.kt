@@ -368,12 +368,17 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun initCardNumberInput() {
-        binding.editTextCardNumber.setOnChangeListener {
-            setCardErrorState(true)
-            cardDelegate.updateInputData { cardNumber = binding.editTextCardNumber.rawValue }
-        }
-        binding.editTextCardNumber.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-            setCardErrorState(hasFocus)
+        binding.editTextCardNumber.apply {
+            setOnChangeListener {
+                setCardErrorState(true)
+                cardDelegate.updateInputData { cardNumber = this@apply.rawValue }
+            }
+
+            onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+                setCardErrorState(hasFocus)
+            }
+
+            requestFocus()
         }
     }
 
