@@ -52,7 +52,10 @@ fun ImageView.load(
         }
     }
 
-    setImageResource(placeholder)
+    if (drawable == null) {
+        setImageResource(placeholder)
+    }
+
     context.getLifecycleOwner()?.lifecycleScope?.launch {
         imageLoader.load(
             url,
