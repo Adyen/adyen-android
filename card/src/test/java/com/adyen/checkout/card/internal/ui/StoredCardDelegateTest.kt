@@ -659,6 +659,7 @@ internal class StoredCardDelegateTest(
             isSupported = isSupported,
             panLength = panLength,
             paymentMethodVariant = paymentMethodVariant,
+            localizedBrand = null,
         )
     }
 
