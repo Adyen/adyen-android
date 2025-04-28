@@ -40,6 +40,7 @@ data class CardOutputData(
     val installmentOptions: List<InstallmentModel>,
     val cardBrands: List<CardListItem>,
     val isDualBranded: Boolean,
+    val dualBrandCardBrands: List<CardBrandItem>,
     @StringRes
     val kcpBirthDateOrTaxNumberHint: Int?,
     val isCardListVisible: Boolean,

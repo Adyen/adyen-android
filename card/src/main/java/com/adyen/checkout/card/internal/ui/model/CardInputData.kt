@@ -26,6 +26,6 @@ data class CardInputData(
     var postalCode: String = "",
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
-    var selectedCardIndex: Int = -1,
+    var selectedCardItem: CardBrandItem? = null,
     var installmentOption: InstallmentModel? = null,
 ) : InputData

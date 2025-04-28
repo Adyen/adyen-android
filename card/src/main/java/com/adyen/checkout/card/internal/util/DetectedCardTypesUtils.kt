@@ -9,37 +9,22 @@
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 
 internal object DetectedCardTypesUtils {
 
-    fun filterDetectedCardTypes(
+    fun getSelectedOrFirstDetectedCardType(
         detectedCardTypes: List<DetectedCardType>,
-        selectedCardIndex: Int
-    ): List<DetectedCardType> {
-        val supportedCardTypes = detectedCardTypes.filter { it.isSupported }
-        val sortedCardTypes = DualBrandedCardUtils.sortBrands(supportedCardTypes)
-        return markSelectedCard(sortedCardTypes, selectedCardIndex)
-    }
-
-    fun getSelectedOrFirstDetectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
-        val selectedCardType = getSelectedCardType(detectedCardTypes)
+        selectedCardBrandItem: CardBrandItem?
+    ): DetectedCardType? {
+        val selectedCardType = getSelectedCardType(detectedCardTypes, selectedCardBrandItem)
         return selectedCardType ?: detectedCardTypes.firstOrNull()
     }
 
-    fun getSelectedCardType(detectedCardTypes: List<DetectedCardType>): DetectedCardType? {
-        return detectedCardTypes.firstOrNull { it.isSelected }
+    fun getSelectedCardType(
+        detectedCardTypes: List<DetectedCardType>,
+        selectedCardBrandItem: CardBrandItem?
+    ): DetectedCardType? {
+        return detectedCardTypes.firstOrNull { it.cardBrand.txVariant == selectedCardBrandItem?.brand?.txVariant }
     }
-
-    private fun markSelectedCard(cards: List<DetectedCardType>, selectedIndex: Int): List<DetectedCardType> {
-        if (cards.size <= SINGLE_CARD_LIST_SIZE) return cards
-        return cards.mapIndexed { index, card ->
-            if (index == selectedIndex) {
-                card.copy(isSelected = true)
-            } else {
-                card
-            }
-        }
-    }
-
-    private const val SINGLE_CARD_LIST_SIZE = 1
 }
