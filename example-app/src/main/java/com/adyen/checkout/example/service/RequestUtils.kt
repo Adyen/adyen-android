@@ -161,18 +161,20 @@ private const val DEFAULT_INSTALLMENT_OPTION = "card"
 private const val CARD_BASED_INSTALLMENT_OPTION = "visa"
 private const val ATTEMPT_AUTHENTICATION_TRUE_VALUE = "always"
 private const val ATTEMPT_AUTHENTICATION_FALSE_VALUE = "never"
+private const val THREE_DS_REQUEST_DATA_NATIVE = "preferred"
+private const val THREE_DS_REQUEST_DATA_REDIRECT = "disabled"
 
 private fun getReference() = "android-test-${System.currentTimeMillis()}"
 private fun getAuthenticationData(threeDSMode: ThreeDSMode): AuthenticationData {
     return when (threeDSMode) {
         ThreeDSMode.PREFER_NATIVE -> AuthenticationData(
             attemptAuthentication = ATTEMPT_AUTHENTICATION_TRUE_VALUE,
-            threeDSRequestData = ThreeDSRequestData(),
+            threeDSRequestData = ThreeDSRequestData(THREE_DS_REQUEST_DATA_NATIVE),
         )
 
         ThreeDSMode.REDIRECT -> AuthenticationData(
             attemptAuthentication = ATTEMPT_AUTHENTICATION_TRUE_VALUE,
-            threeDSRequestData = null,
+            threeDSRequestData = ThreeDSRequestData(THREE_DS_REQUEST_DATA_REDIRECT),
         )
 
         ThreeDSMode.DISABLED -> AuthenticationData(
