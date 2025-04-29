@@ -23,9 +23,11 @@ class DualBrandedCardHandler(private val environment: Environment) {
         selectedBrand: CardBrand?
     ): DualBrandData? {
         if (!isDualBrandedFlow(detectedCardTypes)) return null
+        val brandOptions = mapToCardBrandItemList(detectedCardTypes, selectedBrand)
         return DualBrandData(
-            selectedBrand = getSelectedCardType(detectedCardTypes, selectedBrand)?.cardBrand,
-            brandOptions = mapToCardBrandItemList(detectedCardTypes, selectedBrand),
+            selectedBrand = getSelectedCardType(detectedCardTypes, selectedBrand)?.cardBrand
+                ?: brandOptions.firstOrNull()?.brand,
+            brandOptions = brandOptions,
         )
     }
 
