@@ -31,6 +31,8 @@ class DualBrandedCardHandler(private val environment: Environment) {
         )
     }
 
+    fun getAnalyticsTarget() = ANALYTICS_TARGET
+
     private fun getSelectedCardType(
         detectedCardTypes: List<DetectedCardType>,
         selectedBrand: CardBrand?
@@ -64,4 +66,8 @@ class DualBrandedCardHandler(private val environment: Environment) {
         isSelected = isSelected,
         environment = environment,
     )
+
+    companion object {
+        private const val ANALYTICS_TARGET = "dual_brand_button"
+    }
 }
