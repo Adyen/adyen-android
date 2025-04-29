@@ -27,9 +27,9 @@ import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
 import com.adyen.checkout.card.internal.ui.CardDelegate
-import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -202,7 +202,7 @@ class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
-        setCoBadgeBrands(cardOutputData.dualBrandCardBrands, cardOutputData.isDualBranded)
+        setCoBadgeBrands(cardOutputData.dualBrandData)
         updateAddressLookupInputText(cardOutputData.addressState)
     }
 
@@ -311,7 +311,7 @@ class CardView @JvmOverloads constructor(
                 placeholder = R.drawable.ic_card,
                 errorFallback = R.drawable.ic_card,
             )
-            setDualBrandedCardImages(cardOutputData.dualBrandCardBrands, cardOutputData.cardNumberState.validation)
+            setDualBrandedCardImages(cardOutputData.dualBrandData, cardOutputData.cardNumberState.validation)
 
             // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
@@ -330,12 +330,12 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setDualBrandedCardImages(cardBrandList: List<CardBrandItem>, validation: Validation) {
+    private fun setDualBrandedCardImages(dualBrandData: DualBrandData?, validation: Validation) {
         val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
         if (validation is Validation.Invalid && !cardNumberHasFocus) {
             setCardNumberError(validation.reason)
         } else {
-            cardBrandList.getOrNull(1)?.let { cardBrandItem ->
+            dualBrandData?.brandOptions?.getOrNull(1)?.let { cardBrandItem ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
                 binding.cardBrandLogoImageViewSecondary.loadLogo(
@@ -384,7 +384,7 @@ class CardView @JvmOverloads constructor(
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
         val shouldNotShowError = hasFocus && !showErrorWhileEditing
         if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = outputData.isDualBranded
+            val shouldShowSecondaryLogo = outputData.dualBrandData != null
             setCardNumberError(null, shouldShowSecondaryLogo)
         } else if (cardNumberValidation is Validation.Invalid) {
             setCardNumberError(cardNumberValidation.reason)
@@ -746,18 +746,19 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setCoBadgeBrands(brands: List<CardBrandItem>, isCobadged: Boolean) {
-        binding.recyclerViewCobadgeBrands.isVisible = isCobadged
-        if (isCobadged) {
+    private fun setCoBadgeBrands(dualBrandData: DualBrandData?) {
+        val isDualBranded = dualBrandData != null
+        binding.recyclerViewCobadgeBrands.isVisible = isDualBranded
+        if (isDualBranded) {
             if (cardBrandAdapter == null) {
                 cardBrandAdapter = CardBrandAdapter { cardBrandItem ->
                     cardDelegate.updateInputData {
-                        selectedCardItem = cardBrandItem
+                        selectedCardBrand = cardBrandItem.brand
                     }
                 }
                 binding.recyclerViewCobadgeBrands.adapter = cardBrandAdapter
             }
-            cardBrandAdapter?.submitList(brands)
+            cardBrandAdapter?.submitList(dualBrandData?.brandOptions)
         }
     }
 

@@ -26,6 +26,7 @@ import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.CardConfigDataGenerator
 import com.adyen.checkout.card.internal.ui.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
+import com.adyen.checkout.card.internal.util.DualBrandedCardHandler
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order
@@ -140,6 +141,7 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
             )
 
             val genericActionDelegate =
@@ -246,6 +248,7 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
             )
 
             val genericActionDelegate =
