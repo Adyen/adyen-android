@@ -69,43 +69,48 @@ internal class BoletoView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textViewPersonalInformationHeader.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Boleto_PersonalDetailsHeader,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutFirstName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Boleto_FirstNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutLastName.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Boleto_LastNameInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutSocialSecurityNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Boleto_SocialNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.addressFormInput.initLocalizedContext(localizedContext)
         binding.switchSendEmailCopy.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_Boleto_EmailCopySwitch,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutShopperEmail.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Boleto_ShopperEmailInput,
-            localizedContext
+            localizedContext,
         )
     }
 
     private fun initFirstNameInput() {
-        binding.editTextFirstName.setOnChangeListener { editable: Editable ->
-            boletoDelegate.updateInputData { firstName = editable.toString() }
-            binding.textInputLayoutFirstName.hideError()
-        }
-        binding.editTextFirstName.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-            val firstNameValidation = boletoDelegate.outputData.firstNameState.validation
-            if (hasFocus) {
+        binding.editTextFirstName.apply {
+            setOnChangeListener { editable: Editable ->
+                boletoDelegate.updateInputData { firstName = editable.toString() }
                 binding.textInputLayoutFirstName.hideError()
-            } else if (firstNameValidation is Validation.Invalid) {
-                binding.textInputLayoutFirstName.showError(localizedContext.getString(firstNameValidation.reason))
             }
+
+            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                val firstNameValidation = boletoDelegate.outputData.firstNameState.validation
+                if (hasFocus) {
+                    binding.textInputLayoutFirstName.hideError()
+                } else if (firstNameValidation is Validation.Invalid) {
+                    binding.textInputLayoutFirstName.showError(localizedContext.getString(firstNameValidation.reason))
+                }
+            }
+
+            requestFocus()
         }
     }
 
@@ -135,7 +140,7 @@ internal class BoletoView @JvmOverloads constructor(
                 binding.textInputLayoutSocialSecurityNumber.hideError()
             } else if (socialSecurityNumberValidation is Validation.Invalid) {
                 binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason)
+                    localizedContext.getString(socialSecurityNumberValidation.reason),
                 )
             }
         }
@@ -205,7 +210,7 @@ internal class BoletoView @JvmOverloads constructor(
                     binding.textInputLayoutSocialSecurityNumber.requestFocus()
                 }
                 binding.textInputLayoutSocialSecurityNumber.showError(
-                    localizedContext.getString(socialSecurityNumberValidation.reason)
+                    localizedContext.getString(socialSecurityNumberValidation.reason),
                 )
             }
             if (binding.addressFormInput.isVisible && !it.addressState.isValid) {
@@ -219,7 +224,7 @@ internal class BoletoView @JvmOverloads constructor(
                     binding.textInputLayoutShopperEmail.requestFocus()
                 }
                 binding.textInputLayoutShopperEmail.showError(
-                    localizedContext.getString(shopperEmailValidation.reason)
+                    localizedContext.getString(shopperEmailValidation.reason),
                 )
             }
         }
