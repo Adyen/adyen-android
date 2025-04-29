@@ -247,10 +247,9 @@ internal class StoredCardDelegate(
             addressUIState = AddressFormUIState.NONE,
             installmentOptions = emptyList(),
             cardBrands = emptyList(),
-            isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
-            dualBrandCardBrands = emptyList(),
+            dualBrandData = null
         )
     }
 
