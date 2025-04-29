@@ -14,6 +14,7 @@ ksp = "1.9.25-1.0.20"
 dokka = "2.0.0"
 hilt = "2.55"
 compose-compiler = "1.5.15"
+javapoet = "1.13.0"
 
 # Code quality
 detekt = "1.23.8"
@@ -154,6 +155,12 @@ mockito-android-main = { group = "org.mockito", name = "mockito-android", versio
 mock-web-server = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
+# Util libraries
+android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "android-gradle-plugin" }
+dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
+
 [bundles]
 
 # Production bundles
@@ -172,16 +179,16 @@ mockito = ["mockito-junit-jupiter", "mockito-kotlin"]
 mockito-android = ["mockito-android-main", "mockito-kotlin"]
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
-android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
-kotlin = { id = "kotlin" }
+android-application = { id = "com.android.application" }
+android-library = { id = "com.android.library" }
+kotlin = { id = "org.jetbrains.kotlin.jvm" }
 kotlin-android = { id = "kotlin-android" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+dokka = { id = "org.jetbrains.dokka" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
