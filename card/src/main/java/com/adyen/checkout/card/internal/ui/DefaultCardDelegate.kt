@@ -86,6 +86,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -160,6 +161,7 @@ class DefaultCardDelegate(
         initializeAnalytics(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
+        subscribeToDualBrandedAnalyticsEvents()
 
         if (componentParams.addressParams is AddressParams.FullAddress ||
             componentParams.addressParams is AddressParams.Lookup
@@ -277,6 +279,39 @@ class DefaultCardDelegate(
             .distinctUntilChanged()
             .onEach {
                 inputData.selectedCardBrand = null
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun subscribeToDualBrandedAnalyticsEvents() {
+        outputDataFlow.map { it.dualBrandData?.selectedBrand }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { brand ->
+                if (inputData.selectedCardBrand != null) {
+                    val event = GenericEvents.selected(
+                        component = paymentMethod.type.orEmpty(),
+                        target = DUAL_BRAND_ANALYTICS_TARGET,
+                        brand = brand.txVariant,
+                    )
+                    analyticsManager.trackEvent(event)
+                    adyenLog(AdyenLogLevel.DEBUG) { "brand selection changed: ${brand.txVariant}" }
+                }
+            }
+            .launchIn(coroutineScope)
+
+        outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .map { brandOptions ->
+                val event = GenericEvents.displayed(
+                    component = paymentMethod.type.orEmpty(),
+                    target = DUAL_BRAND_ANALYTICS_TARGET,
+                    brand = outputData.dualBrandData?.selectedBrand?.txVariant.orEmpty(),
+                    configData = cardConfigDataGenerator.generateDualBrandConfigData(brandOptions),
+                )
+                analyticsManager.trackEvent(event)
+                adyenLog(AdyenLogLevel.DEBUG) { "new brand options: ${brandOptions.joinToString(",")}" }
             }
             .launchIn(coroutineScope)
     }
@@ -866,6 +901,7 @@ class DefaultCardDelegate(
 
     companion object {
         private const val DEBIT_FUNDING_SOURCE = "debit"
+        private const val DUAL_BRAND_ANALYTICS_TARGET = "dual_brand_button"
 
         @VisibleForTesting
         internal const val BIN_VALUE_LENGTH = 6
