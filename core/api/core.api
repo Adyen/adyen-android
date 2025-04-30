@@ -15,6 +15,64 @@ public final class com/adyen/checkout/core/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/core/Environment : android/os/Parcelable {
+	public static final field $stable I
+	public static final field APSE Lcom/adyen/checkout/core/Environment;
+	public static final field AUSTRALIA Lcom/adyen/checkout/core/Environment;
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/Environment$Companion;
+	public static final field EUROPE Lcom/adyen/checkout/core/Environment;
+	public static final field INDIA Lcom/adyen/checkout/core/Environment;
+	public static final field TEST Lcom/adyen/checkout/core/Environment;
+	public static final field UNITED_STATES Lcom/adyen/checkout/core/Environment;
+	public final fun component1 ()Ljava/net/URL;
+	public final fun component2 ()Ljava/net/URL;
+	public final fun copy (Ljava/net/URL;Ljava/net/URL;)Lcom/adyen/checkout/core/Environment;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/Environment;Ljava/net/URL;Ljava/net/URL;ILjava/lang/Object;)Lcom/adyen/checkout/core/Environment;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckoutAnalyticsBaseUrl ()Ljava/net/URL;
+	public final fun getCheckoutShopperBaseUrl ()Ljava/net/URL;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/Environment$Companion {
+}
+
+public final class com/adyen/checkout/core/Environment$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/Environment;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/Environment;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/exception/ModelSerializationException : java/lang/RuntimeException {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
+}
+
+public abstract class com/adyen/checkout/core/internal/data/model/ModelObject : android/os/Parcelable {
+	public static final field $stable I
+	public fun describeContents ()I
+}
+
+public abstract interface class com/adyen/checkout/core/internal/data/model/ModelObject$Serializer {
+	public abstract fun deserialize (Lorg/json/JSONObject;)Lcom/adyen/checkout/core/internal/data/model/ModelObject;
+	public abstract fun serialize (Lcom/adyen/checkout/core/internal/data/model/ModelObject;)Lorg/json/JSONObject;
+}
+
+public final class com/adyen/checkout/core/internal/data/model/ModelUtils {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/internal/data/model/ModelUtils;
+	public static final fun deserializeOpt (Lorg/json/JSONObject;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lcom/adyen/checkout/core/internal/data/model/ModelObject;
+	public static final fun deserializeOptList (Lorg/json/JSONArray;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Ljava/util/List;
+	public static final fun serializeOpt (Lcom/adyen/checkout/core/internal/data/model/ModelObject;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lorg/json/JSONObject;
+	public static final fun serializeOptList (Ljava/util/List;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lorg/json/JSONArray;
+}
+
 public final class com/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt {
 	public static final field INSTANCE Lcom/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt;
 	public fun <init> ()V
@@ -30,5 +88,192 @@ public final class com/adyen/checkout/core/mbway/internal/ui/view/ComposableSing
 	public fun <init> ()V
 	public final fun getLambda-1$core_release ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda-2$core_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/core/model/Amount : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/model/Amount$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;J)V
+	public synthetic fun <init> (Ljava/lang/String;JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()J
+	public final fun copy (Ljava/lang/String;J)Lcom/adyen/checkout/core/model/Amount;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/model/Amount;Ljava/lang/String;JILjava/lang/Object;)Lcom/adyen/checkout/core/model/Amount;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCurrency ()Ljava/lang/String;
+	public final fun getValue ()J
+	public fun hashCode ()I
+	public final fun setCurrency (Ljava/lang/String;)V
+	public final fun setValue (J)V
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/model/Amount$Companion {
+}
+
+public final class com/adyen/checkout/core/model/Amount$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/model/Amount;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/model/Amount;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethod : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/model/PaymentMethod$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/model/PaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/model/PaymentMethod;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/model/PaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setName (Ljava/lang/String;)V
+	public final fun setType (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethod$Companion {
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethod$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/model/PaymentMethod;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/model/PaymentMethod;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethodsApiResponse : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/util/List;
+	public final fun copy (Ljava/util/List;)Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;Ljava/util/List;ILjava/lang/Object;)Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPaymentMethods ()Ljava/util/List;
+	public fun hashCode ()I
+	public final fun setPaymentMethods (Ljava/util/List;)V
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethodsApiResponse$Companion {
+}
+
+public final class com/adyen/checkout/core/model/PaymentMethodsApiResponse$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/sessions/CheckoutSession {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public final fun component2 ()Lcom/adyen/checkout/core/Environment;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getClientKey ()Ljava/lang/String;
+	public final fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public final fun getPaymentMethod (Ljava/lang/String;)Lcom/adyen/checkout/core/model/PaymentMethod;
+	public final fun getSessionSetupResponse ()Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupConfiguration : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Boolean;ZLjava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/Boolean;ZLjava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/Boolean;
+	public final fun component2 ()Z
+	public final fun component3 ()Ljava/lang/Boolean;
+	public final fun copy (Ljava/lang/Boolean;ZLjava/lang/Boolean;)Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;Ljava/lang/Boolean;ZLjava/lang/Boolean;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEnableStoreDetails ()Ljava/lang/Boolean;
+	public final fun getShowInstallmentAmount ()Z
+	public final fun getShowRemovePaymentMethodButton ()Ljava/lang/Boolean;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupConfiguration$Companion {
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupConfiguration$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupResponse : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/model/Amount;Ljava/lang/String;Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;Ljava/lang/String;Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/adyen/checkout/core/model/Amount;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/model/Amount;Ljava/lang/String;Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;Ljava/lang/String;Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/model/Amount;Ljava/lang/String;Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;Ljava/lang/String;Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()Lcom/adyen/checkout/core/model/Amount;
+	public final fun getConfiguration ()Lcom/adyen/checkout/core/sessions/data/SessionSetupConfiguration;
+	public final fun getExpiresAt ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPaymentMethodsApiResponse ()Lcom/adyen/checkout/core/model/PaymentMethodsApiResponse;
+	public final fun getReturnUrl ()Ljava/lang/String;
+	public final fun getSessionData ()Ljava/lang/String;
+	public final fun getShopperLocale ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupResponse$Companion {
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionSetupResponse$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
