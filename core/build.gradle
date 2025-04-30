@@ -50,6 +50,7 @@ dependencies {
     implementation libs.bundles.compose.ui
     implementation libs.compose.hilt
     implementation libs.compose.viewmodel
+    implementation libs.okhttp
 
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.mockito
