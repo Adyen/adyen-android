@@ -22,6 +22,11 @@ fun JSONObject.getBooleanOrNull(key: String): Boolean? {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.getIntOrNull(key: String): Int? {
+    return if (!isNull(key)) getInt(key) else null
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.getLongOrNull(key: String): Long? {
     return if (!isNull(key)) getLong(key) else null
 }
