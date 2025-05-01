@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/4/2025.
+ * Created by ozgur on 1/5/2025.
  */
 
-package com.adyen.checkout.core.model
+package com.adyen.checkout.core.data.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
