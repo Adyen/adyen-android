@@ -15,6 +15,33 @@ public final class com/adyen/checkout/core/AdyenCheckout$Companion {
 	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public abstract interface class com/adyen/checkout/core/AdyenCheckout$Result {
+}
+
+public final class com/adyen/checkout/core/AdyenCheckout$Result$Error : com/adyen/checkout/core/AdyenCheckout$Result {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/AdyenCheckout$Result$Error;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/AdyenCheckout$Result$Error;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/AdyenCheckout$Result$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getErrorReason ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/AdyenCheckout$Result$Success : com/adyen/checkout/core/AdyenCheckout$Result {
+	public static final field $stable I
+	public fun <init> (Lcom/adyen/checkout/core/AdyenCheckout;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/AdyenCheckout;
+	public final fun copy (Lcom/adyen/checkout/core/AdyenCheckout;)Lcom/adyen/checkout/core/AdyenCheckout$Result$Success;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/AdyenCheckout$Result$Success;Lcom/adyen/checkout/core/AdyenCheckout;ILjava/lang/Object;)Lcom/adyen/checkout/core/AdyenCheckout$Result$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAdyenCheckout ()Lcom/adyen/checkout/core/AdyenCheckout;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/AdyenPaymentFlowKt {
 	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/AdyenCheckout;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
