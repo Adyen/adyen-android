@@ -632,10 +632,9 @@ internal class StoredCardDelegateTest(
             addressUIState = addressUIState,
             installmentOptions = installmentOptions,
             cardBrands = cardBrands,
-            isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
-            dualBrandCardBrands = emptyList(), // TODO
+            dualBrandData = null,
         )
     }
 
