@@ -22,10 +22,15 @@ data class AdyenCheckout(
             sessionModel: SessionModel,
             // TODO - Configuration
             clientKey: String,
-        ): AdyenCheckout {
-            return AdyenCheckout(
-                checkoutSession = getCheckoutSession(sessionModel, clientKey),
-            )
+        ): AdyenCheckout.Result {
+            val checkoutSession = getCheckoutSession(sessionModel, clientKey)
+            return when {
+                checkoutSession != null -> Result.Success(
+                    adyenCheckout = AdyenCheckout(checkoutSession),
+                )
+
+                else -> Result.Error("Session initialization failed.")
+            }
         }
 
         private suspend fun getCheckoutSession(
@@ -43,5 +48,10 @@ data class AdyenCheckout(
                 }
             }
         }
+    }
+
+    sealed interface Result {
+        data class Success(val adyenCheckout: AdyenCheckout) : Result
+        data class Error(val errorReason: String) : Result
     }
 }
