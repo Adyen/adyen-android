@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$s x %2$s</string>
     <string name="checkout_card_installments_option_one_time">Jednorazová platba</string>
     <string name="checkout_card_installments_option_revolving">Revolvingová platba</string>
+    <string name="checkout_card_dual_brand_title">Značka karty</string>
+    <string name="checkout_card_dual_brand_description">Vyberte značku karty, ktorou preferujete platiť. Táto možnosť je nepovinná.</string>
 
     <string name="store_payment_method">Uložiť pre moju ďalšiu platbu</string>
 </resources>

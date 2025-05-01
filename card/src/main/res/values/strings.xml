@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">One time payment</string>
     <string name="checkout_card_installments_option_revolving">Revolving payment</string>
+    <string name="checkout_card_dual_brand_title">Card Brand</string>
+    <string name="checkout_card_dual_brand_description">Select the card brand you prefer to pay with. This is optional.</string>
 
     <string name="store_payment_method">Save for my next payment</string>
     <!-- Untranslatable strings -->
