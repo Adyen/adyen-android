@@ -14,25 +14,25 @@
 
     <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_cardBrandLogo"
-        style="@style/AdyenCheckout.Card.BrandSelection.Logo"
+        style="@style/AdyenCheckout.Card.BrandSelection.Item.Logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textView_cardBrandName"
-        style="@style/AdyenCheckout.Card.BrandSelection.Title"
+        style="@style/AdyenCheckout.Card.BrandSelection.Item.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/imageView_cardBrandLogo"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Mastercard" />
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/radioButton_cardBrand"
-        style="@style/AdyenCheckout.Card.BrandSelection.RadioButton"
+        style="@style/AdyenCheckout.Card.BrandSelection.Item.RadioButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
