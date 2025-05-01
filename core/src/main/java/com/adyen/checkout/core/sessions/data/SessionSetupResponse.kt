@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.core.sessions.data
 
+import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import com.adyen.checkout.core.model.Amount
-import com.adyen.checkout.core.model.PaymentMethodsApiResponse
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
