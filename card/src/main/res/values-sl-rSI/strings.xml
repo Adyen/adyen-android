@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$s × %2$s</string>
     <string name="checkout_card_installments_option_one_time">Enkratno plačilo</string>
     <string name="checkout_card_installments_option_revolving">Revolving plačilo</string>
+    <string name="checkout_card_dual_brand_title">Znamka kartice</string>
+    <string name="checkout_card_dual_brand_description">Izberite znamko kartice, s katero želite plačati. To ni obvezno.</string>
 
     <string name="store_payment_method">Shrani za moje naslednje plačilo</string>
 </resources>

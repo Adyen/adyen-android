@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">Pago único</string>
     <string name="checkout_card_installments_option_revolving">Pago rotativo</string>
+    <string name="checkout_card_dual_brand_title">Marca de tarjeta</string>
+    <string name="checkout_card_dual_brand_description">Seleccione la marca de tarjeta con la que prefiere pagar. Esto es opcional.</string>
 
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

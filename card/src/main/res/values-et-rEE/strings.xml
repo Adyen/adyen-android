@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$s x %2$s</string>
     <string name="checkout_card_installments_option_one_time">Ühekordne makse</string>
     <string name="checkout_card_installments_option_revolving">Vaba tagasimakse</string>
+    <string name="checkout_card_dual_brand_title">Kaardi bränd</string>
+    <string name="checkout_card_dual_brand_description">Valige kaardibränd, millega eelistate maksta. See on valikuline.</string>
 
     <string name="store_payment_method">Salvesta mu järgmise makse jaoks</string>
 </resources>
