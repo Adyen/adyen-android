@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.model.PaymentMethod
+import com.adyen.checkout.core.data.model.PaymentMethod
 import com.adyen.checkout.core.sessions.data.SessionSetupResponse
 
 /**
