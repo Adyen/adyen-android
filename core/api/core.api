@@ -260,12 +260,6 @@ public final class com/adyen/checkout/core/sessions/CheckoutSession {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/sessions/CheckoutSessionProvider {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/sessions/CheckoutSessionProvider;
-	public final fun createSession (Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-}
-
 public abstract class com/adyen/checkout/core/sessions/CheckoutSessionResult {
 	public static final field $stable I
 }
