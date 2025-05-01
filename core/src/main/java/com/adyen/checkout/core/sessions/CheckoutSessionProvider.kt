@@ -10,7 +10,7 @@ package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.Environment
 
-object CheckoutSessionProvider {
+internal object CheckoutSessionProvider {
 
     /**
      * Allows creating a [CheckoutSession] from the response of the /sessions endpoint.
