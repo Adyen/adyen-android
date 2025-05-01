@@ -140,6 +140,8 @@
         <item name="android:layout_marginEnd">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
         <item name="android:paddingEnd">0dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:minWidth">24dp</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
