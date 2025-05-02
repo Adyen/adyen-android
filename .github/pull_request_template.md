@@ -9,7 +9,7 @@
 - [ ] Changes are tested manually
 - [ ] Related issues are linked
 
-COAND-XXX
+COSDK-XXX
 
 ## Release notes
 [//]: # (Use the headers listed below to organize your release notes. Each section should begin with ### followed by a valid label)
