@@ -21,9 +21,9 @@ data class AdyenCheckout(
         suspend fun initialize(
             sessionModel: SessionModel,
             // TODO - Configuration
-            clientKey: String,
+            checkoutConfiguration: CheckoutConfiguration,
         ): AdyenCheckout.Result {
-            val checkoutSession = getCheckoutSession(sessionModel, clientKey)
+            val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
                 checkoutSession != null -> Result.Success(
                     adyenCheckout = AdyenCheckout(checkoutSession),
@@ -35,12 +35,11 @@ data class AdyenCheckout(
 
         private suspend fun getCheckoutSession(
             sessionModel: SessionModel,
-            clientKey: String,
             // TODO - Configuration
-//        checkoutConfiguration: CheckoutConfiguration
+            checkoutConfiguration: CheckoutConfiguration
         ): CheckoutSession? {
             return when (
-                val result = CheckoutSessionProvider.createSession(sessionModel, Environment.TEST, clientKey)
+                val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
             ) {
                 is CheckoutSessionResult.Success -> result.checkoutSession
                 is CheckoutSessionResult.Error -> {
