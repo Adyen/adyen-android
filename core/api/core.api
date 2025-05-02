@@ -12,7 +12,7 @@ public final class com/adyen/checkout/core/AdyenCheckout {
 }
 
 public final class com/adyen/checkout/core/AdyenCheckout$Companion {
-	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/AdyenCheckout$Result {
@@ -52,6 +52,27 @@ public final class com/adyen/checkout/core/BuildConfig {
 	public static final field DEBUG Z
 	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
 	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/CheckoutConfiguration : com/adyen/checkout/core/internal/Configuration {
+	public static final field $stable I
+	public static final field CREATOR Lcom/adyen/checkout/core/CheckoutConfiguration$CREATOR;
+	public synthetic fun <init> (Landroid/os/Parcel;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/data/model/Amount;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/data/model/Amount;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun describeContents ()I
+	public fun getAmount ()Lcom/adyen/checkout/core/data/model/Amount;
+	public fun getClientKey ()Ljava/lang/String;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public fun getShopperLocale ()Ljava/util/Locale;
+	public fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/CheckoutConfiguration$CREATOR : android/os/Parcelable$Creator {
+	public fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/CheckoutConfiguration;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public fun newArray (I)[Lcom/adyen/checkout/core/CheckoutConfiguration;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/core/Environment : android/os/Parcelable {
