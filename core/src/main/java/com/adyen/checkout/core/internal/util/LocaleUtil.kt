@@ -34,4 +34,15 @@ object LocaleUtil {
             false
         }
     }
+
+    /**
+     * Creates a Locale instance for a specific language tag.
+     *
+     * @param tag The tag of the language.
+     * @return The locale associated with that tag or null if tag in invalid.
+     */
+    @JvmStatic
+    fun fromLanguageTag(tag: String): Locale {
+        return Locale.forLanguageTag(tag)
+    }
 }
