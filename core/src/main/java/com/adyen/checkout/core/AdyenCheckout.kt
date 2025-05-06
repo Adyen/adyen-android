@@ -15,6 +15,7 @@ import com.adyen.checkout.core.sessions.SessionModel
 
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,
+    val checkoutConfiguration: CheckoutConfiguration
 ) {
 
     companion object {
@@ -26,7 +27,7 @@ data class AdyenCheckout(
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
                 checkoutSession != null -> Result.Success(
-                    adyenCheckout = AdyenCheckout(checkoutSession),
+                    adyenCheckout = AdyenCheckout(checkoutSession, checkoutConfiguration),
                 )
 
                 else -> Result.Error("Session initialization failed.")
