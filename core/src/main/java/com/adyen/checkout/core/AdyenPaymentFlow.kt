@@ -26,7 +26,7 @@ fun AdyenPaymentFlow(
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
     val adyenComponent = viewModel(key = txVariant) {
-        AdyenComponent()
+        AdyenComponent(adyenCheckout)
     }
     Column(
         modifier = modifier,
