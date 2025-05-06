@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.internal.ui.state.DefaultDelegateStateManager
 import com.adyen.checkout.core.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
@@ -29,8 +30,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
+@Suppress("UnusedPrivateProperty")
 internal class MBWayDelegate(
-    private val coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope,
+    private val componentParams: ButtonComponentParams
 ) : PaymentDelegate, FieldChangeListener<MBWayFieldId> {
 
     private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId> =
