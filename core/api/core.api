@@ -212,6 +212,36 @@ public final class com/adyen/checkout/core/exception/ModelSerializationException
 	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
 }
 
+public abstract class com/adyen/checkout/core/internal/ActionHandlingPaymentMethodConfigurationBuilder : com/adyen/checkout/core/internal/BaseConfigurationBuilder, com/adyen/checkout/core/internal/ActionHandlingConfigurationBuilder {
+	public static final field $stable I
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+}
+
+public abstract class com/adyen/checkout/core/internal/BaseConfigurationBuilder {
+	public static final field $stable I
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public final fun build ()Lcom/adyen/checkout/core/internal/Configuration;
+	protected abstract fun buildInternal ()Lcom/adyen/checkout/core/internal/Configuration;
+	protected final fun getAmount ()Lcom/adyen/checkout/core/data/model/Amount;
+	protected final fun getClientKey ()Ljava/lang/String;
+	protected final fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	protected final fun getShopperLocale ()Ljava/util/Locale;
+	public fun setAmount (Lcom/adyen/checkout/core/data/model/Amount;)Lcom/adyen/checkout/core/internal/BaseConfigurationBuilder;
+	protected final fun setAmount (Lcom/adyen/checkout/core/data/model/Amount;)V
+	protected final fun setClientKey (Ljava/lang/String;)V
+	protected final fun setEnvironment (Lcom/adyen/checkout/core/Environment;)V
+	public final fun setShopperLocale (Ljava/util/Locale;)Lcom/adyen/checkout/core/internal/BaseConfigurationBuilder;
+	protected final fun setShopperLocale (Ljava/util/Locale;)V
+}
+
+public abstract interface class com/adyen/checkout/core/internal/ButtonConfigurationBuilder {
+	public abstract fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/core/internal/ButtonConfigurationBuilder;
+}
+
 public final class com/adyen/checkout/core/internal/data/model/ErrorResponseBody$Companion {
 }
 
@@ -410,6 +440,14 @@ public final class com/adyen/checkout/core/sessions/data/SessionSetupResponse$Cr
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/SessionSetupResponse;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/sessions/data/model/SessionDetails$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/model/SessionDetails;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/model/SessionDetails;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
