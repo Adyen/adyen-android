@@ -9,8 +9,34 @@
 package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.internal.Configuration
 
 internal object CheckoutSessionProvider {
+
+    /**
+     * Allows creating a [CheckoutSession] from the response of the /sessions endpoint.
+     * This is a suspend function that executes a network call on the IO thread.
+     *
+     * @param sessionModel The deserialized JSON response of the /sessions API call. You can use
+     * [SessionModel.SERIALIZER] to deserialize this JSON.
+     * @param configuration A [Configuration] to initialize the session. You can use the same configuration required to
+     * initialize Drop-in or a component.
+     * @param order An [Order] in case of an ongoing partial payment flow.
+     *
+     * @return The result of the API call.
+     */
+    suspend fun createSession(
+        sessionModel: SessionModel,
+        configuration: Configuration,
+//        order: Order? = null,
+    ): CheckoutSessionResult {
+        return createSession(
+            sessionModel = sessionModel,
+            environment = configuration.environment,
+            clientKey = configuration.clientKey,
+//            order = order,
+        )
+    }
 
     /**
      * Allows creating a [CheckoutSession] from the response of the /sessions endpoint.

@@ -15,18 +15,19 @@ import com.adyen.checkout.core.sessions.SessionModel
 
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,
+    val checkoutConfiguration: CheckoutConfiguration
 ) {
 
     companion object {
         suspend fun initialize(
             sessionModel: SessionModel,
             // TODO - Configuration
-            clientKey: String,
+            checkoutConfiguration: CheckoutConfiguration,
         ): AdyenCheckout.Result {
-            val checkoutSession = getCheckoutSession(sessionModel, clientKey)
+            val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
                 checkoutSession != null -> Result.Success(
-                    adyenCheckout = AdyenCheckout(checkoutSession),
+                    adyenCheckout = AdyenCheckout(checkoutSession, checkoutConfiguration),
                 )
 
                 else -> Result.Error("Session initialization failed.")
@@ -35,12 +36,11 @@ data class AdyenCheckout(
 
         private suspend fun getCheckoutSession(
             sessionModel: SessionModel,
-            clientKey: String,
             // TODO - Configuration
-//        checkoutConfiguration: CheckoutConfiguration
+            checkoutConfiguration: CheckoutConfiguration
         ): CheckoutSession? {
             return when (
-                val result = CheckoutSessionProvider.createSession(sessionModel, Environment.TEST, clientKey)
+                val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
             ) {
                 is CheckoutSessionResult.Success -> result.checkoutSession
                 is CheckoutSessionResult.Error -> {
