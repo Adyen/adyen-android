@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">Pagament únic</string>
     <string name="checkout_card_installments_option_revolving">Pagament rotatiu</string>
+    <string name="checkout_card_dual_brand_title">Marca de targeta</string>
+    <string name="checkout_card_dual_brand_description">Seleccioneu la marca de la targeta amb la qual preferiu pagar. Això és opcional.</string>
 
     <string name="store_payment_method">Desa\'l per al meu proper pagament</string>
 </resources>

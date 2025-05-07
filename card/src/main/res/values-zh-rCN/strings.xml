@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">全款支付</string>
     <string name="checkout_card_installments_option_revolving">循环支付</string>
+    <string name="checkout_card_dual_brand_title">卡片品牌</string>
+    <string name="checkout_card_dual_brand_description">请选择您偏好的支付卡片品牌。这是可选的。</string>
 
     <string name="store_payment_method">保存以便下次支付使用</string>
 </resources>
