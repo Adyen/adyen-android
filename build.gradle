@@ -16,7 +16,6 @@ plugins {
     alias libs.plugins.binary.compatibility.validator
 }
 
-apply from: "config/gradle/dokkaRoot.gradle"
 apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
 apply from: "config/gradle/dependencyList.gradle"
@@ -83,6 +82,63 @@ subprojects {
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
+}
+
+dependencies {
+    dokka(project(':3ds2'))
+    dokka(project(':ach'))
+    dokka(project(':action'))
+    dokka(project(':action-core'))
+    dokka(project(':await'))
+    dokka(project(':bacs'))
+    dokka(project(':bcmc'))
+    dokka(project(':blik'))
+    dokka(project(':boleto'))
+    dokka(project(':card'))
+    dokka(project(':card-scanning'))
+    dokka(project(':cashapppay'))
+    dokka(project(':checkout-core'))
+    dokka(project(':components-compose'))
+    dokka(project(':components-core'))
+    dokka(project(':convenience-stores-jp'))
+    dokka(project(':core'))
+    dokka(project(':cse'))
+    dokka(project(':dotpay'))
+    dokka(project(':drop-in'))
+    dokka(project(':drop-in-compose'))
+    dokka(project(':econtext'))
+    dokka(project(':entercash'))
+    dokka(project(':eps'))
+    dokka(project(':giftcard'))
+    dokka(project(':googlepay'))
+    dokka(project(':ideal'))
+    dokka(project(':instant'))
+    dokka(project(':issuer-list'))
+    dokka(project(':mbway'))
+    dokka(project(':meal-voucher-fr'))
+    dokka(project(':molpay'))
+    dokka(project(':online-banking-core'))
+    dokka(project(':online-banking-cz'))
+    dokka(project(':online-banking-jp'))
+    dokka(project(':online-banking-pl'))
+    dokka(project(':online-banking-sk'))
+    dokka(project(':openbanking'))
+    dokka(project(':paybybank'))
+    dokka(project(':paybybank-us'))
+    dokka(project(':payeasy'))
+    dokka(project(':payto'))
+    dokka(project(':qr-code'))
+    dokka(project(':redirect'))
+    dokka(project(':seven-eleven'))
+    dokka(project(':sepa'))
+    dokka(project(':sessions-core'))
+    dokka(project(':twint'))
+    dokka(project(':twint-action'))
+    dokka(project(':ui'))
+    dokka(project(':ui-core'))
+    dokka(project(':upi'))
+    dokka(project(':voucher'))
+    dokka(project(':wechatpay'))
 }
 
 apply from: file('config/gradle/dependencyGraph.gradle')
