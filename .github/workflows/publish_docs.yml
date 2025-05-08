@@ -32,7 +32,7 @@ jobs:
 
       # Generate kdocs
       - name: Generate Dokka HTML documentation
-        run: ./gradlew dokkaHtmlMultiModule
+        run: ./gradlew dokkaGeneratePublicationHtml
 
       # Deploy to GitHub Pages
       - name: Deploy GitHub Pages
