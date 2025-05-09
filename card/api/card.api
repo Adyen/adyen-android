@@ -528,6 +528,3 @@ public final class com/adyen/checkout/card/internal/ui/view/CardNumberInput : co
 public final class com/adyen/checkout/card/internal/ui/view/CardNumberInput$Companion {
 }
 
-public final class com/adyen/checkout/card/internal/util/DualBrandedCardHandler$Companion {
-}
-
