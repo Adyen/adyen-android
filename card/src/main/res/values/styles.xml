@@ -134,6 +134,7 @@
         <item name="android:layout_marginStart">@dimen/standard_three_quarters_margin</item>
         <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
         <item name="android:text">@string/checkout_address_form_country_hint</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="AdyenCheckout.Card.BrandSelection.Item.RadioButton" parent="AdyenCheckout.RadioButton">
