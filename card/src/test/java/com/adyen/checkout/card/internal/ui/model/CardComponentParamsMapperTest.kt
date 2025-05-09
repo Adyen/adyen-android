@@ -595,6 +595,7 @@ internal class CardComponentParamsMapperTest {
         addressParams = addressParams,
         cvcVisibility = cvcVisibility,
         storedCVCVisibility = storedCVCVisibility,
+        isDualBrandsEnabled = true
     )
 
     companion object {

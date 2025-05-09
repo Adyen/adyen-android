@@ -74,6 +74,7 @@ internal class BcmcComponentParamsMapper(
             cvcVisibility = CVCVisibility.HIDE_FIRST,
             storedCVCVisibility = StoredCVCVisibility.HIDE,
             supportedCardBrands = getSupportedCardBrands(paymentMethod),
+            isDualBrandsEnabled = false,
         )
     }
 

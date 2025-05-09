@@ -30,5 +30,6 @@ data class CardComponentParams(
     val installmentParams: InstallmentParams?,
     val addressParams: AddressParams,
     val cvcVisibility: CVCVisibility,
-    val storedCVCVisibility: StoredCVCVisibility
+    val storedCVCVisibility: StoredCVCVisibility,
+    val isDualBrandsEnabled: Boolean
 ) : ComponentParams by commonComponentParams, ButtonParams

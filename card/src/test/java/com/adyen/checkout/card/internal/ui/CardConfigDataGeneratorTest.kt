@@ -261,6 +261,7 @@ internal class CardConfigDataGeneratorTest {
             addressParams = addressParams,
             cvcVisibility = cvcVisibility,
             storedCVCVisibility = storedCVCVisibility,
+            isDualBrandsEnabled = true,
         )
     }
 }

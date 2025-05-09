@@ -429,10 +429,7 @@ class DefaultCardDelegate(
             cardBrands = getCardBrands(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
-            dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
-                detectedCardTypes,
-                inputData.selectedCardBrand,
-            ),
+            dualBrandData = makeDualBrandData(detectedCardTypes, inputData.selectedCardBrand),
         )
     }
 
@@ -865,9 +862,19 @@ class DefaultCardDelegate(
         }
     }
 
+    private fun makeDualBrandData(
+        detectedCardTypes: List<DetectedCardType>,
+        selectedCardBrand: CardBrand?
+    ) = if (componentParams.isDualBrandsEnabled) {
+        dualBrandedCardHandler.processDetectedCardTypes(detectedCardTypes, selectedCardBrand)
+    } else {
+        null
+    }
+
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
 
-    override fun shouldShowSubmitButton(): Boolean = isConfirmationRequired() && componentParams.isSubmitButtonVisible
+    override fun shouldShowSubmitButton(): Boolean =
+        isConfirmationRequired() && componentParams.isSubmitButtonVisible
 
     override fun setOnBinValueListener(listener: ((binValue: String) -> Unit)?) {
         onBinValueListener = listener

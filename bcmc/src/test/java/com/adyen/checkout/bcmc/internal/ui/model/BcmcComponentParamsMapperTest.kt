@@ -321,6 +321,7 @@ internal class BcmcComponentParamsMapperTest {
             CardBrand(cardType = CardType.MAESTRO),
             CardBrand(cardType = CardType.VISA),
         ),
+        isDualBrandsEnabled = false,
     )
 
     companion object {

@@ -124,6 +124,7 @@ internal class CardComponentParamsMapper(
             } else {
                 StoredCVCVisibility.SHOW
             },
+            isDualBrandsEnabled = true,
         )
     }
 
