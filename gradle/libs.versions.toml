@@ -45,7 +45,7 @@ compose-viewmodel = "2.8.7"
 adyen3ds2 = "2.2.23"
 
 # External dependencies
-cash-app-pay = "2.5.0"
+cash-app-pay = "2.6.0"
 okhttp = "4.12.0"
 play-services-wallet = "19.4.0"
 twint = "8.0.0"
