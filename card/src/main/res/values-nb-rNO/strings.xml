@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">Engangsbetaling</string>
     <string name="checkout_card_installments_option_revolving">Gjentakende betaling</string>
+    <string name="checkout_card_dual_brand_title">Kortmerke</string>
+    <string name="checkout_card_dual_brand_description">Velg kortmerket du foretrekker å betale med. Dette er valgfritt.</string>
 
     <string name="store_payment_method">Lagre til min neste betaling</string>
 </resources>

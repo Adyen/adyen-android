@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$s x %2$s</string>
     <string name="checkout_card_installments_option_one_time">Egyösszegű fizetés</string>
     <string name="checkout_card_installments_option_revolving">Többösszegű fizetés</string>
+    <string name="checkout_card_dual_brand_title">Kártyakibocsátó</string>
+    <string name="checkout_card_dual_brand_description">Válassza ki a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.</string>
 
     <string name="store_payment_method">Mentés a következő fizetéshez</string>
 </resources>

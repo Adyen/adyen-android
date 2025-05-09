@@ -24,12 +24,13 @@ import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.CardInputData
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.card.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.card.internal.util.CardValidationUtils
-import com.adyen.checkout.card.internal.util.DetectedCardTypesUtils
+import com.adyen.checkout.card.internal.util.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.card.internal.util.KcpValidationUtils
 import com.adyen.checkout.card.internal.util.toBinLookupData
@@ -85,6 +86,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -109,6 +111,7 @@ class DefaultCardDelegate(
     private val submitHandler: SubmitHandler<CardComponentState>,
     private val addressLookupDelegate: AddressLookupDelegate,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
+    private val dualBrandedCardHandler: DualBrandedCardHandler,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
     private val inputData: CardInputData = CardInputData()
@@ -158,6 +161,7 @@ class DefaultCardDelegate(
         initializeAnalytics(coroutineScope)
         fetchPublicKey()
         subscribeToDetectedCardTypes()
+        subscribeToDualBrandedAnalyticsEvents()
 
         if (componentParams.addressParams is AddressParams.FullAddress ||
             componentParams.addressParams is AddressParams.Lookup
@@ -269,9 +273,46 @@ class DefaultCardDelegate(
                 }
                 updateOutputData(detectedCardTypes = detectedCardTypes)
             }
-            .map { detectedCardTypes -> detectedCardTypes.map { it.cardBrand } }
+            .map { detectedCardTypes ->
+                detectedCardTypes.filter { it.isReliable && it.isSupported }.map { it.cardBrand }
+            }
             .distinctUntilChanged()
-            .onEach { inputData.selectedCardIndex = -1 }
+            .onEach {
+                inputData.selectedCardBrand = null
+            }
+            .launchIn(coroutineScope)
+    }
+
+    private fun subscribeToDualBrandedAnalyticsEvents() {
+        outputDataFlow.map { it.dualBrandData?.selectedBrand }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .onEach { brand ->
+                if (inputData.selectedCardBrand != null) {
+                    val event = GenericEvents.selected(
+                        component = paymentMethod.type.orEmpty(),
+                        target = DUAL_BRAND_ANALYTICS_TARGET,
+                        brand = brand.txVariant,
+                    )
+                    analyticsManager.trackEvent(event)
+                    adyenLog(AdyenLogLevel.DEBUG) { "brand selection changed: ${brand.txVariant}" }
+                }
+            }
+            .launchIn(coroutineScope)
+
+        outputDataFlow.map { it.dualBrandData?.brandOptions?.map { it.brand.txVariant } }
+            .filterNotNull()
+            .distinctUntilChanged()
+            .map { brandOptions ->
+                val event = GenericEvents.displayed(
+                    component = paymentMethod.type.orEmpty(),
+                    target = DUAL_BRAND_ANALYTICS_TARGET,
+                    brand = outputData.dualBrandData?.selectedBrand?.txVariant.orEmpty(),
+                    configData = cardConfigDataGenerator.generateDualBrandConfigData(brandOptions),
+                )
+                analyticsManager.trackEvent(event)
+                adyenLog(AdyenLogLevel.DEBUG) { "new brand options: ${brandOptions.joinToString(",")}" }
+            }
             .launchIn(coroutineScope)
     }
 
@@ -335,13 +376,11 @@ class DefaultCardDelegate(
 
         val isReliable = detectedCardTypes.any { it.isReliable }
 
-        val filteredDetectedCardTypes = DetectedCardTypesUtils.filterDetectedCardTypes(
-            detectedCardTypes,
-            inputData.selectedCardIndex,
-        )
-        val selectedOrFirstCardType = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = filteredDetectedCardTypes,
-        )
+        val filteredDetectedCardTypes = detectedCardTypes.filter { it.isSupported }
+
+        val selectedOrFirstCardType = inputData.selectedCardBrand?.let { selectedBrand ->
+            detectedCardTypes.firstOrNull { it.cardBrand.txVariant == selectedBrand.txVariant }
+        } ?: filteredDetectedCardTypes.firstOrNull()
 
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
@@ -388,9 +427,12 @@ class DefaultCardDelegate(
                 isCardTypeReliable = isReliable,
             ),
             cardBrands = getCardBrands(filteredDetectedCardTypes),
-            isDualBranded = isDualBrandedFlow(filteredDetectedCardTypes),
             kcpBirthDateOrTaxNumberHint = getKcpBirthDateOrTaxNumberHint(inputData.kcpBirthDateOrTaxNumber),
             isCardListVisible = isCardListVisible(getCardBrands(detectedCardTypes), filteredDetectedCardTypes),
+            dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
+                detectedCardTypes,
+                inputData.selectedCardBrand,
+            ),
         )
     }
 
@@ -418,9 +460,8 @@ class DefaultCardDelegate(
     ): CardComponentState {
         val cardNumber = outputData.cardNumberState.value
 
-        val firstCardBrand = DetectedCardTypesUtils.getSelectedOrFirstDetectedCardType(
-            detectedCardTypes = outputData.detectedCardTypes,
-        )?.cardBrand
+        val firstCardBrand = outputData.dualBrandData?.selectedBrand
+            ?: outputData.detectedCardTypes.firstOrNull()?.cardBrand
 
         val binValue =
             if (outputData.cardNumberState.validation.isValid() && cardNumber.length >= EXTENDED_CARD_NUMBER_LENGTH) {
@@ -737,7 +778,7 @@ class DefaultCardDelegate(
                 taxNumber = stateOutputData.kcpBirthDateOrTaxNumberState.value
             }
 
-            brand = getCardBrand(stateOutputData.detectedCardTypes)
+            brand = getCardBrand(stateOutputData.detectedCardTypes, stateOutputData.dualBrandData)
 
             fundingSource = getFundingSource()
 
@@ -756,11 +797,6 @@ class DefaultCardDelegate(
             binValue = binValue,
             lastFourDigits = lastFour,
         )
-    }
-
-    private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
-        val reliableDetectedCards = detectedCardTypes.filter { it.isReliable }
-        return reliableDetectedCards.size > 1
     }
 
     private fun showStorePaymentField(): Boolean {
@@ -815,16 +851,18 @@ class DefaultCardDelegate(
         }
     }
 
-    private fun getCardBrand(detectedCardTypes: List<DetectedCardType>): String? {
-        return if (isDualBrandedFlow(detectedCardTypes)) {
-            DetectedCardTypesUtils.getSelectedCardType(
-                detectedCardTypes = detectedCardTypes,
-            )
+    private fun getCardBrand(
+        detectedCardTypes: List<DetectedCardType>,
+        dualBrandData: DualBrandData?
+    ): String? {
+        return if (dualBrandData != null) {
+            dualBrandData.selectedBrand?.txVariant
         } else {
             val reliableCardBrand = detectedCardTypes.firstOrNull { it.isReliable }
             val firstDetectedBrand = detectedCardTypes.firstOrNull()
-            reliableCardBrand ?: firstDetectedBrand
-        }?.cardBrand?.txVariant
+            val cardType = reliableCardBrand ?: firstDetectedBrand
+            cardType?.cardBrand?.txVariant
+        }
     }
 
     override fun isConfirmationRequired(): Boolean = _viewFlow.value is ButtonComponentViewType
@@ -863,6 +901,7 @@ class DefaultCardDelegate(
 
     companion object {
         private const val DEBIT_FUNDING_SOURCE = "debit"
+        private const val DUAL_BRAND_ANALYTICS_TARGET = "dual_brand_button"
 
         @VisibleForTesting
         internal const val BIN_VALUE_LENGTH = 6

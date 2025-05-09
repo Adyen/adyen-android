@@ -100,6 +100,7 @@ internal class StoredCardDelegate(
         isSupported = true,
         panLength = null,
         paymentMethodVariant = null,
+        localizedBrand = null
     )
 
     private val inputData: CardInputData = CardInputData()
@@ -246,9 +247,9 @@ internal class StoredCardDelegate(
             addressUIState = AddressFormUIState.NONE,
             installmentOptions = emptyList(),
             cardBrands = emptyList(),
-            isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
+            dualBrandData = null
         )
     }
 

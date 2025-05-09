@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">Eingreiðsla</string>
     <string name="checkout_card_installments_option_revolving">Veltigreiðsla</string>
+    <string name="checkout_card_dual_brand_title">Kortafyrirtæki</string>
+    <string name="checkout_card_dual_brand_description">Veldu kortafyrirtæki kortsins sem þú vilt greiða með. Þetta er valfrjálst.</string>
 
     <string name="store_payment_method">Spara fyrir næstu greiðslu</string>
 </resources>

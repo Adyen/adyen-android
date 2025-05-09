@@ -127,6 +127,7 @@ class DefaultDetectCardTypeRepository(
             isSupported = supportedCardBrands.contains(cardBrand),
             panLength = null,
             paymentMethodVariant = null,
+            localizedBrand = null
         )
     }
 
@@ -205,6 +206,7 @@ class DefaultDetectCardTypeRepository(
                 isSupported = brandResponse.supported != false,
                 panLength = brandResponse.panLength,
                 paymentMethodVariant = brandResponse.paymentMethodVariant,
+                localizedBrand = brandResponse.localizedBrand
             )
         }
     }

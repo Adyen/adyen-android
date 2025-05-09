@@ -28,6 +28,7 @@ data class Brand(
     val expiryDatePolicy: String? = null,
     val panLength: Int? = null,
     val paymentMethodVariant: String? = null,
+    val localizedBrand: String? = null,
 ) : ModelObject() {
 
     companion object {
@@ -39,6 +40,7 @@ data class Brand(
         private const val EXPIRY_DATE_POLICY = "expiryDatePolicy"
         private const val PAN_LENGTH = "panLength"
         private const val PAYMENT_METHOD_VARIANT = "paymentMethodVariant"
+        private const val LOCALE_BRAND = "localeBrand"
 
         @JvmField
         val SERIALIZER: Serializer<Brand> = object : Serializer<Brand> {
@@ -53,6 +55,7 @@ data class Brand(
                     jsonObject.putOpt(EXPIRY_DATE_POLICY, modelObject.expiryDatePolicy)
                     jsonObject.putOpt(PAN_LENGTH, modelObject.panLength)
                     jsonObject.putOpt(PAYMENT_METHOD_VARIANT, modelObject.paymentMethodVariant)
+                    jsonObject.putOpt(LOCALE_BRAND, modelObject.localizedBrand)
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)
                 }
@@ -69,6 +72,7 @@ data class Brand(
                         expiryDatePolicy = jsonObject.getStringOrNull(EXPIRY_DATE_POLICY),
                         panLength = jsonObject.getIntOrNull(PAN_LENGTH),
                         paymentMethodVariant = jsonObject.getStringOrNull(PAYMENT_METHOD_VARIANT),
+                        localizedBrand = jsonObject.getStringOrNull(LOCALE_BRAND)
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(Brand::class.java, e)

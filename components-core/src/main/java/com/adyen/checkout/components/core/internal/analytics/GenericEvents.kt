@@ -32,21 +32,27 @@ object GenericEvents {
     fun displayed(
         component: String,
         target: String,
+        brand: String? = null,
+        configData: Map<String, String>? = null
     ) = AnalyticsEvent.Info(
         component = component,
         type = AnalyticsEvent.Info.Type.DISPLAYED,
         target = target,
+        configData = configData,
+        brand = brand,
     )
 
     fun selected(
         component: String,
         target: String,
-        issuer: String,
+        issuer: String? = null,
+        brand: String? = null
     ) = AnalyticsEvent.Info(
         component = component,
         type = AnalyticsEvent.Info.Type.SELECTED,
         target = target,
         issuer = issuer,
+        brand = brand,
     )
 
     fun input(

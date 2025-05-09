@@ -26,6 +26,7 @@ import com.adyen.checkout.card.internal.ui.DefaultCardDelegate
 import com.adyen.checkout.card.internal.ui.StoredCardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.model.InstallmentsParamsMapper
+import com.adyen.checkout.card.internal.util.DualBrandedCardHandler
 import com.adyen.checkout.card.toCheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
@@ -160,6 +161,7 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
             )
 
             val genericActionDelegate =
@@ -271,6 +273,7 @@ constructor(
                     shopperLocale = componentParams.shopperLocale,
                 ),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
+                dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
             )
 
             val genericActionDelegate =
@@ -386,7 +389,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
-                cardValidationMapper = CardValidationMapper()
+                cardValidationMapper = CardValidationMapper(),
             )
 
             val genericActionDelegate =
@@ -484,7 +487,7 @@ constructor(
                 publicKeyRepository = publicKeyRepository,
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
-                cardValidationMapper = CardValidationMapper()
+                cardValidationMapper = CardValidationMapper(),
             )
 
             val genericActionDelegate =

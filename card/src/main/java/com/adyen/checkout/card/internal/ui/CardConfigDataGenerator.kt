@@ -48,6 +48,10 @@ class CardConfigDataGenerator {
         }
     }
 
+    fun generateDualBrandConfigData(brandOptions: List<String>): Map<String, String> {
+        return mapOf("dualBrands" to brandOptions.joinToString(","))
+    }
+
     private fun getBillingAddressMode(addressParams: AddressParams): String {
         return when (addressParams) {
             is AddressParams.FullAddress -> "full"
