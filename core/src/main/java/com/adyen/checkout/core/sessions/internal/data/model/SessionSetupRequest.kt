@@ -3,11 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/4/2025.
+ * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.sessions.data
+package com.adyen.checkout.core.sessions.internal.data.model
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
@@ -15,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Parcelize
 data class SessionSetupRequest(
     val sessionData: String,

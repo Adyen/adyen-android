@@ -10,7 +10,7 @@ package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.PaymentMethod
-import com.adyen.checkout.core.sessions.data.SessionSetupResponse
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 
 /**
  * A class holding the data required to launch Drop-in or a component with the sessions flow.
