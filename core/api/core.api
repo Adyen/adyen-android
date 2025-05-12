@@ -299,6 +299,39 @@ public final class com/adyen/checkout/core/data/OrderRequest$Creator : android/o
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/data/OrderResponse : com/adyen/checkout/core/internal/data/model/ModelObject {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/data/OrderResponse$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/data/model/Amount;Lcom/adyen/checkout/core/data/model/Amount;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/adyen/checkout/core/data/model/Amount;
+	public final fun component4 ()Lcom/adyen/checkout/core/data/model/Amount;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/data/model/Amount;Lcom/adyen/checkout/core/data/model/Amount;)Lcom/adyen/checkout/core/data/OrderResponse;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/data/OrderResponse;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/data/model/Amount;Lcom/adyen/checkout/core/data/model/Amount;ILjava/lang/Object;)Lcom/adyen/checkout/core/data/OrderResponse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAmount ()Lcom/adyen/checkout/core/data/model/Amount;
+	public final fun getOrderData ()Ljava/lang/String;
+	public final fun getPspReference ()Ljava/lang/String;
+	public final fun getRemainingAmount ()Lcom/adyen/checkout/core/data/model/Amount;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/data/OrderResponse$Companion {
+}
+
+public final class com/adyen/checkout/core/data/OrderResponse$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/data/OrderResponse;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/data/OrderResponse;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
 public final class com/adyen/checkout/core/data/PaymentComponentData : com/adyen/checkout/core/internal/data/model/ModelObject {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -750,6 +783,28 @@ public final class com/adyen/checkout/core/sessions/SessionModel$Creator : andro
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/SessionModel;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/SessionModel;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionPaymentsRequest$Companion {
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionPaymentsRequest$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/SessionPaymentsRequest;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/SessionPaymentsRequest;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionPaymentsResponse$Companion {
+}
+
+public final class com/adyen/checkout/core/sessions/data/SessionPaymentsResponse$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/sessions/data/SessionPaymentsResponse;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/sessions/data/SessionPaymentsResponse;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
