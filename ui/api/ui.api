@@ -15,6 +15,12 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt
 	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class com/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt;
+	public fun <init> ()V
+	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$TextKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$TextKt;
 	public fun <init> ()V
