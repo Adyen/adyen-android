@@ -12,6 +12,8 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.sessions.data.SessionPaymentsRequest
+import com.adyen.checkout.core.sessions.data.SessionPaymentsResponse
 import com.adyen.checkout.core.sessions.data.SessionSetupRequest
 import com.adyen.checkout.core.sessions.data.SessionSetupResponse
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,6 +35,20 @@ class SessionService(
             body = request,
             requestSerializer = SessionSetupRequest.SERIALIZER,
             responseSerializer = SessionSetupResponse.SERIALIZER,
+        )
+    }
+
+    suspend fun submitPayment(
+        request: SessionPaymentsRequest,
+        sessionId: String,
+        clientKey: String,
+    ): SessionPaymentsResponse = withContext(coroutineDispatcher) {
+        httpClient.post(
+            path = "v1/sessions/$sessionId/payments",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = SessionPaymentsRequest.SERIALIZER,
+            responseSerializer = SessionPaymentsResponse.SERIALIZER,
         )
     }
 }
