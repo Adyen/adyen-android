@@ -9,8 +9,12 @@
 package com.adyen.checkout.core.sessions.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.data.PaymentComponentData
 import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.data.SessionPaymentsRequest
+import com.adyen.checkout.core.sessions.data.SessionPaymentsResponse
 import com.adyen.checkout.core.sessions.data.SessionSetupRequest
 import com.adyen.checkout.core.sessions.data.SessionSetupResponse
 
@@ -28,6 +32,18 @@ class SessionRepository(
     ): Result<SessionSetupResponse> = runSuspendCatching {
         val request = SessionSetupRequest(sessionModel.sessionData.orEmpty())
         sessionService.setupSession(
+            request = request,
+            sessionId = sessionModel.id,
+            clientKey = clientKey,
+        )
+    }
+
+    suspend fun submitPayment(
+        sessionModel: SessionModel,
+        paymentComponentData: PaymentComponentData<out PaymentMethodDetails>
+    ): Result<SessionPaymentsResponse> = runSuspendCatching {
+        val request = SessionPaymentsRequest(sessionModel.sessionData.orEmpty(), paymentComponentData)
+        sessionService.submitPayment(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey,
