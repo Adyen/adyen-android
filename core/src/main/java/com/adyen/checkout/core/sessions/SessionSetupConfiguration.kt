@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/4/2025.
+ * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.sessions.data
+package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -58,7 +58,9 @@ data class SessionSetupConfiguration(
                         showInstallmentAmount = jsonObject.getBooleanOrNull(SHOW_INSTALLMENT_AMOUNT) ?: false,
 //                        installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
 //                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
-                        showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(SHOW_REMOVE_PAYMENT_METHOD_BUTTON),
+                        showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(
+                            SHOW_REMOVE_PAYMENT_METHOD_BUTTON
+                        ),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupConfiguration::class.java, e)

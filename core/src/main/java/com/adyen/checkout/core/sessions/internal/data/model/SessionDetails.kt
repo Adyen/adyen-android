@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 6/5/2025.
+ * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.sessions.data.model
+package com.adyen.checkout.core.sessions.internal.data.model
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
@@ -14,7 +14,7 @@ import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionModel
-import com.adyen.checkout.core.sessions.data.SessionSetupConfiguration
+import com.adyen.checkout.core.sessions.SessionSetupConfiguration
 import kotlinx.parcelize.Parcelize
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
