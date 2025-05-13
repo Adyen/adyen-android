@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -92,7 +93,7 @@ fun AdyenTextField(
                     color = labelColor,
                 )
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .styledBackground(style, isFocused, isError)
@@ -107,7 +108,9 @@ fun AdyenTextField(
                     )
 
                     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
-                        innerTextField()
+                        Box(Modifier.weight(1f)) {
+                            innerTextField()
+                        }
                     }
 
                     trailingIcon?.invoke()
@@ -207,6 +210,7 @@ private class StylingPreviewParameterProvider : PreviewParameterProvider<Theme> 
 
     private val styles = sequenceOf(
         AdyenTextFieldStyle(),
+        // Transparent background to get an outlined look
         AdyenTextFieldStyle(
             backgroundColor = AdyenColor(0x00FFFFFF),
         ),
