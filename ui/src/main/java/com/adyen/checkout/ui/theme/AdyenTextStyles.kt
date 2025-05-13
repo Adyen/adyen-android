@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.theme
 
 import androidx.compose.runtime.Immutable
+import com.adyen.checkout.ui.internal.DefaultTextStyles
 
 // TODO - Add KDocs
 @Immutable
@@ -23,25 +24,35 @@ data class AdyenTextStyle(
 data class AdyenTextStyles(
     val title: AdyenTextStyle,
     val subtitle: AdyenTextStyle,
-    val label: AdyenTextStyle,
     val body: AdyenTextStyle,
-    val caption: AdyenTextStyle,
+    val bodyEmphasized: AdyenTextStyle,
+    val subHeadline: AdyenTextStyle,
+    val subHeadlineEmphasized: AdyenTextStyle,
+    val footnote: AdyenTextStyle,
+    val footnoteEmphasized: AdyenTextStyle,
 ) {
 
     companion object {
 
+        @Suppress("LongParameterList")
         fun default(
-            title: AdyenTextStyle = AdyenTextStyle(size = 36, weight = 400, lineHeight = 44, fontResId = null),
-            subtitle: AdyenTextStyle = AdyenTextStyle(size = 22, weight = 400, lineHeight = 28, fontResId = null),
-            label: AdyenTextStyle = AdyenTextStyle(size = 14, weight = 500, lineHeight = 20, fontResId = null),
-            body: AdyenTextStyle = AdyenTextStyle(size = 14, weight = 400, lineHeight = 20, fontResId = null),
-            caption: AdyenTextStyle = AdyenTextStyle(size = 12, weight = 400, lineHeight = 16, fontResId = null),
+            title: AdyenTextStyle = DefaultTextStyles.Title,
+            subtitle: AdyenTextStyle = DefaultTextStyles.Subtitle,
+            body: AdyenTextStyle = DefaultTextStyles.Body,
+            bodyEmphasized: AdyenTextStyle = DefaultTextStyles.BodyEmphasized,
+            subHeadline: AdyenTextStyle = DefaultTextStyles.SubHeadline,
+            subHeadlineEmphasized: AdyenTextStyle = DefaultTextStyles.SubHeadlineEmphasized,
+            footnote: AdyenTextStyle = DefaultTextStyles.Footnote,
+            footnoteEmphasized: AdyenTextStyle = DefaultTextStyles.FootnoteEmphasized,
         ) = AdyenTextStyles(
             title = title,
             subtitle = subtitle,
-            label = label,
             body = body,
-            caption = caption,
+            bodyEmphasized = bodyEmphasized,
+            subHeadline = subHeadline,
+            subHeadlineEmphasized = subHeadlineEmphasized,
+            footnote = footnote,
+            footnoteEmphasized = footnoteEmphasized,
         )
     }
 }

@@ -248,7 +248,7 @@ private fun AdyenButton(
                 Spacer(Modifier.size(8.dp))
             }
 
-            Label(text, color = contentColor)
+            BodyEmphasized(text, color = contentColor)
         },
         modifier = modifier,
     )
