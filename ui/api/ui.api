@@ -218,18 +218,17 @@ public final class com/adyen/checkout/ui/theme/AdyenSwitchStyle {
 
 public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle {
 	public static final field $stable I
-	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
+	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
 	public final fun component2-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
 	public final fun component3-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
 	public final fun component4-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
-	public final fun component5-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
-	public final fun component6 ()Ljava/lang/Integer;
-	public final fun component7-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
-	public final fun component8 ()Ljava/lang/Integer;
-	public final fun copy-5oWp9cY (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;)Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;
-	public static synthetic fun copy-5oWp9cY$default (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;
+	public final fun component5 ()Ljava/lang/Integer;
+	public final fun component6-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
+	public final fun component7 ()Ljava/lang/Integer;
+	public final fun copy-SivOpD4 (Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;)Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;
+	public static synthetic fun copy-SivOpD4$default (Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;Lcom/adyen/checkout/ui/theme/AdyenColor;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getActiveColor-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
 	public final fun getBackgroundColor-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
@@ -238,17 +237,8 @@ public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle {
 	public final fun getCornerRadius ()Ljava/lang/Integer;
 	public final fun getErrorColor-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
 	public final fun getTextColor-DgHkB_c ()Lcom/adyen/checkout/ui/theme/AdyenColor;
-	public final fun getType ()Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type : java/lang/Enum {
-	public static final field OUTLINED Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
-	public static final field UNDERLINED Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
-	public static fun values ()[Lcom/adyen/checkout/ui/theme/AdyenTextFieldStyle$Type;
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenTextStyle {
