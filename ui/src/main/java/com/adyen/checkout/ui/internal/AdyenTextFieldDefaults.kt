@@ -17,7 +17,6 @@ internal object AdyenTextFieldDefaults {
     fun textFieldStyle(style: AdyenTextFieldStyle): InternalTextFieldStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalTextFieldStyle(
-            type = style.type,
             backgroundColor = style.backgroundColor?.toCompose() ?: colors.container,
             textColor = style.textColor?.toCompose() ?: colors.text,
             activeColor = style.activeColor?.toCompose() ?: colors.action,
