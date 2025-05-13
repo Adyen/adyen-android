@@ -10,11 +10,9 @@ package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
 
 @Immutable
 internal data class InternalTextFieldStyle(
-    val type: AdyenTextFieldStyle.Type,
     val backgroundColor: Color,
     val textColor: Color,
     val activeColor: Color,
