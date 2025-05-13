@@ -27,16 +27,13 @@ import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -139,46 +136,25 @@ private fun Modifier.styledBackground(
         else -> style.borderColor
     }
     val borderWidth = if (isFocused || isError) style.borderWidth + 1 else style.borderWidth
-    return when (style.type) {
-        AdyenTextFieldStyle.Type.OUTLINED -> {
-            this
-                .background(style.backgroundColor, RoundedCornerShape(style.cornerRadius.dp))
-                .border(
-                    width = borderWidth.dp,
-                    color = borderColor,
-                    shape = RoundedCornerShape(style.cornerRadius.dp),
-                )
-        }
-
-        AdyenTextFieldStyle.Type.UNDERLINED -> {
-            this
-                .background(style.backgroundColor, RoundedCornerShape(style.cornerRadius.dp))
-                .clip(RoundedCornerShape(style.cornerRadius.dp))
-                .drawBehind {
-                    val strokeWidth = borderWidth * density
-                    val y = size.height - strokeWidth
-
-                    drawLine(
-                        borderColor,
-                        Offset(0f, y),
-                        Offset(size.width, y),
-                        strokeWidth,
-                    )
-                }
-        }
-    }
+    return this
+        .background(style.backgroundColor, RoundedCornerShape(style.cornerRadius.dp))
+        .border(
+            width = borderWidth.dp,
+            color = borderColor,
+            shape = RoundedCornerShape(style.cornerRadius.dp),
+        )
 }
 
 @Preview
 @Composable
 private fun AdyenTextFieldPreview(
-    @PreviewParameter(StylingPreviewParameterProvider::class) styling: Theme,
+    @PreviewParameter(StylingPreviewParameterProvider::class) theme: Theme,
 ) {
-    AdyenCheckoutTheme(styling) {
+    AdyenCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
-                .background(styling.colors.background.toCompose())
+                .background(theme.colors.background.toCompose())
                 .padding(16.dp),
         ) {
             AdyenTextField(
@@ -210,7 +186,7 @@ private fun AdyenTextFieldPreview(
                 supportingText = "Description",
                 modifier = Modifier.focusRequester(focusRequester),
             )
-            SideEffect {
+            LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
             }
 
@@ -230,17 +206,9 @@ private class StylingPreviewParameterProvider : PreviewParameterProvider<Theme> 
     private val themeProvider = ThemePreviewParameterProvider()
 
     private val styles = sequenceOf(
+        AdyenTextFieldStyle(),
         AdyenTextFieldStyle(
-            type = AdyenTextFieldStyle.Type.OUTLINED,
-        ),
-        AdyenTextFieldStyle(
-            type = AdyenTextFieldStyle.Type.OUTLINED,
             backgroundColor = AdyenColor(0x00FFFFFF),
-        ),
-        AdyenTextFieldStyle(
-            type = AdyenTextFieldStyle.Type.UNDERLINED,
-            backgroundColor = AdyenColor(0x00FFFFFF),
-            cornerRadius = 0,
         ),
     )
 
