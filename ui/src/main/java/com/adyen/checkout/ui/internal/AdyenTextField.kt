@@ -88,7 +88,7 @@ fun AdyenTextField(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 val labelColor = if (isFocused) style.activeColor else style.textColor
-                Label(
+                SubHeadline(
                     text = label,
                     color = labelColor,
                 )
@@ -117,7 +117,7 @@ fun AdyenTextField(
                 }
                 supportingText?.let {
                     val supportingTextColor = if (isError) style.errorColor else AdyenCheckoutTheme.colors.textSecondary
-                    Caption(
+                    Footnote(
                         text = supportingText,
                         color = supportingTextColor,
                     )
