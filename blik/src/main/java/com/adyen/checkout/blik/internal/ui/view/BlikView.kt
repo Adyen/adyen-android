@@ -74,26 +74,22 @@ internal class BlikView @JvmOverloads constructor(
     }
 
     private fun initBlikCodeInput() {
-        binding.editTextBlikCode.apply {
-            setOnChangeListener {
-                blikDelegate.updateInputData {
-                    blikCode = binding.editTextBlikCode.rawValue
-                }
+        binding.editTextBlikCode.setOnChangeListener {
+            blikDelegate.updateInputData {
+                blikCode = binding.editTextBlikCode.rawValue
+            }
+            binding.textInputLayoutBlikCode.hideError()
+        }
+
+        binding.editTextBlikCode.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+            val outputData = blikDelegate.outputData
+            val blikCodeValidation = outputData.blikCodeField.validation
+            if (hasFocus) {
                 binding.textInputLayoutBlikCode.hideError()
+            } else if (!blikCodeValidation.isValid()) {
+                val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
+                binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
             }
-
-            onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
-                val outputData = blikDelegate.outputData
-                val blikCodeValidation = outputData.blikCodeField.validation
-                if (hasFocus) {
-                    binding.textInputLayoutBlikCode.hideError()
-                } else if (!blikCodeValidation.isValid()) {
-                    val errorReasonResId = (blikCodeValidation as Validation.Invalid).reason
-                    binding.textInputLayoutBlikCode.showError(localizedContext.getString(errorReasonResId))
-                }
-            }
-
-            requestFocus()
         }
     }
 

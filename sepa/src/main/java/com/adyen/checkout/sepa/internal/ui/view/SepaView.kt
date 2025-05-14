@@ -64,7 +64,6 @@ internal class SepaView @JvmOverloads constructor(
             sepaDelegate.updateInputData { name = binding.editTextHolderName.rawValue }
             binding.textInputLayoutHolderName.hideError()
         }
-        binding.editTextHolderName.requestFocus()
         binding.editTextIbanNumber.setOnChangeListener {
             sepaDelegate.updateInputData { iban = binding.editTextIbanNumber.rawValue }
             binding.textInputLayoutIbanNumber.hideError()

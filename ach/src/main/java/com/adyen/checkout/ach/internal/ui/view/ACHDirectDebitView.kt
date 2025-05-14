@@ -39,7 +39,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
 ) : LinearLayout(
     context,
     attrs,
-    defStyleAttr,
+    defStyleAttr
 ),
     ComponentView {
     private val binding = AchDirectDebitViewBinding.inflate(LayoutInflater.from(context), this)
@@ -61,9 +61,9 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
         initLocalizedStrings(localizedContext)
         initAddressFormInput(coroutineScope)
         observeDelegate(delegate, coroutineScope)
-        initAccountHolderName()
         initBankAccountNumber()
         initAbaRoutingNumber()
+        initAccountHolderName()
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
@@ -74,47 +74,25 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
         with(binding) {
             textviewAchHeader.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_AchHeaderTextView,
-                localizedContext,
+                localizedContext
             )
             textInputLayoutAccountHolderName.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_AccountHolderNameInput,
-                localizedContext,
+                localizedContext
             )
             textInputLayoutAccountNumber.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_AccountNumberInput,
-                localizedContext,
+                localizedContext
             )
             textInputLayoutAbaRoutingNumber.setLocalizedHintFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_AbaRoutingNumberInput,
-                localizedContext,
+                localizedContext
             )
             switchStorePaymentMethod.setLocalizedTextFromStyle(
                 R.style.AdyenCheckout_ACHDirectDebit_StorePaymentSwitch,
-                localizedContext,
+                localizedContext
             )
             addressFormInput.initLocalizedContext(localizedContext)
-        }
-    }
-
-    private fun initAccountHolderName() {
-        binding.editTextAccountHolderName.apply {
-            setOnChangeListener {
-                delegate.updateInputData { ownerName = this@apply.rawValue }
-                binding.textInputLayoutAccountHolderName.hideError()
-            }
-
-            setOnFocusChangeListener { _, hasFocus ->
-                val ownerNameValidation = delegate.outputData.ownerName.validation
-                if (hasFocus) {
-                    binding.textInputLayoutAccountHolderName.hideError()
-                } else if (ownerNameValidation is Validation.Invalid) {
-                    binding.textInputLayoutAccountHolderName.showError(
-                        localizedContext.getString(ownerNameValidation.reason),
-                    )
-                }
-            }
-
-            requestFocus()
         }
     }
 
@@ -131,7 +109,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                     textInputLayoutAccountNumber.hideError()
                 } else if (accountNumberValidation is Validation.Invalid) {
                     textInputLayoutAccountNumber.showError(
-                        localizedContext.getString(accountNumberValidation.reason),
+                        localizedContext.getString(accountNumberValidation.reason)
                     )
                 }
             }
@@ -151,7 +129,27 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                     textInputLayoutAbaRoutingNumber.hideError()
                 } else if (bankLocationIdValidation is Validation.Invalid) {
                     textInputLayoutAbaRoutingNumber.showError(
-                        localizedContext.getString(bankLocationIdValidation.reason),
+                        localizedContext.getString(bankLocationIdValidation.reason)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun initAccountHolderName() {
+        with(binding) {
+            editTextAccountHolderName.setOnChangeListener {
+                delegate.updateInputData { ownerName = editTextAccountHolderName.rawValue }
+                textInputLayoutAccountHolderName.hideError()
+            }
+
+            editTextAccountHolderName.setOnFocusChangeListener { _, hasFocus ->
+                val ownerNameValidation = delegate.outputData.ownerName.validation
+                if (hasFocus) {
+                    textInputLayoutAccountHolderName.hideError()
+                } else if (ownerNameValidation is Validation.Invalid) {
+                    textInputLayoutAccountHolderName.showError(
+                        localizedContext.getString(ownerNameValidation.reason)
                     )
                 }
             }
@@ -178,7 +176,6 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
             AddressFormUIState.FULL_ADDRESS -> {
                 binding.addressFormInput.isVisible = true
             }
-
             else -> {
                 binding.addressFormInput.isVisible = false
             }
@@ -197,7 +194,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                 isErrorFocused = true
                 binding.editTextAccountHolderName.requestFocus()
                 binding.textInputLayoutAccountHolderName.showError(
-                    localizedContext.getString(ownerNameValidation.reason),
+                    localizedContext.getString(ownerNameValidation.reason)
                 )
             }
             val accountNumberValidation = bankAccountNumber.validation
@@ -207,7 +204,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                     binding.textInputLayoutAccountNumber.requestFocus()
                 }
                 binding.textInputLayoutAccountNumber.showError(
-                    localizedContext.getString(accountNumberValidation.reason),
+                    localizedContext.getString(accountNumberValidation.reason)
                 )
             }
 
@@ -218,7 +215,7 @@ internal class ACHDirectDebitView @JvmOverloads constructor(
                     binding.textInputLayoutAbaRoutingNumber.requestFocus()
                 }
                 binding.textInputLayoutAbaRoutingNumber.showError(
-                    localizedContext.getString(abaRoutingNumberValidation.reason),
+                    localizedContext.getString(abaRoutingNumberValidation.reason)
                 )
             }
 

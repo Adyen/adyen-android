@@ -58,27 +58,22 @@ internal class MbWayView @JvmOverloads constructor(
     }
 
     private fun initMobileNumberInput() {
-        binding.editTextMobileNumber.apply {
-            setOnChangeListener {
-                delegate.updateInputData {
-                    localPhoneNumber = it.toString()
-                }
+        binding.editTextMobileNumber.setOnChangeListener {
+            delegate.updateInputData {
+                localPhoneNumber = it.toString()
+            }
+            binding.textInputLayoutMobileNumber.hideError()
+        }
+        binding.editTextMobileNumber.onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
+            val outputData = delegate.outputData
+            val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
+            if (hasFocus) {
                 binding.textInputLayoutMobileNumber.hideError()
+            } else if (mobilePhoneNumberValidation is Validation.Invalid) {
+                binding.textInputLayoutMobileNumber.showError(
+                    localizedContext.getString(mobilePhoneNumberValidation.reason),
+                )
             }
-
-            onFocusChangeListener = OnFocusChangeListener { _, hasFocus: Boolean ->
-                val outputData = delegate.outputData
-                val mobilePhoneNumberValidation = outputData.mobilePhoneNumberFieldState.validation
-                if (hasFocus) {
-                    binding.textInputLayoutMobileNumber.hideError()
-                } else if (mobilePhoneNumberValidation is Validation.Invalid) {
-                    binding.textInputLayoutMobileNumber.showError(
-                        localizedContext.getString(mobilePhoneNumberValidation.reason),
-                    )
-                }
-            }
-
-            requestFocus()
         }
     }
 
