@@ -59,6 +59,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = null,
                 paymentMethodVariant = null,
+                localizedBrand = null,
             ),
         )
     }
@@ -75,6 +76,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardTypes.contains(cardBrand),
                 panLength = 16,
                 paymentMethodVariant = "mccredit",
+                localizedBrand = null,
             ),
         )
     }
@@ -92,6 +94,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardBrands.contains(cardBrandFirst),
                 panLength = 16,
                 paymentMethodVariant = "mccredit",
+                localizedBrand = null,
             ),
             DetectedCardType(
                 cardBrand = cardBrandSecond,
@@ -102,6 +105,7 @@ internal class TestDetectCardTypeRepository : DetectCardTypeRepository {
                 isSupported = supportedCardBrands.contains(cardBrandSecond),
                 panLength = 16,
                 paymentMethodVariant = "maestrouk",
+                localizedBrand = null,
             ),
         )
     }

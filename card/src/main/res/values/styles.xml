@@ -107,4 +107,43 @@
         <item name="android:hint">@string/checkout_address_lookup_hint</item>
         <item name="drawableTint">?attr/colorOnSurface</item>
     </style>
+
+    <style name="AdyenCheckout.Card.BrandSelection" />
+
+    <style name="AdyenCheckout.Card.BrandSelection.Header" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:layout_marginTop">@dimen/standard_half_margin</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:text">@string/checkout_card_dual_brand_title</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandSelection.Description" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:alpha">0.54</item>
+        <item name="android:layout_marginTop">@dimen/standard_quarter_margin</item>
+        <item name="android:text">@string/checkout_card_dual_brand_description</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandSelection.Item" />
+
+    <style name="AdyenCheckout.Card.BrandSelection.Item.Logo" parent="AdyenCheckout.Image.Logo">
+        <item name="adyenStrokeColor">@color/stroke_color</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandSelection.Item.Title" parent="AdyenCheckout.ListItemText">
+        <item name="android:layout_marginStart">@dimen/standard_three_quarters_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_three_quarters_margin</item>
+        <item name="android:text">@string/checkout_address_form_country_hint</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdyenCheckout.Card.BrandSelection.Item.RadioButton" parent="AdyenCheckout.RadioButton">
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

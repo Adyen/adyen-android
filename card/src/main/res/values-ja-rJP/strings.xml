@@ -35,6 +35,8 @@
     <string name="checkout_card_installments_option_regular_with_price">%1$sx %2$s</string>
     <string name="checkout_card_installments_option_one_time">一括払い</string>
     <string name="checkout_card_installments_option_revolving">リボ払い</string>
+    <string name="checkout_card_dual_brand_title">カードブランド</string>
+    <string name="checkout_card_dual_brand_description">お支払いに使用するカードブランドをお選びください。これは任意です。</string>
 
     <string name="store_payment_method">次回のお支払いのため詳細を保存</string>
 </resources>

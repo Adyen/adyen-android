@@ -26,10 +26,10 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.R
 import com.adyen.checkout.card.databinding.CardViewBinding
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
+import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
@@ -37,7 +37,6 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
-import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.BuildUtils
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
@@ -78,6 +77,7 @@ class CardView @JvmOverloads constructor(
 
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
+    private var cardBrandAdapter: CardBrandAdapter? = null
 
     private lateinit var localizedContext: Context
 
@@ -202,6 +202,7 @@ class CardView @JvmOverloads constructor(
         updateInstallments(cardOutputData)
         updateAddressHint(cardOutputData.addressUIState, cardOutputData.addressState.isOptional)
         setCardList(cardOutputData.cardBrands, cardOutputData.isCardListVisible)
+        setCoBadgeBrands(cardOutputData.dualBrandData)
         updateAddressLookupInputText(cardOutputData.addressState)
     }
 
@@ -298,13 +299,11 @@ class CardView @JvmOverloads constructor(
             binding.cardBrandLogoImageViewPrimary.apply {
                 strokeWidth = 0f
                 setImageResource(R.drawable.ic_card)
-                alpha = 1f
             }
             binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
-            resetBrandSelectionInput()
         } else {
-            val firtDetectedCardType = detectedCardTypes.first()
+            val firstDetectedCardType = detectedCardTypes.first()
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
             binding.cardBrandLogoImageViewPrimary.loadLogo(
                 environment = cardDelegate.componentParams.environment,
@@ -312,14 +311,14 @@ class CardView @JvmOverloads constructor(
                 placeholder = R.drawable.ic_card,
                 errorFallback = R.drawable.ic_card,
             )
-            setDualBrandedCardImages(detectedCardTypes, cardOutputData.cardNumberState.validation)
+            setDualBrandedCardImages(cardOutputData.dualBrandData, cardOutputData.cardNumberState.validation)
 
             // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
 
             if (detectedCardTypes.size == 1 &&
-                firtDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
+                firstDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
             ) {
                 val cardNumberValidation = cardOutputData.cardNumberState.validation
                 if (cardNumberValidation is Validation.Invalid) {
@@ -331,26 +330,22 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun setDualBrandedCardImages(detectedCardTypes: List<DetectedCardType>, validation: Validation) {
+    private fun setDualBrandedCardImages(dualBrandData: DualBrandData?, validation: Validation) {
         val cardNumberHasFocus = binding.textInputLayoutCardNumber.hasFocus()
         if (validation is Validation.Invalid && !cardNumberHasFocus) {
             setCardNumberError(validation.reason)
         } else {
-            detectedCardTypes.getOrNull(1)?.takeIf { it.isReliable }?.let { detectedCardType ->
+            dualBrandData?.brandOptions?.getOrNull(1)?.let { cardBrandItem ->
                 binding.cardBrandLogoContainerSecondary.isVisible = true
                 binding.cardBrandLogoImageViewSecondary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
                 binding.cardBrandLogoImageViewSecondary.loadLogo(
                     environment = cardDelegate.componentParams.environment,
-                    txVariant = detectedCardType.cardBrand.txVariant,
+                    txVariant = cardBrandItem.brand.txVariant,
                     placeholder = R.drawable.ic_card,
                     errorFallback = R.drawable.ic_card,
                 )
-                initCardBrandLogoViews(detectedCardTypes.indexOfFirst { it.isSelected })
-                initBrandSelectionListeners()
             } ?: run {
-                binding.cardBrandLogoImageViewPrimary.alpha = 1f
                 binding.cardBrandLogoContainerSecondary.isVisible = false
-                resetBrandSelectionInput()
             }
         }
     }
@@ -389,7 +384,7 @@ class CardView @JvmOverloads constructor(
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
         val shouldNotShowError = hasFocus && !showErrorWhileEditing
         if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = outputData.isDualBranded
+            val shouldShowSecondaryLogo = outputData.dualBrandData != null
             setCardNumberError(null, shouldShowSecondaryLogo)
         } else if (cardNumberValidation is Validation.Invalid) {
             setCardNumberError(cardNumberValidation.reason)
@@ -406,47 +401,6 @@ class CardView @JvmOverloads constructor(
             binding.cardBrandLogoContainerPrimary.isVisible = false
             binding.cardBrandLogoContainerSecondary.isVisible = false
         }
-    }
-
-    private fun initCardBrandLogoViews(selectedIndex: Int) {
-        when (selectedIndex) {
-            UNSELECTED_BRAND_INDEX -> deselectBrands()
-            PRIMARY_BRAND_INDEX -> selectPrimaryBrand()
-            SECONDARY_BRAND_INDEX -> selectSecondaryBrand()
-            else -> throw CheckoutException("Illegal brand index selected. Selected index must be either 0 or 1.")
-        }
-    }
-
-    private fun initBrandSelectionListeners() {
-        binding.cardBrandLogoContainerPrimary.setOnClickListener {
-            cardDelegate.updateInputData { selectedCardIndex = PRIMARY_BRAND_INDEX }
-            selectPrimaryBrand()
-        }
-
-        binding.cardBrandLogoContainerSecondary.setOnClickListener {
-            cardDelegate.updateInputData { selectedCardIndex = SECONDARY_BRAND_INDEX }
-            selectSecondaryBrand()
-        }
-    }
-
-    private fun resetBrandSelectionInput() {
-        binding.cardBrandLogoContainerPrimary.setOnClickListener(null)
-        binding.cardBrandLogoContainerSecondary.setOnClickListener(null)
-    }
-
-    private fun deselectBrands() {
-        binding.cardBrandLogoImageViewPrimary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
-        binding.cardBrandLogoImageViewSecondary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
-    }
-
-    private fun selectPrimaryBrand() {
-        binding.cardBrandLogoImageViewPrimary.alpha = SELECTED_BRAND_LOGO_ALPHA
-        binding.cardBrandLogoImageViewSecondary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
-    }
-
-    private fun selectSecondaryBrand() {
-        binding.cardBrandLogoImageViewPrimary.alpha = UNSELECTED_BRAND_LOGO_ALPHA
-        binding.cardBrandLogoImageViewSecondary.alpha = SELECTED_BRAND_LOGO_ALPHA
     }
 
     private fun initExpiryDateInput() {
@@ -792,13 +746,23 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    override fun getView(): View = this
-
-    companion object {
-        private const val UNSELECTED_BRAND_LOGO_ALPHA = 0.2f
-        private const val SELECTED_BRAND_LOGO_ALPHA = 1f
-        private const val UNSELECTED_BRAND_INDEX = -1
-        private const val PRIMARY_BRAND_INDEX = 0
-        private const val SECONDARY_BRAND_INDEX = 1
+    private fun setCoBadgeBrands(dualBrandData: DualBrandData?) {
+        val isDualBranded = dualBrandData != null
+        binding.recyclerViewCobadgeBrands.isVisible = isDualBranded
+        binding.textViewCobadgeBrandsHeader.isVisible = isDualBranded
+        binding.textViewCobadgeBrandsDescription.isVisible = isDualBranded
+        if (isDualBranded) {
+            if (cardBrandAdapter == null) {
+                cardBrandAdapter = CardBrandAdapter { cardBrandItem ->
+                    cardDelegate.updateInputData {
+                        selectedCardBrand = cardBrandItem.brand
+                    }
+                }
+                binding.recyclerViewCobadgeBrands.adapter = cardBrandAdapter
+            }
+            cardBrandAdapter?.submitList(dualBrandData?.brandOptions)
+        }
     }
+
+    override fun getView(): View = this
 }

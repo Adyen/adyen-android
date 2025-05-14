@@ -21,5 +21,5 @@ data class DetectedCardType(
     val isSupported: Boolean,
     val panLength: Int?,
     val paymentMethodVariant: String?,
-    val isSelected: Boolean = false,
+    val localizedBrand: String?
 )

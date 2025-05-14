@@ -632,9 +632,9 @@ internal class StoredCardDelegateTest(
             addressUIState = addressUIState,
             installmentOptions = installmentOptions,
             cardBrands = cardBrands,
-            isDualBranded = false,
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = isCardListVisible,
+            dualBrandData = null,
         )
     }
 
@@ -648,7 +648,6 @@ internal class StoredCardDelegateTest(
         isSupported: Boolean = true,
         panLength: Int? = null,
         paymentMethodVariant: String? = null,
-        isSelected: Boolean = false,
     ): DetectedCardType {
         return DetectedCardType(
             cardBrand = cardBrand,
@@ -659,7 +658,7 @@ internal class StoredCardDelegateTest(
             isSupported = isSupported,
             panLength = panLength,
             paymentMethodVariant = paymentMethodVariant,
-            isSelected = isSelected,
+            localizedBrand = null,
         )
     }
 

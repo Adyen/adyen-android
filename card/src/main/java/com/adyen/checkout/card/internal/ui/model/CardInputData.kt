@@ -8,6 +8,7 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.InputData
@@ -26,6 +27,6 @@ data class CardInputData(
     var postalCode: String = "",
     var address: AddressInputModel = AddressInputModel(),
     var isStorePaymentMethodSwitchChecked: Boolean = false,
-    var selectedCardIndex: Int = -1,
+    var selectedCardBrand: CardBrand? = null,
     var installmentOption: InstallmentModel? = null,
 ) : InputData
