@@ -38,6 +38,8 @@
     <string name="checkout_card_dual_brand_title">%%creditCard.dualBrand.title%%</string>
     <string name="checkout_card_dual_brand_description">%%creditCard.dualBrand.description%%</string>
 
+    <string name="checkout_card_scan_button">%%card.scanButton%%</string>
+
     <string name="store_payment_method">%%storeDetails%%</string>
     <!-- Untranslatable strings -->
     <string name="checkout_social_security_number_hint" translatable="false">CPF/CNPJ</string>

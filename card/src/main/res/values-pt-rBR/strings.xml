@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Bandeira do cartão</string>
     <string name="checkout_card_dual_brand_description">Selecione a bandeira do cartão com a qual prefere pagar. Isso é opcional.</string>
 
+    <string name="checkout_card_scan_button">Passe o seu cartão</string>
+
     <string name="store_payment_method">Salvar para meu próximo pagamento</string>
 </resources>

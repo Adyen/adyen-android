@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Платежная система карты</string>
     <string name="checkout_card_dual_brand_description">Выберите платежную систему карты по умолчанию. Это необязательно.</string>
 
+    <string name="checkout_card_scan_button">Отсканируйте свою карту</string>
+
     <string name="store_payment_method">Сохранить для следующего платежа</string>
 </resources>

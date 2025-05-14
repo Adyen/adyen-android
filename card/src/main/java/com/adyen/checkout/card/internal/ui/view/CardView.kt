@@ -62,18 +62,25 @@ import com.adyen.checkout.ui.core.R as UICoreR
 @Suppress("TooManyFunctions", "LargeClass")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardView @JvmOverloads constructor(
-    context: Context,
+    layoutInflater: LayoutInflater,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) :
     LinearLayout(
-        context,
+        layoutInflater.context,
         attrs,
         defStyleAttr,
     ),
     ComponentView {
 
-    private val binding: CardViewBinding = CardViewBinding.inflate(LayoutInflater.from(context), this)
+    @JvmOverloads
+    constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyleAttr: Int = 0
+    ) : this(LayoutInflater.from(context), attrs, defStyleAttr)
+
+    private val binding: CardViewBinding = CardViewBinding.inflate(layoutInflater, this)
 
     private var installmentListAdapter: InstallmentListAdapter? = null
     private var cardListAdapter: CardListAdapter? = null
@@ -128,6 +135,7 @@ class CardView @JvmOverloads constructor(
         initPostalCodeInput()
         initAddressFormInput(coroutineScope)
         initAddressLookup()
+        initCardScanning(delegate)
 
         binding.switchStorePaymentMethod.setOnCheckedChangeListener { _, isChecked ->
             delegate.updateInputData { isStorePaymentMethodSwitchChecked = isChecked }
@@ -294,6 +302,10 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun onCardNumberValidated(cardOutputData: CardOutputData) {
+        if (binding.editTextCardNumber.rawValue != cardOutputData.cardNumberState.value) {
+            binding.editTextCardNumber.setText(cardOutputData.cardNumberState.value)
+        }
+
         val detectedCardTypes = cardOutputData.detectedCardTypes
         if (detectedCardTypes.isEmpty()) {
             binding.cardBrandLogoImageViewPrimary.apply {
@@ -351,6 +363,10 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun onExpiryDateValidated(expiryDateState: FieldState<ExpiryDate>) {
+        if (binding.editTextExpiryDate.date != expiryDateState.value) {
+            binding.editTextExpiryDate.date = expiryDateState.value
+        }
+
         if (expiryDateState.validation.isValid()) {
             goToNextInputIfFocus(binding.editTextExpiryDate)
         }
@@ -384,22 +400,19 @@ class CardView @JvmOverloads constructor(
         val showErrorWhileEditing = (cardNumberValidation as? Validation.Invalid)?.showErrorWhileEditing ?: false
         val shouldNotShowError = hasFocus && !showErrorWhileEditing
         if (shouldNotShowError) {
-            val shouldShowSecondaryLogo = outputData.dualBrandData != null
-            setCardNumberError(null, shouldShowSecondaryLogo)
+            setCardNumberError(null)
         } else if (cardNumberValidation is Validation.Invalid) {
             setCardNumberError(cardNumberValidation.reason)
         }
     }
 
-    private fun setCardNumberError(@StringRes stringResId: Int?, shouldShowSecondaryLogo: Boolean = false) {
+    private fun setCardNumberError(@StringRes stringResId: Int?) {
         if (stringResId == null) {
             binding.textInputLayoutCardNumber.hideError()
-            binding.cardBrandLogoContainerPrimary.isVisible = true
-            binding.cardBrandLogoContainerSecondary.isVisible = shouldShowSecondaryLogo
+            binding.cardBrandLogoContainer.isVisible = true
         } else {
             binding.textInputLayoutCardNumber.showError(localizedContext.getString(stringResId))
-            binding.cardBrandLogoContainerPrimary.isVisible = false
-            binding.cardBrandLogoContainerSecondary.isVisible = false
+            binding.cardBrandLogoContainer.isVisible = false
         }
     }
 
@@ -543,6 +556,10 @@ class CardView @JvmOverloads constructor(
         binding.autoCompleteTextViewAddressLookup.setOnClickListener {
             cardDelegate.startAddressLookup()
         }
+    }
+
+    private fun initCardScanning(delegate: CardDelegate) {
+        binding.fragmentContainerCardScanning.getFragment<CardScanningFragment?>()?.initialize(delegate)
     }
 
     private fun updateInstallments(cardOutputData: CardOutputData) {

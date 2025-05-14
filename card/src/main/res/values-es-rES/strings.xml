@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Marca de tarjeta</string>
     <string name="checkout_card_dual_brand_description">Seleccione la marca de tarjeta con la que prefiere pagar. Esto es opcional.</string>
 
+    <string name="checkout_card_scan_button">Escanee su tarjeta</string>
+
     <string name="store_payment_method">Recordar para mi próximo pago</string>
 </resources>

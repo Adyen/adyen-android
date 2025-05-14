@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kártyakibocsátó</string>
     <string name="checkout_card_dual_brand_description">Válassza ki a fizetéshez használni kívánt kártyakibocsátót. Ez nem kötelező.</string>
 
+    <string name="checkout_card_scan_button">Kártya beolvasása</string>
+
     <string name="store_payment_method">Mentés a következő fizetéshez</string>
 </resources>

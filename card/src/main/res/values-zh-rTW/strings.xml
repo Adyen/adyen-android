@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">卡品牌</string>
     <string name="checkout_card_dual_brand_description">選擇首選付款卡品牌。這是可選項。</string>
 
+    <string name="checkout_card_scan_button">掃描您的卡片</string>
+
     <string name="store_payment_method">儲存以供下次付款使用</string>
 </resources>

@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Kortmärke</string>
     <string name="checkout_card_dual_brand_description">Välj det kortmärke du föredrar att betala med. Detta är valfritt.</string>
 
+    <string name="checkout_card_scan_button">Skanna ditt kort</string>
+
     <string name="store_payment_method">Spara till min nästa betalning</string>
 </resources>

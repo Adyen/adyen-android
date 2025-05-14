@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Korttype</string>
     <string name="checkout_card_dual_brand_description">Vælg den korttype, du foretrækker at betale med. Dette er valgfrit.</string>
 
+    <string name="checkout_card_scan_button">Scan dit kort</string>
+
     <string name="store_payment_method">Gem til min næste betaling</string>
 </resources>

@@ -38,5 +38,7 @@
     <string name="checkout_card_dual_brand_title">Vrsta kartice</string>
     <string name="checkout_card_dual_brand_description">Odaberite vrstu kartice kojom želite platiti. Ovo je neobavezno.</string>
 
+    <string name="checkout_card_scan_button">Skenirajte svoju karticu</string>
+
     <string name="store_payment_method">Pohrani za moje sljedeće plaćanje</string>
 </resources>
