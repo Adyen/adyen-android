@@ -173,12 +173,11 @@ internal class BacsDirectDebitInputView @JvmOverloads constructor(
     }
 
     private fun initHolderNameInput() {
-        val holderNameEditText = binding.editTextHolderName as? AdyenTextInputEditText
-        holderNameEditText?.setOnChangeListener {
+        binding.editTextHolderName.setOnChangeListener {
             bacsDelegate.updateInputData { holderName = it.toString() }
             binding.textInputLayoutHolderName.hideError()
         }
-        holderNameEditText?.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+        binding.editTextHolderName.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
             val holderNameValidation = bacsDelegate.outputData.holderNameState.validation
             if (hasFocus) {
                 binding.textInputLayoutHolderName.hideError()
