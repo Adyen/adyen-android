@@ -20,6 +20,7 @@ import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
 
 internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 
@@ -57,7 +58,7 @@ internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
             binding.componentView.attach(component, viewLifecycleOwner)
 
             if ((component as? ButtonComponent)?.isConfirmationRequired() == true) {
-                binding.componentView.requestFocus()
+                binding.componentView.requestFocusOnNextLayout()
             }
         }
     }

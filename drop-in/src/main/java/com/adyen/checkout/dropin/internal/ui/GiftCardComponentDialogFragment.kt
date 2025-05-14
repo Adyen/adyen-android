@@ -26,6 +26,7 @@ import com.adyen.checkout.giftcard.GiftCardComponent
 import com.adyen.checkout.giftcard.GiftCardComponentCallback
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
 import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
@@ -109,7 +110,7 @@ internal class GiftCardComponentDialogFragment : DropInBottomSheetDialogFragment
         binding.giftCardView.attach(component, viewLifecycleOwner)
 
         if (giftCardComponent.isConfirmationRequired()) {
-            binding.giftCardView.requestFocus()
+            binding.giftCardView.requestFocusOnNextLayout()
         }
     }
 
