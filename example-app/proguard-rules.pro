@@ -28,3 +28,7 @@
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+# We use these classes directly for convenience, but they need to be kept for Moshi
+-keep class com.adyen.checkout.components.core.AddressData {*;}
+-keep class com.adyen.checkout.components.core.LookupAddress {*;}

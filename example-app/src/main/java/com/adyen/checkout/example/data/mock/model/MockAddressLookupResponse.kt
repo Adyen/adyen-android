@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.example.data.mock.model
 
+import androidx.annotation.Keep
 import com.adyen.checkout.components.core.LookupAddress
 
+@Keep
 data class MockAddressLookupResponse(
     val options: List<LookupAddress>
 )
