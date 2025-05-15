@@ -19,6 +19,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
+import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.R as MaterialR
@@ -44,7 +45,7 @@ internal class BacsDirectDebitDialogFragment : BaseComponentDialogFragment() {
         binding.bacsView.attach(bacsDirectDebitComponent, viewLifecycleOwner)
 
         if (bacsDirectDebitComponent.isConfirmationRequired()) {
-            binding.bacsView.requestFocus()
+            binding.bacsView.requestFocusOnNextLayout()
         }
     }
 

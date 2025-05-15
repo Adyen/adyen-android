@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package com.adyen.checkout.ui.core.internal.util
 
 import android.content.Context
@@ -11,6 +13,7 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.annotation.RestrictTo
 import androidx.annotation.StyleRes
+import androidx.core.view.doOnNextLayout
 import com.google.android.material.textfield.TextInputLayout
 
 @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -104,4 +107,11 @@ fun View.hideKeyboard() {
 internal fun View.resetFocus() {
     requestFocus()
     clearFocus()
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun View.requestFocusOnNextLayout() {
+    doOnNextLayout { view ->
+        view.requestFocus()
+    }
 }

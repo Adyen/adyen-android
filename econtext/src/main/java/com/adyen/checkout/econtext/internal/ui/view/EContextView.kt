@@ -120,24 +120,19 @@ internal class EContextView @JvmOverloads constructor(
     }
 
     private fun initFirstNameInput() {
-        binding.editTextFirstName.apply {
-            setOnChangeListener {
-                delegate.updateInputData {
-                    firstName = it.toString()
-                }
+        binding.editTextFirstName.setOnChangeListener {
+            delegate.updateInputData {
+                firstName = it.toString()
+            }
+            binding.textInputLayoutFirstName.error = null
+        }
+        binding.editTextFirstName.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+            val firstNameValidation = delegate.outputData.firstNameState.validation
+            if (hasFocus) {
                 binding.textInputLayoutFirstName.error = null
+            } else if (firstNameValidation is Validation.Invalid) {
+                binding.textInputLayoutFirstName.error = localizedContext.getString(firstNameValidation.reason)
             }
-
-            onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
-                val firstNameValidation = delegate.outputData.firstNameState.validation
-                if (hasFocus) {
-                    binding.textInputLayoutFirstName.error = null
-                } else if (firstNameValidation is Validation.Invalid) {
-                    binding.textInputLayoutFirstName.error = localizedContext.getString(firstNameValidation.reason)
-                }
-            }
-
-            requestFocus()
         }
     }
 

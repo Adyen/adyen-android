@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
+import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -47,7 +48,7 @@ internal class CardComponentDialogFragment : BaseComponentDialogFragment(), Addr
         binding.cardView.attach(cardComponent, viewLifecycleOwner)
 
         if (cardComponent.isConfirmationRequired()) {
-            binding.cardView.requestFocus()
+            binding.cardView.requestFocusOnNextLayout()
         }
 
         dropInViewModel.addressLookupOptionsFlow
