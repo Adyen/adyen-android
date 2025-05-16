@@ -24,13 +24,13 @@ public final class com/adyen/checkout/action/core/GenericActionComponent$Compani
 public final class com/adyen/checkout/action/core/GenericActionConfiguration : com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/util/HashMap;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
 	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
 	public fun getShopperLocale ()Ljava/util/Locale;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/action/core/GenericActionConfiguration$Builder : com/adyen/checkout/components/core/internal/BaseConfigurationBuilder, com/adyen/checkout/action/core/internal/ActionHandlingConfigurationBuilder {

@@ -95,7 +95,9 @@ internal class SessionComponentEventHandlerTest(
         inner class SubmitTest {
 
             @Test
-            fun `then loading state should be propagated properly`() {
+            fun `then loading state should be propagated properly`() = runTest {
+                whenever(sessionInteractor.onPaymentsCallRequested(any(), any(), any())) doReturn
+                    SessionCallResult.Payments.Action(createTestAction())
                 val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
@@ -204,7 +206,9 @@ internal class SessionComponentEventHandlerTest(
         inner class ActionDetailsTest {
 
             @Test
-            fun `then loading state should be propagated properly`() {
+            fun `then loading state should be propagated properly`() = runTest {
+                whenever(sessionInteractor.onDetailsCallRequested(any(), any(), any())) doReturn
+                    SessionCallResult.Details.Action(createTestAction())
                 val callback = mock<SessionComponentCallback<PaymentComponentState<*>>>()
 
                 sessionComponentEventHandler.onPaymentComponentEvent(
