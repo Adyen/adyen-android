@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
 import com.adyen.checkout.core.internal.ui.view.PayButton
@@ -27,7 +28,8 @@ fun AdyenPaymentFlow(
     // TODO - Move Creation Logic to Adyen Checkout
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(adyenCheckout)
-    }
+    }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
