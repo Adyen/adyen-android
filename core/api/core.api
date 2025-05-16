@@ -707,6 +707,10 @@ public final class com/adyen/checkout/core/paymentmethod/MBWayPaymentMethod$Crea
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public abstract interface class com/adyen/checkout/core/paymentmethod/PaymentComponentState {
+	public abstract fun getData ()Lcom/adyen/checkout/core/data/PaymentComponentData;
+}
+
 public abstract class com/adyen/checkout/core/paymentmethod/PaymentMethodDetails : com/adyen/checkout/core/internal/data/model/ModelObject {
 	public static final field $stable I
 	public static final field CHECKOUT_ATTEMPT_ID Ljava/lang/String;
