@@ -10,6 +10,7 @@ package com.adyen.checkout.core.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.AdyenCheckout
@@ -26,6 +27,10 @@ internal class AdyenComponent(adyenCheckout: AdyenCheckout) : ViewModel() {
     @Composable
     internal fun ViewFactory(modifier: Modifier = Modifier) {
         paymentFacilitator.ViewFactory(modifier)
+    }
+
+    fun observe(lifecycle: Lifecycle) {
+        paymentFacilitator.observe(lifecycle)
     }
 
     fun submit() {

@@ -11,6 +11,10 @@ package com.adyen.checkout.core.mbway.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.core.PaymentMethodTypes
+import com.adyen.checkout.core.data.PaymentComponentData
+import com.adyen.checkout.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.internal.ui.EventDelegate
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.internal.ui.state.DefaultDelegateStateManager
@@ -24,9 +28,12 @@ import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.model.toViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.core.mbway.internal.ui.view.MbWayComponent
+import com.adyen.checkout.core.paymentmethod.MBWayPaymentMethod
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
@@ -34,10 +41,16 @@ import kotlinx.coroutines.flow.stateIn
 internal class MBWayDelegate(
     private val coroutineScope: CoroutineScope,
     private val componentParams: ButtonComponentParams
-) : PaymentDelegate, FieldChangeListener<MBWayFieldId> {
+) : PaymentDelegate<MBWayComponentState>,
+    FieldChangeListener<MBWayFieldId>,
+    EventDelegate<MBWayComponentState> {
 
     private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId> =
         createStateManager()
+
+    private val _eventFlow = MutableStateFlow<PaymentComponentEvent<MBWayComponentState>?>(null)
+    override val eventFlow: StateFlow<PaymentComponentEvent<MBWayComponentState>?> =
+        _eventFlow.asStateFlow()
 
     // TODO Here we can add a componentStateFlow and generate it, like we generate the
     //  viewStateFlow. The `chore/state_management` branch has its implementation.
@@ -48,10 +61,29 @@ internal class MBWayDelegate(
             .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 
-    override fun submit() = if (stateManager.isValid) {
-        // TODO Implement the submit logic
-    } else {
-        stateManager.highlightAllFieldValidationErrors()
+    override fun submit() {
+        if (stateManager.isValid) {
+            _eventFlow.tryEmit(
+                PaymentComponentEvent.Submit(
+                    // TODO - Correct data
+                    MBWayComponentState(
+                        PaymentComponentData(
+                            MBWayPaymentMethod(
+                                type = PaymentMethodTypes.MB_WAY,
+
+                                // TODO - Analytics
+                                checkoutAttemptId = null,
+                                telephoneNumber = makePhoneNumber(),
+                            ),
+                            null,
+                            componentParams.amount,
+                        ),
+                    )
+                ),
+            )
+        } else {
+            stateManager.highlightAllFieldValidationErrors()
+        }
     }
 
     @Composable
@@ -85,5 +117,10 @@ internal class MBWayDelegate(
             stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
             transformerRegistry = transformerRegistry,
         )
+    }
+
+    private fun makePhoneNumber(): String {
+        val state = stateManager.state.value
+        return state.countryCodeFieldState.value + state.localPhoneNumberFieldState.value
     }
 }
