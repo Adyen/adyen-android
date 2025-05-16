@@ -39,6 +39,8 @@ com.adyen.checkout.card.internal.ui
 com.adyen.checkout.card.internal.ui.model
 com.adyen.checkout.card.internal.ui.view
 com.adyen.checkout.card.internal.util
+module:card-scanning
+com.adyen.checkout.card.scanning
 module:cashapppay
 com.adyen.checkout.cashapppay
 com.adyen.checkout.cashapppay.internal.provider
