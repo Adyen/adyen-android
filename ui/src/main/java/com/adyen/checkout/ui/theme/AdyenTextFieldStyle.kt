@@ -13,7 +13,6 @@ import androidx.compose.runtime.Immutable
 // TODO - Add KDocs
 @Immutable
 data class AdyenTextFieldStyle(
-    val type: Type = Type.OUTLINED,
     val backgroundColor: AdyenColor? = null,
     val textColor: AdyenColor? = null,
     val activeColor: AdyenColor? = null,
@@ -21,10 +20,4 @@ data class AdyenTextFieldStyle(
     val cornerRadius: Int? = null,
     val borderColor: AdyenColor? = null,
     val borderWidth: Int? = null,
-) {
-
-    enum class Type {
-        OUTLINED,
-        UNDERLINED,
-    }
-}
+)
