@@ -10,17 +10,26 @@ package com.adyen.checkout.core.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.AdyenCheckout
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.core.mbway.internal.ui.MBWayComponentState
 import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 
-internal class PaymentFacilitator(coroutineScope: CoroutineScope, adyenCheckout: AdyenCheckout) {
+internal class PaymentFacilitator(
+    val coroutineScope: CoroutineScope,
+    val adyenCheckout: AdyenCheckout,
+) {
 
     private val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
         checkoutConfiguration = adyenCheckout.checkoutConfiguration,
@@ -36,7 +45,8 @@ internal class PaymentFacilitator(coroutineScope: CoroutineScope, adyenCheckout:
     )
 
     // TODO - Make it a val, initialize it based on txVariant?
-    private val paymentDelegate: PaymentDelegate = MBWayDelegate(coroutineScope, componentParams)
+    private val paymentDelegate: PaymentDelegate<MBWayComponentState> = MBWayDelegate(coroutineScope, componentParams)
+    private val componentEventHandler = DefaultComponentEventHandler<MBWayComponentState>()
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
@@ -45,5 +55,14 @@ internal class PaymentFacilitator(coroutineScope: CoroutineScope, adyenCheckout:
 
     fun submit() {
         paymentDelegate.submit()
+    }
+
+    fun observe(lifecycle: Lifecycle) {
+        paymentDelegate.eventFlow
+            .flowWithLifecycle(lifecycle)
+            .filterNotNull()
+            .onEach { event ->
+                componentEventHandler.onPaymentComponentEvent(event)
+            }.launchIn(coroutineScope)
     }
 }
