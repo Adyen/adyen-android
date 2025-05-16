@@ -8,4 +8,50 @@
 
 package com.adyen.checkout.core
 
-class AdyenCheckout
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.CheckoutSessionProvider
+import com.adyen.checkout.core.sessions.CheckoutSessionResult
+import com.adyen.checkout.core.sessions.SessionModel
+
+data class AdyenCheckout(
+    val checkoutSession: CheckoutSession?,
+) {
+
+    companion object {
+        suspend fun initialize(
+            sessionModel: SessionModel,
+            // TODO - Configuration
+            clientKey: String,
+        ): AdyenCheckout.Result {
+            val checkoutSession = getCheckoutSession(sessionModel, clientKey)
+            return when {
+                checkoutSession != null -> Result.Success(
+                    adyenCheckout = AdyenCheckout(checkoutSession),
+                )
+
+                else -> Result.Error("Session initialization failed.")
+            }
+        }
+
+        private suspend fun getCheckoutSession(
+            sessionModel: SessionModel,
+            clientKey: String,
+            // TODO - Configuration
+//        checkoutConfiguration: CheckoutConfiguration
+        ): CheckoutSession? {
+            return when (
+                val result = CheckoutSessionProvider.createSession(sessionModel, Environment.TEST, clientKey)
+            ) {
+                is CheckoutSessionResult.Success -> result.checkoutSession
+                is CheckoutSessionResult.Error -> {
+                    null
+                }
+            }
+        }
+    }
+
+    sealed interface Result {
+        data class Success(val adyenCheckout: AdyenCheckout) : Result
+        data class Error(val errorReason: String) : Result
+    }
+}
