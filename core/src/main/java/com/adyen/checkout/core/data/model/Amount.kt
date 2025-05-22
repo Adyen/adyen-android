@@ -18,8 +18,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class Amount(
-    var currency: String? = null,
-    var value: Long = 0L,
+    val currency: String? = null,
+    val value: Long = 0L,
 ) : ModelObject() {
 
     companion object {
