@@ -104,8 +104,6 @@ public final class com/adyen/checkout/core/data/model/Amount : com/adyen/checkou
 	public final fun getCurrency ()Ljava/lang/String;
 	public final fun getValue ()J
 	public fun hashCode ()I
-	public final fun setCurrency (Ljava/lang/String;)V
-	public final fun setValue (J)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -137,8 +135,6 @@ public final class com/adyen/checkout/core/data/model/PaymentMethod : com/adyen/
 	public final fun getName ()Ljava/lang/String;
 	public final fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setName (Ljava/lang/String;)V
-	public final fun setType (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -168,7 +164,6 @@ public final class com/adyen/checkout/core/data/model/PaymentMethodsApiResponse 
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getPaymentMethods ()Ljava/util/List;
 	public fun hashCode ()I
-	public final fun setPaymentMethods (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -215,15 +210,6 @@ public abstract class com/adyen/checkout/core/internal/data/model/ModelObject : 
 public abstract interface class com/adyen/checkout/core/internal/data/model/ModelObject$Serializer {
 	public abstract fun deserialize (Lorg/json/JSONObject;)Lcom/adyen/checkout/core/internal/data/model/ModelObject;
 	public abstract fun serialize (Lcom/adyen/checkout/core/internal/data/model/ModelObject;)Lorg/json/JSONObject;
-}
-
-public final class com/adyen/checkout/core/internal/data/model/ModelUtils {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/core/internal/data/model/ModelUtils;
-	public static final fun deserializeOpt (Lorg/json/JSONObject;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lcom/adyen/checkout/core/internal/data/model/ModelObject;
-	public static final fun deserializeOptList (Lorg/json/JSONArray;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Ljava/util/List;
-	public static final fun serializeOpt (Lcom/adyen/checkout/core/internal/data/model/ModelObject;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lorg/json/JSONObject;
-	public static final fun serializeOptList (Ljava/util/List;Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;)Lorg/json/JSONArray;
 }
 
 public final class com/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt {
