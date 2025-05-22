@@ -12,7 +12,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Collections
 
-object ModelUtils {
+internal object ModelUtils {
 
     /**
      * Parse a [JSONObject] to a class that extends [ModelObject] using its [ModelObject.Serializer].
