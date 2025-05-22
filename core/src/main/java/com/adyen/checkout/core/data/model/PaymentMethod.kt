@@ -17,8 +17,8 @@ import org.json.JSONObject
 
 @Parcelize
 data class PaymentMethod(
-    var type: String? = null,
-    var name: String? = null,
+    val type: String? = null,
+    val name: String? = null,
 //    var brands: List<String>? = null,
 //    var brand: String? = null,
 //    var fundingSource: String? = null,

@@ -24,7 +24,7 @@ import org.json.JSONObject
 data class PaymentMethodsApiResponse(
     // TODO - Stored Payment Methods
 //    var storedPaymentMethods: List<StoredPaymentMethod>? = null,
-    var paymentMethods: List<PaymentMethod>? = null,
+    val paymentMethods: List<PaymentMethod>? = null,
 ) : ModelObject() {
 
     companion object {
