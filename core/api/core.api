@@ -56,6 +56,10 @@ public final class com/adyen/checkout/core/BuildConfig {
 	public fun <init> ()V
 }
 
+public abstract interface class com/adyen/checkout/core/CheckoutCallback {
+	public abstract fun onSubmit (Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;Lkotlin/jvm/functions/Function1;)V
+}
+
 public final class com/adyen/checkout/core/CheckoutConfiguration : com/adyen/checkout/core/internal/Configuration {
 	public static final field $stable I
 	public static final field CREATOR Lcom/adyen/checkout/core/CheckoutConfiguration$CREATOR;
@@ -75,6 +79,38 @@ public final class com/adyen/checkout/core/CheckoutConfiguration$CREATOR : andro
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public fun newArray (I)[Lcom/adyen/checkout/core/CheckoutConfiguration;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public abstract interface class com/adyen/checkout/core/CheckoutResult {
+}
+
+public abstract interface class com/adyen/checkout/core/CheckoutResult$Advanced : com/adyen/checkout/core/CheckoutResult {
+}
+
+public final class com/adyen/checkout/core/CheckoutResult$Advanced$Action : com/adyen/checkout/core/CheckoutResult$Advanced {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/CheckoutResult$Advanced$Error : com/adyen/checkout/core/CheckoutResult$Advanced {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/CheckoutResult$Advanced$Finished : com/adyen/checkout/core/CheckoutResult$Advanced {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/CheckoutResult$Sessions : com/adyen/checkout/core/CheckoutResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/DefaultCheckoutCallback : com/adyen/checkout/core/CheckoutCallback {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun onSubmit (Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class com/adyen/checkout/core/Environment : android/os/Parcelable {
