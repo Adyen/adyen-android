@@ -20,6 +20,7 @@ import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.core.mbway.internal.ui.MBWayComponentState
 import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
+import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -29,6 +30,7 @@ import java.util.Locale
 internal class PaymentFacilitator(
     val coroutineScope: CoroutineScope,
     val adyenCheckout: AdyenCheckout,
+    val sessionInteractor: SessionInteractor
 ) {
 
     private val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
@@ -46,7 +48,7 @@ internal class PaymentFacilitator(
 
     // TODO - Make it a val, initialize it based on txVariant?
     private val paymentDelegate: PaymentDelegate<MBWayComponentState> = MBWayDelegate(coroutineScope, componentParams)
-    private val componentEventHandler = DefaultComponentEventHandler<MBWayComponentState>()
+    private val componentEventHandler = DefaultComponentEventHandler<MBWayComponentState>(sessionInteractor)
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
@@ -62,7 +64,7 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event)
+                componentEventHandler.onPaymentComponentEvent(event, adyenCheckout.checkoutCallback)
             }.launchIn(coroutineScope)
     }
 }
