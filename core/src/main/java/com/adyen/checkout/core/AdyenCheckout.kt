@@ -15,7 +15,8 @@ import com.adyen.checkout.core.sessions.SessionModel
 
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,
-    val checkoutConfiguration: CheckoutConfiguration
+    val checkoutConfiguration: CheckoutConfiguration,
+    val checkoutCallback: CheckoutCallback
 ) {
 
     companion object {
@@ -23,11 +24,12 @@ data class AdyenCheckout(
             sessionModel: SessionModel,
             // TODO - Configuration
             checkoutConfiguration: CheckoutConfiguration,
+            checkoutCallback: CheckoutCallback = DefaultCheckoutCallback()
         ): AdyenCheckout.Result {
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
                 checkoutSession != null -> Result.Success(
-                    adyenCheckout = AdyenCheckout(checkoutSession, checkoutConfiguration),
+                    adyenCheckout = AdyenCheckout(checkoutSession, checkoutConfiguration, checkoutCallback),
                 )
 
                 else -> Result.Error("Session initialization failed.")
@@ -37,7 +39,7 @@ data class AdyenCheckout(
         private suspend fun getCheckoutSession(
             sessionModel: SessionModel,
             // TODO - Configuration
-            checkoutConfiguration: CheckoutConfiguration
+            checkoutConfiguration: CheckoutConfiguration,
         ): CheckoutSession? {
             return when (
                 val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)

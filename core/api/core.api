@@ -1,12 +1,14 @@
 public final class com/adyen/checkout/core/AdyenCheckout {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/core/AdyenCheckout$Companion;
-	public fun <init> (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;)V
+	public fun <init> (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;)V
 	public final fun component1 ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
 	public final fun component2 ()Lcom/adyen/checkout/core/CheckoutConfiguration;
-	public final fun copy (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;)Lcom/adyen/checkout/core/AdyenCheckout;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/AdyenCheckout;Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;ILjava/lang/Object;)Lcom/adyen/checkout/core/AdyenCheckout;
+	public final fun component3 ()Lcom/adyen/checkout/core/CheckoutCallback;
+	public final fun copy (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;)Lcom/adyen/checkout/core/AdyenCheckout;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/AdyenCheckout;Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;ILjava/lang/Object;)Lcom/adyen/checkout/core/AdyenCheckout;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckoutCallback ()Lcom/adyen/checkout/core/CheckoutCallback;
 	public final fun getCheckoutConfiguration ()Lcom/adyen/checkout/core/CheckoutConfiguration;
 	public final fun getCheckoutSession ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
 	public fun hashCode ()I
@@ -14,7 +16,8 @@ public final class com/adyen/checkout/core/AdyenCheckout {
 }
 
 public final class com/adyen/checkout/core/AdyenCheckout$Companion {
-	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun initialize$default (Lcom/adyen/checkout/core/AdyenCheckout$Companion;Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/AdyenCheckout$Result {
