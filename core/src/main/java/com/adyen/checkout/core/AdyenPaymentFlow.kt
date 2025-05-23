@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
 import com.adyen.checkout.core.internal.ui.view.PayButton
@@ -27,7 +28,10 @@ fun AdyenPaymentFlow(
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
     val adyenComponent = viewModel(key = txVariant) {
-        AdyenComponent(adyenCheckout)
+        AdyenComponent(
+            adyenCheckout = adyenCheckout,
+            savedStateHandle = createSavedStateHandle()
+        )
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 
     Column(
