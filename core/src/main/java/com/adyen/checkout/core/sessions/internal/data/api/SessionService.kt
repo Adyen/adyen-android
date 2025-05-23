@@ -3,17 +3,19 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/4/2025.
+ * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.sessions.data.api
+package com.adyen.checkout.core.sessions.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.api.post
-import com.adyen.checkout.core.sessions.data.SessionSetupRequest
-import com.adyen.checkout.core.sessions.data.SessionSetupResponse
+import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRequest
+import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupRequest
+import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -33,6 +35,20 @@ class SessionService(
             body = request,
             requestSerializer = SessionSetupRequest.SERIALIZER,
             responseSerializer = SessionSetupResponse.SERIALIZER,
+        )
+    }
+
+    suspend fun submitPayment(
+        request: SessionPaymentsRequest,
+        sessionId: String,
+        clientKey: String,
+    ): SessionPaymentsResponse = withContext(coroutineDispatcher) {
+        httpClient.post(
+            path = "v1/sessions/$sessionId/payments",
+            queryParameters = mapOf("clientKey" to clientKey),
+            body = request,
+            requestSerializer = SessionPaymentsRequest.SERIALIZER,
+            responseSerializer = SessionPaymentsResponse.SERIALIZER,
         )
     }
 }
