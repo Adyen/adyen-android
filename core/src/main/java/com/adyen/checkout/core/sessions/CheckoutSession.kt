@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.sessions
 
+import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.PaymentMethod
 import com.adyen.checkout.core.sessions.data.SessionSetupResponse
@@ -30,12 +32,11 @@ data class CheckoutSession(
             }
     }
 
-    // TODO - Configuration
-//    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-//    fun getConfiguration(): CheckoutConfiguration {
-//        return CheckoutConfiguration(
-//            environment = environment,
-//            clientKey = clientKey,
-//        )
-//    }
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun getConfiguration(): CheckoutConfiguration {
+        return CheckoutConfiguration(
+            environment = environment,
+            clientKey = clientKey,
+        )
+    }
 }
