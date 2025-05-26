@@ -21,7 +21,6 @@ data class AdyenCheckout(
     companion object {
         suspend fun initialize(
             sessionModel: SessionModel,
-            // TODO - Configuration
             checkoutConfiguration: CheckoutConfiguration,
         ): AdyenCheckout.Result {
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
@@ -36,7 +35,6 @@ data class AdyenCheckout(
 
         private suspend fun getCheckoutSession(
             sessionModel: SessionModel,
-            // TODO - Configuration
             checkoutConfiguration: CheckoutConfiguration
         ): CheckoutSession? {
             return when (
