@@ -42,11 +42,71 @@ jobs:
       # Packages and publishes to Maven Central
       - name: Publish to Maven Central
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+          SONATYPE_CENTRAL_PORTAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_CENTRAL_PORTAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
           VERSION_NAME: ${{ inputs.version-name }}
         run: ./gradlew publishReleasePublicationToSonatypeRepository --max-workers 1 --stacktrace -Pversion-name=$VERSION_NAME
+
+  # This step should be removed when gradle plugin supports uploading to Central Portal
+  move_repository_to_central_portal:
+    needs: publish_to_maven_central
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Moved the repository from OSSRH to Central Portal
+      - name: Move repository to Central Portal
+        env:
+          NAMESPACE: "com.adyen"
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
+          PUBLISHING_TYPE: "user_managed"
+        run: |
+          # Constructing the URL with the namespace and publishing_type query parameter
+          API_URL="https://ossrh-staging-api.central.sonatype.com/manual/upload/defaultRepository/$NAMESPACE?publishing_type=$PUBLISHING_TYPE"
+          
+          # Create a temporary file to store the response body
+          RESPONSE_BODY_FILE=$(mktemp)
+  
+          # Making API call
+          HTTP_STATUS_CODE=$(curl -s -w "%{http_code}" \
+          -X POST \
+          -u "$SONATYPE_USERNAME:$SONATYPE_PASSWORD" \
+          -H "Accept: application/json" \
+          -o "$RESPONSE_BODY_FILE" \
+          "$API_URL")
+
+          # Capture curl's own exit code (e.g., for network errors before HTTP status is determined)
+          CURL_EXIT_CODE=$?
+
+          echo "-------------------- RESPONSE START --------------------"
+          cat "$RESPONSE_BODY_FILE"
+          echo
+          echo "-------------------- RESPONSE END ----------------------"
+
+          # Clean up the temporary file
+          rm -f "$RESPONSE_BODY_FILE"
+  
+          echo "HTTP Status Code: $HTTP_STATUS_CODE"
+          echo "Curl Exit Code: $CURL_EXIT_CODE"
+          
+          # Check if curl itself failed (e.g., network error, couldn't connect)
+          # These errors typically result in a non-zero CURL_EXIT_CODE and often a 000 HTTP_STATUS_CODE
+          if [ "$CURL_EXIT_CODE" -ne 0 ]; then
+          echo "Error: curl command failed with exit code $CURL_EXIT_CODE (e.g., network issue, host not found)."
+          exit "$CURL_EXIT_CODE"
+          fi
+          
+          # Check if the HTTP status code indicates an error (400 or above)
+          if [ "$HTTP_STATUS_CODE" -ge 400 ]; then
+          echo "Error: Server responded with HTTP status $HTTP_STATUS_CODE."
+          exit 1 # Fail the GitHub Action step
+          fi
+        
+          # If we reach here, the request was successful
+          echo "Request finished successfully (HTTP Status: $HTTP_STATUS_CODE)."
