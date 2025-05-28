@@ -9,7 +9,7 @@ def fetch_changed_dependencies() -> dict:
 
     # Fetch the base commit of the PR using the merge base
     base_commit = subprocess.check_output(
-        ['git', 'merge-base', 'origin/main', 'HEAD']
+        ['git', 'merge-base', 'origin/v5', 'HEAD']
     ).decode(sys.stdout.encoding).strip()
 
     # Fetch the version of the file before the PR changes

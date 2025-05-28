@@ -5,7 +5,7 @@ on:
     types:
       - opened
     branches:
-      - 'main'
+      - 'v5'
       - 'feature/**'
       - 'chore/**'
       - 'fix/**'
