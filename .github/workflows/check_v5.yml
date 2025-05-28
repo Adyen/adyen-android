@@ -1,12 +1,12 @@
-name: Check Main
+name: Check V5
 
 on:
   push:
     branches:
-      - 'main'
+      - 'v5'
 
 concurrency:
-  group: 'main'
+  group: 'v5'
   cancel-in-progress: true
 
 jobs:
