@@ -14,7 +14,7 @@ Pre-Submission Checklist
 3. Verify that the feature specifically relates to the Android SDK
 
 Integration guide: https://docs.adyen.com/online-payments/build-your-integration/?platform=Android
-Github docs: https://github.com/Adyen/adyen-android/tree/main/docs
+Github docs: https://github.com/Adyen/adyen-android/tree/v5/docs
 -->
 
 ## Description
