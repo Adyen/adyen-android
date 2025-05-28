@@ -1,0 +1,21 @@
+# generated files
+build/
+release/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+.DS_Store
+
+# IDEA/Android Studio project files, because
+# the project can be imported from settings.gradle
+*.iml
+.idea/*
+!.idea/copyright
+
+# Gradle cache
+.gradle
+
+# Android Studio captures folder
+captures/
