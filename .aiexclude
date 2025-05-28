@@ -5,7 +5,7 @@ release/
 # Local configuration file (sdk path, etc)
 local.properties
 
-# Windows thumbnail db
+# macOS folder settings
 .DS_Store
 
 # IDEA/Android Studio project files, because
