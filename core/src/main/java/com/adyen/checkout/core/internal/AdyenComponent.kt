@@ -15,50 +15,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.AdyenCheckout
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.sessions.SessionInteractor
-import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
-import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
-import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 
 internal class AdyenComponent(adyenCheckout: AdyenCheckout, savedStateHandle: SavedStateHandle) : ViewModel() {
 
-    private val paymentFacilitator: PaymentFacilitator
-
-    init {
-        // TODO - Initialize Payment Flow
-        if (adyenCheckout.checkoutSession != null) {
-            val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-                savedStateHandle = savedStateHandle,
-
-                // TODO - Advanced Flow
-                checkoutSession = adyenCheckout.checkoutSession
-            )
-
-            paymentFacilitator = PaymentFacilitator(
-                coroutineScope = viewModelScope,
-                adyenCheckout = adyenCheckout,
-
-                // TODO - Where should we initialize sessions interactor?
-                sessionInteractor = SessionInteractor(
-                    sessionRepository = SessionRepository(
-                        sessionService = SessionService(
-                            httpClient = HttpClientFactory.getHttpClient(
-                                adyenCheckout.checkoutConfiguration.environment
-                            ),
-                        ),
-                        clientKey = adyenCheckout.checkoutConfiguration.clientKey,
-                    ),
-                    sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                    sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                    isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-                ),
-            )
-        } else {
-            // TODO - Advanced Flow
-            paymentFacilitator = TODO("Not yet implemented")
-        }
-    }
+    // TODO - Initialize Payment Flow
+    private val paymentFacilitator: PaymentFacilitator =
+        PaymentFacilitatorProvider().provide(
+            adyenCheckout = adyenCheckout,
+            coroutineScope = viewModelScope,
+            savedStateHandle = savedStateHandle,
+        )
 
     @Composable
     internal fun ViewFactory(modifier: Modifier = Modifier) {
