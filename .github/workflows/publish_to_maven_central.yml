@@ -15,7 +15,28 @@ on:
         type: string
 
 jobs:
+  # This step should be removed when gradle plugin supports uploading to Central Portal
+  drop_all_open_ossrh_repositories:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Drop all open OSSRH repositories
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
+        run: |
+          chmod +x scripts/drop_all_open_ossrh_repositories.py
+          pip install requests toml
+          python scripts/drop_all_open_ossrh_repositories.py
+
   publish_to_maven_central:
+    needs: drop_all_open_ossrh_repositories
     runs-on: ubuntu-latest
 
     steps:
@@ -70,7 +91,7 @@ jobs:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
           PUBLISHING_TYPE: "user_managed"
-        run:  |
+        run: |
           chmod +x scripts/move_ossrh_repository_to_central_portal.py
           pip install requests toml
           python scripts/move_ossrh_repository_to_central_portal.py
