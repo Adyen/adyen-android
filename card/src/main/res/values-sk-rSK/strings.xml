@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Meno na karte</string>
     <string name="checkout_card_expiry_date_hint">Koniec platnosti</string>
     <string name="checkout_card_expiry_date_optional_hint">Dátum konca platnosti (voliteľné)</string>
-    <string name="checkout_card_security_code_hint">CVC/CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC/CVV (voliteľné)</string>
+    <string name="checkout_card_expiry_date_format">MM/RR</string>
+    <string name="checkout_card_security_code_hint">Bezpečnostný kód</string>
+    <string name="checkout_card_security_code_optional_hint">Bezpečnostný kód (voliteľný)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 číslice</string>
+    <string name="checkout_card_security_code_format_4_digits">4 číslice</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Dátum narodenia držiteľa karty (RRRMMDD) alebo identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_tax_number_hint">Identifikačné číslo organizácie (10 číslic)</string>
     <string name="checkout_kcp_password_hint">Prvé 2 číslice hesla karty</string>

@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Titolare carta</string>
     <string name="checkout_card_expiry_date_hint">Data di scadenza</string>
     <string name="checkout_card_expiry_date_optional_hint">Data di scadenza (opzionale)</string>
-    <string name="checkout_card_security_code_hint">CVC/CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC/CVV (facoltativo)</string>
+    <string name="checkout_card_expiry_date_format">MM/AA</string>
+    <string name="checkout_card_security_code_hint">Codice di sicurezza</string>
+    <string name="checkout_card_security_code_optional_hint">Codice di sicurezza (facoltativo)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 cifre</string>
+    <string name="checkout_card_security_code_format_4_digits">4 cifre</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data di nascita del titolare della carta (AAMMGG) o numero di registrazione aziendale (10 cifre)</string>
     <string name="checkout_kcp_tax_number_hint">Numero di registrazione aziendale (10 cifre)</string>
     <string name="checkout_kcp_password_hint">Prime 2 cifre della password della carta</string>

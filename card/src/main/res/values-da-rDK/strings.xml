@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Navn på kort</string>
     <string name="checkout_card_expiry_date_hint">Udløbsdato</string>
     <string name="checkout_card_expiry_date_optional_hint">Udløbsdato (valgfrit)</string>
-    <string name="checkout_card_security_code_hint">CVC / CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC / CVV (valgfrit)</string>
+    <string name="checkout_card_expiry_date_format">MM/ÅÅ</string>
+    <string name="checkout_card_security_code_hint">Sikkerhedskode</string>
+    <string name="checkout_card_security_code_optional_hint">Sikkerhedskode (valgfrit)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 cifre</string>
+    <string name="checkout_card_security_code_format_4_digits">4 cifre</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortholders fødselsdato (ÅÅMMDD) eller virksomheds registreringsnummer (10 cifre)</string>
     <string name="checkout_kcp_tax_number_hint">Virksomheds registreringsnummer (10 cifre)</string>
     <string name="checkout_kcp_password_hint">Første 2 cifre i adgangskode til kort</string>

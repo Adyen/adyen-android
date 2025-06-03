@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">카드상의 이름</string>
     <string name="checkout_card_expiry_date_hint">만료일</string>
     <string name="checkout_card_expiry_date_optional_hint">만료일(선택 사항)</string>
-    <string name="checkout_card_security_code_hint">CVC / CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC / CVV (선택)</string>
+    <string name="checkout_card_expiry_date_format">MM/YY</string>
+    <string name="checkout_card_security_code_hint">보안 코드</string>
+    <string name="checkout_card_security_code_optional_hint">보안 코드(선택 사항)</string>
+    <string name="checkout_card_security_code_format_3_digits">3자리</string>
+    <string name="checkout_card_security_code_format_4_digits">4자리</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">카드 소유자 생년월일(예: 870130) 또는 법인 등록 번호(10자리)</string>
     <string name="checkout_kcp_tax_number_hint">법인 등록 번호(10자리)</string>
     <string name="checkout_kcp_password_hint">카드 비밀번호 첫 2자리</string>
