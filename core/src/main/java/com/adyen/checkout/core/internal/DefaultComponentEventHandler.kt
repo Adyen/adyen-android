@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 internal class DefaultComponentEventHandler<T : PaymentComponentState<*>>(
-    val sessionInteractor: SessionInteractor
+    private val sessionInteractor: SessionInteractor?,
 ) : ComponentEventHandler<T> {
 
     private var _coroutineScope: CoroutineScope? = null
@@ -37,14 +37,17 @@ internal class DefaultComponentEventHandler<T : PaymentComponentState<*>>(
                                 is CheckoutResult.Advanced.Action -> {
                                     // TODO - Advanced Flow
                                 }
+
                                 is CheckoutResult.Advanced.Error -> {
                                     // TODO - Advanced Flow
                                 }
+
                                 is CheckoutResult.Advanced.Finished -> {
                                     // TODO - Advanced Flow
                                 }
                             }
                         }
+
                         is CheckoutResult.Sessions -> {
                             //
                             makePaymentsCall(event.state)
@@ -55,9 +58,14 @@ internal class DefaultComponentEventHandler<T : PaymentComponentState<*>>(
         }
     }
 
+    // TODO - Remove suppression
+    //  Separate event handlers to advanced and sessions. That will ensure sessionInteractor to be non-null.
+    //  After that change remove this.
+    @Suppress("TooGenericExceptionThrown")
     private fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         coroutineScope.launch {
-            sessionInteractor.submitPayment(paymentComponentState)
+            sessionInteractor?.submitPayment(paymentComponentState)
+                ?: error("Session interactor is null.")
         }
     }
 
