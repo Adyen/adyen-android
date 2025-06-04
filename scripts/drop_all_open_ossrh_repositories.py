@@ -32,7 +32,7 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
 
     print(f"Making {method} request to: {url} with params: {params if params else 'None'}")
     try:
-        response = requests.request(method, url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
+        response = requests.request(method=method, url=url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
 
         print(f"Response Status: {response.status_code}")
         # Optionally print response text for debugging, can be verbose
