@@ -46,7 +46,7 @@ You can keep the default Adyen theme by simply adding one line. Optionally, you 
 </style>
 ```
 
-To figure out all the colors and styling you can override have a look at [the Material guides](https://m2.material.io/design/color/the-color-system.html) or check [our Adyen base style](https://github.com/Adyen/adyen-android/blob/main/ui-core/src/main/res/values/styles.xml).
+To figure out all the colors and styling you can override have a look at [the Material guides](https://m2.material.io/design/color/the-color-system.html) or check [our Adyen base style](https://github.com/Adyen/adyen-android/blob/v5/ui-core/src/main/res/values/styles.xml).
 
 ## Customizing the style for specific view types
 
@@ -62,7 +62,7 @@ In case you want to change the styling for a specific view type, you can do this
 </style>
 ```
 
-It can be difficult to find which style is applied to which view. To figure this out we recommend to take a look at [our styles.xml](https://github.com/Adyen/adyen-android/blob/main/ui-core/src/main/res/values/styles.xml) or use the Layout Inspector.
+It can be difficult to find which style is applied to which view. To figure this out we recommend to take a look at [our styles.xml](https://github.com/Adyen/adyen-android/blob/v5/ui-core/src/main/res/values/styles.xml) or use the Layout Inspector.
 
 ## Customizing a specific view
 
@@ -102,7 +102,7 @@ Out of the box the SDK doesn’t support dark mode, but you can easily add this 
 </style>
 ```
 
-To learn more about Material dark theming you can read [this guide](https://m2.material.io/develop/android/theming/dark) or take a look at [our example app](https://github.com/Adyen/adyen-android/blob/main/example-app/src/main/res/values/styles.xml).
+To learn more about Material dark theming you can read [this guide](https://m2.material.io/develop/android/theming/dark) or take a look at [our example app](https://github.com/Adyen/adyen-android/blob/v5/example-app/src/main/res/values/styles.xml).
 
 ## Overriding string resources
 
