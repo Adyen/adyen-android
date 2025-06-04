@@ -10,8 +10,6 @@
 apply plugin: "maven-publish"
 apply plugin: "signing"
 
-apply from: "${rootDir}/config/gradle/artifacts.gradle"
-
 ext["signing.keyId"] = ''
 ext["signing.password"] = ''
 ext["signing.secretKeyRingFile"] = ''
@@ -56,99 +54,62 @@ final theScmUrl = "https://github.com/Adyen/adyen-android"
 
 group theGroupId
 
-project.afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId theGroupId
-                artifactId theArtifactId
-                version theVersion
+publishing {
+    publications {
+        release(MavenPublication) {
 
-                artifact androidSourcesJar
-                artifact javadocJar
-                artifact bundleReleaseAar
+            groupId theGroupId
+            artifactId theArtifactId
+            version theVersion
 
-                pom {
-                    name = theName
-                    description = theDescription
-                    url = theUrl
-                    licenses {
-                        license {
-                            name = theLicenseName
-                            url = theLicenseUrl
-                        }
-                    }
-                    organization {
-                        name = theOrganizationName
-                        url = theOrganizationUrl
-                    }
-                    developers {
-                        developer {
-                            name = theTeamName
-                            organization = theOrganizationName
-                            organizationUrl = theOrganizationUrl
-                        }
-                    }
-                    scm {
-                        connection = theScmConnection
-                        developerConnection = theScmConnection
-                        url = theScmUrl
-                    }
-                }
+            artifact tasks.dokkaJavadocJar
 
-                // Add dependencies to the POM file.
-                pom.withXml {
-                    logger.lifecycle("\nPublishing maven repository $theGroupId:$theArtifactId:$theVersion\n")
-
-                    final dependenciesNode = asNode().appendNode("dependencies")
-
-                    ext.addDependency = { dep, scope ->
-                        if (dep.name != 'unspecified') {
-                            final depGroup = dep.group != rootProject.name ? dep.group : theGroupId
-                            final depName = dep.name
-                            final depVersion = dep.version != 'unspecified' ? dep.version : theVersion
-
-                            final dependencyNode = dependenciesNode.appendNode("dependency")
-                            dependencyNode.appendNode("groupId", depGroup)
-                            dependencyNode.appendNode("artifactId", depName)
-                            dependencyNode.appendNode("version", depVersion)
-                            dependencyNode.appendNode("scope", scope)
-
-                            if (!dep.hasProperty("transitive") || !dep.transitive) {
-                                final exclusionNode = dependencyNode.appendNode("exclusions").appendNode("exclusion")
-                                exclusionNode.appendNode("groupId", "*")
-                                exclusionNode.appendNode("artifactId", "*")
-                            } else if (!dep.properties.excludeRules.empty) {
-                                final exclusionNode = dependencyNode.appendNode("exclusions").appendNode("exclusion")
-                                dep.properties.excludeRules.each { rule ->
-                                    exclusionNode.appendNode("groupId", rule.group ?: "*")
-                                    exclusionNode.appendNode("artifactId", rule.module ?: "*")
-                                }
-                            }
-                        }
-                    }
-
-                    logger.lifecycle("- Append api dependencies:")
-                    configurations.api.dependencies.each { dep -> addDependency(dep, "compile") }
-                    logger.lifecycle("- Append implementation dependencies:")
-                    configurations.implementation.dependencies.each { dep -> addDependency(dep, "runtime") }
-                }
+            afterEvaluate {
+                from(components.release)
             }
-        }
 
-        repositories {
-            maven {
-                name = "sonatype"
-                url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                credentials {
-                    username ossrhUsername
-                    password ossrhPassword
+            pom {
+                name = theName
+                description = theDescription
+                url = theUrl
+                licenses {
+                    license {
+                        name = theLicenseName
+                        url = theLicenseUrl
+                    }
+                }
+                organization {
+                    name = theOrganizationName
+                    url = theOrganizationUrl
+                }
+                developers {
+                    developer {
+                        name = theTeamName
+                        organization = theOrganizationName
+                        organizationUrl = theOrganizationUrl
+                    }
+                }
+                scm {
+                    connection = theScmConnection
+                    developerConnection = theScmConnection
+                    url = theScmUrl
                 }
             }
         }
     }
 
-    signing {
-        sign publishing.publications
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
     }
+}
+
+signing {
+    sign publishing.publications
 }
