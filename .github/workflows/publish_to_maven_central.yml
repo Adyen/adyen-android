@@ -87,7 +87,6 @@ jobs:
       # Moved the repository from OSSRH to Central Portal
       - name: Move repository to Central Portal
         env:
-          NAMESPACE: "com.adyen"
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
           PUBLISHING_TYPE: "user_managed"
