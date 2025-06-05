@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Name on card</string>
     <string name="checkout_card_expiry_date_hint">Expiry date</string>
     <string name="checkout_card_expiry_date_optional_hint">Expiry date (optional)</string>
-    <string name="checkout_card_expiry_date_format">MM/YY</string>
+    <string name="checkout_card_expiry_date_format_label">Month, 2 digits, Year, 2 digits</string>
     <string name="checkout_card_security_code_hint">Security code</string>
     <string name="checkout_card_security_code_optional_hint">Security code (optional)</string>
     <string name="checkout_card_security_code_format_3_digits">3 digits</string>

@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Име на картата</string>
     <string name="checkout_card_expiry_date_hint">Дата на валидност</string>
     <string name="checkout_card_expiry_date_optional_hint">Дата на валидност (незадължително)</string>
-    <string name="checkout_card_expiry_date_format">ММ/ГГ</string>
+    <string name="checkout_card_expiry_date_format_label">Месец, 2 цифри, година, 2 цифри</string>
     <string name="checkout_card_security_code_hint">Код за сигурност</string>
     <string name="checkout_card_security_code_optional_hint">Код за сигурност (незадължително)</string>
     <string name="checkout_card_security_code_format_3_digits">3 цифри</string>

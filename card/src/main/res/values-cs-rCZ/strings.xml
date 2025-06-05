@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Jméno na kartě</string>
     <string name="checkout_card_expiry_date_hint">Konec platnosti</string>
     <string name="checkout_card_expiry_date_optional_hint">Datum konce platnosti (volitelné)</string>
-    <string name="checkout_card_expiry_date_format">MM/RR</string>
+    <string name="checkout_card_expiry_date_format_label">Měsíc, 2 číslice, rok, 2 číslice</string>
     <string name="checkout_card_security_code_hint">Bezpečnostní kód</string>
     <string name="checkout_card_security_code_optional_hint">Bezpečnostní kód (volitelný)</string>
     <string name="checkout_card_security_code_format_3_digits">3 číslice</string>

@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Όνομα στην κάρτα</string>
     <string name="checkout_card_expiry_date_hint">Ημερομηνία λήξης</string>
     <string name="checkout_card_expiry_date_optional_hint">Ημερομηνία λήξης (προαιρετικό)</string>
-    <string name="checkout_card_expiry_date_format">ΜΜ/ΕΕ</string>
+    <string name="checkout_card_expiry_date_format_label">Μήνας, 2 ψηφία, Έτος, 2 ψηφία</string>
     <string name="checkout_card_security_code_hint">Κωδικός ασφαλείας</string>
     <string name="checkout_card_security_code_optional_hint">Κωδικός ασφαλείας (προαιρετικό)</string>
     <string name="checkout_card_security_code_format_3_digits">3ψήφιος</string>

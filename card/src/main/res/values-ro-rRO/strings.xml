@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Numele de pe card</string>
     <string name="checkout_card_expiry_date_hint">Data expirării</string>
     <string name="checkout_card_expiry_date_optional_hint">Data de expirare (opțional)</string>
-    <string name="checkout_card_expiry_date_format">LL/AA</string>
+    <string name="checkout_card_expiry_date_format_label">Lună, 2 cifre, An, 2 cifre</string>
     <string name="checkout_card_security_code_hint">Cod de securitate</string>
     <string name="checkout_card_security_code_optional_hint">Cod de securitate (opțional)</string>
     <string name="checkout_card_security_code_format_3_digits">3 cifre</string>

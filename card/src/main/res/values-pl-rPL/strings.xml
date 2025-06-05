@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Imię i nazwisko na karcie</string>
     <string name="checkout_card_expiry_date_hint">Data ważności</string>
     <string name="checkout_card_expiry_date_optional_hint">Data ważności (opcjonalnie)</string>
-    <string name="checkout_card_expiry_date_format">MM/RR</string>
+    <string name="checkout_card_expiry_date_format_label">Miesiąc, 2 cyfry, rok, 2 cyfry</string>
     <string name="checkout_card_security_code_hint">Kod zabezpieczający</string>
     <string name="checkout_card_security_code_optional_hint">Kod zabezpieczający (opcjonalnie)</string>
     <string name="checkout_card_security_code_format_3_digits">3 cyfry</string>

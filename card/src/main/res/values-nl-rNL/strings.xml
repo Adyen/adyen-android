@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Naam op kaart</string>
     <string name="checkout_card_expiry_date_hint">Vervaldatum</string>
     <string name="checkout_card_expiry_date_optional_hint">Vervaldatum (optioneel)</string>
-    <string name="checkout_card_expiry_date_format">MM/JJ</string>
+    <string name="checkout_card_expiry_date_format_label">Maand, 2 cijfers; jaar, 2 cijfers</string>
     <string name="checkout_card_security_code_hint">Beveiligingscode</string>
     <string name="checkout_card_security_code_optional_hint">Beveiligingscode (optioneel)</string>
     <string name="checkout_card_security_code_format_3_digits">3 cijfers</string>

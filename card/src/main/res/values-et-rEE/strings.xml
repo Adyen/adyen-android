@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Nimi kaardil</string>
     <string name="checkout_card_expiry_date_hint">Aegumise kuupäev</string>
     <string name="checkout_card_expiry_date_optional_hint">Aegumiskuupäev (valikuline)</string>
-    <string name="checkout_card_expiry_date_format">KK/AA</string>
+    <string name="checkout_card_expiry_date_format_label">Kuu, 2 numbrit, aasta, 2 numbrit</string>
     <string name="checkout_card_security_code_hint">Turvakood</string>
     <string name="checkout_card_security_code_optional_hint">Turvakood (valikuline)</string>
     <string name="checkout_card_security_code_format_3_digits">3 numbrit</string>

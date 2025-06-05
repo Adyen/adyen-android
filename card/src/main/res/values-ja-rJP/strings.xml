@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">カード上の名前</string>
     <string name="checkout_card_expiry_date_hint">有効期限</string>
     <string name="checkout_card_expiry_date_optional_hint">有効期限（任意）</string>
-    <string name="checkout_card_expiry_date_format">MM/YY</string>
+    <string name="checkout_card_expiry_date_format_label">月2桁、年2桁</string>
     <string name="checkout_card_security_code_hint">セキュリティコード</string>
     <string name="checkout_card_security_code_optional_hint">セキュリティコード（任意）</string>
     <string name="checkout_card_security_code_format_3_digits">3桁</string>

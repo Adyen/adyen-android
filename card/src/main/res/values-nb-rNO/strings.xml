@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Navn på kortet</string>
     <string name="checkout_card_expiry_date_hint">Utløpsdato</string>
     <string name="checkout_card_expiry_date_optional_hint">Utløpsdato (valgfritt)</string>
-    <string name="checkout_card_expiry_date_format">MM/ÅÅ</string>
+    <string name="checkout_card_expiry_date_format_label">Måned, 2 sifre, år, 2 sifre</string>
     <string name="checkout_card_security_code_hint">Sikkerhetskode</string>
     <string name="checkout_card_security_code_optional_hint">Sikkerhetskode (valgfritt)</string>
     <string name="checkout_card_security_code_format_3_digits">3 siffer</string>

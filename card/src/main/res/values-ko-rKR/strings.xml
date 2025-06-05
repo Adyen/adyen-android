@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">카드상의 이름</string>
     <string name="checkout_card_expiry_date_hint">만료일</string>
     <string name="checkout_card_expiry_date_optional_hint">만료일(선택 사항)</string>
-    <string name="checkout_card_expiry_date_format">MM/YY</string>
+    <string name="checkout_card_expiry_date_format_label">월, 2자리 숫자, 연도, 2자리 숫자</string>
     <string name="checkout_card_security_code_hint">보안 코드</string>
     <string name="checkout_card_security_code_optional_hint">보안 코드(선택 사항)</string>
     <string name="checkout_card_security_code_format_3_digits">3자리</string>

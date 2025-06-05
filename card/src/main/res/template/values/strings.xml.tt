@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">%%creditCard.holderName%%</string>
     <string name="checkout_card_expiry_date_hint">%%creditCard.expiryDateField.title%%</string>
     <string name="checkout_card_expiry_date_optional_hint">%%creditCard.expiryDateField.title.optional%%</string>
-    <string name="checkout_card_expiry_date_format">%%creditCard.expiryDateField.placeholder%%</string>
+    <string name="checkout_card_expiry_date_format_label">%%creditCard.expiryDateField.formatAccessibilityLabel%%</string>
     <string name="checkout_card_security_code_hint">%%creditCard.cvcField.title%%</string>
     <string name="checkout_card_security_code_optional_hint">%%creditCard.cvcField.title.optional%%</string>
     <string name="checkout_card_security_code_format_3_digits">%%creditCard.cvcField.placeholder.3digits%%</string>

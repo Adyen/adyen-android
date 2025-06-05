@@ -11,7 +11,7 @@
     <string name="checkout_card_holder_hint">Nombre en la tarjeta</string>
     <string name="checkout_card_expiry_date_hint">Fecha de expiración</string>
     <string name="checkout_card_expiry_date_optional_hint">Fecha de caducidad (opcional)</string>
-    <string name="checkout_card_expiry_date_format">MM/AA</string>
+    <string name="checkout_card_expiry_date_format_label">Mes, 2 dígitos; año, 2 dígitos</string>
     <string name="checkout_card_security_code_hint">Código de seguridad</string>
     <string name="checkout_card_security_code_optional_hint">Código de seguridad (opcional)</string>
     <string name="checkout_card_security_code_format_3_digits">3 dígitos</string>
