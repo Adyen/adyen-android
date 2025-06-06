@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.internal
 
 import android.content.Context
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.util.LocaleUtil
@@ -35,8 +36,7 @@ constructor(
     protected var clientKey: String
 ) {
 
-    // TODO - Analytics
-//    protected var analyticsConfiguration: AnalyticsConfiguration? = null
+    protected var analyticsConfiguration: AnalyticsConfiguration? = null
     protected var amount: Amount? = null
 
     // TODO - Client Key Validation
@@ -97,17 +97,16 @@ constructor(
         return this as BuilderT
     }
 
-    // TODO - Analytics
-//    /**
-//     * Allows configuring the internal analytics of the library.
-//     *
-//     * @param analyticsConfiguration the analytics configuration.
-//     */
-//    fun setAnalyticsConfiguration(analyticsConfiguration: AnalyticsConfiguration): BuilderT {
-//        this.analyticsConfiguration = analyticsConfiguration
-//        @Suppress("UNCHECKED_CAST")
-//        return this as BuilderT
-//    }
+    /**
+     * Allows configuring the internal analytics of the library.
+     *
+     * @param analyticsConfiguration the analytics configuration.
+     */
+    fun setAnalyticsConfiguration(analyticsConfiguration: AnalyticsConfiguration): BuilderT {
+        this.analyticsConfiguration = analyticsConfiguration
+        @Suppress("UNCHECKED_CAST")
+        return this as BuilderT
+    }
 
     /**
      * Sets the amount of the transaction.
