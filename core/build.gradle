@@ -53,6 +53,12 @@ dependencies {
     implementation libs.compose.viewmodel
     implementation libs.okhttp
 
+    testImplementation libs.json
     testImplementation libs.bundles.junit
+    testImplementation libs.bundles.kotlin.coroutines.test
     testImplementation libs.bundles.mockito
+
+    testFixturesImplementation libs.bundles.androidx.lifecycle
+    testFixturesImplementation libs.bundles.junit
+    testFixturesImplementation libs.bundles.kotlin.coroutines.test
 }
