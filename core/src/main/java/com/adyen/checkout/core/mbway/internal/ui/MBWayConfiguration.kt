@@ -20,6 +20,7 @@ import com.adyen.checkout.core.internal.util.CheckoutConfigurationMarker
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
+// TODO Change MBWayComponent to the new name
 /**
  * Configuration class for the [MBWayComponent].
  */
