@@ -165,6 +165,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_half_margin"
+        android:layout_marginBottom="@dimen/standard_margin"
         android:descendantFocusability="beforeDescendants"
         android:focusable="false"
         android:focusableInTouchMode="false"
