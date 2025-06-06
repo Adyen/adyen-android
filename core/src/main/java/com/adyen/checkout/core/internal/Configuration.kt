@@ -10,6 +10,7 @@ package com.adyen.checkout.core.internal
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
 import java.util.Locale
@@ -20,8 +21,6 @@ interface Configuration : Parcelable {
     val environment: Environment
     val clientKey: String
     val shopperLocale: Locale?
-
-    // TODO - Analytics Configuration
-//    val analyticsConfiguration: AnalyticsConfiguration?
+    val analyticsConfiguration: AnalyticsConfiguration?
     val amount: Amount?
 }

@@ -18,9 +18,7 @@ interface ComponentParams {
     val shopperLocale: Locale
     val environment: Environment
     val clientKey: String
-
-    // TODO - Analytics
-//    val analyticsParams: AnalyticsParams
+    val analyticsParams: AnalyticsParams
     val isCreatedByDropIn: Boolean
     val amount: Amount?
 }
