@@ -89,7 +89,7 @@ public abstract interface class com/adyen/checkout/dropin/DropInCallback {
 public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/util/HashMap;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Landroid/os/Bundle;Ljava/util/HashMap;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public final fun getAdditionalDataForDropInService ()Landroid/os/Bundle;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
@@ -99,7 +99,7 @@ public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/che
 	public final fun getShowPreselectedStoredPaymentMethod ()Ljava/lang/Boolean;
 	public final fun getSkipListWhenSinglePaymentMethod ()Ljava/lang/Boolean;
 	public final fun isRemovingStoredPaymentMethodsEnabled ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder {
@@ -159,6 +159,10 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Creator : andro
 public final class com/adyen/checkout/dropin/DropInConfigurationKt {
 	public static final fun dropIn (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun dropIn$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
+}
+
+public final class com/adyen/checkout/dropin/DropInRedirectHandlingActivity : androidx/appcompat/app/AppCompatActivity {
+	public fun <init> ()V
 }
 
 public abstract class com/adyen/checkout/dropin/DropInResult {

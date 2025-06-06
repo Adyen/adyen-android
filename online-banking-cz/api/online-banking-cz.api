@@ -34,7 +34,7 @@ public final class com/adyen/checkout/onlinebankingcz/OnlineBankingCZComponentSt
 public final class com/adyen/checkout/onlinebankingcz/OnlineBankingCZConfiguration : com/adyen/checkout/onlinebankingcore/internal/OnlineBankingConfiguration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
@@ -42,7 +42,7 @@ public final class com/adyen/checkout/onlinebankingcz/OnlineBankingCZConfigurati
 	public fun getGenericActionConfiguration ()Lcom/adyen/checkout/action/core/GenericActionConfiguration;
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/onlinebankingcz/OnlineBankingCZConfiguration$Builder : com/adyen/checkout/onlinebankingcore/internal/OnlineBankingConfiguration$OnlineBankingConfigurationBuilder {

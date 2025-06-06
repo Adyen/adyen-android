@@ -70,7 +70,9 @@ include ':3ds2',
         ':test-core',
         ':twint',
         ':twint-action',
+        ':ui',
         ':ui-core',
         ':upi',
         ':voucher',
         ':wechatpay'
+include ':core'
