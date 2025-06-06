@@ -7,8 +7,10 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.URLSpan
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT
+import android.widget.EditText
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.annotation.RestrictTo
@@ -113,5 +115,15 @@ internal fun View.resetFocus() {
 fun View.requestFocusOnNextLayout() {
     doOnNextLayout { view ->
         view.requestFocus()
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun EditText.setAccessibilityDelegateWith(contentDescription: String) {
+    accessibilityDelegate = object : View.AccessibilityDelegate() {
+        override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfo) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info.contentDescription = contentDescription
+        }
     }
 }

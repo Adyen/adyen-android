@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">カード上の名前</string>
     <string name="checkout_card_expiry_date_hint">有効期限</string>
     <string name="checkout_card_expiry_date_optional_hint">有効期限（任意）</string>
-    <string name="checkout_card_security_code_hint">セキュリティーコード (CVC)</string>
-    <string name="checkout_card_security_code_optional_hint">セキュリティーコード(任意)</string>
+    <string name="checkout_card_expiry_date_format_label">月2桁、年2桁</string>
+    <string name="checkout_card_security_code_hint">セキュリティコード</string>
+    <string name="checkout_card_security_code_optional_hint">セキュリティコード（任意）</string>
+    <string name="checkout_card_security_code_format_3_digits">3桁</string>
+    <string name="checkout_card_security_code_format_4_digits">4桁</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">カード所有者の生年月日（YYMMDD）または法人登録番号（10桁）</string>
     <string name="checkout_kcp_tax_number_hint">法人登録番号（10桁）</string>
     <string name="checkout_kcp_password_hint">カードのパスワードの最初の2桁</string>

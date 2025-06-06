@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Vardas ant kortelės</string>
     <string name="checkout_card_expiry_date_hint">Galiojimo data</string>
     <string name="checkout_card_expiry_date_optional_hint">Galiojimo data (neprivaloma)</string>
+    <string name="checkout_card_expiry_date_format_label">Mėnuo, 2 skaitmenys, metai, 2 skaitmenys</string>
     <string name="checkout_card_security_code_hint">Saugos kodas</string>
     <string name="checkout_card_security_code_optional_hint">Saugos kodas (neprivaloma)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 skaitmenys</string>
+    <string name="checkout_card_security_code_format_4_digits">4 skaitmenys</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kortelės turėtojo gimimo data (MMMMDD) arba įmonės registracijos numeris (10 skaitmenų)</string>
     <string name="checkout_kcp_tax_number_hint">Įmonės registracijos numeris (10 skaitmenų)</string>
     <string name="checkout_kcp_password_hint">Pirmieji 2 kortelės slaptažodžio skaitmenys</string>

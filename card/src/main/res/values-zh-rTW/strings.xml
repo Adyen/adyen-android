@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">信用卡上的姓名</string>
     <string name="checkout_card_expiry_date_hint">到期日期</string>
     <string name="checkout_card_expiry_date_optional_hint">到期日（選用）</string>
-    <string name="checkout_card_security_code_hint">信用卡驗證碼 / 信用卡安全碼</string>
-    <string name="checkout_card_security_code_optional_hint">CVC / CVV (可選)</string>
+    <string name="checkout_card_expiry_date_format_label">月份，2 位數，年份，2 位數</string>
+    <string name="checkout_card_security_code_hint">安全碼</string>
+    <string name="checkout_card_security_code_optional_hint">安全碼（選填）</string>
+    <string name="checkout_card_security_code_format_3_digits">3 位數</string>
+    <string name="checkout_card_security_code_format_4_digits">4 位數</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">持卡人生日（年月日）或公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_tax_number_hint">公司註冊號碼（10 位數）</string>
     <string name="checkout_kcp_password_hint">卡密碼的前 2 位數字</string>

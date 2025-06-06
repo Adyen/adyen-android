@@ -44,10 +44,12 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.isVisible
+import com.adyen.checkout.ui.core.internal.util.setAccessibilityDelegateWith
 import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.ui.core.internal.util.showError
@@ -314,6 +316,7 @@ class CardView @JvmOverloads constructor(
             }
             binding.cardBrandLogoContainerSecondary.isVisible = false
             binding.editTextCardNumber.setAmexCardFormat(false)
+            binding.editTextSecurityCode.setAccessibilityDescription(false)
         } else {
             val firstDetectedCardType = detectedCardTypes.first()
             binding.cardBrandLogoImageViewPrimary.strokeWidth = RoundCornerImageView.DEFAULT_STROKE_WIDTH
@@ -328,6 +331,7 @@ class CardView @JvmOverloads constructor(
             // TODO 29/01/2021 get this logic from OutputData
             val isAmex = detectedCardTypes.any { it.cardBrand == CardBrand(cardType = CardType.AMERICAN_EXPRESS) }
             binding.editTextCardNumber.setAmexCardFormat(isAmex)
+            binding.editTextSecurityCode.setAccessibilityDescription(isAmex)
 
             if (detectedCardTypes.size == 1 &&
                 firstDetectedCardType.panLength == binding.editTextCardNumber.rawValue.length
@@ -425,6 +429,15 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutExpiryDate.showError(localizedContext.getString(expiryDateValidation.reason))
             }
         }
+        binding.editTextExpiryDate.setAccessibilityDescription()
+    }
+
+    // TODO - Investigate contentDescription in ViewFieldState [COSDK-490]
+    private fun ExpiryDateInput.setAccessibilityDescription() {
+        val expiryDateHint = localizedContext.getString(R.string.checkout_card_expiry_date_hint)
+        val expiryDateFormatLabel = localizedContext.getString(R.string.checkout_card_expiry_date_format_label)
+        val contentDescription = "$expiryDateHint, $expiryDateFormatLabel"
+        this.setAccessibilityDelegateWith(contentDescription)
     }
 
     private fun initSecurityCodeInput() {
@@ -441,6 +454,20 @@ class CardView @JvmOverloads constructor(
                 binding.textInputLayoutSecurityCode.showError(localizedContext.getString(securityCodeValidation.reason))
             }
         }
+        binding.editTextSecurityCode.setAccessibilityDescription(false)
+    }
+
+    // TODO - Investigate contentDescription in ViewFieldState [COSDK-490]
+    private fun SecurityCodeInput.setAccessibilityDescription(isAmex: Boolean) {
+        val securityCodeHint = localizedContext.getString(R.string.checkout_card_security_code_hint)
+        val contentDescription = if (isAmex) {
+            val fourDigitFormat = localizedContext.getString(R.string.checkout_card_security_code_format_4_digits)
+            "$securityCodeHint, $fourDigitFormat"
+        } else {
+            val threeDigitFormat = localizedContext.getString(R.string.checkout_card_security_code_format_3_digits)
+            "$securityCodeHint, $threeDigitFormat"
+        }
+        this.setAccessibilityDelegateWith(contentDescription)
     }
 
     private fun initHolderNameInput() {

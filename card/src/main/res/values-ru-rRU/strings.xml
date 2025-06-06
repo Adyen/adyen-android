@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Имя на карте</string>
     <string name="checkout_card_expiry_date_hint">Срок действия</string>
     <string name="checkout_card_expiry_date_optional_hint">Срок действия (необязательно)</string>
-    <string name="checkout_card_security_code_hint">CVC / CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC / CVV (необязательно)</string>
+    <string name="checkout_card_expiry_date_format_label">Месяц: 2 цифры, год: 2 цифры</string>
+    <string name="checkout_card_security_code_hint">Защитный код</string>
+    <string name="checkout_card_security_code_optional_hint">Защитный код (необязательно)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 цифры</string>
+    <string name="checkout_card_security_code_format_4_digits">4 цифры</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Дата рождения владельца карты (ГГММДД) или регистрационный номер предприятия (10 цифр)</string>
     <string name="checkout_kcp_tax_number_hint">Регистрационный номер предприятия (10 цифр)</string>
     <string name="checkout_kcp_password_hint">Первые 2 цифры пароля карты</string>

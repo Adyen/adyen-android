@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Naam op kaart</string>
     <string name="checkout_card_expiry_date_hint">Vervaldatum</string>
     <string name="checkout_card_expiry_date_optional_hint">Vervaldatum (optioneel)</string>
-    <string name="checkout_card_security_code_hint">CVC / CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC / CVV (optioneel)</string>
+    <string name="checkout_card_expiry_date_format_label">Maand, 2 cijfers; jaar, 2 cijfers</string>
+    <string name="checkout_card_security_code_hint">Beveiligingscode</string>
+    <string name="checkout_card_security_code_optional_hint">Beveiligingscode (optioneel)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 cijfers</string>
+    <string name="checkout_card_security_code_format_4_digits">4 cijfers</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Geboortedatum (JJ-MM-DD) of bedrijfsregistratienummer (10 cijfers) van kaarthouder</string>
     <string name="checkout_kcp_tax_number_hint">Bedrijfsregistratienummer (10 cijfers)</string>
     <string name="checkout_kcp_password_hint">Eerste twee cijfers van het wachtwoord van de kaart</string>

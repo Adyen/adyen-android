@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Име на картата</string>
     <string name="checkout_card_expiry_date_hint">Дата на валидност</string>
     <string name="checkout_card_expiry_date_optional_hint">Дата на валидност (незадължително)</string>
+    <string name="checkout_card_expiry_date_format_label">Месец, 2 цифри, година, 2 цифри</string>
     <string name="checkout_card_security_code_hint">Код за сигурност</string>
     <string name="checkout_card_security_code_optional_hint">Код за сигурност (незадължително)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 цифри</string>
+    <string name="checkout_card_security_code_format_4_digits">4 цифри</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Дата на раждане на картодържателя (ГГГГММДД) или корпоративен регистрационен номер (10 цифри)</string>
     <string name="checkout_kcp_tax_number_hint">Корпоративен регистрационен номер (10 цифри)</string>
     <string name="checkout_kcp_password_hint">Първите 2 цифри от паролата на картата</string>

@@ -9,10 +9,13 @@
 <resources>
     <string name="checkout_card_number_hint">Kortanúmer</string>
     <string name="checkout_card_holder_hint">Nafn á korti</string>
-    <string name="checkout_card_expiry_date_hint">Gildisdadgur</string>
+    <string name="checkout_card_expiry_date_hint">Gildisdagur</string>
     <string name="checkout_card_expiry_date_optional_hint">Gildisdagur (valfrjálst)</string>
+    <string name="checkout_card_expiry_date_format_label">Mánuður, 2 tölustafir, Ár, 2 tölustafir</string>
     <string name="checkout_card_security_code_hint">Öryggiskóði</string>
     <string name="checkout_card_security_code_optional_hint">Öryggiskóði (valfrjálst)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 tölustafir</string>
+    <string name="checkout_card_security_code_format_4_digits">4 tölustafir</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Fæðingardagur korthafa (ÁÁMMDD) eða skráningarnúmer fyrirtækis (10 tölustafir)</string>
     <string name="checkout_kcp_tax_number_hint">Skráningarnúmer fyrirtækis (10 tölustafir)</string>
     <string name="checkout_kcp_password_hint">Fyrstu 2 tölustafirnir í aðgangsorði kortsins</string>

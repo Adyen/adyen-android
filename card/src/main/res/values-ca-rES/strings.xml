@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Nom a la targeta</string>
     <string name="checkout_card_expiry_date_hint">Data de caducitat</string>
     <string name="checkout_card_expiry_date_optional_hint">Data de caducitat (opcional)</string>
+    <string name="checkout_card_expiry_date_format_label">Mes, 2 dígits, Any, 2 dígits</string>
     <string name="checkout_card_security_code_hint">Codi de seguretat</string>
     <string name="checkout_card_security_code_optional_hint">Codi de seguretat (opcional)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 dígits</string>
+    <string name="checkout_card_security_code_format_4_digits">4 dígits</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Data de naixement del titular de la targeta (AAMMDD) o número de registre corporatiu (10 dígits)</string>
     <string name="checkout_kcp_tax_number_hint">Número de registre corporatiu (10 dígits)</string>
     <string name="checkout_kcp_password_hint">Els 2 primers dígits de la contrasenya de la targeta</string>

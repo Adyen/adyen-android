@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Vārds uz kartes</string>
     <string name="checkout_card_expiry_date_hint">Derīguma termiņš</string>
     <string name="checkout_card_expiry_date_optional_hint">Derīguma termiņš (pēc izvēles)</string>
+    <string name="checkout_card_expiry_date_format_label">Mēnesis, 2 cipari, gads, 2 cipari</string>
     <string name="checkout_card_security_code_hint">Drošības kods</string>
     <string name="checkout_card_security_code_optional_hint">Drošības kods (pēc izvēles)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 cipari</string>
+    <string name="checkout_card_security_code_format_4_digits">4 cipari</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kartes īpašnieka dzimšanas datums (GGMMDD) vai uzņēmuma reģistrācijas numurs (10 cipari)</string>
     <string name="checkout_kcp_tax_number_hint">Uzņēmuma reģistrācijas numurs (10 cipari)</string>
     <string name="checkout_kcp_password_hint">Kartes paroles pirmie 2 cipari</string>

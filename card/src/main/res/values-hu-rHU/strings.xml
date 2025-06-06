@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">A kártyán szereplő név</string>
     <string name="checkout_card_expiry_date_hint">Lejárati dátum</string>
     <string name="checkout_card_expiry_date_optional_hint">Lejárati dátum (nem kötelező)</string>
-    <string name="checkout_card_security_code_hint">CVC/CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC/CVV (opcionális)</string>
+    <string name="checkout_card_expiry_date_format_label">Hónap, két számjegy, év, két számjegy</string>
+    <string name="checkout_card_security_code_hint">Biztonsági kód</string>
+    <string name="checkout_card_security_code_optional_hint">Biztonsági kód (nem kötelező)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 számjegyű</string>
+    <string name="checkout_card_security_code_format_4_digits">4 számjegyű</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Kártyatulajdonos születési dátuma (ÉÉHHNN) vagy cégjegyzékszám (10 számjegyű)</string>
     <string name="checkout_kcp_tax_number_hint">Cégjegyzékszám (10 számjegyű)</string>
     <string name="checkout_kcp_password_hint">Kártya jelszavának első 2 számjegye</string>

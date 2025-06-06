@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">الاسم على البطاقة</string>
     <string name="checkout_card_expiry_date_hint">تاريخ الانتهاء</string>
     <string name="checkout_card_expiry_date_optional_hint">تاريخ الانتهاء (اختياري)</string>
-    <string name="checkout_card_security_code_hint">رمز CVC / CVV</string>
-    <string name="checkout_card_security_code_optional_hint">رمز CVC / CVV (اختياري)</string>
+    <string name="checkout_card_expiry_date_format_label">الشهر (رقمين)، السنة (رقمين)</string>
+    <string name="checkout_card_security_code_hint">رمز الأمان</string>
+    <string name="checkout_card_security_code_optional_hint">رمز الأمان (اختياري)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 أرقام</string>
+    <string name="checkout_card_security_code_format_4_digits">4 أرقام</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">تاريخ ميلاد حامل البطاقة (يوم شهر سنة) أو رقم تسجيل الشركة (10 أرقام)</string>
     <string name="checkout_kcp_tax_number_hint">رقم تسجيل الشركة (10 أرقام)</string>
     <string name="checkout_kcp_password_hint">أول رقمان من كلمة مرور البطاقة</string>

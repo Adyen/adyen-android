@@ -11,8 +11,11 @@
     <string name="checkout_card_holder_hint">Ime na kartici</string>
     <string name="checkout_card_expiry_date_hint">Datum veljavnosti</string>
     <string name="checkout_card_expiry_date_optional_hint">Datum poteka veljavnosti (neobvezno)</string>
-    <string name="checkout_card_security_code_hint">CVC/CVV</string>
-    <string name="checkout_card_security_code_optional_hint">CVC/CVV (neobvezno)</string>
+    <string name="checkout_card_expiry_date_format_label">Mesec, 2 števki; leto, 2 števki</string>
+    <string name="checkout_card_security_code_hint">Varnostna koda</string>
+    <string name="checkout_card_security_code_optional_hint">Varnostna koda (neobvezno)</string>
+    <string name="checkout_card_security_code_format_3_digits">3 števke</string>
+    <string name="checkout_card_security_code_format_4_digits">4 števke</string>
     <string name="checkout_kcp_birth_date_or_tax_number_hint">Datum rojstva imetnika kartice (LLMMDD) ali registracijska številka podjetja (10 števk)</string>
     <string name="checkout_kcp_tax_number_hint">Matična številka podjetja (10 števk)</string>
     <string name="checkout_kcp_password_hint">Prvi dve števki gesla za kartico</string>
