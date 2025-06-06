@@ -26,12 +26,10 @@ class CommonComponentParamsMapper {
             shopperLocale = checkoutConfiguration.shopperLocale ?: sessionParams?.shopperLocale ?: deviceLocale,
             environment = sessionParams?.environment ?: checkoutConfiguration.environment,
             clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
-
-            // TODO - Analytics
-//            analyticsParams = AnalyticsParams(
-//                analyticsConfiguration = checkoutConfiguration.analyticsConfiguration,
-//                clientKey = checkoutConfiguration.clientKey,
-//            ),
+            analyticsParams = AnalyticsParams(
+                analyticsConfiguration = checkoutConfiguration.analyticsConfiguration,
+                clientKey = checkoutConfiguration.clientKey,
+            ),
             isCreatedByDropIn = dropInOverrideParams != null,
             amount = sessionParams?.amount
                 ?: dropInOverrideParams?.amount

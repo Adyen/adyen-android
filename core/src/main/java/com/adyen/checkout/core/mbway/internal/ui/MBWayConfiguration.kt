@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.mbway.internal.ui
 
 import android.content.Context
+import com.adyen.checkout.core.AnalyticsConfiguration
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
@@ -31,8 +32,7 @@ class MBWayConfiguration private constructor(
     override val environment: Environment,
     override val clientKey: String,
 
-    // TODO - Analytics
-//    override val analyticsConfiguration: AnalyticsConfiguration?,
+    override val analyticsConfiguration: AnalyticsConfiguration?,
     override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean?,
 
@@ -109,7 +109,7 @@ class MBWayConfiguration private constructor(
                 shopperLocale = shopperLocale,
                 environment = environment,
                 clientKey = clientKey,
-//                analyticsConfiguration = analyticsConfiguration,
+                analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
                 isSubmitButtonVisible = isSubmitButtonVisible,
 //                genericActionConfiguration = genericActionConfigurationBuilder.build(),
@@ -125,7 +125,7 @@ fun CheckoutConfiguration.mbWay(
         .apply {
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
-//            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
         }
         .apply(configuration)
         .build()
@@ -145,7 +145,7 @@ internal fun MBWayConfiguration.toCheckoutConfiguration(): CheckoutConfiguration
         environment = environment,
         clientKey = clientKey,
         amount = amount,
-//        analyticsConfiguration = analyticsConfiguration,
+        analyticsConfiguration = analyticsConfiguration,
     ) {
         // TODO - Add PaymentMethodTypes to core module
         addConfiguration("mbway", this@toCheckoutConfiguration)

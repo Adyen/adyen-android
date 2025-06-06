@@ -18,9 +18,7 @@ data class CommonComponentParams(
     override val shopperLocale: Locale,
     override val environment: Environment,
     override val clientKey: String,
-
-    // TODO - Analytics
-//    override val analyticsParams: AnalyticsParams,
+    override val analyticsParams: AnalyticsParams,
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount?,
 ) : ComponentParams
