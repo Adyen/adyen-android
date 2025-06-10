@@ -43,12 +43,12 @@ public final class com/adyen/checkout/core/CardBrand : android/os/Parcelable {
 	public final fun component1 ()Ljava/lang/String;
 	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/CardBrand;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/core/CardBrand;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/CardBrand;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getTxVariant ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/core/CardBrand$Companion {
@@ -121,13 +121,13 @@ public final class com/adyen/checkout/core/Environment : android/os/Parcelable {
 	public final fun component2 ()Ljava/net/URL;
 	public final fun copy (Ljava/net/URL;Ljava/net/URL;)Lcom/adyen/checkout/core/Environment;
 	public static synthetic fun copy$default (Lcom/adyen/checkout/core/Environment;Ljava/net/URL;Ljava/net/URL;ILjava/lang/Object;)Lcom/adyen/checkout/core/Environment;
-	public fun describeContents ()I
+	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCheckoutAnalyticsBaseUrl ()Ljava/net/URL;
 	public final fun getCheckoutShopperBaseUrl ()Ljava/net/URL;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public fun writeToParcel (Landroid/os/Parcel;I)V
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
 public final class com/adyen/checkout/core/Environment$Companion {

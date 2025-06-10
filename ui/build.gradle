@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 10/4/2025.
+ */
+
+plugins {
+    alias libs.plugins.android.library
+    alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.compose
+    alias libs.plugins.kotlin.parcelize
+}
+
+// Maven artifact
+ext.mavenArtifactId = "ui"
+ext.mavenArtifactName = "Adyen Checkout UI"
+ext.mavenArtifactDescription = "UI and styling foundation for Adyen Checkout."
+
+apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+
+android {
+    // TODO - change to com.adyen.checkout.ui once we get rid of ui-core
+    namespace 'com.adyen.checkout.test'
+    compileSdk libs.versions.compile.sdk.get().toInteger()
+
+    defaultConfig {
+        minSdk libs.versions.min.sdk.get().toInteger()
+        targetSdk libs.versions.target.sdk.get().toInteger()
+
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildFeatures {
+        compose = true
+    }
+}
+
+dependencies {
+    implementation platform(libs.compose.bom)
+    api libs.compose.material
+    api libs.compose.ui.graphics
+    api libs.compose.ui.main
+    api libs.compose.ui.tooling.preview
+
+    debugImplementation libs.compose.ui.tooling
+}
