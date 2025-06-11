@@ -14,7 +14,7 @@ plugins {
     alias libs.plugins.sonarqube
     alias libs.plugins.jacoco
     alias libs.plugins.binary.compatibility.validator
-    id "resolve-dependencies"
+    alias libs.plugins.resolve.dependencies
 }
 
 apply from: "config/gradle/sonarcloud.gradle"

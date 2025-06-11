@@ -68,6 +68,7 @@
 "com.squareup.retrofit2:converter-moshi" = ""
 "com.squareup.retrofit2:retrofit" = ""
 "com.squareup:javapoet" = ""
+"dokka-convention" = ""
 "io.gitlab.arturbosch.detekt" = ""
 "io.gitlab.arturbosch.detekt:detekt-formatting" = ""
 "jacoco" = ""
@@ -88,6 +89,7 @@
 "org.mockito:mockito-junit-jupiter" = ""
 "org.robolectric:robolectric" = ""
 "org.sonarqube" = ""
+"resolve-dependencies" = ""
 # These are used in our SDK, but we already display Kotlin in through another dependency.
 "kotlin-android" = ""
 "kotlin-parcelize" = ""

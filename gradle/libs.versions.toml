@@ -192,6 +192,8 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dokka = { id = "org.jetbrains.dokka" }
+dokka-convention = { id = "dokka-convention" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+resolve-dependencies = { id = "resolve-dependencies" }
