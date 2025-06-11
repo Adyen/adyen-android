@@ -9,28 +9,28 @@ public final class com/adyen/checkout/test/BuildConfig {
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$AdyenTextFieldKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$AdyenTextFieldKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1324205339$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-2$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-3$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-4$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1106449004$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1334187742$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-889266526$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$437627562$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1292813058$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$TextKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$TextKt;
 	public fun <init> ()V
-	public final fun getLambda-1$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1290739053$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/theme/AdyenButtonStyle {
