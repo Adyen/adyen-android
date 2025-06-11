@@ -12,13 +12,13 @@ TIMEOUT_SECONDS = 600 # This should be adjusted after the API stops throwing 401
 def _get_env_variables():
     # Retrieves Sonatype username, password, and publishing_type from environment variables.
     # Exits with an error if they are not set.
-    username = os.environ.get("SONATYPE_USERNAME")
-    password = os.environ.get("SONATYPE_PASSWORD")
+    username = os.environ.get("SONATYPE_CENTRAL_PORTAL_USERNAME")
+    password = os.environ.get("SONATYPE_CENTRAL_PORTAL_PASSWORD")
     publishing_type = os.environ.get("PUBLISHING_TYPE")
 
     required = {
-        "SONATYPE_USERNAME": username,
-        "SONATYPE_PASSWORD": password,
+        "SONATYPE_CENTRAL_PORTAL_USERNAME": username,
+        "SONATYPE_CENTRAL_PORTAL_PASSWORD": password,
         "PUBLISHING_TYPE": publishing_type
     }
     for name, value in required.items():
