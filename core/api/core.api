@@ -635,7 +635,7 @@ public abstract interface class com/adyen/checkout/core/internal/data/model/Mode
 public final class com/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt {
 	public static final field INSTANCE Lcom/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt;
 	public fun <init> ()V
-	public final fun getLambda-1$core_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1206248042$core_release ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/adyen/checkout/core/internal/ui/view/PayButtonKt {
@@ -681,8 +681,8 @@ public final class com/adyen/checkout/core/mbway/internal/ui/MBWayConfigurationK
 public final class com/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt {
 	public static final field INSTANCE Lcom/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt;
 	public fun <init> ()V
-	public final fun getLambda-1$core_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda-2$core_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1841229527$core_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$396925426$core_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/core/paymentmethod/GenericPaymentMethod : com/adyen/checkout/core/paymentmethod/PaymentMethodDetails {
