@@ -15,12 +15,12 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class LoggingExtension : BeforeAllCallback, AfterAllCallback {
 
     override fun beforeAll(context: ExtensionContext?) {
-        // TODO Adyen logger
+        // TODO - Adyen logger
 //    AdyenLogger.setLogger(PrintLogger())
     }
 
     override fun afterAll(context: ExtensionContext?) {
-        // TODO Adyen logger
+        // TODO - Adyen logger
 //    AdyenLogger.resetLogger()
     }
 }
