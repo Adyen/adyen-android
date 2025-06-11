@@ -12,11 +12,11 @@ TIMEOUT_SECONDS = 60
 def _get_auth_credentials():
     # Retrieves Sonatype username and password from environment variables.
     # Exits with an error if they are not set.
-    username = os.environ.get("SONATYPE_USERNAME")
-    password = os.environ.get("SONATYPE_PASSWORD")
+    username = os.environ.get("SONATYPE_CENTRAL_PORTAL_USERNAME")
+    password = os.environ.get("SONATYPE_CENTRAL_PORTAL_PASSWORD")
 
     if not username or not password:
-        print("Error: SONATYPE_USERNAME and SONATYPE_PASSWORD environment variables must be set.")
+        print("Error: SONATYPE_CENTRAL_PORTAL_USERNAME and SONATYPE_CENTRAL_PORTAL_PASSWORD environment variables must be set.")
         sys.exit(1)
     return username, password
 
