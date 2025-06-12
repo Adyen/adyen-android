@@ -13,11 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.CheckoutCallback
+import com.adyen.checkout.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.core.mbway.internal.ui.MBWayComponentState
 import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegate
-import com.adyen.checkout.core.sessions.SessionInteractor
+import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
@@ -26,18 +27,24 @@ import kotlinx.coroutines.flow.onEach
 internal class PaymentFacilitator(
     private val coroutineScope: CoroutineScope,
     private val checkoutCallback: CheckoutCallback,
-    private val sessionInteractor: SessionInteractor?,
-
+    private val componentEventHandler: ComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>,
     // TODO - Switch to Component Params
     private val componentParams: ButtonComponentParams,
 ) {
 
     // TODO - Make it a val, initialize it based on txVariant?
-    private val paymentDelegate: PaymentDelegate<MBWayComponentState> = MBWayDelegate(coroutineScope, componentParams)
+    private val paymentDelegate: PaymentDelegate<PaymentComponentState<out PaymentMethodDetails>> =
+        createPaymentDelegate(PaymentMethodTypes.MB_WAY)
 
-    // TODO - Refactor PaymentFacilitator to take ComponentEventHandler as a parameter (either an advanced or
-    //  a sessions one). This will make PaymentFacilitator agnostic to flow type.
-    private val componentEventHandler = DefaultComponentEventHandler<MBWayComponentState>(sessionInteractor)
+    @Suppress("UNCHECKED_CAST")
+    private fun createPaymentDelegate(
+        txVariant: String
+    ): PaymentDelegate<PaymentComponentState<out PaymentMethodDetails>> {
+        return when (txVariant) {
+            PaymentMethodTypes.MB_WAY -> MBWayDelegate(coroutineScope, componentParams)
+            else -> error("Illegal txVariant")
+        } as PaymentDelegate<PaymentComponentState<out PaymentMethodDetails>>
+    }
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {

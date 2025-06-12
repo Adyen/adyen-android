@@ -13,6 +13,8 @@ import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
+import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
@@ -32,12 +34,15 @@ internal class AdvancedPaymentFacilitatorFactory(
             componentSessionParams = null,
             componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
         )
+
+        val componentEventHandler = AdvancedComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>()
+
         // TODO - Advanced Flow
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
             checkoutCallback = checkoutCallback,
-            sessionInteractor = null,
             componentParams = componentParams,
+            componentEventHandler = componentEventHandler,
         )
     }
 }
