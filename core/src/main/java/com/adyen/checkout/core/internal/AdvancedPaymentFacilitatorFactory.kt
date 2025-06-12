@@ -10,7 +10,11 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutConfiguration
+import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
@@ -18,13 +22,22 @@ internal class AdvancedPaymentFacilitatorFactory(
 ) : PaymentFacilitatorFactory {
 
     override fun create(coroutineScope: CoroutineScope): PaymentFacilitator {
+        val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+
+            // TODO - Add locale support, For now it's hardcoded to US
+//        deviceLocale = localeProvider.getLocale(application)
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
+        )
         // TODO - Advanced Flow
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
-            checkoutSession = null,
-            checkoutConfiguration = checkoutConfiguration,
             checkoutCallback = checkoutCallback,
             sessionInteractor = null,
+            componentParams = componentParams,
         )
     }
 }
