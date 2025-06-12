@@ -6,7 +6,6 @@
  * Created by oscars on 29/4/2025.
  */
 
-
 plugins {
     `kotlin-dsl`
 }

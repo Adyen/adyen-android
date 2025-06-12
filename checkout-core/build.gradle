@@ -10,7 +10,7 @@ plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
     alias libs.plugins.kotlin.parcelize
-    id "dokka-convention"
+    alias libs.plugins.dokka.convention
 }
 
 ext.mavenArtifactId = "checkout-core"
