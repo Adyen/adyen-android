@@ -58,8 +58,7 @@ class CheckoutConfiguration(
     override val clientKey: String,
     override val shopperLocale: Locale? = null,
     override val amount: Amount? = null,
-    // TODO - Analytics Configuration
-//    override val analyticsConfiguration: AnalyticsConfiguration? = null,
+    override val analyticsConfiguration: AnalyticsConfiguration? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Configuration {
@@ -91,7 +90,7 @@ class CheckoutConfiguration(
         environment = requireNotNull(parcel.readParcelable(Environment::class.java.classLoader)),
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
-//        analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
+        analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
     ) {
         val size = parcel.readInt()
 
@@ -132,7 +131,7 @@ class CheckoutConfiguration(
         dest.writeParcelable(environment, flags)
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
-//        dest.writeParcelable(analyticsConfiguration, flags)
+        dest.writeParcelable(analyticsConfiguration, flags)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)

@@ -72,7 +72,7 @@ internal class MBWayDelegate(
                             MBWayPaymentMethod(
                                 type = PaymentMethodTypes.MB_WAY,
 
-                                // TODO - Analytics
+                                // TODO - Pass this after getting it in the Checkout initialization (COSDK-443)
                                 checkoutAttemptId = null,
                                 telephoneNumber = makePhoneNumber(),
                             ),
