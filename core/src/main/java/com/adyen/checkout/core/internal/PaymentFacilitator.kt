@@ -12,7 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.adyen.checkout.core.AdyenCheckout
+import com.adyen.checkout.core.CheckoutCallback
+import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
@@ -20,6 +21,7 @@ import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.core.mbway.internal.ui.MBWayComponentState
 import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegate
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
+import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -27,27 +29,33 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.Locale
 
+// TODO - Have separate facilitators for sessions and advanced?
 internal class PaymentFacilitator(
-    val coroutineScope: CoroutineScope,
-    val adyenCheckout: AdyenCheckout,
-    val sessionInteractor: SessionInteractor
+    private val coroutineScope: CoroutineScope,
+    private val checkoutSession: CheckoutSession?,
+    private val checkoutConfiguration: CheckoutConfiguration,
+    private val checkoutCallback: CheckoutCallback,
+    private val sessionInteractor: SessionInteractor?
 ) {
 
     private val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-        checkoutConfiguration = adyenCheckout.checkoutConfiguration,
+        checkoutConfiguration = checkoutConfiguration,
 
         // TODO - Add locale support, For now it's hardcoded to US
 //        deviceLocale = localeProvider.getLocale(application)
         deviceLocale = Locale.US,
         dropInOverrideParams = null,
-        componentSessionParams = adyenCheckout.checkoutSession?.let {
-            SessionParamsFactory.create(adyenCheckout.checkoutSession)
+        componentSessionParams = checkoutSession?.let {
+            SessionParamsFactory.create(checkoutSession)
         },
-        componentConfiguration = adyenCheckout.checkoutConfiguration.getMBWayConfiguration(),
+        componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
     )
 
     // TODO - Make it a val, initialize it based on txVariant?
     private val paymentDelegate: PaymentDelegate<MBWayComponentState> = MBWayDelegate(coroutineScope, componentParams)
+
+    // TODO - Refactor PaymentFacilitator to take ComponentEventHandler as a parameter (either an advanced or
+    //  a sessions one). This will make PaymentFacilitator agnostic to flow type.
     private val componentEventHandler = DefaultComponentEventHandler<MBWayComponentState>(sessionInteractor)
 
     @Composable
@@ -64,7 +72,7 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event, adyenCheckout.checkoutCallback)
+                componentEventHandler.onPaymentComponentEvent(event, checkoutCallback)
             }.launchIn(coroutineScope)
     }
 }
