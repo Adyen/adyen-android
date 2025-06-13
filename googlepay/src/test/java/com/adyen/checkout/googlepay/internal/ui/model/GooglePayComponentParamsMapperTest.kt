@@ -106,6 +106,7 @@ internal class GooglePayComponentParamsMapperTest {
                 setShippingAddressParameters(shippingAddressParameters)
                 setShippingAddressRequired(true)
                 setTotalPriceStatus("STATUS")
+                setCheckoutOption("DEFAULT")
                 setGooglePayButtonStyling(googlePayButtonStyling)
             }
         }
@@ -141,6 +142,7 @@ internal class GooglePayComponentParamsMapperTest {
             shippingAddressParameters = shippingAddressParameters,
             isBillingAddressRequired = true,
             billingAddressParameters = billingAddressParameters,
+            checkoutOption = "DEFAULT",
             googlePayButtonStyling = googlePayButtonStyling,
         )
 
@@ -609,6 +611,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters: ShippingAddressParameters? = null,
         isBillingAddressRequired: Boolean = false,
         billingAddressParameters: BillingAddressParameters? = null,
+        checkoutOption: String? = null,
         googlePayButtonStyling: GooglePayButtonStyling? = null,
     ) = GooglePayComponentParams(
         commonComponentParams = CommonComponentParams(
@@ -637,6 +640,7 @@ internal class GooglePayComponentParamsMapperTest {
         shippingAddressParameters = shippingAddressParameters,
         isBillingAddressRequired = isBillingAddressRequired,
         billingAddressParameters = billingAddressParameters,
+        checkoutOption = checkoutOption,
         googlePayButtonStyling = googlePayButtonStyling,
     )
 
