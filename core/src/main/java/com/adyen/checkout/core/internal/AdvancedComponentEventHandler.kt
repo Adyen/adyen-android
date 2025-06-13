@@ -9,21 +9,42 @@
 package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
+import com.adyen.checkout.core.CheckoutResult
 import com.adyen.checkout.core.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 
-internal class AdvancedComponentEventHandler<T : PaymentComponentState<out PaymentMethodDetails>> :
+internal class AdvancedComponentEventHandler<T : PaymentComponentState<out PaymentMethodDetails>>(
+    private val checkoutCallback: CheckoutCallback
+) :
     ComponentEventHandler<T> {
+
     override fun initialize(coroutineScope: CoroutineScope) {
         // no ops
     }
 
-    override fun onCleared() {
-        // no ops
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
+        when (event) {
+            is PaymentComponentEvent.Submit -> {
+                checkoutCallback.beforeSubmit(event.state)
+                checkoutCallback.onSubmit(event.state) { checkoutResult ->
+                    when (checkoutResult) {
+                        is CheckoutResult.Action -> {
+                            // TODO - Handle Action
+                        }
+                        is CheckoutResult.Error -> {
+                            // TODO - Handle Error
+                        }
+                        is CheckoutResult.Finished -> {
+                            // TODO - Handle Finished
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, checkoutCallback: CheckoutCallback) {
-        // TODO - Advanced Flow
+    override fun onCleared() {
+        // no ops
     }
 }

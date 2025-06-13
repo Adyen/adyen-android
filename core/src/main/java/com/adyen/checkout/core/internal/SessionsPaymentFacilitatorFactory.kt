@@ -29,7 +29,7 @@ import java.util.Locale
 internal class SessionsPaymentFacilitatorFactory(
     private val checkoutSession: CheckoutSession,
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallback: CheckoutCallback,
+    private val checkoutCallback: CheckoutCallback?,
     private val savedStateHandle: SavedStateHandle
 ) : PaymentFacilitatorFactory {
 
@@ -37,16 +37,17 @@ internal class SessionsPaymentFacilitatorFactory(
         coroutineScope: CoroutineScope,
     ): PaymentFacilitator {
         // TODO - ComponentParams mapping is different for each payment method, that needs to be abstracted away.
-        val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
+        val componentParams =
+            ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
 
-            // TODO - Add locale support, For now it's hardcoded to US
+                // TODO - Add locale support, For now it's hardcoded to US
 //        deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
-            dropInOverrideParams = null,
-            componentSessionParams = SessionParamsFactory.create(checkoutSession),
-            componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
-        )
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
+            )
 
         val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
             savedStateHandle = savedStateHandle,
@@ -65,13 +66,14 @@ internal class SessionsPaymentFacilitatorFactory(
         )
 
         // TODO - Based on txVariant, needs to be abstracted away
-        val componentEventHandler = SessionsComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>(
-            sessionInteractor = sessionInteractor,
-        )
+        val componentEventHandler =
+            SessionsComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>(
+                sessionInteractor = sessionInteractor,
+                checkoutCallback = checkoutCallback,
+            )
 
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
-            checkoutCallback = checkoutCallback,
             componentEventHandler = componentEventHandler,
             componentParams = componentParams,
         )

@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.PaymentMethodTypes
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.onEach
 
 internal class PaymentFacilitator(
     private val coroutineScope: CoroutineScope,
-    private val checkoutCallback: CheckoutCallback,
     private val componentEventHandler: ComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>,
     // TODO - Switch to Component Params
     private val componentParams: ButtonComponentParams,
@@ -60,7 +58,7 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event, checkoutCallback)
+                componentEventHandler.onPaymentComponentEvent(event)
             }.launchIn(coroutineScope)
     }
 }

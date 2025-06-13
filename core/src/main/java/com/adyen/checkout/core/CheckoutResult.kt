@@ -14,23 +14,12 @@ package com.adyen.checkout.core
  */
 sealed interface CheckoutResult {
 
-    /**
-     * Represents advanced flow results that require further action or indicate a final state.
-     */
-    sealed interface Advanced : CheckoutResult {
+    /** Indicates the payment process has finished successfully. */
+    class Finished : CheckoutResult
 
-        /** Indicates the payment process has finished successfully. */
-        class Finished : Advanced
+    /** Indicates that an additional action is required from the shopper. */
+    class Action : CheckoutResult
 
-        /** Indicates that an additional action is required from the shopper. */
-        class Action : Advanced
-
-        /** Indicates an error occurred during the payment process. */
-        class Error : Advanced
-    }
-
-    /**
-     * Represents a result specific to the Sessions flow, typically indicating the SDK will handle the next steps.
-     */
-    class Sessions : CheckoutResult
+    /** Indicates an error occurred during the payment process. */
+    class Error : CheckoutResult
 }

@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
+import com.adyen.checkout.core.CheckoutResult
 import com.adyen.checkout.core.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
+    private val checkoutCallback: CheckoutCallback?,
 ) : ComponentEventHandler<T> {
 
     private var _coroutineScope: CoroutineScope? = null
@@ -25,11 +27,34 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         _coroutineScope = coroutineScope
     }
 
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, checkoutCallback: CheckoutCallback) {
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
         when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
-                makePaymentsCall(event.state)
+                when {
+                    checkoutCallback == null || !checkoutCallback.beforeSubmit(event.state) -> {
+                        makePaymentsCall(event.state)
+                    }
+                    else -> {
+                        checkoutCallback.onSubmit(event.state) { checkoutResult ->
+                            handleResult(checkoutResult)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleResult(checkoutResult: CheckoutResult) {
+        when (checkoutResult) {
+            is CheckoutResult.Action -> {
+                // TODO - Handle Action
+            }
+            is CheckoutResult.Error -> {
+                // TODO - Handle Error
+            }
+            is CheckoutResult.Finished -> {
+                // TODO - Handle Finished
             }
         }
     }

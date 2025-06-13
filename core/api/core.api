@@ -17,7 +17,6 @@ public final class com/adyen/checkout/core/AdyenCheckout {
 
 public final class com/adyen/checkout/core/AdyenCheckout$Companion {
 	public final fun initialize (Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static synthetic fun initialize$default (Lcom/adyen/checkout/core/AdyenCheckout$Companion;Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/CheckoutConfiguration;Lcom/adyen/checkout/core/CheckoutCallback;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/AdyenCheckout$Result {
@@ -93,7 +92,12 @@ public final class com/adyen/checkout/core/BuildConfig {
 }
 
 public abstract interface class com/adyen/checkout/core/CheckoutCallback {
+	public abstract fun beforeSubmit (Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;)Z
 	public abstract fun onSubmit (Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class com/adyen/checkout/core/CheckoutCallback$DefaultImpls {
+	public static fun beforeSubmit (Lcom/adyen/checkout/core/CheckoutCallback;Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;)Z
 }
 
 public final class com/adyen/checkout/core/CheckoutConfiguration : com/adyen/checkout/core/internal/Configuration {
@@ -121,33 +125,19 @@ public final class com/adyen/checkout/core/CheckoutConfiguration$CREATOR : andro
 public abstract interface class com/adyen/checkout/core/CheckoutResult {
 }
 
-public abstract interface class com/adyen/checkout/core/CheckoutResult$Advanced : com/adyen/checkout/core/CheckoutResult {
-}
-
-public final class com/adyen/checkout/core/CheckoutResult$Advanced$Action : com/adyen/checkout/core/CheckoutResult$Advanced {
+public final class com/adyen/checkout/core/CheckoutResult$Action : com/adyen/checkout/core/CheckoutResult {
 	public static final field $stable I
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/core/CheckoutResult$Advanced$Error : com/adyen/checkout/core/CheckoutResult$Advanced {
+public final class com/adyen/checkout/core/CheckoutResult$Error : com/adyen/checkout/core/CheckoutResult {
 	public static final field $stable I
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/core/CheckoutResult$Advanced$Finished : com/adyen/checkout/core/CheckoutResult$Advanced {
+public final class com/adyen/checkout/core/CheckoutResult$Finished : com/adyen/checkout/core/CheckoutResult {
 	public static final field $stable I
 	public fun <init> ()V
-}
-
-public final class com/adyen/checkout/core/CheckoutResult$Sessions : com/adyen/checkout/core/CheckoutResult {
-	public static final field $stable I
-	public fun <init> ()V
-}
-
-public final class com/adyen/checkout/core/DefaultCheckoutCallback : com/adyen/checkout/core/CheckoutCallback {
-	public static final field $stable I
-	public fun <init> ()V
-	public fun onSubmit (Lcom/adyen/checkout/core/paymentmethod/PaymentComponentState;Lkotlin/jvm/functions/Function1;)V
 }
 
 public final class com/adyen/checkout/core/Environment : android/os/Parcelable {
