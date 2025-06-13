@@ -54,6 +54,7 @@ class GooglePayConfiguration private constructor(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean?,
     val billingAddressParameters: BillingAddressParameters?,
+    val checkoutOption: String?,
     val googlePayButtonStyling: GooglePayButtonStyling?,
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration, ButtonConfiguration {
@@ -81,6 +82,7 @@ class GooglePayConfiguration private constructor(
         private var isBillingAddressRequired: Boolean? = null
         private var billingAddressParameters: BillingAddressParameters? = null
         private var totalPriceStatus: String? = null
+        private var checkoutOption: String? = null
         private var googlePayButtonStyling: GooglePayButtonStyling? = null
         private var isSubmitButtonVisible: Boolean? = null
 
@@ -366,6 +368,18 @@ class GooglePayConfiguration private constructor(
         }
 
         /**
+         * Sets the checkout option. This affects the submit button text displayed in the Google Pay sheet.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
+         * for more details.
+         */
+        fun setCheckoutOption(checkoutOption: String): Builder {
+            this.checkoutOption = checkoutOption
+            return this
+        }
+
+        /**
          * Sets the amount of the transaction.
          *
          * Default is 0 USD.
@@ -431,6 +445,7 @@ class GooglePayConfiguration private constructor(
                 shippingAddressParameters = shippingAddressParameters,
                 isBillingAddressRequired = isBillingAddressRequired,
                 billingAddressParameters = billingAddressParameters,
+                checkoutOption = checkoutOption,
                 googlePayButtonStyling = googlePayButtonStyling,
                 genericActionConfiguration = genericActionConfigurationBuilder.build(),
             )

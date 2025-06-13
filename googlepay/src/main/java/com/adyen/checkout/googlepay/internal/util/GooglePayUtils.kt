@@ -221,6 +221,7 @@ internal object GooglePayUtils {
             countryCode = params.countryCode,
             totalPriceStatus = params.totalPriceStatus,
             currencyCode = params.amount.currency,
+            checkoutOption = params.checkoutOption,
         ).apply {
             // Google requires to not pass the price when the price status is NOT_CURRENTLY_KNOWN
             if (params.totalPriceStatus == NOT_CURRENTLY_KNOWN) return@apply
