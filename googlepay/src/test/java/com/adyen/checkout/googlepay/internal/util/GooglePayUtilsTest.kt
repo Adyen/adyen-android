@@ -228,7 +228,8 @@ internal class GooglePayUtilsTest {
                         "totalPrice": "13.37",
                         "countryCode": "COUNTRY_CODE",
                         "totalPriceStatus": "TOTAL_PRICE_STATUS",
-                        "currencyCode": "EUR"
+                        "currencyCode": "EUR",
+                        "checkoutOption": "DEFAULT"
                     }
                 }
             """.trimIndent(),
@@ -265,6 +266,7 @@ internal class GooglePayUtilsTest {
             shippingAddressParameters = null,
             isBillingAddressRequired = false,
             billingAddressParameters = null,
+            checkoutOption = null,
             googlePayButtonStyling = null,
         )
     }
@@ -306,6 +308,7 @@ internal class GooglePayUtilsTest {
                 format = "FORMAT",
                 isPhoneNumberRequired = true,
             ),
+            checkoutOption = "DEFAULT",
             googlePayButtonStyling = null,
         )
     }

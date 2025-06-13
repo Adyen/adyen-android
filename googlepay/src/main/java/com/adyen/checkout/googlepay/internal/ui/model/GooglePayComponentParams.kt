@@ -37,5 +37,6 @@ internal data class GooglePayComponentParams(
     val shippingAddressParameters: ShippingAddressParameters?,
     val isBillingAddressRequired: Boolean,
     val billingAddressParameters: BillingAddressParameters?,
+    val checkoutOption: String?,
     val googlePayButtonStyling: GooglePayButtonStyling?,
 ) : ComponentParams by commonComponentParams, ButtonParams
