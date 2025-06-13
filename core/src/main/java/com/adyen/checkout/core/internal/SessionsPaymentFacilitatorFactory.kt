@@ -12,12 +12,17 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 internal class SessionsPaymentFacilitatorFactory(
     private val checkoutSession: CheckoutSession,
@@ -29,6 +34,17 @@ internal class SessionsPaymentFacilitatorFactory(
     override fun create(
         coroutineScope: CoroutineScope,
     ): PaymentFacilitator {
+        val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+
+            // TODO - Add locale support, For now it's hardcoded to US
+//        deviceLocale = localeProvider.getLocale(application)
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = SessionParamsFactory.create(checkoutSession),
+            componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
+        )
+
         val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
             savedStateHandle = savedStateHandle,
             checkoutSession = checkoutSession,
@@ -36,8 +52,6 @@ internal class SessionsPaymentFacilitatorFactory(
 
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
-            checkoutSession = checkoutSession,
-            checkoutConfiguration = checkoutConfiguration,
             checkoutCallback = checkoutCallback,
 
             sessionInteractor = SessionInteractor(
@@ -51,6 +65,7 @@ internal class SessionsPaymentFacilitatorFactory(
                 sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
                 isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
             ),
+            componentParams = componentParams,
         )
     }
 }
