@@ -63,6 +63,7 @@ fun AdyenTextField(
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val style = AdyenTextFieldDefaults.textFieldStyle(AdyenCheckoutTheme.elements.textField)
@@ -101,6 +102,10 @@ fun AdyenTextField(
                         .heightIn(48.dp)
                         .padding(horizontal = 16.dp, vertical = 12.dp),
                 ) {
+                    prefix?.let {
+                        Body(prefix, color = AdyenCheckoutTheme.colors.textSecondary)
+                    }
+
                     val selectionColor = style.activeColor
                     val customTextSelectionColors = TextSelectionColors(
                         handleColor = selectionColor,
@@ -172,6 +177,7 @@ private fun AdyenTextFieldPreview(
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
+                prefix = "Prefix",
                 trailingIcon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
