@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
@@ -26,7 +28,10 @@ internal fun MbWayComponent(
     fieldChangeListener: FieldChangeListener<MBWayFieldId>,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
         // CountryCode
         val supportingTextCountryCode = if (viewState.countryCodeFieldState.errorMessageId != null) {
             "The country code is invalid"
