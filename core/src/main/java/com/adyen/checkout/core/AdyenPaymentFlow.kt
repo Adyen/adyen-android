@@ -9,17 +9,20 @@
 package com.adyen.checkout.core
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.internal.AdyenComponent
-import com.adyen.checkout.core.internal.ui.view.PayButton
+import com.adyen.checkout.ui.internal.PrimaryButton
 
 // TODO - Change Name?
-@Suppress("UnusedParameter")
 @Composable
 fun AdyenPaymentFlow(
     txVariant: String,
@@ -30,7 +33,7 @@ fun AdyenPaymentFlow(
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(
             adyenCheckout = adyenCheckout,
-            savedStateHandle = createSavedStateHandle()
+            savedStateHandle = createSavedStateHandle(),
         )
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 
@@ -39,8 +42,13 @@ fun AdyenPaymentFlow(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         adyenComponent.ViewFactory()
-        PayButton(
+
+        Spacer(Modifier.size(16.dp))
+
+        PrimaryButton(
             onClick = adyenComponent::submit,
+            text = "Pay $13.37",
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
