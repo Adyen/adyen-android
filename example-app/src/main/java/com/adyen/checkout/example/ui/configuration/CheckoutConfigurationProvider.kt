@@ -91,6 +91,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
             googlePay {
                 setSubmitButtonVisible(true)
                 setCountryCode(keyValueStorage.getCountry())
+                setCheckoutOption("COMPLETE_IMMEDIATE_PURCHASE")
             }
 
             instantPayment {
