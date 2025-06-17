@@ -117,6 +117,10 @@ internal class MainViewModel @Inject constructor(
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.GooglePayWithSession))
             }
 
+            is ComponentItem.Entry.V6 -> {
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6))
+            }
+
             is ComponentItem.Entry.DropIn -> startDropInFlow()
             is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
             is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)

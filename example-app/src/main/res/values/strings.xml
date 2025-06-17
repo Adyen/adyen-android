@@ -27,6 +27,7 @@
     <string name="instant_component_entry">Instant (%s)</string>
     <string name="google_pay_component_entry">Google Pay</string>
     <string name="google_pay_with_session_component_entry">Google Pay</string>
+    <string name="v6_entry">v6</string>
 
     <string name="switch_use_sessions">Use sessions</string>
 

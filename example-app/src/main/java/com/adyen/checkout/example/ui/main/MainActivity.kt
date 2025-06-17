@@ -39,6 +39,7 @@ import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
 import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.example.ui.settings.SettingsActivity
+import com.adyen.checkout.example.ui.v6.V6Activity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -140,7 +141,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Suppress("LongMethod")
+    @Suppress("LongMethod", "CyclomaticComplexMethod")
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
             is MainNavigation.DropIn -> {
@@ -210,6 +211,10 @@ class MainActivity : AppCompatActivity() {
 
             is MainNavigation.GooglePayWithSession -> {
                 startActivity(Intent(this, SessionsGooglePayActivity::class.java))
+            }
+
+            is MainNavigation.V6 -> {
+                startActivity(Intent(this, V6Activity::class.java))
             }
         }
     }
