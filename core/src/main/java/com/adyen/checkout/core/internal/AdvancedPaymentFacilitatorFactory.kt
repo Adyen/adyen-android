@@ -10,20 +10,14 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutConfiguration
-import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
     private val checkoutCallback: CheckoutCallback?,
 ) : PaymentFacilitatorFactory {
 
-    override fun create(coroutineScope: CoroutineScope): PaymentFacilitator {
+    override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
         if (checkoutCallback == null) {
             throw IllegalArgumentException(
                 "Checkout callback is not set. " +
@@ -31,27 +25,16 @@ internal class AdvancedPaymentFacilitatorFactory(
             )
         }
 
-        val componentParams =
-            ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-                checkoutConfiguration = checkoutConfiguration,
-
-                // TODO - Add locale support, For now it's hardcoded to US
-//        deviceLocale = localeProvider.getLocale(application)
-                deviceLocale = Locale.US,
-                dropInOverrideParams = null,
-                componentSessionParams = null,
-                componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
-            )
+        val paymentDelegate = PaymentMethodProvider.get(txVariant, coroutineScope, checkoutConfiguration)
 
         val componentEventHandler =
-            AdvancedComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>(
+            AdvancedComponentEventHandler<BaseComponentState>(
                 checkoutCallback,
             )
 
-        // TODO - Advanced Flow
         return PaymentFacilitator(
+            paymentDelegate = paymentDelegate,
             coroutineScope = coroutineScope,
-            componentParams = componentParams,
             componentEventHandler = componentEventHandler,
         )
     }

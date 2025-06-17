@@ -8,12 +8,11 @@
 
 package com.adyen.checkout.core.internal.ui
 
+import com.adyen.checkout.core.internal.BaseComponentState
 import com.adyen.checkout.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.flow.Flow
 
-internal interface EventDelegate<T : PaymentComponentState<out PaymentMethodDetails>> {
+internal interface EventDelegate<T : BaseComponentState> {
 
     val eventFlow: Flow<PaymentComponentEvent<T>>
 }

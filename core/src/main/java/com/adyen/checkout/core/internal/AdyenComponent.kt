@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.AdyenCheckout
 
 internal class AdyenComponent(
+    txVariant: String,
     adyenCheckout: AdyenCheckout,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -24,6 +25,7 @@ internal class AdyenComponent(
     // TODO - Initialize Payment Flow
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
+            txVariant = txVariant,
             adyenCheckout = adyenCheckout,
             coroutineScope = viewModelScope,
             savedStateHandle = savedStateHandle,
