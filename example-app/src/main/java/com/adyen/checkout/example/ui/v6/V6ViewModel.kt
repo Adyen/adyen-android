@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 17/6/2025.
+ */
+
+package com.adyen.checkout.example.ui.v6
+
+import androidx.lifecycle.ViewModel
+import com.adyen.checkout.core.AdyenCheckout
+import com.adyen.checkout.core.CheckoutCallback
+import com.adyen.checkout.core.CheckoutConfiguration
+import com.adyen.checkout.core.CheckoutResult
+import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.example.BuildConfig
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback {
+
+    private val configuration = CheckoutConfiguration(
+        Environment.TEST,
+        BuildConfig.CLIENT_KEY,
+    )
+
+    fun createAdyenCheckout() = AdyenCheckout(
+        checkoutSession = null,
+        checkoutConfiguration = configuration,
+        checkoutCallback = this,
+    )
+
+    override fun onSubmit(paymentComponentState: PaymentComponentState<*>, onCompletion: (CheckoutResult) -> Unit) {
+        // Not yet implemented
+    }
+}

@@ -69,6 +69,7 @@ dependencies {
     // Checkout
     implementation project(':drop-in')
     implementation project(':components-compose')
+    implementation project(':core')
 //    implementation "com.adyen.checkout:drop-in:LATEST_VERSION"
 //    implementation "com.adyen.checkout:components-compose:LATEST_VERSION"
 
