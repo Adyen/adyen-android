@@ -2,7 +2,7 @@ package com.adyen.checkout.components.core
 
 import android.os.Parcel
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith

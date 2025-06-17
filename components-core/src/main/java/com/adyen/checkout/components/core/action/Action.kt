@@ -7,9 +7,9 @@
  */
 package com.adyen.checkout.components.core.action
 
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
+import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 import org.json.JSONObject
 
 /**

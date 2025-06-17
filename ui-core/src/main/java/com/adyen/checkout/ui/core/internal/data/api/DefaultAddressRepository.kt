@@ -10,10 +10,10 @@ package com.adyen.checkout.ui.core.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.util.adyenLog
+import com.adyen.checkout.core.old.internal.util.runSuspendCatching
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import kotlinx.coroutines.CoroutineDispatcher

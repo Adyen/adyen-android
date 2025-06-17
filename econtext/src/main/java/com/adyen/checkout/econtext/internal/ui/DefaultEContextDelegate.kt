@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.internal.ui.model.EContextInputData
 import com.adyen.checkout.econtext.internal.ui.model.EContextOutputData

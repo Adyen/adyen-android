@@ -10,9 +10,9 @@ package com.adyen.checkout.mealvoucherfr.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidator
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberValidationResult
 import com.adyen.checkout.giftcard.internal.util.GiftCardPinUtils

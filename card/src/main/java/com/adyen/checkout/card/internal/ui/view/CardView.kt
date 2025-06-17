@@ -35,10 +35,10 @@ import com.adyen.checkout.card.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
-import com.adyen.checkout.core.internal.util.BuildUtils
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
+import com.adyen.checkout.core.old.internal.util.BuildUtils
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo

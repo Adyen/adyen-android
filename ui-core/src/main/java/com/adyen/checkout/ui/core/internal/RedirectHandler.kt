@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.core.internal
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

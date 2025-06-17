@@ -11,7 +11,7 @@ package com.adyen.checkout.googlepay.internal.ui
 import android.app.Activity
 import android.content.Intent
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.googlepay.GooglePayButtonParameters
 import com.adyen.checkout.googlepay.GooglePayComponentState
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams

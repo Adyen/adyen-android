@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFac
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusService
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.DropInPaymentMethodInformation

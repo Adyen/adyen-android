@@ -9,9 +9,9 @@
 package com.adyen.checkout.ui.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.getList
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.getList
 import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

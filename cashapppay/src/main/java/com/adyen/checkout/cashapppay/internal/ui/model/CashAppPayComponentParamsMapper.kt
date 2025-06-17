@@ -20,8 +20,8 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.ComponentException
 import java.util.Locale
 
 internal class CashAppPayComponentParamsMapper(

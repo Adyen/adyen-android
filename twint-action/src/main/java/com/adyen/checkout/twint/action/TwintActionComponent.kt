@@ -16,8 +16,8 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.twint.action.internal.provider.TwintActionComponentProvider
 import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

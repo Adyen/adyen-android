@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.components.core
 
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 
 /**
  * Data about an error that happened inside a component.

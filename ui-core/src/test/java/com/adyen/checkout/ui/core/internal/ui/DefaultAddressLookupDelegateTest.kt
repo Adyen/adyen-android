@@ -14,8 +14,8 @@ import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.mapToAddressInputModel
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.Logger
+import com.adyen.checkout.core.old.AdyenLogger
+import com.adyen.checkout.core.old.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption

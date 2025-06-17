@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.redirect.internal.data.api
 
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import kotlinx.coroutines.CoroutineDispatcher

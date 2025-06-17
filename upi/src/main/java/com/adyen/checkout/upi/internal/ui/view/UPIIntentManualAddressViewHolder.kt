@@ -12,8 +12,8 @@ import android.content.Context
 import android.os.Build
 import androidx.autofill.HintConstants
 import androidx.core.view.doOnAttach
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.util.hideError
 import com.adyen.checkout.ui.core.internal.util.hideKeyboard
 import com.adyen.checkout.ui.core.internal.util.isVisible

@@ -5,9 +5,9 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.components.core.internal.util.validate
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LocaleUtil
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.util.LocaleUtil
 import java.util.Locale
 
 @Suppress("ktlint:standard:discouraged-comment-location", "ktlint:standard:type-parameter-list-spacing")

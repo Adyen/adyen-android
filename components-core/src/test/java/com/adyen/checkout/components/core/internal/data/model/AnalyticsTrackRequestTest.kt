@@ -1,6 +1,6 @@
 package com.adyen.checkout.components.core.internal.data.model
 
-import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

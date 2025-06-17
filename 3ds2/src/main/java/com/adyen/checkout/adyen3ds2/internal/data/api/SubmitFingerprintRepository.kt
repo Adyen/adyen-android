@@ -12,9 +12,9 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
 import com.adyen.checkout.components.core.action.RedirectAction
 import com.adyen.checkout.components.core.action.Threeds2Action
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
+import com.adyen.checkout.core.old.internal.util.runSuspendCatching
 import org.json.JSONObject
 
 internal class SubmitFingerprintRepository internal constructor(

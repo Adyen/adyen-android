@@ -15,8 +15,8 @@ import com.adyen.checkout.card.internal.util.CardNumberValidation
 import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.StringUtil
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.internal.util.StringUtil
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardValidationMapper {

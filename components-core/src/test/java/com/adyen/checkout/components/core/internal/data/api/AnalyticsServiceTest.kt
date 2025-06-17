@@ -1,9 +1,9 @@
 package com.adyen.checkout.components.core.internal.data.api
 
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
-import com.adyen.checkout.core.internal.data.api.AdyenApiResponse
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.model.EmptyResponse
+import com.adyen.checkout.core.old.internal.data.api.AdyenApiResponse
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.model.EmptyResponse
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertInstanceOf

@@ -13,7 +13,7 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DualBrandedCardHandler(private val environment: Environment) {

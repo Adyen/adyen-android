@@ -15,8 +15,8 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.core.PermissionHandlerCallback
-import com.adyen.checkout.core.exception.MethodNotImplementedException
+import com.adyen.checkout.core.old.PermissionHandlerCallback
+import com.adyen.checkout.core.old.exception.MethodNotImplementedException
 import org.json.JSONObject
 
 /**

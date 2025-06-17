@@ -12,15 +12,15 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
-import com.adyen.checkout.core.internal.ui.model.isEmptyDate
-import com.adyen.checkout.core.internal.util.StringUtil
-import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidator
-import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
-import com.adyen.checkout.core.ui.validation.CardNumberValidator
-import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
-import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidator
+import com.adyen.checkout.core.old.internal.ui.model.isEmptyDate
+import com.adyen.checkout.core.old.internal.util.StringUtil
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidator
+import com.adyen.checkout.core.old.ui.validation.CardNumberValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardNumberValidator
+import com.adyen.checkout.core.old.ui.validation.CardSecurityCodeValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardSecurityCodeValidator
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object CardValidationUtils {

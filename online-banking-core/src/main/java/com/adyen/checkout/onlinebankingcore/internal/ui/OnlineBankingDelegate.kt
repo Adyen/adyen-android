@@ -13,7 +13,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingInputData
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData

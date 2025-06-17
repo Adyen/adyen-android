@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core.internal.util
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutCurrency
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.Currency

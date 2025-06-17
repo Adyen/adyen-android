@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.StringRes
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed interface LogoTextItem {

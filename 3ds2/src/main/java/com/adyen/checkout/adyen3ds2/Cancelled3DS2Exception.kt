@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.adyen3ds2
 
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.exception.ComponentException
 
 /**
  * This exception is an indication that the 3DS2 Authentication was cancelled by the user.

@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.exception.CancellationException
+import com.adyen.checkout.core.old.exception.CancellationException
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.AddressLookupCompletionResult

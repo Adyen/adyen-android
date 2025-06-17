@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.core.exception.CancellationException
+import com.adyen.checkout.core.old.exception.CancellationException
 
 /**
  * This exception indicates that the payment flow was manually cancelled by the user.

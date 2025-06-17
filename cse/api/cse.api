@@ -41,7 +41,7 @@ public final class com/adyen/checkout/cse/EncryptedCard$Creator : android/os/Par
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/cse/EncryptionException : com/adyen/checkout/core/exception/CheckoutException {
+public final class com/adyen/checkout/cse/EncryptionException : com/adyen/checkout/core/old/exception/CheckoutException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
 }
 

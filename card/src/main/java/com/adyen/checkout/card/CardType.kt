@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.old.CardType
 
 typealias CardType = CardType

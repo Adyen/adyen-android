@@ -15,8 +15,8 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.StoredPaymentMethod
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper
 import com.adyen.checkout.dropin.internal.ui.model.GenericStoredModel

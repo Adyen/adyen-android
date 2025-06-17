@@ -63,7 +63,7 @@ internal class JSONOptFunctionsDetector : Detector(), Detector.UastScanner {
                         .replace()
                         .all()
                         .with(replacement)
-                        .imports("com.adyen.checkout.core.internal.data.model.$replacement")
+                        .imports("com.adyen.checkout.core.old.internal.data.model.$replacement")
                         .reformat(true)
                         .shortenNames()
                         .build(),

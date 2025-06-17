@@ -40,8 +40,8 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler

@@ -10,7 +10,7 @@ package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponent
-import com.adyen.checkout.core.PermissionHandlerCallback
+import com.adyen.checkout.core.old.PermissionHandlerCallback
 import org.json.JSONObject
 
 /**

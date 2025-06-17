@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.core
 
-import com.adyen.checkout.core.PermissionHandlerCallback
+import com.adyen.checkout.core.old.PermissionHandlerCallback
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock

@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Installments
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
-import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.old.CardBrand
 import java.util.Locale
 
 private const val REVOLVING_INSTALLMENT_VALUE = 1

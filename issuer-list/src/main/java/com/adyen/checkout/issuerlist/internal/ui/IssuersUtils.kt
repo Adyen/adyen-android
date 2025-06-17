@@ -10,7 +10,7 @@ package com.adyen.checkout.issuerlist.internal.ui
 
 import com.adyen.checkout.components.core.InputDetail
 import com.adyen.checkout.components.core.Issuer
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 
 internal fun List<Issuer>.mapToModel(environment: Environment): List<IssuerModel> =

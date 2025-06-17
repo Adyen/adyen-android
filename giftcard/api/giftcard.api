@@ -96,7 +96,7 @@ public abstract interface class com/adyen/checkout/giftcard/GiftCardComponentCal
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardComponentCallback$DefaultImpls {
-	public static fun onPermissionRequest (Lcom/adyen/checkout/giftcard/GiftCardComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/PermissionHandlerCallback;)V
+	public static fun onPermissionRequest (Lcom/adyen/checkout/giftcard/GiftCardComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/old/PermissionHandlerCallback;)V
 	public static fun onStateChanged (Lcom/adyen/checkout/giftcard/GiftCardComponentCallback;Lcom/adyen/checkout/giftcard/GiftCardComponentState;)V
 }
 
@@ -135,12 +135,12 @@ public final class com/adyen/checkout/giftcard/GiftCardComponentState$Creator : 
 
 public final class com/adyen/checkout/giftcard/GiftCardConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
-	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/old/Environment;
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public final fun isPinRequired ()Ljava/lang/Boolean;
 	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
@@ -148,9 +148,9 @@ public final class com/adyen/checkout/giftcard/GiftCardConfiguration : com/adyen
 }
 
 public final class com/adyen/checkout/giftcard/GiftCardConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
-	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public final fun setPinRequired (Z)Lcom/adyen/checkout/giftcard/GiftCardConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
@@ -170,7 +170,7 @@ public final class com/adyen/checkout/giftcard/GiftCardConfigurationKt {
 	public static synthetic fun giftCard$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
-public final class com/adyen/checkout/giftcard/GiftCardException : com/adyen/checkout/core/exception/CheckoutException {
+public final class com/adyen/checkout/giftcard/GiftCardException : com/adyen/checkout/core/old/exception/CheckoutException {
 	public fun <init> (Ljava/lang/String;)V
 }
 
@@ -185,7 +185,7 @@ public final class com/adyen/checkout/giftcard/SessionsGiftCardComponentCallback
 	public static fun onBalanceCheck (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 	public static fun onLoading (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Z)V
 	public static fun onOrderRequest (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;)Z
-	public static fun onPermissionRequest (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/PermissionHandlerCallback;)V
+	public static fun onPermissionRequest (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/old/PermissionHandlerCallback;)V
 	public static fun onStateChanged (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Lcom/adyen/checkout/giftcard/GiftCardComponentState;)V
 	public static fun onSubmit (Lcom/adyen/checkout/giftcard/SessionsGiftCardComponentCallback;Lcom/adyen/checkout/giftcard/GiftCardComponentState;)Z
 }

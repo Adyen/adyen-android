@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.exception.ComponentException
 import org.json.JSONException
 import org.json.JSONObject
 

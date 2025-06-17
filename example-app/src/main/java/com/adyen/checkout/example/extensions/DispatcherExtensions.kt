@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.extensions
 
-import com.adyen.checkout.core.DispatcherProvider
+import com.adyen.checkout.core.old.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 
 @Suppress("RestrictedApi")

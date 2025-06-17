@@ -7,7 +7,7 @@
  */
 package com.adyen.checkout.cse
 
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 
 /**
  * Exception thrown when the Adyen encryption fails.

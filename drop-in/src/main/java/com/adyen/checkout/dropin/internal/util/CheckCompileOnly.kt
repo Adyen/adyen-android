@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.util
 
-import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.old.internal.util.runCompileOnly
 
 internal inline fun checkCompileOnly(block: () -> Boolean): Boolean {
     return runCompileOnly(block) ?: false

@@ -43,10 +43,10 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension

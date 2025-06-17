@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.data.api
 
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import java.io.IOException
 
 class TestPublicKeyRepository : PublicKeyRepository {

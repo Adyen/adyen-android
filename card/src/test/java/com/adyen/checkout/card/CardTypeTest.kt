@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull

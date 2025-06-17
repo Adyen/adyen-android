@@ -10,8 +10,8 @@ package com.adyen.checkout.giftcard.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.InputData
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class GiftCardInputData(

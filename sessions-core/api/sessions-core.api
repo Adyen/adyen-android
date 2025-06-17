@@ -7,16 +7,16 @@ public final class com/adyen/checkout/sessions/core/BuildConfig {
 }
 
 public final class com/adyen/checkout/sessions/core/CheckoutSession {
-	public fun <init> (Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public final fun component1 ()Lcom/adyen/checkout/sessions/core/SessionSetupResponse;
 	public final fun component2 ()Lcom/adyen/checkout/components/core/OrderRequest;
-	public final fun component3 ()Lcom/adyen/checkout/core/Environment;
+	public final fun component3 ()Lcom/adyen/checkout/core/old/Environment;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)Lcom/adyen/checkout/sessions/core/CheckoutSession;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/sessions/core/CheckoutSession;
+	public final fun copy (Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)Lcom/adyen/checkout/sessions/core/CheckoutSession;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/sessions/core/SessionSetupResponse;Lcom/adyen/checkout/components/core/OrderRequest;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/sessions/core/CheckoutSession;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClientKey ()Ljava/lang/String;
-	public final fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public final fun getEnvironment ()Lcom/adyen/checkout/core/old/Environment;
 	public final fun getOrder ()Lcom/adyen/checkout/components/core/OrderRequest;
 	public final fun getPaymentMethod (Ljava/lang/String;)Lcom/adyen/checkout/components/core/PaymentMethod;
 	public final fun getSessionSetupResponse ()Lcom/adyen/checkout/sessions/core/SessionSetupResponse;
@@ -27,19 +27,19 @@ public final class com/adyen/checkout/sessions/core/CheckoutSession {
 public final class com/adyen/checkout/sessions/core/CheckoutSessionProvider {
 	public static final field INSTANCE Lcom/adyen/checkout/sessions/core/CheckoutSessionProvider;
 	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;Lcom/adyen/checkout/components/core/internal/Configuration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun createSession (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static synthetic fun createSession$default (Lcom/adyen/checkout/sessions/core/CheckoutSessionProvider;Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
-	public static synthetic fun createSession$default (Lcom/adyen/checkout/sessions/core/CheckoutSessionProvider;Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun createSession$default (Lcom/adyen/checkout/sessions/core/CheckoutSessionProvider;Lcom/adyen/checkout/sessions/core/SessionModel;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/OrderRequest;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
 }
 
 public abstract class com/adyen/checkout/sessions/core/CheckoutSessionResult {
 }
 
 public final class com/adyen/checkout/sessions/core/CheckoutSessionResult$Error : com/adyen/checkout/sessions/core/CheckoutSessionResult {
-	public fun <init> (Lcom/adyen/checkout/core/exception/CheckoutException;)V
-	public final fun getException ()Lcom/adyen/checkout/core/exception/CheckoutException;
+	public fun <init> (Lcom/adyen/checkout/core/old/exception/CheckoutException;)V
+	public final fun getException ()Lcom/adyen/checkout/core/old/exception/CheckoutException;
 }
 
 public final class com/adyen/checkout/sessions/core/CheckoutSessionResult$Success : com/adyen/checkout/sessions/core/CheckoutSessionResult {
@@ -53,7 +53,7 @@ public abstract interface class com/adyen/checkout/sessions/core/SessionComponen
 	public abstract fun onError (Lcom/adyen/checkout/components/core/ComponentError;)V
 	public abstract fun onFinished (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;)V
 	public abstract fun onLoading (Z)V
-	public abstract fun onPermissionRequest (Ljava/lang/String;Lcom/adyen/checkout/core/PermissionHandlerCallback;)V
+	public abstract fun onPermissionRequest (Ljava/lang/String;Lcom/adyen/checkout/core/old/PermissionHandlerCallback;)V
 	public abstract fun onStateChanged (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 	public abstract fun onSubmit (Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 }
@@ -61,15 +61,15 @@ public abstract interface class com/adyen/checkout/sessions/core/SessionComponen
 public final class com/adyen/checkout/sessions/core/SessionComponentCallback$DefaultImpls {
 	public static fun onAdditionalDetails (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Lcom/adyen/checkout/components/core/ActionComponentData;)Z
 	public static fun onLoading (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Z)V
-	public static fun onPermissionRequest (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/PermissionHandlerCallback;)V
+	public static fun onPermissionRequest (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Ljava/lang/String;Lcom/adyen/checkout/core/old/PermissionHandlerCallback;)V
 	public static fun onStateChanged (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 	public static fun onSubmit (Lcom/adyen/checkout/sessions/core/SessionComponentCallback;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 }
 
-public final class com/adyen/checkout/sessions/core/SessionModel : com/adyen/checkout/core/internal/data/model/ModelObject {
+public final class com/adyen/checkout/sessions/core/SessionModel : com/adyen/checkout/core/old/internal/data/model/ModelObject {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/sessions/core/SessionModel$Companion;
-	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/old/internal/data/model/ModelObject$Serializer;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
@@ -124,10 +124,10 @@ public final class com/adyen/checkout/sessions/core/SessionPaymentResult$Creator
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/sessions/core/SessionSetupConfiguration : com/adyen/checkout/core/internal/data/model/ModelObject {
+public final class com/adyen/checkout/sessions/core/SessionSetupConfiguration : com/adyen/checkout/core/old/internal/data/model/ModelObject {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/sessions/core/SessionSetupConfiguration$Companion;
-	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/old/internal/data/model/ModelObject$Serializer;
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/Boolean;ZLjava/util/Map;Ljava/lang/Boolean;)V
 	public synthetic fun <init> (Ljava/lang/Boolean;ZLjava/util/Map;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -158,10 +158,10 @@ public final class com/adyen/checkout/sessions/core/SessionSetupConfiguration$Cr
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/sessions/core/SessionSetupInstallmentOptions : com/adyen/checkout/core/internal/data/model/ModelObject {
+public final class com/adyen/checkout/sessions/core/SessionSetupInstallmentOptions : com/adyen/checkout/core/old/internal/data/model/ModelObject {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/sessions/core/SessionSetupInstallmentOptions$Companion;
-	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/old/internal/data/model/ModelObject$Serializer;
 	public fun <init> (Ljava/util/List;Ljava/lang/Integer;Ljava/util/List;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Ljava/lang/Integer;
@@ -188,10 +188,10 @@ public final class com/adyen/checkout/sessions/core/SessionSetupInstallmentOptio
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/sessions/core/SessionSetupResponse : com/adyen/checkout/core/internal/data/model/ModelObject {
+public final class com/adyen/checkout/sessions/core/SessionSetupResponse : com/adyen/checkout/core/old/internal/data/model/ModelObject {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/sessions/core/SessionSetupResponse$Companion;
-	public static final field SERIALIZER Lcom/adyen/checkout/core/internal/data/model/ModelObject$Serializer;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/old/internal/data/model/ModelObject$Serializer;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/String;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Ljava/lang/String;Lcom/adyen/checkout/sessions/core/SessionSetupConfiguration;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;

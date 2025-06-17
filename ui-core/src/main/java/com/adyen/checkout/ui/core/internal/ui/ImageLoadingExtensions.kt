@@ -16,11 +16,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.ui.DefaultImageLoader
-import com.adyen.checkout.core.internal.ui.ImageLoader
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.internal.ui.DefaultImageLoader
+import com.adyen.checkout.core.old.internal.ui.ImageLoader
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import kotlinx.coroutines.launch
 

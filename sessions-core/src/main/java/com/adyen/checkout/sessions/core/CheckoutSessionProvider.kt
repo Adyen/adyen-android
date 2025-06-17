@@ -10,8 +10,8 @@ package com.adyen.checkout.sessions.core
 
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.internal.Configuration
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.sessions.core.internal.CheckoutSessionInitializer
 
 object CheckoutSessionProvider {

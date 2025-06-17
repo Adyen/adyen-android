@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.test
 
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.old.AdyenLogger
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext

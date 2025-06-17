@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentMethod
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 
 /**
  * A class holding the data required to launch Drop-in or a component with the sessions flow.

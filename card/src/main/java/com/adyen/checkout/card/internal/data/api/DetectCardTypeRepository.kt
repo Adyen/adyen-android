@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.old.CardBrand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 

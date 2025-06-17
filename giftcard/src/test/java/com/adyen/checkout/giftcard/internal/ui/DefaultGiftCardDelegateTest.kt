@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyReposit
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState

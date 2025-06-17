@@ -36,9 +36,9 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.econtext.internal.EContextComponent
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import com.adyen.checkout.econtext.internal.ui.DefaultEContextDelegate

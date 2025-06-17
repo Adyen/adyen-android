@@ -9,7 +9,7 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepository
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.dropin.internal.analytics.DropInEvents
 import com.adyen.checkout.dropin.internal.ui.model.DropInParams
 import com.adyen.checkout.test.LoggingExtension

@@ -10,7 +10,7 @@ package com.adyen.checkout.dropin.internal.ui.model
 
 import android.content.Context
 import com.adyen.checkout.components.core.internal.util.DateUtils
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.ui.PaymentMethodAdapter.StoredPaymentMethodItem
 

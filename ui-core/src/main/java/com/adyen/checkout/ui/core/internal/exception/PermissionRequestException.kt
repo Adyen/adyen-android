@@ -9,7 +9,7 @@
 package com.adyen.checkout.ui.core.internal.exception
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 
 /**
  * Exception thrown when requested runtime permission is denied.

@@ -21,7 +21,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.econtext.TestEContextComponentState
 import com.adyen.checkout.econtext.TestEContextConfiguration
 import com.adyen.checkout.econtext.TestEContextPaymentMethod

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.giftcard
 
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 
 /**
  * Exception thrown when an error occurs during a payment flow using Gift Cards.

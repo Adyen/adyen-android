@@ -10,8 +10,8 @@ package com.adyen.checkout.components.core.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.ActionComponentCallback
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DefaultActionComponentEventHandler : ActionComponentEventHandler {

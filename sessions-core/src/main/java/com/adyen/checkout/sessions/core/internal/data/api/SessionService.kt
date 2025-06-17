@@ -9,9 +9,9 @@
 package com.adyen.checkout.sessions.core.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
 import com.adyen.checkout.sessions.core.SessionSetupResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceRequest
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceResponse

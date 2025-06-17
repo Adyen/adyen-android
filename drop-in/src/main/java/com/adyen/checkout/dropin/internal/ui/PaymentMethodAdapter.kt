@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.INVALID_TYPE
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.databinding.PaymentMethodsListHeaderBinding
 import com.adyen.checkout.dropin.databinding.PaymentMethodsListItemBinding
