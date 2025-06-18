@@ -47,6 +47,7 @@ fun AdyenTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -59,6 +60,8 @@ fun AdyenTextField(
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
+        modifier = modifier,
+        enabled = enabled,
         textStyle = TextStyle(
             color = style.textColor,
             fontSize = innerTextStyle.size.sp,
@@ -69,7 +72,6 @@ fun AdyenTextField(
         cursorBrush = SolidColor(style.activeColor),
         keyboardOptions = keyboardOptions,
         interactionSource = interactionSource,
-        modifier = modifier,
         decorationBox = { innerTextField ->
             AdyenTextFieldDecorationBox(
                 label = label,
