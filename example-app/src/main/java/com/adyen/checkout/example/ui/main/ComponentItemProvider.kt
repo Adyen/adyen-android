@@ -16,6 +16,7 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.Klarna,
         ComponentItem.Entry.PayPal,
         ComponentItem.Entry.Instant(instantPaymentMethodType),
+        ComponentItem.Entry.V6,
     )
 
     fun getSessionItems() = listOf(

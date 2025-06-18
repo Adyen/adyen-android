@@ -34,6 +34,8 @@ internal sealed class MainNavigation {
 
     data object GooglePayWithSession : MainNavigation()
 
+    data object V6 : MainNavigation()
+
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration

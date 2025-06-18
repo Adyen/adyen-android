@@ -27,11 +27,13 @@ internal sealed class ComponentItem {
         object PayPal : Entry(R.string.paypal_component_entry)
         data class Instant(private val paymentMethodType: String) :
             Entry(R.string.instant_component_entry, listOf(paymentMethodType))
+
         object CardWithSession : Entry(R.string.card_component_with_session_entry)
         object CardWithSessionTakenOver : Entry(R.string.card_component_with_session_taken_over_entry)
         object GiftCard : Entry(R.string.gift_card_component_entry)
         object GiftCardWithSession : Entry(R.string.gift_card_with_session_component_entry)
         object GooglePay : Entry(R.string.google_pay_component_entry)
         object GooglePayWithSession : Entry(R.string.google_pay_with_session_component_entry)
+        data object V6 : Entry(R.string.v6_entry)
     }
 }
