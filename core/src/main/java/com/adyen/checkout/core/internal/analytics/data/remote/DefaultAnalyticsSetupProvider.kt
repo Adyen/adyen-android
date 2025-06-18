@@ -19,7 +19,8 @@ import java.util.Locale
 
 @Suppress("LongParameterList")
 internal class DefaultAnalyticsSetupProvider(
-    private val application: Application,
+    // TODO - Analytics, application should not be null, or we should ask for another data object
+    private val application: Application?,
     private val shopperLocale: Locale,
     private val isCreatedByDropIn: Boolean,
     private val analyticsLevel: AnalyticsParamsLevel,
@@ -39,9 +40,9 @@ internal class DefaultAnalyticsSetupProvider(
             level = getLevelQueryParameter(analyticsLevel),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
-            referrer = application.packageName,
+            referrer = application?.packageName ?: "",
             systemVersion = Build.VERSION.SDK_INT.toString(),
-            screenWidth = application.resources.displayMetrics.widthPixels,
+            screenWidth = application?.resources?.displayMetrics?.widthPixels ?: 0,
             paymentMethods = source.getPaymentMethods(),
             amount = amount,
             // unused for Android
