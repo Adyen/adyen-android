@@ -845,6 +845,7 @@ public final class com/adyen/checkout/core/paymentmethod/MBWayPaymentMethod$Crea
 
 public abstract interface class com/adyen/checkout/core/paymentmethod/PaymentComponentState {
 	public abstract fun getData ()Lcom/adyen/checkout/core/data/PaymentComponentData;
+	public abstract fun isValid ()Z
 }
 
 public abstract class com/adyen/checkout/core/paymentmethod/PaymentMethodDetails : com/adyen/checkout/core/internal/data/model/ModelObject {

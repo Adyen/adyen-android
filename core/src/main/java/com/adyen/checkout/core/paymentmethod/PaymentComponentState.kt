@@ -19,4 +19,9 @@ interface PaymentComponentState<PaymentMethodDetailsT : PaymentMethodDetails> {
      * @return The data that was collected by the component.
      */
     val data: PaymentComponentData<PaymentMethodDetailsT>
+
+    /**
+     * @return If the component UI data is valid.
+     */
+    val isValid: Boolean
 }
