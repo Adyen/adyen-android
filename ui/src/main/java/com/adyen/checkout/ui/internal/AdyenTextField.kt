@@ -90,7 +90,7 @@ fun AdyenTextField(
 @Preview
 @Composable
 private fun AdyenTextFieldPreview(
-    @PreviewParameter(StylingPreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
@@ -144,7 +144,7 @@ private fun AdyenTextFieldPreview(
     }
 }
 
-private class StylingPreviewParameterProvider : PreviewParameterProvider<Theme> {
+internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<Theme> {
 
     private val themeProvider = ThemePreviewParameterProvider()
 
