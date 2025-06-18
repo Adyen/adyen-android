@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 
 /**

@@ -16,8 +16,8 @@ import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.BaseComponentCallback
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.PermissionHandlerCallback
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.PermissionHandlerCallback
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionPaymentResult

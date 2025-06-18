@@ -20,9 +20,9 @@ import com.adyen.checkout.components.core.action.VoucherAction
 import com.adyen.checkout.components.core.action.WeChatPaySdkData
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate

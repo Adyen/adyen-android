@@ -12,10 +12,10 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsSetupResponse
 import com.adyen.checkout.components.core.internal.data.model.AnalyticsTrackRequest
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
-import com.adyen.checkout.core.internal.data.model.EmptyResponse
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
+import com.adyen.checkout.core.old.internal.data.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

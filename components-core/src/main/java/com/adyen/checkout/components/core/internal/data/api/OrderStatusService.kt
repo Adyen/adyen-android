@@ -11,9 +11,9 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusRequest
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

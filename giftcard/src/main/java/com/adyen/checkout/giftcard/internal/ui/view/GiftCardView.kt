@@ -18,8 +18,8 @@ import android.widget.LinearLayout
 import androidx.autofill.HintConstants
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate

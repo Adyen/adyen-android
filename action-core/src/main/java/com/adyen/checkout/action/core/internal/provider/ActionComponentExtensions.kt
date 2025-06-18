@@ -12,7 +12,7 @@ import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
 import com.adyen.checkout.await.AwaitComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
-import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.old.internal.util.runCompileOnly
 import com.adyen.checkout.qrcode.QRCodeComponent
 import com.adyen.checkout.redirect.RedirectComponent
 import com.adyen.checkout.twint.action.TwintActionComponent

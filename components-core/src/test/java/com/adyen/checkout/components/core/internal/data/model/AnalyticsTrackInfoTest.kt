@@ -1,6 +1,6 @@
 package com.adyen.checkout.components.core.internal.data.model
 
-import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.old.exception.ModelSerializationException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.ui.PermissionRequestingDelega
 import com.adyen.checkout.components.core.internal.ui.RedirectableDelegate
 import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
-import com.adyen.checkout.core.internal.ui.PermissionHandler
+import com.adyen.checkout.core.old.internal.ui.PermissionHandler
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate

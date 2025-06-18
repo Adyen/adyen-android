@@ -1,6 +1,6 @@
 package com.adyen.checkout.redirect.internal.data.api
 
-import com.adyen.checkout.core.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach

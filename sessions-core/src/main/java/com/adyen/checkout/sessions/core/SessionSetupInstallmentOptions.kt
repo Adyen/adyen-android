@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.sessions.core
 
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.JsonUtils
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.getIntOrNull
-import com.adyen.checkout.core.internal.data.model.optIntList
-import com.adyen.checkout.core.internal.data.model.optStringList
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.JsonUtils
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
+import com.adyen.checkout.core.old.internal.data.model.getIntOrNull
+import com.adyen.checkout.core.old.internal.data.model.optIntList
+import com.adyen.checkout.core.old.internal.data.model.optStringList
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.instant.internal.ui.model.InstantComponentParamsMapper
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.CoroutineScope

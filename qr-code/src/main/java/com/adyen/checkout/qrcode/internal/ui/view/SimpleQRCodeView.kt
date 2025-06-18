@@ -18,8 +18,8 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.qrcode.R
 import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate

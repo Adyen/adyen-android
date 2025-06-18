@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.sessions.core
 
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 
 /**
  * The result of the API call to fetch a [CheckoutSession].

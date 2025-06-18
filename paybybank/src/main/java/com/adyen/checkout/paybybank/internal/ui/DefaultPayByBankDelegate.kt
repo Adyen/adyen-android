@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.paymentmethod.PayByBankPaymentMethod
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData

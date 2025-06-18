@@ -10,8 +10,8 @@ package com.adyen.checkout.card.internal.data.api
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

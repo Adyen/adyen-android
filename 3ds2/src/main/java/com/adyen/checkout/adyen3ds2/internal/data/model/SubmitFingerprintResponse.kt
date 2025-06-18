@@ -9,10 +9,10 @@
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.ModelUtils
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils
+import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

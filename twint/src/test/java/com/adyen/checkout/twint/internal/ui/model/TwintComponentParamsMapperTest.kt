@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.twint.TwintConfiguration
 import com.adyen.checkout.twint.twint
 import org.junit.jupiter.api.Assertions.assertEquals

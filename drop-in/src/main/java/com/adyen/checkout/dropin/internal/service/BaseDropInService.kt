@@ -21,9 +21,9 @@ import com.adyen.checkout.card.BinLookupData
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.AddressLookupDropInServiceResult
 import com.adyen.checkout.dropin.BalanceDropInServiceResult
 import com.adyen.checkout.dropin.BaseDropInServiceContract

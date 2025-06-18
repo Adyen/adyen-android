@@ -9,7 +9,7 @@
 package com.adyen.checkout.upi.internal.ui
 
 import com.adyen.checkout.components.core.AppData
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest

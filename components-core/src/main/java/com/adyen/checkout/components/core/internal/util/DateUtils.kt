@@ -9,8 +9,8 @@
 package com.adyen.checkout.components.core.internal.util
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat

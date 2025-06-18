@@ -17,7 +17,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.payto.PayToConfiguration
 import com.adyen.checkout.payto.getPayToConfiguration
 import com.adyen.checkout.payto.payTo

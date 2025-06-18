@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.sessions.core.SessionModel
 
 internal sealed class DropInActivityEvent {

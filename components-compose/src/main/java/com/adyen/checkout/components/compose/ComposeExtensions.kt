@@ -29,7 +29,7 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider

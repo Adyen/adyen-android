@@ -11,9 +11,9 @@ package com.adyen.checkout.card.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.card.internal.data.model.BinLookupRequest
 import com.adyen.checkout.card.internal.data.model.BinLookupResponse
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 

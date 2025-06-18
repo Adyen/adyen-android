@@ -11,7 +11,7 @@ package com.adyen.checkout.econtext
 import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.econtext.internal.EContextConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale

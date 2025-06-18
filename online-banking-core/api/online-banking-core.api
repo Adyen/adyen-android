@@ -25,9 +25,9 @@ public abstract class com/adyen/checkout/onlinebankingcore/internal/OnlineBankin
 }
 
 public abstract class com/adyen/checkout/onlinebankingcore/internal/OnlineBankingConfiguration$OnlineBankingConfigurationBuilder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
-	protected fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	protected fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	protected fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	protected fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	protected fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	protected fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	protected fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	protected fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;

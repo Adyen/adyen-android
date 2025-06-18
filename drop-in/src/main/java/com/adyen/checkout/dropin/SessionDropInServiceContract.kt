@@ -13,7 +13,7 @@ import com.adyen.checkout.components.core.Order
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.exception.MethodNotImplementedException
+import com.adyen.checkout.core.old.exception.MethodNotImplementedException
 import org.json.JSONObject
 
 interface SessionDropInServiceContract {

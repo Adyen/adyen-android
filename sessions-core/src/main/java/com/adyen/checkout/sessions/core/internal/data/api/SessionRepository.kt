@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.OrderRequest
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
-import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.core.old.internal.util.runSuspendCatching
 import com.adyen.checkout.sessions.core.SessionModel
 import com.adyen.checkout.sessions.core.SessionSetupResponse
 import com.adyen.checkout.sessions.core.internal.data.model.SessionBalanceRequest

@@ -33,11 +33,11 @@ import com.adyen.checkout.components.core.internal.ui.StatusPollingDelegate
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.internal.util.repeatOnResume
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.util.adyenLog
+import com.adyen.checkout.core.old.internal.util.runCompileOnly
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope

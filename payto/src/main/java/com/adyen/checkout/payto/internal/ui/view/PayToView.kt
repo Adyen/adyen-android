@@ -18,8 +18,8 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.payto.R
 import com.adyen.checkout.payto.databinding.PaytoViewBinding
 import com.adyen.checkout.payto.internal.ui.PayToDelegate

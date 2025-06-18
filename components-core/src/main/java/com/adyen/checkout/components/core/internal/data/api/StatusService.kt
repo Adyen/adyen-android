@@ -10,8 +10,8 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.StatusRequest
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.post
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class StatusService(

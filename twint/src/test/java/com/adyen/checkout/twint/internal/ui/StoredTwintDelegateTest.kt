@@ -10,7 +10,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.TwintPaymentMethod
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper

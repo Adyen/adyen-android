@@ -187,18 +187,18 @@ public final class com/adyen/checkout/card/CardComponent$Companion {
 }
 
 public final class com/adyen/checkout/card/CardComponentState : com/adyen/checkout/components/core/PaymentComponentState {
-	public fun <init> (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/CardBrand;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/old/CardBrand;Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Lcom/adyen/checkout/components/core/PaymentComponentData;
 	public final fun component2 ()Z
 	public final fun component3 ()Z
-	public final fun component4 ()Lcom/adyen/checkout/core/CardBrand;
+	public final fun component4 ()Lcom/adyen/checkout/core/old/CardBrand;
 	public final fun component5 ()Ljava/lang/String;
 	public final fun component6 ()Ljava/lang/String;
-	public final fun copy (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/CardBrand;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/card/CardComponentState;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/card/CardComponentState;Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/CardBrand;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/card/CardComponentState;
+	public final fun copy (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/old/CardBrand;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/card/CardComponentState;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/card/CardComponentState;Lcom/adyen/checkout/components/core/PaymentComponentData;ZZLcom/adyen/checkout/core/old/CardBrand;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/card/CardComponentState;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getBinValue ()Ljava/lang/String;
-	public final fun getCardBrand ()Lcom/adyen/checkout/core/CardBrand;
+	public final fun getCardBrand ()Lcom/adyen/checkout/core/old/CardBrand;
 	public fun getData ()Lcom/adyen/checkout/components/core/PaymentComponentData;
 	public final fun getLastFourDigits ()Ljava/lang/String;
 	public fun hashCode ()I
@@ -211,13 +211,13 @@ public final class com/adyen/checkout/card/CardComponentState : com/adyen/checko
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/card/CardConfiguration$Companion;
-	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;Lcom/adyen/checkout/card/KCPAuthVisibility;Lcom/adyen/checkout/card/InstallmentConfiguration;Lcom/adyen/checkout/card/AddressConfiguration;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/util/List;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;Lcom/adyen/checkout/card/KCPAuthVisibility;Lcom/adyen/checkout/card/InstallmentConfiguration;Lcom/adyen/checkout/card/AddressConfiguration;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
 	public final fun getAddressConfiguration ()Lcom/adyen/checkout/card/AddressConfiguration;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
-	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/old/Environment;
 	public final fun getInstallmentConfiguration ()Lcom/adyen/checkout/card/InstallmentConfiguration;
 	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/KCPAuthVisibility;
 	public fun getShopperLocale ()Ljava/util/Locale;
@@ -233,9 +233,9 @@ public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkou
 }
 
 public final class com/adyen/checkout/card/CardConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
-	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public final fun setAddressConfiguration (Lcom/adyen/checkout/card/AddressConfiguration;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public final fun setHideCvc (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
@@ -248,8 +248,8 @@ public final class com/adyen/checkout/card/CardConfiguration$Builder : com/adyen
 	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
-	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/CardBrand;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
-	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/CardType;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/old/CardBrand;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/old/CardType;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 }
 
 public final class com/adyen/checkout/card/CardConfiguration$Companion {
@@ -305,16 +305,16 @@ public abstract class com/adyen/checkout/card/InstallmentOptions : android/os/Pa
 
 public final class com/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions : com/adyen/checkout/card/InstallmentOptions {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (IZLcom/adyen/checkout/core/CardBrand;)V
-	public fun <init> (Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;)V
+	public fun <init> (IZLcom/adyen/checkout/core/old/CardBrand;)V
+	public fun <init> (Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Z
-	public final fun component3 ()Lcom/adyen/checkout/core/CardBrand;
-	public final fun copy (Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;)Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;
+	public final fun component3 ()Lcom/adyen/checkout/core/old/CardBrand;
+	public final fun copy (Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;)Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/card/InstallmentOptions$CardBasedInstallmentOptions;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCardBrand ()Lcom/adyen/checkout/core/CardBrand;
+	public final fun getCardBrand ()Lcom/adyen/checkout/core/old/CardBrand;
 	public fun getIncludeRevolving ()Z
 	public fun getValues ()Ljava/util/List;
 	public fun hashCode ()I
@@ -492,14 +492,14 @@ public final class com/adyen/checkout/card/internal/ui/DefaultCardDelegate$Compa
 }
 
 public final class com/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions : com/adyen/checkout/card/internal/ui/model/InstallmentOptionParams {
-	public fun <init> (Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;)V
+	public fun <init> (Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;)V
 	public final fun component1 ()Ljava/util/List;
 	public final fun component2 ()Z
-	public final fun component3 ()Lcom/adyen/checkout/core/CardBrand;
-	public final fun copy (Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;)Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;Ljava/util/List;ZLcom/adyen/checkout/core/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;
+	public final fun component3 ()Lcom/adyen/checkout/core/old/CardBrand;
+	public final fun copy (Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;)Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;Ljava/util/List;ZLcom/adyen/checkout/core/old/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/card/internal/ui/model/InstallmentOptionParams$CardBasedInstallmentOptions;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getCardBrand ()Lcom/adyen/checkout/core/CardBrand;
+	public final fun getCardBrand ()Lcom/adyen/checkout/core/old/CardBrand;
 	public fun getIncludeRevolving ()Z
 	public fun getValues ()Ljava/util/List;
 	public fun hashCode ()I

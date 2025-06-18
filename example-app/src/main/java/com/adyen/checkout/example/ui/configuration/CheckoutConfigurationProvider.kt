@@ -16,7 +16,7 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.dropin.dropIn
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.AnalyticsMode

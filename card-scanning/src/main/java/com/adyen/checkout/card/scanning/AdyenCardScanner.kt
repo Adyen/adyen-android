@@ -15,9 +15,9 @@ import android.content.Intent
 import android.content.IntentSender
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.google.android.gms.wallet.PaymentCardRecognitionIntentRequest
 import com.google.android.gms.wallet.PaymentCardRecognitionResult
 import com.google.android.gms.wallet.PaymentsClient

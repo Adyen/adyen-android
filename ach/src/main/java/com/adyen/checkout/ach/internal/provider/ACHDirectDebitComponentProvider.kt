@@ -45,10 +45,10 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.data.api.HttpClient
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.cse.internal.GenericEncryptorFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback

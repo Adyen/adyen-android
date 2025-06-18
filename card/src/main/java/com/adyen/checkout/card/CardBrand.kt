@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.old.CardBrand
 
 typealias CardBrand = CardBrand

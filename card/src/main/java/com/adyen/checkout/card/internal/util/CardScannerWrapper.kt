@@ -13,8 +13,8 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.adyen.checkout.card.scanning.AdyenCardScanner
 import com.adyen.checkout.card.scanning.AdyenCardScannerResult
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.util.runCompileOnly
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.internal.util.runCompileOnly
 
 internal class CardScannerWrapper {
 

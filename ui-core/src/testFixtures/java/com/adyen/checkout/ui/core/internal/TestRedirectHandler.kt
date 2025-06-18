@@ -10,7 +10,7 @@ package com.adyen.checkout.ui.core.internal
 
 import android.content.Context
 import android.net.Uri
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.exception.ComponentException
 import org.json.JSONObject
 
 /**

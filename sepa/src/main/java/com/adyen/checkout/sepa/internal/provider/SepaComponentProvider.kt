@@ -31,9 +31,9 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.sepa.SepaComponent
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.SepaConfiguration

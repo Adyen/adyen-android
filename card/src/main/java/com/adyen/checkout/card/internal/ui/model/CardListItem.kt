@@ -9,8 +9,8 @@
 package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardListItem(

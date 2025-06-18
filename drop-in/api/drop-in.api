@@ -88,13 +88,13 @@ public abstract interface class com/adyen/checkout/dropin/DropInCallback {
 
 public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/util/HashMap;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Landroid/os/Bundle;Ljava/util/HashMap;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/util/HashMap;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Landroid/os/Bundle;Ljava/util/HashMap;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
 	public final fun getAdditionalDataForDropInService ()Landroid/os/Bundle;
 	public fun getAmount ()Lcom/adyen/checkout/components/core/Amount;
 	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/components/core/AnalyticsConfiguration;
 	public fun getClientKey ()Ljava/lang/String;
-	public fun getEnvironment ()Lcom/adyen/checkout/core/Environment;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/old/Environment;
 	public fun getShopperLocale ()Ljava/util/Locale;
 	public final fun getShowPreselectedStoredPaymentMethod ()Ljava/lang/Boolean;
 	public final fun getSkipListWhenSinglePaymentMethod ()Ljava/lang/Boolean;
@@ -103,9 +103,9 @@ public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/che
 }
 
 public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder {
-	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public final fun addAchDirectDebitConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addBacsDirectDebitConfiguration (Lcom/adyen/checkout/bacs/BacsDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addBcmcConfiguration (Lcom/adyen/checkout/bcmc/BcmcConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
@@ -343,7 +343,7 @@ public final class com/adyen/checkout/dropin/SessionDropInResultContract : andro
 
 public class com/adyen/checkout/dropin/SessionDropInService : com/adyen/checkout/dropin/internal/service/BaseDropInService, com/adyen/checkout/dropin/SessionDropInServiceContract, com/adyen/checkout/dropin/internal/service/SessionDropInServiceInterface {
 	public fun <init> ()V
-	public final fun initialize (Lcom/adyen/checkout/sessions/core/SessionModel;Ljava/lang/String;Lcom/adyen/checkout/core/Environment;ZLcom/adyen/checkout/components/core/internal/analytics/AnalyticsManager;)V
+	public final fun initialize (Lcom/adyen/checkout/sessions/core/SessionModel;Ljava/lang/String;Lcom/adyen/checkout/core/old/Environment;ZLcom/adyen/checkout/components/core/internal/analytics/AnalyticsManager;)V
 	public final fun isFlowTakenOver ()Z
 	public fun onAdditionalDetails (Lcom/adyen/checkout/components/core/ActionComponentData;)Z
 	public fun onBalanceCheck (Lcom/adyen/checkout/components/core/PaymentComponentState;)Z

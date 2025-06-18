@@ -10,12 +10,12 @@ package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
-import com.adyen.checkout.core.internal.ui.model.INVALID_DATE
-import com.adyen.checkout.core.ui.model.ExpiryDate
-import com.adyen.checkout.core.ui.validation.CardExpiryDateValidationResult
-import com.adyen.checkout.core.ui.validation.CardNumberValidationResult
-import com.adyen.checkout.core.ui.validation.CardSecurityCodeValidationResult
+import com.adyen.checkout.core.old.internal.ui.model.EMPTY_DATE
+import com.adyen.checkout.core.old.internal.ui.model.INVALID_DATE
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardNumberValidationResult
+import com.adyen.checkout.core.old.ui.validation.CardSecurityCodeValidationResult
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

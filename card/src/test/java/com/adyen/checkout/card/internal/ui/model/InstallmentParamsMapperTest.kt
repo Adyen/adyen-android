@@ -13,8 +13,8 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

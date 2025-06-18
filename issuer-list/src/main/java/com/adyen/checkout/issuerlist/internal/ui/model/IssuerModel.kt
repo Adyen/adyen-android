@@ -9,7 +9,7 @@
 package com.adyen.checkout.issuerlist.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class IssuerModel(

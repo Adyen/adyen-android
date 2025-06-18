@@ -14,10 +14,10 @@ import com.adyen.checkout.components.core.OrderResponse
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.service.BaseDropInService
 import com.adyen.checkout.dropin.internal.service.SessionDropInServiceInterface
 import com.adyen.checkout.sessions.core.SessionModel

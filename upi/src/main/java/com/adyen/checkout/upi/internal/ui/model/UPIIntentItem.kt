@@ -9,7 +9,7 @@
 package com.adyen.checkout.upi.internal.ui.model
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 
 internal sealed class UPIIntentItem {
 

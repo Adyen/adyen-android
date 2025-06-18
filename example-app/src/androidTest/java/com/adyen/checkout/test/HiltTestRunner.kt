@@ -11,8 +11,8 @@ package com.adyen.checkout.test
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.AdyenLogger
 import dagger.hilt.android.testing.HiltTestApplication
 
 // This class is used from build.gradle

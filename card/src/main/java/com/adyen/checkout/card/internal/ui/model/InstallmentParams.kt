@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.old.CardBrand
 import java.util.Locale
 
 /**

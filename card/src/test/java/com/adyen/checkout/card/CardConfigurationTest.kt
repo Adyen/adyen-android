@@ -4,8 +4,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.CardType
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.CardType
+import com.adyen.checkout.core.old.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

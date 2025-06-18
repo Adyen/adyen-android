@@ -9,7 +9,7 @@
 package com.adyen.checkout.giftcard.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 
 internal class DefaultGiftCardValidator : GiftCardValidator {
     override fun validateNumber(number: String): FieldState<String> {

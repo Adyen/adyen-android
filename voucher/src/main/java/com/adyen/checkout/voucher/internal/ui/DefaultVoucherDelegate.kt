@@ -26,11 +26,11 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParams
 import com.adyen.checkout.components.core.internal.util.DateUtils
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.PermissionHandlerCallback
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.PermissionHandlerCallback
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.util.ImageSaver

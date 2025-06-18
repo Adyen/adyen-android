@@ -10,10 +10,10 @@ package com.adyen.checkout.sessions.core.internal
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.Order
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.CheckoutSessionResult
 import com.adyen.checkout.sessions.core.SessionModel

@@ -10,7 +10,7 @@ package com.adyen.checkout.test.fake
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.example.ui.configuration.ConfigurationProvider
 import com.adyen.checkout.test.server.CheckoutMockWebServer
 import java.net.URL

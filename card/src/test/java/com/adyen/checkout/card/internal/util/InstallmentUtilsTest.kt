@@ -19,8 +19,8 @@ import com.adyen.checkout.card.internal.ui.model.InstallmentParams
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull

@@ -22,10 +22,10 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.exception.HttpException
-import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.exception.HttpException
+import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.redirect.redirect

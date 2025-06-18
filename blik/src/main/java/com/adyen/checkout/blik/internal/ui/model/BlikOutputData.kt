@@ -11,8 +11,8 @@ import com.adyen.checkout.blik.R
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 
 internal class BlikOutputData(blikCode: String) : OutputData {
 

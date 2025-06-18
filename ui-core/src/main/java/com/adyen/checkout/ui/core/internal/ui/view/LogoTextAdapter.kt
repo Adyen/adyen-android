@@ -15,7 +15,7 @@ import androidx.annotation.RestrictTo
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.ui.core.databinding.LogoViewHolderBinding
 import com.adyen.checkout.ui.core.databinding.TextViewHolderBinding
 import com.adyen.checkout.ui.core.internal.ui.loadLogo

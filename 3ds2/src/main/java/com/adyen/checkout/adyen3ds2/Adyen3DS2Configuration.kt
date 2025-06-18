@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.components.core.internal.util.CheckoutConfigurationMarker
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.threeds2.customization.UiCustomization
 import com.adyen.threeds2.internal.ui.activity.ChallengeActivity
 import kotlinx.parcelize.Parcelize

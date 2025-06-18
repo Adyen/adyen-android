@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.dropin.internal.ui.model
 
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
 
 internal data class PaymentMethodModel(

@@ -13,7 +13,7 @@ import com.adyen.checkout.card.internal.util.CardExpiryDateValidation
 import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.ui.model.ExpiryDate
+import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

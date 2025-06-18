@@ -20,7 +20,7 @@ import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import androidx.customview.widget.ViewDragHelper
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import com.google.android.material.elevation.ElevationOverlayProvider
 import kotlin.math.abs
 import kotlin.math.max

@@ -7,14 +7,14 @@
  */
 package com.adyen.checkout.googlepay.internal.data.model
 
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
-import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
-import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
-import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
-import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
-import com.adyen.checkout.core.internal.data.model.getIntOrNull
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.serializeOptList
+import com.adyen.checkout.core.old.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.old.internal.data.model.getIntOrNull
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
 import kotlinx.parcelize.Parcelize

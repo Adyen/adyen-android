@@ -21,8 +21,8 @@ import com.adyen.checkout.components.core.internal.data.api.TestStatusRepository
 import com.adyen.checkout.components.core.internal.data.model.StatusResponse
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.TestRedirectHandler

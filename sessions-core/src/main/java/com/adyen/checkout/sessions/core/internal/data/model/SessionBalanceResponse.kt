@@ -9,11 +9,11 @@ package com.adyen.checkout.sessions.core.internal.data.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.ModelUtils
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils
+import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

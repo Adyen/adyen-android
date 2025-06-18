@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.upi.internal.ui.view
 
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.upi.databinding.UpiAppBinding
 import com.adyen.checkout.upi.internal.ui.model.UPIIntentItem

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.test
 
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.AdyenLogger
 import java.io.PrintWriter
 import java.io.StringWriter
 

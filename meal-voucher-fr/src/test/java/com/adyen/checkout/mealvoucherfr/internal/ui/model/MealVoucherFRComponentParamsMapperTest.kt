@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardComponentParams
 import com.adyen.checkout.mealvoucherfr.MealVoucherFRConfiguration
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR

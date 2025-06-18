@@ -8,11 +8,11 @@
 package com.adyen.checkout.components.core.action
 
 import com.adyen.checkout.components.core.PaymentMethodTypes
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
-import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.deserializeOpt
+import com.adyen.checkout.core.old.internal.data.model.ModelUtils.serializeOpt
+import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

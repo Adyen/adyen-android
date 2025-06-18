@@ -13,10 +13,10 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.AdyenLogger
-import com.adyen.checkout.core.internal.util.BuildUtils
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.AdyenLogger
+import com.adyen.checkout.core.old.internal.util.BuildUtils
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.DropIn.registerForDropInResult
 import com.adyen.checkout.dropin.DropIn.startPayment
 import com.adyen.checkout.dropin.internal.ui.model.DropInParamsMapper

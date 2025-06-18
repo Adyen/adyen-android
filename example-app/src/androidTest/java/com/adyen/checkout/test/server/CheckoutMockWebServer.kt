@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.test.server
 
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import okhttp3.mockwebserver.MockWebServer
 import java.io.IOException
 

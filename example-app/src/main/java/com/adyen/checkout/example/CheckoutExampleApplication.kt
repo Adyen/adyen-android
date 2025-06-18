@@ -9,8 +9,8 @@
 package com.adyen.checkout.example
 
 import android.app.Application
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.AdyenLogger
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.AdyenLogger
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject

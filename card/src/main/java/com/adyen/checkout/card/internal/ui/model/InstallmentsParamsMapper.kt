@@ -13,7 +13,7 @@ import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
-import com.adyen.checkout.core.CardBrand
+import com.adyen.checkout.core.old.CardBrand
 import java.util.Locale
 
 internal class InstallmentsParamsMapper {

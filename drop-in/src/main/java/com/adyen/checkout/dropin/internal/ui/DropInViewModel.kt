@@ -29,10 +29,10 @@ import com.adyen.checkout.components.core.internal.data.api.OrderStatusRepositor
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.R
 import com.adyen.checkout.dropin.internal.analytics.DropInEvents
 import com.adyen.checkout.dropin.internal.ui.model.DropInActivityEvent

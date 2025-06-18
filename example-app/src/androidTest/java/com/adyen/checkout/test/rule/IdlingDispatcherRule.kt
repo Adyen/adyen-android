@@ -10,7 +10,7 @@ package com.adyen.checkout.test.rule
 
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.idling.CountingIdlingResource
-import com.adyen.checkout.core.DispatcherProvider
+import com.adyen.checkout.core.old.DispatcherProvider
 import com.adyen.checkout.test.util.IdlingResourceDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

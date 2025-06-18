@@ -14,7 +14,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate
 import com.adyen.checkout.components.core.internal.ui.PermissionRequestingDelegate
 import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
-import com.adyen.checkout.core.internal.ui.PermissionHandler
+import com.adyen.checkout.core.old.internal.ui.PermissionHandler
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
 import com.adyen.checkout.voucher.internal.ui.model.VoucherUIEvent

@@ -20,8 +20,8 @@ import com.adyen.checkout.components.core.internal.PaymentComponent
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.internal.PayByBankUSDelegate
 import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProvider
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

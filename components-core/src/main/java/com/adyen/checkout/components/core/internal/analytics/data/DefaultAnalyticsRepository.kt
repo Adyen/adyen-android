@@ -13,8 +13,8 @@ import com.adyen.checkout.components.core.internal.analytics.data.local.Analytic
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsRemoteDataStore
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.components.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 
 internal class DefaultAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,

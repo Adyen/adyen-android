@@ -25,9 +25,9 @@ import com.adyen.checkout.components.core.action.Threeds2FingerprintAction
 import com.adyen.checkout.components.core.internal.ActionObserverRepository
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import kotlinx.coroutines.CoroutineScope

@@ -8,7 +8,7 @@
 package com.adyen.checkout.components.core
 
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
-import com.adyen.checkout.core.exception.CheckoutException
+import com.adyen.checkout.core.old.exception.CheckoutException
 import java.util.Collections
 
 /**

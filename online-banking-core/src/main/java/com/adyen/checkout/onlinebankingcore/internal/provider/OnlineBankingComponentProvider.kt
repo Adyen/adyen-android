@@ -36,9 +36,9 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
-import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.util.LocaleProvider
+import com.adyen.checkout.core.old.exception.ComponentException
+import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingComponent
 import com.adyen.checkout.onlinebankingcore.internal.OnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.internal.ui.DefaultOnlineBankingDelegate

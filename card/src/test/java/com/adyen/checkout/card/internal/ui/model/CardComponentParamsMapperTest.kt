@@ -28,9 +28,9 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.CardBrand
-import com.adyen.checkout.core.CardType
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.CardBrand
+import com.adyen.checkout.core.old.CardType
+import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

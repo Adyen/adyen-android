@@ -11,9 +11,9 @@ package com.adyen.checkout.components.core.internal.data.api
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusRequest
 import com.adyen.checkout.components.core.internal.data.model.OrderStatusResponse
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
-import com.adyen.checkout.core.internal.util.runSuspendCatching
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
+import com.adyen.checkout.core.old.internal.util.runSuspendCatching
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class OrderStatusRepository(

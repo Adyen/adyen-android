@@ -25,9 +25,9 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.PermissionHandlerCallback
-import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.core.old.PermissionHandlerCallback
+import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.extensions.test
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType

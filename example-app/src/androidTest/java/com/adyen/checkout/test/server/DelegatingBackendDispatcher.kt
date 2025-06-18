@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.test.server
 
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.test.server.service.MockCheckoutService
 import com.adyen.checkout.test.server.service.MockPublicKeyService
 import com.adyen.checkout.test.server.service.MockSessionService

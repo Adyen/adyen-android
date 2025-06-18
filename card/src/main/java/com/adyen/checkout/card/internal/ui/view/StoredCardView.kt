@@ -25,7 +25,7 @@ import com.adyen.checkout.card.internal.ui.CardDelegate
 import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.internal.util.BuildUtils
+import com.adyen.checkout.core.old.internal.util.BuildUtils
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView

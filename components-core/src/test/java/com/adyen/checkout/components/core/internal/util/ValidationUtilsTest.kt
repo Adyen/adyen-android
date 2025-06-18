@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.components.core.internal.util
 
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.old.Environment
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments

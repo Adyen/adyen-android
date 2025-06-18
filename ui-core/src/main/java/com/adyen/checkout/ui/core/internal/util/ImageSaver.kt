@@ -26,11 +26,11 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.exception.CheckoutException
-import com.adyen.checkout.core.internal.ui.PermissionHandler
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.DispatcherProvider
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.ui.PermissionHandler
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED

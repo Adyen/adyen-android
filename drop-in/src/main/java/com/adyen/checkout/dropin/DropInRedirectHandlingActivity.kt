@@ -11,8 +11,8 @@ package com.adyen.checkout.dropin
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.adyen.checkout.core.AdyenLogLevel
-import com.adyen.checkout.core.internal.util.adyenLog
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
 class DropInRedirectHandlingActivity : AppCompatActivity() {

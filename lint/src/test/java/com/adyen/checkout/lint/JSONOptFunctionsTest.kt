@@ -77,61 +77,61 @@ src/test/SomeClass.kt:16: Error: JSONObject.optBoolean should not be used direct
                 """
 Fix for src/test/SomeClass.kt line 7: Replace with getStringOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getStringOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 @@ -7 +8
 -         val stringWithoutFallback = jsonObject.optString("key")
 +         val stringWithoutFallback = jsonObject.getStringOrNull("key")
 Fix for src/test/SomeClass.kt line 8: Replace with getStringOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getStringOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 @@ -8 +9
 -         val stringWithFallback = jsonObject.optString("key", "fallback")
 +         val stringWithFallback = jsonObject.getStringOrNull("key", "fallback")
 Fix for src/test/SomeClass.kt line 9: Replace with getIntOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getIntOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getIntOrNull
 @@ -9 +10
 -         val intWithoutFallback = jsonObject.optInt("key")
 +         val intWithoutFallback = jsonObject.getIntOrNull("key")
 Fix for src/test/SomeClass.kt line 10: Replace with getIntOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getIntOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getIntOrNull
 @@ -10 +11
 -         val intWithFallback = jsonObject.optInt("key", 1)
 +         val intWithFallback = jsonObject.getIntOrNull("key", 1)
 Fix for src/test/SomeClass.kt line 11: Replace with getDoubleOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getDoubleOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getDoubleOrNull
 @@ -11 +12
 -         val doubleWithoutFallback = jsonObject.optDouble("key")
 +         val doubleWithoutFallback = jsonObject.getDoubleOrNull("key")
 Fix for src/test/SomeClass.kt line 12: Replace with getDoubleOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getDoubleOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getDoubleOrNull
 @@ -12 +13
 -         val doubleWithFallback = jsonObject.optDouble("key", 1.0)
 +         val doubleWithFallback = jsonObject.getDoubleOrNull("key", 1.0)
 Fix for src/test/SomeClass.kt line 13: Replace with getLongOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getLongOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getLongOrNull
 @@ -13 +14
 -         val longWithoutFallback = jsonObject.optLong("key")
 +         val longWithoutFallback = jsonObject.getLongOrNull("key")
 Fix for src/test/SomeClass.kt line 14: Replace with getLongOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getLongOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getLongOrNull
 @@ -14 +15
 -         val longWithFallback = jsonObject.optLong("key", 1L)
 +         val longWithFallback = jsonObject.getLongOrNull("key", 1L)
 Fix for src/test/SomeClass.kt line 15: Replace with getBooleanOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getBooleanOrNull
 @@ -15 +16
 -         val booleanWithoutFallback = jsonObject.optBoolean("key")
 +         val booleanWithoutFallback = jsonObject.getBooleanOrNull("key")
 Fix for src/test/SomeClass.kt line 16: Replace with getBooleanOrNull:
 @@ -3 +3
-+ import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
++ import com.adyen.checkout.core.old.internal.data.model.getBooleanOrNull
 @@ -16 +17
 -         val booleanWithFallback = jsonObject.optBoolean("key", true)
 +         val booleanWithFallback = jsonObject.getBooleanOrNull("key", true)
