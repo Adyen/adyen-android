@@ -24,8 +24,8 @@ internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayDelegateStat
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> validate(state: MBWayDelegateState, key: MBWayFieldId, value: T): Validation {
-        val validator = validators[key] as? FieldValidator<MBWayDelegateState, T>
+    override fun <T> validate(state: MBWayDelegateState, fieldId: MBWayFieldId, value: T): Validation {
+        val validator = validators[fieldId] as? FieldValidator<MBWayDelegateState, T>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return validator.validate(state, value)
     }
