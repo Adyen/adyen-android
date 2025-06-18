@@ -16,6 +16,8 @@ import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
+import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
@@ -27,44 +29,52 @@ import java.util.Locale
 internal class SessionsPaymentFacilitatorFactory(
     private val checkoutSession: CheckoutSession,
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallback: CheckoutCallback,
+    private val checkoutCallback: CheckoutCallback?,
     private val savedStateHandle: SavedStateHandle
 ) : PaymentFacilitatorFactory {
 
     override fun create(
         coroutineScope: CoroutineScope,
     ): PaymentFacilitator {
-        val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
+        // TODO - ComponentParams mapping is different for each payment method, that needs to be abstracted away.
+        val componentParams =
+            ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
 
-            // TODO - Add locale support, For now it's hardcoded to US
+                // TODO - Add locale support, For now it's hardcoded to US
 //        deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
-            dropInOverrideParams = null,
-            componentSessionParams = SessionParamsFactory.create(checkoutSession),
-            componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
-        )
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = SessionParamsFactory.create(checkoutSession),
+                componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
+            )
 
         val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
             savedStateHandle = savedStateHandle,
             checkoutSession = checkoutSession,
         )
+        val sessionInteractor = SessionInteractor(
+            sessionRepository = SessionRepository(
+                sessionService = SessionService(
+                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
+                ),
+                clientKey = checkoutConfiguration.clientKey,
+            ),
+            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+        )
+
+        // TODO - Based on txVariant, needs to be abstracted away
+        val componentEventHandler =
+            SessionsComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>(
+                sessionInteractor = sessionInteractor,
+                checkoutCallback = checkoutCallback,
+            )
 
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
-            checkoutCallback = checkoutCallback,
-
-            sessionInteractor = SessionInteractor(
-                sessionRepository = SessionRepository(
-                    sessionService = SessionService(
-                        httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
-                    ),
-                    clientKey = checkoutConfiguration.clientKey,
-                ),
-                sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-                sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-                isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-            ),
+            componentEventHandler = componentEventHandler,
             componentParams = componentParams,
         )
     }

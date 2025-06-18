@@ -16,14 +16,14 @@ import com.adyen.checkout.core.sessions.SessionModel
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,
     val checkoutConfiguration: CheckoutConfiguration,
-    val checkoutCallback: CheckoutCallback
+    val checkoutCallback: CheckoutCallback?
 ) {
 
     companion object {
         suspend fun initialize(
             sessionModel: SessionModel,
             checkoutConfiguration: CheckoutConfiguration,
-            checkoutCallback: CheckoutCallback = DefaultCheckoutCallback()
+            checkoutCallback: CheckoutCallback?
         ): AdyenCheckout.Result {
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {

@@ -13,31 +13,46 @@ import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.mbway.internal.ui.getMBWayConfiguration
+import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallback: CheckoutCallback,
+    private val checkoutCallback: CheckoutCallback?,
 ) : PaymentFacilitatorFactory {
 
     override fun create(coroutineScope: CoroutineScope): PaymentFacilitator {
-        val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
+        if (checkoutCallback == null) {
+            throw IllegalArgumentException(
+                "Checkout callback is not set. " +
+                    "While using Advanced flow you must pass CheckoutCallback while initializing AdyenCheckout."
+            )
+        }
 
-            // TODO - Add locale support, For now it's hardcoded to US
+        val componentParams =
+            ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
+                checkoutConfiguration = checkoutConfiguration,
+
+                // TODO - Add locale support, For now it's hardcoded to US
 //        deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
-            dropInOverrideParams = null,
-            componentSessionParams = null,
-            componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
-        )
+                deviceLocale = Locale.US,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
+            )
+
+        val componentEventHandler =
+            AdvancedComponentEventHandler<PaymentComponentState<out PaymentMethodDetails>>(
+                checkoutCallback,
+            )
+
         // TODO - Advanced Flow
         return PaymentFacilitator(
             coroutineScope = coroutineScope,
-            checkoutCallback = checkoutCallback,
-            sessionInteractor = null,
             componentParams = componentParams,
+            componentEventHandler = componentEventHandler,
         )
     }
 }
