@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
@@ -47,7 +48,7 @@ internal fun MbWayComponent(
             label = "Country Code",
             isError = viewState.countryCodeFieldState.errorMessageId != null,
             supportingText = supportingTextCountryCode,
-            value = viewState.countryCodeFieldState.value,
+            value = viewState.countryCodeFieldState.value.toShortString(),
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, value)
             },
@@ -69,7 +70,7 @@ internal fun MbWayComponent(
             isError = viewState.phoneNumberFieldState.errorMessageId != null,
             supportingText = supportingTextPhoneNumber,
             value = viewState.phoneNumberFieldState.value,
-            prefix = viewState.countryCodeFieldState.value,
+            prefix = viewState.countryCodeFieldState.value.toShortString(),
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
             },
@@ -80,10 +81,14 @@ internal fun MbWayComponent(
 @Preview(showBackground = true)
 @Composable
 private fun MbWayComponentPreview() {
+    val countries = listOf(
+        CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
+        CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
+    )
     MbWayComponent(
         viewState = MBWayViewState(
-            countries = listOf("ES", "PT"),
-            countryCodeFieldState = ViewFieldState("", false),
+            countries = countries,
+            countryCodeFieldState = ViewFieldState(countries.first(), false),
             phoneNumberFieldState = ViewFieldState("", false),
         ),
         fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {

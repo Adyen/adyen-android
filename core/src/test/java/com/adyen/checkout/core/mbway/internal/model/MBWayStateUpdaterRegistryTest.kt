@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.mbway.internal.model
 
+import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayStateUpdaterRegistry
@@ -20,16 +21,18 @@ internal class MBWayStateUpdaterRegistryTest {
 
     private lateinit var stateUpdaterRegistry: MBWayStateUpdaterRegistry
     private lateinit var initialState: MBWayDelegateState
+    private lateinit var countryModel: CountryModel
     private lateinit var localPhoneNumberFieldState: DelegateFieldState<String>
-    private lateinit var countryCodeFieldState: DelegateFieldState<String>
+    private lateinit var countryCodeFieldState: DelegateFieldState<CountryModel>
 
     @BeforeEach
     fun setup() {
+        countryModel = CountryModel(isoCode = "NL", countryName = "Netherlands", callingCode = "+31")
         localPhoneNumberFieldState = DelegateFieldState(value = "123456789")
-        countryCodeFieldState = DelegateFieldState(value = "PT")
+        countryCodeFieldState = DelegateFieldState(value = countryModel)
 
         initialState = MBWayDelegateState(
-            countries = listOf("PT", "ES"),
+            countries = listOf(countryModel),
             countryCodeFieldState = countryCodeFieldState,
             localPhoneNumberFieldState = localPhoneNumberFieldState,
         )

@@ -8,12 +8,13 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.model
 
+import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.DelegateState
 import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
 
 internal data class MBWayDelegateState(
-    val countries: List<String>,
-    val countryCodeFieldState: DelegateFieldState<String> = DelegateFieldState(value = ""),
+    val countries: List<CountryModel>,
+    val countryCodeFieldState: DelegateFieldState<CountryModel>,
     val localPhoneNumberFieldState: DelegateFieldState<String> = DelegateFieldState(value = ""),
 ) : DelegateState {
 
