@@ -55,7 +55,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
         )
 
         val transformerRegistry = MBWayTransformerRegistry()
-        val delegateStateFactory = MBWayDelegateStateFactory()
+        val delegateStateFactory = MBWayDelegateStateFactory(componentParams)
         val stateManager = DefaultDelegateStateManager(
             factory = delegateStateFactory,
             validationRegistry = MBWayValidatorRegistry(),

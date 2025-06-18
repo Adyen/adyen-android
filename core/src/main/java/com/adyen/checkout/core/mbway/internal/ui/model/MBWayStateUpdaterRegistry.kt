@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.model
 
+import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.internal.ui.state.updater.StateUpdater
 import com.adyen.checkout.core.internal.ui.state.updater.StateUpdaterRegistry
@@ -54,11 +55,11 @@ internal class LocalPhoneNumberUpdater : StateUpdater<MBWayDelegateState, Delega
         )
 }
 
-internal class CountryCodeUpdater : StateUpdater<MBWayDelegateState, DelegateFieldState<String>> {
-    override fun getFieldState(state: MBWayDelegateState): DelegateFieldState<String> =
+internal class CountryCodeUpdater : StateUpdater<MBWayDelegateState, DelegateFieldState<CountryModel>> {
+    override fun getFieldState(state: MBWayDelegateState): DelegateFieldState<CountryModel> =
         state.countryCodeFieldState
 
-    override fun updateFieldState(state: MBWayDelegateState, fieldState: DelegateFieldState<String>) =
+    override fun updateFieldState(state: MBWayDelegateState, fieldState: DelegateFieldState<CountryModel>) =
         state.copy(
             countryCodeFieldState = fieldState,
         )
