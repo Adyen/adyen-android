@@ -4,6 +4,7 @@ release/
 
 # Local configuration file (sdk path, etc)
 local.properties
+local.gradle
 
 # macOS folder settings
 .DS_Store
