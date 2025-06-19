@@ -9,31 +9,63 @@
 package com.adyen.checkout.example.ui.v6
 
 import android.os.Bundle
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.AdyenPaymentFlow
+import com.adyen.checkout.example.ui.theme.ExampleTheme
+import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class V6Activity : AppCompatActivity() {
 
     private val viewModel: V6ViewModel by viewModels()
 
+    @Inject
+    internal lateinit var uiThemeRepository: UIThemeRepository
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Scaffold { contentPadding ->
-                AdyenPaymentFlow(
-                    txVariant = "mbway",
-                    adyenCheckout = viewModel.createAdyenCheckout(),
-                    modifier = Modifier.padding(contentPadding),
-                )
+            val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+            ExampleTheme(uiThemeRepository.isDarkTheme()) {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("v6 components") },
+                            navigationIcon = {
+                                IconButton(onClick = { backPressedDispatcher?.onBackPressed() }) {
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                                }
+                            },
+                        )
+                    },
+                ) { contentPadding ->
+                    AdyenPaymentFlow(
+                        txVariant = "mbway",
+                        adyenCheckout = viewModel.createAdyenCheckout(),
+                        modifier = Modifier
+                            .padding(contentPadding)
+                            .padding(16.dp),
+                    )
+                }
             }
         }
     }

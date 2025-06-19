@@ -745,16 +745,6 @@ public abstract interface class com/adyen/checkout/core/internal/data/model/Mode
 	public abstract fun serialize (Lcom/adyen/checkout/core/internal/data/model/ModelObject;)Lorg/json/JSONObject;
 }
 
-public final class com/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt {
-	public static final field INSTANCE Lcom/adyen/checkout/core/internal/ui/view/ComposableSingletons$PayButtonKt;
-	public fun <init> ()V
-	public final fun getLambda$1206248042$core_release ()Lkotlin/jvm/functions/Function3;
-}
-
-public final class com/adyen/checkout/core/internal/ui/view/PayButtonKt {
-	public static final fun PayButton (Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/adyen/checkout/core/mbway/internal/ui/MBWayConfiguration : com/adyen/checkout/core/internal/ButtonConfiguration, com/adyen/checkout/core/internal/Configuration {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -790,13 +780,6 @@ public final class com/adyen/checkout/core/mbway/internal/ui/MBWayConfiguration$
 public final class com/adyen/checkout/core/mbway/internal/ui/MBWayConfigurationKt {
 	public static final fun mbWay (Lcom/adyen/checkout/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/CheckoutConfiguration;
 	public static synthetic fun mbWay$default (Lcom/adyen/checkout/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/CheckoutConfiguration;
-}
-
-public final class com/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt {
-	public static final field INSTANCE Lcom/adyen/checkout/core/mbway/internal/ui/view/ComposableSingletons$MbWayComponentKt;
-	public fun <init> ()V
-	public final fun getLambda$-1841229527$core_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$396925426$core_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/core/paymentmethod/GenericPaymentMethod : com/adyen/checkout/core/paymentmethod/PaymentMethodDetails {
