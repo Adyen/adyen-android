@@ -12,8 +12,7 @@ import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.PaymentMethodFactory
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
-import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.internal.ui.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
@@ -22,27 +21,8 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
 
     override fun create(
         coroutineScope: CoroutineScope,
-        checkoutConfiguration: CheckoutConfiguration
-    ): MBWayDelegate {
-        val componentParams =
-            ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
-                checkoutConfiguration = checkoutConfiguration,
-
-                // TODO - Add locale support, For now it's hardcoded to US
-                // deviceLocale = localeProvider.getLocale(application)
-                deviceLocale = Locale.US,
-                dropInOverrideParams = null,
-                componentSessionParams = null,
-                componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
-            )
-
-        return MBWayDelegate(coroutineScope, componentParams)
-    }
-
-    override fun create(
-        coroutineScope: CoroutineScope,
-        checkoutSession: CheckoutSession,
-        checkoutConfiguration: CheckoutConfiguration
+        checkoutConfiguration: CheckoutConfiguration,
+        componentSessionParams: SessionParams?,
     ): MBWayDelegate {
         val componentParams = ButtonComponentParamsMapper(CommonComponentParamsMapper()).mapToParams(
             checkoutConfiguration = checkoutConfiguration,
@@ -51,7 +31,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
             // deviceLocale = localeProvider.getLocale(application)
             deviceLocale = Locale.US,
             dropInOverrideParams = null,
-            componentSessionParams = SessionParamsFactory.create(checkoutSession),
+            componentSessionParams = componentSessionParams,
             componentConfiguration = checkoutConfiguration.getMBWayConfiguration(),
         )
 

@@ -12,6 +12,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
+import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
@@ -56,8 +57,8 @@ internal class SessionsPaymentFacilitatorFactory(
         val paymentDelegate = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
-            checkoutSession = checkoutSession,
             checkoutConfiguration = checkoutConfiguration,
+            componentSessionParams = SessionParamsFactory.create(checkoutSession)
         )
 
         return PaymentFacilitator(
