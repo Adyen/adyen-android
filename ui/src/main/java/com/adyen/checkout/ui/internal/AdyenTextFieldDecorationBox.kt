@@ -8,8 +8,10 @@
 
 package com.adyen.checkout.ui.internal
 
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +29,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Suppress("LongParameterList")
@@ -37,6 +40,7 @@ internal fun AdyenTextFieldDecorationBox(
     supportingText: String?,
     isError: Boolean,
     interactionSource: MutableInteractionSource,
+    indication: Indication?,
     style: InternalTextFieldStyle,
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -55,6 +59,8 @@ internal fun AdyenTextFieldDecorationBox(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .clip(RoundedCornerShape(style.cornerRadius.dp))
+                .indication(interactionSource, indication)
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
                 .heightIn(48.dp)

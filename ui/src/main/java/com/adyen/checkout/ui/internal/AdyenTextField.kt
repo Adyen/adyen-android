@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -52,6 +53,7 @@ fun AdyenTextField(
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    innerIndication: Indication? = null,
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -79,6 +81,7 @@ fun AdyenTextField(
                 supportingText = supportingText,
                 isError = isError,
                 interactionSource = interactionSource,
+                indication = innerIndication,
                 prefix = prefix,
                 trailingIcon = trailingIcon,
                 style = style,
