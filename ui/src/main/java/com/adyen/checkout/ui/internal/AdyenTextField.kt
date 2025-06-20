@@ -40,7 +40,6 @@ import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
-@Suppress("LongParameterList")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun AdyenTextField(
