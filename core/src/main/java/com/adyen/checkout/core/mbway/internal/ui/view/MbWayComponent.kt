@@ -10,8 +10,11 @@ package com.adyen.checkout.core.mbway.internal.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -37,6 +40,7 @@ import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
+import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.ValuePickerField
 
 @Composable
@@ -113,7 +117,20 @@ internal fun MbWayComponent(
                 modifier = Modifier.fillMaxSize(),
                 color = AdyenCheckoutTheme.colors.background,
             ) {
-
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    modifier = Modifier
+                        .systemBarsPadding()
+                        .padding(16.dp),
+                ) {
+                    viewState.countries.forEach { country ->
+                        Row(
+                            modifier = Modifier.padding(12.dp),
+                        ) {
+                            BodyEmphasized(country.toShortString())
+                        }
+                    }
+                }
             }
         }
     }
