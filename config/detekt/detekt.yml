@@ -6,6 +6,10 @@ complexity:
     excludes:
       - '**/test/**'
       - '**/androidTest/**'
+  LongParameterList:
+    active: true
+    ignoreAnnotated:
+      - 'Composable'
 
 naming:
   active: true

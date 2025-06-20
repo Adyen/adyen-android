@@ -9,7 +9,7 @@ public final class com/adyen/checkout/test/BuildConfig {
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$AdyenTextFieldKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$AdyenTextFieldKt;
 	public fun <init> ()V
-	public final fun getLambda$766221276$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1227481451$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt {
