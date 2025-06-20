@@ -30,7 +30,7 @@ class AnalyticsManagerFactory {
 
     fun provide(
         componentParams: ComponentParams,
-        application: Application,
+        application: Application?,
         source: AnalyticsSource,
         sessionId: String?
     ): AnalyticsManager = provide(
@@ -53,7 +53,7 @@ class AnalyticsManagerFactory {
         analyticsParams: AnalyticsParams,
         isCreatedByDropIn: Boolean,
         amount: Amount?,
-        application: Application,
+        application: Application?,
         source: AnalyticsSource,
         sessionId: String?
     ): AnalyticsManager = DefaultAnalyticsManager(

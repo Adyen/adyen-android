@@ -25,9 +25,9 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateSta
     @Suppress("UNCHECKED_CAST")
     override fun <T> getFieldState(
         state: MBWayDelegateState,
-        key: MBWayFieldId,
+        fieldId: MBWayFieldId,
     ): DelegateFieldState<T> {
-        val updater = updaters[key] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
+        val updater = updaters[fieldId] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.getFieldState(state)
     }
@@ -35,10 +35,10 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateSta
     @Suppress("UNCHECKED_CAST")
     override fun <T> updateFieldState(
         state: MBWayDelegateState,
-        key: MBWayFieldId,
+        fieldId: MBWayFieldId,
         fieldState: DelegateFieldState<T>,
     ): MBWayDelegateState {
-        val updater = updaters[key] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
+        val updater = updaters[fieldId] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.updateFieldState(state, fieldState)
     }
