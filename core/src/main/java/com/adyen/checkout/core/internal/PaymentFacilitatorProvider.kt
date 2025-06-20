@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class PaymentFacilitatorProvider {
 
     fun provide(
+        txVariant: String,
         adyenCheckout: AdyenCheckout,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
@@ -33,6 +34,6 @@ internal class PaymentFacilitatorProvider {
             )
         }
 
-        return paymentFacilitatorFactory.create(coroutineScope = coroutineScope)
+        return paymentFacilitatorFactory.create(txVariant = txVariant, coroutineScope = coroutineScope)
     }
 }

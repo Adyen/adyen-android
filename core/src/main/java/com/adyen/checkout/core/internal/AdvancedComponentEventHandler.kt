@@ -10,11 +10,9 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutResult
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.coroutines.CoroutineScope
 
-internal class AdvancedComponentEventHandler<T : PaymentComponentState<out PaymentMethodDetails>>(
+internal class AdvancedComponentEventHandler<T : BaseComponentState>(
     private val checkoutCallback: CheckoutCallback
 ) :
     ComponentEventHandler<T> {

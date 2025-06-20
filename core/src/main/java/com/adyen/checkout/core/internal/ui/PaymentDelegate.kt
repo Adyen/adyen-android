@@ -8,12 +8,11 @@
 
 package com.adyen.checkout.core.internal.ui
 
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.internal.BaseComponentState
 
 // TODO - Some delegates might not be composable,
 //  Move ComposableDelegate to PaymentMethod specific delegate later
-internal interface PaymentDelegate<T : PaymentComponentState<out PaymentMethodDetails>> :
+internal interface PaymentDelegate<T : BaseComponentState> :
     ComposableDelegate,
     EventDelegate<T> {
 

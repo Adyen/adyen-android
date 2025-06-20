@@ -32,6 +32,7 @@ fun AdyenPaymentFlow(
     // TODO - Move Creation Logic to Adyen Checkout
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(
+            txVariant = txVariant,
             adyenCheckout = adyenCheckout,
             savedStateHandle = createSavedStateHandle(),
         )

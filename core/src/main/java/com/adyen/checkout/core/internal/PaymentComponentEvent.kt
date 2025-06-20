@@ -8,12 +8,9 @@
 
 package com.adyen.checkout.core.internal
 
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
+internal sealed class PaymentComponentEvent<ComponentStateT : BaseComponentState> {
 
-internal sealed class PaymentComponentEvent<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>> {
-
-    class Submit<ComponentStateT : PaymentComponentState<out PaymentMethodDetails>>(
+    class Submit<ComponentStateT : BaseComponentState>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()
 }

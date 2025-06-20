@@ -11,5 +11,5 @@ package com.adyen.checkout.core.internal
 import kotlinx.coroutines.CoroutineScope
 
 internal interface PaymentFacilitatorFactory {
-    fun create(coroutineScope: CoroutineScope): PaymentFacilitator
+    fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator
 }
