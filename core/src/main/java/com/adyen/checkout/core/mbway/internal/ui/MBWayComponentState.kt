@@ -37,7 +37,7 @@ internal fun MBWayDelegateState.toComponentState(
         MBWayFieldId.PHONE_NUMBER,
         localPhoneNumberFieldState.value,
     )
-    val telephoneNumber = "${countryCodeFieldState.value}$sanitizedTelephoneNumber"
+    val telephoneNumber = "${countryCodeFieldState.value.callingCode}$sanitizedTelephoneNumber"
 
     val paymentMethod = MBWayPaymentMethod(
         type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
