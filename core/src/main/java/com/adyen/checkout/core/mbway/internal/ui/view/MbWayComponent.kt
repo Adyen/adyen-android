@@ -22,6 +22,7 @@ import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenTextField
+import com.adyen.checkout.ui.internal.ValuePickerField
 
 @Composable
 internal fun MbWayComponent(
@@ -39,19 +40,17 @@ internal fun MbWayComponent(
         } else {
             null
         }
-        AdyenTextField(
+        ValuePickerField(
+            value = viewState.countryCodeFieldState.value.toShortString(),
+            label = "Country Code",
+            supportingText = supportingTextCountryCode,
+            isError = viewState.countryCodeFieldState.errorMessageId != null,
+            onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     fieldChangeListener.onFieldFocusChanged(MBWayFieldId.COUNTRY_CODE, focusState.hasFocus)
                 },
-            label = "Country Code",
-            isError = viewState.countryCodeFieldState.errorMessageId != null,
-            supportingText = supportingTextCountryCode,
-            value = viewState.countryCodeFieldState.value.toShortString(),
-            onValueChange = { value ->
-                fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, value)
-            },
         )
 
         // PhoneNumber
