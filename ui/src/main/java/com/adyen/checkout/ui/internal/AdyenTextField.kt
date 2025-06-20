@@ -40,6 +40,31 @@ import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
+/**
+ * A composable that provides a styled text field with Adyen's theming.
+ *
+ * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
+ * styling defined by [InternalTextFieldStyle].
+ *
+ * @param value The current text to be displayed in the text field.
+ * @param onValueChange A callback that is triggered when the text in the field changes.
+ * @param label The label text to be displayed for the text field.
+ * @param modifier Optional [Modifier] to be applied to this composable.
+ * @param enabled Controls the enabled state of the text field. When `false`, the text field
+ * is not interactable.
+ * @param supportingText Optional supporting text to be displayed below the text field.
+ * @param isError Indicates whether the text field is in an error state. When `true`,
+ * the text field's appearance may change to reflect an error.
+ * @param keyboardOptions Optional keyboard options that can be used to configure the keyboard.
+ * @param interactionSource Optional [MutableInteractionSource] representing the stream of
+ * interactions for this text field.
+ * @param innerIndication Optional [Indication] that will be used for the internal
+ * [AdyenTextFieldDecorationBox].
+ * @param prefix An optional string to be displayed at the beginning of the input area,
+ * before the user's input.
+ * @param trailingIcon An optional composable function that provides a trailing icon to be
+ * displayed at the end of the text field.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun AdyenTextField(
