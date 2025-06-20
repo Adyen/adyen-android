@@ -28,6 +28,18 @@ import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
+/**
+ * A composable that displays a value and a label, designed to trigger an action on click.
+ * This field is not directly editable by the user and is visually consistent with [AdyenTextField].
+ * It's typically used for scenarios where selecting a value requires opening a separate picker or dialog.
+ *
+ * @param value The current value to be displayed in the field.
+ * @param label The descriptive label for the field.
+ * @param onClick Lambda to be executed when the field is clicked.
+ * @param modifier Optional [Modifier] to be applied to this composable.
+ * @param supportingText Optional text displayed below the field for additional context or guidance.
+ * @param isError Boolean indicating whether the field should be displayed in an error state.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun ValuePickerField(
