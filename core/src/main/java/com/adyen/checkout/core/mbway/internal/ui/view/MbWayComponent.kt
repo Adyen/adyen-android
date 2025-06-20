@@ -10,19 +10,32 @@ package com.adyen.checkout.core.mbway.internal.ui.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
 import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.ValuePickerField
 
@@ -32,6 +45,7 @@ internal fun MbWayComponent(
     fieldChangeListener: FieldChangeListener<MBWayFieldId>,
     modifier: Modifier = Modifier,
 ) {
+    var showCountryCodeDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -47,7 +61,7 @@ internal fun MbWayComponent(
             label = "Country Code",
             supportingText = supportingTextCountryCode,
             isError = viewState.countryCodeFieldState.errorMessageId != null,
-            onClick = {},
+            onClick = { showCountryCodeDialog = true },
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
@@ -77,6 +91,31 @@ internal fun MbWayComponent(
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
         )
+    }
+
+    if (showCountryCodeDialog) {
+        Dialog(
+            onDismissRequest = { showCountryCodeDialog = false },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false,
+            ),
+        ) {
+            val isBackgroundColorLight = AdyenCheckoutTheme.colors.background.luminance() > 0.5
+            (LocalView.current.parent as? DialogWindowProvider)?.window?.let {
+                WindowCompat.getInsetsController(it, it.decorView)
+                    .isAppearanceLightStatusBars = isBackgroundColorLight
+            }
+
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = AdyenCheckoutTheme.colors.background,
+            ) {
+
+            }
+        }
     }
 }
 
