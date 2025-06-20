@@ -60,7 +60,7 @@ fun ValuePickerField(
             )
         },
         interactionSource = interactionSource,
-        innerIndication = ripple(),
+        innerIndication = ripple(color = style.textColor),
     )
 }
 
