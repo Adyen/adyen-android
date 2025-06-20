@@ -67,6 +67,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
             coroutineScope = coroutineScope,
             componentParams = componentParams,
             analyticsManager = analyticsManager,
+            // TODO - Order to be passed later
             order = null,
             transformerRegistry = transformerRegistry,
             stateManager = stateManager,
