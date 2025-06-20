@@ -11,6 +11,11 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
 }
 
+// Apply local.gradle if it exists (used for local testing configurations)
+if (file("local.gradle").exists()) {
+    apply from: "local.gradle"
+}
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
