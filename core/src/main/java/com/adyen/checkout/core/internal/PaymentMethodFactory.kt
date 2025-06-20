@@ -10,25 +10,26 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
-import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.internal.ui.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
 internal interface PaymentMethodFactory<CS : BaseComponentState, T : PaymentDelegate<CS>> {
 
     /**
-     * Creates an Advanced Payment Method Delegate.
+     * Creates a [PaymentDelegate].
+     *
+     * @param coroutineScope Coroutine Scope.
+     * @param checkoutConfiguration Checkout Configuration.
+     * @param componentSessionParams Configuration from Sessions.
+     *
+     * @return A [PaymentDelegate] instance.
      */
     fun create(
         coroutineScope: CoroutineScope,
-        checkoutConfiguration: CheckoutConfiguration
-    ): T
+        checkoutConfiguration: CheckoutConfiguration,
 
-    /**
-     * Creates a Sessions Payment Method Delegate.
-     */
-    fun create(
-        coroutineScope: CoroutineScope,
-        checkoutSession: CheckoutSession,
-        checkoutConfiguration: CheckoutConfiguration
+        // TODO - Remove dependency to SessionParams. Investigate separating ComponentParams into two:
+        //  CheckoutParams and PaymentMethodParams to reflect the structure in CheckoutConfiguration.
+        componentSessionParams: SessionParams?,
     ): T
 }

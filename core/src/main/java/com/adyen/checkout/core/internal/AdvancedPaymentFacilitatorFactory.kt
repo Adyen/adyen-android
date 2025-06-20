@@ -25,7 +25,12 @@ internal class AdvancedPaymentFacilitatorFactory(
             )
         }
 
-        val paymentDelegate = PaymentMethodProvider.get(txVariant, coroutineScope, checkoutConfiguration)
+        val paymentDelegate = PaymentMethodProvider.get(
+            txVariant = txVariant,
+            coroutineScope = coroutineScope,
+            checkoutConfiguration = checkoutConfiguration,
+            componentSessionParams = null
+        )
 
         val componentEventHandler =
             AdvancedComponentEventHandler<BaseComponentState>(

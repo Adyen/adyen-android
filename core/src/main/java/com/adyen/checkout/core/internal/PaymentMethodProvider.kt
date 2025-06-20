@@ -10,7 +10,7 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
-import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.internal.ui.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
 internal object PaymentMethodProvider {
@@ -26,35 +26,25 @@ internal object PaymentMethodProvider {
     }
 
     /**
-     * Advanced
+     * Create a [PaymentDelegate] via a [PaymentMethodFactory].
+     *
+     * @param txVariant Payment Method Type.
+     * @param coroutineScope Coroutine Scope.
+     * @param checkoutConfiguration Checkout Configuration.
+     * @param componentSessionParams Configuration from Sessions.
+     *
+     * @return [PaymentDelegate] for given txVariant.
      */
     fun get(
         txVariant: String,
         coroutineScope: CoroutineScope,
-        checkoutConfiguration: CheckoutConfiguration
+        checkoutConfiguration: CheckoutConfiguration,
+        componentSessionParams: SessionParams?,
     ): PaymentDelegate<BaseComponentState> {
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-        ) ?: run {
-            // TODO - Error propagation [COSDK-85]. Propagate an initialization error via onError()
-            error("Factory for payment method type: $txVariant is not registered.")
-        }
-    }
-
-    /**
-     * Sessions
-     */
-    fun get(
-        txVariant: String,
-        coroutineScope: CoroutineScope,
-        checkoutSession: CheckoutSession,
-        checkoutConfiguration: CheckoutConfiguration
-    ): PaymentDelegate<BaseComponentState> {
-        return factories[txVariant]?.create(
-            coroutineScope = coroutineScope,
-            checkoutSession = checkoutSession,
-            checkoutConfiguration = checkoutConfiguration,
+            componentSessionParams = componentSessionParams,
         ) ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")
