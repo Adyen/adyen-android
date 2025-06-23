@@ -106,6 +106,7 @@ internal fun MbWayComponent(
         )
     }
 
+    // TODO - replace with actual navigation after it has been implemented
     if (showCountryCodeDialog) {
         CountryCodeDialog(
             onDismissRequest = { showCountryCodeDialog = false },
@@ -115,6 +116,7 @@ internal fun MbWayComponent(
     }
 }
 
+@Suppress("LongMethod", "MagicNumber")
 @Composable
 private fun CountryCodeDialog(
     onDismissRequest: () -> Unit,
@@ -174,7 +176,9 @@ private fun CountryCodeDialog(
 
                         if (isSelected) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_checkmark),
+                                imageVector = ImageVector.vectorResource(
+                                    com.adyen.checkout.test.R.drawable.ic_checkmark
+                                ),
                                 contentDescription = null,
                                 tint = AdyenCheckoutTheme.colors.text,
                             )
