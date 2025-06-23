@@ -107,64 +107,77 @@ internal fun MbWayComponent(
     }
 
     if (showCountryCodeDialog) {
-        Dialog(
+        CountryCodeDialog(
             onDismissRequest = { showCountryCodeDialog = false },
-            properties = DialogProperties(
-                dismissOnBackPress = true,
-                dismissOnClickOutside = false,
-                usePlatformDefaultWidth = false,
-                decorFitsSystemWindows = false,
-            ),
+            viewState = viewState,
+            fieldChangeListener = fieldChangeListener,
+        )
+    }
+}
+
+@Composable
+private fun CountryCodeDialog(
+    onDismissRequest: () -> Unit,
+    viewState: MBWayViewState,
+    fieldChangeListener: FieldChangeListener<MBWayFieldId>,
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+        ),
+    ) {
+        val isBackgroundColorLight = AdyenCheckoutTheme.colors.background.luminance() > 0.5
+        (LocalView.current.parent as? DialogWindowProvider)?.window?.let {
+            WindowCompat.getInsetsController(it, it.decorView)
+                .isAppearanceLightStatusBars = isBackgroundColorLight
+        }
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = AdyenCheckoutTheme.colors.background,
         ) {
-            val isBackgroundColorLight = AdyenCheckoutTheme.colors.background.luminance() > 0.5
-            (LocalView.current.parent as? DialogWindowProvider)?.window?.let {
-                WindowCompat.getInsetsController(it, it.decorView)
-                    .isAppearanceLightStatusBars = isBackgroundColorLight
-            }
-
-            Surface(
-                modifier = Modifier.fillMaxSize(),
-                color = AdyenCheckoutTheme.colors.background,
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                modifier = Modifier
+                    .systemBarsPadding()
+                    .padding(16.dp),
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .padding(16.dp),
-                ) {
-                    viewState.countries.forEach { country ->
-                        val isSelected = country == viewState.countryCodeFieldState.value
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp))
-                                .let {
-                                    if (isSelected) {
-                                        it.background(AdyenCheckoutTheme.colors.container)
-                                    } else {
-                                        it
-                                    }
+                viewState.countries.forEach { country ->
+                    val isSelected = country == viewState.countryCodeFieldState.value
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp))
+                            .let {
+                                if (isSelected) {
+                                    it.background(AdyenCheckoutTheme.colors.container)
+                                } else {
+                                    it
                                 }
-                                .clickable(
-                                    interactionSource = null,
-                                    indication = ripple(color = AdyenCheckoutTheme.colors.text),
-                                ) {
-                                    fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
-                                    showCountryCodeDialog = false
-                                }
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                        ) {
-                            BodyEmphasized(country.toShortString())
-
-                            if (isSelected) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_checkmark),
-                                    contentDescription = null,
-                                    tint = AdyenCheckoutTheme.colors.text,
-                                )
                             }
+                            .clickable(
+                                interactionSource = null,
+                                indication = ripple(color = AdyenCheckoutTheme.colors.text),
+                            ) {
+                                fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
+                                onDismissRequest()
+                            }
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                    ) {
+                        BodyEmphasized(country.toShortString())
+
+                        if (isSelected) {
+                            Icon(
+                                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_checkmark),
+                                contentDescription = null,
+                                tint = AdyenCheckoutTheme.colors.text,
+                            )
                         }
                     }
                 }
