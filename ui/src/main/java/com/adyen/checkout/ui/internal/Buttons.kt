@@ -217,7 +217,6 @@ private fun DestructiveButtonPreview(
     }
 }
 
-@Suppress("LongParameterList")
 @Composable
 private fun AdyenButton(
     onClick: () -> Unit,

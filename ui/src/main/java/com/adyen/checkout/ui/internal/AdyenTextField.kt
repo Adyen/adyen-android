@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +40,31 @@ import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
-@Suppress("LongParameterList")
+/**
+ * A composable that provides a styled text field with Adyen's theming.
+ *
+ * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
+ * styling defined by [InternalTextFieldStyle].
+ *
+ * @param value The current text to be displayed in the text field.
+ * @param onValueChange A callback that is triggered when the text in the field changes.
+ * @param label The label text to be displayed for the text field.
+ * @param modifier Optional [Modifier] to be applied to this composable.
+ * @param enabled Controls the enabled state of the text field. When `false`, the text field
+ * is not interactable.
+ * @param supportingText Optional supporting text to be displayed below the text field.
+ * @param isError Indicates whether the text field is in an error state. When `true`,
+ * the text field's appearance may change to reflect an error.
+ * @param keyboardOptions Optional keyboard options that can be used to configure the keyboard.
+ * @param interactionSource Optional [MutableInteractionSource] representing the stream of
+ * interactions for this text field.
+ * @param innerIndication Optional [Indication] that will be used for the internal
+ * [AdyenTextFieldDecorationBox].
+ * @param prefix An optional string to be displayed at the beginning of the input area,
+ * before the user's input.
+ * @param trailingIcon An optional composable function that provides a trailing icon to be
+ * displayed at the end of the text field.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun AdyenTextField(
@@ -47,10 +72,12 @@ fun AdyenTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    innerIndication: Indication? = null,
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -59,6 +86,8 @@ fun AdyenTextField(
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
+        modifier = modifier,
+        enabled = enabled,
         textStyle = TextStyle(
             color = style.textColor,
             fontSize = innerTextStyle.size.sp,
@@ -69,7 +98,6 @@ fun AdyenTextField(
         cursorBrush = SolidColor(style.activeColor),
         keyboardOptions = keyboardOptions,
         interactionSource = interactionSource,
-        modifier = modifier,
         decorationBox = { innerTextField ->
             AdyenTextFieldDecorationBox(
                 label = label,
@@ -77,6 +105,7 @@ fun AdyenTextField(
                 supportingText = supportingText,
                 isError = isError,
                 interactionSource = interactionSource,
+                indication = innerIndication,
                 prefix = prefix,
                 trailingIcon = trailingIcon,
                 style = style,
@@ -88,7 +117,7 @@ fun AdyenTextField(
 @Preview
 @Composable
 private fun AdyenTextFieldPreview(
-    @PreviewParameter(StylingPreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
@@ -142,7 +171,7 @@ private fun AdyenTextFieldPreview(
     }
 }
 
-private class StylingPreviewParameterProvider : PreviewParameterProvider<Theme> {
+internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<Theme> {
 
     private val themeProvider = ThemePreviewParameterProvider()
 
