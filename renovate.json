@@ -6,6 +6,10 @@
   "labels": [
     "Dependencies"
   ],
+  "baseBranches": [
+    "$default",
+    "v5"
+  ],
   "packageRules": [
     {
       "groupName": "Kotlin Coroutines",
