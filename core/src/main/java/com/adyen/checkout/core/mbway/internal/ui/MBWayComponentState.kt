@@ -11,7 +11,6 @@ package com.adyen.checkout.core.mbway.internal.ui
 import com.adyen.checkout.core.data.OrderRequest
 import com.adyen.checkout.core.data.PaymentComponentData
 import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
@@ -28,7 +27,7 @@ internal data class MBWayComponentState(
 ) : PaymentComponentState<MBWayPaymentMethod>
 
 internal fun MBWayDelegateState.toComponentState(
-    analyticsManager: AnalyticsManager,
+    checkoutAttemptId: String,
     fieldTransformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     order: OrderRequest?,
     amount: Amount?,
@@ -41,7 +40,7 @@ internal fun MBWayDelegateState.toComponentState(
 
     val paymentMethod = MBWayPaymentMethod(
         type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-        checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+        checkoutAttemptId = checkoutAttemptId,
         telephoneNumber = telephoneNumber,
     )
 
@@ -53,6 +52,6 @@ internal fun MBWayDelegateState.toComponentState(
 
     return MBWayComponentState(
         data = paymentComponentData,
-        isValid = isValid
+        isValid = isValid,
     )
 }

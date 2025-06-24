@@ -8,10 +8,8 @@
 
 package com.adyen.checkout.com.mbway.internal.ui
 
-import com.adyen.checkout.com.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.core.data.OrderRequest
 import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.TestFieldTransformerRegistry
 import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
@@ -25,7 +23,6 @@ import org.junit.jupiter.api.Test
 
 internal class MBWayComponentStateTest {
 
-    private lateinit var analyticsManager: AnalyticsManager
     private lateinit var fieldTransformerRegistry: TestFieldTransformerRegistry<MBWayFieldId>
     private lateinit var initialState: MBWayDelegateState
     private lateinit var orderRequest: OrderRequest
@@ -33,7 +30,6 @@ internal class MBWayComponentStateTest {
 
     @BeforeEach
     fun setup() {
-        analyticsManager = TestAnalyticsManager()
         fieldTransformerRegistry = TestFieldTransformerRegistry()
 
         val countryModel = CountryModel(isoCode = "NL", countryName = "Netherlands", callingCode = "+31")
@@ -58,7 +54,7 @@ internal class MBWayComponentStateTest {
         )
 
         val componentState = updatedState.toComponentState(
-            analyticsManager = analyticsManager,
+            checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
             amount = amount,
@@ -82,7 +78,7 @@ internal class MBWayComponentStateTest {
         )
 
         val componentState = updatedState.toComponentState(
-            analyticsManager = analyticsManager,
+            checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
             amount = amount,
@@ -99,7 +95,7 @@ internal class MBWayComponentStateTest {
         fieldTransformerRegistry.setTransformation(MBWayFieldId.PHONE_NUMBER, "123456789", "987654321")
 
         val componentState = initialState.toComponentState(
-            analyticsManager = analyticsManager,
+            checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
             amount = amount,
@@ -111,7 +107,7 @@ internal class MBWayComponentStateTest {
     @Test
     fun `when toComponentState is called with null order and amount, then MBWayComponentState should be created correctly`() {
         val componentState = initialState.toComponentState(
-            analyticsManager = analyticsManager,
+            checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = null,
             amount = null,

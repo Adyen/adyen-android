@@ -52,7 +52,12 @@ internal class MBWayDelegate(
 
     private val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
-            delegateState.toComponentState(analyticsManager, transformerRegistry, order, componentParams.amount)
+            delegateState.toComponentState(
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                fieldTransformerRegistry = transformerRegistry,
+                order = order,
+                amount = componentParams.amount,
+            )
         }
         stateManager.state
             .map(toComponentState)
