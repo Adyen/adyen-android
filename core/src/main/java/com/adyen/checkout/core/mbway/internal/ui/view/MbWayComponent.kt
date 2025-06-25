@@ -53,6 +53,7 @@ import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.SubHeadline
 import com.adyen.checkout.ui.internal.ValuePickerField
 
+// TODO - replace hardcoded strings with resources
 @Composable
 internal fun MbWayComponent(
     viewState: MBWayViewState,
@@ -70,8 +71,9 @@ internal fun MbWayComponent(
         } else {
             null
         }
+        val country = viewState.countryCodeFieldState.value
         ValuePickerField(
-            value = viewState.countryCodeFieldState.value.toShortString(),
+            value = "${country.callingCode} • ${country.countryName}",
             label = "Country Code",
             supportingText = supportingTextCountryCode,
             isError = viewState.countryCodeFieldState.errorMessageId != null,
@@ -99,7 +101,7 @@ internal fun MbWayComponent(
             isError = viewState.phoneNumberFieldState.errorMessageId != null,
             supportingText = supportingTextPhoneNumber,
             value = viewState.phoneNumberFieldState.value,
-            prefix = viewState.countryCodeFieldState.value.toShortString(),
+            prefix = country.callingCode,
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
             },
