@@ -50,6 +50,7 @@ import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized
+import com.adyen.checkout.ui.internal.SubHeadline
 import com.adyen.checkout.ui.internal.ValuePickerField
 
 @Composable
@@ -172,12 +173,18 @@ private fun CountryCodeDialog(
                             .fillMaxWidth()
                             .padding(12.dp),
                     ) {
-                        BodyEmphasized(country.toShortString())
+                        Column {
+                            BodyEmphasized(country.callingCode)
+                            SubHeadline(
+                                text = "${country.isoCode} • ${country.countryName}",
+                                color = AdyenCheckoutTheme.colors.textSecondary,
+                            )
+                        }
 
                         if (isSelected) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(
-                                    com.adyen.checkout.test.R.drawable.ic_checkmark
+                                    com.adyen.checkout.test.R.drawable.ic_checkmark,
                                 ),
                                 contentDescription = null,
                                 tint = AdyenCheckoutTheme.colors.text,
