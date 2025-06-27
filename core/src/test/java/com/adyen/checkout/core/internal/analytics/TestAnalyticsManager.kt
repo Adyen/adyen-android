@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.internal.analytics
 
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import kotlinx.coroutines.CoroutineScope
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

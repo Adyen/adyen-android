@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.data.OrderRequest
 import com.adyen.checkout.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.internal.analytics.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.internal.ui.EventDelegate
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams

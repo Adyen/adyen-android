@@ -6,9 +6,9 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics.data
+package com.adyen.checkout.core.analytics.internal.data
 
-import com.adyen.checkout.core.internal.analytics.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 
 internal interface AnalyticsRepository {
 

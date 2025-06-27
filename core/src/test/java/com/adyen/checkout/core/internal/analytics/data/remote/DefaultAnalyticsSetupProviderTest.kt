@@ -5,10 +5,11 @@ import android.content.res.Resources
 import android.os.Build
 import android.util.DisplayMetrics
 import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.analytics.AnalyticsPlatformParams
-import com.adyen.checkout.core.internal.analytics.AnalyticsSource
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
+import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.doReturn
