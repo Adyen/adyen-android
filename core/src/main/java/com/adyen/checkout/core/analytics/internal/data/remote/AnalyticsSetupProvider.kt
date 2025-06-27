@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote
 
-import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 
 internal interface AnalyticsSetupProvider {
     fun provide(): AnalyticsSetupRequest

@@ -1,5 +1,6 @@
 package com.adyen.checkout.core.internal.data.model
 
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackInfo
 import com.adyen.checkout.core.exception.ModelSerializationException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals

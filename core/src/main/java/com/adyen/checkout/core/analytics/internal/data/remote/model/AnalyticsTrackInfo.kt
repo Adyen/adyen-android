@@ -3,12 +3,17 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.analytics.internal.data.remote.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
+import com.adyen.checkout.core.internal.data.model.getLongOrNull
+import com.adyen.checkout.core.internal.data.model.getMapOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

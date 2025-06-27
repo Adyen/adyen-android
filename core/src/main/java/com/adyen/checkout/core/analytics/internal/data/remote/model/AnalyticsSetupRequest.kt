@@ -3,13 +3,20 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.analytics.internal.data.remote.model
 
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.JsonUtils
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
+import com.adyen.checkout.core.internal.data.model.getIntOrNull
+import com.adyen.checkout.core.internal.data.model.getLongOrNull
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.internal.data.model.optStringList
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -53,7 +60,8 @@ internal data class AnalyticsSetupRequest(
         private const val SESSION_ID = "sessionId"
 
         @JvmField
-        val SERIALIZER: Serializer<AnalyticsSetupRequest> = object : Serializer<AnalyticsSetupRequest> {
+        val SERIALIZER: Serializer<AnalyticsSetupRequest> = object :
+            Serializer<AnalyticsSetupRequest> {
             override fun serialize(modelObject: AnalyticsSetupRequest): JSONObject {
                 try {
                     return JSONObject().apply {
@@ -70,7 +78,10 @@ internal data class AnalyticsSetupRequest(
                         putOpt(SYSTEM_VERSION, modelObject.systemVersion)
                         putOpt(CONTAINER_WIDTH, modelObject.containerWidth)
                         putOpt(SCREEN_WIDTH, modelObject.screenWidth)
-                        putOpt(PAYMENT_METHODS, JsonUtils.serializeOptStringList(modelObject.paymentMethods))
+                        putOpt(
+                            PAYMENT_METHODS,
+                            JsonUtils.serializeOptStringList(modelObject.paymentMethods)
+                        )
                         putOpt(
                             AMOUNT,
                             ModelUtils.serializeOpt(
