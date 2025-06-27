@@ -41,6 +41,7 @@ android {
 
 dependencies {
     implementation platform(libs.compose.bom)
+    api libs.androidx.appcompat
     api libs.compose.material
     api libs.compose.ui.graphics
     api libs.compose.ui.main

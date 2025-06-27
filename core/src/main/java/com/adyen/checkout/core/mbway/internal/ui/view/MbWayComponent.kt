@@ -13,14 +13,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,17 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
-import androidx.core.view.WindowCompat
 import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
@@ -50,6 +41,7 @@ import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized
+import com.adyen.checkout.ui.internal.FullScreenDialog
 import com.adyen.checkout.ui.internal.SubHeadline
 import com.adyen.checkout.ui.internal.ValuePickerField
 
@@ -119,79 +111,60 @@ internal fun MbWayComponent(
     }
 }
 
-@Suppress("LongMethod", "MagicNumber")
+@Suppress("LongMethod")
 @Composable
 private fun CountryCodeDialog(
     onDismissRequest: () -> Unit,
     viewState: MBWayViewState,
     fieldChangeListener: FieldChangeListener<MBWayFieldId>,
 ) {
-    Dialog(
+    FullScreenDialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false,
-            decorFitsSystemWindows = false,
-        ),
     ) {
-        val isBackgroundColorLight = AdyenCheckoutTheme.colors.background.luminance() > 0.5
-        (LocalView.current.parent as? DialogWindowProvider)?.window?.let {
-            WindowCompat.getInsetsController(it, it.decorView)
-                .isAppearanceLightStatusBars = isBackgroundColorLight
-        }
-
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = AdyenCheckoutTheme.colors.background,
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.padding(16.dp),
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier
-                    .systemBarsPadding()
-                    .padding(16.dp),
-            ) {
-                viewState.countries.forEach { country ->
-                    val isSelected = country == viewState.countryCodeFieldState.value
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp))
-                            .let {
-                                if (isSelected) {
-                                    it.background(AdyenCheckoutTheme.colors.container)
-                                } else {
-                                    it
-                                }
+            viewState.countries.forEach { country ->
+                val isSelected = country == viewState.countryCodeFieldState.value
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp))
+                        .let {
+                            if (isSelected) {
+                                it.background(AdyenCheckoutTheme.colors.container)
+                            } else {
+                                it
                             }
-                            .clickable(
-                                interactionSource = null,
-                                indication = ripple(color = AdyenCheckoutTheme.colors.text),
-                            ) {
-                                fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
-                                onDismissRequest()
-                            }
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                    ) {
-                        Column {
-                            BodyEmphasized(country.callingCode)
-                            SubHeadline(
-                                text = "${country.isoCode} • ${country.countryName}",
-                                color = AdyenCheckoutTheme.colors.textSecondary,
-                            )
                         }
+                        .clickable(
+                            interactionSource = null,
+                            indication = ripple(color = AdyenCheckoutTheme.colors.text),
+                        ) {
+                            fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
+                            onDismissRequest()
+                        }
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                ) {
+                    Column {
+                        BodyEmphasized(country.callingCode)
+                        SubHeadline(
+                            text = "${country.isoCode} • ${country.countryName}",
+                            color = AdyenCheckoutTheme.colors.textSecondary,
+                        )
+                    }
 
-                        if (isSelected) {
-                            Icon(
-                                imageVector = ImageVector.vectorResource(
-                                    com.adyen.checkout.test.R.drawable.ic_checkmark,
-                                ),
-                                contentDescription = null,
-                                tint = AdyenCheckoutTheme.colors.text,
-                            )
-                        }
+                    if (isSelected) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(
+                                com.adyen.checkout.test.R.drawable.ic_checkmark,
+                            ),
+                            contentDescription = null,
+                            tint = AdyenCheckoutTheme.colors.text,
+                        )
                     }
                 }
             }
@@ -207,6 +180,28 @@ private fun MbWayComponentPreview() {
         CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
     )
     MbWayComponent(
+        viewState = MBWayViewState(
+            countries = countries,
+            countryCodeFieldState = ViewFieldState(countries.first(), false),
+            phoneNumberFieldState = ViewFieldState("", false),
+        ),
+        fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
+            override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
+
+            override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) = Unit
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun CountryCodeDialogPreview() {
+    val countries = listOf(
+        CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
+        CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
+    )
+    CountryCodeDialog(
+        onDismissRequest = {},
         viewState = MBWayViewState(
             countries = countries,
             countryCodeFieldState = ViewFieldState(countries.first(), false),
