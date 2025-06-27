@@ -6,20 +6,20 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics.data.local
+package com.adyen.checkout.core.analytics.internal.data.local
 
-import com.adyen.checkout.core.internal.analytics.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.LinkedList
 
-internal class ErrorAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsEvent.Error> {
+internal class LogAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsEvent.Log> {
 
-    private val list = LinkedList<AnalyticsEvent.Error>()
+    private val list = LinkedList<AnalyticsEvent.Log>()
 
     private val mutex = Mutex()
 
-    override suspend fun storeEvent(event: AnalyticsEvent.Error) {
+    override suspend fun storeEvent(event: AnalyticsEvent.Log) {
         mutex.withLock {
             list.add(event)
         }
@@ -29,7 +29,7 @@ internal class ErrorAnalyticsLocalDataStore : AnalyticsLocalDataStore<AnalyticsE
         list.takeLast(size)
     }
 
-    override suspend fun removeEvents(events: List<AnalyticsEvent.Error>) {
+    override suspend fun removeEvents(events: List<AnalyticsEvent.Log>) {
         mutex.withLock {
             list.removeAll(events.toSet())
         }

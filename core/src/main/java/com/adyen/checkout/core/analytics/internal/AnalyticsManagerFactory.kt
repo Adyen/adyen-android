@@ -3,25 +3,24 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics
+package com.adyen.checkout.core.analytics.internal
 
 import android.app.Application
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.analytics.data.DefaultAnalyticsRepository
-import com.adyen.checkout.core.internal.analytics.data.local.ErrorAnalyticsLocalDataStore
-import com.adyen.checkout.core.internal.analytics.data.local.InfoAnalyticsLocalDataStore
-import com.adyen.checkout.core.internal.analytics.data.local.LogAnalyticsLocalDataStore
-import com.adyen.checkout.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
-import com.adyen.checkout.core.internal.analytics.data.remote.DefaultAnalyticsRemoteDataStore
-import com.adyen.checkout.core.internal.analytics.data.remote.DefaultAnalyticsSetupProvider
+import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
+import com.adyen.checkout.core.analytics.internal.data.local.ErrorAnalyticsLocalDataStore
+import com.adyen.checkout.core.analytics.internal.data.local.InfoAnalyticsLocalDataStore
+import com.adyen.checkout.core.analytics.internal.data.local.LogAnalyticsLocalDataStore
+import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
+import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRemoteDataStore
+import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.analytics.internal.AnalyticsParams
 import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import java.util.Locale
 

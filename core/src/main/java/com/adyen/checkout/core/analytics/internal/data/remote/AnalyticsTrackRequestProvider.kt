@@ -6,10 +6,10 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics.data.remote
+package com.adyen.checkout.core.analytics.internal.data.remote
 
-import com.adyen.checkout.core.internal.analytics.AnalyticsEvent
-import com.adyen.checkout.core.internal.analytics.AnalyticsPlatformParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackError
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackInfo
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackLog
