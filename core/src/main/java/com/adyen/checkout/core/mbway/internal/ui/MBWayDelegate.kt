@@ -11,9 +11,9 @@ package com.adyen.checkout.core.mbway.internal.ui
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.data.OrderRequest
 import com.adyen.checkout.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.internal.ui.EventDelegate
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
@@ -48,7 +48,8 @@ internal class MBWayDelegate(
     EventDelegate<MBWayComponentState> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<MBWayComponentState>> = eventChannel.receiveAsFlow()
+    override val eventFlow: Flow<PaymentComponentEvent<MBWayComponentState>> =
+        eventChannel.receiveAsFlow()
 
     private val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
         val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
@@ -61,7 +62,11 @@ internal class MBWayDelegate(
         }
         stateManager.state
             .map(toComponentState)
-            .stateIn(coroutineScope, SharingStarted.Lazily, toComponentState(stateManager.state.value))
+            .stateIn(
+                coroutineScope,
+                SharingStarted.Lazily,
+                toComponentState(stateManager.state.value)
+            )
     }
 
     private val viewStateFlow: StateFlow<MBWayViewState> by lazy {

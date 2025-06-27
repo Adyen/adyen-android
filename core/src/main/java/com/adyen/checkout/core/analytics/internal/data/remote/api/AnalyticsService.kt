@@ -10,11 +10,11 @@ package com.adyen.checkout.core.analytics.internal.data.remote.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.DispatcherProvider
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupResponse
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.internal.data.api.HttpClient
+import com.adyen.checkout.core.internal.data.api.post
 import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
