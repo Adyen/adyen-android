@@ -11,7 +11,6 @@ package com.adyen.checkout.core.analytics.internal
 import android.app.Application
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
 import com.adyen.checkout.core.analytics.internal.data.local.ErrorAnalyticsLocalDataStore
 import com.adyen.checkout.core.analytics.internal.data.local.InfoAnalyticsLocalDataStore
@@ -20,6 +19,7 @@ import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequ
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
+import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import java.util.Locale
