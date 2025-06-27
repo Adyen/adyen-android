@@ -6,7 +6,7 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics.data.remote
+package com.adyen.checkout.core.analytics.internal.data.remote
 
 import com.adyen.checkout.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
