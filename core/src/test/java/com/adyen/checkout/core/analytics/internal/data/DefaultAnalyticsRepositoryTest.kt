@@ -1,8 +1,15 @@
-package com.adyen.checkout.core.internal.analytics.data
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 27/6/2025.
+ */
+
+package com.adyen.checkout.core.analytics.internal.data
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 import com.adyen.checkout.core.analytics.internal.DirectAnalyticsEventCreation
-import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
 import com.adyen.checkout.core.analytics.internal.data.local.AnalyticsLocalDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsSetupProvider
@@ -100,7 +107,7 @@ internal class DefaultAnalyticsRepositoryTest(
 
         @ParameterizedTest
         @MethodSource(
-            "com.adyen.checkout.core.internal.analytics.data.DefaultAnalyticsRepositoryTest#sendEventsSource",
+            "com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepositoryTest#sendEventsSource",
         )
         fun `there are events stored, then events are successfully sent`(
             infoEvents: List<AnalyticsEvent.Info>,
