@@ -1,5 +1,7 @@
 package com.adyen.checkout.core.internal.analytics
 
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatform
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.test.BuildConfig
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals

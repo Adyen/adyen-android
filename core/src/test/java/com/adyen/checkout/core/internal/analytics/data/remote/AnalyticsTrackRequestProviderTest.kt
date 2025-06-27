@@ -1,7 +1,8 @@
 package com.adyen.checkout.core.internal.analytics.data.remote
 
-import com.adyen.checkout.core.internal.analytics.AnalyticsEvent
-import com.adyen.checkout.core.internal.analytics.DirectAnalyticsEventCreation
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.DirectAnalyticsEventCreation
+import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackError
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackInfo
 import com.adyen.checkout.core.internal.data.model.AnalyticsTrackLog

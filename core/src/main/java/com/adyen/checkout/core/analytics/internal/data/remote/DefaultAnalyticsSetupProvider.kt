@@ -6,13 +6,13 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics.data.remote
+package com.adyen.checkout.core.analytics.internal.data.remote
 
 import android.app.Application
 import android.os.Build
 import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.analytics.AnalyticsPlatformParams
-import com.adyen.checkout.core.internal.analytics.AnalyticsSource
+import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import java.util.Locale

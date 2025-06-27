@@ -1,11 +1,12 @@
 package com.adyen.checkout.core.internal.analytics.data
 
-import com.adyen.checkout.core.internal.analytics.AnalyticsEvent
-import com.adyen.checkout.core.internal.analytics.DirectAnalyticsEventCreation
-import com.adyen.checkout.core.internal.analytics.data.local.AnalyticsLocalDataStore
-import com.adyen.checkout.core.internal.analytics.data.remote.AnalyticsRemoteDataStore
-import com.adyen.checkout.core.internal.analytics.data.remote.AnalyticsSetupProvider
-import com.adyen.checkout.core.internal.analytics.data.remote.AnalyticsTrackRequestProvider
+import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
+import com.adyen.checkout.core.analytics.internal.DirectAnalyticsEventCreation
+import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
+import com.adyen.checkout.core.analytics.internal.data.local.AnalyticsLocalDataStore
+import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsRemoteDataStore
+import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsSetupProvider
+import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupResponse
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
