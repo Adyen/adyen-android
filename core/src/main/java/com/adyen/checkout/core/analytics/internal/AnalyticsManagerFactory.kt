@@ -19,7 +19,7 @@ import com.adyen.checkout.core.analytics.internal.data.local.LogAnalyticsLocalDa
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.DefaultAnalyticsSetupProvider
-import com.adyen.checkout.core.internal.data.api.AnalyticsService
+import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import java.util.Locale

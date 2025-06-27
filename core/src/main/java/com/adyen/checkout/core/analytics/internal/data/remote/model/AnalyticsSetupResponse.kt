@@ -3,12 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.analytics.internal.data.remote.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -22,7 +24,8 @@ internal data class AnalyticsSetupResponse(
         private const val CHECKOUT_ATTEMPT_ID = "checkoutAttemptId"
 
         @JvmField
-        val SERIALIZER: Serializer<AnalyticsSetupResponse> = object : Serializer<AnalyticsSetupResponse> {
+        val SERIALIZER: Serializer<AnalyticsSetupResponse> = object :
+            Serializer<AnalyticsSetupResponse> {
             override fun serialize(modelObject: AnalyticsSetupResponse): JSONObject {
                 try {
                     return JSONObject().apply {

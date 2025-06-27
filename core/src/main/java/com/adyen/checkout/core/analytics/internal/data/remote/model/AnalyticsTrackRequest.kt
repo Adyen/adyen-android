@@ -3,13 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.analytics.internal.data.remote.model
 
 import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -30,7 +33,8 @@ internal data class AnalyticsTrackRequest(
         private const val ERRORS = "errors"
 
         @JvmField
-        val SERIALIZER: Serializer<AnalyticsTrackRequest> = object : Serializer<AnalyticsTrackRequest> {
+        val SERIALIZER: Serializer<AnalyticsTrackRequest> = object :
+            Serializer<AnalyticsTrackRequest> {
             override fun serialize(modelObject: AnalyticsTrackRequest): JSONObject {
                 try {
                     return JSONObject().apply {
@@ -38,15 +42,24 @@ internal data class AnalyticsTrackRequest(
                         putOpt(PLATFORM, modelObject.platform)
                         putOpt(
                             INFO,
-                            ModelUtils.serializeOptList(modelObject.info, AnalyticsTrackInfo.SERIALIZER),
+                            ModelUtils.serializeOptList(
+                                modelObject.info,
+                                AnalyticsTrackInfo.SERIALIZER
+                            ),
                         )
                         putOpt(
                             LOGS,
-                            ModelUtils.serializeOptList(modelObject.logs, AnalyticsTrackLog.SERIALIZER),
+                            ModelUtils.serializeOptList(
+                                modelObject.logs,
+                                AnalyticsTrackLog.SERIALIZER
+                            ),
                         )
                         putOpt(
                             ERRORS,
-                            ModelUtils.serializeOptList(modelObject.errors, AnalyticsTrackError.SERIALIZER),
+                            ModelUtils.serializeOptList(
+                                modelObject.errors,
+                                AnalyticsTrackError.SERIALIZER
+                            ),
                         )
                     }
                 } catch (e: JSONException) {

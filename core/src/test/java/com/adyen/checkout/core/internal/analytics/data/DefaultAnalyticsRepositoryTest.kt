@@ -7,7 +7,7 @@ import com.adyen.checkout.core.analytics.internal.data.local.AnalyticsLocalDataS
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
-import com.adyen.checkout.core.internal.data.model.AnalyticsSetupResponse
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupResponse
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
