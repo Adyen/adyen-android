@@ -14,7 +14,7 @@ import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import java.util.Locale
 
 @Suppress("LongParameterList")
