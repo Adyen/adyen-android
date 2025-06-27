@@ -3,13 +3,11 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 18/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.internal.analytics
+package com.adyen.checkout.core.analytics.internal
 
-import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import kotlinx.coroutines.CoroutineScope
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

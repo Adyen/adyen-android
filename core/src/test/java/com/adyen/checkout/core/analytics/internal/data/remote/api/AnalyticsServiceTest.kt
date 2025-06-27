@@ -1,7 +1,16 @@
-package com.adyen.checkout.core.internal.data.api
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 27/6/2025.
+ */
 
-import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsService
+package com.adyen.checkout.core.analytics.internal.data.remote.api
+
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.internal.data.api.AdyenApiResponse
+import com.adyen.checkout.core.internal.data.api.HttpClient
 import com.adyen.checkout.core.internal.data.model.EmptyResponse
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.test.runTest

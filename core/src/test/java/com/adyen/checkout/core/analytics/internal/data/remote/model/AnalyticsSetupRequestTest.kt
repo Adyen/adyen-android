@@ -1,6 +1,13 @@
-package com.adyen.checkout.core.internal.data.model
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 27/6/2025.
+ */
 
-import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
+package com.adyen.checkout.core.analytics.internal.data.remote.model
+
 import com.adyen.checkout.core.data.model.Amount
 import org.json.JSONArray
 import org.json.JSONObject
