@@ -8,7 +8,7 @@ import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.analytics.AnalyticsPlatformParams
 import com.adyen.checkout.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.doReturn

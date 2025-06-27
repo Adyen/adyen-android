@@ -1,8 +1,8 @@
 package com.adyen.checkout.core.internal.analytics
 
 import com.adyen.checkout.core.internal.analytics.data.AnalyticsRepository
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.core.analytics.internal.AnalyticsParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineDispatcher

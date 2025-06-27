@@ -21,7 +21,7 @@ import com.adyen.checkout.core.internal.analytics.data.remote.DefaultAnalyticsRe
 import com.adyen.checkout.core.internal.analytics.data.remote.DefaultAnalyticsSetupProvider
 import com.adyen.checkout.core.internal.data.api.AnalyticsService
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsParams
 import com.adyen.checkout.core.internal.ui.model.ComponentParams
 import java.util.Locale
 

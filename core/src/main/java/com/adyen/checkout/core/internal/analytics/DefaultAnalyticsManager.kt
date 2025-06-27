@@ -11,8 +11,8 @@ package com.adyen.checkout.core.internal.analytics
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.internal.analytics.data.AnalyticsRepository
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParams
-import com.adyen.checkout.core.internal.ui.model.AnalyticsParamsLevel
+import com.adyen.checkout.core.analytics.internal.AnalyticsParams
+import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.internal.util.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
