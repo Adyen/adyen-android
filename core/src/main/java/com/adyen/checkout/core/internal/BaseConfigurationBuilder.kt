@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.internal
 
 import android.content.Context
-import com.adyen.checkout.core.AnalyticsConfiguration
+import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.util.LocaleUtil

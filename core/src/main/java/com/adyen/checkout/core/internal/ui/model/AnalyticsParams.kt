@@ -3,14 +3,14 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 27/6/2025.
  */
 
 package com.adyen.checkout.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.AnalyticsConfiguration
-import com.adyen.checkout.core.AnalyticsLevel
+import com.adyen.checkout.core.analytics.AnalyticsConfiguration
+import com.adyen.checkout.core.analytics.AnalyticsLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsParams(
