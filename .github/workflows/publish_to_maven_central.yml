@@ -15,8 +15,31 @@ on:
         type: string
 
 jobs:
-  publish_to_maven_central:
+  # This step should be removed when gradle plugin supports uploading to Central Portal
+  drop_all_open_ossrh_repositories:
     runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Drop all open OSSRH repositories
+        env:
+          SONATYPE_CENTRAL_PORTAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_CENTRAL_PORTAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
+        run: |
+          chmod +x scripts/drop_all_open_ossrh_repositories.py
+          pip install requests toml
+          python scripts/drop_all_open_ossrh_repositories.py
+
+  publish_to_maven_central:
+    needs: drop_all_open_ossrh_repositories
+    runs-on:
+      group: larger-runners
+      labels: ubuntu-latest-8-cores
 
     steps:
       - uses: actions/checkout@v4
@@ -42,8 +65,8 @@ jobs:
       # Packages and publishes to Maven Central
       - name: Publish to Maven Central
         env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_TOKEN_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_TOKEN_PASSWORD }}
+          SONATYPE_CENTRAL_PORTAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_CENTRAL_PORTAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
