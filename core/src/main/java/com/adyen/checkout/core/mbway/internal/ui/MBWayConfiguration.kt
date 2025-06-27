@@ -9,9 +9,9 @@
 package com.adyen.checkout.core.mbway.internal.ui
 
 import android.content.Context
-import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.core.internal.ButtonConfiguration

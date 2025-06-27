@@ -9,15 +9,15 @@
 package com.adyen.checkout.core.internal
 
 import android.content.Context
-import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.util.LocaleUtil
 import java.util.Locale
 
 @Suppress(
     "ktlint:standard:discouraged-comment-location",
-    "ktlint:standard:type-parameter-list-spacing"
+    "ktlint:standard:type-parameter-list-spacing",
 )
 abstract class BaseConfigurationBuilder<
     ConfigurationT : Configuration,
