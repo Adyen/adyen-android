@@ -10,10 +10,10 @@ package com.adyen.checkout.core.analytics.internal.data.remote
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
-import com.adyen.checkout.core.internal.data.model.AnalyticsTrackError
-import com.adyen.checkout.core.internal.data.model.AnalyticsTrackInfo
-import com.adyen.checkout.core.internal.data.model.AnalyticsTrackLog
-import com.adyen.checkout.core.internal.data.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackError
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackInfo
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackLog
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
 
 internal class AnalyticsTrackRequestProvider {
 

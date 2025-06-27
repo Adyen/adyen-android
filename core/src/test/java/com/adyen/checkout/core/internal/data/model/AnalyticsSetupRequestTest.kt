@@ -1,5 +1,6 @@
 package com.adyen.checkout.core.internal.data.model
 
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.data.model.Amount
 import org.json.JSONArray
 import org.json.JSONObject
