@@ -1,12 +1,14 @@
-package com.adyen.checkout.core.internal.analytics
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 27/6/2025.
+ */
 
-import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
+package com.adyen.checkout.core.analytics.internal
+
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
-import com.adyen.checkout.core.analytics.internal.AnalyticsParams
-import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
-import com.adyen.checkout.core.analytics.internal.DefaultAnalyticsManager
-import com.adyen.checkout.core.analytics.internal.DirectAnalyticsEventCreation
-import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineDispatcher
