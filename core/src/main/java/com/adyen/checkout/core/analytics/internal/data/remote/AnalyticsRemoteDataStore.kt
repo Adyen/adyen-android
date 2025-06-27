@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote
 
-import com.adyen.checkout.core.internal.data.model.AnalyticsSetupRequest
-import com.adyen.checkout.core.internal.data.model.AnalyticsSetupResponse
-import com.adyen.checkout.core.internal.data.model.AnalyticsTrackRequest
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupResponse
+import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
 
 internal interface AnalyticsRemoteDataStore {
 
