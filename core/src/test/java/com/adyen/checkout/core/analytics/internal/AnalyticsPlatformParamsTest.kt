@@ -1,7 +1,13 @@
-package com.adyen.checkout.core.internal.analytics
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ararat on 27/6/2025.
+ */
 
-import com.adyen.checkout.core.analytics.internal.AnalyticsPlatform
-import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
+package com.adyen.checkout.core.analytics.internal
+
 import com.adyen.checkout.test.BuildConfig
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
