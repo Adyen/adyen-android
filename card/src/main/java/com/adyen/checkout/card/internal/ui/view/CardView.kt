@@ -416,8 +416,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
-            val date = binding.editTextExpiryDate.rawValue
-            cardDelegate.updateInputData { expiryDate = date }
+            cardDelegate.updateInputData { expiryDate = binding.editTextExpiryDate.rawValue }
             binding.textInputLayoutExpiryDate.hideError()
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
