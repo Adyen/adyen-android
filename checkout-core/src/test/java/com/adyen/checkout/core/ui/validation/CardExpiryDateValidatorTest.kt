@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.core.ui.validation
 
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
-import com.adyen.checkout.core.internal.ui.model.INVALID_DATE
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
@@ -23,7 +20,7 @@ internal class CardExpiryDateValidatorTest {
     @ParameterizedTest
     @MethodSource("expiryDateValidationSource")
     fun `when validateExpiryDate is called, then expected validation result is returned`(
-        expiryDateInput: ExpiryDate,
+        expiryDateInput: String,
         calendar: Calendar,
         expectedValidationResult: CardExpiryDateValidationResult,
     ) {
@@ -38,56 +35,74 @@ internal class CardExpiryDateValidatorTest {
         fun expiryDateValidationSource() = listOf(
             // Invalid expiry date
             arguments(
-                EMPTY_DATE,
+                "0/0",
                 GregorianCalendar.getInstance(),
                 CardExpiryDateValidationResult.Invalid.NonParseableDate(),
             ),
             arguments(
-                INVALID_DATE,
+                "-1/-1",
+                GregorianCalendar.getInstance(),
+                CardExpiryDateValidationResult.Invalid.NonParseableDate(),
+            ),
+            // Non existing month
+            arguments(
+                "15/30",
                 GregorianCalendar.getInstance(),
                 CardExpiryDateValidationResult.Invalid.NonParseableDate(),
             ),
             // Date 30 years in future
             arguments(
-                ExpiryDate(12, 2052), // 12/2052 (last valid date in future)
+                "12/52", // last valid date in future
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Valid(),
             ),
             // Date more than 30 years in future
             arguments(
-                ExpiryDate(1, 2053), // 01/2053 (first invalid date in future)
+                "01/53", // first invalid date in future
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Invalid.TooFarInTheFuture(),
             ),
             // Date 8 years in future
             arguments(
-                ExpiryDate(1, 2030), // 01/2030
+                "01/30",
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Valid(),
             ),
             // Date 1 month in past
             arguments(
-                ExpiryDate(4, 2022), // 04/2022 (last valid date in past)
+                "04/22", // last valid date in past
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Valid(),
             ),
             // Date 3 months in past
             arguments(
-                ExpiryDate(2, 2022), // 02/2022 (last valid date in past)
+                "02/22", // last valid date in past
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Valid(),
             ),
             // Date more than 3 months in past
             arguments(
-                ExpiryDate(1, 2022), // 01/2022 (first invalid date in past)
+                "01/22", // first invalid date in past
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Invalid.TooOld(),
             ),
             // Date 1 year in future
             arguments(
-                ExpiryDate(1, 2023), // 01/2023
+                "01/23",
                 GregorianCalendar(2022, 4, 23), // 23/05/2022
                 CardExpiryDateValidationResult.Valid(),
+            ),
+            // Date crossing centuries, valid
+            arguments(
+                "01/05",
+                GregorianCalendar(1975, 1, 1), // 01/01/1975
+                CardExpiryDateValidationResult.Valid(),
+            ),
+            // Date crossing centuries, one year too far in the future
+            arguments(
+                "01/06",
+                GregorianCalendar(1975, 1, 1), // 01/01/1975
+                CardExpiryDateValidationResult.Invalid.TooFarInTheFuture(),
             ),
         )
     }
