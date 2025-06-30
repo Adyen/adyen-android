@@ -92,8 +92,6 @@ class CardView @JvmOverloads constructor(
 
     private lateinit var cardDelegate: CardDelegate
 
-    private var isExpiryDateChangeListenerEnabled = true
-
     init {
         orientation = VERTICAL
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
@@ -370,9 +368,7 @@ class CardView @JvmOverloads constructor(
 
     private fun onExpiryDateValidated(expiryDateState: FieldState<ExpiryDate>) {
         if (binding.editTextExpiryDate.date != expiryDateState.value) {
-            isExpiryDateChangeListenerEnabled = false
             binding.editTextExpiryDate.date = expiryDateState.value
-            isExpiryDateChangeListenerEnabled = true
         }
 
         if (expiryDateState.validation.isValid()) {
@@ -421,7 +417,6 @@ class CardView @JvmOverloads constructor(
 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
-            if (!isExpiryDateChangeListenerEnabled) return@setOnChangeListener
             val date = binding.editTextExpiryDate.date
             cardDelegate.updateInputData { expiryDate = date }
             binding.textInputLayoutExpiryDate.hideError()
