@@ -24,10 +24,8 @@ data class ExpiryDate(
      * Convert this instance to a date string with the "MM/yy" format.
      */
     fun toMMyyString(): String {
-        val expiryMonthString = expiryMonth.toString()
-        val monthDigits = if (expiryMonthString.length == 1) "0$expiryMonthString" else expiryMonthString
-        val expiryYearString = expiryYear.toString()
-        val yearDigits = if (expiryYearString.length == 1) "0$expiryYearString" else expiryYearString
+        val monthDigits = expiryMonth.toString().padStart(2, '0')
+        val yearDigits = expiryYear.toString().takeLast(2).padStart(2, '0')
         return "$monthDigits/$yearDigits"
     }
 
