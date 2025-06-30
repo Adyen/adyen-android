@@ -9,8 +9,8 @@
 package com.adyen.checkout.core.sessions.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.data.PaymentComponentData
-import com.adyen.checkout.core.internal.util.runSuspendCatching
 import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRequest

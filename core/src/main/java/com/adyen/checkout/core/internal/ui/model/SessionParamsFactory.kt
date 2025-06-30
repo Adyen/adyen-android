@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.internal.util.LocaleUtil
+import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToDetails
