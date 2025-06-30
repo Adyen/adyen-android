@@ -46,7 +46,8 @@ internal object MealVoucherFRValidationUtils {
     }
 
     fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        return when (val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)) {
+        // TODO
+        return when (val result = CardExpiryDateValidator.validateExpiryDate("")) {
             is CardExpiryDateValidationResult.Valid -> FieldState(expiryDate, Validation.Valid)
             is CardExpiryDateValidationResult.Invalid -> {
                 when (result) {
