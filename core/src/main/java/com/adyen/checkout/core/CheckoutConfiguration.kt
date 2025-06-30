@@ -14,10 +14,10 @@ import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.AnalyticsConfiguration
+import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
+import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.Configuration
-import com.adyen.checkout.core.internal.util.CheckoutConfigurationMarker
-import com.adyen.checkout.core.internal.util.LocaleUtil
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 

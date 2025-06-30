@@ -21,7 +21,11 @@ internal class CountryUtilsTest {
         val actual = CountryUtils.getLocalizedCountries(Locale.US)
 
         val expected = CountryUtils.getCountries().map {
-            CountryModel(it.isoCode, CountryUtils.getCountryName(it.isoCode, Locale.US), it.callingCode)
+            CountryModel(
+                it.isoCode,
+                CountryUtils.getCountryName(it.isoCode, Locale.US),
+                it.callingCode
+            )
         }.sortedBy { it.countryName }
         assertEquals(expected, actual)
     }
@@ -50,8 +54,11 @@ internal class CountryUtilsTest {
             "US",
             "DE",
         )
-        val actual =
-            CountryUtils.getLocalizedCountries(Locale.US, specifiedCountries, compareByDescending { it.isoCode })
+        val actual = CountryUtils.getLocalizedCountries(
+            Locale.US,
+            specifiedCountries,
+            compareByDescending { it.isoCode }
+        )
 
         val expected = listOf(
             CountryModel("US", "United States", "+1"),
