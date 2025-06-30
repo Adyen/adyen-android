@@ -10,7 +10,6 @@ package com.adyen.checkout.giftcard.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.giftcard.R
 
 internal object GiftCardValidationUtils {
@@ -39,7 +38,7 @@ internal object GiftCardValidationUtils {
         }
     }
 
-    fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
+    fun validateExpiryDate(expiryDate: String): FieldState<String> {
         return FieldState(expiryDate, Validation.Valid)
     }
 }
