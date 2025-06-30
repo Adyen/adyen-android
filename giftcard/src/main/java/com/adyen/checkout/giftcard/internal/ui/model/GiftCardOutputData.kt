@@ -11,13 +11,12 @@ package com.adyen.checkout.giftcard.internal.ui.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.core.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class GiftCardOutputData(
     val numberFieldState: FieldState<String>,
     val pinFieldState: FieldState<String>,
-    val expiryDateFieldState: FieldState<ExpiryDate>,
+    val expiryDateFieldState: FieldState<String>,
 ) : OutputData {
 
     override val isValid: Boolean

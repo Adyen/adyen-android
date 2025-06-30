@@ -30,7 +30,6 @@ import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.EncryptedCard
@@ -185,7 +184,7 @@ class DefaultGiftCardDelegate(
 
     override fun isPinRequired(): Boolean = componentParams.isPinRequired
 
-    private fun getExpiryDateFieldState(expiryDate: ExpiryDate) = if (isExpiryDateRequired()) {
+    private fun getExpiryDateFieldState(expiryDate: String) = if (isExpiryDateRequired()) {
         validator.validateExpiryDate(expiryDate)
     } else {
         FieldState(expiryDate, Validation.Valid)
@@ -278,10 +277,11 @@ class DefaultGiftCardDelegate(
             }
 
             val expiryDateResult = outputData.expiryDateFieldState.value
-            if (componentParams.isExpiryDateRequired && expiryDateResult != EMPTY_DATE) {
+            if (componentParams.isExpiryDateRequired && expiryDateResult.isNotBlank()) {
+                val expiryDate = ExpiryDate.from(expiryDateResult)
                 setExpiryDate(
-                    expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString(),
+                    expiryMonth = expiryDate.expiryMonth.toString(),
+                    expiryYear = expiryDate.expiryYear.toString(),
                 )
             }
 
