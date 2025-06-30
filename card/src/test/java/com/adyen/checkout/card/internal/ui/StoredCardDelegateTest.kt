@@ -46,7 +46,6 @@ import com.adyen.checkout.components.core.paymentmethod.CardPaymentMethod
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -542,8 +541,8 @@ internal class StoredCardDelegateTest(
         type: String = CardPaymentMethod.PAYMENT_METHOD_TYPE,
         brand: String = TEST_CARD_TYPE.txVariant,
         lastFour: String = TEST_CARD_LAST_FOUR,
-        expiryMonth: String = TEST_EXPIRY_DATE.expiryMonth.toString(),
-        expiryYear: String = TEST_EXPIRY_DATE.expiryYear.toString(),
+        expiryMonth: String = TEST_EXPIRY_DATE.take(2),
+        expiryYear: String = TEST_EXPIRY_DATE.takeLast(2),
     ): StoredPaymentMethod {
         return StoredPaymentMethod(
             id = id,
@@ -588,7 +587,7 @@ internal class StoredCardDelegateTest(
     @Suppress("LongParameterList")
     private fun createOutputData(
         cardNumberState: FieldState<String> = FieldState(TEST_CARD_LAST_FOUR, Validation.Valid),
-        expiryDateState: FieldState<ExpiryDate> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+        expiryDateState: FieldState<String> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
         securityCodeState: FieldState<String> = FieldState(TEST_SECURITY_CODE, Validation.Valid),
         holderNameState: FieldState<String> = FieldState("", Validation.Valid),
         socialSecurityNumberState: FieldState<String> = FieldState("", Validation.Valid),
@@ -665,7 +664,7 @@ internal class StoredCardDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CARD_LAST_FOUR = "1234"
-        private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
+        private const val TEST_EXPIRY_DATE = "03/30"
         private const val TEST_SECURITY_CODE = "737"
         private const val TEST_STORED_PM_ID = "1337"
         private val TEST_CARD_TYPE = CardBrand(cardType = CardType.MASTERCARD)

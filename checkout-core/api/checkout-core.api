@@ -224,6 +224,7 @@ public abstract interface annotation class com/adyen/checkout/core/old/internal/
 }
 
 public final class com/adyen/checkout/core/old/ui/model/ExpiryDate {
+	public static final field Companion Lcom/adyen/checkout/core/old/ui/model/ExpiryDate$Companion;
 	public fun <init> (II)V
 	public final fun component1 ()I
 	public final fun component2 ()I
@@ -233,7 +234,11 @@ public final class com/adyen/checkout/core/old/ui/model/ExpiryDate {
 	public final fun getExpiryMonth ()I
 	public final fun getExpiryYear ()I
 	public fun hashCode ()I
+	public final fun toMMyyString ()Ljava/lang/String;
 	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/old/ui/model/ExpiryDate$Companion {
 }
 
 public abstract interface class com/adyen/checkout/core/old/ui/validation/CardExpiryDateValidationResult {
