@@ -10,7 +10,6 @@ package com.adyen.checkout.mealvoucherfr.internal.util
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
@@ -45,9 +44,8 @@ internal object MealVoucherFRValidationUtils {
         }
     }
 
-    fun validateExpiryDate(expiryDate: ExpiryDate): FieldState<ExpiryDate> {
-        // TODO
-        return when (val result = CardExpiryDateValidator.validateExpiryDate("")) {
+    fun validateExpiryDate(expiryDate: String): FieldState<String> {
+        return when (val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)) {
             is CardExpiryDateValidationResult.Valid -> FieldState(expiryDate, Validation.Valid)
             is CardExpiryDateValidationResult.Invalid -> {
                 when (result) {
