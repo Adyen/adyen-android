@@ -12,12 +12,12 @@ import android.content.Context
 import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.analytics.AnalyticsConfiguration
+import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.core.internal.ButtonConfiguration
 import com.adyen.checkout.core.internal.ButtonConfigurationBuilder
 import com.adyen.checkout.core.internal.Configuration
-import com.adyen.checkout.core.internal.util.CheckoutConfigurationMarker
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
