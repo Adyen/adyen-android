@@ -43,7 +43,6 @@ import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -100,7 +99,7 @@ internal class StoredCardDelegate(
         isSupported = true,
         panLength = null,
         paymentMethodVariant = null,
-        localizedBrand = null
+        localizedBrand = null,
     )
 
     private val inputData: CardInputData = CardInputData()
@@ -249,7 +248,7 @@ internal class StoredCardDelegate(
             cardBrands = emptyList(),
             kcpBirthDateOrTaxNumberHint = null,
             isCardListVisible = false,
-            dualBrandData = null
+            dualBrandData = null,
         )
     }
 
@@ -290,10 +289,11 @@ internal class StoredCardDelegate(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != EMPTY_DATE) {
+            if (expiryDateResult.isNotBlank()) {
+                val expiryDate = ExpiryDate.from(expiryDateResult)
                 unencryptedCardBuilder.setExpiryDate(
-                    expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString(),
+                    expiryMonth = expiryDate.expiryMonth.toString(),
+                    expiryYear = expiryDate.expiryYear.toString(),
                 )
             }
 
@@ -396,15 +396,14 @@ internal class StoredCardDelegate(
     private fun initializeInputData() {
         inputData.cardNumber = storedPaymentMethod.lastFour.orEmpty()
 
-        try {
-            val storedDate = ExpiryDate(
-                storedPaymentMethod.expiryMonth.orEmpty().toInt(),
-                storedPaymentMethod.expiryYear.orEmpty().toInt(),
-            )
-            inputData.expiryDate = storedDate
-        } catch (e: NumberFormatException) {
-            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to parse stored Date" }
-            inputData.expiryDate = EMPTY_DATE
+        val expiryMonth = storedPaymentMethod.expiryMonth
+        val expiryYear = storedPaymentMethod.expiryYear
+
+        if (expiryMonth.isNullOrBlank() || expiryYear.isNullOrBlank()) {
+            adyenLog(AdyenLogLevel.WARN) { "Failed to parse stored expiry date" }
+            inputData.expiryDate = ""
+        } else {
+            inputData.expiryDate = "$expiryMonth/$expiryYear"
         }
 
         onInputDataChanged()

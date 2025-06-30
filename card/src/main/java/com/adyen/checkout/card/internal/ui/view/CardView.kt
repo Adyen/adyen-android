@@ -38,7 +38,6 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.internal.util.BuildUtils
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
@@ -366,9 +365,9 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun onExpiryDateValidated(expiryDateState: FieldState<ExpiryDate>) {
-        if (binding.editTextExpiryDate.date != expiryDateState.value) {
-            binding.editTextExpiryDate.date = expiryDateState.value
+    private fun onExpiryDateValidated(expiryDateState: FieldState<String>) {
+        if (binding.editTextExpiryDate.rawValue != expiryDateState.value) {
+            binding.editTextExpiryDate.setText(expiryDateState.value)
         }
 
         if (expiryDateState.validation.isValid()) {
@@ -417,7 +416,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
-            val date = binding.editTextExpiryDate.date
+            val date = binding.editTextExpiryDate.rawValue
             cardDelegate.updateInputData { expiryDate = date }
             binding.textInputLayoutExpiryDate.hideError()
         }
@@ -754,7 +753,7 @@ class CardView @JvmOverloads constructor(
     private fun updateInputFields(cardOutputData: CardOutputData?) {
         cardOutputData?.let { outputData ->
             binding.editTextCardNumber.setText(outputData.cardNumberState.value)
-            binding.editTextExpiryDate.date = outputData.expiryDateState.value
+            binding.editTextExpiryDate.setText(outputData.expiryDateState.value)
             binding.editTextSecurityCode.setText(outputData.securityCodeState.value)
             binding.editTextCardHolder.setText(outputData.holderNameState.value)
             binding.editTextSocialSecurityNumber.setSocialSecurityNumber(outputData.socialSecurityNumberState.value)

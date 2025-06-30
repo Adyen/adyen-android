@@ -13,14 +13,13 @@ import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardOutputData(
     val cardNumberState: FieldState<String>,
-    val expiryDateState: FieldState<ExpiryDate>,
+    val expiryDateState: FieldState<String>,
     val securityCodeState: FieldState<String>,
     val holderNameState: FieldState<String>,
     val socialSecurityNumberState: FieldState<String>,

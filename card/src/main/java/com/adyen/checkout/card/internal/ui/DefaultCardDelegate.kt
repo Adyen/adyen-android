@@ -58,7 +58,6 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
-import com.adyen.checkout.core.internal.ui.model.EMPTY_DATE
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -501,10 +500,11 @@ class DefaultCardDelegate(
                 if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
             }
             val expiryDateResult = outputData.expiryDateState.value
-            if (expiryDateResult != EMPTY_DATE) {
+            if (expiryDateResult.isNotBlank()) {
+                val expiryDate = ExpiryDate.from(expiryDateResult)
                 unencryptedCardBuilder.setExpiryDate(
-                    expiryMonth = expiryDateResult.expiryMonth.toString(),
-                    expiryYear = expiryDateResult.expiryYear.toString(),
+                    expiryMonth = expiryDate.expiryMonth.toString(),
+                    expiryYear = expiryDate.expiryYear.toString(),
                 )
             }
 
@@ -570,9 +570,9 @@ class DefaultCardDelegate(
     }
 
     private fun validateExpiryDate(
-        expiryDate: ExpiryDate,
+        expiryDate: String,
         expiryDatePolicy: Brand.FieldPolicy?
-    ): FieldState<ExpiryDate> {
+    ): FieldState<String> {
         val validation = CardValidationUtils.validateExpiryDate(expiryDate, expiryDatePolicy)
         return cardValidationMapper.mapExpiryDateValidation(expiryDate, validation)
     }
@@ -924,7 +924,7 @@ class DefaultCardDelegate(
         updateInputData {
             pan?.let { cardNumber = pan }
             if (expiryMonth != null && expiryYear != null) {
-                expiryDate = ExpiryDate(expiryMonth, expiryYear)
+                expiryDate = ExpiryDate(expiryMonth, expiryYear).toMMyyString()
             }
         }
     }

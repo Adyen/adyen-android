@@ -7,6 +7,8 @@
  */
 package com.adyen.checkout.core.ui.model
 
+import androidx.annotation.RestrictTo
+
 /**
  * Expiry date.
  *
@@ -16,4 +18,30 @@ package com.adyen.checkout.core.ui.model
 data class ExpiryDate(
     val expiryMonth: Int,
     val expiryYear: Int,
-)
+) {
+
+    /**
+     * Convert this instance to a date string with the "MM/yy" format.
+     */
+    fun toMMyyString(): String {
+        val expiryMonthString = expiryMonth.toString()
+        val monthDigits = if (expiryMonthString.length == 1) "0$expiryMonthString" else expiryMonthString
+        val expiryYearString = expiryYear.toString()
+        val yearDigits = if (expiryYearString.length == 1) "0$expiryYearString" else expiryYearString
+        return "$monthDigits/$yearDigits"
+    }
+
+    companion object {
+
+        /**
+         * Create an [ExpiryDate] from a string, expecting the `MM/yy` date format
+         */
+        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+        fun from(date: String): ExpiryDate {
+            val split = date.split("/")
+            val month = split.getOrNull(0)?.toIntOrNull() ?: -1
+            val year = split.getOrNull(1)?.toIntOrNull() ?: -1
+            return ExpiryDate(month, year)
+        }
+    }
+}
