@@ -18,9 +18,3 @@ val EMPTY_DATE: ExpiryDate = ExpiryDate(0, 0)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @JvmField
 val INVALID_DATE: ExpiryDate = ExpiryDate(-1, -1)
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun ExpiryDate.isEmptyDate() = expiryMonth == 0 && expiryYear == 0
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun ExpiryDate.isInvalidDate() = expiryMonth == -1 && expiryYear == -1
