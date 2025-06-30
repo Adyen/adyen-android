@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 22/5/2024.
+ * Created by ararat on 30/6/2025.
  */
 
-package com.adyen.checkout.core.internal.util
+package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
