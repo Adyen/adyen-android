@@ -762,7 +762,7 @@ internal class DefaultCardDelegateTest(
                 delegate.updateComponentState(
                     createOutputData(
                         expiryDateState = FieldState(
-                            ExpiryDate(10, 2020),
+                            "10/20",
                             Validation.Invalid(R.string.checkout_expiry_date_not_valid),
                         ),
                     ),
@@ -809,8 +809,8 @@ internal class DefaultCardDelegateTest(
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
                     assertEquals(TEST_CARD_NUMBER, encryptedCardNumber)
-                    assertEquals(TEST_EXPIRY_DATE.expiryMonth.toString(), encryptedExpiryMonth)
-                    assertEquals(TEST_EXPIRY_DATE.expiryYear.toString(), encryptedExpiryYear)
+                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryMonth.toString(), encryptedExpiryMonth)
+                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryYear.toString(), encryptedExpiryYear)
                     assertEquals(TEST_SECURITY_CODE, encryptedSecurityCode)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
                     assertEquals(CardType.VISA.txVariant, brand)
@@ -930,8 +930,8 @@ internal class DefaultCardDelegateTest(
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
                     assertEquals(TEST_CARD_NUMBER, encryptedCardNumber)
-                    assertEquals(TEST_EXPIRY_DATE.expiryMonth.toString(), encryptedExpiryMonth)
-                    assertEquals(TEST_EXPIRY_DATE.expiryYear.toString(), encryptedExpiryYear)
+                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryMonth.toString(), encryptedExpiryMonth)
+                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryYear.toString(), encryptedExpiryYear)
                     assertNull(encryptedSecurityCode)
                     assertEquals("S. Hopper", holderName)
                     assertEquals("3445456", taxNumber)
@@ -1352,7 +1352,7 @@ internal class DefaultCardDelegateTest(
 
                 with(expectMostRecentItem()) {
                     assertEquals("1234", cardNumberState.value)
-                    assertEquals(ExpiryDate(1, 2), expiryDateState.value)
+                    assertEquals("01/02", expiryDateState.value)
                 }
             }
         }
@@ -1385,14 +1385,14 @@ internal class DefaultCardDelegateTest(
                 // Set initial state
                 delegate.updateInputData {
                     cardNumber = "5454"
-                    expiryDate = ExpiryDate(12, 4)
+                    expiryDate = "12/04"
                 }
 
                 delegate.onCardScanningResult(Activity.RESULT_OK, null, null, null)
 
                 with(expectMostRecentItem()) {
                     assertEquals("5454", cardNumberState.value)
-                    assertEquals(ExpiryDate(12, 4), expiryDateState.value)
+                    assertEquals("12/04", expiryDateState.value)
                 }
             }
         }
@@ -1481,7 +1481,7 @@ internal class DefaultCardDelegateTest(
     @Suppress("LongParameterList")
     private fun createOutputData(
         cardNumberState: FieldState<String> = FieldState(TEST_CARD_NUMBER, Validation.Valid),
-        expiryDateState: FieldState<ExpiryDate> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
+        expiryDateState: FieldState<String> = FieldState(TEST_EXPIRY_DATE, Validation.Valid),
         securityCodeState: FieldState<String> = FieldState(TEST_SECURITY_CODE, Validation.Valid),
         holderNameState: FieldState<String> = FieldState("", Validation.Valid),
         socialSecurityNumberState: FieldState<String> = FieldState("", Validation.Valid),
@@ -1599,7 +1599,7 @@ internal class DefaultCardDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CARD_NUMBER = "5555444433331111"
-        private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
+        private const val TEST_EXPIRY_DATE = "03/30"
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
