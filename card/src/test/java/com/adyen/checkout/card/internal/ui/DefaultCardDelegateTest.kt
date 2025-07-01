@@ -59,7 +59,6 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
 import com.adyen.checkout.cse.internal.TestCardEncryptor
@@ -809,8 +808,8 @@ internal class DefaultCardDelegateTest(
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
                     assertEquals(TEST_CARD_NUMBER, encryptedCardNumber)
-                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryMonth.toString(), encryptedExpiryMonth)
-                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryYear.toString(), encryptedExpiryYear)
+                    assertEquals(TEST_EXPIRY_MONTH.trimStart('0'), encryptedExpiryMonth)
+                    assertEquals(TEST_EXPIRY_YEAR.trimStart('0'), encryptedExpiryYear)
                     assertEquals(TEST_SECURITY_CODE, encryptedSecurityCode)
                     assertEquals(PaymentMethodTypes.SCHEME, type)
                     assertEquals(CardType.VISA.txVariant, brand)
@@ -930,8 +929,8 @@ internal class DefaultCardDelegateTest(
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
                     assertEquals(TEST_CARD_NUMBER, encryptedCardNumber)
-                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryMonth.toString(), encryptedExpiryMonth)
-                    assertEquals(ExpiryDate.from(TEST_EXPIRY_DATE).expiryYear.toString(), encryptedExpiryYear)
+                    assertEquals(TEST_EXPIRY_MONTH.trimStart('0'), encryptedExpiryMonth)
+                    assertEquals(TEST_EXPIRY_YEAR.trimStart('0'), encryptedExpiryYear)
                     assertNull(encryptedSecurityCode)
                     assertEquals("S. Hopper", holderName)
                     assertEquals("3445456", taxNumber)
@@ -1599,7 +1598,9 @@ internal class DefaultCardDelegateTest(
     companion object {
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CARD_NUMBER = "5555444433331111"
-        private const val TEST_EXPIRY_DATE = "03/30"
+        private const val TEST_EXPIRY_MONTH = "03"
+        private const val TEST_EXPIRY_YEAR = "30"
+        private const val TEST_EXPIRY_DATE = "$TEST_EXPIRY_MONTH/$TEST_EXPIRY_YEAR"
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
