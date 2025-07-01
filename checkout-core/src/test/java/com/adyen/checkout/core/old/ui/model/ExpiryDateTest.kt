@@ -36,24 +36,29 @@ internal class ExpiryDateTest {
             arguments(ExpiryDate(1, 1), "01/01"),
             arguments(ExpiryDate(12, 1234), "12/34"),
             arguments(ExpiryDate(9, 2008), "09/08"),
+            arguments(ExpiryDate(10, 1998), "10/98"),
+            arguments(ExpiryDate(10, 2098), "10/98"),
             arguments(EMPTY_DATE, "00/00"),
             arguments(INVALID_DATE, "-1/-1"),
         )
 
         @JvmStatic
         fun createExpiryDateFromStringSource() = listOf(
-            arguments("01/01", ExpiryDate(1, 1)),
-            arguments("3/3", ExpiryDate(3, 3)),
-            arguments("03/3", ExpiryDate(3, 3)),
-            arguments("3/03", ExpiryDate(3, 3)),
-            arguments("12/34", ExpiryDate(12, 34)),
-            arguments("09/08", ExpiryDate(9, 8)),
-            arguments("00/00", ExpiryDate(0, 0)),
-            arguments("-9/-18", ExpiryDate(-9, -18)),
+            arguments("01/01", ExpiryDate(1, 2001)),
+            arguments("3/03", ExpiryDate(3, 2003)),
+            arguments("12/34", ExpiryDate(12, 2034)),
+            arguments("09/08", ExpiryDate(9, 2008)),
+            arguments("01/00", ExpiryDate(1, 2000)),
+            // Our correction adds 100 years when the date parsing gives a smaller century than the current
+            arguments("10/98", ExpiryDate(10, 2098)),
+            arguments("3/3", ExpiryDate(3, 103)),
+            arguments("03/3", ExpiryDate(3, 103)),
             // Invalid input should create invalid expiry date
-            arguments("03", ExpiryDate(3, -1)),
-            arguments("asd/fgh", ExpiryDate(-1, -1)),
-            arguments("asdfgh", ExpiryDate(-1, -1)),
+            arguments("00/00", INVALID_DATE), // Month 0 doesn't exist
+            arguments("03", INVALID_DATE),
+            arguments("-9/-18", INVALID_DATE),
+            arguments("asd/fgh", INVALID_DATE),
+            arguments("asdfgh", INVALID_DATE),
         )
     }
 }

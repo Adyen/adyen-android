@@ -1599,8 +1599,10 @@ internal class DefaultCardDelegateTest(
         private const val TEST_CLIENT_KEY = "test_qwertyuiopasdfghjklzxcvbnmqwerty"
         private const val TEST_CARD_NUMBER = "5555444433331111"
         private const val TEST_EXPIRY_MONTH = "03"
-        private const val TEST_EXPIRY_YEAR = "30"
-        private const val TEST_EXPIRY_DATE = "$TEST_EXPIRY_MONTH/$TEST_EXPIRY_YEAR"
+        private const val TEST_EXPIRY_YEAR = "2030"
+
+        // Take last 2 digits of year to comply with the MM/yy format
+        private val TEST_EXPIRY_DATE = "$TEST_EXPIRY_MONTH/${TEST_EXPIRY_YEAR.takeLast(2)}"
         private const val TEST_SECURITY_CODE = "737"
         private val TEST_ORDER = OrderRequest("PSP", "ORDER_DATA")
         private const val TEST_CHECKOUT_ATTEMPT_ID = "TEST_CHECKOUT_ATTEMPT_ID"
