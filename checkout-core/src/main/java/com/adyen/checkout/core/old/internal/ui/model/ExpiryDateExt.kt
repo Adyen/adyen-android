@@ -18,3 +18,10 @@ val EMPTY_DATE: ExpiryDate = ExpiryDate(0, 0)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @JvmField
 val INVALID_DATE: ExpiryDate = ExpiryDate(-1, -1)
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun toMMyyString(expiryMonth: String, expiryYear: String): String {
+    val monthDigits = expiryMonth.padStart(2, '0')
+    val yearDigits = expiryYear.takeLast(2).padStart(2, '0')
+    return "$monthDigits/$yearDigits"
+}
