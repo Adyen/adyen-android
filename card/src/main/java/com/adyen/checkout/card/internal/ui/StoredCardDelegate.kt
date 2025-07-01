@@ -43,6 +43,7 @@ import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.toMMyyString
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -403,7 +404,7 @@ internal class StoredCardDelegate(
             adyenLog(AdyenLogLevel.WARN) { "Failed to parse stored expiry date" }
             inputData.expiryDate = ""
         } else {
-            inputData.expiryDate = "$expiryMonth/$expiryYear"
+            inputData.expiryDate = toMMyyString(expiryMonth, expiryYear)
         }
 
         onInputDataChanged()
