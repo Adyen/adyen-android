@@ -58,6 +58,7 @@ import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.CardBrand
 import com.adyen.checkout.core.exception.CheckoutException
 import com.adyen.checkout.core.exception.ComponentException
+import com.adyen.checkout.core.internal.ui.model.toMMyyString
 import com.adyen.checkout.core.internal.util.adyenLog
 import com.adyen.checkout.core.internal.util.runCompileOnly
 import com.adyen.checkout.core.ui.model.ExpiryDate
@@ -924,7 +925,7 @@ class DefaultCardDelegate(
         updateInputData {
             pan?.let { cardNumber = pan }
             if (expiryMonth != null && expiryYear != null) {
-                expiryDate = ExpiryDate(expiryMonth, expiryYear).toMMyyString()
+                expiryDate = toMMyyString(expiryMonth.toString(), expiryYear.toString())
             }
         }
     }
