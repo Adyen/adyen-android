@@ -20,9 +20,6 @@ import java.util.Locale
 
 object CardExpiryDateValidator {
     // Date
-    private const val YEARS_IN_CENTURY = 100
-    private const val MAXIMUM_YEARS_IN_FUTURE = 30
-    private const val MAXIMUM_EXPIRED_MONTHS = 3
     private const val DATE_FORMAT = "MM/yy"
 
     private val dateFormat: SimpleDateFormat = SimpleDateFormat(DATE_FORMAT, Locale.ROOT)
@@ -61,7 +58,7 @@ object CardExpiryDateValidator {
         calendar: Calendar
     ) = when {
         dateExists(expiryDate) -> {
-            val expiryDateCalendar = getExpiryCalendar(expiryDate)
+            val expiryDateCalendar = ExpiryDate.getExpiryCalendar(expiryDate)
             val isInMaxYearRange = isInMaxYearRange(expiryDateCalendar, calendar)
             val isInMinMonthRange = isInMinMonthRange(expiryDateCalendar, calendar)
 
@@ -79,13 +76,13 @@ object CardExpiryDateValidator {
 
     private fun isInMaxYearRange(expiryDateCalendar: Calendar, calendar: Calendar): Boolean {
         val maxFutureCalendar = calendar.clone() as GregorianCalendar
-        maxFutureCalendar.add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
+        maxFutureCalendar.add(Calendar.YEAR, ExpiryDate.MAXIMUM_YEARS_IN_FUTURE)
         return expiryDateCalendar.get(Calendar.YEAR) <= maxFutureCalendar.get(Calendar.YEAR)
     }
 
     private fun isInMinMonthRange(expiryDateCalendar: Calendar, calendar: Calendar): Boolean {
         val maxPastCalendar = calendar.clone() as GregorianCalendar
-        maxPastCalendar.add(Calendar.MONTH, -MAXIMUM_EXPIRED_MONTHS)
+        maxPastCalendar.add(Calendar.MONTH, -ExpiryDate.MAXIMUM_EXPIRED_MONTHS)
         return expiryDateCalendar >= maxPastCalendar
     }
 
@@ -95,32 +92,6 @@ object CardExpiryDateValidator {
         } catch (e: ParseException) {
             adyenLog(AdyenLogLevel.WARN) { "Invalid expiry date: $expiryDate" }
             false
-        }
-    }
-
-    private fun getExpiryCalendar(expiryDate: String): Calendar {
-        val parsedDate = requireNotNull(dateFormat.parse(expiryDate))
-        val expiryCalendar = GregorianCalendar.getInstance()
-        expiryCalendar.time = parsedDate
-        fixCalendarYear(expiryCalendar)
-        // Go to next month and remove 1 day to be on the last day of the expiry month.
-        expiryCalendar.add(Calendar.MONTH, 1)
-        expiryCalendar.add(Calendar.DAY_OF_MONTH, -1)
-        return expiryCalendar
-    }
-
-    private fun fixCalendarYear(calendar: Calendar) {
-        // On SimpleDateFormat, if the truncated (yy) year is more than 20 years in the future it will use the previous
-        // century.
-        // This is a small fix to correct for that without implementing or overriding the DateFormat class.
-        val currentCalendar = GregorianCalendar.getInstance().apply {
-            // Add the max expiry years, so that when the next century approaches dates in the next century are used.
-            add(Calendar.YEAR, MAXIMUM_YEARS_IN_FUTURE)
-        }
-        val currentCentury = currentCalendar[Calendar.YEAR] / YEARS_IN_CENTURY
-        val calendarCentury = calendar[Calendar.YEAR] / YEARS_IN_CENTURY
-        if (calendarCentury < currentCentury) {
-            calendar.add(Calendar.YEAR, YEARS_IN_CENTURY)
         }
     }
 }
