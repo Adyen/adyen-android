@@ -8,6 +8,7 @@
 package com.adyen.checkout.core.old.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.old.internal.ui.model.toMMyyString
 
 /**
  * Expiry date.
@@ -23,11 +24,7 @@ data class ExpiryDate(
     /**
      * Convert this instance to a date string with the "MM/yy" format.
      */
-    fun toMMyyString(): String {
-        val monthDigits = expiryMonth.toString().padStart(2, '0')
-        val yearDigits = expiryYear.toString().takeLast(2).padStart(2, '0')
-        return "$monthDigits/$yearDigits"
-    }
+    fun toMMyyString(): String = toMMyyString(expiryMonth.toString(), expiryYear.toString())
 
     companion object {
 
