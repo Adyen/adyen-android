@@ -6,7 +6,7 @@
  * Created by ozgur on 8/4/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

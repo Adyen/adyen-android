@@ -6,7 +6,7 @@
  * Created by ozgur on 8/4/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionProvider
@@ -24,11 +24,15 @@ data class AdyenCheckout(
             sessionModel: SessionModel,
             checkoutConfiguration: CheckoutConfiguration,
             checkoutCallback: CheckoutCallback?
-        ): AdyenCheckout.Result {
+        ): Result {
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
                 checkoutSession != null -> Result.Success(
-                    adyenCheckout = AdyenCheckout(checkoutSession, checkoutConfiguration, checkoutCallback),
+                    adyenCheckout = AdyenCheckout(
+                        checkoutSession,
+                        checkoutConfiguration,
+                        checkoutCallback,
+                    ),
                 )
 
                 else -> Result.Error("Session initialization failed.")
