@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.JsonUtils
 import com.adyen.checkout.core.internal.data.model.ModelObject
@@ -80,7 +80,7 @@ internal data class AnalyticsSetupRequest(
                         putOpt(SCREEN_WIDTH, modelObject.screenWidth)
                         putOpt(
                             PAYMENT_METHODS,
-                            JsonUtils.serializeOptStringList(modelObject.paymentMethods)
+                            JsonUtils.serializeOptStringList(modelObject.paymentMethods),
                         )
                         putOpt(
                             AMOUNT,
