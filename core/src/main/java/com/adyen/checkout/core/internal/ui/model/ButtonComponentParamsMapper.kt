@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ButtonConfiguration
 import com.adyen.checkout.core.internal.Configuration
 import java.util.Locale
