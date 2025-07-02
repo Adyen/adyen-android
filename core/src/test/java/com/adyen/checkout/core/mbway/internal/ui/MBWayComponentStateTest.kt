@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 25/3/2025.
+ * Created by ararat on 30/6/2025.
  */
 
-package com.adyen.checkout.com.mbway.internal.ui
+package com.adyen.checkout.core.mbway.internal.ui
 
 import com.adyen.checkout.core.data.OrderRequest
 import com.adyen.checkout.core.data.model.Amount
@@ -16,7 +16,6 @@ import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.internal.ui.state.model.Validation
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
-import com.adyen.checkout.core.mbway.internal.ui.toComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

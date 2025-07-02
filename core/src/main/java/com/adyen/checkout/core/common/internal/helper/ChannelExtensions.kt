@@ -6,7 +6,7 @@
  * Created by ozgur on 3/6/2025.
  */
 
-package com.adyen.checkout.core.internal.util
+package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
 import kotlinx.coroutines.channels.Channel
