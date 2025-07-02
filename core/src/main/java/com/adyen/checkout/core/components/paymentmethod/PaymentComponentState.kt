@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.data.PaymentComponentData
+import com.adyen.checkout.core.components.data.PaymentComponentData
 
 /**
  * The current state of a PaymentComponent.

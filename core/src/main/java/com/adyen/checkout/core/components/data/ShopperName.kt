@@ -6,7 +6,7 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.data
+package com.adyen.checkout.core.components.data
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject

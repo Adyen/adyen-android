@@ -11,7 +11,7 @@ package com.adyen.checkout.core.sessions
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 
 /**

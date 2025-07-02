@@ -6,9 +6,9 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.data
+package com.adyen.checkout.core.components.data
 
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
@@ -38,7 +38,10 @@ data class OrderResponse(
                     try {
                         putOpt(PSP_REFERENCE, modelObject.pspReference)
                         putOpt(ORDER_DATA, modelObject.orderData)
-                        putOpt(AMOUNT, ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER))
+                        putOpt(
+                            AMOUNT,
+                            ModelUtils.serializeOpt(modelObject.amount, Amount.SERIALIZER)
+                        )
                         putOpt(
                             REMAINING_AMOUNT,
                             ModelUtils.serializeOpt(modelObject.remainingAmount, Amount.SERIALIZER),
@@ -53,7 +56,10 @@ data class OrderResponse(
                 return OrderResponse(
                     pspReference = jsonObject.getStringOrNull(PSP_REFERENCE).orEmpty(),
                     orderData = jsonObject.getStringOrNull(ORDER_DATA).orEmpty(),
-                    amount = ModelUtils.deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
+                    amount = ModelUtils.deserializeOpt(
+                        jsonObject.optJSONObject(AMOUNT),
+                        Amount.SERIALIZER
+                    ),
                     remainingAmount = ModelUtils.deserializeOpt(
                         jsonObject.optJSONObject(REMAINING_AMOUNT),
                         Amount.SERIALIZER,
