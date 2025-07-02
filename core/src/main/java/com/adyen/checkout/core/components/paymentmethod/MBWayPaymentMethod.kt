@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize

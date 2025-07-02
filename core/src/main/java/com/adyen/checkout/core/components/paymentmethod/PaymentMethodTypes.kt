@@ -6,7 +6,7 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components.paymentmethod
 
 /**
  * Helper class with a list of all the currently supported Payment Methods on Components and Drop-In.
