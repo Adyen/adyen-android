@@ -9,12 +9,12 @@
 package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.data.PaymentComponentData
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -49,8 +49,8 @@ data class SessionPaymentsRequest(
                         sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                         paymentComponentData = ModelUtils.deserializeOpt(
                             jsonObject,
-                            PaymentComponentData.SERIALIZER
-                        ) as PaymentComponentData<out PaymentMethodDetails>
+                            PaymentComponentData.SERIALIZER,
+                        ) as PaymentComponentData<out PaymentMethodDetails>,
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionPaymentsRequest::class.java, e)

@@ -10,7 +10,7 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.CheckoutCallback
 import com.adyen.checkout.core.CheckoutResult
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -35,6 +35,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
                     checkoutCallback == null || !checkoutCallback.beforeSubmit(event.state) -> {
                         makePaymentsCall(event.state)
                     }
+
                     else -> {
                         checkoutCallback.onSubmit(event.state) { checkoutResult ->
                             handleResult(checkoutResult)
@@ -50,9 +51,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
             is CheckoutResult.Action -> {
                 // TODO - Handle Action
             }
+
             is CheckoutResult.Error -> {
                 // TODO - Handle Error
             }
+
             is CheckoutResult.Finished -> {
                 // TODO - Handle Finished
             }
