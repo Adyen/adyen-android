@@ -16,7 +16,6 @@ import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.internal.util.StringUtil
-import com.adyen.checkout.core.ui.model.ExpiryDate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CardValidationMapper {
@@ -42,9 +41,9 @@ class CardValidationMapper {
     }
 
     fun mapExpiryDateValidation(
-        expiryDate: ExpiryDate,
+        expiryDate: String,
         validationResult: CardExpiryDateValidation,
-    ): FieldState<ExpiryDate> {
+    ): FieldState<String> {
         val validation = when (validationResult) {
             CardExpiryDateValidation.VALID -> Validation.Valid
             CardExpiryDateValidation.VALID_NOT_REQUIRED -> Validation.Valid

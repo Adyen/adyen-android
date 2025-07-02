@@ -23,7 +23,6 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.giftcard.GiftCardAction
 import com.adyen.checkout.giftcard.GiftCardComponentState
@@ -478,7 +477,7 @@ internal class DefaultGiftCardDelegateTest(
     private fun createValidOutputData(
         number: String = TEST_NUMBER,
         pin: String = TEST_PIN,
-        expiryDate: ExpiryDate = TEST_EXPIRY_DATE,
+        expiryDate: String = TEST_EXPIRY_DATE,
     ) = GiftCardOutputData(
         numberFieldState = FieldState(number, Validation.Valid),
         pinFieldState = FieldState(pin, Validation.Valid),
@@ -488,7 +487,7 @@ internal class DefaultGiftCardDelegateTest(
     private fun createInvalidOutputData(
         number: String = TEST_NUMBER,
         pin: String = TEST_PIN,
-        expiryDate: ExpiryDate = TEST_EXPIRY_DATE,
+        expiryDate: String = TEST_EXPIRY_DATE,
     ) = GiftCardOutputData(
         numberFieldState = FieldState(number, Validation.Invalid(-1)),
         pinFieldState = FieldState(pin, Validation.Invalid(-1)),
@@ -502,7 +501,7 @@ internal class DefaultGiftCardDelegateTest(
         private const val TEST_PAYMENT_METHOD_TYPE = "TEST_PAYMENT_METHOD_TYPE"
         private const val TEST_NUMBER = "test_number"
         private const val TEST_PIN = "test_pin"
-        private val TEST_EXPIRY_DATE = ExpiryDate(3, 2030)
+        private const val TEST_EXPIRY_DATE = "03/30"
 
         @JvmStatic
         fun amountSource() = listOf(

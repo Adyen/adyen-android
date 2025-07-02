@@ -100,7 +100,7 @@ internal class MealVoucherFRView @JvmOverloads constructor(
         )
 
         binding.editTextMealVoucherFRExpiryDate.setOnChangeListener {
-            val date = binding.editTextMealVoucherFRExpiryDate.date
+            val date = binding.editTextMealVoucherFRExpiryDate.rawValue
             giftCardDelegate.updateInputData {
                 expiryDate = date
             }
