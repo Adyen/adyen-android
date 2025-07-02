@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.sessions
 
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +33,7 @@ internal class SessionInteractor(
     ) {
         sessionRepository.submitPayment(
             sessionModel = sessionModel,
-            paymentComponentData = paymentComponentState.data
+            paymentComponentData = paymentComponentState.data,
         ).fold(
             onSuccess = { response ->
                 updateSessionData(response.sessionData)
@@ -49,7 +49,7 @@ internal class SessionInteractor(
 //                    )
 //                    analyticsManager?.trackEvent(event)
                 }
-            }
+            },
         )
     }
 

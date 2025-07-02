@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.internal
 
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.paymentmethod.PaymentMethodDetails
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 
 internal typealias BaseComponentState = PaymentComponentState<out PaymentMethodDetails>

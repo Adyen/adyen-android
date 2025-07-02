@@ -6,7 +6,7 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.paymentmethod
+package com.adyen.checkout.core.components.paymentmethod
 
 import com.adyen.checkout.core.internal.data.model.ModelObject
 import com.adyen.checkout.core.internal.data.model.getStringOrNull

@@ -6,7 +6,7 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.paymentmethod
+package com.adyen.checkout.core.components.paymentmethod
 
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
@@ -43,7 +43,7 @@ data class GenericPaymentMethod(
                 return GenericPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
-                    subtype = jsonObject.getStringOrNull(SUBTYPE)
+                    subtype = jsonObject.getStringOrNull(SUBTYPE),
                 )
             }
         }
