@@ -6,7 +6,7 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components
 
 // TODO - KDocs, revisit later after having parameters
 /**

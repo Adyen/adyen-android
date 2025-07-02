@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.core.mbway.internal.ui
 
-import com.adyen.checkout.core.CheckoutConfiguration
 import com.adyen.checkout.core.PaymentMethodTypes
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.internal.PaymentMethodFactory
 import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper

@@ -9,8 +9,8 @@
 package com.adyen.checkout.core.internal
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.CheckoutCallback
-import com.adyen.checkout.core.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
 import com.adyen.checkout.core.sessions.CheckoutSession

@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.internal
 
-import com.adyen.checkout.core.CheckoutCallback
-import com.adyen.checkout.core.CheckoutResult
+import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutResult
 import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedComponentEventHandler<T : BaseComponentState>(
@@ -30,9 +30,11 @@ internal class AdvancedComponentEventHandler<T : BaseComponentState>(
                         is CheckoutResult.Action -> {
                             // TODO - Handle Action
                         }
+
                         is CheckoutResult.Error -> {
                             // TODO - Handle Error
                         }
+
                         is CheckoutResult.Finished -> {
                             // TODO - Handle Finished
                         }

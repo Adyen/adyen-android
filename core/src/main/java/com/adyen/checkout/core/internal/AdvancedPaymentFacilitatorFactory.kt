@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.internal
 
-import com.adyen.checkout.core.CheckoutCallback
-import com.adyen.checkout.core.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedPaymentFacilitatorFactory(

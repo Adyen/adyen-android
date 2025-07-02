@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.internal
 
-import com.adyen.checkout.core.CheckoutCallback
-import com.adyen.checkout.core.CheckoutResult
+import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
