@@ -8,11 +8,11 @@
 
 package com.adyen.checkout.core.mbway.internal.ui
 
+import com.adyen.checkout.core.components.data.OrderRequest
+import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.data.OrderRequest
-import com.adyen.checkout.core.data.PaymentComponentData
-import com.adyen.checkout.core.data.model.Amount
 import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId

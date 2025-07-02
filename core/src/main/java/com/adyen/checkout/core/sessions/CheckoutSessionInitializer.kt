@@ -10,7 +10,7 @@ package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
