@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.AdyenCheckout
+import com.adyen.checkout.core.components.AdyenCheckout
 
 internal class AdyenComponent(
     txVariant: String,

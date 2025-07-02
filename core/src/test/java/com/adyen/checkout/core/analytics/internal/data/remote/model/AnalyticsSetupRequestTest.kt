@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -6,9 +6,9 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core.paymentmethod
+package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.data.PaymentComponentData
+import com.adyen.checkout.core.components.data.PaymentComponentData
 
 /**
  * The current state of a PaymentComponent.

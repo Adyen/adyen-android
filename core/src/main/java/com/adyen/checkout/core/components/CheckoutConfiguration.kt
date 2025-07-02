@@ -6,17 +6,18 @@
  * Created by ozgur on 2/5/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components
 
 import android.annotation.SuppressLint
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.internal.Configuration
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale

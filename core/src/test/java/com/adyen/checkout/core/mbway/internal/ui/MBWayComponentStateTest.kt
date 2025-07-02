@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.mbway.internal.ui
 
-import com.adyen.checkout.core.data.OrderRequest
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.OrderRequest
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.internal.ui.model.CountryModel
 import com.adyen.checkout.core.internal.ui.state.TestFieldTransformerRegistry
 import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState

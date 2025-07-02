@@ -6,13 +6,16 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core
+package com.adyen.checkout.core.components
 
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 interface CheckoutCallback {
 
     fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean = false
 
-    fun onSubmit(paymentComponentState: PaymentComponentState<*>, onCompletion: (CheckoutResult) -> Unit)
+    fun onSubmit(
+        paymentComponentState: PaymentComponentState<*>,
+        onCompletion: (CheckoutResult) -> Unit
+    )
 }

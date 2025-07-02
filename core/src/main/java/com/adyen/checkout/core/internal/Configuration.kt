@@ -12,7 +12,7 @@ import android.os.Parcelable
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.analytics.AnalyticsConfiguration
-import com.adyen.checkout.core.data.model.Amount
+import com.adyen.checkout.core.components.data.model.Amount
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

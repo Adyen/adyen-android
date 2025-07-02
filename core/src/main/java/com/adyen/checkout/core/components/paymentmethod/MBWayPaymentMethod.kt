@@ -6,9 +6,8 @@
  * Created by ozgur on 12/5/2025.
  */
 
-package com.adyen.checkout.core.paymentmethod
+package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.PaymentMethodTypes
 import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
