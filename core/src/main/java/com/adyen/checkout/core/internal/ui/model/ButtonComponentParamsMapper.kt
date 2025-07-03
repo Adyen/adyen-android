@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ButtonConfiguration
 import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
