@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.mbway.internal.model
 
-import com.adyen.checkout.core.internal.ui.state.model.Validation
+import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayValidatorRegistry
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
