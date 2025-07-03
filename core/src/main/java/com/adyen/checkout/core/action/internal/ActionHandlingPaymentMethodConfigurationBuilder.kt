@@ -6,10 +6,12 @@
  * Created by ozgur on 6/5/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.action.internal
 
 import android.content.Context
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.internal.BaseConfigurationBuilder
+import com.adyen.checkout.core.internal.Configuration
 import java.util.Locale
 
 @Suppress(
