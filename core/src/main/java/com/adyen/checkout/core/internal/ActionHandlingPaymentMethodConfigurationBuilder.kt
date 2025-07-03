@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.internal
 
 import android.content.Context
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.common.Environment
 import java.util.Locale
 
 @Suppress(
