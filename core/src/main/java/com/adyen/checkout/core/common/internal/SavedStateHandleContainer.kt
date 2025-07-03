@@ -6,7 +6,7 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.common.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
