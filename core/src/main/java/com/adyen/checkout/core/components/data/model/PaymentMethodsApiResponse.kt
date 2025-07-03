@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.core.components.data.model
 
+import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptList
 import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptList
-import com.adyen.checkout.core.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
