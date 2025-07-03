@@ -11,20 +11,21 @@ package com.adyen.checkout.ui.internal
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -42,8 +43,9 @@ fun Stepper(
     ) {
         steps.forEachIndexed { index, step ->
             Step(
-                step = step,
-                showConnector = index < steps.lastIndex,
+                label = step,
+                isFirstStep = index == 0,
+                isLastStep = index == steps.lastIndex,
             )
         }
     }
@@ -51,33 +53,57 @@ fun Stepper(
 
 @Composable
 private fun Step(
-    step: String,
-    showConnector: Boolean,
+    label: String,
+    isFirstStep: Boolean,
+    isLastStep: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
+    ConstraintLayout(
         modifier = modifier,
     ) {
-        Image(painterResource(R.drawable.ic_rounded_square), null)
-        Body(step)
-    }
+        val (icon, body) = createRefs()
+        Image(
+            painter = painterResource(R.drawable.ic_rounded_square),
+            contentDescription = null,
+            colorFilter = ColorFilter.tint(AdyenCheckoutTheme.colors.text),
+            modifier = Modifier.constrainAs(icon) {
+                top.linkTo(body.top)
+                start.linkTo(parent.start)
+                bottom.linkTo(body.bottom)
+            },
+        )
 
-    if (showConnector) {
-        // TODO - correctly center this under the icon
-        VerticalDivider(
-            Modifier
-                .height(12.dp)
-                .padding(start = 8.dp),
-            color = AdyenCheckoutTheme.colors.outline,
+        val topMargin = if (isFirstStep) 0.dp else 6.dp
+        val bottomMargin = if (isLastStep) 0.dp else 6.dp
+        Body(
+            text = label,
+            modifier = Modifier
+                .constrainAs(body) {
+                    top.linkTo(parent.top, topMargin)
+                    start.linkTo(icon.end, 16.dp)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom, bottomMargin)
+                    width = Dimension.preferredWrapContent
+                },
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun StepperPreview() {
-    val steps = listOf("Step 1", "Step 2", "Step 3")
-    Stepper(steps, Modifier.padding(16.dp))
+private fun StepperPreview(
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+) {
+    AdyenCheckoutTheme(theme) {
+        Surface(color = AdyenCheckoutTheme.colors.background) {
+            val steps = listOf(
+                "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius facilisis sit amet ut ipsum.",
+                "Step 2",
+                "Step 3",
+                "Step 4: Fusce pretium orci ut nibh rutrum mattis. In condimentum augue id justo cursus facilisis.",
+                "Step 5",
+            )
+            Stepper(steps, Modifier.padding(16.dp))
+        }
+    }
 }
