@@ -6,11 +6,11 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.api
+package com.adyen.checkout.core.common.internal.api
 
+import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 import com.adyen.checkout.core.exception.HttpException
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
 import okhttp3.Headers.Companion.toHeaders
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import okhttp3.MediaType.Companion.toMediaType
