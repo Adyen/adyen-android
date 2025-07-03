@@ -9,15 +9,15 @@
 package com.adyen.checkout.core.mbway.internal.ui
 
 import android.content.Context
-import com.adyen.checkout.core.AnalyticsConfiguration
-import com.adyen.checkout.core.CheckoutConfiguration
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
-import com.adyen.checkout.core.internal.ButtonConfiguration
-import com.adyen.checkout.core.internal.ButtonConfigurationBuilder
-import com.adyen.checkout.core.internal.Configuration
-import com.adyen.checkout.core.internal.util.CheckoutConfigurationMarker
+import com.adyen.checkout.core.action.internal.ActionHandlingPaymentMethodConfigurationBuilder
+import com.adyen.checkout.core.analytics.AnalyticsConfiguration
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.ButtonConfiguration
+import com.adyen.checkout.core.components.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 

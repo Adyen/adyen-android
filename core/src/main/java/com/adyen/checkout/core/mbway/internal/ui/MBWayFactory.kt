@@ -8,18 +8,18 @@
 
 package com.adyen.checkout.core.mbway.internal.ui
 
-import com.adyen.checkout.core.CheckoutConfiguration
-import com.adyen.checkout.core.PaymentMethodTypes
-import com.adyen.checkout.core.internal.PaymentMethodFactory
-import com.adyen.checkout.core.internal.analytics.AnalyticsManagerFactory
-import com.adyen.checkout.core.internal.analytics.AnalyticsSource
-import com.adyen.checkout.core.internal.ui.model.ButtonComponentParamsMapper
-import com.adyen.checkout.core.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.internal.ui.model.SessionParams
-import com.adyen.checkout.core.internal.ui.state.DefaultDelegateStateManager
+import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.PaymentMethodFactory
+import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.state.DefaultDelegateStateManager
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayStateUpdaterRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayValidatorRegistry
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
