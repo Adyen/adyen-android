@@ -23,7 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstrainScope
+import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintLayoutBaseScope
+import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
@@ -53,6 +57,7 @@ fun Stepper(
     }
 }
 
+@Suppress("DestructuringDeclarationWithTooManyEntries")
 @Composable
 private fun Step(
     label: String,
@@ -69,8 +74,8 @@ private fun Step(
             contentDescription = null,
             colorFilter = ColorFilter.tint(AdyenCheckoutTheme.colors.primary),
             modifier = Modifier.constrainAs(icon) {
-                top.linkTo(body.top)
                 start.linkTo(parent.start)
+                top.linkTo(body.top)
                 bottom.linkTo(body.bottom)
             },
         )
@@ -81,8 +86,8 @@ private fun Step(
             text = label,
             modifier = Modifier
                 .constrainAs(body) {
-                    top.linkTo(parent.top, topMargin)
                     start.linkTo(icon.end, 16.dp)
+                    top.linkTo(parent.top, topMargin)
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom, bottomMargin)
                     width = Dimension.preferredWrapContent
@@ -91,34 +96,43 @@ private fun Step(
 
         // Draw line up from icon
         if (!isFirstStep) {
-            VerticalDivider(
-                color = AdyenCheckoutTheme.colors.outline,
-                modifier = Modifier
-                    .constrainAs(upperConnector) {
-                        top.linkTo(parent.top)
-                        start.linkTo(icon.start)
-                        bottom.linkTo(icon.top)
-                        end.linkTo(icon.end)
-                        height = Dimension.fillToConstraints
-                    },
+            StepConnector(
+                ref = upperConnector,
+                iconRef = icon,
+                topAnchor = { parent.top },
+                bottomAnchor = { icon.top },
             )
         }
 
         // Draw line down from icon
         if (!isLastStep) {
-            VerticalDivider(
-                color = AdyenCheckoutTheme.colors.outline,
-                modifier = Modifier
-                    .constrainAs(lowerConnector) {
-                        top.linkTo(icon.bottom)
-                        start.linkTo(icon.start)
-                        bottom.linkTo(parent.bottom)
-                        end.linkTo(icon.end)
-                        height = Dimension.fillToConstraints
-                    },
+            StepConnector(
+                ref = lowerConnector,
+                iconRef = icon,
+                topAnchor = { icon.bottom },
+                bottomAnchor = { parent.bottom },
             )
         }
     }
+}
+
+@Composable
+private fun ConstraintLayoutScope.StepConnector(
+    ref: ConstrainedLayoutReference,
+    iconRef: ConstrainedLayoutReference,
+    topAnchor: ConstrainScope.() -> ConstraintLayoutBaseScope.HorizontalAnchor,
+    bottomAnchor: ConstrainScope.() -> ConstraintLayoutBaseScope.HorizontalAnchor,
+) {
+    VerticalDivider(
+        color = AdyenCheckoutTheme.colors.outline,
+        modifier = Modifier.constrainAs(ref) {
+            start.linkTo(iconRef.start)
+            top.linkTo(topAnchor())
+            end.linkTo(iconRef.end)
+            bottom.linkTo(bottomAnchor())
+            height = Dimension.fillToConstraints
+        },
+    )
 }
 
 @Preview
@@ -129,7 +143,8 @@ private fun StepperPreview(
     AdyenCheckoutTheme(theme) {
         Surface(color = AdyenCheckoutTheme.colors.background) {
             val steps = listOf(
-                "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius facilisis sit amet ut ipsum.",
+                "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius " +
+                    "facilisis sit amet ut ipsum.",
                 "Step 2",
                 "Step 3",
                 "Step 4: Fusce pretium orci ut nibh rutrum mattis. In condimentum augue id justo cursus facilisis.",
