@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.internal.ui.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CommonComponentParamsMapperData(
