@@ -6,7 +6,7 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import kotlinx.coroutines.CoroutineScope
