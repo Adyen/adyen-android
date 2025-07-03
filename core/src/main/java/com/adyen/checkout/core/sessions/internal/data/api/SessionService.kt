@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.sessions.internal.data.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.DispatcherProvider
+import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClient
 import com.adyen.checkout.core.common.internal.api.post
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRequest
