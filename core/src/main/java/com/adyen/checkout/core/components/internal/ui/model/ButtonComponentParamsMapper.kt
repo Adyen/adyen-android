@@ -6,12 +6,12 @@
  * Created by ozgur on 6/5/2025.
  */
 
-package com.adyen.checkout.core.internal.ui.model
+package com.adyen.checkout.core.components.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.internal.ButtonConfiguration
-import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.components.internal.ButtonConfiguration
+import com.adyen.checkout.core.components.internal.Configuration
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import java.util.Locale
 

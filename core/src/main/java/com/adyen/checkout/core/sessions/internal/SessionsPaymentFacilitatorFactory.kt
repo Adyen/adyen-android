@@ -12,10 +12,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.internal.BaseComponentState
-import com.adyen.checkout.core.internal.PaymentFacilitator
-import com.adyen.checkout.core.internal.PaymentFacilitatorFactory
-import com.adyen.checkout.core.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.internal.BaseComponentState
+import com.adyen.checkout.core.components.internal.PaymentFacilitator
+import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer

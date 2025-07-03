@@ -6,10 +6,10 @@
  * Created by ozgur on 14/5/2025.
  */
 
-package com.adyen.checkout.core.internal.ui
+package com.adyen.checkout.core.components.internal.ui
 
-import com.adyen.checkout.core.internal.BaseComponentState
-import com.adyen.checkout.core.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.BaseComponentState
+import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import kotlinx.coroutines.flow.Flow
 
 internal interface EventDelegate<T : BaseComponentState> {

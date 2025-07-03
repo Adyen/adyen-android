@@ -6,10 +6,10 @@
  * Created by ozgur on 13/6/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 

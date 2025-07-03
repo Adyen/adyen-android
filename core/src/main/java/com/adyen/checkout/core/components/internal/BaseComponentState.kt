@@ -6,7 +6,7 @@
  * Created by ozgur on 17/6/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails

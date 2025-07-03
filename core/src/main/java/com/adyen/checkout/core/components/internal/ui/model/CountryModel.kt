@@ -6,7 +6,7 @@
  * Created by josephj on 16/12/2020.
  */
 
-package com.adyen.checkout.core.internal.ui.model
+package com.adyen.checkout.core.components.internal.ui.model
 
 import androidx.annotation.RestrictTo
 

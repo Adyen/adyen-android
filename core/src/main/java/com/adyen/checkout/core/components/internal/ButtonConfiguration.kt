@@ -6,12 +6,11 @@
  * Created by ozgur on 6/5/2025.
  */
 
-package com.adyen.checkout.core.internal.ui.model
+package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class ButtonComponentParams(
-    private val commonComponentParams: CommonComponentParams,
-    override val isSubmitButtonVisible: Boolean,
-) : ComponentParams by commonComponentParams, ButtonParams
+interface ButtonConfiguration {
+    val isSubmitButtonVisible: Boolean?
+}

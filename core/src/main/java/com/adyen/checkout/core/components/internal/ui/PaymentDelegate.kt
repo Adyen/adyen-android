@@ -6,9 +6,9 @@
  * Created by ozgur on 8/4/2025.
  */
 
-package com.adyen.checkout.core.internal.ui
+package com.adyen.checkout.core.components.internal.ui
 
-import com.adyen.checkout.core.internal.BaseComponentState
+import com.adyen.checkout.core.components.internal.BaseComponentState
 
 // TODO - Some delegates might not be composable,
 //  Move ComposableDelegate to PaymentMethod specific delegate later

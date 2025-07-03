@@ -10,7 +10,7 @@ package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

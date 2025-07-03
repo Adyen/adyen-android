@@ -6,13 +6,13 @@
  * Created by ozgur on 8/4/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import com.adyen.checkout.core.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn

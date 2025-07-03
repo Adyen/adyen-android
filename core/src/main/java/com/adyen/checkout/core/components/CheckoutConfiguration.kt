@@ -18,7 +18,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.IgnoredOnParcel
 import java.util.Locale
 

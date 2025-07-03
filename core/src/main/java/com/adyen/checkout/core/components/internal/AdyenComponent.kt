@@ -6,7 +6,7 @@
  * Created by ozgur on 8/4/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -6,7 +6,7 @@
  * Created by ozgur on 3/6/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.components.AdyenCheckout

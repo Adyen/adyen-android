@@ -6,7 +6,7 @@
  * Created by ozgur on 6/5/2025.
  */
 
-package com.adyen.checkout.core.internal.ui.model
+package com.adyen.checkout.core.components.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsParams
@@ -15,11 +15,11 @@ import com.adyen.checkout.core.components.data.model.Amount
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ComponentParams {
-    val shopperLocale: Locale
-    val environment: Environment
-    val clientKey: String
-    val analyticsParams: AnalyticsParams
-    val isCreatedByDropIn: Boolean
-    val amount: Amount?
-}
+data class CommonComponentParams(
+    override val shopperLocale: Locale,
+    override val environment: Environment,
+    override val clientKey: String,
+    override val analyticsParams: AnalyticsParams,
+    override val isCreatedByDropIn: Boolean,
+    override val amount: Amount?,
+) : ComponentParams

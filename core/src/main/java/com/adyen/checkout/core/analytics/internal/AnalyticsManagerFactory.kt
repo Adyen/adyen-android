@@ -21,7 +21,7 @@ import com.adyen.checkout.core.analytics.internal.data.remote.api.AnalyticsServi
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
