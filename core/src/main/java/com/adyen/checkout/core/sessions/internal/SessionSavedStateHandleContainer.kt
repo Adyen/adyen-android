@@ -6,16 +6,18 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core.sessions
+package com.adyen.checkout.core.sessions.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.internal.SavedStateHandleContainer
 import com.adyen.checkout.core.common.internal.SavedStateHandleProperty
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.data.model.SessionDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToModel
 
-class SessionSavedStateHandleContainer(
+internal class SessionSavedStateHandleContainer(
     override val savedStateHandle: SavedStateHandle,
     checkoutSession: CheckoutSession
 ) : SavedStateHandleContainer {

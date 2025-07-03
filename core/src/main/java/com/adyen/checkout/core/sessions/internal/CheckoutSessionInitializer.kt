@@ -6,12 +6,15 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.sessions
+package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.CheckoutSessionResult
+import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,7 +43,9 @@ internal class CheckoutSessionInitializer(
             onSuccess = { sessionSetupResponse ->
                 return@withContext CheckoutSessionResult.Success(
                     CheckoutSession(
-                        sessionSetupResponse.copy(amount = overrideAmount ?: sessionSetupResponse.amount),
+                        sessionSetupResponse.copy(
+                            amount = overrideAmount ?: sessionSetupResponse.amount
+                        ),
 //                        order,
                         environment,
                         clientKey,
@@ -50,7 +55,12 @@ internal class CheckoutSessionInitializer(
             onFailure = {
                 // TODO - Error propagation
 //                return@withContext CheckoutSessionResult.Error(CheckoutException("Failed to fetch session", it))
-                return@withContext CheckoutSessionResult.Error(Exception("Failed to fetch session", it))
+                return@withContext CheckoutSessionResult.Error(
+                    Exception(
+                        "Failed to fetch session",
+                        it
+                    )
+                )
             },
         )
     }

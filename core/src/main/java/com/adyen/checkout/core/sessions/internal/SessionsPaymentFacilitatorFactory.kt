@@ -17,8 +17,6 @@ import com.adyen.checkout.core.components.internal.PaymentFacilitator
 import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.SessionInteractor
-import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory

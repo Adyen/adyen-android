@@ -6,9 +6,10 @@
  * Created by ozgur on 16/5/2025.
  */
 
-package com.adyen.checkout.core.sessions
+package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
