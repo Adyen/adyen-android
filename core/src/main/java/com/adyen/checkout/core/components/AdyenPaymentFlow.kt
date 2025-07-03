@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.adyen.checkout.core.internal.AdyenComponent
+import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.ui.internal.PrimaryButton
 
 // TODO - Change Name?

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
-import com.adyen.checkout.core.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

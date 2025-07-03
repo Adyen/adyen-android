@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.sessions
 
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.internal.Configuration
 
 internal object CheckoutSessionProvider {
 
