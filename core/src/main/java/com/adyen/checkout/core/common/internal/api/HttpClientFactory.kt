@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.common.Environment
 import okhttp3.OkHttpClient
 import com.adyen.checkout.core.common.internal.api.OkHttpClient as InternalOkHttpClient
 

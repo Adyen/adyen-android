@@ -9,8 +9,8 @@
 package com.adyen.checkout.core.internal
 
 import android.content.Context
-import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.analytics.AnalyticsConfiguration
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.components.data.model.Amount
 import java.util.Locale
