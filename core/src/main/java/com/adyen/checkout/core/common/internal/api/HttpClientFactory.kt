@@ -6,12 +6,12 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.api
+package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.Environment
 import okhttp3.OkHttpClient
-import com.adyen.checkout.core.internal.data.api.OkHttpClient as InternalOkHttpClient
+import com.adyen.checkout.core.common.internal.api.OkHttpClient as InternalOkHttpClient
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object HttpClientFactory {

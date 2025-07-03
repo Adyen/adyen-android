@@ -6,7 +6,7 @@
  * Created by ararat on 6/6/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.common.internal.model
 
 import androidx.annotation.RestrictTo
 import kotlinx.parcelize.Parcelize

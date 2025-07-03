@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.components.paymentmethod
 
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import org.json.JSONObject
 
 /**

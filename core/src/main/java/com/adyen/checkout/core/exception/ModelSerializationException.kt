@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.exception
 
-import com.adyen.checkout.core.internal.data.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelObject
 import org.json.JSONException
 
 /**

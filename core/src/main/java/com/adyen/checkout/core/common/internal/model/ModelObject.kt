@@ -6,10 +6,11 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.common.internal.model
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.internal.model.ModelObject.Serializer
 import org.json.JSONObject
 
 /**

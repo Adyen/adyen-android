@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.exception
 
-import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
+import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 
 /**
  * Indicates that an internal API call has failed.

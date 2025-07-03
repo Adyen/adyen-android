@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
+import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
+import com.adyen.checkout.core.common.internal.model.getLongOrNull
+import com.adyen.checkout.core.common.internal.model.getMapOrNull
+import com.adyen.checkout.core.common.internal.model.getStringOrNull
 import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.getBooleanOrNull
-import com.adyen.checkout.core.internal.data.model.getLongOrNull
-import com.adyen.checkout.core.internal.data.model.getMapOrNull
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
