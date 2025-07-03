@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote.model
 
-import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.common.exception.ModelSerializationException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

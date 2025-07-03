@@ -9,8 +9,8 @@
 package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.exception.HttpException
 import com.adyen.checkout.core.common.internal.model.ModelObject
-import com.adyen.checkout.core.exception.HttpException
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

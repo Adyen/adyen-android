@@ -6,7 +6,7 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.exception
+package com.adyen.checkout.core.common.exception
 
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import org.json.JSONException
