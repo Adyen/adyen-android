@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.sessions
 
+import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
-import com.adyen.checkout.core.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
