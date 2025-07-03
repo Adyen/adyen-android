@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.sessions
 
-import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.data.model.Amount
