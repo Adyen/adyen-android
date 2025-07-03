@@ -6,11 +6,11 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.api
+package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.exception.HttpException
-import com.adyen.checkout.core.internal.data.model.ModelObject
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -13,9 +13,9 @@ import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupResponse
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.api.post
-import com.adyen.checkout.core.internal.data.model.EmptyResponse
+import com.adyen.checkout.core.common.internal.api.HttpClient
+import com.adyen.checkout.core.common.internal.api.post
+import com.adyen.checkout.core.common.internal.model.EmptyResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
