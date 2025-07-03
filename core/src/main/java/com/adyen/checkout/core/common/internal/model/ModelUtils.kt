@@ -6,7 +6,7 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.common.internal.model
 
 import org.json.JSONArray
 import org.json.JSONObject

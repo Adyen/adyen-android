@@ -6,10 +6,10 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.internal.data.model
+package com.adyen.checkout.core.common.internal.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.common.exception.ModelSerializationException
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject

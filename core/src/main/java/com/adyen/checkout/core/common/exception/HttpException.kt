@@ -6,9 +6,9 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.exception
+package com.adyen.checkout.core.common.exception
 
-import com.adyen.checkout.core.internal.data.model.ErrorResponseBody
+import com.adyen.checkout.core.common.internal.model.ErrorResponseBody
 
 /**
  * Indicates that an internal API call has failed.

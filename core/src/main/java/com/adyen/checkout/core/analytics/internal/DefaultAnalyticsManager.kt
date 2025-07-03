@@ -9,8 +9,8 @@
 package com.adyen.checkout.core.analytics.internal
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.core.DispatcherProvider
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
+import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

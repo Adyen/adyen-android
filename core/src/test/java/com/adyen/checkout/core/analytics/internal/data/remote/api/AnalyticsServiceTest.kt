@@ -9,9 +9,9 @@
 package com.adyen.checkout.core.analytics.internal.data.remote.api
 
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsTrackRequest
-import com.adyen.checkout.core.internal.data.api.AdyenApiResponse
-import com.adyen.checkout.core.internal.data.api.HttpClient
-import com.adyen.checkout.core.internal.data.model.EmptyResponse
+import com.adyen.checkout.core.common.internal.api.AdyenApiResponse
+import com.adyen.checkout.core.common.internal.api.HttpClient
+import com.adyen.checkout.core.common.internal.model.EmptyResponse
 import com.adyen.checkout.test.LoggingExtension
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertInstanceOf
