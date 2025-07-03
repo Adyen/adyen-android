@@ -8,12 +8,12 @@
 
 package com.adyen.checkout.core.mbway.internal.ui
 
+import com.adyen.checkout.core.common.internal.ui.state.TestFieldTransformerRegistry
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.internal.ui.state.TestFieldTransformerRegistry
-import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
-import com.adyen.checkout.core.internal.ui.state.model.Validation
+import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import org.junit.jupiter.api.Assertions.assertEquals

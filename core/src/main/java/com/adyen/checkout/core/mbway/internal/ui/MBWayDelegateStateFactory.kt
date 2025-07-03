@@ -12,8 +12,8 @@ import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.internal.ui.state.DelegateStateFactory
-import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.DelegateStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 
