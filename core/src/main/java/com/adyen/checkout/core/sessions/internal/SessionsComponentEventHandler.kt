@@ -13,7 +13,6 @@ import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.sessions.SessionInteractor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

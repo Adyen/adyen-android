@@ -9,9 +9,9 @@
 package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.sessions.CheckoutSession
-import com.adyen.checkout.core.sessions.CheckoutSessionProvider
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,

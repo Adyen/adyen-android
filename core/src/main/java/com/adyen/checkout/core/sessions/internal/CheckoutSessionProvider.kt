@@ -6,10 +6,12 @@
  * Created by ozgur on 30/4/2025.
  */
 
-package com.adyen.checkout.core.sessions
+package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.core.sessions.CheckoutSessionResult
+import com.adyen.checkout.core.sessions.SessionModel
 
 internal object CheckoutSessionProvider {
 
