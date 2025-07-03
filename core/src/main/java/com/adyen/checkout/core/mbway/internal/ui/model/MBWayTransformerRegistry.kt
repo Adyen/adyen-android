@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.model
 
-import com.adyen.checkout.core.internal.ui.state.transformer.DefaultTransformer
-import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformer
-import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformerRegistry
+import com.adyen.checkout.core.components.internal.ui.state.transformer.DefaultTransformer
+import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformer
+import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayTransformerRegistry : FieldTransformerRegistry<MBWayFieldId> {

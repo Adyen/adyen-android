@@ -8,10 +8,10 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.model
 
-import com.adyen.checkout.core.internal.ui.state.model.Validation
-import com.adyen.checkout.core.internal.ui.state.validator.DefaultValidator
-import com.adyen.checkout.core.internal.ui.state.validator.FieldValidator
-import com.adyen.checkout.core.internal.ui.state.validator.FieldValidatorRegistry
+import com.adyen.checkout.core.components.internal.ui.state.model.Validation
+import com.adyen.checkout.core.components.internal.ui.state.validator.DefaultValidator
+import com.adyen.checkout.core.components.internal.ui.state.validator.FieldValidator
+import com.adyen.checkout.core.components.internal.ui.state.validator.FieldValidatorRegistry
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayDelegateState, MBWayFieldId> {

@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.mbway.internal.model
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayStateUpdaterRegistry
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId

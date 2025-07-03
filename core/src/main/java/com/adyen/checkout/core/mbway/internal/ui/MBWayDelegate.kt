@@ -18,9 +18,9 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.EventDelegate
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
-import com.adyen.checkout.core.internal.ui.state.DelegateStateManager
-import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
-import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformerRegistry
+import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
+import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
+import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.model.toViewState
