@@ -10,8 +10,8 @@ package com.adyen.checkout.core.action.internal
 
 import android.content.Context
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.internal.BaseConfigurationBuilder
-import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.components.internal.BaseConfigurationBuilder
+import com.adyen.checkout.core.components.internal.Configuration
 import java.util.Locale
 
 @Suppress(

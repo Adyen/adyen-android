@@ -14,10 +14,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.OrderRequest
-import com.adyen.checkout.core.internal.PaymentComponentEvent
-import com.adyen.checkout.core.internal.ui.EventDelegate
-import com.adyen.checkout.core.internal.ui.PaymentDelegate
-import com.adyen.checkout.core.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.ui.EventDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.internal.ui.state.transformer.FieldTransformerRegistry

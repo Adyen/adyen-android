@@ -6,7 +6,7 @@
  * Created by ozgur on 6/5/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.components.internal
 
 interface ButtonConfigurationBuilder {
 

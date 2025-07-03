@@ -15,9 +15,9 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.internal.ButtonConfiguration
-import com.adyen.checkout.core.internal.ButtonConfigurationBuilder
-import com.adyen.checkout.core.internal.Configuration
+import com.adyen.checkout.core.components.internal.ButtonConfiguration
+import com.adyen.checkout.core.components.internal.ButtonConfigurationBuilder
+import com.adyen.checkout.core.components.internal.Configuration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
 
