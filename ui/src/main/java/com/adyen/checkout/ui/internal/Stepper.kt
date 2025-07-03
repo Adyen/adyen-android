@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -61,11 +62,11 @@ private fun Step(
     ConstraintLayout(
         modifier = modifier,
     ) {
-        val (icon, body) = createRefs()
+        val (icon, body, upperConnector, lowerConnector) = createRefs()
         Image(
             painter = painterResource(R.drawable.ic_rounded_square),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(AdyenCheckoutTheme.colors.text),
+            colorFilter = ColorFilter.tint(AdyenCheckoutTheme.colors.primary),
             modifier = Modifier.constrainAs(icon) {
                 top.linkTo(body.top)
                 start.linkTo(parent.start)
@@ -86,6 +87,36 @@ private fun Step(
                     width = Dimension.preferredWrapContent
                 },
         )
+
+        // Draw line up from icon
+        if (!isFirstStep) {
+            VerticalDivider(
+                color = AdyenCheckoutTheme.colors.outline,
+                modifier = Modifier
+                    .constrainAs(upperConnector) {
+                        top.linkTo(parent.top)
+                        start.linkTo(icon.start)
+                        bottom.linkTo(icon.top)
+                        end.linkTo(icon.end)
+                        height = Dimension.fillToConstraints
+                    },
+            )
+        }
+
+        // Draw line down from icon
+        if (!isLastStep) {
+            VerticalDivider(
+                color = AdyenCheckoutTheme.colors.outline,
+                modifier = Modifier
+                    .constrainAs(lowerConnector) {
+                        top.linkTo(icon.bottom)
+                        start.linkTo(icon.start)
+                        bottom.linkTo(parent.bottom)
+                        end.linkTo(icon.end)
+                        height = Dimension.fillToConstraints
+                    },
+            )
+        }
     }
 }
 
