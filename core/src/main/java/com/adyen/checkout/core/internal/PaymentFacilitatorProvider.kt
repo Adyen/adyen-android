@@ -10,6 +10,7 @@ package com.adyen.checkout.core.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class PaymentFacilitatorProvider {

@@ -6,18 +6,22 @@
  * Created by ozgur on 30/5/2025.
  */
 
-package com.adyen.checkout.core.internal
+package com.adyen.checkout.core.sessions.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.internal.ui.model.SessionParamsFactory
+import com.adyen.checkout.core.internal.BaseComponentState
+import com.adyen.checkout.core.internal.PaymentFacilitator
+import com.adyen.checkout.core.internal.PaymentFacilitatorFactory
+import com.adyen.checkout.core.internal.PaymentMethodProvider
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.SessionInteractor
 import com.adyen.checkout.core.sessions.SessionSavedStateHandleContainer
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
+import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class SessionsPaymentFacilitatorFactory(

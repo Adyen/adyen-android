@@ -10,7 +10,7 @@ package com.adyen.checkout.core.internal
 
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.internal.ui.PaymentDelegate
-import com.adyen.checkout.core.internal.ui.model.SessionParams
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
 internal object PaymentMethodProvider {
