@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
+// TODO - replace paddings and margins with standardized dimensions
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun Stepper(
@@ -40,7 +41,7 @@ fun Stepper(
                 color = AdyenCheckoutTheme.colors.container,
                 shape = RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp),
             )
-            .padding(12.dp),
+            .padding(16.dp),
     ) {
         steps.forEachIndexed { index, step ->
             Step(
