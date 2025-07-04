@@ -786,11 +786,11 @@ class CardView @JvmOverloads constructor(
     }
 
     private fun setCoBadgeBrands(dualBrandData: DualBrandData?) {
-        val isDualBranded = dualBrandData != null
-        binding.recyclerViewCobadgeBrands.isVisible = isDualBranded
-        binding.textViewCobadgeBrandsHeader.isVisible = isDualBranded
-        binding.textViewCobadgeBrandsDescription.isVisible = isDualBranded
-        if (isDualBranded) {
+        val shouldDisplaySelection = dualBrandData != null && dualBrandData.selectable
+        binding.recyclerViewCobadgeBrands.isVisible = shouldDisplaySelection
+        binding.textViewCobadgeBrandsHeader.isVisible = shouldDisplaySelection
+        binding.textViewCobadgeBrandsDescription.isVisible = shouldDisplaySelection
+        if (shouldDisplaySelection) {
             if (cardBrandAdapter == null) {
                 cardBrandAdapter = CardBrandAdapter { cardBrandItem ->
                     cardDelegate.updateInputData {
