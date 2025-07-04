@@ -14,5 +14,6 @@ import com.adyen.checkout.card.CardBrand
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class DualBrandData(
     val selectedBrand: CardBrand?,
-    val brandOptions: List<CardBrandItem>
+    val brandOptions: List<CardBrandItem>,
+    val selectable: Boolean
 )
