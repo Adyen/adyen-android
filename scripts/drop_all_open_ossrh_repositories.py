@@ -31,7 +31,7 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
     if expected_success_codes is None:
         expected_success_codes = [200]
 
-    print(f"Making {method} request to: {url} with params: {params if params else 'None'}")
+    print(f"Making {method} request to: {url}")
     try:
         response = requests.request(method=method, url=url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
 
