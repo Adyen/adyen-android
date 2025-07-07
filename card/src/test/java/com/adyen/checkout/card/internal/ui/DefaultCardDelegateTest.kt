@@ -897,6 +897,7 @@ internal class DefaultCardDelegateTest(
                                     environment = Environment.TEST,
                                 ),
                             ),
+                            selectable = true,
                         ),
                     ),
                 )

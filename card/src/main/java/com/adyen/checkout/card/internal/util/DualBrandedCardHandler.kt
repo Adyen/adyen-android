@@ -13,6 +13,7 @@ import com.adyen.checkout.card.CardBrand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
+import com.adyen.checkout.core.CardType
 import com.adyen.checkout.core.Environment
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -23,19 +24,53 @@ class DualBrandedCardHandler(private val environment: Environment) {
         selectedBrand: CardBrand?
     ): DualBrandData? {
         if (!isDualBrandedFlow(detectedCardTypes)) return null
-        val brandOptions = mapToCardBrandItemList(detectedCardTypes, selectedBrand)
-        return DualBrandData(
-            selectedBrand = getSelectedCardType(detectedCardTypes, selectedBrand)?.cardBrand
-                ?: brandOptions.firstOrNull()?.brand,
+
+        val isSelectable = isSelectable(detectedCardTypes = detectedCardTypes)
+        val brandOptions = mapToCardBrandItemList(
+            detectedCardTypes = detectedCardTypes,
+            selectedBrand = selectedBrand,
+            isSelectable = isSelectable,
+        )
+
+        val selectedCardBrand = getSelectedCardBrand(
+            isSelectable = isSelectable,
+            detectedCardTypes = detectedCardTypes,
+            selectedBrand = selectedBrand,
             brandOptions = brandOptions,
+        )
+
+        return DualBrandData(
+            selectedBrand = selectedCardBrand,
+            brandOptions = brandOptions,
+            selectable = isSelectable,
         )
     }
 
-    private fun getSelectedCardType(
+    private fun isSelectable(detectedCardTypes: List<DetectedCardType>): Boolean {
+        return detectedCardTypes.filter { it.isSupported && it.isReliable }.any {
+            it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS
+        }
+    }
+
+    private fun getSelectedCardBrand(
+        isSelectable: Boolean,
+        detectedCardTypes: List<DetectedCardType>,
+        selectedBrand: CardBrand?,
+        brandOptions: List<CardBrandItem>
+    ): CardBrand? {
+        return if (isSelectable) {
+            findSelectedCardType(detectedCardTypes, selectedBrand)?.cardBrand
+                ?: brandOptions.firstOrNull()?.brand
+        } else {
+            null
+        }
+    }
+
+    private fun findSelectedCardType(
         detectedCardTypes: List<DetectedCardType>,
         selectedBrand: CardBrand?
     ): DetectedCardType? {
-        return detectedCardTypes.firstOrNull { it.cardBrand.txVariant == selectedBrand?.txVariant }
+        return detectedCardTypes.find { it.cardBrand.txVariant == selectedBrand?.txVariant }
     }
 
     private fun isDualBrandedFlow(detectedCardTypes: List<DetectedCardType>): Boolean {
@@ -44,15 +79,16 @@ class DualBrandedCardHandler(private val environment: Environment) {
 
     private fun mapToCardBrandItemList(
         detectedCardTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?
+        selectedBrand: CardBrand?,
+        isSelectable: Boolean,
     ): List<CardBrandItem> {
         val filteredCardBrands = detectedCardTypes.filter { it.isSupported && it.isReliable }
         return filteredCardBrands.mapIndexed { index, detectedCardType ->
             if (selectedBrand == null) {
-                detectedCardType.mapToCardBrandItem(index == 0)
+                detectedCardType.mapToCardBrandItem(isSelectable && index == 0)
             } else {
                 detectedCardType.mapToCardBrandItem(
-                    detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
+                    isSelectable && detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
                 )
             }
         }
@@ -64,4 +100,12 @@ class DualBrandedCardHandler(private val environment: Environment) {
         isSelected = isSelected,
         environment = environment,
     )
+
+    companion object {
+        private val SUPPORTED_CARD_BRANDS = listOf(
+            CardType.CARTEBANCAIRE,
+            CardType.BCMC,
+            CardType.DANKORT,
+        ).map { it.txVariant }
+    }
 }
