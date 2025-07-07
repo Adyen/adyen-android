@@ -128,7 +128,7 @@ This repository is available under the [MIT license](LICENSE).
 [mavenRepo]: https://repo1.maven.org/maven2/com/adyen/checkout/
 [migration.guide]: https://docs.adyen.com/online-payments/build-your-integration/migrate-to-android-5-0-0
 [github.newIssue]: https://github.com/Adyen/adyen-android/issues/new/choose
-[adyen.support]: https://ca-live.adyen.com/ca/ca/contactUs/support.shtml
+[adyen.support]: https://ca-live.adyen.com/ca/ca/contactUs.shtml
 [analytics.firstVersion]: https://github.com/Adyen/adyen-android/releases/tag/5.0.0
 [docs.analytics]: https://docs.adyen.com/online-payments/analytics-and-data-tracking
 [contributing.guidelines]: https://github.com/Adyen/.github/blob/main/CONTRIBUTING.md
