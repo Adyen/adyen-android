@@ -9,12 +9,12 @@
 package com.adyen.checkout.example.ui.v6
 
 import androidx.lifecycle.ViewModel
-import com.adyen.checkout.core.AdyenCheckout
-import com.adyen.checkout.core.CheckoutCallback
-import com.adyen.checkout.core.CheckoutConfiguration
-import com.adyen.checkout.core.CheckoutResult
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.core.paymentmethod.PaymentComponentState
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.example.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

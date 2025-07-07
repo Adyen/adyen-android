@@ -8,9 +8,9 @@
 
 package com.adyen.checkout.core.mbway.internal.ui.model
 
-import com.adyen.checkout.core.internal.ui.model.CountryModel
-import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
-import com.adyen.checkout.core.internal.ui.state.model.toViewFieldState
+import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.toViewFieldState
 
 internal data class MBWayViewState(
     val countries: List<CountryModel>,

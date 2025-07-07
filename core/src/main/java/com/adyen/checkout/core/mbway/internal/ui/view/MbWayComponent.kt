@@ -33,9 +33,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.adyen.checkout.core.internal.ui.model.CountryModel
-import com.adyen.checkout.core.internal.ui.state.FieldChangeListener
-import com.adyen.checkout.core.internal.ui.state.model.ViewFieldState
+import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
+import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
 import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme

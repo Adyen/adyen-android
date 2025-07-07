@@ -9,12 +9,12 @@
 package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.data.model.Amount
-import com.adyen.checkout.core.data.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.ModelUtils
-import com.adyen.checkout.core.internal.data.model.getStringOrNull
+import com.adyen.checkout.core.common.exception.ModelSerializationException
+import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils
+import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.SessionSetupConfiguration
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -56,13 +56,13 @@ data class SessionSetupResponse(
                         PAYMENT_METHODS,
                         ModelUtils.serializeOpt(
                             modelObject.paymentMethodsApiResponse,
-                            PaymentMethodsApiResponse.SERIALIZER
-                        )
+                            PaymentMethodsApiResponse.SERIALIZER,
+                        ),
                     )
                     jsonObject.putOpt(RETURN_URL, modelObject.returnUrl)
                     jsonObject.putOpt(
                         CONFIGURATION,
-                        ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER)
+                        ModelUtils.serializeOpt(modelObject.configuration, SessionSetupConfiguration.SERIALIZER),
                     )
                     jsonObject.putOpt(SHOPPER_LOCALE, modelObject.shopperLocale)
                 } catch (e: JSONException) {
@@ -80,12 +80,12 @@ data class SessionSetupResponse(
                         expiresAt = jsonObject.getStringOrNull(EXPIRES_AT).orEmpty(),
                         paymentMethodsApiResponse = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(PAYMENT_METHODS),
-                            PaymentMethodsApiResponse.SERIALIZER
+                            PaymentMethodsApiResponse.SERIALIZER,
                         ),
                         returnUrl = jsonObject.getStringOrNull(RETURN_URL),
                         configuration = ModelUtils.deserializeOpt(
                             jsonObject.optJSONObject(CONFIGURATION),
-                            SessionSetupConfiguration.SERIALIZER
+                            SessionSetupConfiguration.SERIALIZER,
                         ),
                         shopperLocale = jsonObject.getStringOrNull(SHOPPER_LOCALE),
                     )
