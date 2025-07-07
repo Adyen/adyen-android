@@ -45,12 +45,12 @@ fun SwitchContainer(
                 color = AdyenCheckoutTheme.colors.container,
                 shape = RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp),
             )
-            .padding(12.dp),
+            .padding(Dimensions.Medium),
     ) {
         Box(Modifier.weight(1f)) {
             content()
         }
-        Spacer(Modifier.size(8.dp))
+        Spacer(Modifier.size(Dimensions.Small))
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
@@ -86,10 +86,10 @@ private fun SwitchContainerPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             val description = "A very long and detailed description that covers multiple lines"
             SwitchContainer(

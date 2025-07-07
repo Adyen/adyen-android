@@ -27,4 +27,6 @@ object Dimensions {
     val DoubleExtraLarge = 32.dp
 
     val TripleExtraLarge = 48.dp
+
+    val MinTouchTarget = 48.dp
 }

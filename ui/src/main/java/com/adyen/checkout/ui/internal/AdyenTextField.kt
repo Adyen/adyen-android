@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenColor
@@ -121,10 +120,10 @@ private fun AdyenTextFieldPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(theme.colors.background.toCompose())
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             AdyenTextField(
                 value = "",
