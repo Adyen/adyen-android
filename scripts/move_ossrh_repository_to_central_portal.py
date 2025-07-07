@@ -43,7 +43,7 @@ def _make_api_request(method, url, auth, params=None, headers=None, expected_suc
         else: # Default for GET, DELETE etc.
             expected_success_codes = [200]
 
-    print(f"Making {method} request to: {url} with params: {params if params else 'None'}")
+    print(f"Making {method} request to: {url}")
     try:
         response = requests.request(method, url, auth=auth, params=params, headers=headers, timeout=TIMEOUT_SECONDS)
 
@@ -81,7 +81,6 @@ def _get_single_open_repository_key(auth):
 
         if not isinstance(repositories, list):
             print(f"Error: Expected 'repositories' to be a list, got {type(repositories)}.")
-            print(f"Response data: {data}")
             return None
 
         if len(repositories) == 0:
@@ -96,7 +95,6 @@ def _get_single_open_repository_key(auth):
             repo_key = repositories[0].get("key")
             if not repo_key:
                 print("Error: Found one repository, but it has no 'key'.")
-                print(f"Repository data: {repositories[0]}")
                 return None
             print(f"Found one open repository with key: {repo_key}")
             return repo_key
@@ -125,10 +123,6 @@ def _upload_repository_by_key(auth, repo_key, publishing_type_value):
 
     if response is None: # Network or request exception
         return False
-
-    print("-------------------- UPLOAD RESPONSE START --------------------")
-    print(response.text)
-    print("-------------------- UPLOAD RESPONSE END ----------------------")
     print(f"Upload HTTP Status Code: {response.status_code}")
 
     # Success conditions: 2xx status codes
