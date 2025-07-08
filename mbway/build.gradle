@@ -49,6 +49,7 @@ dependencies {
     implementation libs.material
 
     //Tests
+    testImplementation testFixtures(project(':core'))
     testImplementation testFixtures(project(':test-core'))
     testImplementation testFixtures(project(':components-core'))
     testImplementation testFixtures(project(':ui-core'))
