@@ -46,6 +46,7 @@ dependencies {
     api project(':sessions-core')
 
     // Dependencies
+    implementation libs.androidx.startup
     implementation libs.material
 
     //Tests
