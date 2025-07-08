@@ -6,7 +6,7 @@
  * Created by ararat on 16/4/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui.view
+package com.adyen.checkout.mbway.internal.ui.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
-import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
-import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized

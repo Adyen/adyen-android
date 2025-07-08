@@ -6,13 +6,13 @@
  * Created by ararat on 4/2/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdater
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdaterRegistry
-import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateState, MBWayFieldId> {
 

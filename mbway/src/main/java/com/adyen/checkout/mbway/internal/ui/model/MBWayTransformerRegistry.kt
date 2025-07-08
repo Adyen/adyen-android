@@ -6,12 +6,12 @@
  * Created by ararat on 24/1/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.core.components.internal.ui.state.transformer.DefaultTransformer
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformer
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
-import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayTransformerRegistry : FieldTransformerRegistry<MBWayFieldId> {
     private val transformers = MBWayFieldId.entries.associateWith { fieldId ->

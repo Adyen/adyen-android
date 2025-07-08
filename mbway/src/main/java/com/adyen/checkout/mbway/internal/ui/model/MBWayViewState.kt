@@ -6,7 +6,7 @@
  * Created by ararat on 14/1/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.model
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState

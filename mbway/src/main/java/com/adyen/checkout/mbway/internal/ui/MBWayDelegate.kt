@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 16/4/2025.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui
+package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,11 +21,11 @@ import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
-import com.adyen.checkout.core.mbway.internal.ui.model.MBWayDelegateState
-import com.adyen.checkout.core.mbway.internal.ui.model.MBWayViewState
-import com.adyen.checkout.core.mbway.internal.ui.model.toViewState
-import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
-import com.adyen.checkout.core.mbway.internal.ui.view.MbWayComponent
+import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.model.toViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted

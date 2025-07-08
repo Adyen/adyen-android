@@ -8,12 +8,14 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
-internal interface PaymentMethodFactory<CS : BaseComponentState, T : PaymentDelegate<CS>> {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface PaymentMethodFactory<CS : BaseComponentState, T : PaymentDelegate<CS>> {
 
     /**
      * Creates a [PaymentDelegate].

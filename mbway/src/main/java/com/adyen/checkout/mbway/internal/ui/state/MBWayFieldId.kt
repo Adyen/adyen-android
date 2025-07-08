@@ -6,7 +6,7 @@
  * Created by ararat on 16/4/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal.ui.state
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 

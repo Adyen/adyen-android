@@ -3,15 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/3/2025.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.core.mbway.internal
+package com.adyen.checkout.mbway.internal
 
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.mbway.internal.ui.MBWayDelegateStateFactory
-import com.adyen.checkout.core.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.MBWayDelegateStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
