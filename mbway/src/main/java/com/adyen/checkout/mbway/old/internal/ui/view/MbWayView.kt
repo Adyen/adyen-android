@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/9/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui.view
+package com.adyen.checkout.mbway.old.internal.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.mbway.databinding.MbwayViewBinding
-import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.old.internal.ui.MBWayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel

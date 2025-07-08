@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 13/7/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.old.internal.ui
 
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.old.MBWayComponentState
+import com.adyen.checkout.mbway.old.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.old.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate

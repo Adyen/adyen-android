@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 11/8/2020.
+ * Created by oscars on 8/7/2025.
  */
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.old
 
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration

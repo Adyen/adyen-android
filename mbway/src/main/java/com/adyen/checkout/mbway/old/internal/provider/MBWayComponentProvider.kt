@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 12/4/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.provider
+package com.adyen.checkout.mbway.old.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -34,12 +34,12 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.mbway.MBWayComponent
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.MBWayConfiguration
-import com.adyen.checkout.mbway.getMBWayConfiguration
-import com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegate
-import com.adyen.checkout.mbway.toCheckoutConfiguration
+import com.adyen.checkout.mbway.old.MBWayComponent
+import com.adyen.checkout.mbway.old.MBWayComponentState
+import com.adyen.checkout.mbway.old.MBWayConfiguration
+import com.adyen.checkout.mbway.old.getMBWayConfiguration
+import com.adyen.checkout.mbway.old.internal.ui.DefaultMBWayDelegate
+import com.adyen.checkout.mbway.old.toCheckoutConfiguration
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.SessionComponentEventHandler

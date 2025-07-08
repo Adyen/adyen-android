@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 11/8/2020.
+ * Created by oscars on 8/7/2025.
  */
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.old
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -22,8 +22,8 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
-import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.old.internal.provider.MBWayComponentProvider
+import com.adyen.checkout.mbway.old.internal.ui.MBWayDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent

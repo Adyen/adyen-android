@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 30/6/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.old.internal.ui
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LifecycleOwner
@@ -22,9 +22,9 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.components.core.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.old.MBWayComponentState
+import com.adyen.checkout.mbway.old.internal.ui.model.MBWayInputData
+import com.adyen.checkout.mbway.old.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 13/12/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway
+package com.adyen.checkout.mbway.old
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
@@ -15,8 +15,8 @@ import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
-import com.adyen.checkout.mbway.internal.ui.MBWayDelegate
-import com.adyen.checkout.mbway.internal.ui.MbWayComponentViewType
+import com.adyen.checkout.mbway.old.internal.ui.MBWayDelegate
+import com.adyen.checkout.mbway.old.internal.ui.MbWayComponentViewType
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared

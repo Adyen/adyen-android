@@ -123,7 +123,7 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/a
 	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public static synthetic fun addInstantPaymentConfiguration$default (Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMBWayConfiguration (Lcom/adyen/checkout/mbway/MBWayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun addMBWayConfiguration (Lcom/adyen/checkout/mbway/old/MBWayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMealVoucherFRConfiguration (Lcom/adyen/checkout/mealvoucherfr/MealVoucherFRConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMolpayMalasyaConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addMolpayThailandConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;

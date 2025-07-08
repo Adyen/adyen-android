@@ -5,7 +5,7 @@
  *
  * Created by josephj on 18/12/2020.
  */
-package com.adyen.checkout.mbway.internal.ui.model
+package com.adyen.checkout.mbway.old.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData

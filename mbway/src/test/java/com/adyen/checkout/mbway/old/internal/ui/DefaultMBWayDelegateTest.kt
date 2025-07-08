@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 25/7/2022.
+ * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.old.internal.ui
 
 import app.cash.turbine.test
 import com.adyen.checkout.components.core.Amount
@@ -19,11 +19,11 @@ import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManage
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.MBWayConfiguration
-import com.adyen.checkout.mbway.getMBWayConfiguration
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
-import com.adyen.checkout.mbway.mbWay
+import com.adyen.checkout.mbway.old.MBWayComponentState
+import com.adyen.checkout.mbway.old.MBWayConfiguration
+import com.adyen.checkout.mbway.old.getMBWayConfiguration
+import com.adyen.checkout.mbway.old.internal.ui.model.MBWayOutputData
+import com.adyen.checkout.mbway.old.mbWay
 import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -182,7 +182,7 @@ internal class DefaultMBWayDelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.mbway.internal.ui.DefaultMBWayDelegateTest#amountSource")
+        @MethodSource("com.adyen.checkout.mbway.old.internal.ui.DefaultMBWayDelegateTest#amountSource")
         fun `when input data is valid then amount is propagated in component state if set`(
             configurationValue: Amount?,
             expectedComponentStateValue: Amount?,
