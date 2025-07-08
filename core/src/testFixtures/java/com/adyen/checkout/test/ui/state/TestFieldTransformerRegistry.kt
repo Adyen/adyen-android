@@ -6,7 +6,7 @@
  * Created by ararat on 6/3/2025.
  */
 
-package com.adyen.checkout.core.common.internal.ui.state
+package com.adyen.checkout.test.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
