@@ -13,6 +13,7 @@ import androidx.annotation.RestrictTo
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentEvent<ComponentStateT : BaseComponentState> {
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     class Submit<ComponentStateT : BaseComponentState>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()

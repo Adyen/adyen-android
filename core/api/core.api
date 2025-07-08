@@ -662,12 +662,6 @@ public abstract interface class com/adyen/checkout/core/components/internal/Butt
 	public abstract fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/core/components/internal/ButtonConfigurationBuilder;
 }
 
-public final class com/adyen/checkout/core/components/internal/PaymentComponentEvent$Submit : com/adyen/checkout/core/components/internal/PaymentComponentEvent {
-	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;)V
-	public final fun getState ()Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;
-}
-
 public final class com/adyen/checkout/core/components/paymentmethod/GenericPaymentMethod : com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
