@@ -6,7 +6,45 @@ public final class com/adyen/checkout/mbway/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/mbway/internal/ui/MBWayConfiguration : com/adyen/checkout/core/components/internal/ButtonConfiguration, com/adyen/checkout/core/components/internal/Configuration {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;Lcom/adyen/checkout/core/components/data/model/Amount;Ljava/lang/Boolean;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun describeContents ()I
+	public fun getAmount ()Lcom/adyen/checkout/core/components/data/model/Amount;
+	public fun getAnalyticsConfiguration ()Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
+	public fun getClientKey ()Ljava/lang/String;
+	public fun getEnvironment ()Lcom/adyen/checkout/core/common/Environment;
+	public fun getShopperLocale ()Ljava/util/Locale;
+	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/mbway/internal/ui/MBWayConfiguration$Builder : com/adyen/checkout/core/action/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/core/components/internal/ButtonConfigurationBuilder {
+	public static final field $stable I
+	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
+	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
+	public synthetic fun buildInternal ()Lcom/adyen/checkout/core/components/internal/Configuration;
+	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/core/components/internal/ButtonConfigurationBuilder;
+	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/mbway/internal/ui/MBWayConfiguration$Builder;
+}
+
+public final class com/adyen/checkout/mbway/internal/ui/MBWayConfiguration$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/mbway/internal/ui/MBWayConfiguration;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/mbway/internal/ui/MBWayConfiguration;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/mbway/internal/ui/MBWayConfigurationKt {
+	public static final fun mbWay (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun mbWay$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+}
+
 public final class com/adyen/checkout/mbway/old/MBWayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/mbway/old/MBWayComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/mbway/old/internal/provider/MBWayComponentProvider;
@@ -25,6 +63,7 @@ public final class com/adyen/checkout/mbway/old/MBWayComponent$Companion {
 }
 
 public final class com/adyen/checkout/mbway/old/MBWayComponentState : com/adyen/checkout/components/core/PaymentComponentState {
+	public static final field $stable I
 	public fun <init> (Lcom/adyen/checkout/components/core/PaymentComponentData;ZZ)V
 	public final fun component1 ()Lcom/adyen/checkout/components/core/PaymentComponentData;
 	public final fun component2 ()Z
@@ -41,6 +80,7 @@ public final class com/adyen/checkout/mbway/old/MBWayComponentState : com/adyen/
 }
 
 public final class com/adyen/checkout/mbway/old/MBWayConfiguration : com/adyen/checkout/components/core/internal/ButtonConfiguration, com/adyen/checkout/components/core/internal/Configuration {
+	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/lang/Boolean;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
@@ -54,6 +94,7 @@ public final class com/adyen/checkout/mbway/old/MBWayConfiguration : com/adyen/c
 }
 
 public final class com/adyen/checkout/mbway/old/MBWayConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder, com/adyen/checkout/components/core/internal/ButtonConfigurationBuilder {
+	public static final field $stable I
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
@@ -76,6 +117,7 @@ public final class com/adyen/checkout/mbway/old/MBWayConfigurationKt {
 }
 
 public final class com/adyen/checkout/mbway/old/internal/provider/MBWayComponentProvider : com/adyen/checkout/components/core/internal/provider/PaymentComponentProvider, com/adyen/checkout/sessions/core/internal/provider/SessionPaymentComponentProvider {
+	public static final field $stable I
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
 	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/mbway/old/MBWayComponent;
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/PaymentMethod;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ComponentCallback;Lcom/adyen/checkout/components/core/OrderRequest;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/PaymentComponent;
