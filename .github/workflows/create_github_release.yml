@@ -23,5 +23,6 @@ jobs:
         with:
           token: ${{ env.GITHUB_TOKEN }}
           tag: ${{ env.VERSION_NAME }}
+          commit: ${{ github.sha }}
           name: ${{ env.VERSION_NAME }}
           draft: true
