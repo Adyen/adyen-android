@@ -3,16 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 4/2/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdater
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdaterRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateState, MBWayFieldId> {
 

@@ -10,7 +10,7 @@ package com.adyen.checkout.mbway.internal
 
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.mbway.internal.ui.MBWayDelegateStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

@@ -3,16 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 15/1/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 import com.adyen.checkout.core.components.internal.ui.state.validator.DefaultValidator
 import com.adyen.checkout.core.components.internal.ui.state.validator.FieldValidator
 import com.adyen.checkout.core.components.internal.ui.state.validator.FieldValidatorRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayValidatorRegistry : FieldValidatorRegistry<MBWayDelegateState, MBWayFieldId> {
 

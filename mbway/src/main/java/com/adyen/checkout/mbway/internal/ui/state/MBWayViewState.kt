@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 14/1/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState

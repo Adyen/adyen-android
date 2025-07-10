@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/7/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -14,8 +14,6 @@ import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 // TODO - MBWayComponent in the comment should be changed to the new model
 /**
