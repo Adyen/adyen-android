@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.mbway.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -22,7 +22,7 @@ import java.util.Locale
 
 @ExtendWith(MockitoExtension::class)
 internal class MBWayDelegateStateFactoryTest(
-    @Mock private val componentParams: ButtonComponentParams,
+    @Mock private val componentParams: CommonComponentParams,
 ) {
 
     private lateinit var factory: MBWayDelegateStateFactory
