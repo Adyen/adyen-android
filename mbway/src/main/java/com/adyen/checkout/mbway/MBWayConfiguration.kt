@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/7/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway
 
 import android.content.Context
 import com.adyen.checkout.core.action.internal.ActionHandlingPaymentMethodConfigurationBuilder

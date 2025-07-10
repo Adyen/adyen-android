@@ -6,7 +6,7 @@
  * Created by ararat on 15/1/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui.model
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.DelegateState

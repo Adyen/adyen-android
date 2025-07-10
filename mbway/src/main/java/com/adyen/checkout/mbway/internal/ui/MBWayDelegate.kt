@@ -21,10 +21,12 @@ import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParam
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
-import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
-import com.adyen.checkout.mbway.internal.ui.model.toViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.state.toComponentState
+import com.adyen.checkout.mbway.internal.ui.state.toViewState
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow

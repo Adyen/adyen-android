@@ -6,12 +6,10 @@
  * Created by oscars on 8/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.mbway.internal.ui.MBWayDelegateStateFactory
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

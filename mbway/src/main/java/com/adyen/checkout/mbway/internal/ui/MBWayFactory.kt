@@ -17,9 +17,12 @@ import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.components.internal.ui.state.DefaultDelegateStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import com.adyen.checkout.mbway.internal.ui.model.MBWayStateUpdaterRegistry
-import com.adyen.checkout.mbway.internal.ui.model.MBWayTransformerRegistry
-import com.adyen.checkout.mbway.internal.ui.model.MBWayValidatorRegistry
+import com.adyen.checkout.mbway.getMBWayConfiguration
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayStateUpdaterRegistry
+import com.adyen.checkout.mbway.internal.ui.state.MBWayTransformerRegistry
+import com.adyen.checkout.mbway.internal.ui.state.MBWayValidatorRegistry
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 

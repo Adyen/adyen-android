@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 8/7/2025.
+ * Created by oscars on 10/7/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
@@ -14,8 +14,6 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 
 internal class MBWayDelegateStateFactory(
     private val componentParams: ButtonComponentParams
