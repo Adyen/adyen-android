@@ -15,6 +15,7 @@
 "androidx.lifecycle:lifecycle-viewmodel-compose" = "[AndroidX Lifecycle ViewModel Compose](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
 "androidx.lifecycle:lifecycle-viewmodel-ktx" = "[AndroidX Lifecycle ViewModel](https://developer.android.com/jetpack/androidx/releases/lifecycle#{})"
 "androidx.recyclerview:recyclerview" = "[AndroidX RecyclerView](https://developer.android.com/jetpack/androidx/releases/recyclerview#{})"
+"androidx.startup:startup-runtime" = "[AndroidX Startup](https://developer.android.com/jetpack/androidx/releases/startup#{})"
 "app.cash.paykit:core" = "[CashApp Pay](https://github.com/cashapp/cash-app-pay-android-sdk/releases/tag/v{})"
 "ch.twint.payment.sdk:android-sdk" = "[TWINT](https://docs.adyen.com/payment-methods/twint)"
 "com.adyen.threeds:adyen-3ds2" = "[Adyen 3DS2](https://github.com/Adyen/adyen-3ds2-android/releases/tag/{})"

@@ -8,19 +8,20 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
-internal object PaymentMethodProvider {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object PaymentMethodProvider {
 
-    private val factories =
-        mutableMapOf<String, PaymentMethodFactory<BaseComponentState, PaymentDelegate<BaseComponentState>>>()
+    private val factories = mutableMapOf<String, PaymentMethodFactory<*, *>>()
 
     fun register(
         txVariant: String,
-        factory: PaymentMethodFactory<BaseComponentState, PaymentDelegate<BaseComponentState>>
+        factory: PaymentMethodFactory<*, *>,
     ) {
         factories[txVariant] = factory
     }
@@ -41,11 +42,12 @@ internal object PaymentMethodProvider {
         checkoutConfiguration: CheckoutConfiguration,
         componentSessionParams: SessionParams?,
     ): PaymentDelegate<BaseComponentState> {
+        @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
             componentSessionParams = componentSessionParams,
-        ) ?: run {
+        ) as? PaymentDelegate<BaseComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")
         }

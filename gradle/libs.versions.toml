@@ -33,6 +33,7 @@ fragment = "1.8.6"
 lifecycle = "2.9.0"
 material = "1.12.0"
 recyclerview = "1.4.0"
+startup = "1.2.0"
 constraintlayout = "2.2.1"
 constraintlayout-compose = "1.0.1"
 
@@ -96,6 +97,7 @@ androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-r
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-preference = { group = "androidx.preference", name = "preference-ktx", version.ref = "preference" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
 cash-app-pay = { group = "app.cash.paykit", name = "core", version.ref = "cash-app-pay" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
