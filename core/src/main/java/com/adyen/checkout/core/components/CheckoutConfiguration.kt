@@ -56,14 +56,14 @@ import java.util.Locale
  */
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
-    override val environment: Environment,
-    override val clientKey: String,
-    override val shopperLocale: Locale? = null,
-    override val amount: Amount? = null,
-    override val analyticsConfiguration: AnalyticsConfiguration? = null,
+    val environment: Environment,
+    val clientKey: String,
+    val shopperLocale: Locale? = null,
+    val amount: Amount? = null,
+    val analyticsConfiguration: AnalyticsConfiguration? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
-) : Configuration {
+) : Parcelable {
 
     private val availableConfigurations = mutableMapOf<String, Configuration>()
 
