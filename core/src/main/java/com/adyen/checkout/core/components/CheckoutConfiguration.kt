@@ -52,6 +52,8 @@ import java.util.Locale
  * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set this
  * value.
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
+ * @param isSubmitButtonVisible Determines if the submit button should be visible or not. For drop-in this will be
+ * ignored.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
 @CheckoutConfigurationMarker
@@ -61,6 +63,7 @@ class CheckoutConfiguration(
     val shopperLocale: Locale? = null,
     val amount: Amount? = null,
     val analyticsConfiguration: AnalyticsConfiguration? = null,
+    val isSubmitButtonVisible: Boolean? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Parcelable {
@@ -93,6 +96,7 @@ class CheckoutConfiguration(
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
+        isSubmitButtonVisible = parcel.readNullableBoolean(),
     ) {
         val size = parcel.readInt()
 
@@ -134,6 +138,7 @@ class CheckoutConfiguration(
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
+        dest.writeNullableBoolean(isSubmitButtonVisible)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)
@@ -153,5 +158,21 @@ class CheckoutConfiguration(
         override fun newArray(size: Int): Array<CheckoutConfiguration?> {
             return arrayOfNulls(size)
         }
+    }
+}
+
+private fun Parcel.writeNullableBoolean(value: Boolean?) {
+    when (value) {
+        true -> writeInt(1)
+        false -> writeInt(0)
+        else -> writeInt(-1)
+    }
+}
+
+private fun Parcel.readNullableBoolean(): Boolean? {
+    return when (readInt()) {
+        1 -> true
+        0 -> false
+        else -> null
     }
 }
