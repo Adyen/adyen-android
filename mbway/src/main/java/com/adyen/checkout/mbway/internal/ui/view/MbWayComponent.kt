@@ -41,6 +41,7 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
 import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized
+import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.FullScreenDialog
 import com.adyen.checkout.ui.internal.SubHeadline
 import com.adyen.checkout.ui.internal.ValuePickerField
@@ -55,7 +56,7 @@ internal fun MbWayComponent(
     var showCountryCodeDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
     ) {
         // CountryCode
         val supportingTextCountryCode = if (viewState.countryCodeFieldState.errorMessageId != null) {
@@ -122,8 +123,8 @@ private fun CountryCodeDialog(
         onDismissRequest = onDismissRequest,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+            modifier = Modifier.padding(Dimensions.Large),
         ) {
             viewState.countries.forEach { country ->
                 val isSelected = country == viewState.countryCodeFieldState.value

@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.ui.theme.AdyenTextStyle
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
@@ -141,10 +140,10 @@ private fun TextPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             Title("Title")
             Subtitle("Subtitle")

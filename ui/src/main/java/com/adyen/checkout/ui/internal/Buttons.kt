@@ -55,10 +55,10 @@ private fun PrimaryButtonPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             PrimaryButton(
                 onClick = {},
@@ -102,10 +102,10 @@ private fun SecondaryButtonPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             SecondaryButton(
                 onClick = {},
@@ -149,10 +149,10 @@ private fun TertiaryButtonPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             TertiaryButton(
                 onClick = {},
@@ -196,10 +196,10 @@ private fun DestructiveButtonPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(AdyenCheckoutTheme.colors.background)
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             DestructiveButton(
                 onClick = {},
@@ -250,7 +250,7 @@ private fun AdyenButton(
 
             BodyEmphasized(text, color = contentColor)
         },
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = Dimensions.ExtraLarge, vertical = Dimensions.Medium),
         modifier = modifier,
     )
 }

@@ -72,7 +72,7 @@ internal fun AdyenTextFieldDecorationBox(
     val isFocused = interactionSource.collectIsFocusedAsState().value
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
     ) {
         val labelColor = if (isFocused) style.activeColor else style.textColor
         SubHeadline(
@@ -80,15 +80,15 @@ internal fun AdyenTextFieldDecorationBox(
             color = labelColor,
         )
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(Dimensions.Small),
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
                 .indication(interactionSource, indication)
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
-                .heightIn(48.dp)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
+                .heightIn(Dimensions.MinTouchTarget)
+                .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
         ) {
             prefix?.let {
                 Body(prefix, color = AdyenCheckoutTheme.colors.textSecondary)

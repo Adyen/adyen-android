@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
 
@@ -60,7 +59,7 @@ fun ValuePickerField(
         modifier = modifier.clickable(
             interactionSource = interactionSource,
             indication = null,
-            onClick = onClick
+            onClick = onClick,
         ),
         enabled = false,
         supportingText = supportingText,
@@ -84,10 +83,10 @@ private fun ValuePickerFieldPreview(
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(theme.colors.background.toCompose())
-                .padding(16.dp),
+                .padding(Dimensions.Large),
         ) {
             ValuePickerField(
                 value = "Value",
