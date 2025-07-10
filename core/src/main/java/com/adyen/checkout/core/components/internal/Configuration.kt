@@ -10,17 +10,6 @@ package com.adyen.checkout.core.components.internal
 
 import android.os.Parcelable
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.analytics.AnalyticsConfiguration
-import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.data.model.Amount
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface Configuration : Parcelable {
-
-    val environment: Environment
-    val clientKey: String
-    val shopperLocale: Locale?
-    val analyticsConfiguration: AnalyticsConfiguration?
-    val amount: Amount?
-}
+interface Configuration : Parcelable

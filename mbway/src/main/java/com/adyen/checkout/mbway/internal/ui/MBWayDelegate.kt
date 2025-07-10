@@ -17,7 +17,7 @@ import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.EventDelegate
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
-import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.stateIn
 @Suppress("UnusedPrivateProperty")
 internal class MBWayDelegate(
     private val coroutineScope: CoroutineScope,
-    private val componentParams: ButtonComponentParams,
+    private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
