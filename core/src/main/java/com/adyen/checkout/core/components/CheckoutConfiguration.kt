@@ -56,6 +56,7 @@ import java.util.Locale
  * ignored.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
+@Suppress("LongParameterList")
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
     val environment: Environment,
