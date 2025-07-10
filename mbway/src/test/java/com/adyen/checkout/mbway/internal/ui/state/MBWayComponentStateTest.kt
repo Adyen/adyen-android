@@ -6,16 +6,13 @@
  * Created by ararat on 30/6/2025.
  */
 
-package com.adyen.checkout.mbway.internal.ui
+package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
-import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.state.toComponentState
 import com.adyen.checkout.test.ui.state.TestFieldTransformerRegistry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

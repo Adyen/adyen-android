@@ -6,10 +6,8 @@
  * Created by ararat on 6/3/2025.
  */
 
-package com.adyen.checkout.mbway.internal.model
+package com.adyen.checkout.mbway.internal.ui.state
 
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
-import com.adyen.checkout.mbway.internal.ui.state.MBWayTransformerRegistry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
