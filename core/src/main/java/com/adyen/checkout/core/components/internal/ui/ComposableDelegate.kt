@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.core.components.internal.ui
 
+import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-internal interface ComposableDelegate {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ComposableDelegate {
 
     @Composable
     fun ViewFactory(modifier: Modifier)

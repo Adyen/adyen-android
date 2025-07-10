@@ -1,40 +1,107 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 13/7/2022.
+ * Created by oscars on 8/7/2025.
  */
 
 package com.adyen.checkout.mbway.internal.ui
 
-import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.model.MBWayInputData
-import com.adyen.checkout.mbway.internal.ui.model.MBWayOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.data.OrderRequest
+import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.ui.EventDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
+import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
+import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
+import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
+import com.adyen.checkout.mbway.internal.ui.model.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.model.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.model.toViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 
-internal interface MBWayDelegate :
-    PaymentComponentDelegate<MBWayComponentState>,
-    ViewProvidingDelegate,
-    ButtonDelegate,
-    UIStateDelegate {
+@Suppress("UnusedPrivateProperty")
+internal class MBWayDelegate(
+    private val coroutineScope: CoroutineScope,
+    private val componentParams: ButtonComponentParams,
+    private val analyticsManager: AnalyticsManager,
+    // TODO - Order to be passed later
+    private val order: OrderRequest? = null,
+    private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
+    private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
+) : PaymentDelegate<MBWayComponentState>,
+    FieldChangeListener<MBWayFieldId>,
+    EventDelegate<MBWayComponentState> {
 
-    val outputData: MBWayOutputData
+    private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayComponentState>>()
+    override val eventFlow: Flow<PaymentComponentEvent<MBWayComponentState>> =
+        eventChannel.receiveAsFlow()
 
-    val outputDataFlow: Flow<MBWayOutputData>
+    private val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
+        val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
+            delegateState.toComponentState(
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                fieldTransformerRegistry = transformerRegistry,
+                order = order,
+                amount = componentParams.amount,
+            )
+        }
+        stateManager.state
+            .map(toComponentState)
+            .stateIn(
+                coroutineScope,
+                SharingStarted.Lazily,
+                toComponentState(stateManager.state.value),
+            )
+    }
 
-    val componentStateFlow: Flow<MBWayComponentState>
+    private val viewStateFlow: StateFlow<MBWayViewState> by lazy {
+        stateManager.state
+            .map(MBWayDelegateState::toViewState)
+            .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
+    }
 
-    fun getSupportedCountries(): List<CountryModel>
+    override fun submit() {
+        if (stateManager.isValid) {
+            eventChannel.trySend(
+                PaymentComponentEvent.Submit(componentStateFlow.value),
+            )
+        } else {
+            stateManager.highlightAllFieldValidationErrors()
+        }
+    }
 
-    fun getInitiallySelectedCountry(): CountryModel?
+    @Composable
+    override fun ViewFactory(modifier: Modifier) {
+        val viewState = viewStateFlow.collectAsStateWithLifecycle()
 
-    fun updateInputData(update: MBWayInputData.() -> Unit)
+        MbWayComponent(
+            viewState.value,
+            fieldChangeListener = this,
+        )
+    }
 
-    fun setInteractionBlocked(isInteractionBlocked: Boolean)
+    override fun <T> onFieldValueChanged(
+        fieldId: MBWayFieldId,
+        value: T
+    ) = stateManager.updateFieldValue(fieldId, value)
+
+    override fun onFieldFocusChanged(
+        fieldId: MBWayFieldId,
+        hasFocus: Boolean
+    ) = stateManager.updateFieldFocus(fieldId, hasFocus)
 }

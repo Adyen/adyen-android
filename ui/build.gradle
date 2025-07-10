@@ -40,13 +40,14 @@ android {
 }
 
 dependencies {
-    implementation platform(libs.compose.bom)
     implementation libs.androidx.constraintlayout.compose
+
+    api platform(libs.compose.bom)
     api libs.androidx.appcompat
     api libs.compose.material
     api libs.compose.ui.graphics
     api libs.compose.ui.main
     api libs.compose.ui.tooling.preview
 
-    debugImplementation libs.compose.ui.tooling
+    debugApi libs.compose.ui.tooling
 }

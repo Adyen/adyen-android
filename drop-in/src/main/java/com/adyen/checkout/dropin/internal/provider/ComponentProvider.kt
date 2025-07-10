@@ -64,9 +64,9 @@ import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.instant.InstantComponentState
 import com.adyen.checkout.instant.InstantPaymentComponent
 import com.adyen.checkout.instant.internal.provider.InstantPaymentComponentProvider
-import com.adyen.checkout.mbway.MBWayComponent
-import com.adyen.checkout.mbway.MBWayComponentState
-import com.adyen.checkout.mbway.internal.provider.MBWayComponentProvider
+import com.adyen.checkout.mbway.old.MBWayComponent
+import com.adyen.checkout.mbway.old.MBWayComponentState
+import com.adyen.checkout.mbway.old.internal.provider.MBWayComponentProvider
 import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponent
 import com.adyen.checkout.mealvoucherfr.MealVoucherFRComponentCallback
 import com.adyen.checkout.mealvoucherfr.internal.provider.MealVoucherFRComponentProvider

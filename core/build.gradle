@@ -49,7 +49,6 @@ dependencies {
 
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui
-    implementation libs.compose.hilt
     implementation libs.compose.viewmodel
     implementation libs.okhttp
 
