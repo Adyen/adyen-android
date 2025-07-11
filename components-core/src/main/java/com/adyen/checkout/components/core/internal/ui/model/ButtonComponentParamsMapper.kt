@@ -28,7 +28,9 @@ class ButtonComponentParamsMapper(
         return ButtonComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible ?: true,
+                ?: (componentConfiguration as? ButtonConfiguration)?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
         )
     }
 }

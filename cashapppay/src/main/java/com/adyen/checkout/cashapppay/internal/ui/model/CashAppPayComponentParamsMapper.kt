@@ -62,6 +62,7 @@ internal class CashAppPayComponentParamsMapper(
             clientId = clientId,
             scopeId = scopeId,
             context = context,
+            checkoutConfiguration = checkoutConfiguration,
         )
 
         if (params.returnUrl == null) {
@@ -99,6 +100,7 @@ internal class CashAppPayComponentParamsMapper(
             clientId = null,
             scopeId = null,
             context = context,
+            checkoutConfiguration = checkoutConfiguration,
         )
     }
 
@@ -111,11 +113,14 @@ internal class CashAppPayComponentParamsMapper(
         clientId: String?,
         scopeId: String?,
         context: Context,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CashAppPayComponentParams {
         return CashAppPayComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: cashAppPayConfiguration?.isSubmitButtonVisible ?: true,
+                ?: cashAppPayConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             cashAppPayEnvironment = getCashAppPayEnvironment(
                 commonComponentParams.environment,
                 cashAppPayConfiguration,

@@ -105,6 +105,7 @@ fun CheckoutConfiguration.convenienceStoresJP(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -123,6 +124,7 @@ internal fun ConvenienceStoresJPConfiguration.toCheckoutConfiguration(): Checkou
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.ECONTEXT_STORES, this@toCheckoutConfiguration)
 

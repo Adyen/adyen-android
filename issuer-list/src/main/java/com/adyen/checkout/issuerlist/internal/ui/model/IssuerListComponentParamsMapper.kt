@@ -41,7 +41,9 @@ class IssuerListComponentParamsMapper(
         return IssuerListComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: componentConfiguration?.isSubmitButtonVisible ?: true,
+                ?: componentConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             viewType = componentConfiguration?.viewType ?: IssuerListViewType.RECYCLER_VIEW,
             hideIssuerLogos = componentConfiguration?.hideIssuerLogos ?: hideIssuerLogosDefaultValue,
         )

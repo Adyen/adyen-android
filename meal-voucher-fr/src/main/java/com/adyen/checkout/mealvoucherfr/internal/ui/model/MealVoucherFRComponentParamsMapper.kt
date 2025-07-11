@@ -37,7 +37,9 @@ internal class MealVoucherFRComponentParamsMapper(
         return GiftCardComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: mealVoucherFRConfiguration?.isSubmitButtonVisible ?: true,
+                ?: mealVoucherFRConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             isPinRequired = mealVoucherFRConfiguration?.isSecurityCodeRequired ?: true,
             isExpiryDateRequired = true,
         )

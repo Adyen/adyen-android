@@ -51,8 +51,10 @@ import java.util.Locale
  * [Sessions API documentation](https://docs.adyen.com/api-explorer/Checkout/latest/post/sessions) on how to set this
  * value.
  * @param analyticsConfiguration A configuration for the internal analytics of the library.
+ * @param isSubmitButtonVisible Sets if submit button will be visible or not. In drop-in, this setting will be ignored.
  * @param configurationBlock A block that allows adding drop-in or payment method specific configurations.
  */
+@Suppress("LongParameterList")
 @CheckoutConfigurationMarker
 class CheckoutConfiguration(
     override val environment: Environment,
@@ -60,6 +62,7 @@ class CheckoutConfiguration(
     override val shopperLocale: Locale? = null,
     override val amount: Amount? = null,
     override val analyticsConfiguration: AnalyticsConfiguration? = null,
+    val isSubmitButtonVisible: Boolean? = null,
     @IgnoredOnParcel
     private val configurationBlock: CheckoutConfiguration.() -> Unit = {},
 ) : Configuration {
@@ -70,6 +73,23 @@ class CheckoutConfiguration(
         apply(configurationBlock)
         validateContents()
     }
+
+    constructor(
+        environment: Environment,
+        clientKey: String,
+        shopperLocale: Locale? = null,
+        amount: Amount? = null,
+        analyticsConfiguration: AnalyticsConfiguration? = null,
+        configurationBlock: CheckoutConfiguration.() -> Unit = {},
+    ) : this(
+        environment = environment,
+        clientKey = clientKey,
+        shopperLocale = shopperLocale,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = null,
+        configurationBlock = configurationBlock,
+    )
 
     private fun validateContents() {
         shopperLocale?.let {
@@ -90,6 +110,7 @@ class CheckoutConfiguration(
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
+        isSubmitButtonVisible = parcel.readValue(null) as? Boolean?,
     ) {
         val size = parcel.readInt()
 
@@ -131,6 +152,7 @@ class CheckoutConfiguration(
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
+        dest.writeValue(isSubmitButtonVisible)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)

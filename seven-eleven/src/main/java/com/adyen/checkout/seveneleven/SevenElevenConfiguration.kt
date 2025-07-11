@@ -105,6 +105,7 @@ fun CheckoutConfiguration.sevenEleven(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -123,6 +124,7 @@ internal fun SevenElevenConfiguration.toCheckoutConfiguration(): CheckoutConfigu
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN, this@toCheckoutConfiguration)
 

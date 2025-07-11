@@ -38,7 +38,9 @@ internal class BoletoComponentParamsMapper(
         return BoletoComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: boletoConfiguration?.isSubmitButtonVisible ?: true,
+                ?: boletoConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             addressParams = AddressParams.FullAddress(
                 defaultCountryCode = BRAZIL_COUNTRY_CODE,
                 supportedCountryCodes = DEFAULT_SUPPORTED_COUNTRY_LIST,

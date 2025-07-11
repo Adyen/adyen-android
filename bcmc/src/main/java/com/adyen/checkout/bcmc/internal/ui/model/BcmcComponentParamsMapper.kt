@@ -50,20 +50,25 @@ internal class BcmcComponentParamsMapper(
             dropInOverrideParams,
             bcmcConfiguration,
             paymentMethod,
+            checkoutConfiguration,
         )
     }
 
+    @Suppress("LongParameterList")
     private fun mapToParams(
         commonComponentParams: CommonComponentParams,
         sessionParams: SessionParams?,
         dropInOverrideParams: DropInOverrideParams?,
         bcmcConfiguration: BcmcConfiguration?,
         paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CardComponentParams {
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: bcmcConfiguration?.isSubmitButtonVisible ?: true,
+                ?: bcmcConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             isHolderNameRequired = bcmcConfiguration?.isHolderNameRequired ?: false,
             shopperReference = bcmcConfiguration?.shopperReference,
             isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, bcmcConfiguration),

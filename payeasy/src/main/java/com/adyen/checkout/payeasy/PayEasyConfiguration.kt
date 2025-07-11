@@ -105,6 +105,7 @@ fun CheckoutConfiguration.payEasy(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -123,6 +124,7 @@ internal fun PayEasyConfiguration.toCheckoutConfiguration(): CheckoutConfigurati
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.ECONTEXT_ATM, this@toCheckoutConfiguration)
 

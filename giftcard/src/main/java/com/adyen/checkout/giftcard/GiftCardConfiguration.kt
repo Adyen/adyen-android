@@ -139,6 +139,7 @@ fun CheckoutConfiguration.giftCard(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -157,6 +158,7 @@ internal fun GiftCardConfiguration.toCheckoutConfiguration(): CheckoutConfigurat
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.GIFTCARD, this@toCheckoutConfiguration)
 

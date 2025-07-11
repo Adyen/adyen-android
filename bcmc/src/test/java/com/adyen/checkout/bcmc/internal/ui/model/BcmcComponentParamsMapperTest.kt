@@ -142,6 +142,27 @@ internal class BcmcComponentParamsMapperTest {
         assertEquals(true, params.isSubmitButtonVisible)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is not set in bcmc component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            bcmc { }
+        }
+
+        val params = bcmcComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = PaymentMethod(),
+        )
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     @Suppress("MaxLineLength")

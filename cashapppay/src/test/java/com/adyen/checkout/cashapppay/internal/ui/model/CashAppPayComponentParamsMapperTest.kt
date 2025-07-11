@@ -180,6 +180,30 @@ internal class CashAppPayComponentParamsMapperTest {
         assertEquals(true, params.isSubmitButtonVisible)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is not set in cash app component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            cashAppPay {
+                setReturnUrl(TEST_RETURN_URL)
+            }
+        }
+
+        val params = cashAppPayComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = getDefaultPaymentMethod(),
+            context = Application(),
+        )
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     fun `showStorePaymentField should match value set in sessions if it exists, otherwise should match configuration`(

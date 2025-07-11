@@ -134,6 +134,7 @@ fun CheckoutConfiguration.boleto(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -158,6 +159,7 @@ internal fun BoletoConfiguration.toCheckoutConfiguration(): CheckoutConfiguratio
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         BoletoComponent.PAYMENT_METHOD_TYPES.forEach { key ->
             addConfiguration(key, this@toCheckoutConfiguration)

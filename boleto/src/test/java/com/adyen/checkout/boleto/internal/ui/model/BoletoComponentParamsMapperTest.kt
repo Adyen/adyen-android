@@ -122,6 +122,21 @@ internal class BoletoComponentParamsMapperTest {
     }
 
     @Test
+    fun `when setSubmitButtonVisible is not set in boleto component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            boleto { }
+        }
+
+        val params = mapParams(configuration = configuration)
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
+    @Test
     fun `when send email is set, them params should match`() {
         val configuration = createCheckoutConfiguration {
             setEmailVisibility(true)

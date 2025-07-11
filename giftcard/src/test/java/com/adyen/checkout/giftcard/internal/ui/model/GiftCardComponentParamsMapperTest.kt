@@ -97,6 +97,21 @@ internal class GiftCardComponentParamsMapperTest {
         assertEquals(true, params.isSubmitButtonVisible)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is not set in gift card component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            giftCard { }
+        }
+
+        val params = giftCardComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `amount should match value set in sessions then drop in then component configuration`(
@@ -232,7 +247,7 @@ internal class GiftCardComponentParamsMapperTest {
             ),
             isSubmitButtonVisible = isSubmitButtonVisible,
             isPinRequired = isPinRequired,
-            isExpiryDateRequired = false
+            isExpiryDateRequired = false,
         )
     }
 

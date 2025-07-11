@@ -121,6 +121,26 @@ internal class ACHDirectDebitComponentParamsMapperTest {
     }
 
     @Test
+    fun `when setSubmitButtonVisible is not set in ach component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            achDirectDebit { }
+        }
+
+        val params = achDirectDebitComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+        )
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
+    @Test
     fun `when a address is selected as FullAddress, addressParams should return FullAddress`() {
         val addressConfiguration =
             ACHDirectDebitAddressConfiguration.FullAddress(supportedCountryCodes = SUPPORTED_COUNTRY_LIST)
