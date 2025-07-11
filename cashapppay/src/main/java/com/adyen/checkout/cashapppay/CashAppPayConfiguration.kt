@@ -27,6 +27,7 @@ import java.util.Locale
  * Configuration class for the [CashAppPayComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class CashAppPayConfiguration
 @Suppress("LongParameterList")
 private constructor(
@@ -43,15 +44,16 @@ private constructor(
     val storePaymentMethod: Boolean?,
 ) : Configuration, ButtonConfiguration {
 
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<CashAppPayConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
-        private var cashAppPayEnvironment: CashAppPayEnvironment? = null
-        private var returnUrl: String? = null
-        private var showStorePaymentField: Boolean? = null
-        private var storePaymentMethod: Boolean? = null
+        var isSubmitButtonVisible: Boolean? = null
+        var cashAppPayEnvironment: CashAppPayEnvironment? = null
+        var returnUrl: String? = null
+        var showStorePaymentField: Boolean? = null
+        var storePaymentMethod: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -103,6 +105,7 @@ private constructor(
          *
          * @param cashAppPayEnvironment The Cash App Pay environment.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setCashAppPayEnvironment(cashAppPayEnvironment: CashAppPayEnvironment): Builder {
             this.cashAppPayEnvironment = cashAppPayEnvironment
             return this
@@ -118,6 +121,7 @@ private constructor(
          *
          * @param returnUrl The Cash App Pay environment.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setReturnUrl(returnUrl: String): Builder {
             this.returnUrl = returnUrl
             return this
@@ -135,6 +139,7 @@ private constructor(
          * @param showStorePaymentField [Boolean]
          * @return [CashAppPayConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             this.showStorePaymentField = showStorePaymentField
             return this
@@ -151,6 +156,7 @@ private constructor(
          * @param storePaymentMethod [Boolean]
          * @return [CashAppPayConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setStorePaymentMethod(storePaymentMethod: Boolean): Builder {
             this.storePaymentMethod = storePaymentMethod
             return this
@@ -163,6 +169,7 @@ private constructor(
          *
          * @param isSubmitButtonVisible If submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
