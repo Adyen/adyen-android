@@ -74,6 +74,23 @@ class CheckoutConfiguration(
         validateContents()
     }
 
+    constructor(
+        environment: Environment,
+        clientKey: String,
+        shopperLocale: Locale? = null,
+        amount: Amount? = null,
+        analyticsConfiguration: AnalyticsConfiguration? = null,
+        configurationBlock: CheckoutConfiguration.() -> Unit = {},
+    ) : this(
+        environment = environment,
+        clientKey = clientKey,
+        shopperLocale = shopperLocale,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = null,
+        configurationBlock = configurationBlock,
+    )
+
     private fun validateContents() {
         shopperLocale?.let {
             if (!LocaleUtil.isValidLocale(it)) {
