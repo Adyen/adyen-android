@@ -23,6 +23,7 @@ import java.util.Locale
  * Configuration class for the [AwaitComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class AwaitConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -34,6 +35,7 @@ class AwaitConfiguration private constructor(
     /**
      * Builder to create an [AwaitConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<AwaitConfiguration, Builder> {
 
         /**
