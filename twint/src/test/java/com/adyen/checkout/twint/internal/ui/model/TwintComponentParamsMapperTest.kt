@@ -148,6 +148,21 @@ internal class TwintComponentParamsMapperTest {
         assertEquals(true, params.isSubmitButtonVisible)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is not set in gift card component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            twint { }
+        }
+
+        val params = twintComponentParamsMapper.mapToParams(configuration, DEVICE_LOCALE, null, null)
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("enableStoreDetailsSource")
     fun `showStorePaymentField should match value set in sessions if it exists, otherwise should match configuration`(

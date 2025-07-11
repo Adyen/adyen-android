@@ -42,6 +42,7 @@ internal class TwintComponentParamsMapper(
             sessionParams = commonComponentParamsMapperData.sessionParams,
             dropInOverrideParams = dropInOverrideParams,
             twintConfiguration = twintConfiguration,
+            checkoutConfiguration = checkoutConfiguration,
         )
     }
 
@@ -50,11 +51,14 @@ internal class TwintComponentParamsMapper(
         sessionParams: SessionParams?,
         dropInOverrideParams: DropInOverrideParams?,
         twintConfiguration: TwintConfiguration?,
+        checkoutConfiguration: CheckoutConfiguration,
     ): TwintComponentParams {
         return TwintComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: twintConfiguration?.isSubmitButtonVisible ?: true,
+                ?: twintConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             showStorePaymentField = getShowStorePaymentField(sessionParams, twintConfiguration),
             actionHandlingMethod = twintConfiguration?.actionHandlingMethod ?: ActionHandlingMethod.PREFER_NATIVE,
         )
