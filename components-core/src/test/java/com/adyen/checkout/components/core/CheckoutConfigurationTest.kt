@@ -22,6 +22,7 @@ internal class CheckoutConfigurationTest {
             clientKey = TEST_CLIENT_KEY,
             amount = Amount("EUR", 123L),
             analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
+            isSubmitButtonVisible = true,
         ) {
             addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
             addActionConfiguration(testActionConfiguration)

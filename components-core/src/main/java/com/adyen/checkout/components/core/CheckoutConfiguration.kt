@@ -110,7 +110,7 @@ class CheckoutConfiguration(
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
-        isSubmitButtonVisible = parcel.readSerializable() as? Boolean?,
+        isSubmitButtonVisible = parcel.readValue(null) as? Boolean?,
     ) {
         val size = parcel.readInt()
 
@@ -152,7 +152,7 @@ class CheckoutConfiguration(
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
-        dest.writeSerializable(isSubmitButtonVisible)
+        dest.writeValue(isSubmitButtonVisible)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)
