@@ -160,6 +160,7 @@ fun CheckoutConfiguration.achDirectDebit(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -172,7 +173,14 @@ internal fun CheckoutConfiguration.getACHDirectDebitConfiguration(): ACHDirectDe
 }
 
 internal fun ACHDirectDebitConfiguration.toCheckoutConfiguration(): CheckoutConfiguration {
-    return CheckoutConfiguration(environment, clientKey, shopperLocale, amount, analyticsConfiguration) {
+    return CheckoutConfiguration(
+        environment = environment,
+        clientKey = clientKey,
+        shopperLocale = shopperLocale,
+        amount = amount,
+        analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
+    ) {
         addConfiguration(PaymentMethodTypes.ACH, this@toCheckoutConfiguration)
 
         genericActionConfiguration.getAllConfigurations().forEach {

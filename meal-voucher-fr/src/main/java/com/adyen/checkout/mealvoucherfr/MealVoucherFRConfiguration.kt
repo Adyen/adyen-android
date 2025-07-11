@@ -139,6 +139,7 @@ fun CheckoutConfiguration.mealVoucherFR(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -163,6 +164,7 @@ internal fun MealVoucherFRConfiguration.toCheckoutConfiguration(): CheckoutConfi
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         MealVoucherFRComponent.PAYMENT_METHOD_TYPES.forEach { key ->
             addConfiguration(key, this@toCheckoutConfiguration)

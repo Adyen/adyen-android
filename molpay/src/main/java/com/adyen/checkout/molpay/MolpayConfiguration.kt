@@ -108,6 +108,7 @@ fun CheckoutConfiguration.molpay(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -132,6 +133,7 @@ internal fun MolpayConfiguration.toCheckoutConfiguration(): CheckoutConfiguratio
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         MolpayComponent.PAYMENT_METHOD_TYPES.forEach { key ->
             addConfiguration(key, this@toCheckoutConfiguration)

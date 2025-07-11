@@ -192,6 +192,7 @@ fun CheckoutConfiguration.cashAppPay(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -210,6 +211,7 @@ internal fun CashAppPayConfiguration.toCheckoutConfiguration(): CheckoutConfigur
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.CASH_APP_PAY, this@toCheckoutConfiguration)
 
