@@ -27,6 +27,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class BlikConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -40,11 +41,12 @@ class BlikConfiguration private constructor(
     /**
      * Builder to create a [BlikConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BlikConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -96,6 +98,7 @@ class BlikConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
