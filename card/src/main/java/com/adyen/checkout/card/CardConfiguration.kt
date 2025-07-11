@@ -29,6 +29,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class CardConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -53,20 +54,21 @@ class CardConfiguration private constructor(
      * Builder to create a [CardConfiguration].
      */
     @Suppress("TooManyFunctions")
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder>,
         ButtonConfigurationBuilder {
-        private var supportedCardBrands: List<CardBrand>? = null
-        private var holderNameRequired: Boolean? = null
-        private var isStorePaymentFieldVisible: Boolean? = null
-        private var shopperReference: String? = null
-        private var isHideCvc: Boolean? = null
-        private var isHideCvcStoredCard: Boolean? = null
-        private var isSubmitButtonVisible: Boolean? = null
-        private var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
-        private var kcpAuthVisibility: KCPAuthVisibility? = null
-        private var installmentConfiguration: InstallmentConfiguration? = null
-        private var addressConfiguration: AddressConfiguration? = null
+        var supportedCardBrands: List<CardBrand>? = null
+        var holderNameRequired: Boolean? = null
+        var isStorePaymentFieldVisible: Boolean? = null
+        var shopperReference: String? = null
+        var isHideCvc: Boolean? = null
+        var isHideCvcStoredCard: Boolean? = null
+        var isSubmitButtonVisible: Boolean? = null
+        var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
+        var kcpAuthVisibility: KCPAuthVisibility? = null
+        var installmentConfiguration: InstallmentConfiguration? = null
+        var addressConfiguration: AddressConfiguration? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -121,6 +123,7 @@ class CardConfiguration private constructor(
          * @param supportCardBrands array of [CardBrand]
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setSupportedCardTypes(vararg supportCardBrands: CardBrand): Builder {
             supportedCardBrands = listOf(*supportCardBrands)
             return this
@@ -134,6 +137,7 @@ class CardConfiguration private constructor(
          * @param supportCardTypes array of [CardType]
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setSupportedCardTypes(vararg supportCardTypes: CardType): Builder {
             supportedCardBrands = listOf(*supportCardTypes).map { CardBrand(cardType = it) }
             return this
@@ -147,6 +151,7 @@ class CardConfiguration private constructor(
          * @param holderNameRequired [Boolean]
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setHolderNameRequired(holderNameRequired: Boolean): Builder {
             this.holderNameRequired = holderNameRequired
             return this
@@ -164,6 +169,7 @@ class CardConfiguration private constructor(
          * @param showStorePaymentField [Boolean]
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             isStorePaymentFieldVisible = showStorePaymentField
             return this
@@ -176,6 +182,7 @@ class CardConfiguration private constructor(
          * @param shopperReference The unique shopper reference
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShopperReference(shopperReference: String): Builder {
             this.shopperReference = shopperReference
             return this
@@ -192,6 +199,7 @@ class CardConfiguration private constructor(
          * @param hideCvc If CVC should be hidden or not.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setHideCvc(hideCvc: Boolean): Builder {
             this.isHideCvc = hideCvc
             return this
@@ -207,6 +215,7 @@ class CardConfiguration private constructor(
          * @param hideCvcStoredCard If CVC should be hidden or not for stored payments.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setHideCvcStoredCard(hideCvcStoredCard: Boolean): Builder {
             isHideCvcStoredCard = hideCvcStoredCard
             return this
@@ -220,6 +229,7 @@ class CardConfiguration private constructor(
          * @param socialSecurityNumberVisibility If CPF/CNPJ field should be visible or not.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setSocialSecurityNumberVisibility(socialSecurityNumberVisibility: SocialSecurityNumberVisibility): Builder {
             this.socialSecurityNumberVisibility = socialSecurityNumberVisibility
             return this
@@ -233,6 +243,7 @@ class CardConfiguration private constructor(
          * @param kcpAuthVisibility If security fields for Korean cards should be visible or not.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setKcpAuthVisibility(kcpAuthVisibility: KCPAuthVisibility): Builder {
             this.kcpAuthVisibility = kcpAuthVisibility
             return this
@@ -248,6 +259,7 @@ class CardConfiguration private constructor(
          * @param installmentConfiguration The configuration object for installment options.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setInstallmentConfigurations(installmentConfiguration: InstallmentConfiguration): Builder {
             this.installmentConfiguration = installmentConfiguration
             return this
@@ -261,6 +273,7 @@ class CardConfiguration private constructor(
          * @param addressConfiguration The configuration object for address form.
          * @return [CardConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAddressConfiguration(addressConfiguration: AddressConfiguration): Builder {
             this.addressConfiguration = addressConfiguration
             return this
@@ -273,6 +286,7 @@ class CardConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
