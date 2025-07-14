@@ -96,6 +96,7 @@ constructor(
     /**
      * Add configuration for 3DS2 action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun add3ds2ActionConfiguration(configuration: Adyen3DS2Configuration): BuilderT {
         genericActionConfigurationBuilder.add3ds2ActionConfiguration(configuration)
         return this as BuilderT
@@ -104,6 +105,7 @@ constructor(
     /**
      * Add configuration for Await action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addAwaitActionConfiguration(configuration: AwaitConfiguration): BuilderT {
         genericActionConfigurationBuilder.addAwaitActionConfiguration(configuration)
         return this as BuilderT
@@ -112,6 +114,7 @@ constructor(
     /**
      * Add configuration for QR code action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addQRCodeActionConfiguration(configuration: QRCodeConfiguration): BuilderT {
         genericActionConfigurationBuilder.addQRCodeActionConfiguration(configuration)
         return this as BuilderT
@@ -120,6 +123,7 @@ constructor(
     /**
      * Add configuration for Redirect action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addRedirectActionConfiguration(configuration: RedirectConfiguration): BuilderT {
         genericActionConfigurationBuilder.addRedirectActionConfiguration(configuration)
         return this as BuilderT
@@ -128,6 +132,7 @@ constructor(
     /**
      * Add configuration for Twint action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addTwintActionConfiguration(configuration: TwintActionConfiguration): BuilderT {
         genericActionConfigurationBuilder.addTwintActionConfiguration(configuration)
         return this as BuilderT
@@ -136,6 +141,7 @@ constructor(
     /**
      * Add configuration for Voucher action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addVoucherActionConfiguration(configuration: VoucherConfiguration): BuilderT {
         genericActionConfigurationBuilder.addVoucherActionConfiguration(configuration)
         return this as BuilderT
@@ -144,6 +150,7 @@ constructor(
     /**
      * Add configuration for WeChat Pay action.
      */
+    @Deprecated("Use CheckoutConfiguration instead.")
     final override fun addWeChatPayActionConfiguration(configuration: WeChatPayActionConfiguration): BuilderT {
         genericActionConfigurationBuilder.addWeChatPayActionConfiguration(configuration)
         return this as BuilderT
