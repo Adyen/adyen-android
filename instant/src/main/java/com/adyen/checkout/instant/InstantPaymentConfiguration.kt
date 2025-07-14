@@ -28,6 +28,7 @@ import java.util.Locale
 @Parcelize
 class InstantPaymentConfiguration
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -41,9 +42,10 @@ private constructor(
     /**
      * Builder to create an [InstantPaymentConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
-        private var actionHandlingMethod: ActionHandlingMethod? = null
+        var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -93,6 +95,7 @@ private constructor(
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
+        @Deprecated("Use property access syntax instead.")
         fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
             this.actionHandlingMethod = actionHandlingMethod
             return this
