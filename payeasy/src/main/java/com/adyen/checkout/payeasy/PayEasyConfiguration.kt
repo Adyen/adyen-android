@@ -6,6 +6,8 @@
  * Created by ozgur on 19/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.payeasy
 
 import android.content.Context

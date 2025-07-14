@@ -5,6 +5,9 @@
  *
  * Created by josephj on 9/9/2021.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard
 
 import android.content.Context

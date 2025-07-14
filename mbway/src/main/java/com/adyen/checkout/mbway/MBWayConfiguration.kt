@@ -5,6 +5,9 @@
  *
  * Created by caiof on 11/8/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.mbway
 
 import android.content.Context

@@ -6,6 +6,8 @@
  * Created by oscars on 10/5/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.action.core.internal
 
 import android.content.Context
@@ -83,7 +85,7 @@ constructor(
      */
     @Deprecated("You can omit the context parameter")
     constructor(
-        @Suppress("unused")
+        @Suppress("unused", "UNUSED_PARAMETER")
         context: Context,
         environment: Environment,
         clientKey: String

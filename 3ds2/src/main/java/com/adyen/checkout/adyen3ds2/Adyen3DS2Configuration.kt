@@ -5,6 +5,9 @@
  *
  * Created by caiof on 25/8/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.adyen3ds2
 
 import android.content.Context

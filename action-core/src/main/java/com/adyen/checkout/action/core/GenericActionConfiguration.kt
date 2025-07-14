@@ -6,6 +6,8 @@
  * Created by josephj on 23/8/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.action.core
 
 import android.content.Context

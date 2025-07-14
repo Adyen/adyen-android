@@ -5,6 +5,9 @@
  *
  * Created by arman on 11/6/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.molpay
 
 import android.content.Context

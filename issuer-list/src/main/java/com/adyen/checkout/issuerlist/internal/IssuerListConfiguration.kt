@@ -5,6 +5,9 @@
  *
  * Created by caiof on 25/4/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.issuerlist.internal
 
 import android.content.Context

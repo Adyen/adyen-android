@@ -5,6 +5,9 @@
  *
  * Created by ran on 14/3/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.card
 
 import android.content.Context
