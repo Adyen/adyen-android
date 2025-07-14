@@ -97,7 +97,7 @@ class CheckoutConfiguration(
         clientKey = requireNotNull(parcel.readString()),
         amount = parcel.readParcelable(Amount::class.java.classLoader),
         analyticsConfiguration = parcel.readParcelable(AnalyticsConfiguration::class.java.classLoader),
-        isSubmitButtonVisible = parcel.readNullableBoolean(),
+        isSubmitButtonVisible = parcel.readValue(null) as? Boolean?,
     ) {
         val size = parcel.readInt()
 
@@ -139,7 +139,7 @@ class CheckoutConfiguration(
         dest.writeString(clientKey)
         dest.writeParcelable(amount, flags)
         dest.writeParcelable(analyticsConfiguration, flags)
-        dest.writeNullableBoolean(isSubmitButtonVisible)
+        dest.writeValue(isSubmitButtonVisible)
         dest.writeInt(availableConfigurations.size)
         availableConfigurations.forEach {
             dest.writeString(it.key)
@@ -159,21 +159,5 @@ class CheckoutConfiguration(
         override fun newArray(size: Int): Array<CheckoutConfiguration?> {
             return arrayOfNulls(size)
         }
-    }
-}
-
-private fun Parcel.writeNullableBoolean(value: Boolean?) {
-    when (value) {
-        true -> writeInt(1)
-        false -> writeInt(0)
-        else -> writeInt(-1)
-    }
-}
-
-private fun Parcel.readNullableBoolean(): Boolean? {
-    return when (readInt()) {
-        1 -> true
-        0 -> false
-        else -> null
     }
 }
