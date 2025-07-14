@@ -48,6 +48,8 @@ class GiftCardConfiguration private constructor(
         ButtonConfigurationBuilder {
 
         var isPinRequired: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

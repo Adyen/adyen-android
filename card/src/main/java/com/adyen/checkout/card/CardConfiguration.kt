@@ -64,6 +64,8 @@ class CardConfiguration private constructor(
         var shopperReference: String? = null
         var isHideCvc: Boolean? = null
         var isHideCvcStoredCard: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
         var socialSecurityNumberVisibility: SocialSecurityNumberVisibility? = null
         var kcpAuthVisibility: KCPAuthVisibility? = null

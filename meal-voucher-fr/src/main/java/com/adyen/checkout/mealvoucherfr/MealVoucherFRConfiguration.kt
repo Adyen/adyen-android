@@ -48,6 +48,8 @@ class MealVoucherFRConfiguration private constructor(
         ButtonConfigurationBuilder {
 
         var isSecurityCodeRequired: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

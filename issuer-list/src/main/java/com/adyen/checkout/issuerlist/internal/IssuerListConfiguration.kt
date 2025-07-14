@@ -35,6 +35,8 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
 
         open var viewType: IssuerListViewType? = null
         open var hideIssuerLogos: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         open var isSubmitButtonVisible: Boolean? = null
 
         protected constructor(environment: Environment, clientKey: String) : super(

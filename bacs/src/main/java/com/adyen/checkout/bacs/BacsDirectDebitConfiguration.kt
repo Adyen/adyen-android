@@ -47,6 +47,7 @@ class BacsDirectDebitConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

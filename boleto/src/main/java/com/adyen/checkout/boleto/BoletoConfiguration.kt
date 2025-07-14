@@ -46,6 +46,8 @@ class BoletoConfiguration private constructor(
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BoletoConfiguration, Builder>,
         ButtonConfigurationBuilder {
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
         var isEmailVisible: Boolean? = null
 
