@@ -49,6 +49,7 @@ private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<CashAppPayConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
         var cashAppPayEnvironment: CashAppPayEnvironment? = null
         var returnUrl: String? = null

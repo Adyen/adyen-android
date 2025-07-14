@@ -51,6 +51,7 @@ class ACHDirectDebitConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<ACHDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
         var addressConfiguration: ACHDirectDebitAddressConfiguration? = null
         var isStorePaymentFieldVisible: Boolean? = null

@@ -53,6 +53,8 @@ class BcmcConfiguration private constructor(
         var isHolderNameRequired: Boolean? = null
         var showStorePaymentField: Boolean? = null
         var shopperReference: String? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

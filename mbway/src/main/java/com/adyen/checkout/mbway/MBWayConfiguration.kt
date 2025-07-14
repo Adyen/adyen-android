@@ -46,6 +46,7 @@ class MBWayConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<MBWayConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

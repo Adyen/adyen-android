@@ -46,6 +46,7 @@ class BlikConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<BlikConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

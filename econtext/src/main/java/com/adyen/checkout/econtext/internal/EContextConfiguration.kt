@@ -33,6 +33,7 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
         ActionHandlingPaymentMethodConfigurationBuilder<EContextConfigurationT, BuilderT>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

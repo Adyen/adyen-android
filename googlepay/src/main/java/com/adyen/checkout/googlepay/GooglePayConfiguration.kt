@@ -95,6 +95,8 @@ class GooglePayConfiguration private constructor(
         var totalPriceStatus: String? = null
         var checkoutOption: String? = null
         var googlePayButtonStyling: GooglePayButtonStyling? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         var isSubmitButtonVisible: Boolean? = null
 
         /**

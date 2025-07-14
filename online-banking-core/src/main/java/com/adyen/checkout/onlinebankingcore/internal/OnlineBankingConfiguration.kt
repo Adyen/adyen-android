@@ -30,6 +30,7 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
         ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingConfigurationT, IssuerListBuilderT>,
         ButtonConfigurationBuilder {
 
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         open var isSubmitButtonVisible: Boolean? = null
 
         protected constructor(environment: Environment, clientKey: String) : super(environment, clientKey)
