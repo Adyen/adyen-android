@@ -27,6 +27,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class MealVoucherFRConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -41,12 +42,13 @@ class MealVoucherFRConfiguration private constructor(
     /**
      * Builder to create a [MealVoucherFRConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<MealVoucherFRConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSecurityCodeRequired: Boolean? = null
-        private var isSubmitButtonVisible: Boolean? = null
+        var isSecurityCodeRequired: Boolean? = null
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -98,6 +100,7 @@ class MealVoucherFRConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
@@ -111,6 +114,7 @@ class MealVoucherFRConfiguration private constructor(
          *
          * @param isSecurityCodeRequired If Security code should be hidden or not.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setSecurityCodeRequired(isSecurityCodeRequired: Boolean): Builder {
             this.isSecurityCodeRequired = isSecurityCodeRequired
             return this
