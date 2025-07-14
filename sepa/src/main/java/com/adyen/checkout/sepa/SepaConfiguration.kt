@@ -27,6 +27,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class SepaConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -40,11 +41,13 @@ class SepaConfiguration private constructor(
     /**
      * Builder to create a [SepaConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<SepaConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -96,6 +99,7 @@ class SepaConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
