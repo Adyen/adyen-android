@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.components.internal
 
+import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
@@ -15,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
     private val checkoutCallback: CheckoutCallback?,
+    private val savedStateHandle: SavedStateHandle,
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
@@ -37,10 +40,16 @@ internal class AdvancedPaymentFacilitatorFactory(
                 checkoutCallback,
             )
 
+        val actionProvider = ActionProvider(
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+        )
+
         return PaymentFacilitator(
             paymentDelegate = paymentDelegate,
             coroutineScope = coroutineScope,
             componentEventHandler = componentEventHandler,
+            actionProvider = actionProvider,
         )
     }
 }
