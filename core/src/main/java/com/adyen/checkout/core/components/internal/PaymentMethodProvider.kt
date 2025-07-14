@@ -29,10 +29,10 @@ object PaymentMethodProvider {
     /**
      * Create a [PaymentDelegate] via a [PaymentMethodFactory].
      *
-     * @param txVariant Payment Method Type.
-     * @param coroutineScope Coroutine Scope.
-     * @param checkoutConfiguration Checkout Configuration.
-     * @param componentSessionParams Configuration from Sessions.
+     * @param txVariant The payment method type to be handled.
+     * @param coroutineScope The [CoroutineScope] to be used by the delegate.
+     * @param checkoutConfiguration The global checkout configuration.
+     * @param componentSessionParams The [SessionParams] from Sessions.
      *
      * @return [PaymentDelegate] for given txVariant.
      */
