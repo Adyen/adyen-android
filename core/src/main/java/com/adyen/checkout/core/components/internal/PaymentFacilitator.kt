@@ -9,10 +9,14 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.internal.ActionDelegate
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -27,9 +31,15 @@ internal class PaymentFacilitator(
     private val actionProvider: ActionProvider,
 ) {
 
+    private var actionDelegate by mutableStateOf<ActionDelegate?>(null)
+
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
-        paymentDelegate.ViewFactory(modifier)
+        if (actionDelegate != null) {
+            // TODO - Add action delegate composable
+        } else {
+            paymentDelegate.ViewFactory(modifier)
+        }
     }
 
     fun submit() {
@@ -46,10 +56,11 @@ internal class PaymentFacilitator(
     }
 
     fun handleAction(action: Action) {
-        // TODO - Store the actionDelegate
-        actionProvider.get(
+        actionDelegate = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
+        // TODO - Adyen log
+//        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
     }
 }
