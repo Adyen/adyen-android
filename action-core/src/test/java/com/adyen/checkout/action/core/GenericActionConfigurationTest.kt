@@ -1,7 +1,7 @@
 package com.adyen.checkout.action.core
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

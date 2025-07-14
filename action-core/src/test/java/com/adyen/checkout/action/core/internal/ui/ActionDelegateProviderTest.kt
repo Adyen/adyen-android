@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.Parcel
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
-import com.adyen.checkout.await.internal.ui.AwaitDelegate
+import com.adyen.checkout.await.old.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.action.Action
