@@ -28,18 +28,18 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         _coroutineScope = coroutineScope
     }
 
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit) {
         when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
                 when {
                     checkoutCallback == null || !checkoutCallback.beforeSubmit(event.state) -> {
-                        makePaymentsCall(event.state)
+                        makePaymentsCall(event.state, onCheckoutResult)
                     }
 
                     else -> {
                         checkoutCallback.onSubmit(event.state) { checkoutResult ->
-                            handleResult(checkoutResult)
+                            onCheckoutResult(checkoutResult)
                         }
                     }
                 }
@@ -47,26 +47,21 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         }
     }
 
-    private fun handleResult(checkoutResult: CheckoutResult) {
-        when (checkoutResult) {
-            is CheckoutResult.Action -> {
-                // TODO - Handle Action
-            }
-
-            is CheckoutResult.Error -> {
-                // TODO - Handle Error
-            }
-
-            is CheckoutResult.Finished -> {
-                // TODO - Handle Finished
-            }
-        }
-    }
-
-    private fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>) {
+    private fun makePaymentsCall(
+        paymentComponentState: PaymentComponentState<*>,
+        onCheckoutResult: (CheckoutResult) -> Unit
+    ) {
         coroutineScope.launch {
-            // TODO - Handle result
-            sessionInteractor.submitPayment(paymentComponentState)
+            val sessionResult = sessionInteractor.submitPayment(paymentComponentState)
+            val checkoutResult = when (sessionResult) {
+                is SessionCallResult.Payments.Action -> CheckoutResult.Action(sessionResult.action)
+                // TODO - Implement Error case
+                is SessionCallResult.Payments.Error -> CheckoutResult.Error()
+                // TODO - Implement Finished case
+                is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
+            }
+
+            onCheckoutResult(checkoutResult)
         }
     }
 

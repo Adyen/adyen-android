@@ -18,6 +18,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionDelegate
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -51,11 +52,24 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event)
+                componentEventHandler.onPaymentComponentEvent(event, ::handleResult)
             }.launchIn(coroutineScope)
     }
 
-    fun handleAction(action: Action) {
+    private fun handleResult(checkoutResult: CheckoutResult) {
+        when (checkoutResult) {
+            is CheckoutResult.Action -> handleAction(checkoutResult.action)
+            is CheckoutResult.Error -> {
+                // TODO - Handle error state
+            }
+
+            is CheckoutResult.Finished -> {
+                // TODO - Handle finished state
+            }
+        }
+    }
+
+    private fun handleAction(action: Action) {
         actionDelegate = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
