@@ -65,6 +65,7 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
 
     private fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>) {
         coroutineScope.launch {
+            // TODO - Handle result
             sessionInteractor.submitPayment(paymentComponentState)
         }
     }

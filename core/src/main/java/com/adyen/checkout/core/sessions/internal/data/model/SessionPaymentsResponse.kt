@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.sessions.internal.data.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import com.adyen.checkout.core.common.internal.model.ModelUtils
@@ -24,9 +25,7 @@ data class SessionPaymentsResponse(
     val sessionData: String,
     val status: String?,
     val resultCode: String?,
-
-    // TODO - Actions
-//    val action: Action?,
+    val action: Action?,
     val order: OrderResponse?,
     val sessionResult: String?,
 ) : ModelObject() {
@@ -35,9 +34,7 @@ data class SessionPaymentsResponse(
         private const val SESSION_DATA = "sessionData"
         private const val STATUS = "status"
         private const val RESULT_CODE = "resultCode"
-
-        // TODO - Actions
-//        private const val ACTION = "action"
+        private const val ACTION = "action"
         private const val ORDER = "order"
         private const val SESSION_RESULT = "sessionResult"
 
@@ -49,9 +46,7 @@ data class SessionPaymentsResponse(
                         putOpt(SESSION_DATA, modelObject.sessionData)
                         putOpt(STATUS, modelObject.status)
                         putOpt(RESULT_CODE, modelObject.resultCode)
-
-                        // TODO - Actions
-//                        putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
+                        putOpt(ACTION, ModelUtils.serializeOpt(modelObject.action, Action.SERIALIZER))
                         putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderResponse.SERIALIZER))
                         putOpt(SESSION_RESULT, modelObject.sessionResult)
                     } catch (e: JSONException) {
@@ -65,9 +60,7 @@ data class SessionPaymentsResponse(
                     sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
                     status = jsonObject.getStringOrNull(STATUS),
                     resultCode = jsonObject.getStringOrNull(RESULT_CODE),
-
-                    // TODO - Actions
-//                    action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
+                    action = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ACTION), Action.SERIALIZER),
                     order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderResponse.SERIALIZER),
                     sessionResult = jsonObject.getStringOrNull(SESSION_RESULT),
                 )
