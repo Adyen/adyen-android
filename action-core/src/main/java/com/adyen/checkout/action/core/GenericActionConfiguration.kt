@@ -13,7 +13,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.GenericActionConfiguration.Builder
 import com.adyen.checkout.action.core.internal.ActionHandlingConfigurationBuilder
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration

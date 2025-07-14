@@ -9,7 +9,7 @@
 package com.adyen.checkout.action.core.internal
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.await.AwaitConfiguration
+import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.RedirectConfiguration
 import com.adyen.checkout.twint.action.TwintActionConfiguration

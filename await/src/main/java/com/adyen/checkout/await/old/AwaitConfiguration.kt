@@ -5,7 +5,7 @@
  *
  * Created by caiof on 19/8/2020.
  */
-package com.adyen.checkout.await
+package com.adyen.checkout.await.old
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
