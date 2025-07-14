@@ -25,6 +25,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class IdealConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -46,6 +47,7 @@ class IdealConfiguration private constructor(
      * Builder to create an[IdealConfiguration].
      */
     @Suppress("DeprecatedCallableAddReplaceWith")
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : IssuerListBuilder<IdealConfiguration, Builder> {
 
         /**
