@@ -52,7 +52,11 @@ public final class com/adyen/checkout/boleto/BoletoConfiguration$Builder : com/a
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun isEmailVisible ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public final fun setEmailVisibility (Z)Lcom/adyen/checkout/boleto/BoletoConfiguration$Builder;
+	public final fun setEmailVisible (Ljava/lang/Boolean;)V
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/boleto/BoletoConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 }
