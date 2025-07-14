@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.action.data.Action as ActionResponse
+
 // TODO - KDocs, revisit later after having parameters
 /**
  * Represents the outcome of a checkout operation.
@@ -18,7 +20,7 @@ sealed interface CheckoutResult {
     class Finished : CheckoutResult
 
     /** Indicates that an additional action is required from the shopper. */
-    class Action : CheckoutResult
+    class Action(val action: ActionResponse) : CheckoutResult
 
     /** Indicates an error occurred during the payment process. */
     class Error : CheckoutResult

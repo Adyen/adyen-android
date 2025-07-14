@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import kotlinx.coroutines.CoroutineScope
 
@@ -22,5 +23,5 @@ internal interface ComponentEventHandler<T : PaymentComponentState<*>> {
 
     fun onCleared()
 
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>)
+    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit)
 }
