@@ -24,6 +24,7 @@ import java.util.Locale
  * Configuration class for the [PayByBankUSComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class PayByBankUSConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -33,6 +34,7 @@ class PayByBankUSConfiguration private constructor(
     internal val genericActionConfiguration: GenericActionConfiguration,
 ) : Configuration {
 
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<PayByBankUSConfiguration, Builder> {
 
         /**
