@@ -25,6 +25,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class EPSConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -40,6 +41,7 @@ class EPSConfiguration private constructor(
     /**
      * Builder to create an [EPSConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : IssuerListBuilder<EPSConfiguration, Builder> {
 
         /**
@@ -71,17 +73,6 @@ class EPSConfiguration private constructor(
             environment,
             clientKey,
         )
-
-        /**
-         * Sets whether the logos should be shown next to the issuers name.
-         *
-         * Default is true.
-         *
-         * @param hideIssuerLogos if issuer logos should be hidden or not.
-         */
-        override fun setHideIssuerLogos(hideIssuerLogos: Boolean): Builder {
-            return super.setHideIssuerLogos(hideIssuerLogos)
-        }
 
         /**
          * Initialize a configuration builder with the required fields and a shopper locale.
