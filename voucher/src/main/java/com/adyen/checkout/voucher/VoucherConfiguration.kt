@@ -23,6 +23,7 @@ import java.util.Locale
  * Configuration class for the [VoucherComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class VoucherConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -34,6 +35,7 @@ class VoucherConfiguration private constructor(
     /**
      * Builder to create a [VoucherConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<VoucherConfiguration, Builder> {
 
         /**
