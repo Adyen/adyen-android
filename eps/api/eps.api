@@ -53,8 +53,6 @@ public final class com/adyen/checkout/eps/EPSConfiguration$Builder : com/adyen/c
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public fun buildInternal ()Lcom/adyen/checkout/eps/EPSConfiguration;
-	public fun setHideIssuerLogos (Z)Lcom/adyen/checkout/eps/EPSConfiguration$Builder;
-	public synthetic fun setHideIssuerLogos (Z)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
 }
 
 public final class com/adyen/checkout/eps/EPSConfiguration$Creator : android/os/Parcelable$Creator {

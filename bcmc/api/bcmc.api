@@ -28,9 +28,17 @@ public final class com/adyen/checkout/bcmc/BcmcConfiguration$Builder : com/adyen
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getShopperReference ()Ljava/lang/String;
+	public final fun getShowStorePaymentField ()Ljava/lang/Boolean;
+	public final fun isHolderNameRequired ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun setHolderNameRequired (Ljava/lang/Boolean;)V
 	public final fun setHolderNameRequired (Z)Lcom/adyen/checkout/bcmc/BcmcConfiguration$Builder;
 	public final fun setShopperReference (Ljava/lang/String;)Lcom/adyen/checkout/bcmc/BcmcConfiguration$Builder;
+	public final fun setShopperReference (Ljava/lang/String;)V
+	public final fun setShowStorePaymentField (Ljava/lang/Boolean;)V
 	public final fun setShowStorePaymentField (Z)Lcom/adyen/checkout/bcmc/BcmcConfiguration$Builder;
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/bcmc/BcmcConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 }

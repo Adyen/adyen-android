@@ -28,8 +28,8 @@ public abstract class com/adyen/checkout/econtext/internal/EContextConfiguration
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	protected final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	protected final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/econtext/internal/EContextConfiguration$Builder;
 }

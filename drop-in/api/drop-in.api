@@ -141,10 +141,18 @@ public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/a
 	public final fun addTwintConfiguration (Lcom/adyen/checkout/twint/TwintConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun addUPIConfiguration (Lcom/adyen/checkout/upi/UPIConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getAdditionalDataForDropInService ()Landroid/os/Bundle;
+	public final fun getShowPreselectedStoredPaymentMethod ()Ljava/lang/Boolean;
+	public final fun getSkipListWhenSinglePaymentMethod ()Ljava/lang/Boolean;
+	public final fun isRemovingStoredPaymentMethodsEnabled ()Ljava/lang/Boolean;
 	public final fun overridePaymentMethodName (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 	public final fun setAdditionalDataForDropInService (Landroid/os/Bundle;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun setAdditionalDataForDropInService (Landroid/os/Bundle;)V
 	public final fun setEnableRemovingStoredPaymentMethods (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun setRemovingStoredPaymentMethodsEnabled (Ljava/lang/Boolean;)V
+	public final fun setShowPreselectedStoredPaymentMethod (Ljava/lang/Boolean;)V
 	public final fun setShowPreselectedStoredPaymentMethod (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun setSkipListWhenSinglePaymentMethod (Ljava/lang/Boolean;)V
 	public final fun setSkipListWhenSinglePaymentMethod (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
 }
 

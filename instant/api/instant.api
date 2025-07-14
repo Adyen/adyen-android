@@ -55,7 +55,9 @@ public final class com/adyen/checkout/instant/InstantPaymentConfiguration$Builde
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getActionHandlingMethod ()Lcom/adyen/checkout/components/core/ActionHandlingMethod;
 	public final fun setActionHandlingMethod (Lcom/adyen/checkout/components/core/ActionHandlingMethod;)Lcom/adyen/checkout/instant/InstantPaymentConfiguration$Builder;
+	public final fun setActionHandlingMethod (Lcom/adyen/checkout/components/core/ActionHandlingMethod;)V
 }
 
 public final class com/adyen/checkout/instant/InstantPaymentConfiguration$Creator : android/os/Parcelable$Creator {

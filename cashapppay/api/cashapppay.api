@@ -65,10 +65,20 @@ public final class com/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getCashAppPayEnvironment ()Lcom/adyen/checkout/cashapppay/CashAppPayEnvironment;
+	public final fun getReturnUrl ()Ljava/lang/String;
+	public final fun getShowStorePaymentField ()Ljava/lang/Boolean;
+	public final fun getStorePaymentMethod ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public final fun setCashAppPayEnvironment (Lcom/adyen/checkout/cashapppay/CashAppPayEnvironment;)Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder;
+	public final fun setCashAppPayEnvironment (Lcom/adyen/checkout/cashapppay/CashAppPayEnvironment;)V
 	public final fun setReturnUrl (Ljava/lang/String;)Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder;
+	public final fun setReturnUrl (Ljava/lang/String;)V
+	public final fun setShowStorePaymentField (Ljava/lang/Boolean;)V
 	public final fun setShowStorePaymentField (Z)Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder;
+	public final fun setStorePaymentMethod (Ljava/lang/Boolean;)V
 	public final fun setStorePaymentMethod (Z)Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder;
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 }

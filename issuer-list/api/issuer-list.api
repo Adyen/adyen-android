@@ -38,16 +38,16 @@ public abstract class com/adyen/checkout/issuerlist/internal/IssuerListConfigura
 	protected fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	protected fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	protected fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	protected fun getHideIssuerLogos ()Ljava/lang/Boolean;
-	protected fun getViewType ()Lcom/adyen/checkout/issuerlist/IssuerListViewType;
-	protected fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	protected fun setHideIssuerLogos (Ljava/lang/Boolean;)V
+	public fun getHideIssuerLogos ()Ljava/lang/Boolean;
+	public fun getViewType ()Lcom/adyen/checkout/issuerlist/IssuerListViewType;
+	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public fun setHideIssuerLogos (Ljava/lang/Boolean;)V
 	public fun setHideIssuerLogos (Z)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
-	protected fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
+	public fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
 	public fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)Lcom/adyen/checkout/issuerlist/internal/IssuerListConfiguration$IssuerListBuilder;
-	protected fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)V
+	public fun setViewType (Lcom/adyen/checkout/issuerlist/IssuerListViewType;)V
 }
 
 public abstract class com/adyen/checkout/issuerlist/internal/provider/IssuerListComponentProvider : com/adyen/checkout/components/core/internal/provider/PaymentComponentProvider, com/adyen/checkout/sessions/core/internal/provider/SessionPaymentComponentProvider {
