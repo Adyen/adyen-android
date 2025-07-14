@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
@@ -29,7 +30,7 @@ internal object CheckoutSessionProvider {
      */
     suspend fun createSession(
         sessionModel: SessionModel,
-        configuration: Configuration,
+        configuration: CheckoutConfiguration,
 //        order: Order? = null,
     ): CheckoutSessionResult {
         return createSession(

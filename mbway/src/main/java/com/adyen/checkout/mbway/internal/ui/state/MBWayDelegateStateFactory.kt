@@ -9,14 +9,13 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
-import com.adyen.checkout.core.components.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
 
 internal class MBWayDelegateStateFactory(
-    private val componentParams: ButtonComponentParams
+    private val componentParams: ComponentParams,
 ) : DelegateStateFactory<MBWayDelegateState, MBWayFieldId> {
 
     override fun createDefaultDelegateState() = MBWayDelegateState(
@@ -29,7 +28,8 @@ internal class MBWayDelegateStateFactory(
 
     private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
         val countries = getSupportedCountries(componentParams)
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL } ?: countries.firstOrNull()
+        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL }
+            ?: countries.firstOrNull()
             ?: throw IllegalArgumentException("Countries list can not be null")
     }
 
