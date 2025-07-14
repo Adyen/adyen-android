@@ -5,7 +5,8 @@
  *
  * Created by caiof on 4/7/2019.
  */
-@file:Suppress("unused")
+
+@file:Suppress("unused", "DEPRECATION")
 
 package com.adyen.checkout.googlepay
 

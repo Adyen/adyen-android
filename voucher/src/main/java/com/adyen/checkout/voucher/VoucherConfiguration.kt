@@ -6,6 +6,8 @@
  * Created by ozgur on 29/11/2021.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.voucher
 
 import android.content.Context

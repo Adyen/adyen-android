@@ -5,6 +5,9 @@
  *
  * Created by josephj on 4/12/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.blik
 
 import android.content.Context

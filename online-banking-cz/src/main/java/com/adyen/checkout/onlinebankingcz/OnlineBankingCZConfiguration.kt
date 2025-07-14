@@ -6,6 +6,8 @@
  * Created by atef on 20/9/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.onlinebankingcz
 
 import android.content.Context

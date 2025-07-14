@@ -5,6 +5,9 @@
  *
  * Created by caiof on 22/8/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.sepa
 
 import android.content.Context

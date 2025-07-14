@@ -6,6 +6,8 @@
  * Created by oscars on 10/7/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.twint
 
 import android.content.Context

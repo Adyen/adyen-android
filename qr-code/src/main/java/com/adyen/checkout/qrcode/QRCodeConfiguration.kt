@@ -5,6 +5,9 @@
  *
  * Created by josephj on 13/4/2021.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.qrcode
 
 import android.content.Context

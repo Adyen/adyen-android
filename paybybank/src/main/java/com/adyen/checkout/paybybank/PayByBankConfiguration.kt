@@ -6,6 +6,8 @@
  * Created by ozgur on 27/9/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.paybybank
 
 import android.content.Context

@@ -5,6 +5,9 @@
  *
  * Created by arman on 12/6/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.entercash
 
 import android.content.Context

@@ -6,6 +6,8 @@
  * Created by ozgur on 4/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant
 
 import android.content.Context
@@ -26,9 +28,9 @@ import java.util.Locale
  * Configuration class for the [InstantPaymentComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class InstantPaymentConfiguration
 @Suppress("LongParameterList")
-@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,

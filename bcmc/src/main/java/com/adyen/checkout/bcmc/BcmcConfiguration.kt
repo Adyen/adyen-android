@@ -5,6 +5,9 @@
  *
  * Created by arman on 18/9/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bcmc
 
 import android.content.Context

@@ -6,6 +6,8 @@
  * Created by oscars on 10/5/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.action.core.internal
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration

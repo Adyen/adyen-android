@@ -6,6 +6,8 @@
  * Created by ozgur on 7/6/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.econtext.internal
 
 import android.content.Context
