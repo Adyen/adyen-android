@@ -25,6 +25,7 @@ import java.util.Locale
  */
 @Suppress("LongParameterList")
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class OnlineBankingCZConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -38,6 +39,7 @@ class OnlineBankingCZConfiguration private constructor(
     /**
      * Builder to create an [OnlineBankingCZConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : OnlineBankingConfigurationBuilder<OnlineBankingCZConfiguration, Builder> {
 
         /**
