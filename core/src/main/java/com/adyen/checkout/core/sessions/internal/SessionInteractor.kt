@@ -10,7 +10,9 @@ package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.SessionPaymentResult
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -31,7 +33,7 @@ internal class SessionInteractor(
 
     suspend fun submitPayment(
         paymentComponentState: PaymentComponentState<*>,
-    ) {
+    ): SessionCallResult.Payments {
         sessionRepository.submitPayment(
             sessionModel = sessionModel,
             paymentComponentData = paymentComponentState.data,
@@ -39,7 +41,11 @@ internal class SessionInteractor(
             onSuccess = { response ->
                 updateSessionData(response.sessionData)
 
-                // TODO - Handle API Call Result. Move [SessionsCallResult] here.
+                val action = response.action
+                return when {
+                    action != null -> SessionCallResult.Payments.Action(action)
+                    else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
+                }
             },
             onFailure = {
                 paymentComponentState.data.paymentMethod?.type?.let { paymentMethodType ->
@@ -50,6 +56,8 @@ internal class SessionInteractor(
 //                    )
 //                    analyticsManager?.trackEvent(event)
                 }
+
+                return SessionCallResult.Payments.Error(throwable = it)
             },
         )
     }
@@ -59,4 +67,11 @@ internal class SessionInteractor(
 //        adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
         sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
+
+    private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
+        sessionResult = sessionResult,
+        sessionData = sessionData,
+        resultCode = resultCode,
+    )
 }
