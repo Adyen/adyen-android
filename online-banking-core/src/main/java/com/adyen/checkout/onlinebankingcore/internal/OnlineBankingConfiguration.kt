@@ -30,7 +30,7 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
         ActionHandlingPaymentMethodConfigurationBuilder<OnlineBankingConfigurationT, IssuerListBuilderT>,
         ButtonConfigurationBuilder {
 
-        protected open var isSubmitButtonVisible: Boolean? = null
+        open var isSubmitButtonVisible: Boolean? = null
 
         protected constructor(environment: Environment, clientKey: String) : super(environment, clientKey)
 
@@ -38,7 +38,7 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
         protected constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         protected constructor(
@@ -54,6 +54,7 @@ abstract class OnlineBankingConfiguration : Configuration, ButtonConfiguration {
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): IssuerListBuilderT {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             @Suppress("UNCHECKED_CAST")
