@@ -9,6 +9,7 @@
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
     alias libs.plugins.dokka.convention
 }
@@ -31,6 +32,7 @@ android {
         consumerProguardFiles "consumer-rules.pro"
     }
 
+    // TODO - remove view binding after old component is removed
     buildFeatures {
         viewBinding true
     }
@@ -38,7 +40,12 @@ android {
 
 dependencies {
     // Checkout
+    api project(':core')
     api project(':ui-core')
+
+    // Dependencies
+    implementation libs.androidx.startup
+    implementation libs.material
 
     //Tests
     testImplementation testFixtures(project(':test-core'))

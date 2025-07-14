@@ -37,7 +37,7 @@ internal class PaymentFacilitator(
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
         if (actionDelegate != null) {
-            // TODO - Add action delegate composable
+            actionDelegate?.ViewFactory(modifier)
         } else {
             paymentDelegate.ViewFactory(modifier)
         }
