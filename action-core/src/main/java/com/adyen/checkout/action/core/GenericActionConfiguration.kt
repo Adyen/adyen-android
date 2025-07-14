@@ -38,6 +38,7 @@ import kotlin.collections.set
  * If you don't specify anything, a default configuration will be used.
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class GenericActionConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -55,6 +56,7 @@ class GenericActionConfiguration private constructor(
      * component.
      */
     @Suppress("unused")
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         BaseConfigurationBuilder<GenericActionConfiguration, Builder>,
         ActionHandlingConfigurationBuilder<Builder> {
