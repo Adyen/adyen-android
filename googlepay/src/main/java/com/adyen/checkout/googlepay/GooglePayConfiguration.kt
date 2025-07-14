@@ -72,7 +72,7 @@ class GooglePayConfiguration private constructor(
         var merchantAccount: String? = null
         var googlePayEnvironment: Int? = null
             set(value) {
-                if (!isGooglePayEnvironmentValid(value)) {
+                if (value != null && !isGooglePayEnvironmentValid(value)) {
                     throw CheckoutException(
                         "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
                             " WalletConstants.ENVIRONMENT_PRODUCTION",
