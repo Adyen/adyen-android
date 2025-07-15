@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,10 +46,6 @@ internal class PaymentFacilitator(
         }
     }
 
-    fun submit() {
-        paymentDelegate.submit()
-    }
-
     fun observe(lifecycle: Lifecycle) {
         paymentDelegate.eventFlow
             .flowWithLifecycle(lifecycle)
@@ -56,6 +53,17 @@ internal class PaymentFacilitator(
             .onEach { event ->
                 componentEventHandler.onPaymentComponentEvent(event, ::handleResult)
             }.launchIn(coroutineScope)
+
+        checkoutController.events
+            .flowWithLifecycle(lifecycle)
+            .onEach { event ->
+                when (event) {
+                    CheckoutController.Event.Submit -> submit()
+                    is CheckoutController.Event.HandleAction -> handleAction(event.action)
+                    is CheckoutController.Event.HandleIntent -> handleIntent(event.intent)
+                }
+            }
+            .launchIn(coroutineScope)
     }
 
     private fun handleResult(checkoutResult: CheckoutResult) {
@@ -71,6 +79,11 @@ internal class PaymentFacilitator(
         }
     }
 
+    private fun submit() {
+        // TODO - what if we are handling an action?
+        paymentDelegate.submit()
+    }
+
     private fun handleAction(action: Action) {
         actionDelegate = actionProvider.get(
             action = action,
@@ -78,5 +91,9 @@ internal class PaymentFacilitator(
         )
         // TODO - Adyen log
 //        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
+    }
+
+    private fun handleIntent(intent: Intent) {
+        // TODO - handle intent with action delegate
     }
 }
