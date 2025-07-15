@@ -5,7 +5,7 @@
  *
  * Created by josephj on 18/8/2022.
  */
-package com.adyen.checkout.ui.core.internal
+package com.adyen.checkout.ui.core.old.internal
 
 import android.content.Context
 import android.net.Uri

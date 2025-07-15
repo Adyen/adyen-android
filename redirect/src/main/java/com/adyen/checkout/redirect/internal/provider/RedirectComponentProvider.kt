@@ -38,7 +38,7 @@ import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
 import com.adyen.checkout.redirect.toCheckoutConfiguration
-import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.DefaultRedirectHandler
 
 class RedirectComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

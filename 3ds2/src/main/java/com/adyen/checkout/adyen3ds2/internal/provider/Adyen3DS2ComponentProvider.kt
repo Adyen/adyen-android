@@ -42,7 +42,7 @@ import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.old.DispatcherProvider
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 
 class Adyen3DS2ComponentProvider

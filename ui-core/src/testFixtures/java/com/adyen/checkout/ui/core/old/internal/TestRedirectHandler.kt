@@ -11,7 +11,6 @@ package com.adyen.checkout.ui.core.old.internal
 import android.content.Context
 import android.net.Uri
 import com.adyen.checkout.core.old.exception.ComponentException
-import com.adyen.checkout.ui.core.internal.RedirectHandler
 import org.json.JSONObject
 
 /**

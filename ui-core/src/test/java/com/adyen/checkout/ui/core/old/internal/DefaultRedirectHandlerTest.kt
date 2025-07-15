@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.core.old.internal
 
 import android.net.Uri
 import com.adyen.checkout.core.old.exception.CheckoutException
-import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.google.common.collect.Iterators
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
