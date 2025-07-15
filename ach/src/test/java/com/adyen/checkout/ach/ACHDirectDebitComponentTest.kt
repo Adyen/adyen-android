@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
-import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

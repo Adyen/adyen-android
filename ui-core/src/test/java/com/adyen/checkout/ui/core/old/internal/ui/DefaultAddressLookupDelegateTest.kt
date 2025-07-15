@@ -16,10 +16,10 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.old.AdyenLogger
 import com.adyen.checkout.core.old.internal.util.Logger
-import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
+import com.adyen.checkout.ui.core.old.internal.data.api.TestAddressRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -55,7 +55,10 @@ internal class DefaultAddressLookupDelegateTest {
 
     @Test
     fun `when initialized without an address, lookup state should be Initial`() = runTest {
-        defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+        defaultAddressLookupDelegate.initialize(
+            CoroutineScope(UnconfinedTestDispatcher()),
+            AddressInputModel()
+        )
         assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Initial)
     }
 
@@ -115,7 +118,10 @@ internal class DefaultAddressLookupDelegateTest {
 
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
@@ -142,7 +148,10 @@ internal class DefaultAddressLookupDelegateTest {
     inner class Loading {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
@@ -166,19 +175,30 @@ internal class DefaultAddressLookupDelegateTest {
     inner class Form {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
         fun `and a query is inputted, state should be Loading`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Form(null))
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.Form(
+                    null
+                )
+            )
             defaultAddressLookupDelegate.onAddressQueryChanged("query")
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Loading)
         }
 
         @Test
         fun `and manual mode event has been triggered, state should remain the same`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Form(null))
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.Form(
+                    null
+                )
+            )
             defaultAddressLookupDelegate.onManualEntryModeSelected()
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Form)
         }
@@ -189,7 +209,10 @@ internal class DefaultAddressLookupDelegateTest {
     inner class SearchResult {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
@@ -202,25 +225,26 @@ internal class DefaultAddressLookupDelegateTest {
         }
 
         @Test
-        fun `and an option is selected and no completion call has to be made, state should be Form`() = runTest {
-            whenever(addressLookupCallback.onLookupCompletion(getMockList()[0].lookupAddress)).thenReturn(
-                false,
-            )
-            defaultAddressLookupDelegate.setAddressLookupCallback(addressLookupCallback)
+        fun `and an option is selected and no completion call has to be made, state should be Form`() =
+            runTest {
+                whenever(addressLookupCallback.onLookupCompletion(getMockList()[0].lookupAddress)).thenReturn(
+                    false,
+                )
+                defaultAddressLookupDelegate.setAddressLookupCallback(addressLookupCallback)
 
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
-                AddressLookupState.SearchResult("query", getMockList()),
-            )
-            defaultAddressLookupDelegate.onAddressLookupCompletion(getMockList()[0].lookupAddress)
-            val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
-            assert(state is AddressLookupState.Form)
-            assertEquals(
-                /* expected = */
-                getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
-                /* actual = */
-                (state as AddressLookupState.Form).selectedAddress,
-            )
-        }
+                defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                    AddressLookupState.SearchResult("query", getMockList()),
+                )
+                defaultAddressLookupDelegate.onAddressLookupCompletion(getMockList()[0].lookupAddress)
+                val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
+                assert(state is AddressLookupState.Form)
+                assertEquals(
+                    /* expected = */
+                    getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
+                    /* actual = */
+                    (state as AddressLookupState.Form).selectedAddress,
+                )
+            }
 
         @Test
         fun `and an option is selected and a completion call has to be made, state should be SearchResult with the item loading`() =
@@ -240,22 +264,23 @@ internal class DefaultAddressLookupDelegateTest {
             }
 
         @Test
-        fun `and an option is selected and a completion call has been made, state should be Form`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
-                AddressLookupState.SearchResult("query", getMockList(true)),
-            )
-            defaultAddressLookupDelegate.setAddressLookupResult(
-                AddressLookupResult.Completed(getMockList()[0].lookupAddress),
-            )
-            val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
-            assert(state is AddressLookupState.Form)
-            assertEquals(
-                /* expected = */
-                getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
-                /* actual = */
-                (state as AddressLookupState.Form).selectedAddress,
-            )
-        }
+        fun `and an option is selected and a completion call has been made, state should be Form`() =
+            runTest {
+                defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                    AddressLookupState.SearchResult("query", getMockList(true)),
+                )
+                defaultAddressLookupDelegate.setAddressLookupResult(
+                    AddressLookupResult.Completed(getMockList()[0].lookupAddress),
+                )
+                val state = defaultAddressLookupDelegate.addressLookupStateFlow.first()
+                assert(state is AddressLookupState.Form)
+                assertEquals(
+                    /* expected = */
+                    getMockList()[0].lookupAddress.address.mapToAddressInputModel(),
+                    /* actual = */
+                    (state as AddressLookupState.Form).selectedAddress,
+                )
+            }
 
         @Test
         fun `and an option is selected and a completion call has resulted in error, state should be SearchResult`() =
@@ -285,26 +310,41 @@ internal class DefaultAddressLookupDelegateTest {
     inner class Error {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
         fun `and a query is inputted, state should be Loading`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Error("query"))
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.Error(
+                    "query"
+                )
+            )
             defaultAddressLookupDelegate.onAddressQueryChanged("query")
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Loading)
         }
 
         @Test
         fun `and manual entry mode is selected, state should be Form`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Error("query"))
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.Error(
+                    "query"
+                )
+            )
             defaultAddressLookupDelegate.onManualEntryModeSelected()
             assert(defaultAddressLookupDelegate.addressLookupStateFlow.first() is AddressLookupState.Form)
         }
 
         @Test
         fun `and an option selected event is triggered, state should remain the same`() = runTest {
-            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(AddressLookupState.Error("query"))
+            defaultAddressLookupDelegate.mutableAddressLookupStateFlow.tryEmit(
+                AddressLookupState.Error(
+                    "query"
+                )
+            )
             defaultAddressLookupDelegate.setAddressLookupResult(
                 AddressLookupResult.Completed(
                     LookupAddress(
@@ -322,7 +362,10 @@ internal class DefaultAddressLookupDelegateTest {
     inner class InvalidUI {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
@@ -349,7 +392,10 @@ internal class DefaultAddressLookupDelegateTest {
     inner class Submit {
         @BeforeEach
         fun setup() {
-            defaultAddressLookupDelegate.initialize(CoroutineScope(UnconfinedTestDispatcher()), AddressInputModel())
+            defaultAddressLookupDelegate.initialize(
+                CoroutineScope(UnconfinedTestDispatcher()),
+                AddressInputModel()
+            )
         }
 
         @Test
@@ -360,7 +406,10 @@ internal class DefaultAddressLookupDelegateTest {
 
             defaultAddressLookupDelegate.submitAddress()
 
-            assertEquals(getValidMockAddress(), defaultAddressLookupDelegate.addressLookupSubmitFlow.first())
+            assertEquals(
+                getValidMockAddress(),
+                defaultAddressLookupDelegate.addressLookupSubmitFlow.first()
+            )
         }
 
         @Test

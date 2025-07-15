@@ -18,7 +18,7 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType
 import com.adyen.checkout.upi.internal.ui.UPIComponentViewType
 import com.adyen.checkout.upi.internal.ui.UPIDelegate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
