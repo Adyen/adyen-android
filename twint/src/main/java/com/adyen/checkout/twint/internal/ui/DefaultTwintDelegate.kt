@@ -26,10 +26,10 @@ import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParams
 import com.adyen.checkout.twint.internal.ui.model.TwintInputData
 import com.adyen.checkout.twint.internal.ui.model.TwintOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -47,11 +47,11 @@ import com.adyen.checkout.giftcard.internal.ui.protocol.GiftCardProtocol
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardValidator
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

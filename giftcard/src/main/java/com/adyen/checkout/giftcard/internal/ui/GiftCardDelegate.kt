@@ -16,9 +16,9 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.giftcard.GiftCardComponentState
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardInputData
 import com.adyen.checkout.giftcard.internal.ui.model.GiftCardOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.core.old.internal.ui.view
 
 import com.adyen.checkout.components.core.AddressData
 import com.adyen.checkout.components.core.LookupAddress
-import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

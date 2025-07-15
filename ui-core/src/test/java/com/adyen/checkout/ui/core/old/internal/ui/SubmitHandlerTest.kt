@@ -11,9 +11,6 @@ package com.adyen.checkout.ui.core.old.internal.ui
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.old.TestComponentState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

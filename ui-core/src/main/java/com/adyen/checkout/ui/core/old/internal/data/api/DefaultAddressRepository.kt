@@ -14,8 +14,8 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.DispatcherProvider
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runSuspendCatching
-import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import com.adyen.checkout.ui.core.old.internal.data.model.AddressItem
+import com.adyen.checkout.ui.core.old.internal.ui.AddressSpecification
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel

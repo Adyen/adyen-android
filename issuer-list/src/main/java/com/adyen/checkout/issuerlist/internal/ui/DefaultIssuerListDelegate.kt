@@ -27,11 +27,11 @@ import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

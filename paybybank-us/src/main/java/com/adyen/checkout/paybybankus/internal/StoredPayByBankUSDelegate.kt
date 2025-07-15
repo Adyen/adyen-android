@@ -24,7 +24,7 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSOutputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

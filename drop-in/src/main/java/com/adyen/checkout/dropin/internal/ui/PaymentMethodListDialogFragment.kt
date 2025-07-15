@@ -31,7 +31,7 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodHeader
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.mapToStoredPaymentMethodItem
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
+import com.adyen.checkout.ui.core.old.internal.ui.view.AdyenSwipeToRevealLayout
 import com.adyen.checkout.ui.core.old.internal.util.PayButtonFormatter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

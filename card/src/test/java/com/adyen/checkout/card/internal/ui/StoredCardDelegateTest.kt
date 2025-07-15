@@ -50,9 +50,9 @@ import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
-import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope

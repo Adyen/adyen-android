@@ -26,11 +26,11 @@ import com.adyen.checkout.components.core.paymentmethod.UPIPaymentMethod
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.R
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.internal.ui.model.UPIInputData

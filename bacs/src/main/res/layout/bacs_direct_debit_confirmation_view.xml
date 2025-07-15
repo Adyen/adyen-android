@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_holderName"
             style="@style/AdyenCheckout.Bacs.HolderNameInput"
             android:enabled="false"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_bankAccountNumber"
             style="@style/AdyenCheckout.Bacs.AccountNumberInput"
             android:enabled="false"
@@ -49,7 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_sortCode"
             style="@style/AdyenCheckout.Bacs.SortCodeInput"
             android:enabled="false"
@@ -64,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_shopperEmail"
             style="@style/AdyenCheckout.Bacs.ShopperEmailInput"
             android:enabled="false"

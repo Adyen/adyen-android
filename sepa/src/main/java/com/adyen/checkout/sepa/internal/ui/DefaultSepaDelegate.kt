@@ -25,11 +25,11 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.sepa.SepaComponentState
 import com.adyen.checkout.sepa.internal.ui.model.SepaInputData
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIEvent
-import com.adyen.checkout.ui.core.internal.ui.PaymentComponentUIState
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIEvent
+import com.adyen.checkout.ui.core.old.internal.ui.PaymentComponentUIState
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

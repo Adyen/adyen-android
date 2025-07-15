@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.CardBrandItemBinding
 import com.adyen.checkout.card.internal.ui.model.CardBrandItem
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
 
 internal class CardBrandAdapter(
     private val onItemClicked: (CardBrandItem) -> Unit,

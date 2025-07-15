@@ -9,7 +9,7 @@
 package com.adyen.checkout.paybybankus.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
+import com.adyen.checkout.ui.core.old.internal.ui.model.LogoTextItem
 
 internal data class PayByBankUSOutputData(
     val brandList: List<LogoTextItem>

@@ -161,7 +161,7 @@ public final class com/adyen/checkout/card/BuildConfig {
 	public fun <init> ()V
 }
 
-public class com/adyen/checkout/card/CardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/AddressLookupComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public class com/adyen/checkout/card/CardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/AddressLookupComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/card/CardComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/card/internal/provider/CardComponentProvider;
@@ -519,7 +519,7 @@ public final class com/adyen/checkout/card/internal/ui/model/InstallmentOptionPa
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/card/internal/ui/view/CardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
+public final class com/adyen/checkout/card/internal/ui/view/CardNumberInput : com/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText {
 	public static final field Companion Lcom/adyen/checkout/card/internal/ui/view/CardNumberInput$Companion;
 	public fun getRawValue ()Ljava/lang/String;
 	public final fun setAmexCardFormat (Z)V

@@ -38,9 +38,9 @@ import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.util.isStoredPaymentSupported
 import com.adyen.checkout.dropin.internal.util.mapStoredModel
 import com.adyen.checkout.paybybankus.internal.ui.model.PayByBankUSBrandLogo
-import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
-import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.LogoItem
-import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem.TextItem
+import com.adyen.checkout.ui.core.old.internal.ui.model.LogoTextItem
+import com.adyen.checkout.ui.core.old.internal.ui.model.LogoTextItem.LogoItem
+import com.adyen.checkout.ui.core.old.internal.ui.model.LogoTextItem.TextItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

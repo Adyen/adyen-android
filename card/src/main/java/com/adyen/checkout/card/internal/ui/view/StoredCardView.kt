@@ -27,10 +27,10 @@ import com.adyen.checkout.card.internal.ui.model.CardOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.internal.util.BuildUtils
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
-import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
+import com.adyen.checkout.ui.core.old.internal.ui.view.SecurityCodeInput
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.old.internal.util.showError

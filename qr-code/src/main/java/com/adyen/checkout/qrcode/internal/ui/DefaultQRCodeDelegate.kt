@@ -44,9 +44,9 @@ import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodePaymentMethodConfig
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.old.internal.RedirectHandler
 import com.adyen.checkout.ui.core.old.internal.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.old.internal.util.ImageSaver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

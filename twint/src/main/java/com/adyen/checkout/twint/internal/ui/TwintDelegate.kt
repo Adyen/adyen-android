@@ -11,7 +11,7 @@ package com.adyen.checkout.twint.internal.ui
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
 import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.internal.ui.model.TwintInputData
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface TwintDelegate :

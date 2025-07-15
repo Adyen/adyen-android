@@ -20,7 +20,7 @@ import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.DIGIT_SEPARATOR
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAXIMUM_GIFT_CARD_NUMBER_LENGTH
 import com.adyen.checkout.giftcard.internal.util.GiftCardNumberUtils.MAX_DIGIT_SEPARATOR_COUNT
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
 
 class GiftCardNumberInput
 @JvmOverloads

@@ -31,7 +31,7 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest

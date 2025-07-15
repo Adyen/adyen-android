@@ -26,8 +26,8 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle

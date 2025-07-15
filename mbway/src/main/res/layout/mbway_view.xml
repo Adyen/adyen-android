@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_mobileNumber"
                 style="@style/AdyenCheckout.MBWay.MobileNumberInput"
                 android:autofillHints="phoneNational" />

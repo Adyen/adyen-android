@@ -10,8 +10,8 @@ package com.adyen.checkout.boleto.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
-import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressOutputData
 
 internal data class BoletoOutputData(
     val firstNameState: FieldState<String>,

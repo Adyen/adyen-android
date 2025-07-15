@@ -18,7 +18,7 @@
     android:focusable="true"
     android:orientation="horizontal" >
 
-    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         style="@style/AdyenCheckout.Image.Logo"
         app:adyenStrokeColor="@color/stroke_color"/>

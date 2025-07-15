@@ -20,8 +20,8 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.onlinebankingcore.R
 import com.adyen.checkout.onlinebankingcore.databinding.OnlineBankingViewBinding
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.TextListAdapter
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.TextListAdapter
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle

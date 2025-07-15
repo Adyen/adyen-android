@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adyen.checkout.card.databinding.BrandLogoBinding
 import com.adyen.checkout.card.internal.ui.model.CardListItem
 import com.adyen.checkout.card.internal.ui.view.CardListAdapter.ImageViewHolder
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
 
 internal class CardListAdapter : ListAdapter<CardListItem, ImageViewHolder>(CardDiffCallback) {
 

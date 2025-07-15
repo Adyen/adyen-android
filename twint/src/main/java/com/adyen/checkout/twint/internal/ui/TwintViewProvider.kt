@@ -10,11 +10,11 @@ package com.adyen.checkout.twint.internal.ui
 
 import android.content.Context
 import com.adyen.checkout.twint.internal.ui.view.TwintView
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
-import com.adyen.checkout.ui.core.internal.ui.view.ProcessingPaymentView
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.view.ProcessingPaymentView
 
 internal class TwintViewProvider : ViewProvider {
 

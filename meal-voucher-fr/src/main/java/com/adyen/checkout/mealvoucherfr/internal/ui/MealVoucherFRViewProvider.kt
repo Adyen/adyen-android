@@ -11,9 +11,9 @@ package com.adyen.checkout.mealvoucherfr.internal.ui
 import android.content.Context
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
 import com.adyen.checkout.mealvoucherfr.internal.ui.view.MealVoucherFRView
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
 
 internal object MealVoucherFRViewProvider : ViewProvider {
     override fun getView(viewType: ComponentViewType, context: Context): ComponentView {

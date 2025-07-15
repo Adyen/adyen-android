@@ -20,8 +20,8 @@ import com.adyen.checkout.ach.internal.ui.ACHDirectDebitDelegate
 import com.adyen.checkout.ach.internal.ui.model.ACHDirectDebitOutputData
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle

@@ -10,7 +10,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.adyen.checkout.ui.core.internal.ui.view.PaymentInProgressView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.PaymentInProgressView
         android:id="@+id/paymentInProgressView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

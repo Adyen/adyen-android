@@ -57,7 +57,7 @@ import com.adyen.checkout.twint.internal.ui.StoredTwintDelegate
 import com.adyen.checkout.twint.internal.ui.TwintDelegate
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
 import com.adyen.checkout.twint.toCheckoutConfiguration
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 
 @Suppress("TooManyFunctions")
 class TwintComponentProvider

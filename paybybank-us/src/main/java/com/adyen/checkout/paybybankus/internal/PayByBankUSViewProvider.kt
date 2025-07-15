@@ -11,10 +11,10 @@ package com.adyen.checkout.paybybankus.internal
 import android.content.Context
 import com.adyen.checkout.paybybankus.R
 import com.adyen.checkout.paybybankus.internal.ui.view.PayByBankUSView
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
 
 internal object PayByBankUSViewProvider : ViewProvider {
     override fun getView(viewType: ComponentViewType, context: Context): ComponentView {

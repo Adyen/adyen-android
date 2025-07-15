@@ -12,10 +12,10 @@ import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.internal.ui.view.GiftCardView
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
 
 internal object GiftCardViewProvider : ViewProvider {
 
