@@ -1,6 +1,6 @@
 @file:Suppress("TooManyFunctions")
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.ui.core.old.internal.util
 
 import android.content.Context
 import android.text.Spannable

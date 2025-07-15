@@ -27,8 +27,8 @@ import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
-import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
-import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
+import com.adyen.checkout.ui.core.old.internal.util.AddressFormUtils
+import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

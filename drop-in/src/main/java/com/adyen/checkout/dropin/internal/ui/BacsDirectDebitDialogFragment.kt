@@ -19,7 +19,7 @@ import com.adyen.checkout.bacs.BacsDirectDebitComponent
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentBacsDirectDebitComponentBinding
-import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
+import com.adyen.checkout.ui.core.old.internal.util.requestFocusOnNextLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.R as MaterialR

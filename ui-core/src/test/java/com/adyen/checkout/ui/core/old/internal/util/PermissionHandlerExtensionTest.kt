@@ -11,8 +11,6 @@ package com.adyen.checkout.ui.core.old.internal.util
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult
-import com.adyen.checkout.ui.core.internal.util.checkPermission
 import com.adyen.checkout.ui.core.old.TestPermissionHandler
 import com.adyen.checkout.ui.core.old.TestPermissionHandlerWithDifferentPermission
 import com.adyen.checkout.ui.core.old.TestPermissionHandlerWithNoHandlingForPermissionRequest

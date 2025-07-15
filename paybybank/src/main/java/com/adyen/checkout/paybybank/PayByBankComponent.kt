@@ -26,7 +26,7 @@ import com.adyen.checkout.paybybank.internal.provider.PayByBankComponentProvider
 import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**

@@ -29,7 +29,7 @@ import com.adyen.checkout.twint.internal.ui.TwintDelegate
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**

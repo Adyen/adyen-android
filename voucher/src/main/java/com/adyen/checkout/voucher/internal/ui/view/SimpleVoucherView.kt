@@ -20,7 +20,7 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.LogoSize
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import com.adyen.checkout.voucher.R
 import com.adyen.checkout.voucher.databinding.SimpleVoucherViewBinding
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate

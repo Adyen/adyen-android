@@ -20,7 +20,7 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentGenericComponentBinding
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
+import com.adyen.checkout.ui.core.old.internal.util.requestFocusOnNextLayout
 
 internal class GenericComponentDialogFragment : BaseComponentDialogFragment() {
 

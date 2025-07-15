@@ -18,7 +18,7 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.util.CustomTabsLauncher
+import com.adyen.checkout.ui.core.old.internal.util.CustomTabsLauncher
 import org.json.JSONException
 import org.json.JSONObject
 import java.lang.ref.WeakReference

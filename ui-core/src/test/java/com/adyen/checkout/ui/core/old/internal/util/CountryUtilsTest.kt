@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.old.internal.util
 
 import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.util.CountryUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

@@ -20,7 +20,7 @@ import com.adyen.checkout.twint.databinding.TwintViewBinding
 import com.adyen.checkout.twint.internal.ui.TwintDelegate
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParams
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 

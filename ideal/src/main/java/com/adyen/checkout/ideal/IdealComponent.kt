@@ -26,7 +26,7 @@ import com.adyen.checkout.ideal.internal.provider.IdealComponentProvider
 import com.adyen.checkout.ideal.internal.ui.IdealDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**
