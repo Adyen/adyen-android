@@ -39,7 +39,7 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.DefaultRedirectHandler
 
 class AwaitComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

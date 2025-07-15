@@ -43,8 +43,8 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.RedirectHandler
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler

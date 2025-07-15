@@ -6,9 +6,6 @@ public final class com/adyen/checkout/ui/core/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/ui/core/internal/DefaultRedirectHandler$Companion {
-}
-
 public final class com/adyen/checkout/ui/core/internal/data/api/DefaultAddressRepository$Companion {
 }
 
@@ -326,5 +323,8 @@ public final class com/adyen/checkout/ui/core/old/AdyenComponentView : android/w
 	public final fun attach (Lcom/adyen/checkout/ui/core/internal/ui/ViewableComponent;Landroidx/lifecycle/LifecycleOwner;)V
 	public final fun highlightValidationErrors ()V
 	public fun onInterceptTouchEvent (Landroid/view/MotionEvent;)Z
+}
+
+public final class com/adyen/checkout/ui/core/old/internal/DefaultRedirectHandler$Companion {
 }
 
