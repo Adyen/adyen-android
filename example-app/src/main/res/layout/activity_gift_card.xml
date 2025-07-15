@@ -27,7 +27,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout">
 
-        <com.adyen.checkout.ui.core.AdyenComponentView
+        <com.adyen.checkout.ui.core.old.AdyenComponentView
             android:id="@+id/gift_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

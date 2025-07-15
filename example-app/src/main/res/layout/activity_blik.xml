@@ -20,7 +20,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.adyen.checkout.ui.core.AdyenComponentView
+    <com.adyen.checkout.ui.core.old.AdyenComponentView
         android:id="@+id/component_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
