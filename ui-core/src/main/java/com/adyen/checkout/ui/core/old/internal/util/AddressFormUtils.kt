@@ -10,11 +10,11 @@ package com.adyen.checkout.ui.core.old.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.Address
-import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.data.model.AddressItem
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

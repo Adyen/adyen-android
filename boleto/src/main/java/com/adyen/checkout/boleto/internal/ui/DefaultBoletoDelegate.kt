@@ -28,7 +28,6 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
@@ -38,6 +37,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.old.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import com.adyen.checkout.ui.core.old.internal.util.SocialSecurityNumberUtils
