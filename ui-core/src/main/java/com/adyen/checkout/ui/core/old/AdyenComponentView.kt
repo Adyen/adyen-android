@@ -5,7 +5,7 @@
  *
  * Created by atef on 21/2/2023.
  */
-package com.adyen.checkout.ui.core
+package com.adyen.checkout.ui.core.old
 
 import android.content.Context
 import android.util.AttributeSet
