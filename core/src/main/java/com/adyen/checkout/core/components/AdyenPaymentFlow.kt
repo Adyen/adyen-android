@@ -28,6 +28,7 @@ fun AdyenPaymentFlow(
     txVariant: String,
     adyenCheckout: AdyenCheckout,
     modifier: Modifier = Modifier,
+    checkoutController: CheckoutController = rememberCheckoutController(),
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
     val adyenComponent = viewModel(key = txVariant) {
@@ -35,6 +36,7 @@ fun AdyenPaymentFlow(
             txVariant = txVariant,
             adyenCheckout = adyenCheckout,
             savedStateHandle = createSavedStateHandle(),
+            checkoutController = checkoutController,
         )
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 

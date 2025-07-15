@@ -15,11 +15,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.CheckoutController
 
 internal class AdyenComponent(
     txVariant: String,
     adyenCheckout: AdyenCheckout,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    checkoutController: CheckoutController,
 ) : ViewModel() {
 
     // TODO - Initialize Payment Flow
@@ -29,6 +31,7 @@ internal class AdyenComponent(
             adyenCheckout = adyenCheckout,
             coroutineScope = viewModelScope,
             savedStateHandle = savedStateHandle,
+            checkoutController = checkoutController,
         )
 
     @Composable

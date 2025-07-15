@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope
 
@@ -20,12 +21,14 @@ internal class PaymentFacilitatorProvider {
         adyenCheckout: AdyenCheckout,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
+        checkoutController: CheckoutController,
     ): PaymentFacilitator {
         val paymentFacilitatorFactory = if (adyenCheckout.checkoutSession == null) {
             AdvancedPaymentFacilitatorFactory(
                 checkoutConfiguration = adyenCheckout.checkoutConfiguration,
                 checkoutCallback = adyenCheckout.checkoutCallback,
                 savedStateHandle = savedStateHandle,
+                checkoutController = checkoutController,
             )
         } else {
             SessionsPaymentFacilitatorFactory(
@@ -33,6 +36,7 @@ internal class PaymentFacilitatorProvider {
                 checkoutConfiguration = adyenCheckout.checkoutConfiguration,
                 checkoutCallback = adyenCheckout.checkoutCallback,
                 savedStateHandle = savedStateHandle,
+                checkoutController = checkoutController,
             )
         }
 

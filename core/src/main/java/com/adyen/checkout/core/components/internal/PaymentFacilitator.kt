@@ -18,6 +18,7 @@ import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionDelegate
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +31,7 @@ internal class PaymentFacilitator(
     private val coroutineScope: CoroutineScope,
     private val componentEventHandler: ComponentEventHandler<BaseComponentState>,
     private val actionProvider: ActionProvider,
+    private val checkoutController: CheckoutController,
 ) {
 
     private var actionDelegate by mutableStateOf<ActionDelegate?>(null)
