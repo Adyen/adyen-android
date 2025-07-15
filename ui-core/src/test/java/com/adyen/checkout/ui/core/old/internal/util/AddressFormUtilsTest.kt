@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by onurk on 13/1/2023.
+ * Created by ararat on 15/7/2025.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.ui.core.old.internal.util
 
 import com.adyen.checkout.components.core.Address
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -16,7 +16,8 @@ import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import com.adyen.checkout.ui.core.internal.ui.model.Required
+import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
+import com.adyen.checkout.ui.core.old.internal.ui.model.Required
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -164,7 +165,11 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
+            AddressFormUtils.initializeCountryOptions(
+                Locale.getDefault(),
+                addressParams,
+                inputCountryList
+            ),
         )
     }
 
@@ -188,7 +193,11 @@ internal class AddressFormUtilsTest {
         val expected = emptyList<AddressListItem>()
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
+            AddressFormUtils.initializeCountryOptions(
+                Locale.getDefault(),
+                addressParams,
+                inputCountryList
+            ),
         )
     }
 
@@ -228,7 +237,11 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.GERMANY, addressParams, inputCountryList),
+            AddressFormUtils.initializeCountryOptions(
+                Locale.GERMANY,
+                addressParams,
+                inputCountryList
+            ),
         )
     }
 
@@ -274,7 +287,8 @@ internal class AddressFormUtilsTest {
 
     @Test
     fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithDefaultCountryCode_ExpectListWithItemHavingDefaultCountryCodeSelected`() {
-        val addressParams = AddressParams.FullAddress(defaultCountryCode = "GB", addressFieldPolicy = Required())
+        val addressParams =
+            AddressParams.FullAddress(defaultCountryCode = "GB", addressFieldPolicy = Required())
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -308,7 +322,11 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
+            AddressFormUtils.initializeCountryOptions(
+                Locale.getDefault(),
+                addressParams,
+                inputCountryList
+            ),
         )
     }
 
@@ -318,7 +336,10 @@ internal class AddressFormUtilsTest {
     @Test
     fun `initializeCountryOptions_AddressConfigurationIsFullAddressWithSupportedCountryCodes_ExpectListFilteredBySupportedCountryCodes`() {
         val addressParams =
-            AddressParams.FullAddress(supportedCountryCodes = listOf("CA", "GB"), addressFieldPolicy = Required())
+            AddressParams.FullAddress(
+                supportedCountryCodes = listOf("CA", "GB"),
+                addressFieldPolicy = Required()
+            )
         val inputCountryList = listOf(
             AddressItem(
                 id = "CA",
@@ -347,7 +368,11 @@ internal class AddressFormUtilsTest {
         )
         assertEquals(
             expected,
-            AddressFormUtils.initializeCountryOptions(Locale.getDefault(), addressParams, inputCountryList),
+            AddressFormUtils.initializeCountryOptions(
+                Locale.getDefault(),
+                addressParams,
+                inputCountryList
+            ),
         )
     }
 
