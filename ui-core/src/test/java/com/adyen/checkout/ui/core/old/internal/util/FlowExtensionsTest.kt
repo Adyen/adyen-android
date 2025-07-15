@@ -9,8 +9,8 @@
 package com.adyen.checkout.ui.core.old.internal.util
 
 import app.cash.turbine.test
-import com.adyen.checkout.ui.core.internal.ui.TestComponentViewType
 import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,28 +20,32 @@ import org.junit.jupiter.api.Test
 internal class FlowExtensionsTest {
 
     @Test
-    fun `when merging view flows, then initial value of action view flow should be ignored`() = runTest {
-        mergeViewFlows(
-            scope = this,
-            paymentMethodViewFlow = flowOf(TestComponentViewType.VIEW_TYPE_1),
-            genericActionViewFlow = flowOf(null),
-        ).test {
-            // Initial value of merged flow
-            assertNull(awaitItem())
+    fun `when merging view flows, then initial value of action view flow should be ignored`() =
+        runTest {
+            mergeViewFlows(
+                scope = this,
+                paymentMethodViewFlow = flowOf(TestComponentViewType.VIEW_TYPE_1),
+                genericActionViewFlow = flowOf(null),
+            ).test {
+                // Initial value of merged flow
+                assertNull(awaitItem())
 
-            // Initial value of paymentMethodViewFlow
-            assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
+                // Initial value of paymentMethodViewFlow
+                assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
 
-            // Assert initial value of genericActionViewFlow is not emitted
-            ensureAllEventsConsumed()
+                // Assert initial value of genericActionViewFlow is not emitted
+                ensureAllEventsConsumed()
+            }
         }
-    }
 
     @Test
     fun `when merging view flows, then subsequent values should be emitted`() = runTest {
         mergeViewFlows(
             scope = this,
-            paymentMethodViewFlow = flowOf(TestComponentViewType.VIEW_TYPE_1, TestComponentViewType.VIEW_TYPE_2),
+            paymentMethodViewFlow = flowOf(
+                TestComponentViewType.VIEW_TYPE_1,
+                TestComponentViewType.VIEW_TYPE_2
+            ),
             genericActionViewFlow = flowOf(null, TestComponentViewType.VIEW_TYPE_3),
         ).test {
             // Initial value of merged flow
