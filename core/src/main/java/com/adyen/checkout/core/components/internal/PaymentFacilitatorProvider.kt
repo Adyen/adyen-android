@@ -25,6 +25,7 @@ internal class PaymentFacilitatorProvider {
             AdvancedPaymentFacilitatorFactory(
                 checkoutConfiguration = adyenCheckout.checkoutConfiguration,
                 checkoutCallback = adyenCheckout.checkoutCallback,
+                savedStateHandle = savedStateHandle,
             )
         } else {
             SessionsPaymentFacilitatorFactory(

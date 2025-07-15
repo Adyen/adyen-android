@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -22,6 +24,7 @@ internal class PaymentFacilitator(
     private val paymentDelegate: PaymentDelegate<BaseComponentState>,
     private val coroutineScope: CoroutineScope,
     private val componentEventHandler: ComponentEventHandler<BaseComponentState>,
+    private val actionProvider: ActionProvider,
 ) {
 
     @Composable
@@ -40,5 +43,13 @@ internal class PaymentFacilitator(
             .onEach { event ->
                 componentEventHandler.onPaymentComponentEvent(event)
             }.launchIn(coroutineScope)
+    }
+
+    fun handleAction(action: Action) {
+        // TODO - Store the actionDelegate
+        actionProvider.get(
+            action = action,
+            coroutineScope = coroutineScope,
+        )
     }
 }
