@@ -9,7 +9,6 @@
 package com.adyen.checkout.ui.core.old.internal.util
 
 import app.cash.turbine.test
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
 import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest

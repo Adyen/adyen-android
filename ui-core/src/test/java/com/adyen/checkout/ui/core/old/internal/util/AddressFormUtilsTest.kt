@@ -16,7 +16,6 @@ import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.old.internal.ui.model.Required
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -15,6 +15,7 @@ import android.text.Editable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
@@ -30,9 +31,9 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
 import com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.old.internal.util.hideError
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

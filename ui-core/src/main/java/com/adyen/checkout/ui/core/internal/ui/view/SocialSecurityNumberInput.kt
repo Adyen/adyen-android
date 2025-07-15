@@ -14,7 +14,7 @@ import android.text.InputType
 import android.text.method.DigitsKeyListener
 import android.util.AttributeSet
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.ui.core.internal.util.SocialSecurityNumberUtils
+import com.adyen.checkout.ui.core.old.internal.util.SocialSecurityNumberUtils
 
 class SocialSecurityNumberInput
 @JvmOverloads

@@ -32,7 +32,7 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
+import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

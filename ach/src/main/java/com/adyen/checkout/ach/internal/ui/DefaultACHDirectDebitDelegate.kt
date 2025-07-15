@@ -45,8 +45,8 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
-import com.adyen.checkout.ui.core.internal.util.AddressFormUtils
-import com.adyen.checkout.ui.core.internal.util.AddressValidationUtils
+import com.adyen.checkout.ui.core.old.internal.util.AddressFormUtils
+import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

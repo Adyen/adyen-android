@@ -22,10 +22,10 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.old.internal.util.hideError
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

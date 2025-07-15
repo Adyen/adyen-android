@@ -19,7 +19,7 @@ import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.databinding.FragmentCardComponentBinding
-import com.adyen.checkout.ui.core.internal.util.requestFocusOnNextLayout
+import com.adyen.checkout.ui.core.old.internal.util.requestFocusOnNextLayout
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 

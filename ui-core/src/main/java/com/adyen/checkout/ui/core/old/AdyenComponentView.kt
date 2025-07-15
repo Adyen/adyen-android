@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2023 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by atef on 21/2/2023.
+ * Created by ararat on 15/7/2025.
  */
 package com.adyen.checkout.ui.core.old
 
@@ -36,9 +36,9 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
 import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
 import com.adyen.checkout.ui.core.internal.ui.view.PayButton
-import com.adyen.checkout.ui.core.internal.util.PayButtonFormatter
-import com.adyen.checkout.ui.core.internal.util.hideKeyboard
-import com.adyen.checkout.ui.core.internal.util.resetFocus
+import com.adyen.checkout.ui.core.old.internal.util.PayButtonFormatter
+import com.adyen.checkout.ui.core.old.internal.util.hideKeyboard
+import com.adyen.checkout.ui.core.old.internal.util.resetFocus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

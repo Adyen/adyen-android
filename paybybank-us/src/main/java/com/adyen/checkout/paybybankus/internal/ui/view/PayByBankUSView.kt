@@ -21,7 +21,7 @@ import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.internal.ui.model.LogoTextItem
 import com.adyen.checkout.ui.core.internal.ui.view.LogoTextAdapter
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UiCoreR
 

@@ -20,7 +20,7 @@ import com.adyen.checkout.cashapppay.internal.ui.CashAppPayDelegate
 import com.adyen.checkout.cashapppay.internal.ui.model.CashAppPayComponentParams
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 

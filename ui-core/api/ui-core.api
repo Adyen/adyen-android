@@ -312,9 +312,6 @@ public final class com/adyen/checkout/ui/core/internal/ui/view/SocialSecurityNum
 public final class com/adyen/checkout/ui/core/internal/ui/view/SocialSecurityNumberInput$Companion {
 }
 
-public final class com/adyen/checkout/ui/core/internal/util/ImageSaver$Companion {
-}
-
 public final class com/adyen/checkout/ui/core/old/AdyenComponentView : android/widget/LinearLayout {
 	public fun <init> (Landroid/content/Context;)V
 	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
@@ -326,5 +323,8 @@ public final class com/adyen/checkout/ui/core/old/AdyenComponentView : android/w
 }
 
 public final class com/adyen/checkout/ui/core/old/internal/DefaultRedirectHandler$Companion {
+}
+
+public final class com/adyen/checkout/ui/core/old/internal/util/ImageSaver$Companion {
 }
 

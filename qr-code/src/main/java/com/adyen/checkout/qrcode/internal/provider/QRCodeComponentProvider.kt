@@ -39,8 +39,8 @@ import com.adyen.checkout.qrcode.internal.QRCodeCountDownTimer
 import com.adyen.checkout.qrcode.internal.ui.DefaultQRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.toCheckoutConfiguration
-import com.adyen.checkout.ui.core.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.old.internal.DefaultRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.util.ImageSaver
 
 class QRCodeComponentProvider
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

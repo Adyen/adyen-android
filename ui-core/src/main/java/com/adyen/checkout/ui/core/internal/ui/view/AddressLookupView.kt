@@ -12,6 +12,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import android.widget.SearchView.OnQueryTextListener
 import androidx.annotation.RestrictTo
@@ -24,11 +25,11 @@ import com.adyen.checkout.ui.core.databinding.AddressLookupViewBinding
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
-import com.adyen.checkout.ui.core.internal.util.formatStringWithHyperlink
-import com.adyen.checkout.ui.core.internal.util.hideKeyboard
-import com.adyen.checkout.ui.core.internal.util.setLocalizedQueryHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
-import com.adyen.checkout.ui.core.internal.util.showKeyboard
+import com.adyen.checkout.ui.core.old.internal.util.formatStringWithHyperlink
+import com.adyen.checkout.ui.core.old.internal.util.hideKeyboard
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedQueryHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showKeyboard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

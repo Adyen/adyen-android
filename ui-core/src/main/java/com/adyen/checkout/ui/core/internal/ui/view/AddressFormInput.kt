@@ -25,10 +25,10 @@ import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
 import com.adyen.checkout.ui.core.internal.ui.TextListAdapter
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.old.internal.util.hideError
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showError
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn

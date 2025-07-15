@@ -6,7 +6,7 @@
  * Created by oscars on 30/11/2022.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.ui.core.old.internal.util
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.util.mergeStateFlows

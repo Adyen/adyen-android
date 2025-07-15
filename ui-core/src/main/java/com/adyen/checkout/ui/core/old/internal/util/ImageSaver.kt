@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 8/1/2024.
+ * Created by ararat on 15/7/2025.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.ui.core.old.internal.util
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -33,8 +33,8 @@ import com.adyen.checkout.core.old.internal.ui.PermissionHandler
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
 import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
-import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
-import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
+import com.adyen.checkout.ui.core.old.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
+import com.adyen.checkout.ui.core.old.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
