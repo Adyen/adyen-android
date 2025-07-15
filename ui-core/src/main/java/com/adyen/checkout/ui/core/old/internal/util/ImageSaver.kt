@@ -32,7 +32,7 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.ui.PermissionHandler
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.core.R
-import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
+import com.adyen.checkout.ui.core.old.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.old.internal.util.PermissionHandlerResult.PERMISSION_GRANTED
 import com.adyen.checkout.ui.core.old.internal.util.PermissionHandlerResult.PERMISSION_REQUEST_NOT_HANDLED
 import com.google.android.material.color.MaterialColors

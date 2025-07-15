@@ -31,8 +31,8 @@ import com.adyen.checkout.core.old.PermissionHandlerCallback
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.exception.PermissionRequestException
 import com.adyen.checkout.ui.core.old.internal.util.ImageSaver
 import com.adyen.checkout.ui.core.old.internal.util.PdfOpener
 import com.adyen.checkout.voucher.internal.ui.model.VoucherOutputData
