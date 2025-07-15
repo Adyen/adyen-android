@@ -50,7 +50,7 @@ fun AdyenPaymentFlow(
 
         // TODO - Properly implement the pay button
         PrimaryButton(
-            onClick = adyenComponent::submit,
+            onClick = checkoutController::submit,
             text = "Pay $13.37",
             modifier = Modifier.fillMaxWidth(),
         )

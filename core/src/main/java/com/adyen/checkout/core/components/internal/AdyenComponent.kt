@@ -42,8 +42,4 @@ internal class AdyenComponent(
     fun observe(lifecycle: Lifecycle) {
         paymentFacilitator.observe(lifecycle)
     }
-
-    fun submit() {
-        paymentFacilitator.submit()
-    }
 }

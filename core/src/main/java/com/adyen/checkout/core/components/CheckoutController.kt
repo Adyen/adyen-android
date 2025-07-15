@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 class CheckoutController {
 
     private val _events = MutableSharedFlow<Event>(
-        replay = 0,
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )

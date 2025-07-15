@@ -93,6 +93,7 @@ internal class PaymentFacilitator(
 //        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun handleIntent(intent: Intent) {
         // TODO - handle intent with action delegate
     }
