@@ -6,7 +6,7 @@
  * Created by ararat on 10/1/2024.
  */
 
-package com.adyen.checkout.ui.core.internal.exception
+package com.adyen.checkout.ui.core.old.internal.exception
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.old.exception.CheckoutException
