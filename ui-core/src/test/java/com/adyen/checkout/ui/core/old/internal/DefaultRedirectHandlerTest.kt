@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2021 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 22/4/2021.
+ * Created by ararat on 15/7/2025.
  */
 
-package com.adyen.checkout.ui.core.internal
+package com.adyen.checkout.ui.core.old.internal
 
 import android.net.Uri
 import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.ui.core.internal.DefaultRedirectHandler
 import com.google.common.collect.Iterators
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals

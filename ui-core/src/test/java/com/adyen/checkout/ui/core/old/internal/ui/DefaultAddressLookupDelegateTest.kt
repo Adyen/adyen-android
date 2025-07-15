@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 5/1/2024.
+ * Created by ararat on 15/7/2025.
  */
 
-package com.adyen.checkout.ui.core.internal.ui
+package com.adyen.checkout.ui.core.old.internal.ui
 
 import com.adyen.checkout.components.core.AddressData
 import com.adyen.checkout.components.core.AddressLookupCallback
@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.mapToAddressInputModel
 import com.adyen.checkout.core.old.AdyenLogger
 import com.adyen.checkout.core.old.internal.util.Logger
 import com.adyen.checkout.ui.core.internal.data.api.TestAddressRepository
+import com.adyen.checkout.ui.core.internal.ui.DefaultAddressLookupDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressLookupState
 import com.adyen.checkout.ui.core.internal.ui.view.LookupOption
 import kotlinx.coroutines.CoroutineScope

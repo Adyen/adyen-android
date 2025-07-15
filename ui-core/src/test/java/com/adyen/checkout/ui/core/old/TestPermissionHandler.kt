@@ -6,7 +6,7 @@
  * Created by ararat on 22/1/2024.
  */
 
-package com.adyen.checkout.ui.core
+package com.adyen.checkout.ui.core.old
 
 import android.content.Context
 import com.adyen.checkout.core.old.PermissionHandlerCallback

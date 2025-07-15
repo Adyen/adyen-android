@@ -1,19 +1,21 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 19/1/2024.
+ * Created by ararat on 15/7/2025.
  */
 
-package com.adyen.checkout.ui.core.internal.util
+package com.adyen.checkout.ui.core.old.internal.util
 
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.adyen.checkout.ui.core.TestPermissionHandler
-import com.adyen.checkout.ui.core.TestPermissionHandlerWithDifferentPermission
-import com.adyen.checkout.ui.core.TestPermissionHandlerWithNoHandlingForPermissionRequest
+import com.adyen.checkout.ui.core.internal.util.PermissionHandlerResult
+import com.adyen.checkout.ui.core.internal.util.checkPermission
+import com.adyen.checkout.ui.core.old.TestPermissionHandler
+import com.adyen.checkout.ui.core.old.TestPermissionHandlerWithDifferentPermission
+import com.adyen.checkout.ui.core.old.TestPermissionHandlerWithNoHandlingForPermissionRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
