@@ -33,7 +33,6 @@ import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseGenericEncryptor
-import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
@@ -45,6 +44,7 @@ import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.old.internal.util.AddressFormUtils
 import com.adyen.checkout.ui.core.old.internal.util.AddressValidationUtils
 import kotlinx.coroutines.CoroutineScope

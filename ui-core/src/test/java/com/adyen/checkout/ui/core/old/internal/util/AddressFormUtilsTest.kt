@@ -11,11 +11,11 @@ package com.adyen.checkout.ui.core.old.internal.util
 import com.adyen.checkout.components.core.Address
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.ui.core.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.data.model.AddressItem
 import com.adyen.checkout.ui.core.old.internal.ui.model.Required
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

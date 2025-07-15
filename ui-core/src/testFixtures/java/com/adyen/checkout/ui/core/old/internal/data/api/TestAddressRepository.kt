@@ -8,8 +8,7 @@
 
 package com.adyen.checkout.ui.core.old.internal.data.api
 
-import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
-import com.adyen.checkout.ui.core.internal.data.model.AddressItem
+import com.adyen.checkout.ui.core.old.internal.data.model.AddressItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

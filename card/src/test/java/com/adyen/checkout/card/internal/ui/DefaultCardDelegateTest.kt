@@ -66,7 +66,6 @@ import com.adyen.checkout.cse.internal.TestCardEncryptor
 import com.adyen.checkout.cse.internal.TestGenericEncryptor
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
 import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.internal.ui.AddressLookupDelegate
@@ -74,6 +73,7 @@ import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
 import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.data.api.AddressRepository
 import com.adyen.checkout.ui.core.old.internal.data.api.TestAddressRepository
 import com.adyen.checkout.ui.core.old.internal.util.AddressFormUtils
 import com.adyen.threeds2.ThreeDS2Service

@@ -6,20 +6,6 @@ public final class com/adyen/checkout/ui/core/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/ui/core/internal/data/api/DefaultAddressRepository$Companion {
-}
-
-public final class com/adyen/checkout/ui/core/internal/data/model/AddressItem$Companion {
-}
-
-public final class com/adyen/checkout/ui/core/internal/data/model/AddressItem$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/ui/core/internal/data/model/AddressItem;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/ui/core/internal/data/model/AddressItem;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public final class com/adyen/checkout/ui/core/internal/ui/AddressFormUIState$Companion {
 	public final fun fromAddressParams (Lcom/adyen/checkout/ui/core/internal/ui/model/AddressParams;)Lcom/adyen/checkout/ui/core/internal/ui/AddressFormUIState;
 }
@@ -323,6 +309,20 @@ public final class com/adyen/checkout/ui/core/old/AdyenComponentView : android/w
 }
 
 public final class com/adyen/checkout/ui/core/old/internal/DefaultRedirectHandler$Companion {
+}
+
+public final class com/adyen/checkout/ui/core/old/internal/data/api/DefaultAddressRepository$Companion {
+}
+
+public final class com/adyen/checkout/ui/core/old/internal/data/model/AddressItem$Companion {
+}
+
+public final class com/adyen/checkout/ui/core/old/internal/data/model/AddressItem$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/ui/core/old/internal/data/model/AddressItem;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/ui/core/old/internal/data/model/AddressItem;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/ui/core/old/internal/util/ImageSaver$Companion {
