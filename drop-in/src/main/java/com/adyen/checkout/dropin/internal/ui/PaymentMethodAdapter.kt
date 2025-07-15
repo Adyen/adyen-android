@@ -31,9 +31,9 @@ import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.PaymentMethodNote
 import com.adyen.checkout.dropin.internal.ui.model.StoredPaymentMethodModel
 import com.adyen.checkout.dropin.internal.ui.model.mapToStoredPaymentMethodItem
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout
-import com.adyen.checkout.ui.core.internal.ui.view.LogoTextAdapter
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.ui.view.AdyenSwipeToRevealLayout
+import com.adyen.checkout.ui.core.old.internal.ui.view.LogoTextAdapter
 
 internal class PaymentMethodAdapter @JvmOverloads constructor(
     private val onPaymentMethodSelectedCallback: OnPaymentMethodSelectedCallback? = null,

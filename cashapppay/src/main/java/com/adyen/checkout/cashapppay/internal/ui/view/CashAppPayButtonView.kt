@@ -12,8 +12,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.adyen.checkout.cashapppay.databinding.CashAppPayButtonViewBinding
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.view.PayButton
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.view.PayButton
 import kotlinx.coroutines.CoroutineScope
 
 internal class CashAppPayButtonView @JvmOverloads constructor(

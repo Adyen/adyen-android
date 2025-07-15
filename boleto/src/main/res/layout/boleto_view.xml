@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_firstName"
             style="@style/AdyenCheckout.Boleto.FirstNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_lastName"
             style="@style/AdyenCheckout.Boleto.LastNameInput" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -47,12 +47,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.SocialSecurityNumberInput
+        <com.adyen.checkout.ui.core.old.internal.ui.view.SocialSecurityNumberInput
             android:id="@+id/editText_socialSecurityNumber"
             style="@style/AdyenCheckout.Boleto.SocialNumberInput" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.adyen.checkout.ui.core.internal.ui.view.AddressFormInput
+    <com.adyen.checkout.ui.core.old.internal.ui.view.AddressFormInput
         android:id="@+id/addressFormInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_shopperEmail"
             style="@style/AdyenCheckout.Boleto.ShopperEmailInput" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -12,9 +12,9 @@ import com.adyen.checkout.blik.BlikComponentState
 import com.adyen.checkout.blik.internal.ui.model.BlikInputData
 import com.adyen.checkout.blik.internal.ui.model.BlikOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BlikDelegate :

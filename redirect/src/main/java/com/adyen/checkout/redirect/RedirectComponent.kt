@@ -24,8 +24,8 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
 import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow
 
 /**

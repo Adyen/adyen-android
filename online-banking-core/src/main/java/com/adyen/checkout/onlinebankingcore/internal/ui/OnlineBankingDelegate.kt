@@ -17,9 +17,9 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingInputData
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingModel
 import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutputData
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

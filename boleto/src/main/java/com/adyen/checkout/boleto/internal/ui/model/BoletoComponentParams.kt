@@ -11,7 +11,7 @@ package com.adyen.checkout.boleto.internal.ui.model
 import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 
 internal data class BoletoComponentParams(
     private val commonComponentParams: CommonComponentParams,

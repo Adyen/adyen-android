@@ -8,6 +8,4 @@
 
 package com.adyen.checkout.ui.core.old.internal.ui.model
 
-import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
-
 internal class Required : AddressFieldPolicy

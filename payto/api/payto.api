@@ -6,7 +6,7 @@ public final class com/adyen/checkout/payto/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/payto/PayToComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/payto/PayToComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/payto/PayToComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/payto/internal/provider/PayToComponentProvider;
@@ -79,14 +79,14 @@ public final class com/adyen/checkout/payto/databinding/PaytoViewBinding : andro
 	public final field autoCompleteTextViewPayIdType Landroidx/appcompat/widget/AppCompatAutoCompleteTextView;
 	public final field buttonToggleBsb Lcom/google/android/material/button/MaterialButton;
 	public final field buttonTogglePayId Lcom/google/android/material/button/MaterialButton;
-	public final field editTextBsbAccountNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextBsbStateBranch Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextFirstName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextLastName Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdAbnNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdEmailAddress Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdOrganizationId Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
-	public final field editTextPayIdPhoneNumber Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextBsbAccountNumber Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextBsbStateBranch Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextFirstName Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextLastName Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdAbnNumber Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdEmailAddress Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdOrganizationId Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextPayIdPhoneNumber Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
 	public final field layoutBsbContent Landroid/widget/LinearLayout;
 	public final field layoutPayIdContent Landroid/widget/LinearLayout;
 	public final field textInputLayoutBsbAccountNumber Lcom/google/android/material/textfield/TextInputLayout;

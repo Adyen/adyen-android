@@ -15,7 +15,7 @@ import com.adyen.checkout.components.core.internal.ui.model.ButtonParams
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.old.CardBrand
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardComponentParams(

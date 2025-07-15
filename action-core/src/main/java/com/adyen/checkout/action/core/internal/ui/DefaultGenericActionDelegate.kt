@@ -38,8 +38,8 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

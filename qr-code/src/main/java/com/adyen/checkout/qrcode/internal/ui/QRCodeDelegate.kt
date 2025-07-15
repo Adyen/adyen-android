@@ -20,7 +20,7 @@ import com.adyen.checkout.components.core.internal.ui.ViewableDelegate
 import com.adyen.checkout.core.old.internal.ui.PermissionHandler
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

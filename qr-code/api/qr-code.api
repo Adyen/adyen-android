@@ -6,7 +6,7 @@ public final class com/adyen/checkout/qrcode/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/qrcode/QRCodeComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/qrcode/QRCodeComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/qrcode/QRCodeComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/components/core/internal/provider/ActionComponentProvider;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z

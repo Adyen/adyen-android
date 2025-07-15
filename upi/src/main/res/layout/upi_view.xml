@@ -85,7 +85,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_vpa"
             style="@style/AdyenCheckout.UPI.VPAEditText"
             android:layout_width="match_parent"

@@ -10,7 +10,6 @@ package com.adyen.checkout.ui.core.old.internal.ui.model
 
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

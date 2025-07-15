@@ -6,7 +6,7 @@ public final class com/adyen/checkout/econtext/BuildConfig {
 	public fun <init> ()V
 }
 
-public abstract class com/adyen/checkout/econtext/internal/EContextComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public abstract class com/adyen/checkout/econtext/internal/EContextComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	protected fun <init> (Lcom/adyen/checkout/econtext/internal/ui/EContextDelegate;Lcom/adyen/checkout/action/core/internal/ui/GenericActionDelegate;Lcom/adyen/checkout/action/core/internal/DefaultActionHandlingComponent;Lcom/adyen/checkout/components/core/internal/ComponentEventHandler;)V
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public fun getDelegate ()Lcom/adyen/checkout/components/core/internal/ui/ComponentDelegate;

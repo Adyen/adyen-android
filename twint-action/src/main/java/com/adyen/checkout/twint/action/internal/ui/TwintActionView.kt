@@ -15,7 +15,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.twint.action.databinding.ViewTwintActionBinding
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
 internal class TwintActionView

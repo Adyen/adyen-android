@@ -37,9 +37,9 @@ import com.adyen.checkout.googlepay.internal.ui.model.GooglePayOutputData
 import com.adyen.checkout.googlepay.internal.util.GooglePayAvailabilityCheck
 import com.adyen.checkout.googlepay.internal.util.GooglePayUtils
 import com.adyen.checkout.googlepay.internal.util.awaitTask
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper

@@ -37,7 +37,7 @@ import com.adyen.checkout.giftcard.internal.util.DefaultGiftCardValidator
 import com.adyen.checkout.giftcard.internal.util.GiftCardBalanceStatus
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

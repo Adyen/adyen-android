@@ -12,10 +12,10 @@ import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.internal.ui.model.BoletoInputData
 import com.adyen.checkout.boleto.internal.ui.model.BoletoOutputData
 import com.adyen.checkout.components.core.internal.ui.PaymentComponentDelegate
-import com.adyen.checkout.ui.core.internal.ui.AddressDelegate
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.AddressDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface BoletoDelegate :

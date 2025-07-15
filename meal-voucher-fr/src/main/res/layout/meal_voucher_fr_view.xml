@@ -40,7 +40,7 @@
             android:layout_marginEnd="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
+            <com.adyen.checkout.ui.core.old.internal.ui.view.ExpiryDateInput
                 android:id="@+id/editText_mealVoucherFRExpiryDate"
                 style="@style/AdyenCheckout.MealVoucherFR.ExpiryDateInput"
                 android:nextFocusDown="@id/editText_mealVoucherFRSecurityCode"
@@ -55,7 +55,7 @@
             android:layout_marginStart="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_mealVoucherFRSecurityCode"
                 style="@style/AdyenCheckout.MealVoucherFR.SecurityCodeInput" />
         </com.google.android.material.textfield.TextInputLayout>

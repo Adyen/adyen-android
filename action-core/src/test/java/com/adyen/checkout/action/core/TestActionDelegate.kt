@@ -29,8 +29,8 @@ import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

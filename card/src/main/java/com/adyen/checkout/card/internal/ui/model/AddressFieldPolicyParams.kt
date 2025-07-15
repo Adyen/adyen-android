@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressFieldPolicy
 
 internal sealed class AddressFieldPolicyParams : AddressFieldPolicy {
     /**

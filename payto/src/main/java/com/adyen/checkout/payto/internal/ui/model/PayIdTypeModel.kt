@@ -9,7 +9,7 @@
 package com.adyen.checkout.payto.internal.ui.model
 
 import androidx.annotation.StringRes
-import com.adyen.checkout.ui.core.internal.ui.LocalizedTextListItem
+import com.adyen.checkout.ui.core.old.internal.ui.LocalizedTextListItem
 
 internal class PayIdTypeModel(
     val type: PayIdType,

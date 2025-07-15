@@ -8,9 +8,6 @@
 
 package com.adyen.checkout.ui.core.old.internal.ui
 
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
-
 /**
  * Test implementation of [ComponentViewType].
  */

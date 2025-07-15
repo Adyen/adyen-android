@@ -69,7 +69,7 @@ public final class com/adyen/checkout/giftcard/GiftCardAction$SendPayment$Creato
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public class com/adyen/checkout/giftcard/GiftCardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public class com/adyen/checkout/giftcard/GiftCardComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/giftcard/GiftCardComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/giftcard/internal/provider/GiftCardComponentProvider;
@@ -225,7 +225,7 @@ public final class com/adyen/checkout/giftcard/internal/provider/GiftCardCompone
 public final class com/adyen/checkout/giftcard/internal/ui/DefaultGiftCardDelegate$Companion {
 }
 
-public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput : com/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText {
+public final class com/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput : com/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText {
 	public static final field Companion Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput$Companion;
 	public fun getRawValue ()Ljava/lang/String;
 }

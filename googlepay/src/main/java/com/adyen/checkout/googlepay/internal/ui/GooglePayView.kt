@@ -17,7 +17,7 @@ import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.googlepay.databinding.ViewGooglePayBinding
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayOutputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

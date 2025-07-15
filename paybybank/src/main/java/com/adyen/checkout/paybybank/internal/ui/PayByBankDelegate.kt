@@ -13,8 +13,8 @@ import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
 import com.adyen.checkout.paybybank.PayByBankComponentState
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankInputData
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface PayByBankDelegate :

@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+                <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
                     android:id="@+id/cardBrandLogo_imageView_primary"
                     style="@style/AdyenCheckout.Card.BrandRecognitionLogo"
                     app:adyenStrokeColor="@color/stroke_color"
@@ -73,7 +73,7 @@
             android:layout_marginEnd="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.ExpiryDateInput
+            <com.adyen.checkout.ui.core.old.internal.ui.view.ExpiryDateInput
                 android:id="@+id/editText_expiryDate"
                 style="@style/AdyenCheckout.Card.ExpiryDateInput"
                 android:enabled="false"
@@ -89,7 +89,7 @@
             android:layout_marginStart="@dimen/standard_half_margin"
             android:layout_weight="1">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.SecurityCodeInput
+            <com.adyen.checkout.ui.core.old.internal.ui.view.SecurityCodeInput
                 android:id="@+id/editText_securityCode"
                 style="@style/AdyenCheckout.Card.SecurityCodeInput"
                 android:nextFocusDown="@id/editText_cardHolder"

@@ -83,7 +83,7 @@
             app:prefixText="+61"
             tools:visibility="visible">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_payId_phone_number"
                 style="@style/AdyenCheckout.PayTo.PayId.PhoneNumberEditText"
                 android:layout_width="match_parent"
@@ -100,7 +100,7 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/edit_text_pay_id_email_address"
                 style="@style/AdyenCheckout.PayTo.PayId.EmailAddressEditText"
                 android:layout_width="match_parent"
@@ -117,7 +117,7 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/edit_text_pay_id_abn_number"
                 style="@style/AdyenCheckout.PayTo.PayId.AbnNumberEditText"
                 android:layout_width="match_parent"
@@ -133,7 +133,7 @@
             android:visibility="gone"
             tools:visibility="visible">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_payId_organizationId"
                 style="@style/AdyenCheckout.PayTo.PayId.OrganizationIdEditText"
                 android:layout_width="match_parent"
@@ -165,7 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_bsb_state_branch"
                 style="@style/AdyenCheckout.PayTo.BSB.StateBranchEditText"
                 android:layout_width="match_parent"
@@ -179,7 +179,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                 android:id="@+id/editText_bsb_account_number"
                 style="@style/AdyenCheckout.PayTo.BSB.AccountNumberEditText"
                 android:layout_width="match_parent"
@@ -195,7 +195,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_first_name"
             style="@style/AdyenCheckout.PayTo.FirstNameEditText"
             android:layout_width="match_parent"
@@ -210,7 +210,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_last_name"
             style="@style/AdyenCheckout.PayTo.LastNameEditText"
             android:layout_width="match_parent"

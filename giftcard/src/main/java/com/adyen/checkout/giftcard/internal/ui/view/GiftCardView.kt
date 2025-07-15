@@ -23,7 +23,7 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.giftcard.R
 import com.adyen.checkout.giftcard.databinding.GiftcardViewBinding
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.isVisible
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle

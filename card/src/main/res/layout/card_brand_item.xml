@@ -14,7 +14,7 @@
     android:paddingTop="@dimen/standard_half_margin"
     android:paddingBottom="@dimen/standard_half_margin">
 
-    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_cardBrandLogo"
         style="@style/AdyenCheckout.Card.BrandSelection.Item.Logo"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -23,7 +23,7 @@ import com.adyen.checkout.paybybankus.PayByBankUSComponentState
 import com.adyen.checkout.paybybankus.getPayByBankUSConfiguration
 import com.adyen.checkout.paybybankus.internal.DefaultPayByBankUSDelegate
 import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

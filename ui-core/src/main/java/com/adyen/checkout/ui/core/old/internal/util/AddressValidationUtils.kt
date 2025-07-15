@@ -13,10 +13,10 @@ import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.ui.core.R
-import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.AddressSpecification
-import com.adyen.checkout.ui.core.internal.ui.model.AddressListItem
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.old.internal.ui.AddressSpecification
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressListItem
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressOutputData
 
 @Suppress("LongParameterList")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

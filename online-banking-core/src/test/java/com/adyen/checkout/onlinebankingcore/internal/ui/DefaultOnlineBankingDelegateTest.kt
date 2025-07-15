@@ -25,7 +25,7 @@ import com.adyen.checkout.onlinebankingcore.internal.ui.model.OnlineBankingOutpu
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingComponentState
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingConfiguration
 import com.adyen.checkout.onlinebankingcore.utils.TestOnlineBankingPaymentMethod
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.old.internal.util.PdfOpener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

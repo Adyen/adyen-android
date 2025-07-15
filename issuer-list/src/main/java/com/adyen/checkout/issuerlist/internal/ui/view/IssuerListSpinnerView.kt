@@ -18,7 +18,7 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.issuerlist.databinding.IssuerListSpinnerViewBinding
 import com.adyen.checkout.issuerlist.internal.ui.IssuerListDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import kotlinx.coroutines.CoroutineScope
 
 internal class IssuerListSpinnerView @JvmOverloads constructor(

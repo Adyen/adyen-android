@@ -22,7 +22,7 @@
 
     <!-- ProcessingPaymentView has a RestrictTo annotation, but is actually available -->
     <!--suppress AndroidUnresolvableTag -->
-    <com.adyen.checkout.ui.core.internal.ui.view.ProcessingPaymentView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.ProcessingPaymentView
         android:id="@+id/processingPaymentView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

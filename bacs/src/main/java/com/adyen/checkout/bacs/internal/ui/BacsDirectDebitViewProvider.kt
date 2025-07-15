@@ -12,10 +12,10 @@ import android.content.Context
 import com.adyen.checkout.bacs.R
 import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitConfirmationView
 import com.adyen.checkout.bacs.internal.ui.view.BacsDirectDebitInputView
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
 
 internal object BacsDirectDebitViewProvider : ViewProvider {
     override fun getView(
@@ -30,7 +30,8 @@ internal object BacsDirectDebitViewProvider : ViewProvider {
     }
 }
 
-internal enum class BacsComponentViewType(override val buttonTextResId: Int) : ButtonComponentViewType {
+internal enum class BacsComponentViewType(override val buttonTextResId: Int) :
+    ButtonComponentViewType {
     INPUT(R.string.bacs_continue),
     CONFIRMATION(R.string.bacs_confirm_and_pay);
 

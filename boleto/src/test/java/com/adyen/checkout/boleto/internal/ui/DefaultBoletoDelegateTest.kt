@@ -27,8 +27,8 @@ import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
 import com.adyen.checkout.ui.core.old.internal.data.api.TestAddressRepository
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel

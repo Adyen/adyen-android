@@ -6,7 +6,7 @@ public final class com/adyen/checkout/twint/action/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/twint/action/TwintActionComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/twint/action/TwintActionComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/twint/action/TwintActionComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/twint/action/internal/provider/TwintActionComponentProvider;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
@@ -52,7 +52,7 @@ public final class com/adyen/checkout/twint/action/TwintActionConfigurationKt {
 }
 
 public final class com/adyen/checkout/twint/action/databinding/FragmentTwintActionBinding : androidx/viewbinding/ViewBinding {
-	public final field paymentInProgressView Lcom/adyen/checkout/ui/core/internal/ui/view/PaymentInProgressView;
+	public final field paymentInProgressView Lcom/adyen/checkout/ui/core/old/internal/ui/view/PaymentInProgressView;
 	public static fun bind (Landroid/view/View;)Lcom/adyen/checkout/twint/action/databinding/FragmentTwintActionBinding;
 	public synthetic fun getRoot ()Landroid/view/View;
 	public fun getRoot ()Landroid/widget/FrameLayout;

@@ -24,8 +24,8 @@ import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.model.AddressFieldPolicy
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressFieldPolicy
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 import java.util.Locale
 
 @Suppress("TooManyFunctions")

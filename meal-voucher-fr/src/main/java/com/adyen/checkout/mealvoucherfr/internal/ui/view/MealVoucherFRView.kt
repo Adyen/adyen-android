@@ -24,7 +24,7 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.giftcard.internal.ui.GiftCardDelegate
 import com.adyen.checkout.mealvoucherfr.R
 import com.adyen.checkout.mealvoucherfr.databinding.MealVoucherFrViewBinding
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.old.internal.util.hideError
 import com.adyen.checkout.ui.core.old.internal.util.isVisible
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle

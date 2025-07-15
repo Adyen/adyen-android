@@ -14,8 +14,8 @@ import com.adyen.checkout.card.internal.ui.view.InstallmentModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.OutputData
 import com.adyen.checkout.core.old.ui.model.ExpiryDate
-import com.adyen.checkout.ui.core.internal.ui.AddressFormUIState
-import com.adyen.checkout.ui.core.internal.ui.model.AddressOutputData
+import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressOutputData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class CardOutputData(

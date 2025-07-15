@@ -6,7 +6,7 @@
   ~ Created by ozgur on 13/1/2022.
   -->
 
-<com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.adyen.checkout.ui.core.old.internal.ui.view.AdyenSwipeToRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeToRevealLayout"
@@ -46,7 +46,7 @@
             android:paddingRight="@dimen/standard_margin"
             android:paddingBottom="@dimen/standard_three_quarters_margin">
 
-            <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+            <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
                 android:id="@+id/imageView_logo"
                 android:layout_width="@dimen/logo_width"
                 android:layout_height="@dimen/logo_height"
@@ -99,4 +99,4 @@
         </LinearLayout>
 
     </FrameLayout>
-</com.adyen.checkout.ui.core.internal.ui.view.AdyenSwipeToRevealLayout>
+</com.adyen.checkout.ui.core.old.internal.ui.view.AdyenSwipeToRevealLayout>

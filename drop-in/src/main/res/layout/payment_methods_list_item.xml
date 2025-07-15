@@ -22,7 +22,7 @@
     android:paddingRight="@dimen/standard_margin"
     android:paddingBottom="@dimen/standard_three_quarters_margin">
 
-    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         android:layout_width="@dimen/logo_width"
         android:layout_height="@dimen/logo_height"

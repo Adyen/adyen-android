@@ -19,8 +19,8 @@ import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
 import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import kotlinx.coroutines.flow.Flow

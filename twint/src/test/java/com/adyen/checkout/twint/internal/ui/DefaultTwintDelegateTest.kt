@@ -19,7 +19,7 @@ import com.adyen.checkout.twint.TwintConfiguration
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParamsMapper
 import com.adyen.checkout.twint.internal.ui.model.TwintOutputData
 import com.adyen.checkout.twint.twint
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
