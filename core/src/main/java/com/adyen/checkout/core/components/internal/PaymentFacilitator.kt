@@ -21,14 +21,14 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 internal class PaymentFacilitator(
-    private val paymentDelegate: PaymentDelegate<BaseComponentState>,
+    private val paymentComponent: PaymentComponent<BaseComponentState>,
     private val coroutineScope: CoroutineScope,
     private val componentEventHandler: ComponentEventHandler<BaseComponentState>,
     private val actionProvider: ActionProvider,
@@ -42,12 +42,12 @@ internal class PaymentFacilitator(
         if (actionComponent != null) {
             actionComponent?.ViewFactory(modifier)
         } else {
-            paymentDelegate.ViewFactory(modifier)
+            paymentComponent.ViewFactory(modifier)
         }
     }
 
     fun observe(lifecycle: Lifecycle) {
-        paymentDelegate.eventFlow
+        paymentComponent.eventFlow
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
@@ -81,7 +81,7 @@ internal class PaymentFacilitator(
 
     private fun submit() {
         // TODO - what if we are handling an action?
-        paymentDelegate.submit()
+        paymentComponent.submit()
     }
 
     private fun handleAction(action: Action) {
@@ -95,6 +95,6 @@ internal class PaymentFacilitator(
 
     @Suppress("UNUSED_PARAMETER")
     private fun handleIntent(intent: Intent) {
-        // TODO - handle intent with action delegate
+        // TODO - handle intent with action component
     }
 }

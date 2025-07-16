@@ -15,8 +15,8 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.ui.EventDelegate
-import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.EventComponent
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 
 @Suppress("UnusedPrivateProperty")
-internal class MBWayDelegate(
+internal class MBWayComponent(
     private val coroutineScope: CoroutineScope,
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
@@ -45,9 +45,9 @@ internal class MBWayDelegate(
     private val order: OrderRequest? = null,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
-) : PaymentDelegate<MBWayComponentState>,
+) : PaymentComponent<MBWayComponentState>,
     FieldChangeListener<MBWayFieldId>,
-    EventDelegate<MBWayComponentState> {
+    EventComponent<MBWayComponentState> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayComponentState>> =

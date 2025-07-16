@@ -59,7 +59,7 @@ internal class SessionsPaymentFacilitatorFactory(
                 checkoutCallback = checkoutCallback,
             )
 
-        val paymentDelegate = PaymentMethodProvider.get(
+        val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
@@ -72,7 +72,7 @@ internal class SessionsPaymentFacilitatorFactory(
         )
 
         return PaymentFacilitator(
-            paymentDelegate = paymentDelegate,
+            paymentComponent = paymentComponent,
             coroutineScope = coroutineScope,
             componentEventHandler = componentEventHandler,
             actionProvider = actionProvider,

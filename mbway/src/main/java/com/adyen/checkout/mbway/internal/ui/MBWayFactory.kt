@@ -25,13 +25,13 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 // TODO - Add Initializer
-internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDelegate> {
+internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayComponent> {
 
     override fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         componentSessionParams: SessionParams?,
-    ): MBWayDelegate {
+    ): MBWayComponent {
         val componentParams = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
 
@@ -62,7 +62,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
             transformerRegistry = transformerRegistry,
         )
 
-        return MBWayDelegate(
+        return MBWayComponent(
             coroutineScope = coroutineScope,
             componentParams = componentParams,
             analyticsManager = analyticsManager,

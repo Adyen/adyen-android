@@ -3,18 +3,20 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 14/5/2025.
+ * Created by ozgur on 8/4/2025.
  */
 
 package com.adyen.checkout.core.components.internal.ui
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.BaseComponentState
-import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import kotlinx.coroutines.flow.Flow
 
+// TODO - Some components might not be composable,
+//  Move ComposableComponent to PaymentMethod specific component later
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface EventDelegate<T : BaseComponentState> {
+interface PaymentComponent<T : BaseComponentState> :
+    ComposableComponent,
+    EventComponent<T> {
 
-    val eventFlow: Flow<PaymentComponentEvent<T>>
+    fun submit()
 }

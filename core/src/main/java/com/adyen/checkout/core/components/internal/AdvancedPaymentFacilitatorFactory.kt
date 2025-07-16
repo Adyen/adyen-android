@@ -30,7 +30,7 @@ internal class AdvancedPaymentFacilitatorFactory(
             )
         }
 
-        val paymentDelegate = PaymentMethodProvider.get(
+        val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
@@ -48,7 +48,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         )
 
         return PaymentFacilitator(
-            paymentDelegate = paymentDelegate,
+            paymentComponent = paymentComponent,
             coroutineScope = coroutineScope,
             componentEventHandler = componentEventHandler,
             actionProvider = actionProvider,
