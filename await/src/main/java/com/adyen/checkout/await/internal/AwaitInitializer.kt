@@ -13,13 +13,13 @@ import androidx.annotation.Keep
 import androidx.startup.Initializer
 import com.adyen.checkout.await.internal.ui.AwaitFactory
 import com.adyen.checkout.core.action.data.ActionTypes
-import com.adyen.checkout.core.action.internal.ActionDelegateProvider
+import com.adyen.checkout.core.action.internal.ActionComponentProvider
 
 @Keep
 internal class AwaitInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        ActionDelegateProvider.register(ActionTypes.AWAIT, AwaitFactory())
+        ActionComponentProvider.register(ActionTypes.AWAIT, AwaitFactory())
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()

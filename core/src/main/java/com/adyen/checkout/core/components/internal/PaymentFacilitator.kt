@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.action.internal.ActionDelegate
+import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
@@ -35,12 +35,12 @@ internal class PaymentFacilitator(
     private val checkoutController: CheckoutController,
 ) {
 
-    private var actionDelegate by mutableStateOf<ActionDelegate?>(null)
+    private var actionComponent by mutableStateOf<ActionComponent?>(null)
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
-        if (actionDelegate != null) {
-            actionDelegate?.ViewFactory(modifier)
+        if (actionComponent != null) {
+            actionComponent?.ViewFactory(modifier)
         } else {
             paymentDelegate.ViewFactory(modifier)
         }
@@ -85,12 +85,12 @@ internal class PaymentFacilitator(
     }
 
     private fun handleAction(action: Action) {
-        actionDelegate = actionProvider.get(
+        actionComponent = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
         // TODO - Adyen log
-//        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
+//        adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
     @Suppress("UNUSED_PARAMETER")

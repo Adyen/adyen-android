@@ -21,7 +21,7 @@ internal class ActionProvider(
     fun get(
         action: Action,
         coroutineScope: CoroutineScope,
-    ) = ActionDelegateProvider.get(
+    ) = ActionComponentProvider.get(
         action = action,
         coroutineScope = coroutineScope,
         checkoutConfiguration = checkoutConfiguration,

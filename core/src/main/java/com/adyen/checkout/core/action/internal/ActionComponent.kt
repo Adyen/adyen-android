@@ -12,4 +12,4 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.ui.ComposableDelegate
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionDelegate : ComposableDelegate
+interface ActionComponent : ComposableDelegate

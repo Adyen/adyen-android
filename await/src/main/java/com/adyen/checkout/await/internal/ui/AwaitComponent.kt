@@ -11,9 +11,9 @@ package com.adyen.checkout.await.internal.ui
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.core.action.internal.ActionDelegate
+import com.adyen.checkout.core.action.internal.ActionComponent
 
-internal class AwaitDelegate : ActionDelegate {
+internal class AwaitComponent : ActionComponent {
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {

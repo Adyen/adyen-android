@@ -13,11 +13,11 @@ import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
-internal class AwaitFactory : ActionFactory<AwaitDelegate> {
+internal class AwaitFactory : ActionFactory<AwaitComponent> {
 
     override fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle
-    ): AwaitDelegate = AwaitDelegate()
+    ): AwaitComponent = AwaitComponent()
 }

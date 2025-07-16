@@ -15,7 +15,7 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object ActionDelegateProvider {
+object ActionComponentProvider {
 
     private val factories = mutableMapOf<String, ActionFactory<*>>()
 
@@ -27,14 +27,14 @@ object ActionDelegateProvider {
     }
 
     /**
-     * Create an [ActionDelegate] using an [ActionFactory].
+     * Create an [ActionComponent] using an [ActionFactory].
      *
      * @param action The action to be handled.
-     * @param coroutineScope The [CoroutineScope] to be used by the delegate.
+     * @param coroutineScope The [CoroutineScope] to be used by the component.
      * @param checkoutConfiguration The global checkout configuration.
-     * @param savedStateHandle The [SavedStateHandle] to be used by the delegate.
+     * @param savedStateHandle The [SavedStateHandle] to be used by the component.
      *
-     * @return [ActionDelegate] for given action type.
+     * @return [ActionComponent] for given action type.
      * @throws IllegalStateException If a factory for the provided action type is not registered.
      */
     fun get(
@@ -42,7 +42,7 @@ object ActionDelegateProvider {
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-    ): ActionDelegate {
+    ): ActionComponent {
         return factories[action.type]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,

@@ -14,7 +14,7 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionFactory<T : ActionDelegate> {
+interface ActionFactory<T : ActionComponent> {
 
     fun create(
         coroutineScope: CoroutineScope,
