@@ -109,6 +109,7 @@ fun CheckoutConfiguration.entercash(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -127,6 +128,7 @@ internal fun EntercashConfiguration.toCheckoutConfiguration(): CheckoutConfigura
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.ENTERCASH, this@toCheckoutConfiguration)
 

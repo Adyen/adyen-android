@@ -197,6 +197,27 @@ internal class CardComponentParamsMapperTest {
     }
 
     @Test
+    fun `when setSubmitButtonVisible is not set in card component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            card { }
+        }
+
+        val params = cardComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            paymentMethod = PaymentMethod(),
+        )
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
+    @Test
     fun `when supported card types are set in the card configuration then they should be used in the params`() {
         val configuration = createCheckoutConfiguration {
             setSupportedCardTypes(CardType.MAESTRO, CardType.BCMC)

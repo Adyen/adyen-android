@@ -547,17 +547,34 @@ internal class GooglePayComponentParamsMapperTest {
 
             assertFalse(params.isSubmitButtonVisible)
         }
+
+        @Test
+        fun `when only checkout configuration does configure, then it should follow that`() {
+            val configuration = createCheckoutConfiguration(isSubmitButtonVisible = true)
+
+            val params = googlePayComponentParamsMapper.mapToParams(
+                checkoutConfiguration = configuration,
+                deviceLocale = DEVICE_LOCALE,
+                dropInOverrideParams = null,
+                componentSessionParams = null,
+                paymentMethod = PaymentMethod(),
+            )
+
+            assertEquals(true, params.isSubmitButtonVisible)
+        }
     }
 
     private fun createCheckoutConfiguration(
         amount: Amount? = null,
         shopperLocale: Locale? = null,
+        isSubmitButtonVisible: Boolean? = null,
         configuration: GooglePayConfiguration.Builder.() -> Unit = {}
     ) = CheckoutConfiguration(
         shopperLocale = shopperLocale,
         environment = Environment.TEST,
         clientKey = TEST_CLIENT_KEY_1,
         amount = amount,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         googlePay {
             setMerchantAccount(TEST_GATEWAY_MERCHANT_ID)

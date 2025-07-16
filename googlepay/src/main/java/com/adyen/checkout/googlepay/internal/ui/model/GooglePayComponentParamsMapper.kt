@@ -49,6 +49,7 @@ internal class GooglePayComponentParamsMapper(
             commonComponentParamsMapperData.commonComponentParams,
             googlePayConfiguration,
             paymentMethod,
+            checkoutConfiguration,
         )
     }
 
@@ -56,11 +57,16 @@ internal class GooglePayComponentParamsMapper(
         commonComponentParams: CommonComponentParams,
         googlePayConfiguration: GooglePayConfiguration?,
         paymentMethod: PaymentMethod,
+        checkoutConfiguration: CheckoutConfiguration,
     ): GooglePayComponentParams {
         return GooglePayComponentParams(
             commonComponentParams = commonComponentParams,
             amount = commonComponentParams.amount ?: DEFAULT_AMOUNT,
-            isSubmitButtonVisible = shouldShowSubmitButton(commonComponentParams, googlePayConfiguration),
+            isSubmitButtonVisible = shouldShowSubmitButton(
+                commonComponentParams,
+                googlePayConfiguration,
+                checkoutConfiguration,
+            ),
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
@@ -85,12 +91,15 @@ internal class GooglePayComponentParamsMapper(
     private fun shouldShowSubmitButton(
         commonComponentParams: CommonComponentParams,
         googlePayConfiguration: GooglePayConfiguration?,
+        checkoutConfiguration: CheckoutConfiguration,
     ): Boolean {
         return if (commonComponentParams.isCreatedByDropIn) {
             false
         } else {
             // TODO return true by default in v6
-            googlePayConfiguration?.isSubmitButtonVisible ?: false
+            googlePayConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: false
         }
     }
 

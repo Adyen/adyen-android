@@ -86,21 +86,26 @@ internal class CardComponentParamsMapper(
             dropInOverrideParams,
             cardConfiguration,
             paymentMethod,
+            checkoutConfiguration,
         )
     }
 
+    @Suppress("LongParameterList")
     private fun mapToParams(
         commonComponentParams: CommonComponentParams,
         sessionParams: SessionParams?,
         dropInOverrideParams: DropInOverrideParams?,
         cardConfiguration: CardConfiguration?,
         paymentMethod: PaymentMethod?,
+        checkoutConfiguration: CheckoutConfiguration,
     ): CardComponentParams {
         return CardComponentParams(
             commonComponentParams = commonComponentParams,
             isHolderNameRequired = cardConfiguration?.isHolderNameRequired ?: false,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: cardConfiguration?.isSubmitButtonVisible ?: true,
+                ?: cardConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             supportedCardBrands = getSupportedCardBrands(cardConfiguration, paymentMethod),
             shopperReference = cardConfiguration?.shopperReference,
             isStorePaymentFieldVisible = getStorePaymentFieldVisible(sessionParams, cardConfiguration),

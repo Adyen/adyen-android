@@ -36,7 +36,9 @@ internal class GiftCardComponentParamsMapper(
         return GiftCardComponentParams(
             commonComponentParams = commonComponentParams,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
-                ?: giftCardConfiguration?.isSubmitButtonVisible ?: true,
+                ?: giftCardConfiguration?.isSubmitButtonVisible
+                ?: checkoutConfiguration.isSubmitButtonVisible
+                ?: true,
             isPinRequired = giftCardConfiguration?.isPinRequired ?: true,
             isExpiryDateRequired = false,
         )

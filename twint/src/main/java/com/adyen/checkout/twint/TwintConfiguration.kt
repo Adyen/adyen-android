@@ -154,6 +154,7 @@ fun CheckoutConfiguration.twint(
             shopperLocale?.let { setShopperLocale(it) }
             amount?.let { setAmount(it) }
             analyticsConfiguration?.let { setAnalyticsConfiguration(it) }
+            isSubmitButtonVisible?.let { setSubmitButtonVisible(it) }
         }
         .apply(configuration)
         .build()
@@ -172,6 +173,7 @@ internal fun TwintConfiguration.toCheckoutConfiguration(): CheckoutConfiguration
         clientKey = clientKey,
         amount = amount,
         analyticsConfiguration = analyticsConfiguration,
+        isSubmitButtonVisible = isSubmitButtonVisible,
     ) {
         addConfiguration(PaymentMethodTypes.TWINT, this@toCheckoutConfiguration)
 

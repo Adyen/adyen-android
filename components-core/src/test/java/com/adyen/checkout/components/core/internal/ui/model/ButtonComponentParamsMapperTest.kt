@@ -102,6 +102,29 @@ internal class ButtonComponentParamsMapperTest {
         assertEquals(true, params.isSubmitButtonVisible)
     }
 
+    @Test
+    fun `when setSubmitButtonVisible is not set in button component configuration and checkout configuration does set it, then it should follow that`() {
+        val configuration = CheckoutConfiguration(
+            environment = Environment.EUROPE,
+            clientKey = TEST_CLIENT_KEY_2,
+            isSubmitButtonVisible = false,
+        ) {
+            val testConfiguration = ButtonTestConfiguration.Builder(Locale.CANADA, Environment.TEST, TEST_CLIENT_KEY_1)
+                .build()
+            addConfiguration(TEST_CONFIGURATION_KEY, testConfiguration)
+        }
+
+        val params = buttonComponentParamsMapper.mapToParams(
+            checkoutConfiguration = configuration,
+            deviceLocale = DEVICE_LOCALE,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            componentConfiguration = configuration.getConfiguration(TEST_CONFIGURATION_KEY),
+        )
+
+        assertEquals(false, params.isSubmitButtonVisible)
+    }
+
     @ParameterizedTest
     @MethodSource("amountSource")
     fun `amount should match value set in sessions then drop in then component configuration`(
