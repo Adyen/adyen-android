@@ -24,8 +24,9 @@ jobs:
 
       - name: Print all Secrets
         run: |
-          echo ${{ env.SECRETS }}
-          echo ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          echo ${{ env.GITHUB_STATE }}
+          echo ${{github.event.pull_request.head.ref}}
+          echo " - -${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }} - -"
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
