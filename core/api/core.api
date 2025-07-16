@@ -35,17 +35,20 @@ public final class com/adyen/checkout/core/action/data/AwaitAction : com/adyen/c
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/action/data/AwaitAction$Companion;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
-	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/AwaitAction;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/action/data/AwaitAction;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/action/data/AwaitAction;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getPaymentData ()Ljava/lang/String;
 	public fun getPaymentMethodType ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public final fun getUrl ()Ljava/lang/String;
-	public fun setPaymentData (Ljava/lang/String;)V
-	public fun setPaymentMethodType (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
-	public final fun setUrl (Ljava/lang/String;)V
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 

@@ -14,11 +14,11 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-class AwaitAction(
-    override var type: String? = null,
-    override var paymentData: String? = null,
-    override var paymentMethodType: String? = null,
-    var url: String? = null,
+data class AwaitAction(
+    override val type: String?,
+    override val paymentData: String?,
+    override val paymentMethodType: String?,
+    val url: String?,
 ) : Action() {
 
     companion object {
