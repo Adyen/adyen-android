@@ -9,11 +9,16 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.action.internal.ActionDelegate
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
@@ -27,9 +32,15 @@ internal class PaymentFacilitator(
     private val actionProvider: ActionProvider,
 ) {
 
+    private var actionDelegate by mutableStateOf<ActionDelegate?>(null)
+
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
-        paymentDelegate.ViewFactory(modifier)
+        if (actionDelegate != null) {
+            // TODO - Add action delegate composable
+        } else {
+            paymentDelegate.ViewFactory(modifier)
+        }
     }
 
     fun submit() {
@@ -41,15 +52,29 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event)
+                componentEventHandler.onPaymentComponentEvent(event, ::handleResult)
             }.launchIn(coroutineScope)
     }
 
-    fun handleAction(action: Action) {
-        // TODO - Store the actionDelegate
-        actionProvider.get(
+    private fun handleResult(checkoutResult: CheckoutResult) {
+        when (checkoutResult) {
+            is CheckoutResult.Action -> handleAction(checkoutResult.action)
+            is CheckoutResult.Error -> {
+                // TODO - Handle error state
+            }
+
+            is CheckoutResult.Finished -> {
+                // TODO - Handle finished state
+            }
+        }
+    }
+
+    private fun handleAction(action: Action) {
+        actionDelegate = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
+        // TODO - Adyen log
+//        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
     }
 }

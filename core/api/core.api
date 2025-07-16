@@ -298,7 +298,8 @@ public abstract interface class com/adyen/checkout/core/components/CheckoutResul
 
 public final class com/adyen/checkout/core/components/CheckoutResult$Action : com/adyen/checkout/core/components/CheckoutResult {
 	public static final field $stable I
-	public fun <init> ()V
+	public fun <init> (Lcom/adyen/checkout/core/action/data/Action;)V
+	public final fun getAction ()Lcom/adyen/checkout/core/action/data/Action;
 }
 
 public final class com/adyen/checkout/core/components/CheckoutResult$Error : com/adyen/checkout/core/components/CheckoutResult {

@@ -21,24 +21,12 @@ internal class AdvancedComponentEventHandler<T : BaseComponentState>(
         // no ops
     }
 
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>) {
+    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit) {
         when (event) {
             is PaymentComponentEvent.Submit -> {
                 checkoutCallback.beforeSubmit(event.state)
                 checkoutCallback.onSubmit(event.state) { checkoutResult ->
-                    when (checkoutResult) {
-                        is CheckoutResult.Action -> {
-                            // TODO - Handle Action
-                        }
-
-                        is CheckoutResult.Error -> {
-                            // TODO - Handle Error
-                        }
-
-                        is CheckoutResult.Finished -> {
-                            // TODO - Handle Finished
-                        }
-                    }
+                    onCheckoutResult(checkoutResult)
                 }
             }
         }
