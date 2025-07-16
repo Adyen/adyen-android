@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.internal.ui.state.model
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class DelegateFieldState<T>(
+data class ComponentFieldState<T>(
     val value: T,
     val validation: Validation? = null,
     val hasFocus: Boolean = false,
@@ -19,12 +19,12 @@ data class DelegateFieldState<T>(
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T> DelegateFieldState<T>.updateFieldState(
+fun <T> ComponentFieldState<T>.updateFieldState(
     value: T? = null,
     validation: Validation? = null,
     hasFocus: Boolean? = null,
     shouldHighlightValidationError: Boolean? = null,
-): DelegateFieldState<T> = copy(
+): ComponentFieldState<T> = copy(
     value = value ?: this.value,
     validation = validation ?: this.validation,
     hasFocus = hasFocus ?: this.hasFocus,
@@ -33,7 +33,7 @@ fun <T> DelegateFieldState<T>.updateFieldState(
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <T> DelegateFieldState<T>.toViewFieldState() = ViewFieldState(
+fun <T> ComponentFieldState<T>.toViewFieldState() = ViewFieldState(
     value = value,
     hasFocus = hasFocus,
     errorMessageId = takeIf { fieldState ->
@@ -42,5 +42,5 @@ fun <T> DelegateFieldState<T>.toViewFieldState() = ViewFieldState(
 )
 
 // Validation error should be shown, when the field loses its focus or when we manually trigger a validation
-internal fun <T> DelegateFieldState<T>.shouldShowValidationError() =
+internal fun <T> ComponentFieldState<T>.shouldShowValidationError() =
     !this.hasFocus || this.shouldHighlightValidationError

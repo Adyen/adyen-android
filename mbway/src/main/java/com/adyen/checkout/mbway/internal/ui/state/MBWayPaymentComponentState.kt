@@ -24,7 +24,7 @@ internal data class MBWayPaymentComponentState(
     override val isValid: Boolean,
 ) : PaymentComponentState<MBWayPaymentMethod>
 
-internal fun MBWayDelegateState.toPaymentComponentState(
+internal fun MBWayComponentState.toPaymentComponentState(
     checkoutAttemptId: String,
     fieldTransformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     order: OrderRequest?,

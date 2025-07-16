@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components.internal.ui.state
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 import com.adyen.checkout.core.components.internal.ui.state.model.updateFieldState
@@ -23,14 +23,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultDelegateStateManager<S : DelegateState, FI : FieldId>(
-    private val factory: DelegateStateFactory<S, FI>,
+class DefaultComponentStateManager<S : ComponentState, FI : FieldId>(
+    private val factory: ComponentStateFactory<S, FI>,
     private val validationRegistry: FieldValidatorRegistry<S, FI>,
     private val stateUpdaterRegistry: StateUpdaterRegistry<S, FI>,
     private val transformerRegistry: FieldTransformerRegistry<FI> = DefaultTransformerRegistry(),
-) : DelegateStateManager<S, FI> {
+) : ComponentStateManager<S, FI> {
 
-    private val _state = MutableStateFlow(factory.createDefaultDelegateState())
+    private val _state = MutableStateFlow(factory.createDefaultComponentState())
     override val state: StateFlow<S> = _state.asStateFlow()
 
     override val isValid: Boolean
@@ -46,7 +46,7 @@ class DefaultDelegateStateManager<S : DelegateState, FI : FieldId>(
         validateFields { fieldState -> fieldState.validation != null }
     }
 
-    private fun validateFields(validationPredicate: (DelegateFieldState<Any>) -> Boolean) {
+    private fun validateFields(validationPredicate: (ComponentFieldState<Any>) -> Boolean) {
         factory.getFieldIds()
             .filter { fieldId ->
                 val fieldState = stateUpdaterRegistry.getFieldState<Any>(_state.value, fieldId)

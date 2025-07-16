@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.core.common.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.state.DelegateState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 
-internal class TestDelegateState(
+internal class TestComponentState(
     override val isValid: Boolean = true
-) : DelegateState
+) : ComponentState

@@ -18,10 +18,10 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.EventComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
-import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
@@ -44,7 +44,7 @@ internal class MBWayComponent(
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
-    private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
+    private val stateManager: ComponentStateManager<MBWayComponentState, MBWayFieldId>,
 ) : PaymentComponent<MBWayPaymentComponentState>,
     FieldChangeListener<MBWayFieldId>,
     EventComponent<MBWayPaymentComponentState> {
@@ -54,8 +54,8 @@ internal class MBWayComponent(
         eventChannel.receiveAsFlow()
 
     private val paymentComponentStateFlow: StateFlow<MBWayPaymentComponentState> by lazy {
-        val toPaymentComponentState: (MBWayDelegateState) -> MBWayPaymentComponentState = { delegateState ->
-            delegateState.toPaymentComponentState(
+        val toPaymentComponentState: (MBWayComponentState) -> MBWayPaymentComponentState = { componentState ->
+            componentState.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 fieldTransformerRegistry = transformerRegistry,
                 order = order,
@@ -73,7 +73,7 @@ internal class MBWayComponent(
 
     private val viewStateFlow: StateFlow<MBWayViewState> by lazy {
         stateManager.state
-            .map(MBWayDelegateState::toViewState)
+            .map(MBWayComponentState::toViewState)
             .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 

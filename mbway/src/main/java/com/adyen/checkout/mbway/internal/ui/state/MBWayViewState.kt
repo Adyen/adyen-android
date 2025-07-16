@@ -18,7 +18,7 @@ internal data class MBWayViewState(
     val phoneNumberFieldState: ViewFieldState<String>,
 )
 
-internal fun MBWayDelegateState.toViewState() = MBWayViewState(
+internal fun MBWayComponentState.toViewState() = MBWayViewState(
     countries = this.countries,
     countryCodeFieldState = this.countryCodeFieldState.toViewFieldState(),
     phoneNumberFieldState = this.localPhoneNumberFieldState.toViewFieldState(),

@@ -9,10 +9,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.updater
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.DelegateState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StateUpdater<S : DelegateState, FS> {
+interface StateUpdater<S : ComponentState, FS> {
     fun getFieldState(state: S): FS
 
     fun updateFieldState(state: S, fieldState: FS): S

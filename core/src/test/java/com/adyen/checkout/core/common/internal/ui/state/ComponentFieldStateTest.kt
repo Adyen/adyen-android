@@ -8,12 +8,11 @@
 
 package com.adyen.checkout.core.common.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 import com.adyen.checkout.core.components.internal.ui.state.model.shouldShowValidationError
 import com.adyen.checkout.core.components.internal.ui.state.model.toViewFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.updateFieldState
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -21,13 +20,13 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class DelegateFieldStateTest {
+internal class ComponentFieldStateTest {
 
-    private lateinit var initialState: DelegateFieldState<String>
+    private lateinit var initialState: ComponentFieldState<String>
 
     @BeforeEach
     fun setup() {
-        initialState = DelegateFieldState(
+        initialState = ComponentFieldState(
             value = "initial",
             validation = Validation.Valid,
             hasFocus = false,
@@ -84,7 +83,7 @@ internal class DelegateFieldStateTest {
 
         assertEquals("initial", viewState.value)
         assertFalse(viewState.hasFocus)
-        Assertions.assertEquals(456, viewState.errorMessageId)
+        assertEquals(456, viewState.errorMessageId)
     }
 
     @Test
