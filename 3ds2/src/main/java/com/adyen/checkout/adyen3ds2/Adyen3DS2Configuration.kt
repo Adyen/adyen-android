@@ -5,6 +5,9 @@
  *
  * Created by caiof on 25/8/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.adyen3ds2
 
 import android.content.Context
@@ -26,6 +29,7 @@ import java.util.Locale
  */
 @Suppress("LongParameterList")
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class Adyen3DS2Configuration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -39,11 +43,12 @@ class Adyen3DS2Configuration private constructor(
     /**
      * Builder to create an [Adyen3DS2Configuration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<Adyen3DS2Configuration, Builder> {
 
-        private var uiCustomization: UiCustomization? = null
+        var uiCustomization: UiCustomization? = null
 
-        private var threeDSRequestorAppURL: String? = null
+        var threeDSRequestorAppURL: String? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -93,6 +98,7 @@ class Adyen3DS2Configuration private constructor(
          *
          * @param uiCustomization The customization object.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setUiCustomization(uiCustomization: UiCustomization?): Builder {
             this.uiCustomization = uiCustomization
             return this
@@ -107,6 +113,7 @@ class Adyen3DS2Configuration private constructor(
          * when using this method.
          */
         @Suppress("MaxLineLength")
+        @Deprecated("Use property access syntax instead.")
         fun setThreeDSRequestorAppURL(threeDSRequestorAppURL: String): Builder {
             this.threeDSRequestorAppURL = threeDSRequestorAppURL
             return this

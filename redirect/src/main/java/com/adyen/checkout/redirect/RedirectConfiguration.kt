@@ -5,6 +5,9 @@
  *
  * Created by caiof on 25/8/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.redirect
 
 import android.content.Context
@@ -22,6 +25,7 @@ import java.util.Locale
  * Configuration class for the [RedirectComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class RedirectConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -33,6 +37,7 @@ class RedirectConfiguration private constructor(
     /**
      * Builder to create a [RedirectConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<RedirectConfiguration, Builder> {
 
         /**

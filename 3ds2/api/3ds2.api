@@ -32,8 +32,12 @@ public final class com/adyen/checkout/adyen3ds2/Adyen3DS2Configuration$Builder :
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getThreeDSRequestorAppURL ()Ljava/lang/String;
+	public final fun getUiCustomization ()Lcom/adyen/threeds2/customization/UiCustomization;
 	public final fun setThreeDSRequestorAppURL (Ljava/lang/String;)Lcom/adyen/checkout/adyen3ds2/Adyen3DS2Configuration$Builder;
+	public final fun setThreeDSRequestorAppURL (Ljava/lang/String;)V
 	public final fun setUiCustomization (Lcom/adyen/threeds2/customization/UiCustomization;)Lcom/adyen/checkout/adyen3ds2/Adyen3DS2Configuration$Builder;
+	public final fun setUiCustomization (Lcom/adyen/threeds2/customization/UiCustomization;)V
 }
 
 public final class com/adyen/checkout/adyen3ds2/Adyen3DS2Configuration$Creator : android/os/Parcelable$Creator {

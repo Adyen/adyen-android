@@ -6,6 +6,8 @@
  * Created by oscars on 10/7/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.twint
 
 import android.content.Context
@@ -28,6 +30,7 @@ import java.util.Locale
  * Configuration class for the [TwintComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class TwintConfiguration
 @Suppress("LongParameterList")
 private constructor(
@@ -42,13 +45,15 @@ private constructor(
     val actionHandlingMethod: ActionHandlingMethod?,
 ) : Configuration, ButtonConfiguration {
 
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<TwintConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
-        private var showStorePaymentField: Boolean? = null
-        private var actionHandlingMethod: ActionHandlingMethod? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
+        var showStorePaymentField: Boolean? = null
+        var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -105,6 +110,7 @@ private constructor(
          * @param showStorePaymentField [Boolean]
          * @return [TwintConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             this.showStorePaymentField = showStorePaymentField
             return this
@@ -115,6 +121,7 @@ private constructor(
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
+        @Deprecated("Use property access syntax instead.")
         fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
             this.actionHandlingMethod = actionHandlingMethod
             return this
@@ -127,6 +134,7 @@ private constructor(
          *
          * @param isSubmitButtonVisible If submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this

@@ -6,6 +6,8 @@
  * Created by ozgur on 7/6/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.econtext.internal
 
 import android.content.Context
@@ -33,7 +35,8 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
         ActionHandlingPaymentMethodConfigurationBuilder<EContextConfigurationT, BuilderT>,
         ButtonConfigurationBuilder {
 
-        protected var isSubmitButtonVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -62,7 +65,7 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
         constructor(context: Context, environment: Environment, clientKey: String) : super(
             context,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -75,7 +78,7 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
         constructor(shopperLocale: Locale, environment: Environment, clientKey: String) : super(
             shopperLocale,
             environment,
-            clientKey
+            clientKey,
         )
 
         /**
@@ -85,6 +88,7 @@ abstract class EContextConfiguration : Configuration, ButtonConfiguration {
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): BuilderT {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             @Suppress("UNCHECKED_CAST")

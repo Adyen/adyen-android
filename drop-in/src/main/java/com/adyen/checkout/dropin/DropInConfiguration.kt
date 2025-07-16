@@ -6,6 +6,8 @@
  * Created by caiof on 21/3/2019.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.dropin
 
 import android.content.Context
@@ -64,6 +66,7 @@ import kotlin.collections.set
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class DropInConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -103,16 +106,17 @@ class DropInConfiguration private constructor(
      * Builder for creating a [DropInConfiguration] where you can set specific Configurations for a Payment Method
      */
     @Suppress("unused", "TooManyFunctions")
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<DropInConfiguration, Builder> {
 
         private val availablePaymentConfigs = HashMap<String, Configuration>()
         private val overriddenPaymentMethodInformation = HashMap<String, DropInPaymentMethodInformation>()
 
-        private var showPreselectedStoredPaymentMethod: Boolean? = null
-        private var skipListWhenSinglePaymentMethod: Boolean? = null
-        private var isRemovingStoredPaymentMethodsEnabled: Boolean? = null
-        private var additionalDataForDropInService: Bundle? = null
+        var showPreselectedStoredPaymentMethod: Boolean? = null
+        var skipListWhenSinglePaymentMethod: Boolean? = null
+        var isRemovingStoredPaymentMethodsEnabled: Boolean? = null
+        var additionalDataForDropInService: Bundle? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -162,6 +166,7 @@ class DropInConfiguration private constructor(
          *
          * Default is true.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowPreselectedStoredPaymentMethod(showStoredPaymentMethod: Boolean): Builder {
             this.showPreselectedStoredPaymentMethod = showStoredPaymentMethod
             return this
@@ -177,6 +182,7 @@ class DropInConfiguration private constructor(
          *
          * Default is false.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setSkipListWhenSinglePaymentMethod(skipListWhenSinglePaymentMethod: Boolean): Builder {
             this.skipListWhenSinglePaymentMethod = skipListWhenSinglePaymentMethod
             return this
@@ -190,6 +196,7 @@ class DropInConfiguration private constructor(
          *
          * Default is false.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setEnableRemovingStoredPaymentMethods(isEnabled: Boolean): Builder {
             this.isRemovingStoredPaymentMethodsEnabled = isEnabled
             return this
@@ -199,6 +206,7 @@ class DropInConfiguration private constructor(
          * Pass a custom Bundle to Drop-in. This Bundle will passed to the [DropInService] and can be read using
          * [DropInService.getAdditionalData].
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAdditionalDataForDropInService(additionalDataForDropInService: Bundle): Builder {
             this.additionalDataForDropInService = additionalDataForDropInService
             return this
@@ -207,6 +215,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Credit Card payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addCardConfiguration(cardConfiguration: CardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.SCHEME] = cardConfiguration
             return this
@@ -215,6 +224,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Cash App Pay payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addCashAppPayConfiguration(cashAppPayConfiguration: CashAppPayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.CASH_APP_PAY] = cashAppPayConfiguration
             return this
@@ -223,6 +233,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for iDeal payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addIdealConfiguration(idealConfiguration: IdealConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.IDEAL] = idealConfiguration
             return this
@@ -231,6 +242,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for MolPay Thailand payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addMolpayThailandConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.MOLPAY_THAILAND] = molpayConfiguration
             return this
@@ -239,6 +251,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for MolPay Malasya payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addMolpayMalasyaConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.MOLPAY_MALAYSIA] = molpayConfiguration
             return this
@@ -247,6 +260,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for MolPay Vietnam payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addMolpayVietnamConfiguration(molpayConfiguration: MolpayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.MOLPAY_VIETNAM] = molpayConfiguration
             return this
@@ -255,6 +269,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for DotPay payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addDotpayConfiguration(dotpayConfiguration: DotpayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.DOTPAY] = dotpayConfiguration
             return this
@@ -263,6 +278,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Online Banking Czech Republic payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addOnlineBankingCZConfiguration(onlineBankingCZConfiguration: OnlineBankingCZConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_CZ] = onlineBankingCZConfiguration
             return this
@@ -271,6 +287,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Online Banking Poland payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addOnlineBankingPLConfiguration(onlineBankingPLConfiguration: OnlineBankingPLConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_PL] = onlineBankingPLConfiguration
             return this
@@ -279,6 +296,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Online Banking Slovakia payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addOnlineBankingSKConfiguration(onlineBankingSKConfiguration: OnlineBankingSKConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ONLINE_BANKING_SK] = onlineBankingSKConfiguration
             return this
@@ -287,6 +305,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for EPS payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addEpsConfiguration(epsConfiguration: EPSConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.EPS] = epsConfiguration
             return this
@@ -295,6 +314,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for EnterCash payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addEntercashConfiguration(entercashConfiguration: EntercashConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ENTERCASH] = entercashConfiguration
             return this
@@ -303,6 +323,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Open Banking payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addOpenBankingConfiguration(openBankingConfiguration: OpenBankingConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.OPEN_BANKING] = openBankingConfiguration
             return this
@@ -311,6 +332,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Google Pay payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addGooglePayConfiguration(googlePayConfiguration: GooglePayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.GOOGLE_PAY] = googlePayConfiguration
             availablePaymentConfigs[PaymentMethodTypes.GOOGLE_PAY_LEGACY] = googlePayConfiguration
@@ -320,6 +342,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Sepa payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addSepaConfiguration(sepaConfiguration: SepaConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.SEPA] = sepaConfiguration
             return this
@@ -328,6 +351,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for BCMC payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addBcmcConfiguration(bcmcConfiguration: BcmcConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BCMC] = bcmcConfiguration
             return this
@@ -336,6 +360,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for MB WAY payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addMBWayConfiguration(mbwayConfiguration: MBWayConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.MB_WAY] = mbwayConfiguration
             return this
@@ -344,6 +369,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Blik payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addBlikConfiguration(blikConfiguration: BlikConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BLIK] = blikConfiguration
             return this
@@ -352,6 +378,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for BACS Direct Debit payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addBacsDirectDebitConfiguration(bacsDirectDebitConfiguration: BacsDirectDebitConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BACS] = bacsDirectDebitConfiguration
             return this
@@ -360,6 +387,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Seven Eleven payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addSevenElevenConfiguration(sevenElevenConfiguration: SevenElevenConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_SEVEN_ELEVEN] = sevenElevenConfiguration
             return this
@@ -368,6 +396,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Online Banking Japan payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addOnlineBankingJPConfiguration(onlineBankingJPConfiguration: OnlineBankingJPConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ONLINE] = onlineBankingJPConfiguration
             return this
@@ -376,6 +405,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Convenience Stores Japan payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addConvenienceStoresJPConfiguration(
             convenienceStoresJPConfiguration: ConvenienceStoresJPConfiguration
         ): Builder {
@@ -386,6 +416,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Pay Easy payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addPayEasyConfiguration(payEasyConfiguration: PayEasyConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ECONTEXT_ATM] = payEasyConfiguration
             return this
@@ -394,6 +425,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for ACH Direct Debit payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addAchDirectDebitConfiguration(achDirectDebitConfiguration: ACHDirectDebitConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.ACH] = achDirectDebitConfiguration
             return this
@@ -402,6 +434,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for UPI payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addUPIConfiguration(upiConfiguration: UPIConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.UPI] = upiConfiguration
             availablePaymentConfigs[PaymentMethodTypes.UPI_COLLECT] = upiConfiguration
@@ -412,6 +445,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Boleto payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addBoletoConfiguration(boletoConfiguration: BoletoConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO] = boletoConfiguration
             availablePaymentConfigs[PaymentMethodTypes.BOLETOBANCARIO_BANCODOBRASIL] = boletoConfiguration
@@ -426,6 +460,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for gift card payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addGiftCardConfiguration(giftCardConfiguration: GiftCardConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.GIFTCARD] = giftCardConfiguration
             return this
@@ -434,6 +469,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for French meal voucher payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addMealVoucherFRConfiguration(mealVoucherFRConfiguration: MealVoucherFRConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.MEAL_VOUCHER_FR_GROUPEUP] = mealVoucherFRConfiguration
             availablePaymentConfigs[PaymentMethodTypes.MEAL_VOUCHER_FR_NATIXIS] = mealVoucherFRConfiguration
@@ -444,6 +480,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for instant payment methods.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         @JvmOverloads
         fun addInstantPaymentConfiguration(
             instantPaymentConfiguration: InstantPaymentConfiguration,
@@ -456,6 +493,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Twint payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addTwintConfiguration(twintConfiguration: TwintConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.TWINT] = twintConfiguration
             return this
@@ -464,6 +502,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for Pay by Bank US payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addPayByBankUSConfiguration(payByBankUSConfiguration: PayByBankUSConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.PAY_BY_BANK_US] = payByBankUSConfiguration
             return this
@@ -472,6 +511,7 @@ class DropInConfiguration private constructor(
         /**
          * Add configuration for PAY TO payment method.
          */
+        @Deprecated("Use CheckoutConfiguration instead.")
         fun addPayToConfiguration(payToConfiguration: PayToConfiguration): Builder {
             availablePaymentConfigs[PaymentMethodTypes.PAY_TO] = payToConfiguration
             return this

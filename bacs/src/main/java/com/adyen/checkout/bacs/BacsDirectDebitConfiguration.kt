@@ -6,6 +6,8 @@
  * Created by ozgur on 2/11/2021.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bacs
 
 import android.content.Context
@@ -28,6 +30,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class BacsDirectDebitConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -41,11 +44,13 @@ class BacsDirectDebitConfiguration private constructor(
     /**
      * Builder to create an [BacsDirectDebitConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BacsDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -97,6 +102,7 @@ class BacsDirectDebitConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this

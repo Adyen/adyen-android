@@ -6,6 +6,8 @@
  * Created by ozgur on 18/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.seveneleven
 
 import android.content.Context
@@ -25,6 +27,7 @@ import java.util.Locale
  */
 @Suppress("LongParameterList")
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class SevenElevenConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -38,6 +41,7 @@ class SevenElevenConfiguration private constructor(
     /**
      * Builder to create a [SevenElevenConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : EContextConfiguration.Builder<SevenElevenConfiguration, Builder> {
 
         /**

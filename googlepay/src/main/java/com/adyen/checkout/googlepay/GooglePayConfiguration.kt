@@ -5,7 +5,8 @@
  *
  * Created by caiof on 4/7/2019.
  */
-@file:Suppress("unused")
+
+@file:Suppress("unused", "DEPRECATION")
 
 package com.adyen.checkout.googlepay
 
@@ -31,6 +32,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class GooglePayConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -63,28 +65,40 @@ class GooglePayConfiguration private constructor(
      * Builder to create a [GooglePayConfiguration].
      */
     @Suppress("TooManyFunctions")
+    @Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<GooglePayConfiguration, Builder>,
         ButtonConfigurationBuilder {
-        private var merchantAccount: String? = null
-        private var googlePayEnvironment: Int? = null
-        private var merchantInfo: MerchantInfo? = null
-        private var countryCode: String? = null
-        private var allowedAuthMethods: List<String>? = null
-        private var allowedCardNetworks: List<String>? = null
-        private var isAllowPrepaidCards: Boolean? = null
-        private var isAllowCreditCards: Boolean? = null
-        private var isAssuranceDetailsRequired: Boolean? = null
-        private var isEmailRequired: Boolean? = null
-        private var isExistingPaymentMethodRequired: Boolean? = null
-        private var isShippingAddressRequired: Boolean? = null
-        private var shippingAddressParameters: ShippingAddressParameters? = null
-        private var isBillingAddressRequired: Boolean? = null
-        private var billingAddressParameters: BillingAddressParameters? = null
-        private var totalPriceStatus: String? = null
-        private var checkoutOption: String? = null
-        private var googlePayButtonStyling: GooglePayButtonStyling? = null
-        private var isSubmitButtonVisible: Boolean? = null
+        var merchantAccount: String? = null
+        var googlePayEnvironment: Int? = null
+            set(value) {
+                if (value != null && !isGooglePayEnvironmentValid(value)) {
+                    throw CheckoutException(
+                        "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
+                            " WalletConstants.ENVIRONMENT_PRODUCTION",
+                    )
+                }
+                field = value
+            }
+        var merchantInfo: MerchantInfo? = null
+        var countryCode: String? = null
+        var allowedAuthMethods: List<String>? = null
+        var allowedCardNetworks: List<String>? = null
+        var isAllowPrepaidCards: Boolean? = null
+        var isAllowCreditCards: Boolean? = null
+        var isAssuranceDetailsRequired: Boolean? = null
+        var isEmailRequired: Boolean? = null
+        var isExistingPaymentMethodRequired: Boolean? = null
+        var isShippingAddressRequired: Boolean? = null
+        var shippingAddressParameters: ShippingAddressParameters? = null
+        var isBillingAddressRequired: Boolean? = null
+        var billingAddressParameters: BillingAddressParameters? = null
+        var totalPriceStatus: String? = null
+        var checkoutOption: String? = null
+        var googlePayButtonStyling: GooglePayButtonStyling? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -138,6 +152,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param merchantAccount Your merchant account.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setMerchantAccount(merchantAccount: String): Builder {
             this.merchantAccount = merchantAccount
             return this
@@ -151,18 +166,13 @@ class GooglePayConfiguration private constructor(
          *
          * @param googlePayEnvironment The GooglePay environment.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setGooglePayEnvironment(googlePayEnvironment: Int): Builder {
-            if (!isGooglePayEnvironmentValid(googlePayEnvironment)) {
-                throw CheckoutException(
-                    "Invalid value for Google Environment. Use either WalletConstants.ENVIRONMENT_TEST or" +
-                        " WalletConstants.ENVIRONMENT_PRODUCTION",
-                )
-            }
             this.googlePayEnvironment = googlePayEnvironment
             return this
         }
 
-        private fun isGooglePayEnvironmentValid(environment: Int): Boolean =
+        private fun isGooglePayEnvironmentValid(environment: Int?): Boolean =
             environment == WalletConstants.ENVIRONMENT_TEST || environment == WalletConstants.ENVIRONMENT_PRODUCTION
 
         /**
@@ -173,6 +183,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setMerchantInfo(merchantInfo: MerchantInfo?): Builder {
             this.merchantInfo = merchantInfo
             return this
@@ -186,6 +197,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setCountryCode(countryCode: String?): Builder {
             this.countryCode = countryCode
             return this
@@ -201,6 +213,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAllowedAuthMethods(allowedAuthMethods: List<String>?): Builder {
             this.allowedAuthMethods = allowedAuthMethods
             return this
@@ -217,6 +230,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAllowedCardNetworks(allowedCardNetworks: List<String>?): Builder {
             this.allowedCardNetworks = allowedCardNetworks
             return this
@@ -232,6 +246,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAllowPrepaidCards(isAllowPrepaidCards: Boolean): Builder {
             this.isAllowPrepaidCards = isAllowPrepaidCards
             return this
@@ -247,6 +262,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAllowCreditCards(isAllowCreditCards: Boolean): Builder {
             this.isAllowCreditCards = isAllowCreditCards
             return this
@@ -262,6 +278,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAssuranceDetailsRequired(isAssuranceDetailsRequired: Boolean): Builder {
             this.isAssuranceDetailsRequired = isAssuranceDetailsRequired
             return this
@@ -277,6 +294,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setEmailRequired(isEmailRequired: Boolean): Builder {
             this.isEmailRequired = isEmailRequired
             return this
@@ -291,6 +309,7 @@ class GooglePayConfiguration private constructor(
          *
          */
         @Suppress("MaxLineLength")
+        @Deprecated("Use property access syntax instead.")
         fun setExistingPaymentMethodRequired(isExistingPaymentMethodRequired: Boolean): Builder {
             this.isExistingPaymentMethodRequired = isExistingPaymentMethodRequired
             return this
@@ -306,6 +325,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShippingAddressRequired(isShippingAddressRequired: Boolean): Builder {
             this.isShippingAddressRequired = isShippingAddressRequired
             return this
@@ -319,6 +339,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShippingAddressParameters(shippingAddressParameters: ShippingAddressParameters?): Builder {
             this.shippingAddressParameters = shippingAddressParameters
             return this
@@ -334,6 +355,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setBillingAddressRequired(isBillingAddressRequired: Boolean): Builder {
             this.isBillingAddressRequired = isBillingAddressRequired
             return this
@@ -347,6 +369,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setBillingAddressParameters(billingAddressParameters: BillingAddressParameters?): Builder {
             this.billingAddressParameters = billingAddressParameters
             return this
@@ -362,6 +385,7 @@ class GooglePayConfiguration private constructor(
          * for more details.
          *
          */
+        @Deprecated("Use property access syntax instead.")
         fun setTotalPriceStatus(totalPriceStatus: String): Builder {
             this.totalPriceStatus = totalPriceStatus
             return this
@@ -374,6 +398,7 @@ class GooglePayConfiguration private constructor(
          * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#TransactionInfo)
          * for more details.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setCheckoutOption(checkoutOption: String): Builder {
             this.checkoutOption = checkoutOption
             return this
@@ -394,7 +419,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param amount Amount of the transaction.
          */
-        @Suppress("RedundantOverride")
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setAmount(amount: Amount): Builder {
             return super.setAmount(amount)
         }
@@ -404,6 +429,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param googlePayButtonStyling The customization object.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setGooglePayButtonStyling(googlePayButtonStyling: GooglePayButtonStyling): Builder {
             this.googlePayButtonStyling = googlePayButtonStyling
             return this
@@ -416,6 +442,7 @@ class GooglePayConfiguration private constructor(
          *
          * @param isSubmitButtonVisible If submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this

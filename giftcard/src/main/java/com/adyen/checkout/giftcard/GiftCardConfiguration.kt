@@ -5,6 +5,9 @@
  *
  * Created by josephj on 9/9/2021.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.giftcard
 
 import android.content.Context
@@ -27,6 +30,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class GiftCardConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -41,12 +45,15 @@ class GiftCardConfiguration private constructor(
     /**
      * Builder to create a [GiftCardConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<GiftCardConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isPinRequired: Boolean? = null
-        private var isSubmitButtonVisible: Boolean? = null
+        var isPinRequired: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -98,6 +105,7 @@ class GiftCardConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
@@ -111,6 +119,7 @@ class GiftCardConfiguration private constructor(
          *
          * @param isPinRequired If PIN should be hidden or not.
          */
+        @Deprecated("Use property access syntax instead.")
         fun setPinRequired(isPinRequired: Boolean): Builder {
             this.isPinRequired = isPinRequired
             return this

@@ -6,6 +6,8 @@
  * Created by oscars on 7/2/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.upi
 
 import android.content.Context
@@ -27,6 +29,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class UPIConfiguration(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -40,11 +43,13 @@ class UPIConfiguration(
     /**
      * Builder to create a [UPIConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<UPIConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -96,6 +101,7 @@ class UPIConfiguration(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this

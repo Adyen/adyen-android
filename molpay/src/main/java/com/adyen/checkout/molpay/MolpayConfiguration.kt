@@ -5,6 +5,9 @@
  *
  * Created by arman on 11/6/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.molpay
 
 import android.content.Context
@@ -24,6 +27,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class MolpayConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -39,6 +43,7 @@ class MolpayConfiguration private constructor(
     /**
      * Builder to create a [MolpayConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : IssuerListBuilder<MolpayConfiguration, Builder> {
 
         /**

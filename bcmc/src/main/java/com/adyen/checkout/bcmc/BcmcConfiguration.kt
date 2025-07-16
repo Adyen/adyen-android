@@ -5,6 +5,9 @@
  *
  * Created by arman on 18/9/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.bcmc
 
 import android.content.Context
@@ -28,6 +31,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class BcmcConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -44,14 +48,17 @@ class BcmcConfiguration private constructor(
     /**
      * Builder to create a [BcmcConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BcmcConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isHolderNameRequired: Boolean? = null
-        private var showStorePaymentField: Boolean? = null
-        private var shopperReference: String? = null
-        private var isSubmitButtonVisible: Boolean? = null
+        var isHolderNameRequired: Boolean? = null
+        var showStorePaymentField: Boolean? = null
+        var shopperReference: String? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -104,6 +111,7 @@ class BcmcConfiguration private constructor(
          * @param isHolderNameRequired [Boolean]
          * @return [BcmcConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setHolderNameRequired(isHolderNameRequired: Boolean): Builder {
             this.isHolderNameRequired = isHolderNameRequired
             return this
@@ -121,6 +129,7 @@ class BcmcConfiguration private constructor(
          * @param showStorePaymentField [Boolean]
          * @return [BcmcConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             this.showStorePaymentField = showStorePaymentField
             return this
@@ -133,6 +142,7 @@ class BcmcConfiguration private constructor(
          * @param shopperReference The unique shopper reference
          * @return [BcmcConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShopperReference(shopperReference: String): Builder {
             this.shopperReference = shopperReference
             return this
@@ -145,6 +155,7 @@ class BcmcConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this

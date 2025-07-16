@@ -6,6 +6,8 @@
  * Created by ozgur on 24/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.onlinebankingjp
 
 import android.content.Context
@@ -25,6 +27,7 @@ import java.util.Locale
  */
 @Suppress("LongParameterList")
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class OnlineBankingJPConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -38,6 +41,7 @@ class OnlineBankingJPConfiguration private constructor(
     /**
      * Builder to create an [OnlineBankingJPConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : EContextConfiguration.Builder<OnlineBankingJPConfiguration, Builder> {
 
         /**

@@ -5,6 +5,9 @@
  *
  * Created by caiof on 25/4/2019.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.issuerlist.internal
 
 import android.content.Context
@@ -33,9 +36,11 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
         ActionHandlingPaymentMethodConfigurationBuilder<IssuerListConfigurationT, IssuerListBuilderT>,
         ButtonConfigurationBuilder {
 
-        protected open var viewType: IssuerListViewType? = null
-        protected open var hideIssuerLogos: Boolean? = null
-        protected open var isSubmitButtonVisible: Boolean? = null
+        open var viewType: IssuerListViewType? = null
+        open var hideIssuerLogos: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        open var isSubmitButtonVisible: Boolean? = null
 
         protected constructor(environment: Environment, clientKey: String) : super(
             environment,
@@ -62,6 +67,7 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
          *
          * @param viewType an enum with the view type options.
          */
+        @Deprecated("Use property access syntax instead.")
         open fun setViewType(viewType: IssuerListViewType): IssuerListBuilderT {
             this.viewType = viewType
             @Suppress("UNCHECKED_CAST")
@@ -75,6 +81,7 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
          *
          * @param hideIssuerLogos if issuer logos should be hidden or not.
          */
+        @Deprecated("Use property access syntax instead.")
         open fun setHideIssuerLogos(hideIssuerLogos: Boolean): IssuerListBuilderT {
             this.hideIssuerLogos = hideIssuerLogos
             @Suppress("UNCHECKED_CAST")
@@ -88,6 +95,7 @@ abstract class IssuerListConfiguration : Configuration, ButtonConfiguration {
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): IssuerListBuilderT {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             @Suppress("UNCHECKED_CAST")
