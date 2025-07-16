@@ -21,11 +21,11 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.DelegateStateManager
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.mbway.internal.ui.state.toComponentState
+import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.toViewState
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.CoroutineScope
@@ -45,17 +45,17 @@ internal class MBWayComponent(
     private val order: OrderRequest? = null,
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     private val stateManager: DelegateStateManager<MBWayDelegateState, MBWayFieldId>,
-) : PaymentComponent<MBWayComponentState>,
+) : PaymentComponent<MBWayPaymentComponentState>,
     FieldChangeListener<MBWayFieldId>,
-    EventComponent<MBWayComponentState> {
+    EventComponent<MBWayPaymentComponentState> {
 
-    private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayComponentState>>()
-    override val eventFlow: Flow<PaymentComponentEvent<MBWayComponentState>> =
+    private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
+    override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
         eventChannel.receiveAsFlow()
 
-    private val componentStateFlow: StateFlow<MBWayComponentState> by lazy {
-        val toComponentState: (MBWayDelegateState) -> MBWayComponentState = { delegateState ->
-            delegateState.toComponentState(
+    private val paymentComponentStateFlow: StateFlow<MBWayPaymentComponentState> by lazy {
+        val toPaymentComponentState: (MBWayDelegateState) -> MBWayPaymentComponentState = { delegateState ->
+            delegateState.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 fieldTransformerRegistry = transformerRegistry,
                 order = order,
@@ -63,11 +63,11 @@ internal class MBWayComponent(
             )
         }
         stateManager.state
-            .map(toComponentState)
+            .map(toPaymentComponentState)
             .stateIn(
                 coroutineScope,
                 SharingStarted.Lazily,
-                toComponentState(stateManager.state.value),
+                toPaymentComponentState(stateManager.state.value),
             )
     }
 
@@ -80,7 +80,7 @@ internal class MBWayComponent(
     override fun submit() {
         if (stateManager.isValid) {
             eventChannel.trySend(
-                PaymentComponentEvent.Submit(componentStateFlow.value),
+                PaymentComponentEvent.Submit(paymentComponentStateFlow.value),
             )
         } else {
             stateManager.highlightAllFieldValidationErrors()

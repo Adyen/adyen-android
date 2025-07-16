@@ -19,17 +19,17 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 /**
  * Represents the state of [MBWayComponent].
  */
-internal data class MBWayComponentState(
+internal data class MBWayPaymentComponentState(
     override val data: PaymentComponentData<MBWayPaymentMethod>,
     override val isValid: Boolean,
 ) : PaymentComponentState<MBWayPaymentMethod>
 
-internal fun MBWayDelegateState.toComponentState(
+internal fun MBWayDelegateState.toPaymentComponentState(
     checkoutAttemptId: String,
     fieldTransformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     order: OrderRequest?,
     amount: Amount?,
-): MBWayComponentState {
+): MBWayPaymentComponentState {
     val sanitizedTelephoneNumber = fieldTransformerRegistry.transform(
         MBWayFieldId.PHONE_NUMBER,
         localPhoneNumberFieldState.value,
@@ -48,7 +48,7 @@ internal fun MBWayDelegateState.toComponentState(
         amount = amount,
     )
 
-    return MBWayComponentState(
+    return MBWayPaymentComponentState(
         data = paymentComponentData,
         isValid = isValid,
     )

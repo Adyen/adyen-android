@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class MBWayComponentStateTest {
+internal class MBWayPaymentComponentStateTest {
 
     private lateinit var fieldTransformerRegistry: TestFieldTransformerRegistry<MBWayFieldId>
     private lateinit var initialState: MBWayDelegateState
@@ -50,7 +50,7 @@ internal class MBWayComponentStateTest {
             localPhoneNumberFieldState = initialState.localPhoneNumberFieldState.copy(validation = Validation.Valid),
         )
 
-        val componentState = updatedState.toComponentState(
+        val componentState = updatedState.toPaymentComponentState(
             checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
@@ -74,7 +74,7 @@ internal class MBWayComponentStateTest {
             ),
         )
 
-        val componentState = updatedState.toComponentState(
+        val componentState = updatedState.toPaymentComponentState(
             checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
@@ -91,7 +91,7 @@ internal class MBWayComponentStateTest {
     fun `when transform function changes phone number, then component state should reflect the change`() {
         fieldTransformerRegistry.setTransformation(MBWayFieldId.PHONE_NUMBER, "123456789", "987654321")
 
-        val componentState = initialState.toComponentState(
+        val componentState = initialState.toPaymentComponentState(
             checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = orderRequest,
@@ -103,7 +103,7 @@ internal class MBWayComponentStateTest {
 
     @Test
     fun `when toComponentState is called with null order and amount, then MBWayComponentState should be created correctly`() {
-        val componentState = initialState.toComponentState(
+        val componentState = initialState.toPaymentComponentState(
             checkoutAttemptId = "",
             fieldTransformerRegistry = fieldTransformerRegistry,
             order = null,

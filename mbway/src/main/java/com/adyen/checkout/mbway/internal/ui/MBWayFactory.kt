@@ -16,7 +16,7 @@ import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.components.internal.ui.state.DefaultDelegateStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayStateUpdaterRegistry
 import com.adyen.checkout.mbway.internal.ui.state.MBWayTransformerRegistry
@@ -25,7 +25,7 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 // TODO - Add Initializer
-internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayComponent> {
+internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, MBWayComponent> {
 
     override fun create(
         coroutineScope: CoroutineScope,
