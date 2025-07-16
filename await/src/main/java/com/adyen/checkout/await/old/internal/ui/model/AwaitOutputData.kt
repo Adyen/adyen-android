@@ -5,7 +5,7 @@
  *
  * Created by caiof on 25/8/2020.
  */
-package com.adyen.checkout.await.internal.ui.model
+package com.adyen.checkout.await.old.internal.ui.model
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.model.OutputData

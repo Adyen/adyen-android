@@ -6,7 +6,7 @@
  * Created by josephj on 7/6/2021.
  */
 
-package com.adyen.checkout.await.internal.provider
+package com.adyen.checkout.await.old.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -15,11 +15,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
-import com.adyen.checkout.await.AwaitComponent
-import com.adyen.checkout.await.AwaitConfiguration
-import com.adyen.checkout.await.internal.ui.AwaitDelegate
-import com.adyen.checkout.await.internal.ui.DefaultAwaitDelegate
-import com.adyen.checkout.await.toCheckoutConfiguration
+import com.adyen.checkout.await.old.AwaitComponent
+import com.adyen.checkout.await.old.AwaitConfiguration
+import com.adyen.checkout.await.old.internal.ui.AwaitDelegate
+import com.adyen.checkout.await.old.internal.ui.DefaultAwaitDelegate
+import com.adyen.checkout.await.old.toCheckoutConfiguration
 import com.adyen.checkout.components.core.ActionComponentCallback
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes

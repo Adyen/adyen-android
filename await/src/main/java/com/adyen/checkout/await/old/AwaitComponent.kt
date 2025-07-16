@@ -5,14 +5,14 @@
  *
  * Created by caiof on 18/8/2020.
  */
-package com.adyen.checkout.await
+package com.adyen.checkout.await.old
 
 import android.app.Activity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.await.internal.provider.AwaitComponentProvider
-import com.adyen.checkout.await.internal.ui.AwaitDelegate
+import com.adyen.checkout.await.old.internal.provider.AwaitComponentProvider
+import com.adyen.checkout.await.old.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.RedirectableActionComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.ActionComponent
