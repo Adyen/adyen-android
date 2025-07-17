@@ -51,7 +51,8 @@ internal class PaymentFacilitator(
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
-                componentEventHandler.onPaymentComponentEvent(event, ::handleResult)
+                val result = componentEventHandler.onPaymentComponentEvent(event)
+                handleResult(result)
             }.launchIn(coroutineScope)
 
         checkoutController.events

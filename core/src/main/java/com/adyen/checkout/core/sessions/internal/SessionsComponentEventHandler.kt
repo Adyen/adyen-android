@@ -13,59 +13,36 @@ import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
     private val checkoutCallback: CheckoutCallback?,
 ) : ComponentEventHandler<T> {
 
-    private var _coroutineScope: CoroutineScope? = null
-    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
-
-    override fun initialize(coroutineScope: CoroutineScope) {
-        _coroutineScope = coroutineScope
-    }
-
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit) {
-        when (event) {
+    override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
+        return when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
                 when {
                     checkoutCallback == null || !checkoutCallback.beforeSubmit(event.state) -> {
-                        makePaymentsCall(event.state, onCheckoutResult)
+                        makePaymentsCall(event.state)
                     }
 
                     else -> {
-                        checkoutCallback.onSubmit(event.state) { checkoutResult ->
-                            onCheckoutResult(checkoutResult)
-                        }
+                        checkoutCallback.onSubmit(event.state)
                     }
                 }
             }
         }
     }
 
-    private fun makePaymentsCall(
-        paymentComponentState: PaymentComponentState<*>,
-        onCheckoutResult: (CheckoutResult) -> Unit
-    ) {
-        coroutineScope.launch {
-            val sessionResult = sessionInteractor.submitPayment(paymentComponentState)
-            val checkoutResult = when (sessionResult) {
-                is SessionCallResult.Payments.Action -> CheckoutResult.Action(sessionResult.action)
-                // TODO - Implement Error case
-                is SessionCallResult.Payments.Error -> CheckoutResult.Error()
-                // TODO - Implement Finished case
-                is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
-            }
-
-            onCheckoutResult(checkoutResult)
+    private suspend fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+        return when (val sessionResult = sessionInteractor.submitPayment(paymentComponentState)) {
+            is SessionCallResult.Payments.Action -> CheckoutResult.Action(sessionResult.action)
+            // TODO - Implement Error case
+            is SessionCallResult.Payments.Error -> CheckoutResult.Error()
+            // TODO - Implement Finished case
+            is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
         }
-    }
-
-    override fun onCleared() {
-        _coroutineScope = null
     }
 }
