@@ -30,6 +30,8 @@ class CheckoutController {
         _events.tryEmit(Event.Submit)
     }
 
+    // TODO - discuss if this should be in the controller or somewhere else, for if the merchant wants to use our
+    //   component to only handle actions
     fun handleAction(action: Action) {
         _events.tryEmit(Event.HandleAction(action))
     }
