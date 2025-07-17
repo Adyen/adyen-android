@@ -12,7 +12,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 interface CheckoutCallback {
 
-    fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean = false
+    suspend fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean = false
 
     suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult
 }
