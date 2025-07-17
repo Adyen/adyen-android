@@ -8,24 +8,21 @@
 
 package com.adyen.checkout.core.action.internal
 
+import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
-internal object ActionDelegateProvider {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object ActionDelegateProvider {
 
     private val factories = mutableMapOf<String, ActionFactory<*>>()
 
     fun register(
-        action: Action,
+        actionType: String,
         factory: ActionFactory<*>,
     ) {
-        val actionType = action.type
-        require(!actionType.isNullOrEmpty()) {
-            "The action type cannot be empty or null"
-        }
-
         factories[actionType] = factory
     }
 
