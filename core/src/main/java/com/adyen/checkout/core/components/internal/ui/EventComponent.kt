@@ -9,12 +9,12 @@
 package com.adyen.checkout.core.components.internal.ui
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.BaseComponentState
+import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface EventDelegate<T : BaseComponentState> {
+interface EventComponent<T : BasePaymentComponentState> {
 
     val eventFlow: Flow<PaymentComponentEvent<T>>
 }

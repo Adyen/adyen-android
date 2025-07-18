@@ -9,7 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,18 +17,18 @@ import org.junit.jupiter.api.Test
 internal class MBWayStateUpdaterRegistryTest {
 
     private lateinit var stateUpdaterRegistry: MBWayStateUpdaterRegistry
-    private lateinit var initialState: MBWayDelegateState
+    private lateinit var initialState: MBWayComponentState
     private lateinit var countryModel: CountryModel
-    private lateinit var localPhoneNumberFieldState: DelegateFieldState<String>
-    private lateinit var countryCodeFieldState: DelegateFieldState<CountryModel>
+    private lateinit var localPhoneNumberFieldState: ComponentFieldState<String>
+    private lateinit var countryCodeFieldState: ComponentFieldState<CountryModel>
 
     @BeforeEach
     fun setup() {
         countryModel = CountryModel(isoCode = "NL", countryName = "Netherlands", callingCode = "+31")
-        localPhoneNumberFieldState = DelegateFieldState(value = "123456789")
-        countryCodeFieldState = DelegateFieldState(value = countryModel)
+        localPhoneNumberFieldState = ComponentFieldState(value = "123456789")
+        countryCodeFieldState = ComponentFieldState(value = countryModel)
 
-        initialState = MBWayDelegateState(
+        initialState = MBWayComponentState(
             countries = listOf(countryModel),
             countryCodeFieldState = countryCodeFieldState,
             localPhoneNumberFieldState = localPhoneNumberFieldState,
@@ -53,7 +53,7 @@ internal class MBWayStateUpdaterRegistryTest {
 
     @Test
     fun `when updateFieldState is called for phone number, then field state should update correctly`() {
-        val newPhoneNumberState = DelegateFieldState(value = "987654321")
+        val newPhoneNumberState = ComponentFieldState(value = "987654321")
 
         val updatedState = stateUpdaterRegistry.updateFieldState(
             initialState,
@@ -66,7 +66,7 @@ internal class MBWayStateUpdaterRegistryTest {
 
     @Test
     fun `when updateFieldState is called for country code, then field state should update correctly`() {
-        val newCountryCodeState = DelegateFieldState(value = "PT")
+        val newCountryCodeState = ComponentFieldState(value = "PT")
 
         val updatedState = stateUpdaterRegistry.updateFieldState(
             initialState,

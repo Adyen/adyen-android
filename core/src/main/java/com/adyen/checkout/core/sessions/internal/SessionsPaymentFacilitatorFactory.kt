@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.internal.BaseComponentState
+import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentFacilitator
 import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
@@ -54,12 +54,12 @@ internal class SessionsPaymentFacilitatorFactory(
 
         // TODO - Based on txVariant, needs to be abstracted away
         val componentEventHandler =
-            SessionsComponentEventHandler<BaseComponentState>(
+            SessionsComponentEventHandler<BasePaymentComponentState>(
                 sessionInteractor = sessionInteractor,
                 checkoutCallback = checkoutCallback,
             )
 
-        val paymentDelegate = PaymentMethodProvider.get(
+        val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
@@ -72,7 +72,7 @@ internal class SessionsPaymentFacilitatorFactory(
         )
 
         return PaymentFacilitator(
-            paymentDelegate = paymentDelegate,
+            paymentComponent = paymentComponent,
             coroutineScope = coroutineScope,
             componentEventHandler = componentEventHandler,
             actionProvider = actionProvider,

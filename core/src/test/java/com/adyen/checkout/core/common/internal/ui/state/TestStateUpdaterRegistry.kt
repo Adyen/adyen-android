@@ -8,31 +8,31 @@
 
 package com.adyen.checkout.core.common.internal.ui.state
 
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdaterRegistry
 
-internal class TestStateUpdaterRegistry : StateUpdaterRegistry<TestDelegateState, TestFieldId> {
+internal class TestStateUpdaterRegistry : StateUpdaterRegistry<TestComponentState, TestFieldId> {
 
-    private val fieldStates = mutableMapOf<TestFieldId, DelegateFieldState<*>>()
+    private val fieldStates = mutableMapOf<TestFieldId, ComponentFieldState<*>>()
 
-    fun <T> initialize(defaultFieldState: DelegateFieldState<T>) {
+    fun <T> initialize(defaultFieldState: ComponentFieldState<T>) {
         TestFieldId.entries.map { fieldId ->
             fieldStates[fieldId] = defaultFieldState
         }
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> getFieldState(state: TestDelegateState, key: TestFieldId): DelegateFieldState<T> {
-        return fieldStates[key] as DelegateFieldState<T>
+    override fun <T> getFieldState(state: TestComponentState, key: TestFieldId): ComponentFieldState<T> {
+        return fieldStates[key] as ComponentFieldState<T>
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> updateFieldState(
-        state: TestDelegateState,
+        state: TestComponentState,
         key: TestFieldId,
-        fieldState: DelegateFieldState<T>,
-    ): TestDelegateState {
-        fieldStates[key] = fieldState as DelegateFieldState<Any>
+        fieldState: ComponentFieldState<T>,
+    ): TestComponentState {
+        fieldStates[key] = fieldState as ComponentFieldState<Any>
         return state
     }
 }

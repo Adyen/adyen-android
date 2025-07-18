@@ -11,16 +11,16 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.DelegateStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 
-internal class MBWayDelegateStateFactory(
+internal class MBWayComponentStateFactory(
     private val componentParams: ComponentParams,
-) : DelegateStateFactory<MBWayDelegateState, MBWayFieldId> {
+) : ComponentStateFactory<MBWayComponentState, MBWayFieldId> {
 
-    override fun createDefaultDelegateState() = MBWayDelegateState(
+    override fun createDefaultComponentState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
-        countryCodeFieldState = DelegateFieldState(getInitiallySelectedCountry(componentParams)),
+        countryCodeFieldState = ComponentFieldState(getInitiallySelectedCountry(componentParams)),
     )
 
     private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =

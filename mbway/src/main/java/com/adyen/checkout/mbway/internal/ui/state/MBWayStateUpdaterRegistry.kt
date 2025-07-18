@@ -9,11 +9,11 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdater
 import com.adyen.checkout.core.components.internal.ui.state.updater.StateUpdaterRegistry
 
-internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateState, MBWayFieldId> {
+internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayComponentState, MBWayFieldId> {
 
     private val updaters = MBWayFieldId.entries.associateWith { fieldId ->
         when (fieldId) {
@@ -24,41 +24,41 @@ internal class MBWayStateUpdaterRegistry : StateUpdaterRegistry<MBWayDelegateSta
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> getFieldState(
-        state: MBWayDelegateState,
+        state: MBWayComponentState,
         fieldId: MBWayFieldId,
-    ): DelegateFieldState<T> {
-        val updater = updaters[fieldId] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
+    ): ComponentFieldState<T> {
+        val updater = updaters[fieldId] as? StateUpdater<MBWayComponentState, ComponentFieldState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.getFieldState(state)
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> updateFieldState(
-        state: MBWayDelegateState,
+        state: MBWayComponentState,
         fieldId: MBWayFieldId,
-        fieldState: DelegateFieldState<T>,
-    ): MBWayDelegateState {
-        val updater = updaters[fieldId] as? StateUpdater<MBWayDelegateState, DelegateFieldState<T>>
+        fieldState: ComponentFieldState<T>,
+    ): MBWayComponentState {
+        val updater = updaters[fieldId] as? StateUpdater<MBWayComponentState, ComponentFieldState<T>>
             ?: throw IllegalArgumentException("Unsupported fieldId or invalid type provided")
         return updater.updateFieldState(state, fieldState)
     }
 }
 
-internal class LocalPhoneNumberUpdater : StateUpdater<MBWayDelegateState, DelegateFieldState<String>> {
-    override fun getFieldState(state: MBWayDelegateState): DelegateFieldState<String> =
+internal class LocalPhoneNumberUpdater : StateUpdater<MBWayComponentState, ComponentFieldState<String>> {
+    override fun getFieldState(state: MBWayComponentState): ComponentFieldState<String> =
         state.localPhoneNumberFieldState
 
-    override fun updateFieldState(state: MBWayDelegateState, fieldState: DelegateFieldState<String>) =
+    override fun updateFieldState(state: MBWayComponentState, fieldState: ComponentFieldState<String>) =
         state.copy(
             localPhoneNumberFieldState = fieldState,
         )
 }
 
-internal class CountryCodeUpdater : StateUpdater<MBWayDelegateState, DelegateFieldState<CountryModel>> {
-    override fun getFieldState(state: MBWayDelegateState): DelegateFieldState<CountryModel> =
+internal class CountryCodeUpdater : StateUpdater<MBWayComponentState, ComponentFieldState<CountryModel>> {
+    override fun getFieldState(state: MBWayComponentState): ComponentFieldState<CountryModel> =
         state.countryCodeFieldState
 
-    override fun updateFieldState(state: MBWayDelegateState, fieldState: DelegateFieldState<CountryModel>) =
+    override fun updateFieldState(state: MBWayComponentState, fieldState: ComponentFieldState<CountryModel>) =
         state.copy(
             countryCodeFieldState = fieldState,
         )

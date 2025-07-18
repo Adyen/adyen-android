@@ -13,7 +13,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface DelegateStateManager<S : DelegateState, FI : FieldId> {
+interface ComponentStateManager<S : ComponentState, FI : FieldId> {
 
     val state: StateFlow<S>
 

@@ -21,19 +21,19 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @ExtendWith(MockitoExtension::class)
-internal class MBWayDelegateStateFactoryTest(
+internal class MBWayComponentStateFactoryTest(
     @Mock private val componentParams: CommonComponentParams,
 ) {
 
-    private lateinit var factory: MBWayDelegateStateFactory
+    private lateinit var factory: MBWayComponentStateFactory
 
     @BeforeEach
     fun setup() {
-        factory = MBWayDelegateStateFactory(componentParams)
+        factory = MBWayComponentStateFactory(componentParams)
     }
 
     @Test
-    fun `when createDefaultDelegateState is called, then state should contain supported and default countries`() {
+    fun `when createDefaultComponentState is called, then state should contain supported and default countries`() {
         val supportedCountries = listOf(
             CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
             CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
@@ -41,11 +41,11 @@ internal class MBWayDelegateStateFactoryTest(
         val locale = Locale("en", "US")
         whenever(componentParams.shopperLocale) doReturn locale
 
-        val delegateState = factory.createDefaultDelegateState()
+        val componentState = factory.createDefaultComponentState()
 
-        assertEquals(supportedCountries, delegateState.countries)
+        assertEquals(supportedCountries, componentState.countries)
         // Assert that the selected country is Portugal (since it's the first in the list)
-        assertEquals("PT", delegateState.countryCodeFieldState.value.isoCode)
+        assertEquals("PT", componentState.countryCodeFieldState.value.isoCode)
     }
 
     @Test

@@ -9,10 +9,10 @@
 package com.adyen.checkout.core.components.internal.ui.state.validator
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.DelegateState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DefaultValidator : FieldValidator<DelegateState, Any> {
-    override fun validate(state: DelegateState, input: Any) = Validation.Valid
+class DefaultValidator : FieldValidator<ComponentState, Any> {
+    override fun validate(state: ComponentState, input: Any) = Validation.Valid
 }

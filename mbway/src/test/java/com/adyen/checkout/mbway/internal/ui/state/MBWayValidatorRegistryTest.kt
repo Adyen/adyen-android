@@ -18,7 +18,7 @@ internal class MBWayValidatorRegistryTest {
 
     private lateinit var validatorRegistry: MBWayValidatorRegistry
 
-    private var state: MBWayDelegateState = mock()
+    private var state: MBWayComponentState = mock()
 
     @BeforeEach
     fun setup() {

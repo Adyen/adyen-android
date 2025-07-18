@@ -13,11 +13,11 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.components.internal.ui.state.DefaultDelegateStateManager
+import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayDelegateStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayStateUpdaterRegistry
 import com.adyen.checkout.mbway.internal.ui.state.MBWayTransformerRegistry
 import com.adyen.checkout.mbway.internal.ui.state.MBWayValidatorRegistry
@@ -25,13 +25,13 @@ import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
 // TODO - Add Initializer
-internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDelegate> {
+internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, MBWayComponent> {
 
     override fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         componentSessionParams: SessionParams?,
-    ): MBWayDelegate {
+    ): MBWayComponent {
         val componentParams = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
 
@@ -54,15 +54,15 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayComponentState, MBWayDel
         )
 
         val transformerRegistry = MBWayTransformerRegistry()
-        val delegateStateFactory = MBWayDelegateStateFactory(componentParams)
-        val stateManager = DefaultDelegateStateManager(
-            factory = delegateStateFactory,
+        val componentStateFactory = MBWayComponentStateFactory(componentParams)
+        val stateManager = DefaultComponentStateManager(
+            factory = componentStateFactory,
             validationRegistry = MBWayValidatorRegistry(),
             stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
             transformerRegistry = transformerRegistry,
         )
 
-        return MBWayDelegate(
+        return MBWayComponent(
             coroutineScope = coroutineScope,
             componentParams = componentParams,
             analyticsManager = analyticsManager,

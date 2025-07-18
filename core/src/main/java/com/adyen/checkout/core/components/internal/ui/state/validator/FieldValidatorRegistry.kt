@@ -9,11 +9,11 @@
 package com.adyen.checkout.core.components.internal.ui.state.validator
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.DelegateState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldValidatorRegistry<S : DelegateState, FI : FieldId> {
+interface FieldValidatorRegistry<S : ComponentState, FI : FieldId> {
     fun <T> validate(state: S, fieldId: FI, value: T): Validation
 }

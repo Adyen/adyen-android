@@ -9,13 +9,13 @@
 package com.adyen.checkout.core.components.internal.ui.state.updater
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.DelegateState
-import com.adyen.checkout.core.components.internal.ui.state.model.DelegateFieldState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StateUpdaterRegistry<S : DelegateState, FI : FieldId> {
-    fun <T> getFieldState(state: S, fieldId: FI): DelegateFieldState<T>
+interface StateUpdaterRegistry<S : ComponentState, FI : FieldId> {
+    fun <T> getFieldState(state: S, fieldId: FI): ComponentFieldState<T>
 
-    fun <T> updateFieldState(state: S, fieldId: FI, fieldState: DelegateFieldState<T>): S
+    fun <T> updateFieldState(state: S, fieldId: FI, fieldState: ComponentFieldState<T>): S
 }

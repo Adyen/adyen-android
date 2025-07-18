@@ -9,11 +9,8 @@
 package com.adyen.checkout.core.components.internal.ui.state
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface DelegateStateFactory<S : DelegateState, FI : FieldId> {
-    fun createDefaultDelegateState(): S
-
-    fun getFieldIds(): List<FI>
+interface ComponentState {
+    val isValid: Boolean
 }

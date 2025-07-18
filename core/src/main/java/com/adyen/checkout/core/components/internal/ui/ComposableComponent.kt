@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ComposableDelegate {
+interface ComposableComponent {
 
     @Composable
     fun ViewFactory(modifier: Modifier)

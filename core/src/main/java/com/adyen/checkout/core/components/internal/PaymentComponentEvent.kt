@@ -11,10 +11,10 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-sealed class PaymentComponentEvent<ComponentStateT : BaseComponentState> {
+sealed class PaymentComponentEvent<ComponentStateT : BasePaymentComponentState> {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    class Submit<ComponentStateT : BaseComponentState>(
+    class Submit<ComponentStateT : BasePaymentComponentState>(
         val state: ComponentStateT
     ) : PaymentComponentEvent<ComponentStateT>()
 }

@@ -17,37 +17,37 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
-import com.adyen.checkout.core.action.internal.ActionDelegate
+import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.internal.ui.PaymentDelegate
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 internal class PaymentFacilitator(
-    private val paymentDelegate: PaymentDelegate<BaseComponentState>,
+    private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
     private val coroutineScope: CoroutineScope,
-    private val componentEventHandler: ComponentEventHandler<BaseComponentState>,
+    private val componentEventHandler: ComponentEventHandler<BasePaymentComponentState>,
     private val actionProvider: ActionProvider,
     private val checkoutController: CheckoutController,
 ) {
 
-    private var actionDelegate by mutableStateOf<ActionDelegate?>(null)
+    private var actionComponent by mutableStateOf<ActionComponent?>(null)
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
-        if (actionDelegate != null) {
-            actionDelegate?.ViewFactory(modifier)
+        if (actionComponent != null) {
+            actionComponent?.ViewFactory(modifier)
         } else {
-            paymentDelegate.ViewFactory(modifier)
+            paymentComponent.ViewFactory(modifier)
         }
     }
 
     fun observe(lifecycle: Lifecycle) {
-        paymentDelegate.eventFlow
+        paymentComponent.eventFlow
             .flowWithLifecycle(lifecycle)
             .filterNotNull()
             .onEach { event ->
@@ -81,20 +81,20 @@ internal class PaymentFacilitator(
 
     private fun submit() {
         // TODO - what if we are handling an action?
-        paymentDelegate.submit()
+        paymentComponent.submit()
     }
 
     private fun handleAction(action: Action) {
-        actionDelegate = actionProvider.get(
+        actionComponent = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
         // TODO - Adyen log
-//        adyenLog(AdyenLogLevel.DEBUG) { "Created delegate of type ${actionDelegate::class.simpleName}" }
+//        adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
     @Suppress("UNUSED_PARAMETER")
     private fun handleIntent(intent: Intent) {
-        // TODO - handle intent with action delegate
+        // TODO - handle intent with action component
     }
 }

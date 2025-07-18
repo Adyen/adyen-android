@@ -12,7 +12,7 @@ import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutResult
 import kotlinx.coroutines.CoroutineScope
 
-internal class AdvancedComponentEventHandler<T : BaseComponentState>(
+internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
     private val checkoutCallback: CheckoutCallback
 ) :
     ComponentEventHandler<T> {

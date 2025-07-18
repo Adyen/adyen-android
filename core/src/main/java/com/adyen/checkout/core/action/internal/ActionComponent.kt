@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.ComposableDelegate
+import com.adyen.checkout.core.components.internal.ui.ComposableComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionDelegate : ComposableDelegate
+interface ActionComponent : ComposableComponent
