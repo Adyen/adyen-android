@@ -9,6 +9,7 @@
 package com.adyen.checkout.example.repositories
 
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
@@ -17,12 +18,13 @@ import com.adyen.checkout.example.data.api.model.PaymentMethodsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequest
 import com.adyen.checkout.example.data.api.model.PaymentsRequestData
 import com.adyen.checkout.example.data.api.model.SessionRequest
-import com.adyen.checkout.sessions.core.SessionModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject
+import com.adyen.checkout.sessions.core.SessionModel as OldSessionModel
 
 interface PaymentsRepository {
+    suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel?
     suspend fun createSession(sessionRequest: SessionRequest): SessionModel?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject?
@@ -40,8 +42,15 @@ interface PaymentsRepository {
 @Suppress("TooManyFunctions")
 internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutApiService) : PaymentsRepository {
 
+    override suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel? = safeApiCall {
+        checkoutApiService.sessionsAsync(sessionRequest)
+    }
+
+    // TODO - get rid of old api call and improve this one
     override suspend fun createSession(sessionRequest: SessionRequest): SessionModel? = safeApiCall {
         checkoutApiService.sessionsAsync(sessionRequest)
+    }?.let {
+        SessionModel(it.id, it.sessionData)
     }
 
     override suspend fun getPaymentMethods(
