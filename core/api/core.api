@@ -298,7 +298,7 @@ public final class com/adyen/checkout/core/components/AdyenCheckout$Result$Succe
 }
 
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
-	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/AdyenCheckout;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/AdyenCheckout;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/AdyenCheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutCallback {
