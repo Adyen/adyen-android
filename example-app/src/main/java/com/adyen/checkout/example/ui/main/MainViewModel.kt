@@ -121,6 +121,10 @@ internal class MainViewModel @Inject constructor(
                 _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6))
             }
 
+            is ComponentItem.Entry.V6Sessions -> {
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6Sessions))
+            }
+
             is ComponentItem.Entry.DropIn -> startDropInFlow()
             is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
             is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
@@ -179,7 +183,7 @@ internal class MainViewModel @Inject constructor(
     )
 
     private suspend fun getSession(checkoutConfiguration: CheckoutConfiguration): CheckoutSession? {
-        val sessionModel = paymentsRepository.createSession(
+        val sessionModel = paymentsRepository.createSessionOld(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),
