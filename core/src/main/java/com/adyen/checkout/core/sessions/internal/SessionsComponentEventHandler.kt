@@ -23,14 +23,10 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
         return when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
-                when {
-                    checkoutCallback == null || !checkoutCallback.beforeSubmit(event.state) -> {
-                        makePaymentsCall(event.state)
-                    }
-
-                    else -> {
-                        checkoutCallback.onSubmit(event.state)
-                    }
+                if (checkoutCallback?.beforeSubmit(event.state) != true) {
+                    makePaymentsCall(event.state)
+                } else {
+                    checkoutCallback.onSubmit(event.state)
                 }
             }
         }
