@@ -17,11 +17,13 @@ import com.adyen.checkout.core.action.data.Action as ActionResponse
 sealed interface CheckoutResult {
 
     /** Indicates the payment process has finished successfully. */
-    class Finished : CheckoutResult
+    // TODO - Replace temp parameter with actual value
+    data class Finished(val temp: String? = null) : CheckoutResult
 
     /** Indicates that an additional action is required from the shopper. */
-    class Action(val action: ActionResponse) : CheckoutResult
+    data class Action(val action: ActionResponse) : CheckoutResult
 
     /** Indicates an error occurred during the payment process. */
-    class Error : CheckoutResult
+    // TODO - Replace temp parameter with actual value
+    data class Error(val temp: String? = null) : CheckoutResult
 }
