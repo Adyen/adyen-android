@@ -9,15 +9,17 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
+import java.util.concurrent.ConcurrentHashMap
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object PaymentMethodProvider {
 
-    private val factories = mutableMapOf<String, PaymentMethodFactory<*, *>>()
+    private val factories = ConcurrentHashMap<String, PaymentMethodFactory<*, *>>()
 
     fun register(
         txVariant: String,
@@ -51,5 +53,21 @@ object PaymentMethodProvider {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")
         }
+    }
+
+    /**
+     * Clears all registered factories. Should only be used in tests.
+     */
+    @VisibleForTesting
+    internal fun clear() {
+        factories.clear()
+    }
+
+    /**
+     * Returns the number of registered factories. Should only be used in tests.
+     */
+    @VisibleForTesting
+    internal fun getFactoriesCount(): Int {
+        return factories.size
     }
 }
