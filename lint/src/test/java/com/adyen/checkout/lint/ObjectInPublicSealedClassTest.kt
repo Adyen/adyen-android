@@ -46,6 +46,19 @@ internal class ObjectInPublicSealedClassTest {
                     }
                     """,
                 ).indented(),
+
+                kotlin(
+                    """
+                    package test
+
+                    class PublicParentClass {
+                        internal sealed class InternalSealedClass {
+                            data object Sub1 : InternalSealedClass()
+                            data class Sub2(val test: String) : InternalSealedClass()
+                        }
+                    }
+                    """,
+                ).indented(),
             )
             .issues(OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE)
             .allowMissingSdk()
@@ -99,12 +112,28 @@ internal class ObjectInPublicSealedClassTest {
                     }
                     """,
                 ).indented(),
+
+                kotlin(
+                    """
+                    package test
+
+                    class PublicParentClass {
+                        sealed class InternalSealedClass {
+                            data object Sub1 : InternalSealedClass()
+                            data class Sub2(val test: String) : InternalSealedClass()
+                        }
+                    }
+                    """,
+                ).indented(),
             )
             .issues(OBJECT_IN_PUBLIC_SEALED_CLASS_ISSUE)
             .allowMissingSdk()
             .run()
             .expect(
                 """
+                src/test/PublicParentClass.kt:5: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
+                        data object Sub1 : InternalSealedClass()
+                             ~~~~~~
                 src/test/PublicSealedClass1.kt:4: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
                     data object Sub1 : PublicSealedClass1()
                          ~~~~~~
@@ -117,11 +146,15 @@ internal class ObjectInPublicSealedClassTest {
                 src/test/PublicSealedInterface.kt:4: Error: Don't use object, use class instead [ObjectInPublicSealedClass]
                     data object Sub1 : PublicSealedInterface()
                          ~~~~~~
-                4 errors, 0 warnings
+                5 errors, 0 warnings
                 """,
             )
             .expectFixDiffs(
                 """
+                Fix for src/test/PublicParentClass.kt line 5: Replace with class:
+                @@ -5 +5
+                -         data object Sub1 : InternalSealedClass()
+                +         data class Sub1 : InternalSealedClass()
                 Fix for src/test/PublicSealedClass1.kt line 4: Replace with class:
                 @@ -4 +4
                 -     data object Sub1 : PublicSealedClass1()

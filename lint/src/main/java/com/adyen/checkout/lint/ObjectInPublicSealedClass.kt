@@ -41,11 +41,11 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
 
     override fun createUastHandler(context: JavaContext) = object : UElementHandler() {
         override fun visitClass(node: UClass) {
-            if (!isPublic(node)) return
-
             if (isCompanionObject(node)) return
 
             if (!hasSealedParent(node)) return
+
+            if (!isPublic(node)) return
 
             if (isObject(node)) {
                 val psiText = node.sourcePsi?.text.orEmpty()
@@ -64,21 +64,19 @@ internal class ObjectInPublicSealedClassDetector : Detector(), Detector.UastScan
             }
         }
 
-        private fun isPublic(node: UClass): Boolean {
-            val parent = node.uastParent
-            if (parent is UClass) {
-                return isPublic(parent)
-            }
-
-            return context.evaluator.isPublic(node) && !node.hasAnnotation("androidx.annotation.RestrictTo")
-        }
-
         private fun isCompanionObject(node: UClass): Boolean {
             return context.evaluator.isCompanion(node)
         }
 
         private fun hasSealedParent(node: UClass): Boolean {
             return node.supers.any { context.evaluator.isSealed(it) }
+        }
+
+        private fun isPublic(node: UClass): Boolean {
+            val isPublic = context.evaluator.isPublic(node) && !node.hasAnnotation("androidx.annotation.RestrictTo")
+            val parent = node.uastParent as? UClass
+
+            return isPublic && (parent?.let { isPublic(it) } ?: true)
         }
 
         private fun isObject(node: UClass): Boolean {

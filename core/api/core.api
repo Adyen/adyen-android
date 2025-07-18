@@ -298,7 +298,7 @@ public final class com/adyen/checkout/core/components/AdyenCheckout$Result$Succe
 }
 
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
-	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/AdyenCheckout;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/AdyenCheckout;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutCallback {
@@ -331,6 +331,18 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration$CREA
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public fun newArray (I)[Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/components/CheckoutController {
+	public static final field $stable I
+	public fun <init> ()V
+	public final fun handleAction (Lcom/adyen/checkout/core/action/data/Action;)V
+	public final fun handleIntent (Landroid/content/Intent;)V
+	public final fun submit ()V
+}
+
+public final class com/adyen/checkout/core/components/CheckoutControllerKt {
+	public static final fun rememberCheckoutController (Landroidx/compose/runtime/Composer;I)Lcom/adyen/checkout/core/components/CheckoutController;
 }
 
 public abstract interface class com/adyen/checkout/core/components/CheckoutResult {
