@@ -36,6 +36,8 @@ internal sealed class MainNavigation {
 
     data object V6 : MainNavigation()
 
+    data object V6Sessions : MainNavigation()
+
     data class DropIn(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration

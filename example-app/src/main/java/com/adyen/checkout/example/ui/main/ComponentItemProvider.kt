@@ -28,5 +28,6 @@ internal object ComponentItemProvider {
         ComponentItem.Entry.CardWithSessionTakenOver,
         ComponentItem.Entry.GooglePayWithSession,
         ComponentItem.Entry.GiftCardWithSession,
+        ComponentItem.Entry.V6Sessions,
     )
 }
