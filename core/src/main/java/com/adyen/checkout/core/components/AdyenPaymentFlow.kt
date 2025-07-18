@@ -21,6 +21,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.ui.internal.PrimaryButton
+import com.adyen.checkout.ui.theme.AdyenCheckoutTheme
+import com.adyen.checkout.ui.internal.AdyenCheckoutTheme as ComposableAdyenCheckoutTheme
 
 // TODO - Change Name?
 @Composable
@@ -28,6 +30,7 @@ fun AdyenPaymentFlow(
     txVariant: String,
     adyenCheckout: AdyenCheckout,
     modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
@@ -40,19 +43,21 @@ fun AdyenPaymentFlow(
         )
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        adyenComponent.ViewFactory()
+    ComposableAdyenCheckoutTheme(theme) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            adyenComponent.ViewFactory()
 
-        Spacer(Modifier.size(16.dp))
+            Spacer(Modifier.size(16.dp))
 
-        // TODO - Properly implement the pay button
-        PrimaryButton(
-            onClick = checkoutController::submit,
-            text = "Pay $13.37",
-            modifier = Modifier.fillMaxWidth(),
-        )
+            // TODO - Properly implement the pay button
+            PrimaryButton(
+                onClick = checkoutController::submit,
+                text = "Pay $13.37",
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
