@@ -10,18 +10,8 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import kotlinx.coroutines.CoroutineScope
 
 internal interface ComponentEventHandler<T : PaymentComponentState<*>> {
 
-    /**
-     * Do not keep a local references of this scope if you don't need to.
-     *
-     * If you have to keep any references to [CoroutineScope], use [onCleared] to clear them.
-     */
-    fun initialize(coroutineScope: CoroutineScope)
-
-    fun onCleared()
-
-    fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit)
+    suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult
 }

@@ -10,29 +10,17 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.components.CheckoutCallback
 import com.adyen.checkout.core.components.CheckoutResult
-import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
     private val checkoutCallback: CheckoutCallback
-) :
-    ComponentEventHandler<T> {
+) : ComponentEventHandler<T> {
 
-    override fun initialize(coroutineScope: CoroutineScope) {
-        // no ops
-    }
-
-    override fun onPaymentComponentEvent(event: PaymentComponentEvent<T>, onCheckoutResult: (CheckoutResult) -> Unit) {
-        when (event) {
+    override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
+        return when (event) {
             is PaymentComponentEvent.Submit -> {
                 checkoutCallback.beforeSubmit(event.state)
-                checkoutCallback.onSubmit(event.state) { checkoutResult ->
-                    onCheckoutResult(checkoutResult)
-                }
+                checkoutCallback.onSubmit(event.state)
             }
         }
-    }
-
-    override fun onCleared() {
-        // no ops
     }
 }

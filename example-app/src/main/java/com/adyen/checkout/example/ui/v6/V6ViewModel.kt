@@ -33,7 +33,8 @@ internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback
         checkoutCallback = this,
     )
 
-    override fun onSubmit(paymentComponentState: PaymentComponentState<*>, onCompletion: (CheckoutResult) -> Unit) {
-        // Not yet implemented
+    override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+        // TODO - make payments call
+        return CheckoutResult.Finished()
     }
 }
