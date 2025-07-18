@@ -15,7 +15,7 @@ import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PaymentMethodFactory<CS : BaseComponentState, T : PaymentComponent<CS>> {
+interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentComponent<CS>> {
 
     /**
      * Creates a [PaymentComponent].

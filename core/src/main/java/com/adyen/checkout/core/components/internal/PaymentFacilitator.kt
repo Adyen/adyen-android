@@ -28,9 +28,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 internal class PaymentFacilitator(
-    private val paymentComponent: PaymentComponent<BaseComponentState>,
+    private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
     private val coroutineScope: CoroutineScope,
-    private val componentEventHandler: ComponentEventHandler<BaseComponentState>,
+    private val componentEventHandler: ComponentEventHandler<BasePaymentComponentState>,
     private val actionProvider: ActionProvider,
     private val checkoutController: CheckoutController,
 ) {

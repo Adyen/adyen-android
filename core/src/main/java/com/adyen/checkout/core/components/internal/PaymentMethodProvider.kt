@@ -41,13 +41,13 @@ object PaymentMethodProvider {
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         componentSessionParams: SessionParams?,
-    ): PaymentComponent<BaseComponentState> {
+    ): PaymentComponent<BasePaymentComponentState> {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
             componentSessionParams = componentSessionParams,
-        ) as? PaymentComponent<BaseComponentState> ?: run {
+        ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")
         }
