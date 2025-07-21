@@ -21,7 +21,7 @@ class CheckoutCallbacks(
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
 ) {
 
-    private val additionalCallbacks = mutableMapOf<String, CheckoutCallback>()
+    private val additionalCallbacks = mutableMapOf<KClass<out CheckoutCallback>, CheckoutCallback>()
 
     init {
         apply(additionalCallbacksBlock)
@@ -45,12 +45,12 @@ class CheckoutCallbacks(
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun <T : CheckoutCallback> addCallback(callback: T, clazz: KClass<T>) {
-        additionalCallbacks[clazz.java.name] = callback
+        additionalCallbacks[clazz] = callback
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun <T : CheckoutCallback> getCallback(clazz: KClass<T>): T? {
-        return additionalCallbacks[clazz.java.name]?.let { clazz.safeCast(it) }
+        return additionalCallbacks[clazz]?.let { clazz.safeCast(it) }
     }
 }
 
