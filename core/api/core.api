@@ -338,8 +338,8 @@ public abstract interface class com/adyen/checkout/core/components/CheckoutCallb
 
 public final class com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutConfiguration : android/os/Parcelable {
@@ -418,6 +418,14 @@ public final class com/adyen/checkout/core/components/CheckoutResult$Finished : 
 	public final fun getTemp ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/adyen/checkout/core/components/OnAdditionalDetailsCallback : com/adyen/checkout/core/components/CheckoutCallback {
+	public abstract fun onAdditionalDetails (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
+	public abstract fun onError (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {

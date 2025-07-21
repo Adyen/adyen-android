@@ -33,6 +33,8 @@ internal class V6ViewModel @Inject constructor() : ViewModel() {
         checkoutConfiguration = configuration,
         checkoutCallbacks = CheckoutCallbacks(
             onSubmit = ::onSubmit,
+            onAdditionalDetails = ::onAdditionalDetails,
+            onError = ::onError,
         ),
     )
 
@@ -40,5 +42,14 @@ internal class V6ViewModel @Inject constructor() : ViewModel() {
     private fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
         // TODO - make payments call
         return CheckoutResult.Finished()
+    }
+
+    private fun onAdditionalDetails(): CheckoutResult {
+        // TODO - make payments details call
+        return CheckoutResult.Finished()
+    }
+
+    private fun onError() {
+        // TODO - handle error
     }
 }
