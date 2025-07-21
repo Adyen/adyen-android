@@ -10,8 +10,12 @@ package com.adyen.checkout.core.common.internal.model
 
 import androidx.annotation.RestrictTo
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.Collections
+
+private const val INDENTATION_SPACES = 4
+private const val PARSING_ERROR = "PARSING_ERROR"
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.getStringOrNull(key: String): String? {
@@ -34,6 +38,16 @@ fun JSONObject.getLongOrNull(key: String): Long? {
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.toStringPretty(): String {
+    @Suppress("SwallowedException")
+    return try {
+        toString(INDENTATION_SPACES)
+    } catch (e: JSONException) {
+        PARSING_ERROR
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.optStringList(key: String): List<String>? {
     return JsonUtils.parseOptStringList(optJSONArray(key))
 }
@@ -41,6 +55,16 @@ fun JSONObject.optStringList(key: String): List<String>? {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.getMapOrNull(key: String): Map<String, String>? {
     return if (!isNull(key)) getJSONObject(key).toMap() else null
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONArray.toStringPretty(): String {
+    @Suppress("SwallowedException")
+    return try {
+        toString(INDENTATION_SPACES)
+    } catch (e: JSONException) {
+        PARSING_ERROR
+    }
 }
 
 private fun JSONObject.toMap(): Map<String, String> {
