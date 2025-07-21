@@ -238,7 +238,6 @@ public final class com/adyen/checkout/card/CardConfiguration$Builder : com/adyen
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 	public final fun getAddressConfiguration ()Lcom/adyen/checkout/card/AddressConfiguration;
-	public final fun getHolderNameRequired ()Ljava/lang/Boolean;
 	public final fun getInstallmentConfiguration ()Lcom/adyen/checkout/card/InstallmentConfiguration;
 	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/KCPAuthVisibility;
 	public final fun getShopperReference ()Ljava/lang/String;
@@ -246,6 +245,7 @@ public final class com/adyen/checkout/card/CardConfiguration$Builder : com/adyen
 	public final fun getSupportedCardBrands ()Ljava/util/List;
 	public final fun isHideCvc ()Ljava/lang/Boolean;
 	public final fun isHideCvcStoredCard ()Ljava/lang/Boolean;
+	public final fun isHolderNameRequired ()Ljava/lang/Boolean;
 	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
 	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public final fun setAddressConfiguration (Lcom/adyen/checkout/card/AddressConfiguration;)Lcom/adyen/checkout/card/CardConfiguration$Builder;

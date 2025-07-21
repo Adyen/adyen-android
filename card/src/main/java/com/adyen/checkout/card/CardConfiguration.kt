@@ -62,7 +62,7 @@ class CardConfiguration private constructor(
         ActionHandlingPaymentMethodConfigurationBuilder<CardConfiguration, Builder>,
         ButtonConfigurationBuilder {
         var supportedCardBrands: List<CardBrand>? = null
-        var holderNameRequired: Boolean? = null
+        var isHolderNameRequired: Boolean? = null
         var isStorePaymentFieldVisible: Boolean? = null
         var shopperReference: String? = null
         var isHideCvc: Boolean? = null
@@ -158,7 +158,7 @@ class CardConfiguration private constructor(
          */
         @Deprecated("Use property access syntax instead.")
         fun setHolderNameRequired(holderNameRequired: Boolean): Builder {
-            this.holderNameRequired = holderNameRequired
+            this.isHolderNameRequired = holderNameRequired
             return this
         }
 
@@ -309,7 +309,7 @@ class CardConfiguration private constructor(
                 clientKey = clientKey,
                 analyticsConfiguration = analyticsConfiguration,
                 amount = amount,
-                isHolderNameRequired = holderNameRequired,
+                isHolderNameRequired = isHolderNameRequired,
                 isSubmitButtonVisible = isSubmitButtonVisible,
                 supportedCardBrands = supportedCardBrands,
                 shopperReference = shopperReference,
