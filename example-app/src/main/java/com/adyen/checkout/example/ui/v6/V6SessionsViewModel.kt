@@ -31,6 +31,7 @@ internal class V6SessionsViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
 
+    // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
         Environment.TEST,
         BuildConfig.CLIENT_KEY,
@@ -54,7 +55,7 @@ internal class V6SessionsViewModel @Inject constructor(
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
-                // TODO - We don't need this for now
+                // TODO - Replace with correct URL once redirects are implemented
                 redirectUrl = "test",
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
