@@ -24,7 +24,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayValidatorRegistry
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
-// TODO - Add Initializer
 internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, MBWayComponent> {
 
     override fun create(
