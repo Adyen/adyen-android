@@ -10,6 +10,7 @@ package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.Order
 import com.adyen.checkout.core.components.internal.Configuration
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
@@ -31,13 +32,13 @@ internal object CheckoutSessionProvider {
     suspend fun createSession(
         sessionModel: SessionModel,
         configuration: CheckoutConfiguration,
-//        order: Order? = null,
+        order: Order? = null,
     ): CheckoutSessionResult {
         return createSession(
             sessionModel = sessionModel,
             environment = configuration.environment,
             clientKey = configuration.clientKey,
-//            order = order,
+            order = order,
         )
     }
 
@@ -58,9 +59,13 @@ internal object CheckoutSessionProvider {
         sessionModel: SessionModel,
         environment: Environment,
         clientKey: String,
-        // TODO - Partial Payment Flow
-//        order: Order? = null,
+        order: Order? = null,
     ): CheckoutSessionResult {
-        return CheckoutSessionInitializer(sessionModel, environment, clientKey).setupSession(null)
+        return CheckoutSessionInitializer(
+            sessionModel = sessionModel,
+            environment = environment,
+            clientKey = clientKey,
+            order = order,
+        ).setupSession(null)
     }
 }

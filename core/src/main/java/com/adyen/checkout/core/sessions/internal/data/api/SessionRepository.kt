@@ -10,6 +10,7 @@ package com.adyen.checkout.core.sessions.internal.data.api
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.sessions.SessionModel
@@ -27,10 +28,9 @@ class SessionRepository(
     @Suppress("CommentWrapping")
     suspend fun setupSession(
         sessionModel: SessionModel,
-        // TODO - Partial Payment Flow
-//        order: OrderRequest?
+        order: OrderRequest?,
     ): Result<SessionSetupResponse> = runSuspendCatching {
-        val request = SessionSetupRequest(sessionModel.sessionData.orEmpty())
+        val request = SessionSetupRequest(sessionData = sessionModel.sessionData.orEmpty(), order = order)
         sessionService.setupSession(
             request = request,
             sessionId = sessionModel.id,

@@ -97,7 +97,7 @@ internal class SessionsComponentEventHandlerTest(
             arguments(SessionCallResult.Payments.Action(TestAction()), CheckoutResult.Action(TestAction())),
             arguments(SessionCallResult.Payments.Error(Throwable()), CheckoutResult.Error()),
             arguments(
-                SessionCallResult.Payments.Finished(SessionPaymentResult(null, null, null, null)),
+                SessionCallResult.Payments.Finished(SessionPaymentResult(null, null, null, null, null)),
                 CheckoutResult.Finished(),
             ),
         )

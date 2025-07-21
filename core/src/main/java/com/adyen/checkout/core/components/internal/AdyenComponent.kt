@@ -24,7 +24,6 @@ internal class AdyenComponent(
     checkoutController: CheckoutController,
 ) : ViewModel() {
 
-    // TODO - Initialize Payment Flow
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
             txVariant = txVariant,

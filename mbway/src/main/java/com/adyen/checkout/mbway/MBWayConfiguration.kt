@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
@@ -34,12 +35,10 @@ fun CheckoutConfiguration.mbWay(
     val config = MBWayConfigurationBuilder()
         .apply(configuration)
         .build()
-    // TODO - Add PaymentMethodTypes to core module
-    addConfiguration("mbway", config)
+    addConfiguration(PaymentMethodTypes.MB_WAY, config)
     return this
 }
 
 internal fun CheckoutConfiguration.getMBWayConfiguration(): MBWayConfiguration? {
-    // TODO - Add PaymentMethodTypes to core module
-    return getConfiguration("mbway")
+    return getConfiguration(PaymentMethodTypes.MB_WAY)
 }

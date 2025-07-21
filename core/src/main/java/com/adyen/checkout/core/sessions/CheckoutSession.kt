@@ -11,6 +11,7 @@ package com.adyen.checkout.core.sessions
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.Order
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 
@@ -20,8 +21,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
  */
 data class CheckoutSession(
     val sessionSetupResponse: SessionSetupResponse,
-    // TODO - Partial Payment Flow Support
-//    val order: Order?,
+    val order: Order?,
     val environment: Environment,
     val clientKey: String,
 ) {
