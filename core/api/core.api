@@ -171,6 +171,34 @@ public final class com/adyen/checkout/core/analytics/internal/data/remote/model/
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/common/AdyenLogLevel : java/lang/Enum {
+	public static final field ASSERT Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field DEBUG Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field ERROR Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field INFO Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field NONE Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field VERBOSE Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static final field WARN Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getPriority ()I
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/AdyenLogLevel;
+	public static fun values ()[Lcom/adyen/checkout/core/common/AdyenLogLevel;
+}
+
+public abstract interface class com/adyen/checkout/core/common/AdyenLogger {
+	public static final field Companion Lcom/adyen/checkout/core/common/AdyenLogger$Companion;
+	public abstract fun log (Lcom/adyen/checkout/core/common/AdyenLogLevel;Ljava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public abstract fun setLogLevel (Lcom/adyen/checkout/core/common/AdyenLogLevel;)V
+	public abstract fun shouldLog (Lcom/adyen/checkout/core/common/AdyenLogLevel;)Z
+}
+
+public final class com/adyen/checkout/core/common/AdyenLogger$Companion {
+	public final fun getLogger ()Lcom/adyen/checkout/core/common/AdyenLogger;
+	public final fun resetLogger ()V
+	public final fun setLogLevel (Lcom/adyen/checkout/core/common/AdyenLogLevel;)V
+	public final fun setLogger (Lcom/adyen/checkout/core/common/AdyenLogger;)V
+}
+
 public final class com/adyen/checkout/core/common/Environment : android/os/Parcelable {
 	public static final field $stable I
 	public static final field APSE Lcom/adyen/checkout/core/common/Environment;
