@@ -20,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallbacks {
+internal class V6ViewModel @Inject constructor() : ViewModel() {
 
     // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
@@ -31,10 +31,13 @@ internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback
     fun createAdyenCheckout() = AdyenCheckout(
         checkoutSession = null,
         checkoutConfiguration = configuration,
-        checkoutCallbacks = this,
+        checkoutCallbacks = CheckoutCallbacks(
+            onSubmit = ::onSubmit,
+        ),
     )
 
-    override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+    @Suppress("UNUSED_PARAMETER")
+    private fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
         // TODO - make payments call
         return CheckoutResult.Finished()
     }
