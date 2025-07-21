@@ -13,6 +13,8 @@ import com.adyen.checkout.core.analytics.internal.data.local.AnalyticsLocalDataS
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsRemoteDataStore
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsSetupProvider
 import com.adyen.checkout.core.analytics.internal.data.remote.AnalyticsTrackRequestProvider
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 
 internal class DefaultAnalyticsRepository(
     private val localInfoDataStore: AnalyticsLocalDataStore<AnalyticsEvent.Info>,
@@ -56,8 +58,7 @@ internal class DefaultAnalyticsRepository(
         localLogDataStore.removeEvents(logEvents)
         localErrorDataStore.removeEvents(errorEvents)
 
-        // TODO - Adyen Logger
-//        adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
+        adyenLog(AdyenLogLevel.DEBUG) { "Analytics events successfully sent" }
     }
 
     private fun hasEventsToTrack(vararg eventLists: List<AnalyticsEvent>): Boolean {

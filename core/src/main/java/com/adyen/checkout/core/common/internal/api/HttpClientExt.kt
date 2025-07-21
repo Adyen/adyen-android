@@ -9,7 +9,9 @@
 package com.adyen.checkout.core.common.internal.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.exception.HttpException
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.model.ModelObject
 import org.json.JSONObject
 
@@ -21,8 +23,7 @@ suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     responseSerializer: ModelObject.Serializer<R>,
     queryParameters: Map<String, String> = emptyMap(),
 ): R {
-    // TODO - AdyenLogger
-//    adyenLog(AdyenLogLevel.DEBUG) { "POST - $path" }
+    adyenLog(AdyenLogLevel.DEBUG) { "POST - $path" }
 
     val requestJson = requestSerializer.serialize(body)
 

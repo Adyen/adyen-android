@@ -10,7 +10,9 @@ package com.adyen.checkout.core.analytics.internal
 
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -38,8 +40,7 @@ internal class DefaultAnalyticsManager(
 
     override fun initialize(owner: Any, coroutineScope: CoroutineScope) {
         if (isInitialized) {
-            // TODO - Adyen Logger
-//            adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
+            adyenLog(AdyenLogLevel.DEBUG) { "Already initialized, ignoring." }
             return
         }
         isInitialized = true
@@ -59,8 +60,7 @@ internal class DefaultAnalyticsManager(
                     } ?: CheckoutAttemptIdState.Failed
                 },
                 onFailure = {
-                    // TODO - Adyen Logger
-//                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
+                    adyenLog(AdyenLogLevel.WARN, it) { "Failed to fetch checkoutAttemptId." }
                     checkoutAttemptIdState = CheckoutAttemptIdState.Failed
                 },
             )
@@ -69,8 +69,7 @@ internal class DefaultAnalyticsManager(
 
     override fun trackEvent(event: AnalyticsEvent) {
         if (cannotSendEvents()) {
-            // TODO - Adyen Logger
-//            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
+            adyenLog(AdyenLogLevel.DEBUG) { "Not allowed to track events, ignoring." }
             return
         }
         coroutineScope?.launch(coroutineDispatcher) {
@@ -83,19 +82,17 @@ internal class DefaultAnalyticsManager(
                 }
             }.fold(
                 onSuccess = { /* Not necessary */ },
-                onFailure = {
-                    // TODO - Adyen Logger
-//                throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" }
+                onFailure = { throwable ->
+                    adyenLog(AdyenLogLevel.WARN, throwable) { "Storing event failed" }
                 },
             )
-        } // TODO - Adyen Logger ?: adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null. Tracking event failed." }
+        } ?: adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null. Tracking event failed." }
     }
 
     private fun startTimer() {
         stopTimer()
         if (coroutineScope == null) {
-            // TODO - Adyen Logger
-//            adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null." }
+            adyenLog(AdyenLogLevel.WARN) { "Coroutine scope is null." }
             return
         }
         timerJob = coroutineScope?.launch(coroutineDispatcher) {
@@ -113,8 +110,7 @@ internal class DefaultAnalyticsManager(
     private suspend fun sendEvents() {
         val checkoutAttemptIdState = checkoutAttemptIdState as? CheckoutAttemptIdState.Available
         if (checkoutAttemptIdState == null) {
-            // TODO - Adyen Logger
-//            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should be available at this point." }
+            adyenLog(AdyenLogLevel.WARN) { "checkoutAttemptId should be available at this point." }
             return
         }
 
@@ -122,9 +118,8 @@ internal class DefaultAnalyticsManager(
             analyticsRepository.sendEvents(checkoutAttemptIdState.checkoutAttemptId)
         }.fold(
             onSuccess = { /* Not necessary */ },
-            onFailure = {
-                // TODO - Adyen Logger
-//                throwable -> adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" }
+            onFailure = { throwable ->
+                adyenLog(AdyenLogLevel.WARN, throwable) { "Failed sending analytics events" }
             },
         )
     }
@@ -139,13 +134,11 @@ internal class DefaultAnalyticsManager(
 
     override fun clear(owner: Any) {
         if (ownerReference != owner::class.qualifiedName) {
-            // TODO - Adyen Logger
-//            adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
+            adyenLog(AdyenLogLevel.DEBUG) { "Clear called by not the original owner, ignoring." }
             return
         }
 
-        // TODO - Adyen Logger
-//        adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
+        adyenLog(AdyenLogLevel.DEBUG) { "Clearing analytics manager" }
 
         coroutineScope = null
         checkoutAttemptIdState = CheckoutAttemptIdState.NotAvailable

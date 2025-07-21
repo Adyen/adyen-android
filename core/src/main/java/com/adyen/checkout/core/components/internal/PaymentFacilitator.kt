@@ -19,6 +19,8 @@ import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -86,12 +88,12 @@ internal class PaymentFacilitator(
     }
 
     private fun handleAction(action: Action) {
-        actionComponent = actionProvider.get(
+        val actionComponent = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
-        // TODO - Adyen log
-//        adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
+        this.actionComponent = actionComponent
+        adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
     @Suppress("UNUSED_PARAMETER")
