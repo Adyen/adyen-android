@@ -9,7 +9,7 @@
 package com.adyen.checkout.card.internal.util
 
 import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
-import com.adyen.checkout.ui.core.internal.ui.model.AddressParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 
 internal object CardAddressValidationUtils {
     fun isAddressOptional(addressParams: AddressParams, cardType: String?): Boolean {

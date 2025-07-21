@@ -27,10 +27,10 @@ import com.adyen.checkout.components.core.internal.toActionCallback
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.old.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**

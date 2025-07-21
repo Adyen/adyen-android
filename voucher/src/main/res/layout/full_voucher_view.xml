@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_logo"
         android:layout_width="@dimen/logo_large_width"
         android:layout_height="@dimen/logo_large_height"

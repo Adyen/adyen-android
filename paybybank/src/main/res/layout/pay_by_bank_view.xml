@@ -22,7 +22,7 @@
         android:paddingEnd="@dimen/standard_margin"
         android:layout_height="wrap_content">
 
-        <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+        <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
             android:id="@+id/editText_searchQuery"
             style="@style/AdyenCheckout.PayByBank.SearchQueryInput" />
     </com.google.android.material.textfield.TextInputLayout>

@@ -54,8 +54,8 @@ public final class com/adyen/checkout/mealvoucherfr/MealVoucherFRConfigurationKt
 
 public final class com/adyen/checkout/mealvoucherfr/databinding/MealVoucherFrViewBinding : androidx/viewbinding/ViewBinding {
 	public final field editTextMealVoucherFRCardNumber Lcom/adyen/checkout/giftcard/internal/ui/view/GiftCardNumberInput;
-	public final field editTextMealVoucherFRExpiryDate Lcom/adyen/checkout/ui/core/internal/ui/view/ExpiryDateInput;
-	public final field editTextMealVoucherFRSecurityCode Lcom/adyen/checkout/ui/core/internal/ui/view/AdyenTextInputEditText;
+	public final field editTextMealVoucherFRExpiryDate Lcom/adyen/checkout/ui/core/old/internal/ui/view/ExpiryDateInput;
+	public final field editTextMealVoucherFRSecurityCode Lcom/adyen/checkout/ui/core/old/internal/ui/view/AdyenTextInputEditText;
 	public final field textInputLayoutMealVoucherFRCardNumber Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutMealVoucherFRExpiryDate Lcom/google/android/material/textfield/TextInputLayout;
 	public final field textInputLayoutMealVoucherFRSecurityCode Lcom/google/android/material/textfield/TextInputLayout;

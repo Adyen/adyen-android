@@ -22,9 +22,9 @@ import com.adyen.checkout.paybybank.R
 import com.adyen.checkout.paybybank.databinding.PayByBankViewBinding
 import com.adyen.checkout.paybybank.internal.ui.PayByBankDelegate
 import com.adyen.checkout.paybybank.internal.ui.model.PayByBankOutputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

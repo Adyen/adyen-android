@@ -20,11 +20,11 @@ import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.util.hideError
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 

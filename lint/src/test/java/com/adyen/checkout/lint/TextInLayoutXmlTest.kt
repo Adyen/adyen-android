@@ -32,7 +32,7 @@ internal class TextInLayoutXmlTest {
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
                             
-                            <com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
+                            <com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
                                 android:id="@+id/editText"
                                 android:hint="hint" />
                         </com.google.android.material.textfield.TextInputLayout>

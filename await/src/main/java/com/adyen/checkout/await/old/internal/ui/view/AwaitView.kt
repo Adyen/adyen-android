@@ -21,9 +21,9 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

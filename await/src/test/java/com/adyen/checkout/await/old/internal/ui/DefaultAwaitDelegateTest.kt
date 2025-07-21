@@ -25,7 +25,7 @@ import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.TestRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

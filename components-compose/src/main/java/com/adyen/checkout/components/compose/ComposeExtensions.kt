@@ -34,8 +34,8 @@ import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.sessions.core.SessionComponentCallback
 import com.adyen.checkout.sessions.core.internal.provider.SessionPaymentComponentProvider
 import com.adyen.checkout.sessions.core.internal.provider.SessionStoredPaymentComponentProvider
-import com.adyen.checkout.ui.core.AdyenComponentView
-import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.old.AdyenComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
 
 //region CheckoutConfiguration
 

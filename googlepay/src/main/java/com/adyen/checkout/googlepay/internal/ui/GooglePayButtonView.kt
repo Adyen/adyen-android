@@ -17,8 +17,8 @@ import com.adyen.checkout.googlepay.GooglePayButtonTheme
 import com.adyen.checkout.googlepay.GooglePayButtonType
 import com.adyen.checkout.googlepay.R
 import com.adyen.checkout.googlepay.databinding.ViewGooglePayButtonBinding
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.view.PayButton
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.view.PayButton
 import com.google.android.gms.wallet.button.ButtonOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn

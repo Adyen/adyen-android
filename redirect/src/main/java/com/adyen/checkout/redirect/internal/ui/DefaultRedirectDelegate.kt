@@ -37,8 +37,8 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
-import com.adyen.checkout.ui.core.internal.RedirectHandler
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.RedirectHandler
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow

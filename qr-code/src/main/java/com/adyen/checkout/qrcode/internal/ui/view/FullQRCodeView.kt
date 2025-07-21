@@ -30,11 +30,11 @@ import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.Failure
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.PermissionDenied
 import com.adyen.checkout.qrcode.internal.ui.model.QrCodeUIEvent.QrImageDownloadResult.Success
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.LogoSize
-import com.adyen.checkout.ui.core.internal.ui.load
-import com.adyen.checkout.ui.core.internal.ui.loadLogo
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.LogoSize
+import com.adyen.checkout.ui.core.old.internal.ui.load
+import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach

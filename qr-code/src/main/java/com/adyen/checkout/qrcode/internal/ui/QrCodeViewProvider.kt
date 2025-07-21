@@ -11,10 +11,10 @@ package com.adyen.checkout.qrcode.internal.ui
 import android.content.Context
 import com.adyen.checkout.qrcode.internal.ui.view.FullQRCodeView
 import com.adyen.checkout.qrcode.internal.ui.view.SimpleQRCodeView
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
-import com.adyen.checkout.ui.core.internal.ui.view.PaymentInProgressView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.view.PaymentInProgressView
 
 internal object QrCodeViewProvider : ViewProvider {
 

@@ -26,7 +26,7 @@ import com.adyen.checkout.sepa.SepaConfiguration
 import com.adyen.checkout.sepa.getSepaConfiguration
 import com.adyen.checkout.sepa.internal.ui.model.SepaOutputData
 import com.adyen.checkout.sepa.sepa
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

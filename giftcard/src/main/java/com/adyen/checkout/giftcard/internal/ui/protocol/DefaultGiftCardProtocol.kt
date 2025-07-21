@@ -12,7 +12,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.giftcard.internal.ui.GiftCardComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 
 internal class DefaultGiftCardProtocol : GiftCardProtocol {
     override fun getComponentViewType(): ComponentViewType {

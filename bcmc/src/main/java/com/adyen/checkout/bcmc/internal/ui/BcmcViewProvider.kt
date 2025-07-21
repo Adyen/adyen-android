@@ -11,11 +11,11 @@ package com.adyen.checkout.bcmc.internal.ui
 import android.content.Context
 import android.view.LayoutInflater
 import com.adyen.checkout.card.internal.ui.view.CardView
-import com.adyen.checkout.ui.core.internal.ui.AmountButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ButtonComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewProvider
+import com.adyen.checkout.ui.core.old.internal.ui.AmountButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvider
 
 internal object BcmcViewProvider : ViewProvider {
 

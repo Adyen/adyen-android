@@ -13,7 +13,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.adyen.checkout.ui.core.internal.ui.view.RoundCornerImageView
+    <com.adyen.checkout.ui.core.old.internal.ui.view.RoundCornerImageView
         android:id="@+id/imageView_upi_logo"
         style="@style/AdyenCheckout.UPI.Intent.Icon.Generic"
         app:layout_constraintBottom_toTopOf="@+id/barrier_divider"

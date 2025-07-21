@@ -24,7 +24,7 @@ import com.adyen.checkout.mbway.old.MBWayConfiguration
 import com.adyen.checkout.mbway.old.getMBWayConfiguration
 import com.adyen.checkout.mbway.old.internal.ui.model.MBWayOutputData
 import com.adyen.checkout.mbway.old.mbWay
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest

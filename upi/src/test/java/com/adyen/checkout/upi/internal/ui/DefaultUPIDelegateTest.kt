@@ -26,7 +26,7 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.ui.core.internal.ui.SubmitHandler
+import com.adyen.checkout.ui.core.old.internal.ui.SubmitHandler
 import com.adyen.checkout.upi.UPIComponentState
 import com.adyen.checkout.upi.UPIConfiguration
 import com.adyen.checkout.upi.getUPIConfiguration

@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.paymentmethod.GiftCardPaymentMethod
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.giftcard.internal.ui.protocol.GiftCardProtocol
 import com.adyen.checkout.mealvoucherfr.internal.ui.MealVoucherFRComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 
 internal class MealVoucherFRProtocol : GiftCardProtocol {
     override fun getComponentViewType(): ComponentViewType {

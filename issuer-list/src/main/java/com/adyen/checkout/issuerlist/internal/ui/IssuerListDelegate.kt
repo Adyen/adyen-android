@@ -16,9 +16,9 @@ import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListComponentParams
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListInputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerListOutputData
 import com.adyen.checkout.issuerlist.internal.ui.model.IssuerModel
-import com.adyen.checkout.ui.core.internal.ui.ButtonDelegate
-import com.adyen.checkout.ui.core.internal.ui.UIStateDelegate
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ButtonDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.UIStateDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

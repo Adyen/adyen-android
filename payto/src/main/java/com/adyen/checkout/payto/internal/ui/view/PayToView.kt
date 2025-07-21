@@ -27,12 +27,12 @@ import com.adyen.checkout.payto.internal.ui.model.PayIdType
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToMode
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.LocalizedTextListAdapter
-import com.adyen.checkout.ui.core.internal.util.hideError
-import com.adyen.checkout.ui.core.internal.util.isVisible
-import com.adyen.checkout.ui.core.internal.util.setLocalizedTextFromStyle
-import com.adyen.checkout.ui.core.internal.util.showError
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.LocalizedTextListAdapter
+import com.adyen.checkout.ui.core.old.internal.util.hideError
+import com.adyen.checkout.ui.core.old.internal.util.isVisible
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
+import com.adyen.checkout.ui.core.old.internal.util.showError
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 

@@ -20,11 +20,11 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.econtext.R
 import com.adyen.checkout.econtext.databinding.EcontextViewBinding
 import com.adyen.checkout.econtext.internal.ui.EContextDelegate
-import com.adyen.checkout.ui.core.internal.ui.ComponentView
-import com.adyen.checkout.ui.core.internal.ui.CountryAdapter
-import com.adyen.checkout.ui.core.internal.ui.model.CountryModel
-import com.adyen.checkout.ui.core.internal.ui.view.AdyenTextInputEditText
-import com.adyen.checkout.ui.core.internal.util.setLocalizedHintFromStyle
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.CountryAdapter
+import com.adyen.checkout.ui.core.old.internal.ui.model.CountryModel
+import com.adyen.checkout.ui.core.old.internal.ui.view.AdyenTextInputEditText
+import com.adyen.checkout.ui.core.old.internal.util.setLocalizedHintFromStyle
 import kotlinx.coroutines.CoroutineScope
 import com.adyen.checkout.ui.core.R as UICoreR
 

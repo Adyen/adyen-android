@@ -7,7 +7,7 @@ public final class com/adyen/checkout/redirect/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/redirect/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/internal/ui/ViewableComponent {
+public final class com/adyen/checkout/redirect/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field Companion Lcom/adyen/checkout/redirect/RedirectComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/components/core/internal/provider/ActionComponentProvider;
 	public static final field REDIRECT_RESULT_SCHEME Ljava/lang/String;

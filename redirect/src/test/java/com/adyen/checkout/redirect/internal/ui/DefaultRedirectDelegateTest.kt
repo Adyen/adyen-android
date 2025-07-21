@@ -29,7 +29,7 @@ import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.redirect.redirect
-import com.adyen.checkout.ui.core.internal.TestRedirectHandler
+import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

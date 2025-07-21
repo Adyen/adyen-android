@@ -24,9 +24,9 @@ import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.paybybankus.internal.PayByBankUSDelegate
 import com.adyen.checkout.paybybankus.internal.provider.PayByBankUSComponentProvider
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
-import com.adyen.checkout.ui.core.internal.ui.ViewableComponent
-import com.adyen.checkout.ui.core.internal.util.mergeViewFlows
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
+import com.adyen.checkout.ui.core.old.internal.util.mergeViewFlows
 import kotlinx.coroutines.flow.Flow
 
 /**

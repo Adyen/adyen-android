@@ -13,7 +13,7 @@ import com.adyen.checkout.payto.PayToComponentState
 import com.adyen.checkout.payto.internal.ui.model.PayIdTypeModel
 import com.adyen.checkout.payto.internal.ui.model.PayToInputData
 import com.adyen.checkout.payto.internal.ui.model.PayToOutputData
-import com.adyen.checkout.ui.core.internal.ui.ViewProvidingDelegate
+import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.flow.Flow
 
 internal interface PayToDelegate :

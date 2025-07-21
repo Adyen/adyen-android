@@ -24,7 +24,7 @@ import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.twint.TwintComponentState
 import com.adyen.checkout.twint.internal.ui.model.TwintComponentParams
 import com.adyen.checkout.twint.internal.ui.model.TwintInputData
-import com.adyen.checkout.ui.core.internal.ui.ComponentViewType
+import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
