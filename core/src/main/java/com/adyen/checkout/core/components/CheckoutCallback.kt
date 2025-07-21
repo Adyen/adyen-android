@@ -10,7 +10,7 @@ package com.adyen.checkout.core.components
 
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
-interface CheckoutCallback {
+interface CheckoutCallbacks {
 
     suspend fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean = false
 

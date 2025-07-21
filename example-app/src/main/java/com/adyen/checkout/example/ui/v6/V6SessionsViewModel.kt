@@ -67,7 +67,7 @@ internal class V6SessionsViewModel @Inject constructor(
         val result = AdyenCheckout.initialize(
             sessionModel = session,
             checkoutConfiguration = configuration,
-            checkoutCallback = null,
+            checkoutCallbacks = null,
         )
 
         adyenCheckout = when (result) {

@@ -1,7 +1,7 @@
 package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.action.data.TestAction
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.paymentmethod.TestComponentState
@@ -25,7 +25,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class)
 internal class SessionsComponentEventHandlerTest(
     @Mock private val sessionInteractor: SessionInteractor,
-    @Mock private val checkoutCallback: CheckoutCallback,
+    @Mock private val checkoutCallback: CheckoutCallbacks,
 ) {
 
     private lateinit var sessionsComponentEventHandler: SessionsComponentEventHandler<TestComponentState>
@@ -34,7 +34,7 @@ internal class SessionsComponentEventHandlerTest(
     fun beforeEach() {
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallback = checkoutCallback,
+            checkoutCallbacks = checkoutCallback,
         )
     }
 
@@ -43,7 +43,7 @@ internal class SessionsComponentEventHandlerTest(
         whenever(sessionInteractor.submitPayment(any())) doReturn SessionCallResult.Payments.Finished(mock())
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallback = null,
+            checkoutCallbacks = null,
         )
 
         val state = TestComponentState()

@@ -11,7 +11,7 @@ package com.adyen.checkout.core.sessions.internal
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
@@ -27,7 +27,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class SessionsPaymentFacilitatorFactory(
     private val checkoutSession: CheckoutSession,
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallback: CheckoutCallback?,
+    private val checkoutCallbacks: CheckoutCallbacks?,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
 ) : PaymentFacilitatorFactory {
@@ -56,7 +56,7 @@ internal class SessionsPaymentFacilitatorFactory(
         val componentEventHandler =
             SessionsComponentEventHandler<BasePaymentComponentState>(
                 sessionInteractor = sessionInteractor,
-                checkoutCallback = checkoutCallback,
+                checkoutCallbacks = checkoutCallbacks,
             )
 
         val paymentComponent = PaymentMethodProvider.get(

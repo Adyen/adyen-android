@@ -16,14 +16,14 @@ import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 data class AdyenCheckout(
     val checkoutSession: CheckoutSession?,
     val checkoutConfiguration: CheckoutConfiguration,
-    val checkoutCallback: CheckoutCallback?
+    val checkoutCallbacks: CheckoutCallbacks?
 ) {
 
     companion object {
         suspend fun initialize(
             sessionModel: SessionModel,
             checkoutConfiguration: CheckoutConfiguration,
-            checkoutCallback: CheckoutCallback?
+            checkoutCallbacks: CheckoutCallbacks?
         ): Result {
             val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
             return when {
@@ -31,7 +31,7 @@ data class AdyenCheckout(
                     adyenCheckout = AdyenCheckout(
                         checkoutSession,
                         checkoutConfiguration,
-                        checkoutCallback,
+                        checkoutCallbacks,
                     ),
                 )
 

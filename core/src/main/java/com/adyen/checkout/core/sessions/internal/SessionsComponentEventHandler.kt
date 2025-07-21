@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.sessions.internal
 
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -16,17 +16,17 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
-    private val checkoutCallback: CheckoutCallback?,
+    private val checkoutCallbacks: CheckoutCallbacks?,
 ) : ComponentEventHandler<T> {
 
     override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
         return when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
-                if (checkoutCallback?.beforeSubmit(event.state) != true) {
+                if (checkoutCallbacks?.beforeSubmit(event.state) != true) {
                     makePaymentsCall(event.state)
                 } else {
-                    checkoutCallback.onSubmit(event.state)
+                    checkoutCallbacks.onSubmit(event.state)
                 }
             }
         }
