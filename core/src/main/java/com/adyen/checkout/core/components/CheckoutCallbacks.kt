@@ -8,14 +8,24 @@
 
 package com.adyen.checkout.core.components
 
+import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+import kotlin.reflect.KClass
+import kotlin.reflect.safeCast
 
 class CheckoutCallbacks(
     private val beforeSubmit: BeforeSubmitCallback = BeforeSubmitCallback { false },
     private val onSubmit: OnSubmitCallback,
     private val onAdditionalDetails: OnAdditionalDetailsCallback,
     private val onError: OnErrorCallback,
+    additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
 ) {
+
+    private val additionalCallbacks = mutableMapOf<String, CheckoutCallback>()
+
+    init {
+        apply(additionalCallbacksBlock)
+    }
 
     internal suspend fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean {
         return beforeSubmit.beforeSubmit(paymentComponentState)
@@ -31,6 +41,16 @@ class CheckoutCallbacks(
 
     internal suspend fun onError() {
         onError.onError()
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun <T : CheckoutCallback> addCallback(callback: T, clazz: KClass<T>) {
+        additionalCallbacks[clazz.java.name] = callback
+    }
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun <T : CheckoutCallback> getCallback(clazz: KClass<T>): T? {
+        return additionalCallbacks[clazz.java.name]?.let { clazz.safeCast(it) }
     }
 }
 

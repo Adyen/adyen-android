@@ -338,8 +338,8 @@ public abstract interface class com/adyen/checkout/core/components/CheckoutCallb
 
 public final class com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutConfiguration : android/os/Parcelable {
