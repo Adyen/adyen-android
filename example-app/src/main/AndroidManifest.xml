@@ -223,6 +223,16 @@
                 android:value=".ui.main.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".ui.v6.V6SessionsActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
+
         <service
             android:name=".service.ExampleDropInService"
             android:exported="false" />

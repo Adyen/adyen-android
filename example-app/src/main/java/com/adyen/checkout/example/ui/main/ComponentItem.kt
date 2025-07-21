@@ -35,5 +35,6 @@ internal sealed class ComponentItem {
         object GooglePay : Entry(R.string.google_pay_component_entry)
         object GooglePayWithSession : Entry(R.string.google_pay_with_session_component_entry)
         data object V6 : Entry(R.string.v6_entry)
+        data object V6Sessions : Entry(R.string.v6_entry)
     }
 }

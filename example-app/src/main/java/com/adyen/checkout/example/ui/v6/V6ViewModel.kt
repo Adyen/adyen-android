@@ -22,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback {
 
+    // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
         Environment.TEST,
         BuildConfig.CLIENT_KEY,

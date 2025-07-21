@@ -86,7 +86,7 @@ internal class SessionsGiftCardViewModel @Inject constructor(
     }
 
     private suspend fun getSession(paymentMethodType: String): CheckoutSession? {
-        val sessionModel = paymentsRepository.createSession(
+        val sessionModel = paymentsRepository.createSessionOld(
             getSessionRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

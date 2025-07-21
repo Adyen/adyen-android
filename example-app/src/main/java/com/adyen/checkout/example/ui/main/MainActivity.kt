@@ -40,6 +40,7 @@ import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.example.ui.settings.SettingsActivity
 import com.adyen.checkout.example.ui.v6.V6Activity
+import com.adyen.checkout.example.ui.v6.V6SessionsActivity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -215,6 +216,10 @@ class MainActivity : AppCompatActivity() {
 
             is MainNavigation.V6 -> {
                 startActivity(Intent(this, V6Activity::class.java))
+            }
+
+            is MainNavigation.V6Sessions -> {
+                startActivity(Intent(this, V6SessionsActivity::class.java))
             }
         }
     }
