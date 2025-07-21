@@ -74,5 +74,6 @@ internal class SessionInteractor(
         sessionResult = sessionResult,
         sessionData = sessionData,
         resultCode = resultCode,
+        order = order,
     )
 }

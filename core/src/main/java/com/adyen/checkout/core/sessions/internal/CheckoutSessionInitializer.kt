@@ -11,6 +11,7 @@ package com.adyen.checkout.core.sessions.internal
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.data.Order
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
@@ -24,8 +25,7 @@ internal class CheckoutSessionInitializer(
     private val sessionModel: SessionModel,
     private val environment: Environment,
     private val clientKey: String,
-    // TODO - Partial Payment Flow
-//    private val order: Order?,
+    private val order: Order?,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
 
@@ -38,17 +38,17 @@ internal class CheckoutSessionInitializer(
     suspend fun setupSession(overrideAmount: Amount?): CheckoutSessionResult = withContext(coroutineDispatcher) {
         sessionRepository.setupSession(
             sessionModel = sessionModel,
-//            order = order,
+            order = order,
         ).fold(
             onSuccess = { sessionSetupResponse ->
                 return@withContext CheckoutSessionResult.Success(
                     CheckoutSession(
-                        sessionSetupResponse.copy(
-                            amount = overrideAmount ?: sessionSetupResponse.amount
+                        sessionSetupResponse = sessionSetupResponse.copy(
+                            amount = overrideAmount ?: sessionSetupResponse.amount,
                         ),
-//                        order,
-                        environment,
-                        clientKey,
+                        order = order,
+                        environment = environment,
+                        clientKey = clientKey,
                     ),
                 )
             },
@@ -58,8 +58,8 @@ internal class CheckoutSessionInitializer(
                 return@withContext CheckoutSessionResult.Error(
                     Exception(
                         "Failed to fetch session",
-                        it
-                    )
+                        it,
+                    ),
                 )
             },
         )

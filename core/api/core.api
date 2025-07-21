@@ -920,15 +920,17 @@ public final class com/adyen/checkout/core/components/paymentmethod/PaymentMetho
 
 public final class com/adyen/checkout/core/sessions/CheckoutSession {
 	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
+	public fun <init> (Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/components/data/OrderRequest;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
 	public final fun component1 ()Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;
-	public final fun component2 ()Lcom/adyen/checkout/core/common/Environment;
-	public final fun component3 ()Ljava/lang/String;
-	public final fun copy (Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public final fun component2 ()Lcom/adyen/checkout/core/components/data/OrderRequest;
+	public final fun component3 ()Lcom/adyen/checkout/core/common/Environment;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/components/data/OrderRequest;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/components/data/OrderRequest;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/CheckoutSession;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getClientKey ()Ljava/lang/String;
 	public final fun getEnvironment ()Lcom/adyen/checkout/core/common/Environment;
+	public final fun getOrder ()Lcom/adyen/checkout/core/components/data/OrderRequest;
 	public final fun getPaymentMethod (Ljava/lang/String;)Lcom/adyen/checkout/core/components/data/model/PaymentMethod;
 	public final fun getSessionSetupResponse ()Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;
 	public fun hashCode ()I
@@ -983,15 +985,17 @@ public final class com/adyen/checkout/core/sessions/SessionModel$Creator : andro
 public final class com/adyen/checkout/core/sessions/SessionPaymentResult : android/os/Parcelable {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Ljava/lang/String;
 	public final fun component4 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/SessionPaymentResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
+	public final fun component5 ()Lcom/adyen/checkout/core/components/data/OrderResponse;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/sessions/SessionPaymentResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;ILjava/lang/Object;)Lcom/adyen/checkout/core/sessions/SessionPaymentResult;
 	public final fun describeContents ()I
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOrder ()Lcom/adyen/checkout/core/components/data/OrderResponse;
 	public final fun getResultCode ()Ljava/lang/String;
 	public final fun getSessionData ()Ljava/lang/String;
 	public final fun getSessionId ()Ljava/lang/String;

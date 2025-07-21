@@ -11,7 +11,9 @@ package com.adyen.checkout.core.sessions.internal.data.model
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils
 import com.adyen.checkout.core.common.internal.model.getStringOrNull
+import com.adyen.checkout.core.components.data.OrderRequest
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -20,13 +22,12 @@ import org.json.JSONObject
 @Parcelize
 data class SessionSetupRequest(
     val sessionData: String,
-    // TODO - Partial Payment Flow
-//    val order: OrderRequest?
+    val order: OrderRequest?,
 ) : ModelObject() {
 
     companion object {
         private const val SESSION_DATA = "sessionData"
-//        private const val ORDER = "order"
+        private const val ORDER = "order"
 
         @JvmField
         val SERIALIZER: Serializer<SessionSetupRequest> = object : Serializer<SessionSetupRequest> {
@@ -34,7 +35,7 @@ data class SessionSetupRequest(
                 val jsonObject = JSONObject()
                 try {
                     jsonObject.putOpt(SESSION_DATA, modelObject.sessionData)
-//                    jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
+                    jsonObject.putOpt(ORDER, ModelUtils.serializeOpt(modelObject.order, OrderRequest.SERIALIZER))
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupRequest::class.java, e)
                 }
@@ -45,7 +46,7 @@ data class SessionSetupRequest(
                 return try {
                     SessionSetupRequest(
                         sessionData = jsonObject.getStringOrNull(SESSION_DATA).orEmpty(),
-//                        order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER)
+                        order = ModelUtils.deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
                     )
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SessionSetupRequest::class.java, e)
