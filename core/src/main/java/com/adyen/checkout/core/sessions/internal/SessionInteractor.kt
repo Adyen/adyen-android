@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.sessions.internal
 
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.SessionPaymentResult
@@ -63,8 +65,7 @@ internal class SessionInteractor(
     }
 
     private fun updateSessionData(sessionData: String) {
-        // TODO - Adyen logger
-//        adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
+        adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
         sessionSavedStateHandleContainer.updateSessionData(sessionData)
     }
 

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.test
 
+import com.adyen.checkout.core.common.AdyenLogger
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -15,12 +16,10 @@ import org.junit.jupiter.api.extension.ExtensionContext
 class LoggingExtension : BeforeAllCallback, AfterAllCallback {
 
     override fun beforeAll(context: ExtensionContext?) {
-        // TODO - Adyen logger
-//    AdyenLogger.setLogger(PrintLogger())
+        AdyenLogger.setLogger(PrintLogger())
     }
 
     override fun afterAll(context: ExtensionContext?) {
-        // TODO - Adyen logger
-//    AdyenLogger.resetLogger()
+        AdyenLogger.resetLogger()
     }
 }
