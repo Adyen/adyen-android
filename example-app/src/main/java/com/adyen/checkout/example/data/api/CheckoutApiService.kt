@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.data.api
 
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.example.data.api.model.BalanceRequest
 import com.adyen.checkout.example.data.api.model.CancelOrderRequest
 import com.adyen.checkout.example.data.api.model.CreateOrderRequest
@@ -23,11 +23,17 @@ import retrofit2.http.DELETE
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse
 
+// TODO - Remove annotation after removing old functions
+@Suppress("TooManyFunctions")
 internal interface CheckoutApiService {
 
     @POST("sessions")
     suspend fun sessionsAsync(@Body sessionRequest: SessionRequest): SessionModel
+
+    @POST("paymentMethods")
+    suspend fun paymentMethodsAsyncOld(@Body paymentMethodsRequest: PaymentMethodsRequest): OldPaymentMethodsApiResponse
 
     @POST("paymentMethods")
     suspend fun paymentMethodsAsync(@Body paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse

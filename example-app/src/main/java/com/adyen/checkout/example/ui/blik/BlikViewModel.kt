@@ -62,7 +62,7 @@ class BlikViewModel @Inject constructor(
             return@withContext BlikViewState.Error(R.string.country_code_error, POLAND_COUNTRY_CODE)
         }
 
-        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
+        val paymentMethodResponse = paymentsRepository.getPaymentMethodsOld(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

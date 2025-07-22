@@ -71,7 +71,7 @@ internal class BacsViewModel @Inject constructor(
             return@withContext
         }
 
-        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
+        val paymentMethodResponse = paymentsRepository.getPaymentMethodsOld(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

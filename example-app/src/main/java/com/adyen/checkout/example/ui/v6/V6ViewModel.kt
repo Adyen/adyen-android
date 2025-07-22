@@ -8,20 +8,33 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.example.BuildConfig
+import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.repositories.PaymentsRepository
+import com.adyen.checkout.example.service.getPaymentMethodRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-internal class V6ViewModel @Inject constructor() : ViewModel() {
+internal class V6ViewModel @Inject constructor(
+    private val paymentsRepository: PaymentsRepository,
+    private val keyValueStorage: KeyValueStorage,
+) : ViewModel() {
 
     // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
@@ -29,16 +42,47 @@ internal class V6ViewModel @Inject constructor() : ViewModel() {
         BuildConfig.CLIENT_KEY,
     )
 
-    fun createCheckoutContext() = CheckoutContext.Advanced(
-        // TODO - make payment methods call
-        paymentMethodsApiResponse = PaymentMethodsApiResponse(),
-        checkoutConfiguration = configuration,
-        checkoutCallbacks = CheckoutCallbacks(
-            onSubmit = ::onSubmit,
-            onAdditionalDetails = ::onAdditionalDetails,
-            onError = ::onError,
-        ),
-    )
+    var checkoutContext by mutableStateOf<CheckoutContext?>(null)
+
+    init {
+        viewModelScope.launch {
+            fetchPaymentMethods()
+        }
+    }
+
+    private suspend fun fetchPaymentMethods() {
+        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
+            getPaymentMethodRequest(
+                merchantAccount = keyValueStorage.getMerchantAccount(),
+                shopperReference = keyValueStorage.getShopperReference(),
+                amount = keyValueStorage.getAmount(),
+                countryCode = keyValueStorage.getCountry(),
+                shopperLocale = keyValueStorage.getShopperLocale(),
+                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
+            ),
+        )
+
+        if (paymentMethodResponse == null) {
+            // TODO - Example app error handling
+            Log.d(TAG, "Payment Method Response is null.")
+            return
+        }
+
+        val result = Checkout.initialize(
+            paymentMethodsApiResponse = paymentMethodResponse,
+            checkoutConfiguration = configuration,
+            checkoutCallbacks = CheckoutCallbacks(
+                onSubmit = ::onSubmit,
+                onAdditionalDetails = ::onAdditionalDetails,
+                onError = ::onError,
+            ),
+        )
+
+        checkoutContext = when (result) {
+            is Checkout.Result.Error -> null
+            is Checkout.Result.Success -> result.checkoutContext
+        }
+    }
 
     @Suppress("UNUSED_PARAMETER")
     private fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
@@ -53,5 +97,9 @@ internal class V6ViewModel @Inject constructor() : ViewModel() {
 
     private fun onError() {
         // TODO - handle error
+    }
+
+    companion object {
+        private val TAG = getLogTag()
     }
 }

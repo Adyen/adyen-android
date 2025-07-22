@@ -71,14 +71,16 @@ class V6Activity : AppCompatActivity() {
                         )
                     },
                 ) { contentPadding ->
-                    AdyenPaymentFlow(
-                        txVariant = "mbway",
-                        checkoutContext = viewModel.createCheckoutContext(),
-                        theme = theme,
-                        modifier = Modifier
-                            .padding(contentPadding)
-                            .padding(16.dp),
-                    )
+                    viewModel.checkoutContext?.let {
+                        AdyenPaymentFlow(
+                            txVariant = "mbway",
+                            checkoutContext = it,
+                            theme = theme,
+                            modifier = Modifier
+                                .padding(contentPadding)
+                                .padding(16.dp),
+                        )
+                    }
                 }
             }
         }
