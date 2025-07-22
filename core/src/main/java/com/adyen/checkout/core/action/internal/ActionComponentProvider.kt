@@ -9,15 +9,17 @@
 package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
+import java.util.concurrent.ConcurrentHashMap
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ActionComponentProvider {
 
-    private val factories = mutableMapOf<String, ActionFactory<*>>()
+    private val factories = ConcurrentHashMap<String, ActionFactory<*>>()
 
     fun register(
         actionType: String,
@@ -50,5 +52,21 @@ object ActionComponentProvider {
         ) ?: run {
             error("Factory for action type: ${action.type} is not registered.")
         }
+    }
+
+    /**
+     * Clears all registered factories. Should only be used in tests.
+     */
+    @VisibleForTesting
+    internal fun clear() {
+        factories.clear()
+    }
+
+    /**
+     * Returns the number of registered factories. Should only be used in tests.
+     */
+    @VisibleForTesting
+    internal fun getFactoriesCount(): Int {
+        return factories.size
     }
 }
