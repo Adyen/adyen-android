@@ -10,10 +10,11 @@ package com.adyen.checkout.example.ui.v6
 
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.AdyenCheckout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.example.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,8 +29,9 @@ internal class V6ViewModel @Inject constructor() : ViewModel() {
         BuildConfig.CLIENT_KEY,
     )
 
-    fun createAdyenCheckout() = AdyenCheckout(
-        checkoutSession = null,
+    fun createCheckoutContext() = CheckoutContext.Advanced(
+        // TODO - make payment methods call
+        paymentMethodsApiResponse = PaymentMethodsApiResponse(),
         checkoutConfiguration = configuration,
         checkoutCallbacks = CheckoutCallbacks(
             onSubmit = ::onSubmit,

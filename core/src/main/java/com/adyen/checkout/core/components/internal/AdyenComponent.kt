@@ -14,12 +14,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 
 internal class AdyenComponent(
     txVariant: String,
-    adyenCheckout: AdyenCheckout,
+    checkoutContext: CheckoutContext,
     savedStateHandle: SavedStateHandle,
     checkoutController: CheckoutController,
 ) : ViewModel() {
@@ -27,7 +27,7 @@ internal class AdyenComponent(
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
             txVariant = txVariant,
-            adyenCheckout = adyenCheckout,
+            checkoutContext = checkoutContext,
             coroutineScope = viewModelScope,
             savedStateHandle = savedStateHandle,
             checkoutController = checkoutController,

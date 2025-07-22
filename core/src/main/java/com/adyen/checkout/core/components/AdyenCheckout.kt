@@ -13,49 +13,41 @@ import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 
-data class AdyenCheckout(
-    val checkoutSession: CheckoutSession?,
-    val checkoutConfiguration: CheckoutConfiguration,
-    val checkoutCallbacks: CheckoutCallbacks?
-) {
+object AdyenCheckout {
 
-    companion object {
-        suspend fun initialize(
-            sessionModel: SessionModel,
-            checkoutConfiguration: CheckoutConfiguration,
-            checkoutCallbacks: CheckoutCallbacks?
-        ): Result {
-            val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
-            return when {
-                checkoutSession != null -> Result.Success(
-                    adyenCheckout = AdyenCheckout(
-                        checkoutSession,
-                        checkoutConfiguration,
-                        checkoutCallbacks,
-                    ),
-                )
+    suspend fun initialize(
+        sessionModel: SessionModel,
+        checkoutConfiguration: CheckoutConfiguration,
+        checkoutCallbacks: CheckoutCallbacks?
+    ): Result {
+        val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
+        return when {
+            checkoutSession != null -> Result.Success(
+                checkoutContext = CheckoutContext.Sessions(
+                    checkoutSession = checkoutSession,
+                    checkoutConfiguration = checkoutConfiguration,
+                    checkoutCallbacks = checkoutCallbacks,
+                ),
+            )
 
-                else -> Result.Error("Session initialization failed.")
-            }
+            else -> Result.Error("Session initialization failed.")
         }
+    }
 
-        private suspend fun getCheckoutSession(
-            sessionModel: SessionModel,
-            checkoutConfiguration: CheckoutConfiguration,
-        ): CheckoutSession? {
-            return when (
-                val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
-            ) {
-                is CheckoutSessionResult.Success -> result.checkoutSession
-                is CheckoutSessionResult.Error -> {
-                    null
-                }
-            }
+    private suspend fun getCheckoutSession(
+        sessionModel: SessionModel,
+        checkoutConfiguration: CheckoutConfiguration,
+    ): CheckoutSession? {
+        return when (
+            val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)
+        ) {
+            is CheckoutSessionResult.Success -> result.checkoutSession
+            is CheckoutSessionResult.Error -> null
         }
     }
 
     sealed interface Result {
-        data class Success(val adyenCheckout: AdyenCheckout) : Result
+        data class Success(val checkoutContext: CheckoutContext) : Result
         data class Error(val errorReason: String) : Result
     }
 }
