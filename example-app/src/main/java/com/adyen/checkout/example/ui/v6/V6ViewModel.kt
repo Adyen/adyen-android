@@ -11,7 +11,7 @@ package com.adyen.checkout.example.ui.v6
 import androidx.lifecycle.ViewModel
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.AdyenCheckout
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
@@ -20,7 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback {
+internal class V6ViewModel @Inject constructor() : ViewModel() {
 
     // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
@@ -31,11 +31,25 @@ internal class V6ViewModel @Inject constructor() : ViewModel(), CheckoutCallback
     fun createAdyenCheckout() = AdyenCheckout(
         checkoutSession = null,
         checkoutConfiguration = configuration,
-        checkoutCallback = this,
+        checkoutCallbacks = CheckoutCallbacks(
+            onSubmit = ::onSubmit,
+            onAdditionalDetails = ::onAdditionalDetails,
+            onError = ::onError,
+        ),
     )
 
-    override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+    @Suppress("UNUSED_PARAMETER")
+    private fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
         // TODO - make payments call
         return CheckoutResult.Finished()
+    }
+
+    private fun onAdditionalDetails(): CheckoutResult {
+        // TODO - make payments details call
+        return CheckoutResult.Finished()
+    }
+
+    private fun onError() {
+        // TODO - handle error
     }
 }

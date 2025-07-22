@@ -10,20 +10,20 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallback: CheckoutCallback?,
+    private val checkoutCallbacks: CheckoutCallbacks?,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
-        if (checkoutCallback == null) {
+        if (checkoutCallbacks == null) {
             throw IllegalArgumentException(
                 "Checkout callback is not set. " +
                     "While using Advanced flow you must pass CheckoutCallback while initializing AdyenCheckout.",
@@ -39,7 +39,7 @@ internal class AdvancedPaymentFacilitatorFactory(
 
         val componentEventHandler =
             AdvancedComponentEventHandler<BasePaymentComponentState>(
-                checkoutCallback,
+                checkoutCallbacks,
             )
 
         val actionProvider = ActionProvider(

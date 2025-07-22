@@ -8,18 +8,18 @@
 
 package com.adyen.checkout.core.components.internal
 
-import com.adyen.checkout.core.components.CheckoutCallback
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 
 internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
-    private val checkoutCallback: CheckoutCallback
+    private val checkoutCallbacks: CheckoutCallbacks
 ) : ComponentEventHandler<T> {
 
     override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
         return when (event) {
             is PaymentComponentEvent.Submit -> {
-                checkoutCallback.beforeSubmit(event.state)
-                checkoutCallback.onSubmit(event.state)
+                checkoutCallbacks.beforeSubmit(event.state)
+                checkoutCallbacks.onSubmit(event.state)
             }
         }
     }

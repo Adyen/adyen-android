@@ -26,7 +26,7 @@ internal class PaymentFacilitatorProvider {
         val paymentFacilitatorFactory = if (adyenCheckout.checkoutSession == null) {
             AdvancedPaymentFacilitatorFactory(
                 checkoutConfiguration = adyenCheckout.checkoutConfiguration,
-                checkoutCallback = adyenCheckout.checkoutCallback,
+                checkoutCallbacks = adyenCheckout.checkoutCallbacks,
                 savedStateHandle = savedStateHandle,
                 checkoutController = checkoutController,
             )
@@ -34,7 +34,7 @@ internal class PaymentFacilitatorProvider {
             SessionsPaymentFacilitatorFactory(
                 checkoutSession = adyenCheckout.checkoutSession,
                 checkoutConfiguration = adyenCheckout.checkoutConfiguration,
-                checkoutCallback = adyenCheckout.checkoutCallback,
+                checkoutCallbacks = adyenCheckout.checkoutCallbacks,
                 savedStateHandle = savedStateHandle,
                 checkoutController = checkoutController,
             )
