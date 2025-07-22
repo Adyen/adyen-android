@@ -14,11 +14,8 @@ import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import java.util.UUID
 
-internal data class TestPaymentComponent(
-    private val id: String = UUID.randomUUID().toString(),
-) : PaymentComponent<BasePaymentComponentState> {
+internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState> {
     override fun submit() {
         // No-op
     }
