@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
@@ -20,6 +21,7 @@ object Checkout {
         checkoutConfiguration: CheckoutConfiguration,
         checkoutCallbacks: CheckoutCallbacks?
     ): Result {
+        // TODO - Fetch checkoutAttemptId
         val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
         return when {
             checkoutSession != null -> Result.Success(
@@ -32,6 +34,21 @@ object Checkout {
 
             else -> Result.Error("Session initialization failed.")
         }
+    }
+
+    suspend fun initialize(
+        paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        checkoutConfiguration: CheckoutConfiguration,
+        checkoutCallbacks: CheckoutCallbacks
+    ): Result {
+        // TODO - Fetch checkoutAttemptId
+        return Result.Success(
+            CheckoutContext.Advanced(
+                paymentMethodsApiResponse = paymentMethodsApiResponse,
+                checkoutConfiguration = checkoutConfiguration,
+                checkoutCallbacks = checkoutCallbacks,
+            )
+        )
     }
 
     private suspend fun getCheckoutSession(
