@@ -30,7 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayoutBaseScope
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable

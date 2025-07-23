@@ -37,7 +37,7 @@ import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.AdyenColor
 import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
