@@ -15,7 +15,7 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutColors
-import com.adyen.checkout.ui.theme.AdyenElements
+import com.adyen.checkout.ui.theme.CheckoutElements
 import com.adyen.checkout.ui.theme.CheckoutTextStyles
 import com.adyen.checkout.ui.theme.CheckoutAttributes
 
@@ -53,7 +53,7 @@ object AdyenCheckoutTheme {
         @ReadOnlyComposable
         get() = LocalAttributes.current
 
-    val elements: AdyenElements
+    val elements: CheckoutElements
         @Composable
         @ReadOnlyComposable
         get() = LocalElements.current
@@ -62,4 +62,4 @@ object AdyenCheckoutTheme {
 private val LocalColors = staticCompositionLocalOf { InternalColors.from(CheckoutColors.light()) }
 private val LocalTextStyles = staticCompositionLocalOf { CheckoutTextStyles.default() }
 private val LocalAttributes = staticCompositionLocalOf { CheckoutAttributes.default() }
-private val LocalElements = staticCompositionLocalOf { AdyenElements.default() }
+private val LocalElements = staticCompositionLocalOf { CheckoutElements.default() }
