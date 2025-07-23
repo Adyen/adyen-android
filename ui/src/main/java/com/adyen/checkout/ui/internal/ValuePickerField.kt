@@ -25,11 +25,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A composable that displays a value and a label, designed to trigger an action on click.
- * This field is not directly editable by the user and is visually consistent with [AdyenTextField].
+ * This field is not directly editable by the user and is visually consistent with [CheckoutTextField].
  * It's typically used for scenarios where selecting a value requires opening a separate picker or dialog.
  *
  * @param value The current value to be displayed in the field.
@@ -49,9 +49,9 @@ fun ValuePickerField(
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val style = AdyenTextFieldDefaults.textFieldStyle(AdyenCheckoutTheme.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-    AdyenTextField(
+    CheckoutTextField(
         value = value,
         onValueChange = {},
         label = label,
@@ -79,9 +79,9 @@ fun ValuePickerField(
 @Preview
 @Composable
 private fun ValuePickerFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier

@@ -10,13 +10,13 @@ package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.adyen.checkout.ui.theme.AdyenButtonStyle
+import com.adyen.checkout.ui.theme.CheckoutButtonStyle
 
 internal object ButtonDefaults {
 
     @Composable
-    fun primaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+    fun primaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.primary,
             textColor = style?.textColor?.toCompose() ?: colors.textOnPrimary,
@@ -26,8 +26,8 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun secondaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+    fun secondaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.container,
             textColor = style?.textColor?.toCompose() ?: colors.text,
@@ -37,8 +37,8 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun tertiaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+    fun tertiaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: Color.Transparent,
             textColor = style?.textColor?.toCompose() ?: colors.action,
@@ -48,8 +48,8 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun destructiveButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+    fun destructiveButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.destructive,
             textColor = style?.textColor?.toCompose() ?: colors.textOnDestructive,
