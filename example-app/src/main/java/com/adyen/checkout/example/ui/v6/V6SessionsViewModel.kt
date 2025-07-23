@@ -14,7 +14,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.example.BuildConfig
@@ -65,15 +65,15 @@ internal class V6SessionsViewModel @Inject constructor(
             ),
         ) ?: return
 
-        val result = AdyenCheckout.initialize(
+        val result = Checkout.initialize(
             sessionModel = session,
             checkoutConfiguration = configuration,
             checkoutCallbacks = null,
         )
 
         checkoutContext = when (result) {
-            is AdyenCheckout.Result.Error -> null
-            is AdyenCheckout.Result.Success -> result.checkoutContext
+            is Checkout.Result.Error -> null
+            is Checkout.Result.Success -> result.checkoutContext
         }
     }
 }

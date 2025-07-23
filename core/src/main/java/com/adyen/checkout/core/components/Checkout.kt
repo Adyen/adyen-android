@@ -13,7 +13,7 @@ import com.adyen.checkout.core.sessions.CheckoutSessionResult
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.internal.CheckoutSessionProvider
 
-object AdyenCheckout {
+object Checkout {
 
     suspend fun initialize(
         sessionModel: SessionModel,
