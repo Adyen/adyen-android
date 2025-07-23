@@ -122,6 +122,7 @@ constructor(
     }
 
     override val supportedActionTypes: List<String>
+        @Suppress("DEPRECATION")
         get() = listOf(
             AwaitAction.ACTION_TYPE,
             QrCodeAction.ACTION_TYPE,

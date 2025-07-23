@@ -29,6 +29,7 @@ data class Threeds2FingerprintAction(
         const val ACTION_TYPE = ActionTypes.THREEDS2_FINGERPRINT
         private const val TOKEN = "token"
 
+        @Suppress("DEPRECATION")
         @JvmField
         val SERIALIZER: Serializer<Threeds2FingerprintAction> = object : Serializer<Threeds2FingerprintAction> {
             override fun serialize(modelObject: Threeds2FingerprintAction): JSONObject {

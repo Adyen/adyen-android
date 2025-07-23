@@ -134,6 +134,7 @@ internal class DefaultAdyen3DS2DelegateTest(
     @DisplayName("when handling")
     inner class HandleActionTest {
 
+        @Suppress("DEPRECATION")
         @Test
         fun `Threeds2FingerprintAction and token is null, then an exception is thrown`() = runTest {
             delegate.initialize(this)
@@ -144,6 +145,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             assertTrue(exceptionFlow.latestValue is ComponentException)
         }
 
+        @Suppress("DEPRECATION")
         @Test
         fun `Threeds2ChallengeAction and token is null, then an exception is thrown`() = runTest {
             delegate.initialize(this)
@@ -533,6 +535,7 @@ internal class DefaultAdyen3DS2DelegateTest(
     @Nested
     inner class AnalyticsTest {
 
+        @Suppress("DEPRECATION")
         @Test
         fun `when handleAction is called for Threeds2FingerprintAction, then action event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -551,6 +554,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             analyticsManager.assertHasEventEquals(expectedEvent)
         }
 
+        @Suppress("DEPRECATION")
         @Test
         fun `when handleAction is called for Threeds2ChallengeAction, then action event is tracked`() {
             delegate.initialize(CoroutineScope(UnconfinedTestDispatcher()))
@@ -676,6 +680,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
+        @Suppress("DEPRECATION")
         @Test
         fun `when action is Threeds2FingerprintAction and token is null, then error event is tracked`() = runTest {
             delegate.initialize(this)
@@ -688,6 +693,7 @@ internal class DefaultAdyen3DS2DelegateTest(
             analyticsManager.assertLastEventEquals(expectedEvent)
         }
 
+        @Suppress("DEPRECATION")
         @Test
         fun `when action is Threeds2ChallengeAction and token is null, then error event is tracked`() = runTest {
             delegate.initialize(this)

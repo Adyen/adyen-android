@@ -132,6 +132,7 @@ constructor(
     }
 
     override val supportedActionTypes: List<String>
+        @Suppress("DEPRECATION")
         get() = listOf(
             Threeds2FingerprintAction.ACTION_TYPE,
             Threeds2ChallengeAction.ACTION_TYPE,

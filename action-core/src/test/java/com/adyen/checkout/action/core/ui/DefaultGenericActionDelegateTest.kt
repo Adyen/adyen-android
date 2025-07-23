@@ -198,6 +198,7 @@ internal class DefaultGenericActionDelegateTest(
         assertTrue(testDelegate.refreshStatusCalled)
     }
 
+    @Suppress("DEPRECATION")
     @Test
     fun `when handleAction is called with a Threeds2ChallengeAction the inner delegate is not re-created`() = runTest {
         val adyen3DS2Delegate = Test3DS2Delegate()
