@@ -9,7 +9,7 @@
 package com.adyen.checkout.core.components.internal
 
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.core.components.AdyenCheckout
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope
@@ -18,26 +18,30 @@ internal class PaymentFacilitatorProvider {
 
     fun provide(
         txVariant: String,
-        adyenCheckout: AdyenCheckout,
+        checkoutContext: CheckoutContext,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
         checkoutController: CheckoutController,
     ): PaymentFacilitator {
-        val paymentFacilitatorFactory = if (adyenCheckout.checkoutSession == null) {
-            AdvancedPaymentFacilitatorFactory(
-                checkoutConfiguration = adyenCheckout.checkoutConfiguration,
-                checkoutCallbacks = adyenCheckout.checkoutCallbacks,
-                savedStateHandle = savedStateHandle,
-                checkoutController = checkoutController,
-            )
-        } else {
-            SessionsPaymentFacilitatorFactory(
-                checkoutSession = adyenCheckout.checkoutSession,
-                checkoutConfiguration = adyenCheckout.checkoutConfiguration,
-                checkoutCallbacks = adyenCheckout.checkoutCallbacks,
-                savedStateHandle = savedStateHandle,
-                checkoutController = checkoutController,
-            )
+        val paymentFacilitatorFactory = when (checkoutContext) {
+            is CheckoutContext.Advanced -> {
+                AdvancedPaymentFacilitatorFactory(
+                    checkoutConfiguration = checkoutContext.checkoutConfiguration,
+                    checkoutCallbacks = checkoutContext.checkoutCallbacks,
+                    savedStateHandle = savedStateHandle,
+                    checkoutController = checkoutController,
+                )
+            }
+
+            is CheckoutContext.Sessions -> {
+                SessionsPaymentFacilitatorFactory(
+                    checkoutSession = checkoutContext.checkoutSession,
+                    checkoutConfiguration = checkoutContext.checkoutConfiguration,
+                    checkoutCallbacks = checkoutContext.checkoutCallbacks,
+                    savedStateHandle = savedStateHandle,
+                    checkoutController = checkoutController,
+                )
+            }
         }
 
         return paymentFacilitatorFactory.create(txVariant = txVariant, coroutineScope = coroutineScope)

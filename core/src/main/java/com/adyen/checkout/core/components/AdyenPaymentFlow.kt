@@ -28,7 +28,7 @@ import com.adyen.checkout.ui.internal.AdyenCheckoutTheme as ComposableAdyenCheck
 @Composable
 fun AdyenPaymentFlow(
     txVariant: String,
-    adyenCheckout: AdyenCheckout,
+    checkoutContext: CheckoutContext,
     modifier: Modifier = Modifier,
     theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
@@ -37,7 +37,7 @@ fun AdyenPaymentFlow(
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(
             txVariant = txVariant,
-            adyenCheckout = adyenCheckout,
+            checkoutContext = checkoutContext,
             savedStateHandle = createSavedStateHandle(),
             checkoutController = checkoutController,
         )
