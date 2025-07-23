@@ -30,7 +30,7 @@ import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.ui.theme.CheckoutTheme
-import com.adyen.checkout.ui.theme.AdyenColors
+import com.adyen.checkout.ui.theme.CheckoutColors
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -49,9 +49,9 @@ class V6Activity : AppCompatActivity() {
 
         val theme = CheckoutTheme(
             colors = if (uiThemeRepository.isDarkTheme(this)) {
-                AdyenColors.dark()
+                CheckoutColors.dark()
             } else {
-                AdyenColors.light()
+                CheckoutColors.light()
             },
         )
 

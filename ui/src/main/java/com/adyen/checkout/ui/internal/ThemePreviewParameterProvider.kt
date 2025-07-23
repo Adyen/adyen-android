@@ -11,13 +11,13 @@ package com.adyen.checkout.ui.internal
 import androidx.annotation.RestrictTo
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
-import com.adyen.checkout.ui.theme.AdyenColors
+import com.adyen.checkout.ui.theme.CheckoutColors
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class ThemePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
 
     override val values = sequenceOf(
-        CheckoutTheme(colors = AdyenColors.light()),
-        CheckoutTheme(colors = AdyenColors.dark()),
+        CheckoutTheme(colors = CheckoutColors.light()),
+        CheckoutTheme(colors = CheckoutColors.dark()),
     )
 }

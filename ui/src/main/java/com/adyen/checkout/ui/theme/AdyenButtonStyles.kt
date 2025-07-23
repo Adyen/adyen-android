@@ -21,9 +21,9 @@ data class AdyenButtonStyles(
 
 @Immutable
 data class AdyenButtonStyle(
-    val backgroundColor: AdyenColor? = null,
-    val textColor: AdyenColor? = null,
-    val disabledBackgroundColor: AdyenColor? = null,
-    val disabledTextColor: AdyenColor? = null,
+    val backgroundColor: CheckoutColor? = null,
+    val textColor: CheckoutColor? = null,
+    val disabledBackgroundColor: CheckoutColor? = null,
+    val disabledTextColor: CheckoutColor? = null,
     val cornerRadius: Int? = null,
 )

@@ -13,8 +13,8 @@ import androidx.compose.runtime.Immutable
 // TODO - Add KDocs
 @Immutable
 data class AdyenSwitchStyle(
-    val checkedHandleColor: AdyenColor? = null,
-    val checkedTrackColor: AdyenColor? = null,
-    val uncheckedHandleColor: AdyenColor? = null,
-    val uncheckedTrackColor: AdyenColor? = null,
+    val checkedHandleColor: CheckoutColor? = null,
+    val checkedTrackColor: CheckoutColor? = null,
+    val uncheckedHandleColor: CheckoutColor? = null,
+    val uncheckedTrackColor: CheckoutColor? = null,
 )
