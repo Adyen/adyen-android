@@ -13,7 +13,6 @@ import androidx.compose.runtime.Immutable
 // TODO - Add KDocs
 @Immutable
 data class AdyenButtonStyles(
-    val cornerRadius: Int? = null,
     val primary: AdyenButtonStyle? = null,
     val secondary: AdyenButtonStyle? = null,
     val tertiary: AdyenButtonStyle? = null,
@@ -26,4 +25,5 @@ data class AdyenButtonStyle(
     val textColor: AdyenColor? = null,
     val disabledBackgroundColor: AdyenColor? = null,
     val disabledTextColor: AdyenColor? = null,
+    val cornerRadius: Int? = null,
 )

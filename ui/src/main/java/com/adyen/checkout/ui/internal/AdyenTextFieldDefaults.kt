@@ -21,7 +21,7 @@ internal object AdyenTextFieldDefaults {
             textColor = style.textColor?.toCompose() ?: colors.text,
             activeColor = style.activeColor?.toCompose() ?: colors.action,
             errorColor = style.errorColor?.toCompose() ?: colors.destructive,
-            cornerRadius = style.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
+            cornerRadius = style.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
             borderColor = style.borderColor?.toCompose() ?: colors.container,
             borderWidth = style.borderWidth ?: 1,
         )
