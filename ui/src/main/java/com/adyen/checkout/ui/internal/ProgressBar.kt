@@ -18,7 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -37,7 +37,7 @@ fun ProgressBar(
 @Preview(showBackground = true)
 @Composable
 private fun ProgressBarPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     AdyenCheckoutTheme(theme) {
         Column(
