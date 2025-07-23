@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.AdyenColor
+import com.adyen.checkout.ui.theme.CheckoutColor
 import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
 import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
@@ -178,7 +178,7 @@ internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider
         AdyenTextFieldStyle(),
         // Transparent background to get an outlined look
         AdyenTextFieldStyle(
-            backgroundColor = AdyenColor(0x00FFFFFF),
+            backgroundColor = CheckoutColor(0x00FFFFFF),
         ),
     )
 
