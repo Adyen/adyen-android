@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.repositories
 
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.example.data.api.CheckoutApiService
 import com.adyen.checkout.example.data.api.model.BalanceRequest
@@ -21,11 +21,13 @@ import com.adyen.checkout.example.data.api.model.SessionRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.json.JSONObject
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse
 import com.adyen.checkout.sessions.core.SessionModel as OldSessionModel
 
 interface PaymentsRepository {
     suspend fun createSessionOld(sessionRequest: SessionRequest): OldSessionModel?
     suspend fun createSession(sessionRequest: SessionRequest): SessionModel?
+    suspend fun getPaymentMethodsOld(paymentMethodsRequest: PaymentMethodsRequest): OldPaymentMethodsApiResponse?
     suspend fun getPaymentMethods(paymentMethodsRequest: PaymentMethodsRequest): PaymentMethodsApiResponse?
     suspend fun makePaymentsRequest(paymentsRequest: PaymentsRequest): JSONObject?
     suspend fun makeDetailsRequest(detailsRequest: JSONObject): JSONObject?
@@ -51,6 +53,12 @@ internal class PaymentsRepositoryImpl(private val checkoutApiService: CheckoutAp
         checkoutApiService.sessionsAsync(sessionRequest)
     }?.let {
         SessionModel(it.id, it.sessionData)
+    }
+
+    override suspend fun getPaymentMethodsOld(
+        paymentMethodsRequest: PaymentMethodsRequest
+    ): OldPaymentMethodsApiResponse? = safeApiCall {
+        checkoutApiService.paymentMethodsAsyncOld(paymentMethodsRequest)
     }
 
     override suspend fun getPaymentMethods(

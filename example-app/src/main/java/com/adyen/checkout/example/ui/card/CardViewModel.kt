@@ -57,7 +57,7 @@ internal class CardViewModel @Inject constructor(
     }
 
     private suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
-        val paymentMethodResponse = paymentsRepository.getPaymentMethods(
+        val paymentMethodResponse = paymentsRepository.getPaymentMethodsOld(
             getPaymentMethodRequest(
                 merchantAccount = keyValueStorage.getMerchantAccount(),
                 shopperReference = keyValueStorage.getShopperReference(),

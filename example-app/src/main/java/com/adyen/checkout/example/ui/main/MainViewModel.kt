@@ -171,7 +171,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getPaymentMethods() = paymentsRepository.getPaymentMethods(
+    private suspend fun getPaymentMethods() = paymentsRepository.getPaymentMethodsOld(
         getPaymentMethodRequest(
             merchantAccount = keyValueStorage.getMerchantAccount(),
             shopperReference = keyValueStorage.getShopperReference(),

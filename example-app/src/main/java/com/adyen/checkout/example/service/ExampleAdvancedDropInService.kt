@@ -215,7 +215,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
                 order = order,
             )
-            val paymentMethods = paymentsRepository.getPaymentMethods(paymentMethodRequest)
+            val paymentMethods = paymentsRepository.getPaymentMethodsOld(paymentMethodRequest)
             val result = if (paymentMethods != null) {
                 DropInServiceResult.Update(paymentMethods, orderResponse)
             } else {
