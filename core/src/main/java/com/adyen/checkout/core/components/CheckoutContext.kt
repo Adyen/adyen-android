@@ -13,13 +13,13 @@ import com.adyen.checkout.core.sessions.CheckoutSession
 
 // TODO - Kdocs
 sealed interface CheckoutContext {
-    data class Sessions(
+    data class Sessions internal constructor(
         val checkoutSession: CheckoutSession,
         val checkoutConfiguration: CheckoutConfiguration,
         val checkoutCallbacks: CheckoutCallbacks?
     ) : CheckoutContext
 
-    data class Advanced(
+    data class Advanced internal constructor(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration,
         val checkoutCallbacks: CheckoutCallbacks
