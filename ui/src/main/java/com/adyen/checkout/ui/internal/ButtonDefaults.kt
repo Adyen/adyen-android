@@ -10,12 +10,12 @@ package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.adyen.checkout.ui.theme.AdyenButtonStyle
+import com.adyen.checkout.ui.theme.CheckoutButtonStyle
 
 internal object ButtonDefaults {
 
     @Composable
-    fun primaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
+    fun primaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.primary,
@@ -26,7 +26,7 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun secondaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
+    fun secondaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.container,
@@ -37,7 +37,7 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun tertiaryButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
+    fun tertiaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: Color.Transparent,
@@ -48,7 +48,7 @@ internal object ButtonDefaults {
     }
 
     @Composable
-    fun destructiveButtonStyle(style: AdyenButtonStyle?): InternalButtonStyle {
+    fun destructiveButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.destructive,

@@ -9,12 +9,12 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
+import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 
 internal object AdyenTextFieldDefaults {
 
     @Composable
-    fun textFieldStyle(style: AdyenTextFieldStyle): InternalTextFieldStyle {
+    fun textFieldStyle(style: CheckoutTextFieldStyle): InternalTextFieldStyle {
         val colors = AdyenCheckoutTheme.colors
         return InternalTextFieldStyle(
             backgroundColor = style.backgroundColor?.toCompose() ?: colors.container,
