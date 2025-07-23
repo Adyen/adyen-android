@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
-import com.adyen.checkout.ui.theme.CheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutColors
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

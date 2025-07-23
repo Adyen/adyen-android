@@ -13,11 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.adyen.checkout.ui.theme.CheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutAttributes
 import com.adyen.checkout.ui.theme.CheckoutColors
 import com.adyen.checkout.ui.theme.CheckoutElements
 import com.adyen.checkout.ui.theme.CheckoutTextStyles
-import com.adyen.checkout.ui.theme.CheckoutAttributes
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
