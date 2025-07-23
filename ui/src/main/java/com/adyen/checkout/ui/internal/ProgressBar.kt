@@ -25,7 +25,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun ProgressBar(
     modifier: Modifier = Modifier,
 ) {
-    val colors = AdyenCheckoutTheme.colors
+    val colors = CheckoutThemeProvider.colors
 
     CircularProgressIndicator(
         modifier = modifier,
@@ -39,11 +39,11 @@ fun ProgressBar(
 private fun ProgressBarPreview(
     @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             ProgressBar()

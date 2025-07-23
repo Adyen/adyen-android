@@ -15,13 +15,13 @@ internal object CheckoutTextFieldDefaults {
 
     @Composable
     fun textFieldStyle(style: CheckoutTextFieldStyle): InternalTextFieldStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalTextFieldStyle(
             backgroundColor = style.backgroundColor?.toCompose() ?: colors.container,
             textColor = style.textColor?.toCompose() ?: colors.text,
             activeColor = style.activeColor?.toCompose() ?: colors.action,
             errorColor = style.errorColor?.toCompose() ?: colors.destructive,
-            cornerRadius = style.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+            cornerRadius = style.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
             borderColor = style.borderColor?.toCompose() ?: colors.container,
             borderWidth = style.borderWidth ?: 1,
         )

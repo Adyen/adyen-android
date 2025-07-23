@@ -46,14 +46,14 @@ fun FullScreenDialog(
             decorFitsSystemWindows = false,
         ),
     ) {
-        val isBackgroundColorLight = AdyenCheckoutTheme.colors.background.luminance() > 0.5
+        val isBackgroundColorLight = CheckoutThemeProvider.colors.background.luminance() > 0.5
         (LocalView.current.parent as? DialogWindowProvider)?.window?.let {
             WindowCompat.getInsetsController(it, it.decorView)
                 .isAppearanceLightStatusBars = isBackgroundColorLight
         }
 
         Surface(
-            color = AdyenCheckoutTheme.colors.background,
+            color = CheckoutThemeProvider.colors.background,
             modifier = Modifier.fillMaxSize(),
         ) {
             Box(Modifier.systemBarsPadding()) {

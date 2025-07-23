@@ -25,9 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import androidx.compose.material3.Switch as MaterialSwitch
 import androidx.compose.material3.SwitchDefaults as MaterialSwitchDefaults
-import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -42,8 +42,8 @@ fun SwitchContainer(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = AdyenCheckoutTheme.colors.container,
-                shape = RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp),
+                color = CheckoutThemeProvider.colors.container,
+                shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
             )
             .padding(Dimensions.Medium),
     ) {
@@ -64,7 +64,7 @@ private fun Switch(
     onCheckedChange: ((Boolean) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
-    val style = SwitchDefaults.switchStyle(AdyenCheckoutTheme.elements.switch)
+    val style = SwitchDefaults.switchStyle(CheckoutThemeProvider.elements.switch)
     MaterialSwitch(
         checked = checked,
         onCheckedChange = onCheckedChange,
@@ -82,13 +82,13 @@ private fun Switch(
 @Preview(showBackground = true)
 @Composable
 private fun SwitchContainerPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             val description = "A very long and detailed description that covers multiple lines"

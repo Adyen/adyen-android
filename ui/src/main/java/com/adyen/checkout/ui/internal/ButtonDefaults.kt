@@ -16,7 +16,7 @@ internal object ButtonDefaults {
 
     @Composable
     fun primaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.primary,
             textColor = style?.textColor?.toCompose() ?: colors.textOnPrimary,
@@ -27,7 +27,7 @@ internal object ButtonDefaults {
 
     @Composable
     fun secondaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.container,
             textColor = style?.textColor?.toCompose() ?: colors.text,
@@ -38,7 +38,7 @@ internal object ButtonDefaults {
 
     @Composable
     fun tertiaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: Color.Transparent,
             textColor = style?.textColor?.toCompose() ?: colors.action,
@@ -49,7 +49,7 @@ internal object ButtonDefaults {
 
     @Composable
     fun destructiveButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: colors.destructive,
             textColor = style?.textColor?.toCompose() ?: colors.textOnDestructive,

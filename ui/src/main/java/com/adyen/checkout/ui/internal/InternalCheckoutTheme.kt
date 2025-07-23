@@ -21,7 +21,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun AdyenCheckoutTheme(
+fun InternalCheckoutTheme(
     theme: CheckoutTheme = CheckoutTheme(),
     content: @Composable () -> Unit,
 ) {
@@ -36,7 +36,7 @@ fun AdyenCheckoutTheme(
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object AdyenCheckoutTheme {
+object CheckoutThemeProvider {
 
     val colors: InternalColors
         @Composable

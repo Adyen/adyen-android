@@ -91,7 +91,7 @@ internal fun CheckoutTextFieldDecorationBox(
                 .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
         ) {
             prefix?.let {
-                Body(prefix, color = AdyenCheckoutTheme.colors.textSecondary)
+                Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
             }
 
             val selectionColor = style.activeColor
@@ -109,7 +109,7 @@ internal fun CheckoutTextFieldDecorationBox(
             trailingIcon?.invoke()
         }
         supportingText?.let {
-            val supportingTextColor = if (isError) style.errorColor else AdyenCheckoutTheme.colors.textSecondary
+            val supportingTextColor = if (isError) style.errorColor else CheckoutThemeProvider.colors.textSecondary
             Footnote(
                 text = supportingText,
                 color = supportingTextColor,

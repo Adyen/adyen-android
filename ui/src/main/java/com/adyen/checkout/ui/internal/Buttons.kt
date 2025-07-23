@@ -27,7 +27,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -37,13 +37,13 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = AdyenCheckoutTheme.elements.buttons.primary
+    val buttonStyle = CheckoutThemeProvider.elements.buttons.primary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
         style = ButtonDefaults.primaryButtonStyle(buttonStyle),
     )
 }
@@ -51,13 +51,13 @@ fun PrimaryButton(
 @Preview(showBackground = true)
 @Composable
 private fun PrimaryButtonPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             PrimaryButton(
@@ -84,13 +84,13 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = AdyenCheckoutTheme.elements.buttons.secondary
+    val buttonStyle = CheckoutThemeProvider.elements.buttons.secondary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
         style = ButtonDefaults.secondaryButtonStyle(buttonStyle),
     )
 }
@@ -98,13 +98,13 @@ fun SecondaryButton(
 @Preview(showBackground = true)
 @Composable
 private fun SecondaryButtonPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             SecondaryButton(
@@ -131,13 +131,13 @@ fun TertiaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = AdyenCheckoutTheme.elements.buttons.tertiary
+    val buttonStyle = CheckoutThemeProvider.elements.buttons.tertiary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
         style = ButtonDefaults.tertiaryButtonStyle(buttonStyle),
     )
 }
@@ -145,13 +145,13 @@ fun TertiaryButton(
 @Preview(showBackground = true)
 @Composable
 private fun TertiaryButtonPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             TertiaryButton(
@@ -178,13 +178,13 @@ fun DestructiveButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = AdyenCheckoutTheme.elements.buttons.destructive
+    val buttonStyle = CheckoutThemeProvider.elements.buttons.destructive
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
         style = ButtonDefaults.destructiveButtonStyle(buttonStyle),
     )
 }
@@ -192,13 +192,13 @@ fun DestructiveButton(
 @Preview(showBackground = true)
 @Composable
 private fun DestructiveButtonPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             DestructiveButton(
