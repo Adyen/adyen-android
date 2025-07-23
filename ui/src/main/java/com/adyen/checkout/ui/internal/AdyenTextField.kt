@@ -35,8 +35,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.CheckoutColor
-import com.adyen.checkout.ui.theme.AdyenElements
-import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
+import com.adyen.checkout.ui.theme.CheckoutElements
+import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
 
 /**
@@ -175,9 +175,9 @@ internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider
     private val themeProvider = ThemePreviewParameterProvider()
 
     private val styles = sequenceOf(
-        AdyenTextFieldStyle(),
+        CheckoutTextFieldStyle(),
         // Transparent background to get an outlined look
-        AdyenTextFieldStyle(
+        CheckoutTextFieldStyle(
             backgroundColor = CheckoutColor(0x00FFFFFF),
         ),
     )
@@ -185,7 +185,7 @@ internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider
     override val values = styles.flatMap { style ->
         themeProvider.values.map { theme ->
             theme.copy(
-                elements = AdyenElements.default(
+                elements = CheckoutElements.default(
                     textField = style,
                 ),
             )

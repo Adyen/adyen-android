@@ -12,7 +12,7 @@ import androidx.compose.runtime.Immutable
 
 // TODO - Add KDocs
 @Immutable
-data class AdyenSegmentedButtonStyle(
+data class CheckoutSegmentedButtonStyle(
     val selectedContainerColor: CheckoutColor? = null,
     val selectedTextColor: CheckoutColor? = null,
     val unselectedContainerColor: CheckoutColor? = null,
