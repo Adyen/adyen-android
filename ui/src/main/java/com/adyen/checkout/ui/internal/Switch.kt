@@ -43,7 +43,7 @@ fun SwitchContainer(
             .fillMaxWidth()
             .background(
                 color = AdyenCheckoutTheme.colors.container,
-                shape = RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp),
+                shape = RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp),
             )
             .padding(Dimensions.Medium),
     ) {

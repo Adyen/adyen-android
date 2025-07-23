@@ -43,7 +43,7 @@ fun PrimaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
+        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
         style = ButtonDefaults.primaryButtonStyle(buttonStyles.primary),
     )
 }
@@ -90,7 +90,7 @@ fun SecondaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
+        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
         style = ButtonDefaults.secondaryButtonStyle(buttonStyles.secondary),
     )
 }
@@ -137,7 +137,7 @@ fun TertiaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
+        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
         style = ButtonDefaults.tertiaryButtonStyle(buttonStyles.tertiary),
     )
 }
@@ -184,7 +184,7 @@ fun DestructiveButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
+        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
         style = ButtonDefaults.destructiveButtonStyle(buttonStyles.destructive),
     )
 }

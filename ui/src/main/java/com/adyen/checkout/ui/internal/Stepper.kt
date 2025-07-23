@@ -42,7 +42,7 @@ fun Stepper(
         modifier = modifier
             .background(
                 color = AdyenCheckoutTheme.colors.container,
-                shape = RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp),
+                shape = RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp),
             )
             .padding(Dimensions.Large),
     ) {
