@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import com.adyen.checkout.ui.theme.AdyenColors
 import com.adyen.checkout.ui.theme.AdyenElements
 import com.adyen.checkout.ui.theme.AdyenTextStyles
@@ -22,7 +22,7 @@ import com.adyen.checkout.ui.theme.CheckoutAttributes
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun AdyenCheckoutTheme(
-    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    theme: CheckoutTheme = CheckoutTheme(),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 import com.adyen.checkout.ui.theme.AdyenColors
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -47,7 +47,7 @@ class V6SessionsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val theme = AdyenCheckoutTheme(
+        val theme = CheckoutTheme(
             colors = if (uiThemeRepository.isDarkTheme(this)) {
                 AdyenColors.dark()
             } else {
