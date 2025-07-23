@@ -14,6 +14,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
+@Deprecated(
+    "The 3DS2 flow with separate fingerprint and challenge actions is deprecated. Use Threeds2Action instead.",
+    ReplaceWith("Threeds2Action", "com.adyen.checkout.components.core.action.Threeds2Action"),
+)
 data class Threeds2FingerprintAction(
     override var type: String? = null,
     override var paymentData: String? = null,
