@@ -39,7 +39,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
-import com.adyen.checkout.ui.internal.AdyenTextField
+import com.adyen.checkout.ui.internal.CheckoutTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.FullScreenDialog
@@ -84,7 +84,7 @@ internal fun MbWayComponent(
         } else {
             null
         }
-        AdyenTextField(
+        CheckoutTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->

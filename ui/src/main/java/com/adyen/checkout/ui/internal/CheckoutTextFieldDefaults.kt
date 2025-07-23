@@ -11,7 +11,7 @@ package com.adyen.checkout.ui.internal
 import androidx.compose.runtime.Composable
 import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 
-internal object AdyenTextFieldDefaults {
+internal object CheckoutTextFieldDefaults {
 
     @Composable
     fun textFieldStyle(style: CheckoutTextFieldStyle): InternalTextFieldStyle {
