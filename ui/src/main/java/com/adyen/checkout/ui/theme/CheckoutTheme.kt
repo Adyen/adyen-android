@@ -14,7 +14,7 @@ import androidx.compose.runtime.Immutable
 @Immutable
 data class CheckoutTheme(
     val colors: CheckoutColors = CheckoutColors.light(),
-    val textStyles: AdyenTextStyles = AdyenTextStyles.default(),
+    val textStyles: CheckoutTextStyles = CheckoutTextStyles.default(),
     val attributes: CheckoutAttributes = CheckoutAttributes.default(),
     val elements: AdyenElements = AdyenElements.default(),
 )
