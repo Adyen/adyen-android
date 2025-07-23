@@ -38,7 +38,7 @@ fun PrimaryButton(
     isLoading: Boolean = false,
 ) {
     val buttonStyle = AdyenCheckoutTheme.elements.buttons.primary
-    AdyenButton(
+    CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
@@ -85,7 +85,7 @@ fun SecondaryButton(
     isLoading: Boolean = false,
 ) {
     val buttonStyle = AdyenCheckoutTheme.elements.buttons.secondary
-    AdyenButton(
+    CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
@@ -132,7 +132,7 @@ fun TertiaryButton(
     isLoading: Boolean = false,
 ) {
     val buttonStyle = AdyenCheckoutTheme.elements.buttons.tertiary
-    AdyenButton(
+    CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
@@ -179,7 +179,7 @@ fun DestructiveButton(
     isLoading: Boolean = false,
 ) {
     val buttonStyle = AdyenCheckoutTheme.elements.buttons.destructive
-    AdyenButton(
+    CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
@@ -218,7 +218,7 @@ private fun DestructiveButtonPreview(
 }
 
 @Composable
-private fun AdyenButton(
+private fun CheckoutButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier,
