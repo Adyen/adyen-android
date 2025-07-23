@@ -25,7 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A composable that displays a value and a label, designed to trigger an action on click.
@@ -49,7 +49,7 @@ fun ValuePickerField(
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle(AdyenCheckoutTheme.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     CheckoutTextField(
         value = value,
@@ -79,9 +79,9 @@ fun ValuePickerField(
 @Preview
 @Composable
 private fun ValuePickerFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier

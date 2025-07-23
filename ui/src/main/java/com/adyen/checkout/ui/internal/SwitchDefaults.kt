@@ -15,7 +15,7 @@ internal object SwitchDefaults {
 
     @Composable
     fun switchStyle(style: CheckoutSwitchStyle?): InternalSwitchStyle {
-        val colors = AdyenCheckoutTheme.colors
+        val colors = CheckoutThemeProvider.colors
         return InternalSwitchStyle(
             checkedHandleColor = style?.checkedHandleColor?.toCompose() ?: colors.background,
             checkedTrackColor = style?.checkedHandleColor?.toCompose() ?: colors.primary,

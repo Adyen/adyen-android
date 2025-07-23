@@ -37,7 +37,7 @@ import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.theme.CheckoutColor
 import com.adyen.checkout.ui.theme.CheckoutElements
 import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
-import com.adyen.checkout.ui.theme.CheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -80,8 +80,8 @@ fun CheckoutTextField(
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle(AdyenCheckoutTheme.elements.textField)
-    val innerTextStyle = AdyenCheckoutTheme.textStyles.body
+    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val innerTextStyle = CheckoutThemeProvider.textStyles.body
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -116,9 +116,9 @@ fun CheckoutTextField(
 @Preview
 @Composable
 private fun AdyenTextFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
@@ -142,7 +142,7 @@ private fun AdyenTextFieldPreview(
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
                         contentDescription = null,
-                        tint = AdyenCheckoutTheme.colors.text,
+                        tint = CheckoutThemeProvider.colors.text,
                     )
                 },
             )
@@ -170,7 +170,7 @@ private fun AdyenTextFieldPreview(
     }
 }
 
-internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<Theme> {
+internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
 
     private val themeProvider = ThemePreviewParameterProvider()
 
