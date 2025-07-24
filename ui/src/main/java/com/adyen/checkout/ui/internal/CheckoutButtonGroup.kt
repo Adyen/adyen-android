@@ -54,6 +54,7 @@ fun CheckoutButtonGroup(
                     selectedIndex = index
                     onItemSelected(index)
                 },
+                // TODO - apply custom corner radius
                 shapes = when (index) {
                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                     items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
@@ -73,16 +74,16 @@ private fun CheckoutToggleButton(
     shapes: ToggleButtonShapes,
     modifier: Modifier = Modifier,
 ) {
-    val style = CheckoutThemeProvider.elements.segmentedButton
+    val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.segmentedButton)
     val colors = CheckoutThemeProvider.colors
     ToggleButton(
         checked = checked,
         onCheckedChange = onCheckedChange,
         colors = ToggleButtonColors(
-            contentColor = style.unselectedTextColor?.toCompose() ?: colors.text,
-            containerColor = style.unselectedContainerColor?.toCompose() ?: colors.container,
-            checkedContentColor = style.selectedTextColor?.toCompose() ?: colors.textOnPrimary,
-            checkedContainerColor = style.unselectedContainerColor?.toCompose() ?: colors.primary,
+            contentColor = style.uncheckedTextColor,
+            containerColor = style.uncheckedContainerColor,
+            checkedContentColor = style.checkedTextColor,
+            checkedContainerColor = style.checkedContainerColor,
             disabledContentColor = colors.textOnDisabled,
             disabledContainerColor = colors.disabled,
         ),
