@@ -51,11 +51,13 @@ dependencies {
     implementation libs.bundles.compose.ui
     implementation libs.compose.viewmodel
     implementation libs.okhttp
+    implementation libs.androidx.browser
 
     testImplementation libs.json
     testImplementation libs.bundles.junit
     testImplementation libs.bundles.kotlin.coroutines.test
     testImplementation libs.bundles.mockito
+    testImplementation libs.robolectric
 
     testFixturesImplementation libs.bundles.androidx.lifecycle
     testFixturesImplementation libs.bundles.junit

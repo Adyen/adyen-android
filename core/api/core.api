@@ -975,6 +975,9 @@ public final class com/adyen/checkout/core/components/paymentmethod/PaymentMetho
 	public final fun getUNSUPPORTED_PAYMENT_METHODS ()Ljava/util/List;
 }
 
+public final class com/adyen/checkout/core/redirect/internal/DefaultRedirectHandler$Companion {
+}
+
 public final class com/adyen/checkout/core/sessions/CheckoutSession {
 	public static final field $stable I
 	public fun <init> (Lcom/adyen/checkout/core/sessions/internal/data/model/SessionSetupResponse;Lcom/adyen/checkout/core/components/data/OrderRequest;Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;)V
