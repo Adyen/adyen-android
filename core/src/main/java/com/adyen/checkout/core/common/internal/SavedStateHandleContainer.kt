@@ -32,7 +32,8 @@ interface SavedStateHandleContainer {
  * var amount: Amount? by SavedStateHandleProperty("amount_bundle_key")
  * ```
  */
-internal class SavedStateHandleProperty<T : Any>(
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class SavedStateHandleProperty<T : Any>(
     private val key: String
 ) : ReadWriteProperty<SavedStateHandleContainer, T?> {
     private var backingProperty: T? = null
