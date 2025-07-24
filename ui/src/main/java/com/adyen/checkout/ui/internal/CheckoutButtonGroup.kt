@@ -74,7 +74,7 @@ private fun CheckoutToggleButton(
     shapes: ToggleButtonShapes,
     modifier: Modifier = Modifier,
 ) {
-    val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.segmentedButton)
+    val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.buttonGroup)
     val colors = CheckoutThemeProvider.colors
     ToggleButton(
         checked = checked,
