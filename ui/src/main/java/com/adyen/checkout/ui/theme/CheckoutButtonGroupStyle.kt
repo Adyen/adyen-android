@@ -12,11 +12,10 @@ import androidx.compose.runtime.Immutable
 
 // TODO - Add KDocs
 @Immutable
-data class CheckoutSegmentedButtonStyle(
-    val selectedContainerColor: CheckoutColor? = null,
-    val selectedTextColor: CheckoutColor? = null,
-    val unselectedContainerColor: CheckoutColor? = null,
-    val unselectedTextColor: CheckoutColor? = null,
-    val borderColor: CheckoutColor? = null,
+data class CheckoutButtonGroupStyle(
+    val checkedContainerColor: CheckoutColor? = null,
+    val checkedTextColor: CheckoutColor? = null,
+    val uncheckedContainerColor: CheckoutColor? = null,
+    val uncheckedTextColor: CheckoutColor? = null,
     val cornerRadius: Int? = null,
 )

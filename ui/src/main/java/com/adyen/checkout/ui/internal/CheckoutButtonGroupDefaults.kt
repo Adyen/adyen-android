@@ -9,18 +9,18 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.theme.CheckoutSegmentedButtonStyle
+import com.adyen.checkout.ui.theme.CheckoutButtonGroupStyle
 
 internal object CheckoutButtonGroupDefaults {
 
     @Composable
-    fun buttonGroupStyle(style: CheckoutSegmentedButtonStyle?): InternalButtonGroupStyle {
+    fun buttonGroupStyle(style: CheckoutButtonGroupStyle?): InternalButtonGroupStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonGroupStyle(
-            checkedContainerColor = style?.selectedTextColor?.toCompose() ?: colors.primary,
-            checkedTextColor = style?.selectedContainerColor?.toCompose() ?: colors.textOnPrimary,
-            uncheckedContainerColor = style?.unselectedTextColor?.toCompose() ?: colors.container,
-            uncheckedTextColor = style?.unselectedContainerColor?.toCompose() ?: colors.text,
+            checkedContainerColor = style?.checkedTextColor?.toCompose() ?: colors.primary,
+            checkedTextColor = style?.checkedContainerColor?.toCompose() ?: colors.textOnPrimary,
+            uncheckedContainerColor = style?.uncheckedTextColor?.toCompose() ?: colors.container,
+            uncheckedTextColor = style?.uncheckedContainerColor?.toCompose() ?: colors.text,
             cornerRadius = style?.cornerRadius,
         )
     }
