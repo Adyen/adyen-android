@@ -787,6 +787,9 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethodsA
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/components/internal/PaymentDataRepository$Companion {
+}
+
 public final class com/adyen/checkout/core/components/internal/data/api/DefaultStatusRepository$Companion {
 }
 
