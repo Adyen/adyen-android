@@ -61,46 +61,47 @@ internal class CheckoutConfigurationProvider @Inject constructor(
         ) {
             // Drop-in
             dropIn {
-                setEnableRemovingStoredPaymentMethods(keyValueStorage.isRemoveStoredPaymentMethodEnabled())
+                isRemovingStoredPaymentMethodsEnabled = keyValueStorage.isRemoveStoredPaymentMethodEnabled()
             }
 
             // Payment methods
             bcmc {
-                setShopperReference(keyValueStorage.getShopperReference())
-                setShowStorePaymentField(true)
+                shopperReference = keyValueStorage.getShopperReference()
+                showStorePaymentField = true
             }
 
             card {
-                setShopperReference(keyValueStorage.getShopperReference())
-                setAddressConfiguration(getAddressConfiguration())
-                setInstallmentConfigurations(getInstallmentConfiguration())
+                shopperReference = keyValueStorage.getShopperReference()
+                addressConfiguration = getAddressConfiguration()
+                installmentConfiguration = getInstallmentConfiguration()
             }
 
             cashAppPay {
-                setReturnUrl(CashAppPayComponent.getReturnUrl(context))
+                returnUrl = CashAppPayComponent.getReturnUrl(context)
             }
 
             giftCard {
-                setPinRequired(true)
+                isPinRequired = true
             }
 
             mealVoucherFR {
-                setSecurityCodeRequired(true)
+                isSecurityCodeRequired = true
             }
 
             googlePay {
-                setSubmitButtonVisible(true)
-                setCountryCode(keyValueStorage.getCountry())
-                setCheckoutOption("COMPLETE_IMMEDIATE_PURCHASE")
+                @Suppress("DEPRECATION")
+                isSubmitButtonVisible = true
+                countryCode = keyValueStorage.getCountry()
+                checkoutOption = "COMPLETE_IMMEDIATE_PURCHASE"
             }
 
             instantPayment {
-                setActionHandlingMethod(ActionHandlingMethod.PREFER_NATIVE)
+                actionHandlingMethod = ActionHandlingMethod.PREFER_NATIVE
             }
 
             // Actions
             adyen3DS2 {
-                setThreeDSRequestorAppURL("https://www.adyen.com")
+                threeDSRequestorAppURL = "https://www.adyen.com"
             }
         }
 

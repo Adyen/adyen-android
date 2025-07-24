@@ -6,6 +6,8 @@
  * Created by onurk on 24/1/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.ach
 
 import android.content.Context
@@ -28,6 +30,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class ACHDirectDebitConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -43,13 +46,15 @@ class ACHDirectDebitConfiguration private constructor(
     /**
      * Builder to create an [ACHDirectDebitConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<ACHDirectDebitConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
-        private var addressConfiguration: ACHDirectDebitAddressConfiguration? = null
-        private var isStorePaymentFieldVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
+        var addressConfiguration: ACHDirectDebitAddressConfiguration? = null
+        var isStorePaymentFieldVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -101,6 +106,7 @@ class ACHDirectDebitConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
@@ -114,6 +120,7 @@ class ACHDirectDebitConfiguration private constructor(
          * @param addressConfiguration The configuration object for address form.
          * @return [ACHDirectDebitConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setAddressConfiguration(addressConfiguration: ACHDirectDebitAddressConfiguration): Builder {
             this.addressConfiguration = addressConfiguration
             return this
@@ -131,6 +138,7 @@ class ACHDirectDebitConfiguration private constructor(
          * @param showStorePaymentField [Boolean]
          * @return [ACHDirectDebitConfiguration.Builder]
          */
+        @Deprecated("Use property access syntax instead.")
         fun setShowStorePaymentField(showStorePaymentField: Boolean): Builder {
             isStorePaymentFieldVisible = showStorePaymentField
             return this

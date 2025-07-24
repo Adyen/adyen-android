@@ -6,6 +6,8 @@
  * Created by ozgur on 4/11/2022.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.instant
 
 import android.content.Context
@@ -26,6 +28,7 @@ import java.util.Locale
  * Configuration class for the [InstantPaymentComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class InstantPaymentConfiguration
 @Suppress("LongParameterList")
 private constructor(
@@ -41,9 +44,10 @@ private constructor(
     /**
      * Builder to create an [InstantPaymentConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : ActionHandlingPaymentMethodConfigurationBuilder<InstantPaymentConfiguration, Builder> {
 
-        private var actionHandlingMethod: ActionHandlingMethod? = null
+        var actionHandlingMethod: ActionHandlingMethod? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -93,6 +97,7 @@ private constructor(
          *
          * Default is [ActionHandlingMethod.PREFER_NATIVE].
          */
+        @Deprecated("Use property access syntax instead.")
         fun setActionHandlingMethod(actionHandlingMethod: ActionHandlingMethod): Builder {
             this.actionHandlingMethod = actionHandlingMethod
             return this

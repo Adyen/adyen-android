@@ -196,28 +196,66 @@ public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Builder :
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getAllowedAuthMethods ()Ljava/util/List;
+	public final fun getAllowedCardNetworks ()Ljava/util/List;
+	public final fun getBillingAddressParameters ()Lcom/adyen/checkout/googlepay/BillingAddressParameters;
+	public final fun getCheckoutOption ()Ljava/lang/String;
+	public final fun getCountryCode ()Ljava/lang/String;
+	public final fun getGooglePayButtonStyling ()Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;
+	public final fun getGooglePayEnvironment ()Ljava/lang/Integer;
+	public final fun getMerchantAccount ()Ljava/lang/String;
+	public final fun getMerchantInfo ()Lcom/adyen/checkout/googlepay/MerchantInfo;
+	public final fun getShippingAddressParameters ()Lcom/adyen/checkout/googlepay/ShippingAddressParameters;
+	public final fun getTotalPriceStatus ()Ljava/lang/String;
+	public final fun isAllowCreditCards ()Ljava/lang/Boolean;
+	public final fun isAllowPrepaidCards ()Ljava/lang/Boolean;
+	public final fun isAssuranceDetailsRequired ()Ljava/lang/Boolean;
+	public final fun isBillingAddressRequired ()Ljava/lang/Boolean;
+	public final fun isEmailRequired ()Ljava/lang/Boolean;
+	public final fun isExistingPaymentMethodRequired ()Ljava/lang/Boolean;
+	public final fun isShippingAddressRequired ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun setAllowCreditCards (Ljava/lang/Boolean;)V
 	public final fun setAllowCreditCards (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setAllowPrepaidCards (Ljava/lang/Boolean;)V
 	public final fun setAllowPrepaidCards (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setAllowedAuthMethods (Ljava/util/List;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setAllowedAuthMethods (Ljava/util/List;)V
 	public final fun setAllowedCardNetworks (Ljava/util/List;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setAllowedCardNetworks (Ljava/util/List;)V
 	public synthetic fun setAmount (Lcom/adyen/checkout/components/core/Amount;)Lcom/adyen/checkout/components/core/internal/BaseConfigurationBuilder;
 	public fun setAmount (Lcom/adyen/checkout/components/core/Amount;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setAssuranceDetailsRequired (Ljava/lang/Boolean;)V
 	public final fun setAssuranceDetailsRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setBillingAddressParameters (Lcom/adyen/checkout/googlepay/BillingAddressParameters;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setBillingAddressParameters (Lcom/adyen/checkout/googlepay/BillingAddressParameters;)V
+	public final fun setBillingAddressRequired (Ljava/lang/Boolean;)V
 	public final fun setBillingAddressRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setCheckoutOption (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setCheckoutOption (Ljava/lang/String;)V
 	public final fun setCountryCode (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setCountryCode (Ljava/lang/String;)V
+	public final fun setEmailRequired (Ljava/lang/Boolean;)V
 	public final fun setEmailRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setExistingPaymentMethodRequired (Ljava/lang/Boolean;)V
 	public final fun setExistingPaymentMethodRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setGooglePayButtonStyling (Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setGooglePayButtonStyling (Lcom/adyen/checkout/googlepay/GooglePayButtonStyling;)V
 	public final fun setGooglePayEnvironment (I)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setGooglePayEnvironment (Ljava/lang/Integer;)V
 	public final fun setMerchantAccount (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setMerchantAccount (Ljava/lang/String;)V
 	public final fun setMerchantInfo (Lcom/adyen/checkout/googlepay/MerchantInfo;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setMerchantInfo (Lcom/adyen/checkout/googlepay/MerchantInfo;)V
 	public final fun setShippingAddressParameters (Lcom/adyen/checkout/googlepay/ShippingAddressParameters;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setShippingAddressParameters (Lcom/adyen/checkout/googlepay/ShippingAddressParameters;)V
+	public final fun setShippingAddressRequired (Ljava/lang/Boolean;)V
 	public final fun setShippingAddressRequired (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
 	public final fun setTotalPriceStatus (Ljava/lang/String;)Lcom/adyen/checkout/googlepay/GooglePayConfiguration$Builder;
+	public final fun setTotalPriceStatus (Ljava/lang/String;)V
 }
 
 public final class com/adyen/checkout/googlepay/GooglePayConfiguration$Creator : android/os/Parcelable$Creator {

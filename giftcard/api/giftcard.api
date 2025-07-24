@@ -152,7 +152,11 @@ public final class com/adyen/checkout/giftcard/GiftCardConfiguration$Builder : c
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun isPinRequired ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public final fun setPinRequired (Ljava/lang/Boolean;)V
 	public final fun setPinRequired (Z)Lcom/adyen/checkout/giftcard/GiftCardConfiguration$Builder;
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/giftcard/GiftCardConfiguration$Builder;
 }

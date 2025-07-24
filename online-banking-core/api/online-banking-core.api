@@ -28,8 +28,8 @@ public abstract class com/adyen/checkout/onlinebankingcore/internal/OnlineBankin
 	protected fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	protected fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	protected fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
-	protected fun isSubmitButtonVisible ()Ljava/lang/Boolean;
-	protected fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
+	public fun isSubmitButtonVisible ()Ljava/lang/Boolean;
+	public fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/onlinebankingcore/internal/OnlineBankingConfiguration$OnlineBankingConfigurationBuilder;
 }

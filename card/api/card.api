@@ -237,17 +237,39 @@ public final class com/adyen/checkout/card/CardConfiguration$Builder : com/adyen
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getAddressConfiguration ()Lcom/adyen/checkout/card/AddressConfiguration;
+	public final fun getInstallmentConfiguration ()Lcom/adyen/checkout/card/InstallmentConfiguration;
+	public final fun getKcpAuthVisibility ()Lcom/adyen/checkout/card/KCPAuthVisibility;
+	public final fun getShopperReference ()Ljava/lang/String;
+	public final fun getSocialSecurityNumberVisibility ()Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
+	public final fun getSupportedCardBrands ()Ljava/util/List;
+	public final fun isHideCvc ()Ljava/lang/Boolean;
+	public final fun isHideCvcStoredCard ()Ljava/lang/Boolean;
+	public final fun isHolderNameRequired ()Ljava/lang/Boolean;
+	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public final fun setAddressConfiguration (Lcom/adyen/checkout/card/AddressConfiguration;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setAddressConfiguration (Lcom/adyen/checkout/card/AddressConfiguration;)V
+	public final fun setHideCvc (Ljava/lang/Boolean;)V
 	public final fun setHideCvc (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setHideCvcStoredCard (Ljava/lang/Boolean;)V
 	public final fun setHideCvcStoredCard (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setHolderNameRequired (Ljava/lang/Boolean;)V
 	public final fun setHolderNameRequired (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setInstallmentConfiguration (Lcom/adyen/checkout/card/InstallmentConfiguration;)V
 	public final fun setInstallmentConfigurations (Lcom/adyen/checkout/card/InstallmentConfiguration;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public final fun setKcpAuthVisibility (Lcom/adyen/checkout/card/KCPAuthVisibility;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setKcpAuthVisibility (Lcom/adyen/checkout/card/KCPAuthVisibility;)V
 	public final fun setShopperReference (Ljava/lang/String;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setShopperReference (Ljava/lang/String;)V
 	public final fun setShowStorePaymentField (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
+	public final fun setSocialSecurityNumberVisibility (Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;)V
+	public final fun setStorePaymentFieldVisible (Ljava/lang/Boolean;)V
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
+	public final fun setSupportedCardBrands (Ljava/util/List;)V
 	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/CardBrand;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 	public final fun setSupportedCardTypes ([Lcom/adyen/checkout/core/CardType;)Lcom/adyen/checkout/card/CardConfiguration$Builder;
 }

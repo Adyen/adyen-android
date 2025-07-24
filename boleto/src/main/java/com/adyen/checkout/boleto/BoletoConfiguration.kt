@@ -6,6 +6,8 @@
  * Created by atef on 31/3/2023.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.boleto
 
 import android.content.Context
@@ -27,6 +29,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class BoletoConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -41,11 +44,14 @@ class BoletoConfiguration private constructor(
     /**
      * Builder to create a [BoletoConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<BoletoConfiguration, Builder>,
         ButtonConfigurationBuilder {
-        private var isSubmitButtonVisible: Boolean? = null
-        private var isEmailVisible: Boolean? = null
+
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
+        var isEmailVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -97,6 +103,7 @@ class BoletoConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
@@ -108,6 +115,7 @@ class BoletoConfiguration private constructor(
          * Default value is false
          * @param isEmailVisible
          */
+        @Deprecated("Use property access syntax instead.")
         fun setEmailVisibility(isEmailVisible: Boolean): Builder {
             this.isEmailVisible = isEmailVisible
             return this

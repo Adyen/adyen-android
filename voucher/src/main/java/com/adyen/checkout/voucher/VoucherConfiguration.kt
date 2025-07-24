@@ -6,6 +6,8 @@
  * Created by ozgur on 29/11/2021.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.voucher
 
 import android.content.Context
@@ -23,6 +25,7 @@ import java.util.Locale
  * Configuration class for the [VoucherComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class VoucherConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -34,6 +37,7 @@ class VoucherConfiguration private constructor(
     /**
      * Builder to create a [VoucherConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<VoucherConfiguration, Builder> {
 
         /**

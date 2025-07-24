@@ -92,8 +92,14 @@ public final class com/adyen/checkout/ach/ACHDirectDebitConfiguration$Builder : 
 	public fun <init> (Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
+	public final fun getAddressConfiguration ()Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration;
+	public final fun isStorePaymentFieldVisible ()Ljava/lang/Boolean;
+	public final fun isSubmitButtonVisible ()Ljava/lang/Boolean;
 	public final fun setAddressConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration;)Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration$Builder;
+	public final fun setAddressConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitAddressConfiguration;)V
 	public final fun setShowStorePaymentField (Z)Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration$Builder;
+	public final fun setStorePaymentFieldVisible (Ljava/lang/Boolean;)V
+	public final fun setSubmitButtonVisible (Ljava/lang/Boolean;)V
 	public fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration$Builder;
 	public synthetic fun setSubmitButtonVisible (Z)Lcom/adyen/checkout/components/core/internal/ButtonConfigurationBuilder;
 }

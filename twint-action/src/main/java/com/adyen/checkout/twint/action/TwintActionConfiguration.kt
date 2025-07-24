@@ -6,6 +6,8 @@
  * Created by oscars on 9/7/2024.
  */
 
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.twint.action
 
 import android.content.Context
@@ -23,6 +25,7 @@ import java.util.Locale
  * Configuration class for the [TwintActionComponent].
  */
 @Parcelize
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class TwintActionConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -31,6 +34,7 @@ class TwintActionConfiguration private constructor(
     override val amount: Amount?,
 ) : Configuration {
 
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder : BaseConfigurationBuilder<TwintActionConfiguration, Builder> {
 
         /**

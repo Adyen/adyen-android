@@ -5,6 +5,9 @@
  *
  * Created by caiof on 11/8/2020.
  */
+
+@file:Suppress("DEPRECATION")
+
 package com.adyen.checkout.mbway
 
 import android.content.Context
@@ -27,6 +30,7 @@ import java.util.Locale
  */
 @Parcelize
 @Suppress("LongParameterList")
+@Deprecated("Configuration classes are deprecated, use CheckoutConfiguration instead.")
 class MBWayConfiguration private constructor(
     override val shopperLocale: Locale?,
     override val environment: Environment,
@@ -40,11 +44,13 @@ class MBWayConfiguration private constructor(
     /**
      * Builder to create an [MBWayConfiguration].
      */
+    @Deprecated("Configuration builders are deprecated, use CheckoutConfiguration instead.")
     class Builder :
         ActionHandlingPaymentMethodConfigurationBuilder<MBWayConfiguration, Builder>,
         ButtonConfigurationBuilder {
 
-        private var isSubmitButtonVisible: Boolean? = null
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
+        var isSubmitButtonVisible: Boolean? = null
 
         /**
          * Initialize a configuration builder with the required fields.
@@ -96,6 +102,7 @@ class MBWayConfiguration private constructor(
          *
          * @param isSubmitButtonVisible Is submit button should be visible or not.
          */
+        @Deprecated("Configure this in CheckoutConfiguration instead.")
         override fun setSubmitButtonVisible(isSubmitButtonVisible: Boolean): Builder {
             this.isSubmitButtonVisible = isSubmitButtonVisible
             return this
