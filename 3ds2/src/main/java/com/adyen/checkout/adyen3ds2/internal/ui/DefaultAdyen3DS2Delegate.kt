@@ -135,6 +135,7 @@ internal class DefaultAdyen3DS2Delegate(
 
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
+        @Suppress("DEPRECATION")
         when (action) {
             is Threeds2FingerprintAction -> handleThreeds2FingerprintAction(action, activity)
             is Threeds2ChallengeAction -> handleThreeds2ChallengeAction(action, activity)
@@ -143,6 +144,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun handleThreeds2FingerprintAction(
+        @Suppress("DEPRECATION")
         action: Threeds2FingerprintAction,
         activity: Activity,
     ) {
@@ -165,6 +167,7 @@ internal class DefaultAdyen3DS2Delegate(
     }
 
     private fun handleThreeds2ChallengeAction(
+        @Suppress("DEPRECATION")
         action: Threeds2ChallengeAction,
         activity: Activity,
     ) {

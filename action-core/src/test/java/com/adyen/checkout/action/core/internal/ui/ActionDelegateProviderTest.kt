@@ -100,6 +100,7 @@ internal class ActionDelegateProviderTest(
 
     companion object {
 
+        @Suppress("DEPRECATION")
         @JvmStatic
         fun actionSource() = listOf(
             arguments(AwaitAction(), AwaitDelegate::class.java),

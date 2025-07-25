@@ -156,6 +156,7 @@ internal class DefaultGenericActionDelegate(
         observeViewFlow(delegate)
     }
 
+    @Suppress("DEPRECATION")
     private fun isOld3DS2Flow(action: Action): Boolean {
         return runCompileOnly { _delegate is Adyen3DS2Delegate && action is Threeds2ChallengeAction } ?: false
     }

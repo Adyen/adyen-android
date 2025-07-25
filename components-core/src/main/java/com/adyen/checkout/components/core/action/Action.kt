@@ -48,6 +48,7 @@ abstract class Action : ModelObject() {
             }
         }
 
+        @Suppress("DEPRECATION")
         fun getChildSerializer(actionType: String): Serializer<Action> {
             val childSerializer = when (actionType) {
                 RedirectAction.ACTION_TYPE,

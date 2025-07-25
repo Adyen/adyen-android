@@ -14,6 +14,10 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
+@Deprecated(
+    "The 3DS2 flow with separate fingerprint and challenge actions is deprecated. Use Threeds2Action instead.",
+    ReplaceWith("Threeds2Action", "com.adyen.checkout.components.core.action.Threeds2Action"),
+)
 data class Threeds2ChallengeAction(
     override var type: String? = null,
     override var paymentData: String? = null,
@@ -25,6 +29,7 @@ data class Threeds2ChallengeAction(
         const val ACTION_TYPE = ActionTypes.THREEDS2_CHALLENGE
         private const val TOKEN = "token"
 
+        @Suppress("DEPRECATION")
         @JvmField
         val SERIALIZER: Serializer<Threeds2ChallengeAction> = object : Serializer<Threeds2ChallengeAction> {
             override fun serialize(modelObject: Threeds2ChallengeAction): JSONObject {
