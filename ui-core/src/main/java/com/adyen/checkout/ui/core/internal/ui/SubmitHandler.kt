@@ -60,7 +60,10 @@ class SubmitHandler<ComponentStateT : PaymentComponentState<*>>(
     fun onSubmit(state: ComponentStateT) {
         when {
             !state.isInputValid -> uiEventChannel.trySend(PaymentComponentUIEvent.InvalidUI)
-            state.isValid -> submitChannel.trySend(state)
+            state.isValid -> {
+                uiEventChannel.trySend(PaymentComponentUIEvent.HideKeyboard)
+                submitChannel.trySend(state)
+            }
             !state.isReady -> _uiStateFlow.tryEmit(PaymentComponentUIState.PendingSubmit)
             else -> resetUIState() // unreachable state
         }
