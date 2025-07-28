@@ -115,7 +115,7 @@ fun CheckoutTextField(
 
 @Preview
 @Composable
-private fun AdyenTextFieldPreview(
+private fun CheckoutTextFieldPreview(
     @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
     InternalCheckoutTheme(theme) {
