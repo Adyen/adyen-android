@@ -8,16 +8,19 @@
 
 package com.adyen.checkout.core.sessions.internal
 
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
+import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
+// TODO - Add tests
 internal class SessionInteractor(
     private val sessionRepository: SessionRepository,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
@@ -35,34 +38,47 @@ internal class SessionInteractor(
 
     suspend fun submitPayment(
         paymentComponentState: PaymentComponentState<*>,
-    ): SessionCallResult.Payments {
-        sessionRepository.submitPayment(
-            sessionModel = sessionModel,
-            paymentComponentData = paymentComponentState.data,
-        ).fold(
-            onSuccess = { response ->
-                updateSessionData(response.sessionData)
+    ) = sessionRepository.submitPayment(
+        sessionModel = sessionModel,
+        paymentComponentData = paymentComponentState.data,
+    ).fold(
+        onSuccess = { response ->
+            updateSessionData(response.sessionData)
 
-                val action = response.action
-                return when {
-                    action != null -> SessionCallResult.Payments.Action(action)
-                    else -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
-                }
-            },
-            onFailure = {
-                paymentComponentState.data.paymentMethod?.type?.let { paymentMethodType ->
-                    // TODO - Analytics track event
+            when (val action = response.action) {
+                null -> SessionCallResult.Payments.Finished(response.mapToSessionPaymentResult())
+                else -> SessionCallResult.Payments.Action(action)
+            }
+        },
+        onFailure = {
+            paymentComponentState.data.paymentMethod?.type?.let { paymentMethodType ->
+                // TODO - Analytics track event
 //                    val event = GenericEvents.error(
 //                        component = paymentMethodType,
 //                        event = ErrorEvent.API_PAYMENTS,
 //                    )
 //                    analyticsManager?.trackEvent(event)
-                }
+            }
 
-                return SessionCallResult.Payments.Error(throwable = it)
-            },
-        )
-    }
+            SessionCallResult.Payments.Error(throwable = it)
+        },
+    )
+
+    suspend fun submitDetails(actionComponentData: ActionComponentData) =
+        sessionRepository.submitDetails(sessionModel, actionComponentData)
+            .fold(
+                onSuccess = { response ->
+                    updateSessionData(response.sessionData)
+
+                    when (val action = response.action) {
+                        null -> SessionCallResult.Details.Finished(response.mapToSessionPaymentResult())
+                        else -> SessionCallResult.Details.Action(action)
+                    }
+                },
+                onFailure = {
+                    SessionCallResult.Details.Error(throwable = it)
+                },
+            )
 
     private fun updateSessionData(sessionData: String) {
         adyenLog(AdyenLogLevel.VERBOSE) { "Updating session data - $sessionData" }
@@ -70,6 +86,14 @@ internal class SessionInteractor(
     }
 
     private fun SessionPaymentsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
+        sessionId = sessionModel.id,
+        sessionResult = sessionResult,
+        sessionData = sessionData,
+        resultCode = resultCode,
+        order = order,
+    )
+
+    private fun SessionDetailsResponse.mapToSessionPaymentResult() = SessionPaymentResult(
         sessionId = sessionModel.id,
         sessionResult = sessionResult,
         sessionData = sessionData,
