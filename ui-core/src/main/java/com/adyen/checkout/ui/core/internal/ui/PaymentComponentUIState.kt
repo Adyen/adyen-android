@@ -35,4 +35,5 @@ sealed class PaymentComponentUIState {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 sealed class PaymentComponentUIEvent {
     object InvalidUI : PaymentComponentUIEvent()
+    object HideKeyboard : PaymentComponentUIEvent()
 }

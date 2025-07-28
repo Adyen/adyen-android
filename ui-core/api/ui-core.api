@@ -45,6 +45,10 @@ public final class com/adyen/checkout/ui/core/internal/ui/ButtonComponentViewTyp
 	public final fun getDEFAULT_BUTTON_TEXT_RES_ID ()I
 }
 
+public final class com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$HideKeyboard : com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$HideKeyboard;
+}
+
 public final class com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$InvalidUI : com/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/core/internal/ui/PaymentComponentUIEvent$InvalidUI;
 }

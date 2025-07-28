@@ -67,7 +67,7 @@ internal class SubmitHandlerTest {
     inner class OnSubmitTest {
 
         @Test
-        fun `input is invalid, then InvalidUI state should be emitted`() = runTest {
+        fun `input is invalid, then InvalidUI event should be emitted`() = runTest {
             submitHandler = createSubmitHandler()
             submitHandler.initialize(CoroutineScope(UnconfinedTestDispatcher()), flowOf())
 
@@ -77,13 +77,14 @@ internal class SubmitHandlerTest {
         }
 
         @Test
-        fun `component state is valid, then component state should be emitted`() = runTest {
+        fun `component state is valid, then component state and HideKeyboard event should be emitted`() = runTest {
             submitHandler = createSubmitHandler()
             submitHandler.initialize(CoroutineScope(UnconfinedTestDispatcher()), flowOf())
 
             val componentState = createComponentState(isInputValid = true, isReady = true)
             submitHandler.onSubmit(componentState)
 
+            assertEquals(PaymentComponentUIEvent.HideKeyboard, submitHandler.uiEventFlow.first())
             assertEquals(componentState, submitHandler.submitFlow.first())
         }
 

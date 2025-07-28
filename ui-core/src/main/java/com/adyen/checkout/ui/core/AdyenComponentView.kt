@@ -141,6 +141,7 @@ class AdyenComponentView @JvmOverloads constructor(
             uiStateDelegate?.uiEventFlow?.onEach {
                 when (it) {
                     PaymentComponentUIEvent.InvalidUI -> highlightValidationErrors()
+                    PaymentComponentUIEvent.HideKeyboard -> hideKeyboard()
                 }
             }?.launchIn(coroutineScope)
 
