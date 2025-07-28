@@ -20,4 +20,10 @@ internal interface SessionCallResult {
         data class Action(val action: ActionResponse) : Payments()
         data class Error(val throwable: Throwable) : Payments()
     }
+
+    sealed class Details : SessionCallResult {
+        data class Finished(val result: SessionPaymentResult) : Details()
+        data class Action(val action: ActionResponse) : Details()
+        data class Error(val throwable: Throwable) : Details()
+    }
 }

@@ -9,11 +9,14 @@
 package com.adyen.checkout.core.sessions.internal.data.api
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodDetails
 import com.adyen.checkout.core.sessions.SessionModel
+import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsRequest
+import com.adyen.checkout.core.sessions.internal.data.model.SessionDetailsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRequest
 import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsResponse
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupRequest
@@ -44,6 +47,22 @@ class SessionRepository(
     ): Result<SessionPaymentsResponse> = runSuspendCatching {
         val request = SessionPaymentsRequest(sessionModel.sessionData.orEmpty(), paymentComponentData)
         sessionService.submitPayment(
+            request = request,
+            sessionId = sessionModel.id,
+            clientKey = clientKey,
+        )
+    }
+
+    suspend fun submitDetails(
+        sessionModel: SessionModel,
+        actionComponentData: ActionComponentData
+    ): Result<SessionDetailsResponse> = runSuspendCatching {
+        val request = SessionDetailsRequest(
+            sessionData = sessionModel.sessionData.orEmpty(),
+            paymentData = actionComponentData.paymentData,
+            details = actionComponentData.details,
+        )
+        sessionService.submitDetails(
             request = request,
             sessionId = sessionModel.id,
             clientKey = clientKey,
