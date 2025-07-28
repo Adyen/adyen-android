@@ -15,5 +15,6 @@ import androidx.compose.runtime.Immutable
 data class AdyenCheckoutTheme(
     val colors: AdyenColors = AdyenColors.light(),
     val textStyles: AdyenTextStyles = AdyenTextStyles.default(),
+    val attributes: CheckoutAttributes = CheckoutAttributes.default(),
     val elements: AdyenElements = AdyenElements.default(),
 )

@@ -132,7 +132,7 @@ private fun CountryCodeDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(AdyenCheckoutTheme.elements.cornerRadius.dp))
+                        .clip(RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp))
                         .let {
                             if (isSelected) {
                                 it.background(AdyenCheckoutTheme.colors.container)

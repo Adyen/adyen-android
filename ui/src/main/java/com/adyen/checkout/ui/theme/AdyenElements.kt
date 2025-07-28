@@ -13,7 +13,6 @@ import androidx.compose.runtime.Immutable
 // TODO - Add KDocs
 @Immutable
 data class AdyenElements(
-    val cornerRadius: Int,
     val buttons: AdyenButtonStyles,
     val switch: AdyenSwitchStyle,
     val textField: AdyenTextFieldStyle,
@@ -22,16 +21,12 @@ data class AdyenElements(
 
     companion object {
 
-        private const val DEFAULT_CORNER_RADIUS = 8
-
         fun default(
-            cornerRadius: Int = DEFAULT_CORNER_RADIUS,
             buttons: AdyenButtonStyles = AdyenButtonStyles(),
             switch: AdyenSwitchStyle = AdyenSwitchStyle(),
             textField: AdyenTextFieldStyle = AdyenTextFieldStyle(),
             segmentedButton: AdyenSegmentedButtonStyle = AdyenSegmentedButtonStyle(),
         ) = AdyenElements(
-            cornerRadius = cornerRadius,
             buttons = buttons,
             switch = switch,
             textField = textField,

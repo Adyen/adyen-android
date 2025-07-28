@@ -37,14 +37,14 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyles = AdyenCheckoutTheme.elements.buttons
+    val buttonStyle = AdyenCheckoutTheme.elements.buttons.primary
     AdyenButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
-        style = ButtonDefaults.primaryButtonStyle(buttonStyles.primary),
+        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        style = ButtonDefaults.primaryButtonStyle(buttonStyle),
     )
 }
 
@@ -84,14 +84,14 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyles = AdyenCheckoutTheme.elements.buttons
+    val buttonStyle = AdyenCheckoutTheme.elements.buttons.secondary
     AdyenButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
-        style = ButtonDefaults.secondaryButtonStyle(buttonStyles.secondary),
+        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        style = ButtonDefaults.secondaryButtonStyle(buttonStyle),
     )
 }
 
@@ -131,14 +131,14 @@ fun TertiaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyles = AdyenCheckoutTheme.elements.buttons
+    val buttonStyle = AdyenCheckoutTheme.elements.buttons.tertiary
     AdyenButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
-        style = ButtonDefaults.tertiaryButtonStyle(buttonStyles.tertiary),
+        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        style = ButtonDefaults.tertiaryButtonStyle(buttonStyle),
     )
 }
 
@@ -178,14 +178,14 @@ fun DestructiveButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyles = AdyenCheckoutTheme.elements.buttons
+    val buttonStyle = AdyenCheckoutTheme.elements.buttons.destructive
     AdyenButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyles.cornerRadius ?: AdyenCheckoutTheme.elements.cornerRadius,
-        style = ButtonDefaults.destructiveButtonStyle(buttonStyles.destructive),
+        cornerRadius = buttonStyle?.cornerRadius ?: AdyenCheckoutTheme.attributes.cornerRadius,
+        style = ButtonDefaults.destructiveButtonStyle(buttonStyle),
     )
 }
 
