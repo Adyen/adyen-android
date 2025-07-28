@@ -6,12 +6,12 @@
  * Created by oscars on 8/8/2022.
  */
 
-package com.adyen.checkout.components.core.internal.data.api
+package com.adyen.checkout.core.components.internal.data.api
 
-import com.adyen.checkout.components.core.internal.data.model.StatusResponse
+import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
-import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.test.test
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
