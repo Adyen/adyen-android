@@ -471,7 +471,7 @@ public final class com/adyen/checkout/core/components/CheckoutResult$Finished : 
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnAdditionalDetailsCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onAdditionalDetails (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun onAdditionalDetails (Lcom/adyen/checkout/core/action/data/ActionComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
