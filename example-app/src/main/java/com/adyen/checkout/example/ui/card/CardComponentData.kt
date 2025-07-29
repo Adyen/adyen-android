@@ -12,7 +12,7 @@ import com.adyen.checkout.card.CardComponentState
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
 
-internal data class CardComponentData(
+data class CardComponentData(
     val paymentMethod: PaymentMethod,
     val callback: ComponentCallback<CardComponentState>,
 )

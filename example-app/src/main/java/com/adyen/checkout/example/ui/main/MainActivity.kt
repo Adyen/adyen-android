@@ -30,7 +30,6 @@ import com.adyen.checkout.example.service.ExampleAdvancedDropInService
 import com.adyen.checkout.example.service.ExampleSessionsDropInService
 import com.adyen.checkout.example.ui.bacs.BacsFragment
 import com.adyen.checkout.example.ui.blik.BlikActivity
-import com.adyen.checkout.example.ui.card.CardActivity
 import com.adyen.checkout.example.ui.card.SessionsCardTakenOverActivity
 import com.adyen.checkout.example.ui.card.compose.SessionsCardActivity
 import com.adyen.checkout.example.ui.giftcard.GiftCardActivity
@@ -38,6 +37,7 @@ import com.adyen.checkout.example.ui.giftcard.SessionsGiftCardActivity
 import com.adyen.checkout.example.ui.googlepay.GooglePayFragment
 import com.adyen.checkout.example.ui.googlepay.compose.SessionsGooglePayActivity
 import com.adyen.checkout.example.ui.instant.InstantFragment
+import com.adyen.checkout.example.ui.mobilesummercard.MSCardActivity
 import com.adyen.checkout.example.ui.settings.SettingsActivity
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             is MainNavigation.Card -> {
-                startActivity(Intent(this, CardActivity::class.java))
+                startActivity(Intent(this, MSCardActivity::class.java))
             }
 
             is MainNavigation.CardWithSession -> {
