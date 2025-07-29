@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.sessions.internal
 
+import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
@@ -39,6 +41,23 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
             is SessionCallResult.Payments.Error -> CheckoutResult.Error()
             // TODO - Implement Finished case
             is SessionCallResult.Payments.Finished -> CheckoutResult.Finished()
+        }
+    }
+
+    override suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult {
+        return when (event) {
+            is ActionComponentEvent.ActionDetails -> checkoutCallbacks?.onAdditionalDetails(event.data)
+                ?: makeDetailsCall(event.data)
+        }
+    }
+
+    private suspend fun makeDetailsCall(actionComponentData: ActionComponentData): CheckoutResult {
+        return when (val sessionResult = sessionInteractor.submitDetails(actionComponentData)) {
+            is SessionCallResult.Details.Action -> CheckoutResult.Action(sessionResult.action)
+            // TODO - Propagate error details to CheckoutResult.Error once its data class is updated.
+            is SessionCallResult.Details.Error -> CheckoutResult.Error()
+            // TODO - Propagate session result to CheckoutResult.Finished once its data class is updated.
+            is SessionCallResult.Details.Finished -> CheckoutResult.Finished()
         }
     }
 }

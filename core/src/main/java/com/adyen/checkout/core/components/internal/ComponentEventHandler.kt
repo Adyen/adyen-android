@@ -8,10 +8,13 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 
 internal interface ComponentEventHandler<T : PaymentComponentState<*>> {
 
     suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult
+
+    suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult
 }
