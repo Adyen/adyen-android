@@ -15,7 +15,7 @@ import com.adyen.checkout.core.action.data.ActionComponentData
 sealed class ActionComponentEvent {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    class ActionDetails(
+    data class ActionDetails(
         val data: ActionComponentData
     ) : ActionComponentEvent()
 }
