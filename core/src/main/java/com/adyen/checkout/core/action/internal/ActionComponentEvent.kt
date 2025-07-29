@@ -3,14 +3,19 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 14/7/2025.
+ * Created by ararat on 29/7/2025.
  */
 
 package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.ComposableComponent
-import com.adyen.checkout.core.components.internal.ui.EventComponent
+import com.adyen.checkout.core.action.data.ActionComponentData
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionComponent : ComposableComponent, EventComponent<ActionComponentEvent>
+sealed class ActionComponentEvent {
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    class ActionDetails(
+        val data: ActionComponentData
+    ) : ActionComponentEvent()
+}

@@ -15,7 +15,6 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.ui.EventComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateManager
@@ -46,8 +45,7 @@ internal class MBWayComponent(
     private val transformerRegistry: FieldTransformerRegistry<MBWayFieldId>,
     private val stateManager: ComponentStateManager<MBWayComponentState, MBWayFieldId>,
 ) : PaymentComponent<MBWayPaymentComponentState>,
-    FieldChangeListener<MBWayFieldId>,
-    EventComponent<MBWayPaymentComponentState> {
+    FieldChangeListener<MBWayFieldId> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
