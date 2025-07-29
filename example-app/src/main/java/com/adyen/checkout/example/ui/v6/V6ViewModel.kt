@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -90,7 +91,8 @@ internal class V6ViewModel @Inject constructor(
         return CheckoutResult.Finished()
     }
 
-    private fun onAdditionalDetails(): CheckoutResult {
+    @Suppress("UnusedParameter")
+    private fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
         // TODO - make payments details call
         return CheckoutResult.Finished()
     }
