@@ -19,33 +19,21 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
 import com.adyen.checkout.card.card
+import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.example.BuildConfig
-import com.adyen.checkout.example.data.storage.AnalyticsMode
-import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Locale
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MSCardActivity : AppCompatActivity() {
-
-    @Inject
-    internal lateinit var keyValueStorage: KeyValueStorage
-
-    private val shopperLocale: Locale?
-        get() {
-            val shopperLocaleString = keyValueStorage.getShopperLocale()
-            return shopperLocaleString?.let { Locale.forLanguageTag(it) }
-        }
 
     private lateinit var binding: ActivityCardBinding
 
@@ -63,12 +51,11 @@ class MSCardActivity : AppCompatActivity() {
         val cardConfiguration = CheckoutConfiguration(
             environment = Environment.TEST,
             clientKey = BuildConfig.CLIENT_KEY,
-            shopperLocale = shopperLocale,
-            amount = keyValueStorage.getAmount(),
-            analyticsConfiguration = getAnalyticsConfiguration()
+            amount = Amount(value = 1337L, currency = "EUR"),
+            analyticsConfiguration = AnalyticsConfiguration(level = AnalyticsLevel.ALL)
         ) {
             card {
-                shopperReference = keyValueStorage.getShopperReference()
+                shopperReference = "test-android-components"
             }
         }
 
@@ -138,14 +125,6 @@ class MSCardActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         cardComponent = null
-    }
-
-    private fun getAnalyticsConfiguration(): AnalyticsConfiguration {
-        val analyticsLevel = when (keyValueStorage.getAnalyticsMode()) {
-            AnalyticsMode.ALL -> AnalyticsLevel.ALL
-            AnalyticsMode.NONE -> AnalyticsLevel.NONE
-        }
-        return AnalyticsConfiguration(level = analyticsLevel)
     }
 
     companion object {
