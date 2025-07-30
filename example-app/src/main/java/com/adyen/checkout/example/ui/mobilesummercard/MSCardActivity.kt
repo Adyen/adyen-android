@@ -18,22 +18,20 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.card
-import com.adyen.checkout.components.core.Amount
-import com.adyen.checkout.components.core.AnalyticsConfiguration
-import com.adyen.checkout.components.core.AnalyticsLevel
-import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.core.Environment
-import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.databinding.ActivityCardBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.extensions.getLogTag
+import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MSCardActivity : AppCompatActivity() {
+
+    @Inject
+    internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
 
     private lateinit var binding: ActivityCardBinding
 
@@ -48,21 +46,10 @@ class MSCardActivity : AppCompatActivity() {
             cardViewModel.getCardPaymentMethod(paymentMethods)
                 ?: error("Card payment method not found")
 
-        val cardConfiguration = CheckoutConfiguration(
-            environment = Environment.TEST,
-            clientKey = BuildConfig.CLIENT_KEY,
-            amount = Amount(value = 1337L, currency = "EUR"),
-            analyticsConfiguration = AnalyticsConfiguration(level = AnalyticsLevel.ALL)
-        ) {
-            card {
-                shopperReference = "test-android-components"
-            }
-        }
-
         cardComponent = CardComponent.PROVIDER.get(
             activity = this@MSCardActivity,
             paymentMethod = cardPaymentMethod,
-            checkoutConfiguration = cardConfiguration,
+            checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = cardViewModel,
         )
 
