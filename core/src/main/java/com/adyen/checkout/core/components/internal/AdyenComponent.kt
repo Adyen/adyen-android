@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 
+// TODO - App context - Check if context can be used here or how we can pass it here
 internal class AdyenComponent(
     txVariant: String,
     checkoutContext: CheckoutContext,
@@ -41,4 +42,6 @@ internal class AdyenComponent(
     fun observe(lifecycle: Lifecycle) {
         paymentFacilitator.observe(lifecycle)
     }
+
+    // TODO - Implement onCleared() function
 }
