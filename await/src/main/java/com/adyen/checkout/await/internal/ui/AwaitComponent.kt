@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.await.internal.ui
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
@@ -21,6 +22,10 @@ internal class AwaitComponent : ActionComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
+
+    override fun handleAction(context: Context) {
+        // TODO - Implement handleAction
+    }
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
