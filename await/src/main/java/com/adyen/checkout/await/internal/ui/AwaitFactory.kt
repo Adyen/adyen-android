@@ -9,6 +9,7 @@
 package com.adyen.checkout.await.internal.ui
 
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 internal class AwaitFactory : ActionFactory<AwaitComponent> {
 
     override fun create(
+        action: Action,
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle

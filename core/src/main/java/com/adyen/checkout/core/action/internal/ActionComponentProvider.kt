@@ -46,6 +46,7 @@ object ActionComponentProvider {
         savedStateHandle: SavedStateHandle,
     ): ActionComponent {
         return factories[action.type]?.create(
+            action = action,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,

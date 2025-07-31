@@ -10,6 +10,7 @@ package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import kotlinx.coroutines.CoroutineScope
 
@@ -17,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 interface ActionFactory<T : ActionComponent> {
 
     fun create(
+        action: Action,
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,

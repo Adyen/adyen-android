@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.action.internal
 
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -130,6 +131,7 @@ internal class ActionComponentProviderTest {
     private fun generateFactory(actionComponent: ActionComponent) =
         object : ActionFactory<ActionComponent> {
             override fun create(
+                action: Action,
                 coroutineScope: CoroutineScope,
                 checkoutConfiguration: CheckoutConfiguration,
                 savedStateHandle: SavedStateHandle
