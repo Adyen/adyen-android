@@ -20,7 +20,6 @@ import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusService
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
@@ -69,7 +68,6 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         return AwaitComponent(
             action = action,
             coroutineScope = coroutineScope,
-            componentParams = componentParams,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             statusRepository = statusRepository,

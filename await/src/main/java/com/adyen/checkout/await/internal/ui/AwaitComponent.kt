@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class AwaitComponent(
     private val action: AwaitAction,
     private val coroutineScope: CoroutineScope,
-    private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
