@@ -19,6 +19,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusRepository
+import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
@@ -34,13 +35,19 @@ internal class AwaitComponent(
     private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
-) : ActionComponent {
+) : ActionComponent, StatusPollingComponent {
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
     override fun handleAction(context: Context) {
         // TODO - Implement handleAction
+    }
+
+    // TODO - Refresh status when user resumes the app
+    override fun refreshStatus() {
+        val paymentData = paymentDataRepository.paymentData ?: return
+        statusRepository.refreshStatus(paymentData)
     }
 
     @Composable
