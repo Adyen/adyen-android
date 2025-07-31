@@ -53,8 +53,8 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
             componentParams = componentParams,
             application = null,
             // TODO - Analytics. When we move the analyticsManager, the source can also be adjusted
-            source = AnalyticsSource.PaymentComponent(PaymentMethodTypes.MB_WAY),
-            // TODO - Analytics. When we move out componentParams logic creation to the payment facilitator
+            source = AnalyticsSource.PaymentComponent("AwaitAction"),
+            // TODO - When we move out componentParams logic creation to the payment facilitator
             //  factory level, Analytics manager should move there too and sessionId can be passed
             sessionId = null,
         )
