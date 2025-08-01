@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.ui.internal.PrimaryButton
 import com.adyen.checkout.ui.theme.AdyenCheckoutTheme
@@ -61,3 +63,51 @@ fun AdyenPaymentFlow(
         }
     }
 }
+
+// TODO - Investigate different use cases
+@Composable
+fun AdyenPaymentFlow(
+    paymentMethod: PaymentMethod,
+    checkoutContext: CheckoutContext.Sessions,
+    modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    checkoutController: CheckoutController = rememberCheckoutController(),
+) {}
+
+@Composable
+fun AdyenPaymentFlow(
+    paymentMethod: PaymentMethod,
+    checkoutContext: CheckoutContext.Advanced.Payment,
+    modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    checkoutController: CheckoutController = rememberCheckoutController(),
+) {}
+
+@Composable
+fun AdyenPaymentFlow(
+    // TODO - Stored Payment Method
+    storedPaymentMethod: Int,
+    checkoutContext: CheckoutContext.Sessions,
+    modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    checkoutController: CheckoutController = rememberCheckoutController(),
+) {}
+
+@Composable
+fun AdyenPaymentFlow(
+    // TODO - Stored Payment Method
+    storedPaymentMethod: Int,
+    checkoutContext: CheckoutContext.Advanced.Payment,
+    modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    checkoutController: CheckoutController = rememberCheckoutController(),
+) {}
+
+@Composable
+fun AdyenPaymentFlow(
+    action: Action,
+    checkoutContext: CheckoutContext.Advanced.Action,
+    modifier: Modifier = Modifier,
+    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+    checkoutController: CheckoutController = rememberCheckoutController(),
+) {}

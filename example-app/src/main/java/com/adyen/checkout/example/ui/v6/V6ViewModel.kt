@@ -43,7 +43,7 @@ internal class V6ViewModel @Inject constructor(
         BuildConfig.CLIENT_KEY,
     )
 
-    var checkoutContext by mutableStateOf<CheckoutContext?>(null)
+    var checkoutContext by mutableStateOf<CheckoutContext.Advanced.Payment?>(null)
 
     init {
         viewModelScope.launch {
@@ -81,7 +81,7 @@ internal class V6ViewModel @Inject constructor(
 
         checkoutContext = when (result) {
             is Checkout.Result.Error -> null
-            is Checkout.Result.Success -> result.checkoutContext
+            is Checkout.Result.Success -> result.checkoutContext as CheckoutContext.Advanced.Payment
         }
     }
 

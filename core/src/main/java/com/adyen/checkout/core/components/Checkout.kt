@@ -43,10 +43,22 @@ object Checkout {
     ): Result {
         // TODO - Fetch checkoutAttemptId
         return Result.Success(
-            CheckoutContext.Advanced(
+            CheckoutContext.Advanced.Payment(
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
                 checkoutConfiguration = checkoutConfiguration,
                 checkoutCallbacks = checkoutCallbacks,
+            )
+        )
+    }
+
+    suspend fun initialize(
+        checkoutConfiguration: CheckoutConfiguration,
+        actionCallbacks: ActionCallbacks
+    ): Result {
+        return Result.Success(
+            CheckoutContext.Advanced.Action(
+                checkoutConfiguration = checkoutConfiguration,
+                actionCallbacks = actionCallbacks,
             )
         )
     }

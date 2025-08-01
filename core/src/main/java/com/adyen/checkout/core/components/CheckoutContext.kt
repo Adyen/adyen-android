@@ -19,9 +19,19 @@ sealed interface CheckoutContext {
         val checkoutCallbacks: CheckoutCallbacks?
     ) : CheckoutContext
 
-    data class Advanced internal constructor(
-        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        val checkoutConfiguration: CheckoutConfiguration,
-        val checkoutCallbacks: CheckoutCallbacks
-    ) : CheckoutContext
+    // TODO - Investigate different use cases
+    sealed interface Advanced: CheckoutContext {
+
+        data class Payment internal constructor(
+            val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+            val checkoutConfiguration: CheckoutConfiguration,
+            val checkoutCallbacks: CheckoutCallbacks,
+        ): Advanced
+
+        data class Action internal constructor(
+            val checkoutConfiguration: CheckoutConfiguration,
+            val actionCallbacks: ActionCallbacks,
+        ): Advanced
+
+    }
 }

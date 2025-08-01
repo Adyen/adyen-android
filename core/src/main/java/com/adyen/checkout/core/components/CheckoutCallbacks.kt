@@ -14,13 +14,18 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
+open class ActionCallbacks(
+    private val onAdditionalDetails: OnAdditionalDetailsCallback,
+    private val onError: OnErrorCallback,
+)
+
 class CheckoutCallbacks(
     private val beforeSubmit: BeforeSubmitCallback = BeforeSubmitCallback { false },
     private val onSubmit: OnSubmitCallback,
     private val onAdditionalDetails: OnAdditionalDetailsCallback,
     private val onError: OnErrorCallback,
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
-) {
+): ActionCallbacks(onAdditionalDetails, onError) {
 
     private val additionalCallbacks = mutableMapOf<KClass<out CheckoutCallback>, CheckoutCallback>()
 

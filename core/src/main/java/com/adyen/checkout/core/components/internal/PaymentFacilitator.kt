@@ -93,6 +93,11 @@ internal class PaymentFacilitator(
             coroutineScope = coroutineScope,
         )
         this.actionComponent = actionComponent
+
+        actionComponent.eventFlow.onEach { event ->
+            componentEventHandler.onActionComponentEvent(event)
+        }
+
         adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
