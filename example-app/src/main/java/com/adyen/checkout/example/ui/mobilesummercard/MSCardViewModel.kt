@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.mobilesummercard
 
+import android.app.Activity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,11 +40,14 @@ internal class MSCardViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage
 ) : ViewModel(), ComponentCallback<CardComponentState> {
 
-    private val _events = MutableSharedFlow<MSCardEvent>()
-    val events: Flow<MSCardEvent> = _events
-
     override fun onSubmit(state: CardComponentState) {
-        makePayment(state.data)
+        viewModelScope.launch(IODispatcher) {
+            val action = makePayment(state.data)
+
+            if (action != null) {
+                cardComponent.handleAction(action, activity)
+            }
+        }
     }
 
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
@@ -53,6 +57,13 @@ internal class MSCardViewModel @Inject constructor(
     override fun onError(componentError: ComponentError) {
         onComponentError(componentError)
     }
+
+    lateinit var activity: Activity
+    lateinit var cardComponent: CardComponent
+    lateinit var action: Action
+
+    private val _events = MutableSharedFlow<MSCardEvent>()
+    val events: Flow<MSCardEvent> = _events
 
     suspend fun fetchPaymentMethods() = withContext(IODispatcher) {
         return@withContext paymentsRepository.getPaymentMethods(
@@ -71,41 +82,36 @@ internal class MSCardViewModel @Inject constructor(
         ?.paymentMethods
         ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-    private fun makePayment(data: PaymentComponentData<*>) {
+    private suspend fun makePayment(data: PaymentComponentData<*>): Action? {
         val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
+        val paymentRequest = createPaymentRequest(
+            paymentComponentData = paymentComponentData,
+            shopperReference = keyValueStorage.getShopperReference(),
+            amount = keyValueStorage.getAmount(),
+            countryCode = keyValueStorage.getCountry(),
+            merchantAccount = keyValueStorage.getMerchantAccount(),
+            redirectUrl = savedStateHandle.get<String>(MSCardActivity.RETURN_URL_EXTRA)
+                ?: error("Return url should be set"),
+            threeDSMode = keyValueStorage.getThreeDSMode(),
+            shopperEmail = keyValueStorage.getShopperEmail(),
+        )
 
-        viewModelScope.launch(IODispatcher) {
-            val paymentRequest = createPaymentRequest(
-                paymentComponentData = paymentComponentData,
-                shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
-                countryCode = keyValueStorage.getCountry(),
-                merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = savedStateHandle.get<String>(MSCardActivity.RETURN_URL_EXTRA)
-                    ?: error("Return url should be set"),
-                threeDSMode = keyValueStorage.getThreeDSMode(),
-                shopperEmail = keyValueStorage.getShopperEmail(),
-            )
-
-            handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
-        }
+        return handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
     }
 
-    private suspend fun handlePaymentResponse(json: JSONObject?) {
+    private suspend fun handlePaymentResponse(json: JSONObject?): Action? {
         json?.let {
             when {
                 json.has("action") -> {
                     val action = Action.SERIALIZER.deserialize(json.getJSONObject("action"))
-                    handleAction(action)
+                    return action
                 }
 
                 else -> _events.emit(MSCardEvent.PaymentFinished("Finished: ${json.optString("resultCode")}"))
             }
         } ?: _events.emit(MSCardEvent.PaymentFinished("Failed"))
-    }
 
-    private suspend fun handleAction(action: Action) {
-        _events.emit(MSCardEvent.Action(action))
+        return null
     }
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {

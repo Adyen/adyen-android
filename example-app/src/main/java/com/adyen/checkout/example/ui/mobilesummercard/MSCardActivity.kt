@@ -32,12 +32,8 @@ class MSCardActivity : AppCompatActivity() {
 
     @Inject
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
-
     private lateinit var binding: ActivityCardBinding
-
     private val cardViewModel: MSCardViewModel by viewModels()
-
-    private var cardComponent: CardComponent? = null
 
     // Component: When screen is shown, we initialize the card component
     private fun initializeCardComponent() = cardViewModel.viewModelScope.launch {
@@ -46,21 +42,29 @@ class MSCardActivity : AppCompatActivity() {
             cardViewModel.getCardPaymentMethod(paymentMethods)
                 ?: error("Card payment method not found")
 
-        cardComponent = CardComponent.PROVIDER.get(
+        cardViewModel.cardComponent = CardComponent.PROVIDER.get(
             activity = this@MSCardActivity,
             paymentMethod = cardPaymentMethod,
             checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = cardViewModel,
         )
 
-        binding.cardView.attach(cardComponent!!, this@MSCardActivity)
+        binding.cardView.attach(cardViewModel.cardComponent, this@MSCardActivity)
+    }
+
+    // Redirect: Returned back to the app after a redirect
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        val data = intent.data
+        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
+            cardViewModel.cardComponent.handleIntent(intent)
+        }
     }
 
     // Component: When there is a new result
     private fun onCardEvent(event: MSCardEvent) {
         when (event) {
-            is MSCardEvent.Action -> cardComponent?.handleAction(event.action, this)
-
             is MSCardEvent.PaymentFinished -> {
                 Toast.makeText(this, event.result, Toast.LENGTH_SHORT).show()
                 finish()
@@ -70,16 +74,6 @@ class MSCardActivity : AppCompatActivity() {
                 Toast.makeText(this, event.result, Toast.LENGTH_SHORT).show()
                 finish()
             }
-        }
-    }
-
-    // Redirect: Returned back to the app after a redirect
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-
-        val data = intent.data
-        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-            cardComponent?.handleIntent(intent)
         }
     }
 
@@ -99,6 +93,7 @@ class MSCardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        cardViewModel.activity = this
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { cardViewModel.events.collect(::onCardEvent) }
@@ -111,7 +106,6 @@ class MSCardActivity : AppCompatActivity() {
     // UI: Screen is removed
     override fun onDestroy() {
         super.onDestroy()
-        cardComponent = null
     }
 
     companion object {

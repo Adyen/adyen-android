@@ -12,7 +12,5 @@ internal sealed class MSCardEvent {
 
     data class PaymentFinished(val result: String) : MSCardEvent()
 
-    data class Action(val action: com.adyen.checkout.components.core.action.Action) : MSCardEvent()
-
     data class Error(val result: String) : MSCardEvent()
 }
