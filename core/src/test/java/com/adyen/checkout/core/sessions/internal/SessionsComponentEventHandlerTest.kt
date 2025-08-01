@@ -1,6 +1,8 @@
 package com.adyen.checkout.core.sessions.internal
 
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.TestAction
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -19,6 +21,7 @@ import org.mockito.Mockito.mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.any
 import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
@@ -71,12 +74,12 @@ internal class SessionsComponentEventHandlerTest(
         val state = TestComponentState()
         sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
-        checkoutCallback.onSubmit(state)
+        verify(checkoutCallback).onSubmit(state)
     }
 
     @ParameterizedTest
     @MethodSource("sessionInteractorSubmitSource")
-    fun `when session interactor submits payment and the result is action, then onSubmit is called`(
+    fun `when session interactor submits payment, then the correct checkout result is returned`(
         sessionResult: SessionCallResult.Payments,
         expectedResult: CheckoutResult,
     ) = runTest {
@@ -85,6 +88,52 @@ internal class SessionsComponentEventHandlerTest(
 
         val state = TestComponentState()
         val result = sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
+
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
+    fun `when event is action details and callback is null, then session interactor is used`() = runTest {
+        whenever(sessionInteractor.submitDetails(any())) doReturn SessionCallResult.Details.Finished(mock())
+        sessionsComponentEventHandler = SessionsComponentEventHandler(
+            sessionInteractor = sessionInteractor,
+            checkoutCallbacks = null,
+        )
+
+        val data = ActionComponentData(paymentData = "test")
+        sessionsComponentEventHandler.onActionComponentEvent(ActionComponentEvent.ActionDetails(data))
+
+        verify(sessionInteractor).submitDetails(data)
+    }
+
+    @Test
+    fun `when event is action details and onAdditionalDetails returns a result, then that result is returned`() =
+        runTest {
+            val expectedResult = CheckoutResult.Finished()
+            whenever(checkoutCallback.onAdditionalDetails(any())) doReturn expectedResult
+
+            val data = ActionComponentData(paymentData = "test")
+            val result = sessionsComponentEventHandler.onActionComponentEvent(ActionComponentEvent.ActionDetails(data))
+
+            assertEquals(expectedResult, result)
+            verify(checkoutCallback).onAdditionalDetails(data)
+            verify(sessionInteractor, never()).submitDetails(any())
+        }
+
+    @ParameterizedTest
+    @MethodSource("sessionInteractorDetailsSource")
+    fun `when session interactor submits details, then the correct checkout result is returned`(
+        sessionResult: SessionCallResult.Details,
+        expectedResult: CheckoutResult,
+    ) = runTest {
+        sessionsComponentEventHandler = SessionsComponentEventHandler(
+            sessionInteractor = sessionInteractor,
+            checkoutCallbacks = null,
+        )
+        whenever(sessionInteractor.submitDetails(any())) doReturn sessionResult
+
+        val data = ActionComponentData(paymentData = "test")
+        val result = sessionsComponentEventHandler.onActionComponentEvent(ActionComponentEvent.ActionDetails(data))
 
         assertEquals(expectedResult, result)
     }
@@ -98,6 +147,17 @@ internal class SessionsComponentEventHandlerTest(
             arguments(SessionCallResult.Payments.Error(Throwable()), CheckoutResult.Error()),
             arguments(
                 SessionCallResult.Payments.Finished(SessionPaymentResult(null, null, null, null, null)),
+                CheckoutResult.Finished(),
+            ),
+        )
+
+        @JvmStatic
+        fun sessionInteractorDetailsSource() = listOf(
+            // sessionResult, checkoutResult
+            arguments(SessionCallResult.Details.Action(TestAction()), CheckoutResult.Action(TestAction())),
+            arguments(SessionCallResult.Details.Error(Throwable()), CheckoutResult.Error()),
+            arguments(
+                SessionCallResult.Details.Finished(SessionPaymentResult(null, null, null, null, null)),
                 CheckoutResult.Finished(),
             ),
         )

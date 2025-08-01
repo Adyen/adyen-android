@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 
@@ -21,6 +22,12 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
                 checkoutCallbacks.beforeSubmit(event.state)
                 checkoutCallbacks.onSubmit(event.state)
             }
+        }
+    }
+
+    override suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult {
+        return when (event) {
+            is ActionComponentEvent.ActionDetails -> checkoutCallbacks.onAdditionalDetails(event.data)
         }
     }
 }
