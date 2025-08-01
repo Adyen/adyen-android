@@ -10,6 +10,7 @@ package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.ui.ComposableComponent
+import com.adyen.checkout.core.components.internal.ui.EventComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionComponent : ComposableComponent
+interface ActionComponent : ComposableComponent, EventComponent<ActionComponentEvent>
