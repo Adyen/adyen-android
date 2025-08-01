@@ -22,18 +22,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
-import com.adyen.checkout.ui.theme.AdyenTextStyle
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTextStyle
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun Title(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.title, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.title, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -41,10 +41,10 @@ fun Title(
 fun Subtitle(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.subtitle, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subtitle, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -52,10 +52,10 @@ fun Subtitle(
 fun Body(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.body, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.body, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -63,10 +63,10 @@ fun Body(
 fun BodyEmphasized(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.bodyEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.bodyEmphasized, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -74,10 +74,10 @@ fun BodyEmphasized(
 fun SubHeadline(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.subHeadline, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadline, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -85,10 +85,10 @@ fun SubHeadline(
 fun SubHeadlineEmphasized(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.subHeadlineEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.subHeadlineEmphasized, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -96,10 +96,10 @@ fun SubHeadlineEmphasized(
 fun Footnote(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.footnote, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.footnote, color, modifier, maxLines)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -107,16 +107,16 @@ fun Footnote(
 fun FootnoteEmphasized(
     text: String,
     modifier: Modifier = Modifier,
-    color: Color = AdyenCheckoutTheme.colors.text,
+    color: Color = CheckoutThemeProvider.colors.text,
     maxLines: Int = Int.MAX_VALUE,
 ) {
-    AdyenText(text, AdyenCheckoutTheme.textStyles.footnoteEmphasized, color, modifier, maxLines)
+    CheckoutText(text, CheckoutThemeProvider.textStyles.footnoteEmphasized, color, modifier, maxLines)
 }
 
 @Composable
-private fun AdyenText(
+private fun CheckoutText(
     text: String,
-    style: AdyenTextStyle,
+    style: CheckoutTextStyle,
     color: Color,
     modifier: Modifier = Modifier,
     maxLines: Int = Int.MAX_VALUE,
@@ -136,13 +136,13 @@ private fun AdyenText(
 @Preview
 @Composable
 private fun TextPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
             modifier = Modifier
-                .background(AdyenCheckoutTheme.colors.background)
+                .background(CheckoutThemeProvider.colors.background)
                 .padding(Dimensions.Large),
         ) {
             Title("Title")

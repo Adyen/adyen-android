@@ -38,9 +38,9 @@ import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.ui.internal.AdyenCheckoutTheme
-import com.adyen.checkout.ui.internal.AdyenTextField
 import com.adyen.checkout.ui.internal.BodyEmphasized
+import com.adyen.checkout.ui.internal.CheckoutTextField
+import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.FullScreenDialog
 import com.adyen.checkout.ui.internal.SubHeadline
@@ -84,7 +84,7 @@ internal fun MbWayComponent(
         } else {
             null
         }
-        AdyenTextField(
+        CheckoutTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
@@ -132,17 +132,17 @@ private fun CountryCodeDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .clip(RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp))
+                        .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
                         .let {
                             if (isSelected) {
-                                it.background(AdyenCheckoutTheme.colors.container)
+                                it.background(CheckoutThemeProvider.colors.container)
                             } else {
                                 it
                             }
                         }
                         .clickable(
                             interactionSource = null,
-                            indication = ripple(color = AdyenCheckoutTheme.colors.text),
+                            indication = ripple(color = CheckoutThemeProvider.colors.text),
                         ) {
                             fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
                             onDismissRequest()
@@ -154,7 +154,7 @@ private fun CountryCodeDialog(
                         BodyEmphasized(country.callingCode)
                         SubHeadline(
                             text = "${country.isoCode} • ${country.countryName}",
-                            color = AdyenCheckoutTheme.colors.textSecondary,
+                            color = CheckoutThemeProvider.colors.textSecondary,
                         )
                     }
 
@@ -164,7 +164,7 @@ private fun CountryCodeDialog(
                                 com.adyen.checkout.test.R.drawable.ic_checkmark,
                             ),
                             contentDescription = null,
-                            tint = AdyenCheckoutTheme.colors.text,
+                            tint = CheckoutThemeProvider.colors.text,
                         )
                     }
                 }

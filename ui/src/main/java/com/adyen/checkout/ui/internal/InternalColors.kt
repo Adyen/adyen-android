@@ -11,8 +11,8 @@ package com.adyen.checkout.ui.internal
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
-import com.adyen.checkout.ui.theme.AdyenColor
-import com.adyen.checkout.ui.theme.AdyenColors
+import com.adyen.checkout.ui.theme.CheckoutColor
+import com.adyen.checkout.ui.theme.CheckoutColors
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
@@ -33,7 +33,7 @@ data class InternalColors(
 
     internal companion object {
 
-        fun from(colors: AdyenColors) = with(colors) {
+        fun from(colors: CheckoutColors) = with(colors) {
             InternalColors(
                 background = background.toCompose(),
                 container = container.toCompose(),
@@ -52,4 +52,4 @@ data class InternalColors(
     }
 }
 
-internal fun AdyenColor.toCompose() = Color(value)
+internal fun CheckoutColor.toCompose() = Color(value)
