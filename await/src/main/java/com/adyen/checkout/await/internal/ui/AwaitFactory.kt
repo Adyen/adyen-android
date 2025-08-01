@@ -20,7 +20,6 @@ import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusService
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
@@ -54,8 +53,8 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
             componentParams = componentParams,
             application = null,
             // TODO - Analytics. When we move the analyticsManager, the source can also be adjusted
-            source = AnalyticsSource.PaymentComponent(PaymentMethodTypes.MB_WAY),
-            // TODO - Analytics. When we move out componentParams logic creation to the payment facilitator
+            source = AnalyticsSource.PaymentComponent("AwaitAction"),
+            // TODO - When we move out componentParams logic creation to the payment facilitator
             //  factory level, Analytics manager should move there too and sessionId can be passed
             sessionId = null,
         )
@@ -69,7 +68,6 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         return AwaitComponent(
             action = action,
             coroutineScope = coroutineScope,
-            componentParams = componentParams,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
             statusRepository = statusRepository,
