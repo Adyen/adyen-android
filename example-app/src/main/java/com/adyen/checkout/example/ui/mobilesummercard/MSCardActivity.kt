@@ -34,6 +34,7 @@ class MSCardActivity : AppCompatActivity() {
     internal lateinit var checkoutConfigurationProvider: CheckoutConfigurationProvider
     private lateinit var binding: ActivityCardBinding
     private val cardViewModel: MSCardViewModel by viewModels()
+    lateinit var cardComponent: CardComponent
 
     // Component: When screen is shown, we initialize the card component
     private fun initializeCardComponent() = cardViewModel.viewModelScope.launch {
@@ -42,24 +43,22 @@ class MSCardActivity : AppCompatActivity() {
             cardViewModel.getCardPaymentMethod(paymentMethods)
                 ?: error("Card payment method not found")
 
-        cardViewModel.cardComponent = CardComponent.PROVIDER.get(
+        cardComponent = CardComponent.PROVIDER.get(
             activity = this@MSCardActivity,
             paymentMethod = cardPaymentMethod,
             checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig,
             callback = cardViewModel,
         )
+        cardViewModel.cardComponent = cardComponent
 
-        binding.cardView.attach(cardViewModel.cardComponent, this@MSCardActivity)
+        binding.cardView.attach(cardComponent, this@MSCardActivity)
     }
 
     // Redirect: Returned back to the app after a redirect
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        val data = intent.data
-        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
-            cardViewModel.cardComponent.handleIntent(intent)
-        }
+        // Successfully redirected back (Docs: https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Components&version=5.13.1&utm_source=online-payments-integration&utm_medium=banner&utm_id=v6-banner#handle-a-redirect)
     }
 
     // Component: When there is a new result

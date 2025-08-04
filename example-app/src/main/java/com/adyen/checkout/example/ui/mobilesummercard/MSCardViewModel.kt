@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.data.storage.ThreeDSMode
 import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
@@ -40,18 +41,38 @@ internal class MSCardViewModel @Inject constructor(
     private val keyValueStorage: KeyValueStorage
 ) : ViewModel(), ComponentCallback<CardComponentState> {
 
+    lateinit var cardComponent: CardComponent
+
     override fun onSubmit(state: CardComponentState) {
         viewModelScope.launch(IODispatcher) {
-            val action = makePayment(state.data)
+//            val action = makePaymentCall(state.data)
 
             if (action != null) {
-                cardComponent.handleAction(action, activity)
+                // The action is not empty
             }
         }
     }
 
+    private suspend fun makePaymentCall(data: PaymentComponentData<*>): Action? {
+        val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
+        val paymentRequest = createPaymentRequest(
+            paymentComponentData = paymentComponentData,
+            shopperReference = keyValueStorage.getShopperReference(),
+            amount = keyValueStorage.getAmount(),
+            countryCode = keyValueStorage.getCountry(),
+            merchantAccount = keyValueStorage.getMerchantAccount(),
+            redirectUrl = savedStateHandle.get<String>(MSCardActivity.RETURN_URL_EXTRA)
+                ?: error("Return url should be set"),
+            shopperEmail = keyValueStorage.getShopperEmail(),
+            // 3DS2 mode
+            threeDSMode = ThreeDSMode.PREFER_NATIVE,
+        )
+
+        return handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
+    }
+
     override fun onAdditionalDetails(actionComponentData: ActionComponentData) {
-        sendPaymentDetails(actionComponentData)
+//        sendPaymentDetails(actionComponentData)
     }
 
     override fun onError(componentError: ComponentError) {
@@ -59,8 +80,7 @@ internal class MSCardViewModel @Inject constructor(
     }
 
     lateinit var activity: Activity
-    lateinit var cardComponent: CardComponent
-    lateinit var action: Action
+    var action: Action? = null
 
     private val _events = MutableSharedFlow<MSCardEvent>()
     val events: Flow<MSCardEvent> = _events
@@ -82,22 +102,6 @@ internal class MSCardViewModel @Inject constructor(
         ?.paymentMethods
         ?.firstOrNull { CardComponent.PROVIDER.isPaymentMethodSupported(it) }
 
-    private suspend fun makePayment(data: PaymentComponentData<*>): Action? {
-        val paymentComponentData = PaymentComponentData.SERIALIZER.serialize(data)
-        val paymentRequest = createPaymentRequest(
-            paymentComponentData = paymentComponentData,
-            shopperReference = keyValueStorage.getShopperReference(),
-            amount = keyValueStorage.getAmount(),
-            countryCode = keyValueStorage.getCountry(),
-            merchantAccount = keyValueStorage.getMerchantAccount(),
-            redirectUrl = savedStateHandle.get<String>(MSCardActivity.RETURN_URL_EXTRA)
-                ?: error("Return url should be set"),
-            threeDSMode = keyValueStorage.getThreeDSMode(),
-            shopperEmail = keyValueStorage.getShopperEmail(),
-        )
-
-        return handlePaymentResponse(paymentsRepository.makePaymentsRequest(paymentRequest))
-    }
 
     private suspend fun handlePaymentResponse(json: JSONObject?): Action? {
         json?.let {
