@@ -34,7 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 /**
- * A composable function that provides the decoration box for [AdyenTextField].
+ * A composable function that provides the decoration box for [CheckoutTextField].
  *
  * This internal composable handles the layout and styling of elements surrounding the
  * actual input field, including the label, supporting text, prefix, and trailing icon.
@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.dp
  * displayed at the end of the text field.
  */
 @Composable
-internal fun AdyenTextFieldDecorationBox(
+internal fun CheckoutTextFieldDecorationBox(
     label: String,
     innerTextField: @Composable () -> Unit,
     supportingText: String?,
@@ -91,7 +91,7 @@ internal fun AdyenTextFieldDecorationBox(
                 .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
         ) {
             prefix?.let {
-                Body(prefix, color = AdyenCheckoutTheme.colors.textSecondary)
+                Body(prefix, color = CheckoutThemeProvider.colors.textSecondary)
             }
 
             val selectionColor = style.activeColor
@@ -109,7 +109,7 @@ internal fun AdyenTextFieldDecorationBox(
             trailingIcon?.invoke()
         }
         supportingText?.let {
-            val supportingTextColor = if (isError) style.errorColor else AdyenCheckoutTheme.colors.textSecondary
+            val supportingTextColor = if (isError) style.errorColor else CheckoutThemeProvider.colors.textSecondary
             Footnote(
                 text = supportingText,
                 color = supportingTextColor,

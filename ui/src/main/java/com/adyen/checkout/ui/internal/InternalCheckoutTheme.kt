@@ -13,16 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme
-import com.adyen.checkout.ui.theme.AdyenColors
-import com.adyen.checkout.ui.theme.AdyenElements
-import com.adyen.checkout.ui.theme.AdyenTextStyles
 import com.adyen.checkout.ui.theme.CheckoutAttributes
+import com.adyen.checkout.ui.theme.CheckoutColors
+import com.adyen.checkout.ui.theme.CheckoutElements
+import com.adyen.checkout.ui.theme.CheckoutTextStyles
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun AdyenCheckoutTheme(
-    theme: AdyenCheckoutTheme = AdyenCheckoutTheme(),
+fun InternalCheckoutTheme(
+    theme: CheckoutTheme = CheckoutTheme(),
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
@@ -36,14 +36,14 @@ fun AdyenCheckoutTheme(
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object AdyenCheckoutTheme {
+object CheckoutThemeProvider {
 
     val colors: InternalColors
         @Composable
         @ReadOnlyComposable
         get() = LocalColors.current
 
-    val textStyles: AdyenTextStyles
+    val textStyles: CheckoutTextStyles
         @Composable
         @ReadOnlyComposable
         get() = LocalTextStyles.current
@@ -53,13 +53,13 @@ object AdyenCheckoutTheme {
         @ReadOnlyComposable
         get() = LocalAttributes.current
 
-    val elements: AdyenElements
+    val elements: CheckoutElements
         @Composable
         @ReadOnlyComposable
         get() = LocalElements.current
 }
 
-private val LocalColors = staticCompositionLocalOf { InternalColors.from(AdyenColors.light()) }
-private val LocalTextStyles = staticCompositionLocalOf { AdyenTextStyles.default() }
+private val LocalColors = staticCompositionLocalOf { InternalColors.from(CheckoutColors.light()) }
+private val LocalTextStyles = staticCompositionLocalOf { CheckoutTextStyles.default() }
 private val LocalAttributes = staticCompositionLocalOf { CheckoutAttributes.default() }
-private val LocalElements = staticCompositionLocalOf { AdyenElements.default() }
+private val LocalElements = staticCompositionLocalOf { CheckoutElements.default() }

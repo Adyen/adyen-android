@@ -12,12 +12,12 @@ import androidx.compose.runtime.Immutable
 
 // TODO - Add KDocs
 @Immutable
-data class AdyenTextFieldStyle(
-    val backgroundColor: AdyenColor? = null,
-    val textColor: AdyenColor? = null,
-    val activeColor: AdyenColor? = null,
-    val errorColor: AdyenColor? = null,
+data class CheckoutTextFieldStyle(
+    val backgroundColor: CheckoutColor? = null,
+    val textColor: CheckoutColor? = null,
+    val activeColor: CheckoutColor? = null,
+    val errorColor: CheckoutColor? = null,
     val cornerRadius: Int? = null,
-    val borderColor: AdyenColor? = null,
+    val borderColor: CheckoutColor? = null,
     val borderWidth: Int? = null,
 )

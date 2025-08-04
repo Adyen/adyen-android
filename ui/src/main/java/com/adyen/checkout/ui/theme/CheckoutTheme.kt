@@ -12,9 +12,9 @@ import androidx.compose.runtime.Immutable
 
 // TODO - Add KDocs
 @Immutable
-data class AdyenCheckoutTheme(
-    val colors: AdyenColors = AdyenColors.light(),
-    val textStyles: AdyenTextStyles = AdyenTextStyles.default(),
+data class CheckoutTheme(
+    val colors: CheckoutColors = CheckoutColors.light(),
+    val textStyles: CheckoutTextStyles = CheckoutTextStyles.default(),
     val attributes: CheckoutAttributes = CheckoutAttributes.default(),
-    val elements: AdyenElements = AdyenElements.default(),
+    val elements: CheckoutElements = CheckoutElements.default(),
 )

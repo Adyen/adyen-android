@@ -34,10 +34,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.AdyenColor
-import com.adyen.checkout.ui.theme.AdyenElements
-import com.adyen.checkout.ui.theme.AdyenTextFieldStyle
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutColor
+import com.adyen.checkout.ui.theme.CheckoutElements
+import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -58,7 +58,7 @@ import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
  * @param interactionSource Optional [MutableInteractionSource] representing the stream of
  * interactions for this text field.
  * @param innerIndication Optional [Indication] that will be used for the internal
- * [AdyenTextFieldDecorationBox].
+ * [CheckoutTextFieldDecorationBox].
  * @param prefix An optional string to be displayed at the beginning of the input area,
  * before the user's input.
  * @param trailingIcon An optional composable function that provides a trailing icon to be
@@ -66,7 +66,7 @@ import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
  */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun AdyenTextField(
+fun CheckoutTextField(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -80,8 +80,8 @@ fun AdyenTextField(
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    val style = AdyenTextFieldDefaults.textFieldStyle(AdyenCheckoutTheme.elements.textField)
-    val innerTextStyle = AdyenCheckoutTheme.textStyles.body
+    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val innerTextStyle = CheckoutThemeProvider.textStyles.body
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
@@ -98,7 +98,7 @@ fun AdyenTextField(
         keyboardOptions = keyboardOptions,
         interactionSource = interactionSource,
         decorationBox = { innerTextField ->
-            AdyenTextFieldDecorationBox(
+            CheckoutTextFieldDecorationBox(
                 label = label,
                 innerTextField = innerTextField,
                 supportingText = supportingText,
@@ -115,24 +115,24 @@ fun AdyenTextField(
 
 @Preview
 @Composable
-private fun AdyenTextFieldPreview(
-    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: Theme,
+private fun CheckoutTextFieldPreview(
+    @PreviewParameter(TextFieldStylePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
+    InternalCheckoutTheme(theme) {
         Column(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
             modifier = Modifier
                 .background(theme.colors.background.toCompose())
                 .padding(Dimensions.Large),
         ) {
-            AdyenTextField(
+            CheckoutTextField(
                 value = "",
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
             )
 
-            AdyenTextField(
+            CheckoutTextField(
                 value = "Value",
                 onValueChange = {},
                 label = "Label",
@@ -142,13 +142,13 @@ private fun AdyenTextFieldPreview(
                     Icon(
                         imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
                         contentDescription = null,
-                        tint = AdyenCheckoutTheme.colors.text,
+                        tint = CheckoutThemeProvider.colors.text,
                     )
                 },
             )
 
             val focusRequester = remember { FocusRequester() }
-            AdyenTextField(
+            CheckoutTextField(
                 value = "Value",
                 onValueChange = {},
                 label = "Label",
@@ -159,7 +159,7 @@ private fun AdyenTextFieldPreview(
                 focusRequester.requestFocus()
             }
 
-            AdyenTextField(
+            CheckoutTextField(
                 value = "Value",
                 onValueChange = {},
                 label = "Label",
@@ -170,22 +170,22 @@ private fun AdyenTextFieldPreview(
     }
 }
 
-internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<Theme> {
+internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider<CheckoutTheme> {
 
     private val themeProvider = ThemePreviewParameterProvider()
 
     private val styles = sequenceOf(
-        AdyenTextFieldStyle(),
+        CheckoutTextFieldStyle(),
         // Transparent background to get an outlined look
-        AdyenTextFieldStyle(
-            backgroundColor = AdyenColor(0x00FFFFFF),
+        CheckoutTextFieldStyle(
+            backgroundColor = CheckoutColor(0x00FFFFFF),
         ),
     )
 
     override val values = styles.flatMap { style ->
         themeProvider.values.map { theme ->
             theme.copy(
-                elements = AdyenElements.default(
+                elements = CheckoutElements.default(
                     textField = style,
                 ),
             )

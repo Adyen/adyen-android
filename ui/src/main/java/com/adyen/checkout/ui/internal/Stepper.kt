@@ -30,7 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayoutBaseScope
 import androidx.constraintlayout.compose.ConstraintLayoutScope
 import androidx.constraintlayout.compose.Dimension
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.AdyenCheckoutTheme as Theme
+import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -41,8 +41,8 @@ fun Stepper(
     Column(
         modifier = modifier
             .background(
-                color = AdyenCheckoutTheme.colors.container,
-                shape = RoundedCornerShape(AdyenCheckoutTheme.attributes.cornerRadius.dp),
+                color = CheckoutThemeProvider.colors.container,
+                shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
             )
             .padding(Dimensions.Large),
     ) {
@@ -71,7 +71,7 @@ private fun Step(
         Image(
             painter = painterResource(R.drawable.ic_rounded_square),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(AdyenCheckoutTheme.colors.primary),
+            colorFilter = ColorFilter.tint(CheckoutThemeProvider.colors.primary),
             modifier = Modifier.constrainAs(icon) {
                 start.linkTo(parent.start)
                 top.linkTo(body.top)
@@ -125,7 +125,7 @@ private fun ConstraintLayoutScope.StepConnector(
     bottomAnchor: ConstrainScope.() -> ConstraintLayoutBaseScope.HorizontalAnchor,
 ) {
     VerticalDivider(
-        color = AdyenCheckoutTheme.colors.outline,
+        color = CheckoutThemeProvider.colors.outline,
         modifier = Modifier.constrainAs(ref) {
             start.linkTo(iconRef.start)
             top.linkTo(topAnchor())
@@ -139,10 +139,10 @@ private fun ConstraintLayoutScope.StepConnector(
 @Preview
 @Composable
 private fun StepperPreview(
-    @PreviewParameter(ThemePreviewParameterProvider::class) theme: Theme,
+    @PreviewParameter(ThemePreviewParameterProvider::class) theme: CheckoutTheme,
 ) {
-    AdyenCheckoutTheme(theme) {
-        Surface(color = AdyenCheckoutTheme.colors.background) {
+    InternalCheckoutTheme(theme) {
+        Surface(color = CheckoutThemeProvider.colors.background) {
             val steps = listOf(
                 "Step 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et lectus in leo varius " +
                     "facilisis sit amet ut ipsum.",
