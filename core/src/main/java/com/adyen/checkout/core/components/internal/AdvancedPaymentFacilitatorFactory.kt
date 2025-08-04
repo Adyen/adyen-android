@@ -37,10 +37,9 @@ internal class AdvancedPaymentFacilitatorFactory(
             componentSessionParams = null,
         )
 
-        val componentEventHandler =
-            AdvancedComponentEventHandler<BasePaymentComponentState>(
-                checkoutCallbacks,
-            )
+        val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
+            checkoutCallbacks,
+        )
 
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
