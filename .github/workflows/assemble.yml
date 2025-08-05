@@ -3,6 +3,9 @@ name: Assemble
 on:
   workflow_call
 
+permissions:
+  contents: read
+
 jobs:
   assemble-debug:
     name: Assemble debug

@@ -10,6 +10,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   get_dependency_list:
     runs-on: ubuntu-latest

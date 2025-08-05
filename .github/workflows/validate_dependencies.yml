@@ -3,6 +3,9 @@ name: Validate dependencies
 on:
   workflow_call:
 
+permissions:
+  contents: read
+
 jobs:
   validate_dependencies_for_release_notes:
     runs-on: ubuntu-latest
