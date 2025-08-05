@@ -24,6 +24,5 @@ sealed interface CheckoutResult {
     data class Action(val action: ActionResponse) : CheckoutResult
 
     /** Indicates an error occurred during the payment process. */
-    // TODO - Replace temp parameter with actual value
-    data class Error(val temp: String? = null) : CheckoutResult
+    data class Error(val componentError: ComponentError) : CheckoutResult
 }

@@ -21,6 +21,7 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -97,7 +98,8 @@ internal class V6ViewModel @Inject constructor(
         return CheckoutResult.Finished()
     }
 
-    private fun onError() {
+    @Suppress("UnusedParameter")
+    private fun onError(componentError: ComponentError) {
         // TODO - handle error
     }
 
