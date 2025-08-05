@@ -54,7 +54,6 @@ fun CheckoutButtonGroup(
                     selectedIndex = index
                     onItemSelected(index)
                 },
-                // TODO - apply custom corner radius
                 shapes = when (index) {
                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                     items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()

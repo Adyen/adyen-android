@@ -21,7 +21,6 @@ internal object CheckoutButtonGroupDefaults {
             checkedTextColor = style?.checkedContainerColor?.toCompose() ?: colors.textOnPrimary,
             uncheckedContainerColor = style?.uncheckedTextColor?.toCompose() ?: colors.container,
             uncheckedTextColor = style?.uncheckedContainerColor?.toCompose() ?: colors.text,
-            cornerRadius = style?.cornerRadius,
         )
     }
 }

@@ -17,5 +17,4 @@ data class CheckoutButtonGroupStyle(
     val checkedTextColor: CheckoutColor? = null,
     val uncheckedContainerColor: CheckoutColor? = null,
     val uncheckedTextColor: CheckoutColor? = null,
-    val cornerRadius: Int? = null,
 )
