@@ -46,6 +46,18 @@ fun CheckoutButtonGroup(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         modifier = modifier,
     ) {
+        val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.buttonGroup)
+        val colors = CheckoutThemeProvider.colors
+        val toggleButtonColors = remember(style, colors) {
+            ToggleButtonColors(
+                contentColor = style.uncheckedTextColor,
+                containerColor = style.uncheckedContainerColor,
+                checkedContentColor = style.checkedTextColor,
+                checkedContainerColor = style.checkedContainerColor,
+                disabledContentColor = colors.textOnDisabled,
+                disabledContainerColor = colors.disabled,
+            )
+        }
         items.forEachIndexed { index, item ->
             CheckoutToggleButton(
                 text = item,
@@ -54,6 +66,7 @@ fun CheckoutButtonGroup(
                     selectedIndex = index
                     onItemSelected(index)
                 },
+                colors = toggleButtonColors,
                 shapes = when (index) {
                     0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                     items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
@@ -70,22 +83,14 @@ private fun CheckoutToggleButton(
     text: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    colors: ToggleButtonColors,
     shapes: ToggleButtonShapes,
     modifier: Modifier = Modifier,
 ) {
-    val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.buttonGroup)
-    val colors = CheckoutThemeProvider.colors
     ToggleButton(
         checked = checked,
         onCheckedChange = onCheckedChange,
-        colors = ToggleButtonColors(
-            contentColor = style.uncheckedTextColor,
-            containerColor = style.uncheckedContainerColor,
-            checkedContentColor = style.checkedTextColor,
-            checkedContainerColor = style.checkedContainerColor,
-            disabledContentColor = colors.textOnDisabled,
-            disabledContainerColor = colors.disabled,
-        ),
+        colors = colors,
         shapes = shapes,
         modifier = modifier.semantics { role = Role.RadioButton },
     ) {

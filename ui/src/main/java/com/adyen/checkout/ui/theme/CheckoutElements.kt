@@ -25,12 +25,12 @@ data class CheckoutElements(
             buttons: CheckoutButtonStyles = CheckoutButtonStyles(),
             switch: CheckoutSwitchStyle = CheckoutSwitchStyle(),
             textField: CheckoutTextFieldStyle = CheckoutTextFieldStyle(),
-            buttonGroupStyle: CheckoutButtonGroupStyle = CheckoutButtonGroupStyle(),
+            buttonGroup: CheckoutButtonGroupStyle = CheckoutButtonGroupStyle(),
         ) = CheckoutElements(
             buttons = buttons,
             switch = switch,
             textField = textField,
-            buttonGroup = buttonGroupStyle,
+            buttonGroup = buttonGroup,
         )
     }
 }

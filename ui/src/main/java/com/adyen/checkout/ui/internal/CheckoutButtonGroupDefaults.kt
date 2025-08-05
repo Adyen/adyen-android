@@ -17,10 +17,10 @@ internal object CheckoutButtonGroupDefaults {
     fun buttonGroupStyle(style: CheckoutButtonGroupStyle?): InternalButtonGroupStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonGroupStyle(
-            checkedContainerColor = style?.checkedTextColor?.toCompose() ?: colors.primary,
-            checkedTextColor = style?.checkedContainerColor?.toCompose() ?: colors.textOnPrimary,
-            uncheckedContainerColor = style?.uncheckedTextColor?.toCompose() ?: colors.container,
-            uncheckedTextColor = style?.uncheckedContainerColor?.toCompose() ?: colors.text,
+            checkedContainerColor = style?.checkedContainerColor?.toCompose() ?: colors.primary,
+            checkedTextColor = style?.checkedTextColor?.toCompose() ?: colors.textOnPrimary,
+            uncheckedContainerColor = style?.uncheckedContainerColor?.toCompose() ?: colors.container,
+            uncheckedTextColor = style?.uncheckedTextColor?.toCompose() ?: colors.text,
         )
     }
 }
