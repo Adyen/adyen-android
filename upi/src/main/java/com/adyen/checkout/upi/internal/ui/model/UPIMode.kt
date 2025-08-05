@@ -11,5 +11,4 @@ package com.adyen.checkout.upi.internal.ui.model
 internal sealed class UPIMode {
     data class Intent(val intentItems: List<UPIIntentItem>) : UPIMode()
     data object Vpa : UPIMode()
-    data object Qr : UPIMode()
 }

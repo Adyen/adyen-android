@@ -43,15 +43,6 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_qrCode"
-            style="@style/AdyenCheckout.UPI.QRButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
@@ -92,16 +83,5 @@
             android:layout_height="wrap_content" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/textView_qrCodeDescription"
-        style="@style/AdyenCheckout.UPI.QRGenerationTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        tools:visibility="visible" />
 
 </merge>
