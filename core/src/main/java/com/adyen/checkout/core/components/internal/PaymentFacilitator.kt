@@ -73,7 +73,6 @@ internal class PaymentFacilitator(
         when (checkoutResult) {
             is CheckoutResult.Action -> handleAction(checkoutResult.action)
             is CheckoutResult.Error -> {
-                // TODO - Handle error state
             }
 
             is CheckoutResult.Finished -> {
