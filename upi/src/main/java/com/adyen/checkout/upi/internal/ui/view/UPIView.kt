@@ -145,10 +145,8 @@ internal class UPIView @JvmOverloads constructor(
         if (upiAppsAdapter == null) {
             upiAppsAdapter = UPIAppsAdapter(
                 context = context,
-                localizedContext = localizedContext,
                 paymentMethod = delegate.getPaymentMethodType(),
                 onItemClickListener = ::onIntentItemClicked,
-                onInputChangeListener = ::onIntentItemInputChanged,
             )
             recyclerViewUpiIntent.adapter = upiAppsAdapter
         }
@@ -167,12 +165,6 @@ internal class UPIView @JvmOverloads constructor(
     private fun onIntentItemClicked(item: UPIIntentItem) {
         delegate.updateInputData {
             selectedUPIIntentItem = item
-        }
-    }
-
-    private fun onIntentItemInputChanged(value: String) {
-        delegate.updateInputData {
-            intentVirtualPaymentAddress = value
         }
     }
 
