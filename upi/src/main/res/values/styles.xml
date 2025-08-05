@@ -29,10 +29,8 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.QRButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:text">@string/checkout_upi_other_tab_title</item>
-        <item name="textAllCaps">false</item>
-    </style>
+    <!-- {@deprecated This resource is no longer in use.} -->
+    <style name="AdyenCheckout.UPI.QRButton" parent="Widget.MaterialComponents.Button.OutlinedButton" />
 
     <style name="AdyenCheckout.UPI.NoAppSelectedTextView" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:text">@string/checkout_upi_no_app_selected</item>
@@ -52,10 +50,8 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.QRGenerationTextView" parent="AdyenCheckout.TextAppearance.Primary">
-        <item name="android:text">@string/checkout_upi_qr_generation</item>
-        <item name="android:minHeight">@dimen/input_layout_height</item>
-    </style>
+    <!-- {@deprecated This resource is no longer in use.} -->
+    <style name="AdyenCheckout.UPI.QRGenerationTextView" parent="AdyenCheckout.TextAppearance.Primary" />
 
     <style name="AdyenCheckout.UPI.Intent" />
 

@@ -32,6 +32,5 @@ internal class UPIOutputData(
             }
 
             UPISelectedMode.VPA -> virtualPaymentAddressFieldState.validation.isValid()
-            UPISelectedMode.QR -> true
         }
 }

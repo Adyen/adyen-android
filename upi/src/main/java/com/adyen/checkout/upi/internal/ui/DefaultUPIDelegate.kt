@@ -153,9 +153,9 @@ internal class DefaultUPIDelegate(
                 paymentAddressFieldState,
             )
 
-            listOf(UPIMode.Intent(intentItemList), UPIMode.Qr)
+            listOf(UPIMode.Intent(intentItemList), UPIMode.Vpa)
         } else {
-            listOf(UPIMode.Vpa, UPIMode.Qr)
+            listOf(UPIMode.Vpa)
         }
     }
 
@@ -261,10 +261,6 @@ internal class DefaultUPIDelegate(
             }
         }
 
-        UPISelectedMode.QR -> {
-            PaymentMethodTypes.UPI_QR
-        }
-
         UPISelectedMode.VPA -> {
             PaymentMethodTypes.UPI_COLLECT
         }
@@ -291,8 +287,6 @@ internal class DefaultUPIDelegate(
         UPISelectedMode.VPA -> {
             outputData.virtualPaymentAddressFieldState.value
         }
-
-        else -> null
     }
 
     private fun componentStateChanged(componentState: UPIComponentState) {

@@ -88,20 +88,12 @@ internal class UPIView @JvmOverloads constructor(
             R.style.AdyenCheckout_UPI_VPAButton,
             localizedContext,
         )
-        binding.buttonQrCode.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_UPI_QRButton,
-            localizedContext,
-        )
         binding.textViewNoAppSelected.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_NoAppSelectedTextView,
             localizedContext,
         )
         binding.textInputLayoutVpa.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_UPI_VPAEditText,
-            localizedContext,
-        )
-        binding.textViewQrCodeDescription.setLocalizedTextFromStyle(
-            R.style.AdyenCheckout_UPI_QRGenerationTextView,
             localizedContext,
         )
     }
@@ -111,7 +103,6 @@ internal class UPIView @JvmOverloads constructor(
             when (checkedId) {
                 R.id.button_intent -> updateUpiIntentViews(isChecked)
                 R.id.button_vpa -> updateUpiVpaViews(isChecked)
-                R.id.button_qrCode -> updateUpiQrCodeViews(isChecked)
             }
         }
     }
@@ -141,10 +132,6 @@ internal class UPIView @JvmOverloads constructor(
 
             is UPIMode.Vpa -> {
                 initViewsForVpa(isChecked)
-            }
-
-            is UPIMode.Qr -> {
-                initViewsForQr(isChecked)
             }
         }
     }
@@ -204,22 +191,6 @@ internal class UPIView @JvmOverloads constructor(
             binding.editTextVpa.requestFocus()
             binding.editTextVpa.showKeyboard()
             delegate.updateInputData { selectedMode = UPISelectedMode.VPA }
-        }
-    }
-
-    private fun initViewsForQr(isChecked: Boolean) = with(binding) {
-        buttonQrCode.isVisible = true
-        if (isChecked) {
-            toggleButtonChoice.check(R.id.button_qrCode)
-        }
-    }
-
-    private fun updateUpiQrCodeViews(isChecked: Boolean) {
-        binding.textViewQrCodeDescription.isVisible = isChecked
-        if (isChecked) {
-            delegate.updateInputData { selectedMode = UPISelectedMode.QR }
-            binding.editTextVpa.clearFocus()
-            hideKeyboard()
         }
     }
 
