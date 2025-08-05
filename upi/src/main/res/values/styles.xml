@@ -45,10 +45,8 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.ManualEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_upi_app_manual_input_hint</item>
-        <item name="android:maxLines">1</item>
-    </style>
+    <!-- {@deprecated This resource is no longer in use.} -->
+    <style name="AdyenCheckout.UPI.ManualEditText" parent="AdyenCheckout.TextInputEditText" />
 
     <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.UPI.QRGenerationTextView" parent="AdyenCheckout.TextAppearance.Primary" />
@@ -66,9 +64,8 @@
         <item name="android:text">@string/checkout_upi_app_other_upi</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Intent.AppIdTextView.ManualInput" parent="AdyenCheckout.UPI.Intent.AppIdTextView">
-        <item name="android:text">@string/checkout_upi_app_manual_input</item>
-    </style>
+    <!-- {@deprecated This resource is no longer in use.} -->
+    <style name="AdyenCheckout.UPI.Intent.AppIdTextView.ManualInput" parent="AdyenCheckout.UPI.Intent.AppIdTextView" />
 
     <style name="AdyenCheckout.UPI.Intent.Icon" parent="AdyenCheckout.Image.Logo">
         <item name="adyenStrokeColor">@color/stroke_color</item>
@@ -78,9 +75,8 @@
         <item name="android:src">@drawable/ic_upi_generic_app</item>
     </style>
 
-    <style name="AdyenCheckout.UPI.Intent.Icon.ManualInput" parent="AdyenCheckout.UPI.Intent.Icon">
-        <item name="android:src">@drawable/ic_upi_manual_input</item>
-    </style>
+    <!-- {@deprecated This resource is no longer in use.} -->
+    <style name="AdyenCheckout.UPI.Intent.Icon.ManualInput" parent="AdyenCheckout.UPI.Intent.Icon" />
 
     <style name="AdyenCheckout.UPI.Intent.Divider">
         <item name="android:background">@color/stroke_color</item>

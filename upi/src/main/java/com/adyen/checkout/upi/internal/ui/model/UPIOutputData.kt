@@ -17,7 +17,6 @@ internal class UPIOutputData(
     var selectedUPIIntentItem: UPIIntentItem? = null,
     val showNoSelectedUPIIntentItemError: Boolean,
     val virtualPaymentAddressFieldState: FieldState<String>,
-    val intentVirtualPaymentAddressFieldState: FieldState<String>,
 ) : OutputData {
 
     override val isValid: Boolean
@@ -26,7 +25,7 @@ internal class UPIOutputData(
                 when (selectedUPIIntentItem) {
                     is UPIIntentItem.PaymentApp,
                     is UPIIntentItem.GenericApp -> true
-                    is UPIIntentItem.ManualInput -> intentVirtualPaymentAddressFieldState.validation.isValid()
+
                     null -> false
                 }
             }

@@ -118,8 +118,7 @@ internal class DefaultUPIDelegate(
     }
 
     private fun createOutputData(includeValidationErrors: Boolean = false) = with(inputData) {
-        val availableModes = createAvailableModes(this, paymentMethod, includeValidationErrors)
-        val intentVirtualPaymentAddressFieldState = validateVirtualPaymentAddress(intentVirtualPaymentAddress)
+        val availableModes = createAvailableModes(this, paymentMethod)
         val selectedMode = selectedMode ?: availableModes.first().mapToSelectedMode()
         val showNoSelectedUPIIntentItemError =
             shouldShowNoSelectedUPIIntentItemError(selectedMode, selectedUPIIntentItem, includeValidationErrors)
@@ -130,27 +129,19 @@ internal class DefaultUPIDelegate(
             selectedUPIIntentItem = selectedUPIIntentItem,
             showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = validateVirtualPaymentAddress(vpaVirtualPaymentAddress),
-            intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )
     }
 
     private fun createAvailableModes(
         inputData: UPIInputData,
         paymentMethod: PaymentMethod,
-        includeValidation: Boolean
     ) = with(inputData) {
         val appIds = paymentMethod.apps
         if (!appIds.isNullOrEmpty()) {
-            val paymentAddressFieldState = if (includeValidation) {
-                validateVirtualPaymentAddress(intentVirtualPaymentAddress)
-            } else {
-                null
-            }
             val intentItemList = createIntentItems(
                 appIds,
                 componentParams.environment,
                 selectedUPIIntentItem,
-                paymentAddressFieldState,
             )
 
             listOf(UPIMode.Intent(intentItemList), UPIMode.Vpa)
@@ -163,7 +154,6 @@ internal class DefaultUPIDelegate(
         upiApps: List<AppData>,
         environment: Environment,
         selectedUPIIntentItem: UPIIntentItem?,
-        paymentAddressFieldState: FieldState<String>?,
     ): List<UPIIntentItem> {
         val paymentApps = upiApps.mapToPaymentApp(
             environment = environment,
@@ -174,23 +164,11 @@ internal class DefaultUPIDelegate(
             isSelected = selectedUPIIntentItem is UPIIntentItem.GenericApp,
         )
 
-        val manualInputErrorMessageId = paymentAddressFieldState?.let {
-            getValidationErrorResourceIdOrNull(paymentAddressFieldState.validation)
-        }
-        val manualInput = UPIIntentItem.ManualInput(
-            errorMessageResource = manualInputErrorMessageId,
-            isSelected = selectedUPIIntentItem is UPIIntentItem.ManualInput,
-        )
-
         return mutableListOf<UPIIntentItem>().apply {
             addAll(paymentApps)
             add(genericApp)
-            add(manualInput)
         }
     }
-
-    private fun getValidationErrorResourceIdOrNull(validation: Validation?): Int? =
-        (validation as? Validation.Invalid)?.reason
 
     private fun validateVirtualPaymentAddress(virtualPaymentAddress: String): FieldState<String> =
         if (virtualPaymentAddress.isNotBlank()) {
@@ -253,10 +231,6 @@ internal class DefaultUPIDelegate(
                     PaymentMethodTypes.UPI_INTENT
                 }
 
-                is UPIIntentItem.ManualInput -> {
-                    PaymentMethodTypes.UPI_COLLECT
-                }
-
                 null -> null
             }
         }
@@ -274,19 +248,11 @@ internal class DefaultUPIDelegate(
         }
 
     private fun getVirtualPaymentAddress(outputData: UPIOutputData) = when (outputData.selectedMode) {
-        UPISelectedMode.INTENT -> {
-            when (outputData.selectedUPIIntentItem) {
-                is UPIIntentItem.ManualInput -> {
-                    outputData.intentVirtualPaymentAddressFieldState.value
-                }
-
-                else -> null
-            }
-        }
-
         UPISelectedMode.VPA -> {
             outputData.virtualPaymentAddressFieldState.value
         }
+
+        else -> null
     }
 
     private fun componentStateChanged(componentState: UPIComponentState) {
