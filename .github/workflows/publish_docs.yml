@@ -4,6 +4,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+permissions:
+  deployments: write
+
 jobs:
 
   publish-to-github-pages:

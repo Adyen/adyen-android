@@ -9,6 +9,10 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+  deployments: write
+
 jobs:
   update_release_notes:
     name: Update release notes

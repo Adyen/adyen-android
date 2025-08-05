@@ -9,6 +9,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   fetch_updated_release_notes_file:
     name: Fetch Updated Release Notes File
