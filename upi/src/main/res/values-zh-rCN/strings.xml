@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">您打算如何使用 UPI？</string>
-    <string name="checkout_upi_vpa_validation">输入正确的虚拟支付地址</string>
-    <string name="checkout_upi_qr_generation">生成可以下载或截屏的二维码，然后将其上传到 UPI 应用以完成付款。</string>
+    <string name="checkout_upi_vpa_validation">请输入有效的 UPI</string>
     <string name="checkout_upi_continue">继续</string>
-    <string name="checkout_upi_app_manual_input">输入 UPI ID</string>
+    <string name="checkout_upi_id">UPI ID</string>
     <string name="checkout_upi_app_other_upi">其他 UPI</string>
-    <string name="checkout_upi_no_app_selected">选择支付方式继续</string>
+    <string name="checkout_upi_no_app_selected">请选择您首选的 UPI 应用程序以继续</string>
+    <string name="checkout_upi_app_tab_title">UPI 应用</string>
+    <string name="checkout_upi_id_instruction">输入您的 UPI ID</string>
+    <string name="checkout_upi_app_instruction">选择您首选的 UPI 应用</string>
 </resources>

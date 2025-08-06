@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">UPIをどのように使用しますか？</string>
-    <string name="checkout_upi_vpa_validation">正しい仮想支払アドレスを入力してください</string>
-    <string name="checkout_upi_qr_generation">ダウンロードまたはスクリーンショットで取得できるQRコードを生成し、UPIアプリにアップロードして支払いを完了します。</string>
+    <string name="checkout_upi_vpa_validation">有効なUPIを入力してください</string>
     <string name="checkout_upi_continue">続ける</string>
-    <string name="checkout_upi_app_manual_input">UPI IDを入力してください</string>
+    <string name="checkout_upi_id">UPI ID</string>
     <string name="checkout_upi_app_other_upi">その他のUPI</string>
-    <string name="checkout_upi_no_app_selected">支払い方法を選択して続行する</string>
+    <string name="checkout_upi_no_app_selected">お好みのUPIアプリを選択して続行してください</string>
+    <string name="checkout_upi_app_tab_title">UPIアプリ</string>
+    <string name="checkout_upi_id_instruction">UPI IDを入力してください</string>
+    <string name="checkout_upi_app_instruction">お好みのUPIアプリを選択</string>
 </resources>
