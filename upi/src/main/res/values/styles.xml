@@ -14,7 +14,8 @@
     </style>
 
     <style name="AdyenCheckout.UPI.ButtonToggleGroup" parent="AdyenCheckout">
-        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
         <item name="selectionRequired">true</item>
         <item name="singleSelection">true</item>
     </style>
@@ -34,13 +35,11 @@
 
     <style name="AdyenCheckout.UPI.IntentInstructionTextView" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:text">@string/checkout_upi_app_instruction</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
     </style>
 
     <style name="AdyenCheckout.UPI.VPAInstructionTextView" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:text">@string/checkout_upi_id_instruction</item>
-        <item name="android:layout_marginTop">@dimen/standard_margin</item>
         <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
     </style>
 
