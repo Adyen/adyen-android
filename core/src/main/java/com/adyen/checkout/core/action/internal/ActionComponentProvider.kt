@@ -46,6 +46,8 @@ object ActionComponentProvider {
         savedStateHandle: SavedStateHandle,
     ): ActionComponent {
         return factories[action.type]?.create(
+            // TODO - Action: Think about the case if merchants want to use the same action component
+            //  to handle multiple actions. Is it really necessary?
             action = action,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,

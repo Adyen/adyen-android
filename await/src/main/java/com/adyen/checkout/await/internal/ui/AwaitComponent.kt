@@ -54,6 +54,7 @@ internal class AwaitComponent(
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
+    // TODO - Remove context from here and launch redirect from the ViewFactory composable
     override fun handleAction(context: Context) {
         paymentDataRepository.paymentData = action.paymentData
 
@@ -174,6 +175,7 @@ internal class AwaitComponent(
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
+        // TODO - Start the redirect activity here
         AwaitComponent(modifier = modifier)
     }
 
