@@ -127,6 +127,9 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     private fun initPicker(availableModes: List<UPIMode>, selectedMode: UPISelectedMode) {
+        val shouldShowPicker = availableModes.size > 1
+        binding.textViewModeSelection.isVisible = shouldShowPicker
+        binding.toggleButtonChoice.isVisible = shouldShowPicker
         availableModes.forEach { mode ->
             initViewsForMode(mode = mode, isChecked = mode.mapToSelectedMode() == selectedMode)
         }
