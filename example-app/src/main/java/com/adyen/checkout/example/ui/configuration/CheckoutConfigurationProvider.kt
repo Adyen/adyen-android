@@ -74,6 +74,7 @@ internal class CheckoutConfigurationProvider @Inject constructor(
                 shopperReference = keyValueStorage.getShopperReference()
                 addressConfiguration = getAddressConfiguration()
                 installmentConfiguration = getInstallmentConfiguration()
+                isHideCvc = true
             }
 
             cashAppPay {
