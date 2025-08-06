@@ -8,15 +8,21 @@
 
 package com.adyen.checkout.core.action.internal
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 internal class TestActionComponent : ActionComponent {
+
     @Composable
     override fun ViewFactory(modifier: Modifier) {
         // No-op
+    }
+
+    override fun handleAction(context: Context) {
+        TODO("Not yet implemented")
     }
 
     override val eventFlow: Flow<ActionComponentEvent>
