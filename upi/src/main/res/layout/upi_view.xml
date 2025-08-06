@@ -46,6 +46,22 @@
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
+        android:id="@+id/textView_intentInstruction"
+        style="@style/AdyenCheckout.UPI.IntentInstructionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/textView_vpaInstruction"
+        style="@style/AdyenCheckout.UPI.VPAInstructionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <TextView
         android:id="@+id/textView_noAppSelected"
         style="@style/AdyenCheckout.UPI.NoAppSelectedTextView"
         android:layout_width="match_parent"

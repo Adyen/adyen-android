@@ -88,6 +88,14 @@ internal class UPIView @JvmOverloads constructor(
             R.style.AdyenCheckout_UPI_VPAButton,
             localizedContext,
         )
+        binding.textViewIntentInstruction.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_IntentInstructionTextView,
+            localizedContext,
+        )
+        binding.textViewVpaInstruction.setLocalizedTextFromStyle(
+            R.style.AdyenCheckout_UPI_VPAInstructionTextView,
+            localizedContext,
+        )
         binding.textViewNoAppSelected.setLocalizedTextFromStyle(
             R.style.AdyenCheckout_UPI_NoAppSelectedTextView,
             localizedContext,
@@ -154,6 +162,7 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     private fun updateUpiIntentViews(isChecked: Boolean) {
+        binding.textViewIntentInstruction.isVisible = isChecked
         binding.recyclerViewUpiIntent.isVisible = isChecked
         if (isChecked) {
             binding.editTextVpa.clearFocus()
@@ -176,6 +185,7 @@ internal class UPIView @JvmOverloads constructor(
     }
 
     private fun updateUpiVpaViews(isChecked: Boolean) {
+        binding.textViewVpaInstruction.isVisible = isChecked
         binding.textInputLayoutVpa.isVisible = isChecked
         binding.editTextVpa.isFocusableInTouchMode = isChecked
         binding.editTextVpa.isFocusable = isChecked

@@ -32,6 +32,18 @@
     <!-- {@deprecated This resource is no longer in use.} -->
     <style name="AdyenCheckout.UPI.QRButton" parent="Widget.MaterialComponents.Button.OutlinedButton" />
 
+    <style name="AdyenCheckout.UPI.IntentInstructionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_upi_app_instruction</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+    </style>
+
+    <style name="AdyenCheckout.UPI.VPAInstructionTextView" parent="AdyenCheckout.TextAppearance.Primary">
+        <item name="android:text">@string/checkout_upi_id_instruction</item>
+        <item name="android:layout_marginTop">@dimen/standard_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_half_margin</item>
+    </style>
+
     <style name="AdyenCheckout.UPI.NoAppSelectedTextView" parent="AdyenCheckout.TextAppearance.Primary">
         <item name="android:text">@string/checkout_upi_no_app_selected</item>
         <item name="android:textColor">@color/textColorNote</item>
