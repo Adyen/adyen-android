@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Kaip norėtumėte naudoti UPI?</string>
-    <string name="checkout_upi_vpa_validation">Įveskite teisingą virtualų mokėjimo adresą</string>
-    <string name="checkout_upi_qr_generation">Sugeneruokite QR kodą, kurį galite atsisiųsti arba padaryti ekrano kopiją ir įkelti į UPI programą, kad užbaigtumėte mokėjimą.</string>
+    <string name="checkout_upi_vpa_validation">Įveskite galiojantį UPI</string>
     <string name="checkout_upi_continue">Tęsti</string>
-    <string name="checkout_upi_app_manual_input">Įveskite UPI ID</string>
+    <string name="checkout_upi_id">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Kitos UPI</string>
-    <string name="checkout_upi_no_app_selected">Norėdami tęsti, pasirinkite mokėjimo metodą</string>
+    <string name="checkout_upi_no_app_selected">Norėdami tęsti, pasirinkite pageidaujamą UPI programėlę</string>
+    <string name="checkout_upi_app_tab_title">UPI programėlė</string>
+    <string name="checkout_upi_id_instruction">Įveskite savo UPI ID</string>
+    <string name="checkout_upi_app_instruction">Pasirinkite pageidaujamą UPI programėlę</string>
 </resources>

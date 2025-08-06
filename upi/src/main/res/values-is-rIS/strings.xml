@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Hvernig viltu nota UPI?</string>
-    <string name="checkout_upi_vpa_validation">Sláðu inn rétt vistfang sýndargreiðslu</string>
-    <string name="checkout_upi_qr_generation">Búðu til QR-kóðann sem þú getur hlaðið niður, eða taktu skjámynd og hladdu honum upp í UPI-forritið til að ljúka greiðslunni.</string>
+    <string name="checkout_upi_vpa_validation">Sláið inn gilt UPI</string>
     <string name="checkout_upi_continue">Halda áfram</string>
-    <string name="checkout_upi_app_manual_input">Sláðu inn UPI-auðkenni</string>
+    <string name="checkout_upi_id">UPI-auðkenni</string>
     <string name="checkout_upi_app_other_upi">Annað UPI</string>
-    <string name="checkout_upi_no_app_selected">Veldu greiðslumáta til að halda áfram</string>
+    <string name="checkout_upi_no_app_selected">Veldu UPI-forrit sem þú vilt nota til að halda áfram</string>
+    <string name="checkout_upi_app_tab_title">UPI-forrit</string>
+    <string name="checkout_upi_id_instruction">Sláðu in UPI-auðkennið þitt</string>
+    <string name="checkout_upi_app_instruction">Veldu UPI-forrit sem þú vilt nota</string>
 </resources>

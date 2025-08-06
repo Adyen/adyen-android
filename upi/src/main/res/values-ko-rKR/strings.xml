@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">UPI를 어떻게 사용하시겠습니까?</string>
-    <string name="checkout_upi_vpa_validation">정확한 가상 결제 주소를 입력하세요</string>
-    <string name="checkout_upi_qr_generation">QR 코드를 만들어서 다운로드하거나 스크린샷을 찍은 다음 UPI 앱에 업로드하면 결제가 완료됩니다.</string>
+    <string name="checkout_upi_vpa_validation">유효한 UPI를 입력하세요.</string>
     <string name="checkout_upi_continue">계속</string>
-    <string name="checkout_upi_app_manual_input">UPI ID 입력</string>
+    <string name="checkout_upi_id">UPI ID</string>
     <string name="checkout_upi_app_other_upi">기타 UPI</string>
-    <string name="checkout_upi_no_app_selected">계속 진행하려면 결제 수단을 선택하세요</string>
+    <string name="checkout_upi_no_app_selected">계속 진행하려면 선호하는 UPI 앱을 선택하세요</string>
+    <string name="checkout_upi_app_tab_title">UPI 앱</string>
+    <string name="checkout_upi_id_instruction">UPI ID를 입력하세요</string>
+    <string name="checkout_upi_app_instruction">선호하는 UPI 앱을 선택하세요</string>
 </resources>

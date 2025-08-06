@@ -9,17 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">%%upi.modeSelection%%</string>
-    <string name="checkout_upi_vpa_validation">%%upi.vpa.validationMessage%%</string>
-    <string name="checkout_upi_qr_generation">%%upi.qrcode.generationMessage%%</string>
+    <string name="checkout_upi_vpa_validation">%%upi.collect.field.invalid-id-error%%</string>
     <string name="checkout_upi_continue">%%continue%%</string>
-    <string name="checkout_upi_app_manual_input">%%upi.mode.enterUpiId%%</string>
+    <string name="checkout_upi_id">%%upi.mode.enterUpiId%%</string>
     <string name="checkout_upi_app_other_upi">%%upi.mode.otherUpi%%</string>
     <string name="checkout_upi_no_app_selected">%%upi.error.noAppSelected%%</string>
-    <!-- Untranslatable strings -->
-    <string name="checkout_upi_app_tab_title" translatable="false">Pay by any UPI app</string>
-    <string name="checkout_upi_other_tab_title" translatable="false">Other UPI options</string>
-    <string name="checkout_upi_app_manual_input_hint" translatable="false">UPI ID</string>
-    <string name="checkout_upi_vpa" translatable="false">VPA</string>
-    <string name="checkout_upi_vpa_full" translatable="false">Virtual Payment Address</string>
-    <string name="checkout_upi_qr_code" translatable="false">QR code</string>
+    <string name="checkout_upi_app_tab_title">%%upi.mode.payByAnyUpi%%</string>
+    <string name="checkout_upi_id_instruction">%%upi.collect.instruction%%</string>
+    <string name="checkout_upi_app_instruction">%%upi.intent.instruction%%</string>
 </resources>

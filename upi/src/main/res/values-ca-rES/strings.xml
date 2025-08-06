@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Com us agradaria utilitzar UPI?</string>
-    <string name="checkout_upi_vpa_validation">Introduïu una adreça de pagament virtual correcta</string>
-    <string name="checkout_upi_qr_generation">Genereu el codi QR que podeu baixar o feu una captura de pantalla i pugeu-la a l\'aplicació UPI per completar el pagament.</string>
+    <string name="checkout_upi_vpa_validation">Introduïu un UPI vàlid</string>
     <string name="checkout_upi_continue">Continua</string>
-    <string name="checkout_upi_app_manual_input">Introduïu el PIN d\'UPI</string>
+    <string name="checkout_upi_id">Identificador UPI</string>
     <string name="checkout_upi_app_other_upi">Altres UPI</string>
-    <string name="checkout_upi_no_app_selected">Seleccioneu una forma de pagament per continuar</string>
+    <string name="checkout_upi_no_app_selected">Selecciona la teva aplicació UPI preferida per continuar</string>
+    <string name="checkout_upi_app_tab_title">Aplicació UPI</string>
+    <string name="checkout_upi_id_instruction">Introdueix el teu ID d\'UPI</string>
+    <string name="checkout_upi_app_instruction">Selecciona la teva aplicació UPI preferida</string>
 </resources>
