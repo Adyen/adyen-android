@@ -41,7 +41,7 @@ internal object ButtonDefaults {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
             backgroundColor = style?.backgroundColor?.toCompose() ?: Color.Transparent,
-            textColor = style?.textColor?.toCompose() ?: colors.action,
+            textColor = style?.textColor?.toCompose() ?: colors.highlight,
             disabledBackgroundColor = style?.disabledBackgroundColor?.toCompose() ?: colors.disabled,
             disabledTextColor = style?.disabledTextColor?.toCompose() ?: colors.textOnDisabled,
         )
