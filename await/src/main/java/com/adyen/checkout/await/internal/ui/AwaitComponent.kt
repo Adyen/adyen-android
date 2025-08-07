@@ -134,8 +134,7 @@ internal class AwaitComponent(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (statusResponse.isFinalResult() && !payload.isNullOrEmpty()) {
-            val details = createDetails(payload)
-            emitDetails(details)
+            emitDetails(payload)
         } else {
             // TODO - Error propagation
 //            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
@@ -143,17 +142,17 @@ internal class AwaitComponent(
         }
     }
 
-    @Suppress("SwallowedException")
-    private fun createDetails(payload: String): JSONObject {
-        val jsonObject = JSONObject()
+    private fun emitDetails(payload: String) {
         try {
-            jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
+            val jsonObject = JSONObject().apply {
+                put(PAYLOAD_DETAILS_KEY, payload)
+            }
+            emitDetails(jsonObject)
         } catch (e: JSONException) {
             // TODO - Error propagation
 //            emitError(ComponentException("Failed to create details.", e))
             emitError(RuntimeException("Failed to create details.", e))
         }
-        return jsonObject
     }
 
     private fun emitDetails(details: JSONObject) {
@@ -167,6 +166,7 @@ internal class AwaitComponent(
         eventChannel.trySend(
             ActionComponentEvent.Error(ComponentError(e)),
         )
+        statusPollingJob?.cancel()
     }
 
     private fun createActionComponentData(details: JSONObject): ActionComponentData {
