@@ -9,42 +9,180 @@
 package com.adyen.checkout.await.internal.ui
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
+import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusRepository
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
+import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
+import com.adyen.checkout.core.components.internal.data.model.StatusResponse
+import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
-@Suppress("UnusedPrivateProperty", "LongParameterList")
+// TODO - Write tests
+@Suppress("TooManyFunctions")
 internal class AwaitComponent(
     private val action: AwaitAction,
     private val coroutineScope: CoroutineScope,
-    private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
-) : ActionComponent {
+) : ActionComponent, StatusPollingComponent {
+
+    private var statusPollingJob: Job? = null
 
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
+    // TODO - Remove context from here and launch redirect from the ViewFactory composable
     override fun handleAction(context: Context) {
-        // TODO - Implement handleAction
+        paymentDataRepository.paymentData = action.paymentData
+
+        val event = GenericEvents.action(
+            component = action.paymentMethodType.orEmpty(),
+            subType = action.type.orEmpty(),
+        )
+        analyticsManager.trackEvent(event)
+
+        launchAction(action, context)
+        initState(action)
+    }
+
+    private fun launchAction(action: AwaitAction, context: Context) {
+        if (shouldLaunchRedirect(action)) {
+            makeRedirect(action, context)
+        }
+    }
+
+    @Suppress("SwallowedException", "TooGenericExceptionCaught", "TooGenericExceptionThrown")
+    private fun makeRedirect(action: AwaitAction, context: Context) {
+        val url = action.url
+        try {
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+            redirectHandler.launchUriRedirect(context, url)
+            val paymentData = paymentDataRepository.paymentData
+                // TODO - Error Propagation
+                // ?: throw CheckoutException("Payment data should not be null")
+                ?: throw RuntimeException("Payment data should not be null")
+            startStatusPolling(paymentData)
+            // TODO - Error Propagation
+        } catch (exception: RuntimeException) {
+            // TODO - Emit error
+//            emitError(exception)
+        }
+    }
+
+    private fun initState(action: AwaitAction) {
+        val paymentData = action.paymentData
+        if (paymentData == null) {
+            adyenLog(AdyenLogLevel.ERROR) { "Payment data is null" }
+            // TODO - Throw exception?
+            return
+        }
+
+        // Redirect flow starts polling after it launched a redirect
+        if (!shouldLaunchRedirect(action)) {
+            startStatusPolling(paymentData)
+        }
+    }
+
+    private fun shouldLaunchRedirect(action: AwaitAction) = !action.url.isNullOrEmpty()
+
+    private fun startStatusPolling(paymentData: String) {
+        statusPollingJob?.cancel()
+        statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
+            .onEach { onStatus(it) }
+            .launchIn(coroutineScope)
+    }
+
+    private fun onStatus(result: Result<StatusResponse>) {
+        result.fold(
+            onSuccess = { response ->
+                adyenLog(AdyenLogLevel.VERBOSE) { "Status changed - ${response.resultCode}" }
+                if (response.isFinalResult()) {
+                    onPollingSuccessful(response)
+                }
+            },
+            onFailure = {
+                adyenLog(AdyenLogLevel.ERROR, it) { "Error while polling status" }
+                // TODO - Throw exception?
+            },
+        )
+    }
+
+    private fun onPollingSuccessful(statusResponse: StatusResponse) {
+        // Not authorized status should still call /details so that merchant can get more info
+        val payload = statusResponse.payload
+        if (statusResponse.isFinalResult() && !payload.isNullOrEmpty()) {
+            val details = createDetails(payload)
+            emitDetails(details)
+        } else {
+            // TODO - Emit error
+//            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+        }
+    }
+
+    @Suppress("SwallowedException")
+    private fun createDetails(payload: String): JSONObject {
+        val jsonObject = JSONObject()
+        try {
+            jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
+        } catch (e: JSONException) {
+            // TODO - Emit error
+//            emitError(ComponentException("Failed to create details.", e))
+        }
+        return jsonObject
+    }
+
+    private fun emitDetails(details: JSONObject) {
+        eventChannel.trySend(
+            ActionComponentEvent.ActionDetails(createActionComponentData(details)),
+        )
+    }
+
+    private fun createActionComponentData(details: JSONObject): ActionComponentData {
+        return ActionComponentData(
+            details = details,
+            paymentData = paymentDataRepository.paymentData,
+        )
+    }
+
+    // TODO - Refresh status when user resumes the app
+    override fun refreshStatus() {
+        val paymentData = paymentDataRepository.paymentData ?: return
+        statusRepository.refreshStatus(paymentData)
     }
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
+        // TODO - Start the redirect activity here
         AwaitComponent(modifier = modifier)
+    }
+
+    companion object {
+        private val DEFAULT_MAX_POLLING_DURATION = TimeUnit.MINUTES.toMillis(15)
+
+        @VisibleForTesting
+        internal const val PAYLOAD_DETAILS_KEY = "payload"
     }
 }
