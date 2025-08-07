@@ -80,7 +80,7 @@ internal class AwaitComponent(
         val url = action.url
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
-            redirectHandler.launchUriRedirect(context, url)
+            redirectHandler.launchUriRedirect(context, url!!)
             val paymentData = paymentDataRepository.paymentData
                 // TODO - Error Propagation
                 // ?: throw CheckoutException("Payment data should not be null")
