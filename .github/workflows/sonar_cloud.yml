@@ -3,6 +3,9 @@ name: SonarCloud
 on:
   workflow_call
 
+permissions:
+  contents: read
+
 jobs:
   sonar_cloud:
     name: Run SonarCloud
