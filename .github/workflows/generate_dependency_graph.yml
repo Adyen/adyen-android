@@ -3,6 +3,9 @@ name: Generate Dependency Graph
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   generate-dependency-graph:
     runs-on: ubuntu-latest
