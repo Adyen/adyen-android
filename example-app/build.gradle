@@ -86,6 +86,7 @@ dependencies {
     implementation libs.compose.activity
     implementation libs.compose.hilt
     implementation libs.compose.material
+    implementation libs.compose.material.icons
     implementation libs.compose.viewmodel
 
     implementation libs.material

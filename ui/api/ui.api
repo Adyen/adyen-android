@@ -64,6 +64,25 @@ public final class com/adyen/checkout/ui/theme/CheckoutAttributes$Companion {
 	public static synthetic fun default$default (Lcom/adyen/checkout/ui/theme/CheckoutAttributes$Companion;IILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutAttributes;
 }
 
+public final class com/adyen/checkout/ui/theme/CheckoutButtonGroupStyle {
+	public static final field $stable I
+	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun component2-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun component3-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun component4-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun copy-JmN3xZw (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;)Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;
+	public static synthetic fun copy-JmN3xZw$default (Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckedContainerColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun getCheckedTextColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun getUncheckedContainerColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public final fun getUncheckedTextColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/ui/theme/CheckoutButtonStyle {
 	public static final field $stable I
 	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
@@ -164,16 +183,16 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors$Companion {
 public final class com/adyen/checkout/ui/theme/CheckoutElements {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/ui/theme/CheckoutElements$Companion;
-	public fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;)V
+	public fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;)V
 	public final fun component1 ()Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;
 	public final fun component2 ()Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;
 	public final fun component3 ()Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;
-	public final fun component4 ()Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;
-	public final fun copy (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/CheckoutElements;Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
+	public final fun component4 ()Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;
+	public final fun copy (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/ui/theme/CheckoutElements;Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
 	public fun equals (Ljava/lang/Object;)Z
+	public final fun getButtonGroup ()Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;
 	public final fun getButtons ()Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;
-	public final fun getSegmentedButton ()Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;
 	public final fun getSwitch ()Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;
 	public final fun getTextField ()Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;
 	public fun hashCode ()I
@@ -181,31 +200,8 @@ public final class com/adyen/checkout/ui/theme/CheckoutElements {
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutElements$Companion {
-	public final fun default (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
-	public static synthetic fun default$default (Lcom/adyen/checkout/ui/theme/CheckoutElements$Companion;Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
-}
-
-public final class com/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle {
-	public static final field $stable I
-	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Ljava/lang/Integer;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun component2-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun component3-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun component4-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun component5-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun component6 ()Ljava/lang/Integer;
-	public final fun copy-Jq8eH84 (Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Ljava/lang/Integer;)Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;
-	public static synthetic fun copy-Jq8eH84$default (Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Lcom/adyen/checkout/ui/theme/CheckoutColor;Ljava/lang/Integer;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutSegmentedButtonStyle;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getBorderColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun getCornerRadius ()Ljava/lang/Integer;
-	public final fun getSelectedContainerColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun getSelectedTextColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun getUnselectedContainerColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public final fun getUnselectedTextColor-YXBAHVY ()Lcom/adyen/checkout/ui/theme/CheckoutColor;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
+	public final fun default (Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
+	public static synthetic fun default$default (Lcom/adyen/checkout/ui/theme/CheckoutElements$Companion;Lcom/adyen/checkout/ui/theme/CheckoutButtonStyles;Lcom/adyen/checkout/ui/theme/CheckoutSwitchStyle;Lcom/adyen/checkout/ui/theme/CheckoutTextFieldStyle;Lcom/adyen/checkout/ui/theme/CheckoutButtonGroupStyle;ILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutElements;
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutSwitchStyle {

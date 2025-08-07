@@ -8,6 +8,7 @@
 "androidx.core:core-ktx" = "[AndroidX Core](https://developer.android.com/jetpack/androidx/releases/core#{})"
 "androidx.compose.compiler:compiler" = "[AndroidX Compose Compiler](https://developer.android.com/jetpack/androidx/releases/compose-compiler#{})"
 "androidx.compose:compose-bom" = "[AndroidX Compose BoM](https://developer.android.com/develop/ui/compose/bom/bom-mapping)"
+"androidx.compose.material3:material3" = "[AndroidX Compose Material](https://developer.android.com/jetpack/androidx/releases/compose-material3#{})"
 "androidx.constraintlayout:constraintlayout" = "[AndroidX ConstraintLayout](https://developer.android.com/jetpack/androidx/releases/constraintlayout#constraintlayout-{})"
 "androidx.constraintlayout:constraintlayout-compose" = "[AndroidX ConstraintLayout Compose](https://developer.android.com/jetpack/androidx/releases/constraintlayout#{})"
 "androidx.fragment:fragment-ktx" = "[AndroidX Fragment](https://developer.android.com/jetpack/androidx/releases/fragment#{})"
@@ -32,7 +33,7 @@
 [excluded]
 # We only need the package name, but since toml files are key value base we set an empty value.
 "androidx.arch.core:core-testing" = ""
-"androidx.compose.material3:material3" = ""
+"androidx.compose.material:material-icons-core" = ""
 "androidx.compose.ui:ui" = ""
 "androidx.compose.ui:ui-graphics" = ""
 "androidx.compose.ui:ui-test-manifest" = ""

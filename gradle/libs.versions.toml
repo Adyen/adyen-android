@@ -32,6 +32,7 @@ coroutines = "1.10.2"
 fragment = "1.8.6"
 lifecycle = "2.9.0"
 material = "1.12.0"
+material3 = "1.4.0-alpha18"
 recyclerview = "1.4.0"
 startup = "1.2.0"
 constraintlayout = "2.2.1"
@@ -102,7 +103,8 @@ cash-app-pay = { group = "app.cash.paykit", name = "core", version.ref = "cash-a
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
 compose-hilt = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "compose-hilt" }
-compose-material = { group = "androidx.compose.material3", name = "material3" }
+compose-material = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+compose-material-icons = { group = "androidx.compose.material", name = "material-icons-core" }
 compose-ui-main = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }

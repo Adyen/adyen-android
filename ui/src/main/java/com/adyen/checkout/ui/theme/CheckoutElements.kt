@@ -16,7 +16,7 @@ data class CheckoutElements(
     val buttons: CheckoutButtonStyles,
     val switch: CheckoutSwitchStyle,
     val textField: CheckoutTextFieldStyle,
-    val segmentedButton: CheckoutSegmentedButtonStyle,
+    val buttonGroup: CheckoutButtonGroupStyle,
 ) {
 
     companion object {
@@ -25,12 +25,12 @@ data class CheckoutElements(
             buttons: CheckoutButtonStyles = CheckoutButtonStyles(),
             switch: CheckoutSwitchStyle = CheckoutSwitchStyle(),
             textField: CheckoutTextFieldStyle = CheckoutTextFieldStyle(),
-            segmentedButton: CheckoutSegmentedButtonStyle = CheckoutSegmentedButtonStyle(),
+            buttonGroup: CheckoutButtonGroupStyle = CheckoutButtonGroupStyle(),
         ) = CheckoutElements(
             buttons = buttons,
             switch = switch,
             textField = textField,
-            segmentedButton = segmentedButton,
+            buttonGroup = buttonGroup,
         )
     }
 }
