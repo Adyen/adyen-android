@@ -6,6 +6,9 @@ on:
       - 'v5'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   ui-test:
     name: Run UI tests
