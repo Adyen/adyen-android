@@ -16,8 +16,6 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @Suppress("TooGenericExceptionCaught")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -29,7 +27,7 @@ fun RedirectEvent(
 ) {
     val context = LocalContext.current
     LaunchedEffect(redirectHandler, viewEventFlow, onError) {
-        viewEventFlow.onEach { event ->
+        viewEventFlow.collect { event ->
             when (event) {
                 is RedirectViewEvent.Redirect -> {
                     try {
@@ -42,6 +40,6 @@ fun RedirectEvent(
                     }
                 }
             }
-        }.launchIn(this)
+        }
     }
 }
