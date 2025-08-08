@@ -22,6 +22,7 @@ import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
@@ -74,7 +75,7 @@ internal class AwaitComponent(
         }
     }
 
-    @Suppress("SwallowedException", "TooGenericExceptionCaught", "TooGenericExceptionThrown")
+    @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
     private fun makeRedirect(action: AwaitAction, context: Context) {
         val url = action.url
         try {
@@ -87,8 +88,7 @@ internal class AwaitComponent(
             startStatusPolling(paymentData)
             // TODO - Error Propagation
         } catch (exception: RuntimeException) {
-            // TODO - Emit error
-//            emitError(exception)
+            emitError(exception)
         }
     }
 
@@ -134,30 +134,39 @@ internal class AwaitComponent(
         // Not authorized status should still call /details so that merchant can get more info
         val payload = statusResponse.payload
         if (statusResponse.isFinalResult() && !payload.isNullOrEmpty()) {
-            val details = createDetails(payload)
-            emitDetails(details)
+            emitDetails(payload)
         } else {
-            // TODO - Emit error
+            // TODO - Error propagation
 //            emitError(ComponentException("Payment was not completed. - " + statusResponse.resultCode))
+            emitError(RuntimeException("Payment was not completed. - " + statusResponse.resultCode))
         }
     }
 
-    @Suppress("SwallowedException")
-    private fun createDetails(payload: String): JSONObject {
-        val jsonObject = JSONObject()
+    private fun emitDetails(payload: String) {
         try {
-            jsonObject.put(PAYLOAD_DETAILS_KEY, payload)
+            val jsonObject = JSONObject().apply {
+                put(PAYLOAD_DETAILS_KEY, payload)
+            }
+            emitDetails(jsonObject)
         } catch (e: JSONException) {
-            // TODO - Emit error
+            // TODO - Error propagation
 //            emitError(ComponentException("Failed to create details.", e))
+            emitError(RuntimeException("Failed to create details.", e))
         }
-        return jsonObject
     }
 
     private fun emitDetails(details: JSONObject) {
         eventChannel.trySend(
             ActionComponentEvent.ActionDetails(createActionComponentData(details)),
         )
+    }
+
+    // TODO - Error propagation
+    private fun emitError(e: RuntimeException) {
+        eventChannel.trySend(
+            ActionComponentEvent.Error(ComponentError(e)),
+        )
+        statusPollingJob?.cancel()
     }
 
     private fun createActionComponentData(details: JSONObject): ActionComponentData {

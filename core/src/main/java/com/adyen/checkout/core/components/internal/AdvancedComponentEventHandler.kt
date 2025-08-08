@@ -28,6 +28,10 @@ internal class AdvancedComponentEventHandler<T : BasePaymentComponentState>(
     override suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult {
         return when (event) {
             is ActionComponentEvent.ActionDetails -> checkoutCallbacks.onAdditionalDetails(event.data)
+            is ActionComponentEvent.Error -> {
+                checkoutCallbacks.onError(event.error)
+                CheckoutResult.Error(event.error)
+            }
         }
     }
 }

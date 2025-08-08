@@ -40,8 +40,8 @@ class CheckoutCallbacks(
         return onAdditionalDetails.onAdditionalDetails(actionComponentData)
     }
 
-    internal suspend fun onError() {
-        onError.onError()
+    internal fun onError(componentError: ComponentError) {
+        onError.onError(componentError)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -70,6 +70,5 @@ fun interface OnAdditionalDetailsCallback : CheckoutCallback {
 }
 
 fun interface OnErrorCallback : CheckoutCallback {
-    // TODO - add checkout error parameter once available
-    suspend fun onError()
+    fun onError(componentError: ComponentError)
 }
