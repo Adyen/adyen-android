@@ -93,11 +93,10 @@ internal class DefaultUPIDelegateTest(
                 UPIIntentItem.PaymentApp("id1", "name1", Environment.TEST, true),
                 UPIIntentItem.PaymentApp("id2", "name2", Environment.TEST),
                 UPIIntentItem.GenericApp(),
-                UPIIntentItem.ManualInput(null),
             )
             val expectedAvailableModes = listOf(
                 UPIMode.Intent(intentItemList),
-                UPIMode.Qr,
+                UPIMode.Vpa,
             )
             val delegate = createUPIDelegate(paymentMethod = paymentMethod)
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
@@ -115,7 +114,6 @@ internal class DefaultUPIDelegateTest(
         fun `intent apps are present, then availableModes should contain intent and qr modes`() = runTest {
             val expectedAvailableModes = listOf(
                 UPIMode.Vpa,
-                UPIMode.Qr,
             )
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
@@ -169,38 +167,6 @@ internal class DefaultUPIDelegateTest(
         }
 
         @Test
-        fun `mode is INTENT and selected upi intent item is ManualInput and address is empty, then output should be invalid`() =
-            runTest {
-                val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-
-                delegate.updateInputData {
-                    selectedMode = UPISelectedMode.INTENT
-                    selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
-                    intentVirtualPaymentAddress = " "
-                }
-
-                assertFalse(outputTestFlow.latestValue.isValid)
-
-                outputTestFlow.cancel()
-            }
-
-        @Test
-        fun `mode is INTENT and selected upi intent item is ManualInput and address is not empty, then output should be valid`() =
-            runTest {
-                val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-
-                delegate.updateInputData {
-                    selectedMode = UPISelectedMode.INTENT
-                    selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
-                    intentVirtualPaymentAddress = "address"
-                }
-
-                assertTrue(outputTestFlow.latestValue.isValid)
-
-                outputTestFlow.cancel()
-            }
-
-        @Test
         fun `mode is VPA and address is empty, then output should be invalid`() = runTest {
             val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
 
@@ -221,20 +187,6 @@ internal class DefaultUPIDelegateTest(
             delegate.updateInputData {
                 selectedMode = UPISelectedMode.VPA
                 vpaVirtualPaymentAddress = "address"
-            }
-
-            assertTrue(outputTestFlow.latestValue.isValid)
-
-            outputTestFlow.cancel()
-        }
-
-        @Test
-        fun `mode is QR, then output should be valid`() = runTest {
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.QR
-                vpaVirtualPaymentAddress = ""
             }
 
             assertTrue(outputTestFlow.latestValue.isValid)
@@ -322,28 +274,6 @@ internal class DefaultUPIDelegateTest(
         }
 
         @Test
-        fun `mode is INTENT and selected intent item is manual input, then component state should be valid`() =
-            runTest {
-                val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
-                val outputData = createOutputData(
-                    selectedMode = UPISelectedMode.INTENT,
-                    selectedUPIIntentItem = UPIIntentItem.ManualInput(null),
-                    intentVirtualPaymentAddressFieldState = FieldState("test", Validation.Valid),
-                )
-
-                delegate.updateComponentState(outputData)
-
-                with(componentStateTestFlow.latestValue) {
-                    assertEquals(PaymentMethodTypes.UPI_COLLECT, data.paymentMethod?.type)
-                    assertNull(data.paymentMethod?.appId)
-                    assertEquals("test", data.paymentMethod?.virtualPaymentAddress)
-                    assertEquals(TEST_ORDER, data.order)
-                    assertTrue(isInputValid)
-                    assertTrue(isValid)
-                }
-            }
-
-        @Test
         fun `mode is VPA and output is valid, then component state should be valid`() = runTest {
             val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
             val outputData = createOutputData(
@@ -356,25 +286,6 @@ internal class DefaultUPIDelegateTest(
             with(componentStateTestFlow.latestValue) {
                 assertEquals("test", data.paymentMethod?.virtualPaymentAddress)
                 assertEquals(PaymentMethodTypes.UPI_COLLECT, data.paymentMethod?.type)
-                assertNull(data.paymentMethod?.appId)
-                assertEquals(TEST_ORDER, data.order)
-                assertTrue(isInputValid)
-                assertTrue(isValid)
-            }
-        }
-
-        @Test
-        fun `mode is QR and output is valid, then component state should be valid`() = runTest {
-            val componentStateTestFlow = delegate.componentStateFlow.test(testScheduler)
-            val outputData = createOutputData(
-                selectedMode = UPISelectedMode.QR,
-            )
-
-            delegate.updateComponentState(outputData)
-
-            with(componentStateTestFlow.latestValue) {
-                assertNull(data.paymentMethod?.virtualPaymentAddress)
-                assertEquals(PaymentMethodTypes.UPI_QR, data.paymentMethod?.type)
                 assertNull(data.paymentMethod?.appId)
                 assertEquals(TEST_ORDER, data.order)
                 assertTrue(isInputValid)
@@ -460,66 +371,6 @@ internal class DefaultUPIDelegateTest(
     @DisplayName("when highlightValidationErrors is called and ")
     inner class HighlightValidationErrorsTest {
 
-        @Test
-        fun `payment address is invalid, then output data includes validation errors`() = runTest {
-            val paymentMethod = PaymentMethod(
-                apps = listOf(
-                    AppData("id1", "name1"),
-                ),
-            )
-            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
-                intentVirtualPaymentAddress = " "
-            }
-
-            delegate.highlightValidationErrors()
-
-            with(outputTestFlow.latestValue) {
-                assertTrue(
-                    availableModes.any { mode ->
-                        mode is UPIMode.Intent && mode.intentItems.any { item ->
-                            item is UPIIntentItem.ManualInput && item.errorMessageResource != null
-                        }
-                    },
-                )
-            }
-
-            outputTestFlow.cancel()
-        }
-
-        @Test
-        fun `payment address is valid, then output data does not include validation errors`() = runTest {
-            val paymentMethod = PaymentMethod(
-                apps = listOf(
-                    AppData("id1", "name1"),
-                ),
-            )
-            val delegate = createUPIDelegate(paymentMethod = paymentMethod)
-            val outputTestFlow = delegate.outputDataFlow.test(testScheduler)
-            delegate.updateInputData {
-                selectedMode = UPISelectedMode.INTENT
-                selectedUPIIntentItem = UPIIntentItem.ManualInput(null)
-                intentVirtualPaymentAddress = "test"
-            }
-
-            delegate.highlightValidationErrors()
-
-            with(outputTestFlow.latestValue) {
-                assertTrue(
-                    availableModes.any { mode ->
-                        mode is UPIMode.Intent && mode.intentItems.any { item ->
-                            item is UPIIntentItem.ManualInput && item.errorMessageResource == null
-                        }
-                    },
-                )
-            }
-
-            outputTestFlow.cancel()
-        }
-
         @ParameterizedTest
         @MethodSource("com.adyen.checkout.upi.internal.ui.DefaultUPIDelegateTest#noSelectedItemErrorMessageSource")
         fun `input data is updated, then showNoSelectedUPIIntentItemError updates too`(
@@ -579,7 +430,7 @@ internal class DefaultUPIDelegateTest(
 
             delegate.componentStateFlow.test {
                 delegate.updateInputData {
-                    selectedMode = UPISelectedMode.QR
+                    selectedMode = UPISelectedMode.INTENT
                 }
 
                 assertEquals(TEST_CHECKOUT_ATTEMPT_ID, expectMostRecentItem().data.paymentMethod?.checkoutAttemptId)
@@ -642,13 +493,6 @@ internal class DefaultUPIDelegateTest(
             ),
             arguments(
                 createOutputData(
-                    selectedMode = UPISelectedMode.INTENT,
-                    selectedUPIIntentItem = UPIIntentItem.ManualInput(null),
-                    intentVirtualPaymentAddressFieldState = FieldState("", Validation.Invalid(0)),
-                ),
-            ),
-            arguments(
-                createOutputData(
                     selectedMode = UPISelectedMode.VPA,
                     virtualPaymentAddressFieldState = FieldState("", Validation.Invalid(0)),
                 ),
@@ -669,17 +513,7 @@ internal class DefaultUPIDelegateTest(
                 false,
             ),
             arguments(
-                UPISelectedMode.INTENT,
-                UPIIntentItem.ManualInput(null),
-                false,
-            ),
-            arguments(
                 UPISelectedMode.VPA,
-                null,
-                false,
-            ),
-            arguments(
-                UPISelectedMode.QR,
                 null,
                 false,
             ),
@@ -701,14 +535,12 @@ internal class DefaultUPIDelegateTest(
             selectedUPIIntentItem: UPIIntentItem? = null,
             showNoSelectedUPIIntentItemError: Boolean = false,
             virtualPaymentAddressFieldState: FieldState<String> = FieldState("test", Validation.Invalid(0)),
-            intentVirtualPaymentAddressFieldState: FieldState<String> = FieldState("test", Validation.Invalid(0)),
         ) = UPIOutputData(
             availableModes = availableModes,
             selectedMode = selectedMode,
             selectedUPIIntentItem = selectedUPIIntentItem,
             showNoSelectedUPIIntentItemError = showNoSelectedUPIIntentItemError,
             virtualPaymentAddressFieldState = virtualPaymentAddressFieldState,
-            intentVirtualPaymentAddressFieldState = intentVirtualPaymentAddressFieldState,
         )
     }
 }

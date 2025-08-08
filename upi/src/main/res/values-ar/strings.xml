@@ -9,10 +9,12 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">كيف تود استخدام معرف واجهة المدفوعات الموحدة (UPI)؟</string>
-    <string name="checkout_upi_vpa_validation">أدخل عنوان دفع افتراضي صحيح</string>
-    <string name="checkout_upi_qr_generation">أنشئ رمز الاستجابة السريعة الذي يمكنك تنزيله أو خذ لقطة شاشة له وقم بتحميله على تطبيق UPI لإكمال الدفع.</string>
+    <string name="checkout_upi_vpa_validation">أدخل UPI صالحًا</string>
     <string name="checkout_upi_continue">متابعة</string>
-    <string name="checkout_upi_app_manual_input">أدخل معرف UPI</string>
+    <string name="checkout_upi_id">معرف UPI</string>
     <string name="checkout_upi_app_other_upi">خيارات UPI الأخرى</string>
-    <string name="checkout_upi_no_app_selected">للمتابعة؛ حدد وسيلة للدفع</string>
+    <string name="checkout_upi_no_app_selected">للمتابعة؛ حدد تطبيق UPI المفضّل لديك</string>
+    <string name="checkout_upi_app_tab_title">تطبيق UPI</string>
+    <string name="checkout_upi_id_instruction">أدخل معرّف UPI الخاص بك</string>
+    <string name="checkout_upi_app_instruction">حدد تطبيق UPI المفضل لديك</string>
 </resources>

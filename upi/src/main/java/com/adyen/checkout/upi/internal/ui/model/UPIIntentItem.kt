@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.upi.internal.ui.model
 
-import androidx.annotation.StringRes
 import com.adyen.checkout.core.Environment
 
 internal sealed class UPIIntentItem {
@@ -45,18 +44,5 @@ internal sealed class UPIIntentItem {
                 this == newItem
 
         override fun getChangePayload(newItem: UPIIntentItem) = null
-    }
-
-    data class ManualInput(
-        @StringRes val errorMessageResource: Int?,
-        override val isSelected: Boolean = false
-    ) : UPIIntentItem() {
-        override fun areItemsTheSame(newItem: UPIIntentItem) = newItem is ManualInput
-        override fun areContentsTheSame(newItem: UPIIntentItem) =
-            newItem is ManualInput &&
-                this == newItem
-
-        // This has been implemented to avoid creating a new ViewHolder when the input field has validation error
-        override fun getChangePayload(newItem: UPIIntentItem) = Unit
     }
 }

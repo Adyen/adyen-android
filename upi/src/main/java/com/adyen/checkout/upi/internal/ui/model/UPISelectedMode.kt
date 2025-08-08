@@ -11,11 +11,9 @@ package com.adyen.checkout.upi.internal.ui.model
 internal enum class UPISelectedMode {
     INTENT,
     VPA,
-    QR
 }
 
 internal fun UPIMode.mapToSelectedMode() = when (this) {
     is UPIMode.Intent -> UPISelectedMode.INTENT
     UPIMode.Vpa -> UPISelectedMode.VPA
-    UPIMode.Qr -> UPISelectedMode.QR
 }
