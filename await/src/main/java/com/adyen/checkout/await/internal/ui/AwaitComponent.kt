@@ -28,8 +28,8 @@ import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
-import com.adyen.checkout.core.redirect.internal.ui.RedirectEvent
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
+import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -59,7 +59,6 @@ internal class AwaitComponent(
     private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
-    // TODO - Remove context from here and launch redirect from the ViewFactory composable
     override fun handleAction() {
         paymentDataRepository.paymentData = action.paymentData
 
@@ -187,7 +186,7 @@ internal class AwaitComponent(
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
-        RedirectEvent(
+        redirectEvent(
             redirectHandler = redirectHandler,
             viewEventFlow = redirectEventFlow,
             onError = ::emitError,

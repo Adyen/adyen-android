@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.redirect.internal.ui
 
+import android.annotation.SuppressLint
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,9 +19,10 @@ import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooGenericExceptionCaught")
+@SuppressLint("ComposableNaming")
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun RedirectEvent(
+fun redirectEvent(
     redirectHandler: RedirectHandler,
     viewEventFlow: Flow<RedirectViewEvent>,
     onError: (RuntimeException) -> Unit
