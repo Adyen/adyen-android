@@ -141,11 +141,12 @@ public final class com/adyen/checkout/ui/theme/CheckoutColor {
 public final class com/adyen/checkout/ui/theme/CheckoutColors {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;
-	public synthetic fun <init> (JJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JJJJJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1-26fMgeE ()J
 	public final fun component10-26fMgeE ()J
 	public final fun component11-26fMgeE ()J
 	public final fun component12-26fMgeE ()J
+	public final fun component13-26fMgeE ()J
 	public final fun component2-26fMgeE ()J
 	public final fun component3-26fMgeE ()J
 	public final fun component4-26fMgeE ()J
@@ -154,16 +155,17 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors {
 	public final fun component7-26fMgeE ()J
 	public final fun component8-26fMgeE ()J
 	public final fun component9-26fMgeE ()J
-	public final fun copy-9dLu6Dc (JJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
-	public static synthetic fun copy-9dLu6Dc$default (Lcom/adyen/checkout/ui/theme/CheckoutColors;JJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public final fun copy--GY1CCY (JJJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public static synthetic fun copy--GY1CCY$default (Lcom/adyen/checkout/ui/theme/CheckoutColors;JJJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAction-26fMgeE ()J
 	public final fun getBackground-26fMgeE ()J
 	public final fun getContainer-26fMgeE ()J
 	public final fun getDestructive-26fMgeE ()J
 	public final fun getDisabled-26fMgeE ()J
+	public final fun getHighlight-26fMgeE ()J
 	public final fun getOutline-26fMgeE ()J
 	public final fun getPrimary-26fMgeE ()J
+	public final fun getSuccess-26fMgeE ()J
 	public final fun getText-26fMgeE ()J
 	public final fun getTextOnDestructive-26fMgeE ()J
 	public final fun getTextOnDisabled-26fMgeE ()J
@@ -174,10 +176,10 @@ public final class com/adyen/checkout/ui/theme/CheckoutColors {
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutColors$Companion {
-	public final fun dark-9dLu6Dc (JJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
-	public static synthetic fun dark-9dLu6Dc$default (Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;JJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
-	public final fun light-9dLu6Dc (JJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
-	public static synthetic fun light-9dLu6Dc$default (Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;JJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public final fun dark--GY1CCY (JJJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public static synthetic fun dark--GY1CCY$default (Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;JJJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public final fun light--GY1CCY (JJJJJJJJJJJJJ)Lcom/adyen/checkout/ui/theme/CheckoutColors;
+	public static synthetic fun light--GY1CCY$default (Lcom/adyen/checkout/ui/theme/CheckoutColors$Companion;JJJJJJJJJJJJJILjava/lang/Object;)Lcom/adyen/checkout/ui/theme/CheckoutColors;
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutElements {
