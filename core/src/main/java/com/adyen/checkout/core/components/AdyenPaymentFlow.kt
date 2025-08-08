@@ -34,6 +34,7 @@ fun AdyenPaymentFlow(
     checkoutController: CheckoutController = rememberCheckoutController(),
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
+    // TODO - Verify that this does not keep observing the previous values and adds extra observables
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(
             txVariant = txVariant,
@@ -53,6 +54,7 @@ fun AdyenPaymentFlow(
             Spacer(Modifier.size(16.dp))
 
             // TODO - Properly implement the pay button
+            // TODO - Should we move the payment button to each component
             PrimaryButton(
                 onClick = checkoutController::submit,
                 text = "Pay $13.37",

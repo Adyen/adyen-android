@@ -68,10 +68,10 @@ class DefaultRedirectHandler : RedirectHandler {
     }
 
     @Suppress("ReturnCount")
-    override fun launchUriRedirect(context: Context, url: String?) {
+    override fun launchUriRedirect(context: Context, url: String) {
         // TODO - Error Propagation
-        // if (url.isNullOrEmpty()) throw ComponentException("Redirect URL is empty.")
-        if (url.isNullOrEmpty()) throw RuntimeException("Redirect URL is empty.")
+        // if (url.isEmpty()) throw ComponentException("Redirect URL is empty.")
+        if (url.isEmpty()) throw RuntimeException("Redirect URL is empty.")
         val uri = url.toUri()
 
         if (

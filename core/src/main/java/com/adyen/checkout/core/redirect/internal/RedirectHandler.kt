@@ -27,7 +27,7 @@ interface RedirectHandler {
     @Throws(RuntimeException::class)
     fun parseRedirectResult(data: Uri?): JSONObject
 
-    fun launchUriRedirect(context: Context, url: String?)
+    fun launchUriRedirect(context: Context, url: String)
 
     fun setOnRedirectListener(listener: () -> Unit)
 
