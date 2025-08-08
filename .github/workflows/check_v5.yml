@@ -5,6 +5,9 @@ on:
     branches:
       - 'v5'
 
+permissions:
+  contents: read
+
 concurrency:
   group: 'v5'
   cancel-in-progress: true

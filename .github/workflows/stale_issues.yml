@@ -9,6 +9,9 @@ on:
   schedule:
     - cron: '0 0 * * *'  # Run every day at midnight
 
+permissions:
+  issues: write
+
 jobs:
   close_stale_prs:
     runs-on: ubuntu-latest

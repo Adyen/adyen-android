@@ -6,6 +6,9 @@ on:
       - 'renovate/android.gradle.plugin'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   update-verification-metadata:
     name: Update verification metadata
