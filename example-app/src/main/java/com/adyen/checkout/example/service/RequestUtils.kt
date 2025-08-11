@@ -68,7 +68,6 @@ fun getSessionRequest(
     threeDSAuthenticationOnly: Boolean = false,
     shopperEmail: String? = null,
     allowedPaymentMethods: List<String>? = null,
-    storePaymentMethodMode: String? = StorePaymentMethodMode.ASK_FOR_CONSENT.mode,
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
 ): SessionRequest {
     return SessionRequest(
@@ -87,7 +86,7 @@ fun getSessionRequest(
         threeDSAuthenticationOnly = threeDSAuthenticationOnly,
         shopperEmail = shopperEmail,
         allowedPaymentMethods = allowedPaymentMethods,
-        storePaymentMethodMode = storePaymentMethodMode,
+        storePaymentMethodMode = StorePaymentMethodMode.ASK_FOR_CONSENT.mode,
         recurringProcessingModel = recurringProcessingModel,
         installmentOptions = installmentOptions,
         showInstallmentAmount = showInstallmentAmount,

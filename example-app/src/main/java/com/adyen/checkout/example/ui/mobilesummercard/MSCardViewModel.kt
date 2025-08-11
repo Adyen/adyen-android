@@ -48,7 +48,7 @@ internal class MSCardViewModel @Inject constructor(
 //            val action = makePaymentCall(state.data)
 
             if (action != null) {
-                // The action is not empty
+                // The action is not empty, handle it here
             }
         }
     }
@@ -120,8 +120,9 @@ internal class MSCardViewModel @Inject constructor(
 
     private fun sendPaymentDetails(actionComponentData: ActionComponentData) {
         viewModelScope.launch(IODispatcher) {
-            val json = ActionComponentData.SERIALIZER.serialize(actionComponentData)
-            handlePaymentResponse(paymentsRepository.makeDetailsRequest(json))
+            val actionJson = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+            val responseJson = paymentsRepository.makeDetailsRequest(actionJson)
+            handlePaymentResponse(responseJson)
         }
     }
 

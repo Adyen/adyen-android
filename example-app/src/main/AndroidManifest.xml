@@ -74,6 +74,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
+<!--                Docs: https://docs.adyen.com/online-payments/build-your-integration/sessions-flow/?platform=Android&integration=Components&version=5.13.1&utm_source=online-payments-integration&utm_medium=banner&utm_id=v6-banner#handle-a-redirect -->
 <!--                <data-->
 <!--                    android:host="${applicationId}"-->
 <!--                    android:path="/card"-->
