@@ -178,12 +178,6 @@ internal class AwaitComponent(
         )
     }
 
-    // TODO - Refresh status when user resumes the app
-    override fun refreshStatus() {
-        val paymentData = paymentDataRepository.paymentData ?: return
-        statusRepository.refreshStatus(paymentData)
-    }
-
     @Composable
     override fun ViewFactory(modifier: Modifier) {
         redirectEvent(

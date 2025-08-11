@@ -11,7 +11,4 @@ package com.adyen.checkout.core.components.internal.ui
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface StatusPollingComponent {
-
-    fun refreshStatus()
-}
+interface StatusPollingComponent
