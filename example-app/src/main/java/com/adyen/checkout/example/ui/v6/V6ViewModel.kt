@@ -107,10 +107,10 @@ internal class V6ViewModel @Inject constructor(
         return handleResponse(response)
     }
 
-    @Suppress("UnusedParameter")
-    private fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
-        // TODO - make payments details call
-        return CheckoutResult.Finished()
+    private suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
+        val request = ActionComponentData.SERIALIZER.serialize(actionComponentData)
+        val response = paymentsRepository.makeDetailsRequest(request)
+        return handleResponse(response)
     }
 
     private fun handleResponse(json: JSONObject?): CheckoutResult {
