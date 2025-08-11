@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.await.internal.ui
 
-import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,6 +28,8 @@ import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
+import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
+import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -55,8 +56,10 @@ internal class AwaitComponent(
     private val eventChannel = bufferedChannel<ActionComponentEvent>()
     override val eventFlow: Flow<ActionComponentEvent> = eventChannel.receiveAsFlow()
 
-    // TODO - Remove context from here and launch redirect from the ViewFactory composable
-    override fun handleAction(context: Context) {
+    private val redirectEventChannel = bufferedChannel<RedirectViewEvent>()
+    private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
+
+    override fun handleAction() {
         paymentDataRepository.paymentData = action.paymentData
 
         val event = GenericEvents.action(
@@ -65,22 +68,22 @@ internal class AwaitComponent(
         )
         analyticsManager.trackEvent(event)
 
-        launchAction(action, context)
+        launchActionIfRedirect(action)
         initState(action)
     }
 
-    private fun launchAction(action: AwaitAction, context: Context) {
-        if (shouldLaunchRedirect(action)) {
-            makeRedirect(action, context)
+    private fun launchActionIfRedirect(action: AwaitAction) {
+        val url = action.url
+        if (!url.isNullOrEmpty()) {
+            makeRedirect(url)
         }
     }
 
     @Suppress("TooGenericExceptionCaught", "TooGenericExceptionThrown")
-    private fun makeRedirect(action: AwaitAction, context: Context) {
-        val url = action.url
+    private fun makeRedirect(redirectUrl: String) {
+        redirectEventChannel.trySend(RedirectViewEvent.Redirect(redirectUrl))
         try {
-            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
-            redirectHandler.launchUriRedirect(context, url)
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
             val paymentData = paymentDataRepository.paymentData
                 // TODO - Error Propagation
                 // ?: throw CheckoutException("Payment data should not be null")
@@ -101,13 +104,12 @@ internal class AwaitComponent(
         }
 
         // Redirect flow starts polling after it launched a redirect
-        if (!shouldLaunchRedirect(action)) {
+        if (action.url.isNullOrEmpty()) {
             startStatusPolling(paymentData)
         }
     }
 
-    private fun shouldLaunchRedirect(action: AwaitAction) = !action.url.isNullOrEmpty()
-
+    // TODO - Move status polling into a separate class to not duplicate it in other component
     private fun startStatusPolling(paymentData: String) {
         statusPollingJob?.cancel()
         statusPollingJob = statusRepository.poll(paymentData, DEFAULT_MAX_POLLING_DURATION)
@@ -176,15 +178,13 @@ internal class AwaitComponent(
         )
     }
 
-    // TODO - Refresh status when user resumes the app
-    override fun refreshStatus() {
-        val paymentData = paymentDataRepository.paymentData ?: return
-        statusRepository.refreshStatus(paymentData)
-    }
-
     @Composable
     override fun ViewFactory(modifier: Modifier) {
-        // TODO - Start the redirect activity here
+        redirectEvent(
+            redirectHandler = redirectHandler,
+            viewEventFlow = redirectEventFlow,
+            onError = ::emitError,
+        )
         AwaitComponent(modifier = modifier)
     }
 

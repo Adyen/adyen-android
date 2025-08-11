@@ -25,6 +25,7 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -38,6 +39,7 @@ internal class PaymentFacilitator(
 ) {
 
     private var actionComponent by mutableStateOf<ActionComponent?>(null)
+    private var actionObservationJob: Job? = null
 
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier) {
@@ -54,7 +56,7 @@ internal class PaymentFacilitator(
             .filterNotNull()
             .onEach { event ->
                 val result = componentEventHandler.onPaymentComponentEvent(event)
-                handleResult(result)
+                handleResult(result, lifecycle)
             }.launchIn(coroutineScope)
 
         checkoutController.events
@@ -62,16 +64,16 @@ internal class PaymentFacilitator(
             .onEach { event ->
                 when (event) {
                     CheckoutController.Event.Submit -> submit()
-                    is CheckoutController.Event.HandleAction -> handleAction(event.action)
+                    is CheckoutController.Event.HandleAction -> handleAction(event.action, lifecycle)
                     is CheckoutController.Event.HandleIntent -> handleIntent(event.intent)
                 }
             }
             .launchIn(coroutineScope)
     }
 
-    private fun handleResult(checkoutResult: CheckoutResult) {
+    private fun handleResult(checkoutResult: CheckoutResult, lifecycle: Lifecycle) {
         when (checkoutResult) {
-            is CheckoutResult.Action -> handleAction(checkoutResult.action)
+            is CheckoutResult.Action -> handleAction(checkoutResult.action, lifecycle)
             is CheckoutResult.Error -> {
                 // TODO - Handle error state
             }
@@ -87,12 +89,26 @@ internal class PaymentFacilitator(
         paymentComponent.submit()
     }
 
-    private fun handleAction(action: Action) {
+    private fun handleAction(action: Action, lifecycle: Lifecycle) {
+        // In case handleAction() is called twice, we cancel the old observation job
+        actionObservationJob?.cancel()
+
         val actionComponent = actionProvider.get(
             action = action,
             coroutineScope = coroutineScope,
         )
         this.actionComponent = actionComponent
+
+        actionObservationJob = actionComponent.eventFlow
+            .flowWithLifecycle(lifecycle)
+            .filterNotNull()
+            .onEach { event ->
+                val result = componentEventHandler.onActionComponentEvent(event)
+                handleResult(result, lifecycle)
+            }.launchIn(coroutineScope)
+
+        actionComponent.handleAction()
+
         adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
