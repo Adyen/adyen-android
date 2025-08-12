@@ -20,7 +20,6 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -31,6 +30,8 @@ import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.example.ui.compose.ResultState
+import com.adyen.checkout.example.ui.compose.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -48,7 +49,6 @@ internal class V6ViewModel @Inject constructor(
         BuildConfig.CLIENT_KEY,
     )
 
-    var checkoutContext by mutableStateOf<CheckoutContext?>(null)
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
@@ -70,8 +70,9 @@ internal class V6ViewModel @Inject constructor(
         )
 
         if (paymentMethodResponse == null) {
-            // TODO - Example app error handling
-            Log.d(TAG, "Payment Method Response is null.")
+            val message = "Payment Method Response is null."
+            Log.d(TAG, message)
+            uiState = V6UiState.Error(UIText.String(message))
             return
         }
 
@@ -85,9 +86,9 @@ internal class V6ViewModel @Inject constructor(
             ),
         )
 
-        checkoutContext = when (result) {
-            is Checkout.Result.Error -> null
-            is Checkout.Result.Success -> result.checkoutContext
+        uiState = when (result) {
+            is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.errorReason))
+            is Checkout.Result.Success -> V6UiState.Component(result.checkoutContext)
         }
     }
 
@@ -122,13 +123,16 @@ internal class V6ViewModel @Inject constructor(
                 CheckoutResult.Action(action)
             }
 
-            else -> CheckoutResult.Finished()
+            else -> {
+                // TODO - move to onFinished callback after it's introduced
+                uiState = V6UiState.Final(ResultState.get(json.optString("resultCode")))
+                CheckoutResult.Finished()
+            }
         }
     }
 
-    @Suppress("UnusedParameter")
     private fun onError(componentError: ComponentError) {
-        // TODO - handle error
+        uiState = V6UiState.Error(UIText.String(componentError.errorMessage))
     }
 
     companion object {

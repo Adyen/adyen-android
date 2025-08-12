@@ -71,10 +71,10 @@ class V6Activity : AppCompatActivity() {
                         )
                     },
                 ) { contentPadding ->
-                    viewModel.checkoutContext?.let {
+                    (viewModel.uiState as? V6UiState.Component)?.let {
                         AdyenPaymentFlow(
                             txVariant = "mbway",
-                            checkoutContext = it,
+                            checkoutContext = it.checkoutContext,
                             theme = theme,
                             modifier = Modifier
                                 .padding(contentPadding)
