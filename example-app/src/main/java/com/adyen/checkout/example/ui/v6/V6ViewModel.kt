@@ -49,6 +49,7 @@ internal class V6ViewModel @Inject constructor(
     )
 
     var checkoutContext by mutableStateOf<CheckoutContext?>(null)
+    var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
     init {
         viewModelScope.launch {
