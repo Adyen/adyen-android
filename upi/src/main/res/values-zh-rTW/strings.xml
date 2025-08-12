@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">您想如何使用 UPI？</string>
     <string name="checkout_upi_vpa_validation">請輸入有效的 UPI</string>
     <string name="checkout_upi_continue">繼續</string>
-    <string name="checkout_upi_id">UPI ID</string>
+    <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">其他 UPI</string>
     <string name="checkout_upi_no_app_selected">請選定您所偏好的 UPI 應用程式以繼續至下一步</string>
     <string name="checkout_upi_app_tab_title">UPI 應用程式</string>
+    <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">請輸入您的 UPI ID</string>
     <string name="checkout_upi_app_instruction">請選定您所偏好的 UPI 應用程式</string>
 </resources>

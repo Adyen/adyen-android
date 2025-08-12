@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">%%upi.modeSelection%%</string>
     <string name="checkout_upi_vpa_validation">%%upi.collect.field.invalid-id-error%%</string>
     <string name="checkout_upi_continue">%%continue%%</string>
-    <string name="checkout_upi_id">%%upi.mode.enterUpiId%%</string>
+    <string name="checkout_upi_id_label">%%upi.collect.field.label%%</string>
     <string name="checkout_upi_app_other_upi">%%upi.mode.otherUpi%%</string>
     <string name="checkout_upi_no_app_selected">%%upi.error.noAppSelected%%</string>
     <string name="checkout_upi_app_tab_title">%%upi.mode.payByAnyUpi%%</string>
+    <string name="checkout_upi_id_tab_title">%%upi.mode.enterUpiId%%</string>
     <string name="checkout_upi_id_instruction">%%upi.collect.instruction%%</string>
     <string name="checkout_upi_app_instruction">%%upi.intent.instruction%%</string>
 </resources>

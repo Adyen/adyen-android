@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Jak chcete použít rozhraní UPI?</string>
     <string name="checkout_upi_vpa_validation">Zadejte platné UPI</string>
     <string name="checkout_upi_continue">Pokračovat</string>
-    <string name="checkout_upi_id">UPI ID</string>
+    <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Jiné UPI</string>
     <string name="checkout_upi_no_app_selected">Chcete-li pokračovat, vyberte preferovanou aplikaci UPI.</string>
     <string name="checkout_upi_app_tab_title">Aplikace UPI</string>
+    <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">Zadejte své ID UPI</string>
     <string name="checkout_upi_app_instruction">Vyberte preferovanou aplikaci UPI</string>
 </resources>

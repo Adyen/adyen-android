@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Как вы хотите использовать UPI?</string>
     <string name="checkout_upi_vpa_validation">Введите действительный UPI</string>
     <string name="checkout_upi_continue">Продолжить</string>
-    <string name="checkout_upi_id">Идентификатор UPI</string>
+    <string name="checkout_upi_id_label">Идентификатор UPI</string>
     <string name="checkout_upi_app_other_upi">Другие UPI</string>
     <string name="checkout_upi_no_app_selected">Для продолжения выберите предпочитаемое приложение UPI</string>
     <string name="checkout_upi_app_tab_title">Приложение UPI</string>
+    <string name="checkout_upi_id_tab_title">Идентификатор UPI</string>
     <string name="checkout_upi_id_instruction">Введите свой идентификатор UPI</string>
     <string name="checkout_upi_app_instruction">Выберите предпочитаемое приложение UPI</string>
 </resources>

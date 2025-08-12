@@ -26,7 +26,7 @@
     </style>
 
     <style name="AdyenCheckout.UPI.VPAButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:text">@string/checkout_upi_id</item>
+        <item name="android:text">@string/checkout_upi_id_tab_title</item>
         <item name="textAllCaps">false</item>
     </style>
 
@@ -52,7 +52,7 @@
     </style>
 
     <style name="AdyenCheckout.UPI.VPAEditText" parent="AdyenCheckout.TextInputEditText">
-        <item name="android:hint">@string/checkout_upi_id</item>
+        <item name="android:hint">@string/checkout_upi_id_label</item>
         <item name="android:maxLines">1</item>
     </style>
 

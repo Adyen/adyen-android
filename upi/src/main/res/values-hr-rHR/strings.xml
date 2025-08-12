@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Kako biste željeli koristiti UPI?</string>
     <string name="checkout_upi_vpa_validation">Unesite valjani UPI</string>
     <string name="checkout_upi_continue">Nastavi</string>
-    <string name="checkout_upi_id">UPI ID</string>
+    <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Ostale UPI opcije</string>
     <string name="checkout_upi_no_app_selected">Da biste nastavili, odaberite željenu UPI aplikaciju</string>
     <string name="checkout_upi_app_tab_title">UPI aplikacija</string>
+    <string name="checkout_upi_id_tab_title">UPI ID</string>
     <string name="checkout_upi_id_instruction">Unesite svoj UPI ID</string>
     <string name="checkout_upi_app_instruction">Odaberite svoju željenu UPI aplikaciju</string>
 </resources>
