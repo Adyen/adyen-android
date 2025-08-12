@@ -14,19 +14,28 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.AdyenPaymentFlow
+import com.adyen.checkout.example.ui.compose.ResultContent
+import com.adyen.checkout.example.ui.compose.ResultState
+import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.ui.theme.CheckoutColors
@@ -71,15 +80,46 @@ class V6Activity : AppCompatActivity() {
                         )
                     },
                 ) { contentPadding ->
-                    (viewModel.uiState as? V6UiState.Component)?.let {
-                        AdyenPaymentFlow(
-                            txVariant = "mbway",
-                            checkoutContext = it.checkoutContext,
-                            theme = theme,
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .padding(16.dp),
-                        )
+                    when (val state = viewModel.uiState) {
+                        is V6UiState.Component -> {
+                            AdyenPaymentFlow(
+                                txVariant = "mbway",
+                                checkoutContext = state.checkoutContext,
+                                theme = theme,
+                                modifier = Modifier
+                                    .padding(contentPadding)
+                                    .padding(16.dp),
+                            )
+                        }
+
+                        is V6UiState.Final -> {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                ResultContent(state.resultState)
+                            }
+                        }
+
+                        is V6UiState.Error -> {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                ResultContent(ResultState.FAILURE)
+                                Text(stringFromUIText(state.message))
+                            }
+                        }
+
+                        is V6UiState.Loading -> {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize(),
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
                     }
                 }
             }
