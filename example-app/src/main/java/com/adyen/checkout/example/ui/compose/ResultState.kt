@@ -19,5 +19,13 @@ data class ResultState(
         val SUCCESS = ResultState(R.drawable.ic_result_success, "Payment successful!")
         val PENDING = ResultState(R.drawable.ic_result_pending, "Payment pending...")
         val FAILURE = ResultState(R.drawable.ic_result_failure, "Payment failed...")
+
+        fun get(resultCode: String?): ResultState = when (resultCode) {
+            "Authorised" -> SUCCESS
+            "Pending",
+            "Received" -> PENDING
+
+            else -> FAILURE
+        }
     }
 }
