@@ -59,45 +59,64 @@ fun V6Screen(
         },
     ) { contentPadding ->
         when (uiState) {
-            is V6UiState.Component -> {
-                AdyenPaymentFlow(
-                    txVariant = "mbway",
-                    checkoutContext = uiState.checkoutContext,
-                    theme = theme,
-                    modifier = Modifier
-                        .padding(contentPadding)
-                        .padding(16.dp),
-                )
-            }
-
-            is V6UiState.Final -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    ResultContent(uiState.resultState)
-                }
-            }
-
-            is V6UiState.Error -> {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    ResultContent(ResultState.FAILURE)
-                    Text(stringFromUIText(uiState.message))
-                }
-            }
-
-            is V6UiState.Loading -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize(),
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+            is V6UiState.Component -> Component(theme, uiState, Modifier.padding(contentPadding))
+            is V6UiState.Final -> Final(uiState, Modifier.padding(contentPadding))
+            is V6UiState.Error -> Error(uiState, Modifier.padding(contentPadding))
+            is V6UiState.Loading -> Loading(Modifier.padding(contentPadding))
         }
+    }
+}
+
+@Composable
+private fun Component(
+    theme: CheckoutTheme,
+    uiState: V6UiState.Component,
+    modifier: Modifier,
+) {
+    AdyenPaymentFlow(
+        txVariant = "mbway",
+        checkoutContext = uiState.checkoutContext,
+        theme = theme,
+        modifier = modifier.padding(16.dp),
+    )
+}
+
+@Composable
+private fun Final(
+    uiState: V6UiState.Final,
+    modifier: Modifier,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        ResultContent(uiState.resultState)
+    }
+}
+
+@Composable
+private fun Error(
+    uiState: V6UiState.Error,
+    modifier: Modifier,
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        ResultContent(ResultState.FAILURE)
+        Text(stringFromUIText(uiState.message))
+    }
+}
+
+@Composable
+private fun Loading(
+    modifier: Modifier,
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        CircularProgressIndicator()
     }
 }
