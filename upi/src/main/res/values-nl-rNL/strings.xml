@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Hoe wilt u UPI gebruiken?</string>
     <string name="checkout_upi_vpa_validation">Voer een geldige UPI in</string>
     <string name="checkout_upi_continue">Doorgaan</string>
-    <string name="checkout_upi_id">UPI-ID</string>
+    <string name="checkout_upi_id_label">UPI-ID</string>
     <string name="checkout_upi_app_other_upi">Andere UPI</string>
     <string name="checkout_upi_no_app_selected">Selecteer uw gewenste UPI-app om door te gaan.</string>
     <string name="checkout_upi_app_tab_title">UPI-app</string>
+    <string name="checkout_upi_id_tab_title">UPI-ID</string>
     <string name="checkout_upi_id_instruction">Voer uw UPI-ID in</string>
     <string name="checkout_upi_app_instruction">Selecteer uw gewenste UPI-app</string>
 </resources>

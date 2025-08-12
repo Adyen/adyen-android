@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Miten haluaisit käyttää UPI:a?</string>
     <string name="checkout_upi_vpa_validation">Anna kelvollinen UPI</string>
     <string name="checkout_upi_continue">Jatka</string>
-    <string name="checkout_upi_id">UPI-tunnus</string>
+    <string name="checkout_upi_id_label">UPI-tunnus</string>
     <string name="checkout_upi_app_other_upi">Muu UPI</string>
     <string name="checkout_upi_no_app_selected">Jos haluat jatkaa, valitse haluamasi UPI-sovellus</string>
     <string name="checkout_upi_app_tab_title">UPI-sovellus</string>
+    <string name="checkout_upi_id_tab_title">UPI-tunnus</string>
     <string name="checkout_upi_id_instruction">Anna UPI-tunnuksesi</string>
     <string name="checkout_upi_app_instruction">Valitse haluamasi UPI-sovellus</string>
 </resources>

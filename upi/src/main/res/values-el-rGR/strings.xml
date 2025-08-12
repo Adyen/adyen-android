@@ -11,10 +11,11 @@
     <string name="checkout_upi_mode_selection">Πώς θα θέλατε να χρησιμοποιήσετε το UPI;</string>
     <string name="checkout_upi_vpa_validation">Εισαγάγετε έγκυρο UPI</string>
     <string name="checkout_upi_continue">Συνέχεια</string>
-    <string name="checkout_upi_id">Αναγνωριστικό UPI</string>
+    <string name="checkout_upi_id_label">Αναγνωριστικό UPI</string>
     <string name="checkout_upi_app_other_upi">Άλλο UPI</string>
     <string name="checkout_upi_no_app_selected">Επιλέξτε την προτιμώμενη εφαρμογή UPI για να συνεχίσετε</string>
     <string name="checkout_upi_app_tab_title">Εφαρμογή UPI</string>
+    <string name="checkout_upi_id_tab_title">Αναγνωριστικό UPI</string>
     <string name="checkout_upi_id_instruction">Εισαγάγετε το αναγνωριστικό UPI</string>
     <string name="checkout_upi_app_instruction">Επιλέξτε την προτιμώμενη εφαρμογή UPI</string>
 </resources>
