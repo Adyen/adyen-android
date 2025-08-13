@@ -9,10 +9,13 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Hur vill du använda UPI?</string>
-    <string name="checkout_upi_vpa_validation">Ange en korrekt virtuell betalningsadress</string>
-    <string name="checkout_upi_qr_generation">Generera QR-koden, som du kan ladda ner eller ta en skärmdump av, och ladda upp den i UPI-appen för att slutföra betalningen.</string>
+    <string name="checkout_upi_vpa_validation">Bekräfta en giltig UPI</string>
     <string name="checkout_upi_continue">Fortsätt</string>
-    <string name="checkout_upi_app_manual_input">Ange UPI-ID</string>
+    <string name="checkout_upi_id_label">UPI-ID</string>
     <string name="checkout_upi_app_other_upi">Annan UPI</string>
-    <string name="checkout_upi_no_app_selected">Välj en betalningsmetod för att fortsätta</string>
+    <string name="checkout_upi_no_app_selected">Välj din föredragna UPI-app för att fortsätta</string>
+    <string name="checkout_upi_app_tab_title">UPI-app</string>
+    <string name="checkout_upi_id_tab_title">UPI-ID</string>
+    <string name="checkout_upi_id_instruction">Bekräfta ditt UPI-ID</string>
+    <string name="checkout_upi_app_instruction">Välj din föredragna UPI-app</string>
 </resources>

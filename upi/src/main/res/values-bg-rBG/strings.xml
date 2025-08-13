@@ -9,10 +9,13 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Как бихте искали да използвате UPI?</string>
-    <string name="checkout_upi_vpa_validation">Въведете правилен виртуален адрес за плащане</string>
-    <string name="checkout_upi_qr_generation">Генерирайте QR кода, който можете да изтеглите или заснемете от екрана, и го качете в приложението UPI, за да завършите плащането.</string>
+    <string name="checkout_upi_vpa_validation">Въведи валиден UPI</string>
     <string name="checkout_upi_continue">Продължи</string>
-    <string name="checkout_upi_app_manual_input">Въведете UPI ID</string>
+    <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Други UPI</string>
-    <string name="checkout_upi_no_app_selected">Изберете метод на плащане, за да продължите</string>
+    <string name="checkout_upi_no_app_selected">Изберете предпочитаното приложение UPI, за да продължите</string>
+    <string name="checkout_upi_app_tab_title">Приложение UPI</string>
+    <string name="checkout_upi_id_tab_title">UPI ID</string>
+    <string name="checkout_upi_id_instruction">Въведете UPI ID</string>
+    <string name="checkout_upi_app_instruction">Изберете предпочитаното приложение UPI</string>
 </resources>
