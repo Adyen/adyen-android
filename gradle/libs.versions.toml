@@ -42,7 +42,7 @@ compose-hilt = "1.2.0"
 compose-viewmodel = "2.8.7"
 
 # Adyen dependencies
-adyen3ds2 = "2.2.24"
+adyen3ds2 = "2.2.25"
 
 # External dependencies
 cash-app-pay = "2.5.0"
