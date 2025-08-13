@@ -6,7 +6,7 @@
   "labels": [
     "Dependencies"
   ],
-  "baseBranches": [
+  "baseBranchPatterns": [
     "$default",
     "v5"
   ],
