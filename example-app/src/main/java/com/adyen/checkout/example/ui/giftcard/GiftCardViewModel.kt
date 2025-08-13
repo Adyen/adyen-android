@@ -222,7 +222,7 @@ internal class GiftCardViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = savedStateHandle.get<String>(GiftCardActivity.RETURN_URL_EXTRA)
+                returnUrl = savedStateHandle.get<String>(GiftCardActivity.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
                 shopperEmail = keyValueStorage.getShopperEmail(),

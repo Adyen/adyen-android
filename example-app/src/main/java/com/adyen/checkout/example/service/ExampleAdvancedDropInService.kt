@@ -92,7 +92,7 @@ class ExampleAdvancedDropInService : DropInService() {
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = RedirectComponent.getReturnUrl(applicationContext),
+                returnUrl = RedirectComponent.getReturnUrl(applicationContext),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
                 shopperEmail = keyValueStorage.getShopperEmail(),
             )

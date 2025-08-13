@@ -175,7 +175,7 @@ internal class GooglePayViewModel @Inject constructor(
                 amount = keyValueStorage.getAmount(),
                 countryCode = keyValueStorage.getCountry(),
                 merchantAccount = keyValueStorage.getMerchantAccount(),
-                redirectUrl = savedStateHandle.get<String>(GooglePayFragment.RETURN_URL_EXTRA)
+                returnUrl = savedStateHandle.get<String>(GooglePayFragment.RETURN_URL_EXTRA)
                     ?: error("Return url should be set"),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
                 shopperEmail = keyValueStorage.getShopperEmail(),

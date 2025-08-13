@@ -26,6 +26,7 @@ import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.createPaymentRequest
 import com.adyen.checkout.example.service.getPaymentMethodRequest
+import com.adyen.checkout.redirect.RedirectComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -61,8 +62,7 @@ internal class MSCardViewModel @Inject constructor(
             amount = keyValueStorage.getAmount(),
             countryCode = keyValueStorage.getCountry(),
             merchantAccount = keyValueStorage.getMerchantAccount(),
-            redirectUrl = savedStateHandle.get<String>(MSCardActivity.RETURN_URL_EXTRA)
-                ?: error("Return url should be set"),
+            returnUrl = RedirectComponent.getReturnUrl(activity) + "/card",
             shopperEmail = keyValueStorage.getShopperEmail(),
             // 3DS2 mode
             threeDSMode = ThreeDSMode.PREFER_NATIVE,
