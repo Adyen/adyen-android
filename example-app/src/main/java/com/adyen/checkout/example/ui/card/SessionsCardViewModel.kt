@@ -154,17 +154,9 @@ internal class SessionsCardViewModel @Inject constructor(
         updateUiState {
             it.copy(
                 oneTimeMessage = "Finished: ${result.resultCode}",
-                finalResult = getFinalResultState(result),
+                finalResult = ResultState.get(result.resultCode),
             )
         }
-    }
-
-    private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
-        "Authorised" -> ResultState.SUCCESS
-        "Pending",
-        "Received" -> ResultState.PENDING
-
-        else -> ResultState.FAILURE
     }
 
     override fun onLoading(isLoading: Boolean) {

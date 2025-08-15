@@ -9,24 +9,10 @@
 package com.adyen.checkout.example.ui.v6
 
 import android.os.Bundle
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.adyen.checkout.core.components.AdyenPaymentFlow
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import com.adyen.checkout.ui.theme.CheckoutColors
@@ -42,7 +28,6 @@ class V6Activity : AppCompatActivity() {
     @Inject
     internal lateinit var uiThemeRepository: UIThemeRepository
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,32 +41,11 @@ class V6Activity : AppCompatActivity() {
         )
 
         setContent {
-            val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
             ExampleTheme(uiThemeRepository.isDarkTheme()) {
-                Scaffold(
-                    containerColor = Color(theme.colors.background.value),
-                    topBar = {
-                        TopAppBar(
-                            title = { Text("v6 components") },
-                            navigationIcon = {
-                                IconButton(onClick = { backPressedDispatcher?.onBackPressed() }) {
-                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                                }
-                            },
-                        )
-                    },
-                ) { contentPadding ->
-                    viewModel.checkoutContext?.let {
-                        AdyenPaymentFlow(
-                            txVariant = "mbway",
-                            checkoutContext = it,
-                            theme = theme,
-                            modifier = Modifier
-                                .padding(contentPadding)
-                                .padding(16.dp),
-                        )
-                    }
-                }
+                V6Screen(
+                    theme = theme,
+                    uiState = viewModel.uiState,
+                )
             }
         }
     }

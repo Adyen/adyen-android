@@ -140,15 +140,7 @@ internal class SessionsGooglePayViewModel @Inject constructor(
     }
 
     override fun onFinished(result: SessionPaymentResult) {
-        updateState { SessionsGooglePayState.FinalResult(getFinalResultState(result)) }
-    }
-
-    private fun getFinalResultState(result: SessionPaymentResult): ResultState = when (result.resultCode) {
-        "Authorised" -> ResultState.SUCCESS
-        "Pending",
-        "Received" -> ResultState.PENDING
-
-        else -> ResultState.FAILURE
+        updateState { SessionsGooglePayState.FinalResult(ResultState.get(result.resultCode)) }
     }
 
     private fun onGooglePayUnavailable() {
