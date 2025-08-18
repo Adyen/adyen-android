@@ -28,20 +28,20 @@ import org.json.JSONObject
  */
 @Parcelize
 data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
-    var paymentMethod: PaymentMethodDetailsT?,
-    var order: OrderRequest?,
-    var amount: Amount?,
-    var storePaymentMethod: Boolean? = null,
-    var shopperReference: String? = null,
-    var billingAddress: Address? = null,
-    var deliveryAddress: Address? = null,
-    var shopperName: ShopperName? = null,
-    var telephoneNumber: String? = null,
-    var shopperEmail: String? = null,
-    var dateOfBirth: String? = null,
-    var socialSecurityNumber: String? = null,
-    var installments: Installments? = null,
-    var supportNativeRedirect: Boolean? = true,
+    val paymentMethod: PaymentMethodDetailsT?,
+    val order: OrderRequest?,
+    val amount: Amount?,
+    val storePaymentMethod: Boolean? = null,
+    val shopperReference: String? = null,
+    val billingAddress: Address? = null,
+    val deliveryAddress: Address? = null,
+    val shopperName: ShopperName? = null,
+    val telephoneNumber: String? = null,
+    val shopperEmail: String? = null,
+    val dateOfBirth: String? = null,
+    val socialSecurityNumber: String? = null,
+    val installments: Installments? = null,
+    val supportNativeRedirect: Boolean? = true,
 ) : ModelObject() {
 
     companion object {
