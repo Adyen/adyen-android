@@ -86,7 +86,7 @@ internal class MBWayComponent(
     }
 
     @Composable
-    override fun ViewFactory(modifier: Modifier) {
+    override fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit) {
         val viewState = viewStateFlow.collectAsStateWithLifecycle()
 
         MbWayComponent(
