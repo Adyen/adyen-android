@@ -27,6 +27,7 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.toViewState
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
+import com.adyen.checkout.ui.internal.StandardComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -89,9 +90,15 @@ internal class MBWayComponent(
     override fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit) {
         val viewState = viewStateFlow.collectAsStateWithLifecycle()
 
-        MbWayComponent(
-            viewState.value,
-            fieldChangeListener = this,
+        StandardComponent(
+            modifier = modifier,
+            content = {
+                MbWayComponent(
+                    viewState = viewState.value,
+                    fieldChangeListener = this,
+                )
+            },
+            onButtonClick = onButtonClick,
         )
     }
 

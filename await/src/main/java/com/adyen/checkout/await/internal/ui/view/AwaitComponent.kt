@@ -10,6 +10,7 @@ package com.adyen.checkout.await.internal.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -26,7 +27,9 @@ internal fun AwaitComponent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(Dimensions.Medium),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(Dimensions.Medium),
     ) {
         ProgressBar()
         Spacer(Modifier.size(Dimensions.Large))
