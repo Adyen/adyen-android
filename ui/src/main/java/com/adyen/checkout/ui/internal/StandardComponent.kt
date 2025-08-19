@@ -38,7 +38,7 @@ fun StandardComponent(
     onButtonClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         content()
