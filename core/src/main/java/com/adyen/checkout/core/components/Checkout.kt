@@ -19,7 +19,7 @@ object Checkout {
     suspend fun initialize(
         sessionModel: SessionModel,
         checkoutConfiguration: CheckoutConfiguration,
-        checkoutCallbacks: CheckoutCallbacks?
+        checkoutCallbacks: CheckoutCallbacks,
     ): Result {
         // TODO - Fetch checkoutAttemptId
         val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
@@ -39,7 +39,7 @@ object Checkout {
     suspend fun initialize(
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         checkoutConfiguration: CheckoutConfiguration,
-        checkoutCallbacks: CheckoutCallbacks
+        checkoutCallbacks: CheckoutCallbacks,
     ): Result {
         // TODO - Fetch checkoutAttemptId
         return Result.Success(

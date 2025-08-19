@@ -10,27 +10,27 @@ package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import java.lang.RuntimeException
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
-    private val checkoutCallbacks: CheckoutCallbacks?,
+    private val componentCallbacks: SessionsComponentCallbacks,
 ) : ComponentEventHandler<T> {
 
     override suspend fun onPaymentComponentEvent(event: PaymentComponentEvent<T>): CheckoutResult {
         return when (event) {
             is PaymentComponentEvent.Submit -> {
                 // TODO - Sessions Flow. If not taken over make call
-                if (checkoutCallbacks?.beforeSubmit(event.state) != true) {
+                if (componentCallbacks.onSubmit == null) {
                     makePaymentsCall(event.state)
                 } else {
-                    checkoutCallbacks.onSubmit(event.state)
+                    componentCallbacks.onSubmit(event.state)
                 }
             }
         }
@@ -53,10 +53,15 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
 
     override suspend fun onActionComponentEvent(event: ActionComponentEvent): CheckoutResult {
         return when (event) {
-            is ActionComponentEvent.ActionDetails -> checkoutCallbacks?.onAdditionalDetails(event.data)
-                ?: makeDetailsCall(event.data)
+            is ActionComponentEvent.ActionDetails -> {
+                if (componentCallbacks.onAdditionalDetails == null) {
+                    makeDetailsCall(event.data)
+                } else {
+                    componentCallbacks.onAdditionalDetails(event.data)
+                }
+            }
             is ActionComponentEvent.Error -> {
-                checkoutCallbacks?.onError(event.error)
+                componentCallbacks.onError(event.error)
                 CheckoutResult.Error(event.error)
             }
         }

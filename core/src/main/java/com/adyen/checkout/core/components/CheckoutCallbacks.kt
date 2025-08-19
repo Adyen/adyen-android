@@ -10,15 +10,17 @@ package com.adyen.checkout.core.components
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.common.PaymentResult
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
 class CheckoutCallbacks(
-    private val beforeSubmit: BeforeSubmitCallback = BeforeSubmitCallback { false },
-    private val onSubmit: OnSubmitCallback,
-    private val onAdditionalDetails: OnAdditionalDetailsCallback,
-    private val onError: OnErrorCallback,
+    internal val beforeSubmit: BeforeSubmitCallback? = null,
+    internal val onSubmit: OnSubmitCallback? = null,
+    internal val onAdditionalDetails: OnAdditionalDetailsCallback? = null,
+    internal val onError: OnErrorCallback? = null,
+    internal val onFinished: OnFinishedCallback? = null,
     additionalCallbacksBlock: CheckoutCallbacks.() -> Unit = {},
 ) {
 
@@ -26,22 +28,6 @@ class CheckoutCallbacks(
 
     init {
         apply(additionalCallbacksBlock)
-    }
-
-    internal suspend fun beforeSubmit(paymentComponentState: PaymentComponentState<*>): Boolean {
-        return beforeSubmit.beforeSubmit(paymentComponentState)
-    }
-
-    internal suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
-        return onSubmit.onSubmit(paymentComponentState)
-    }
-
-    internal suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
-        return onAdditionalDetails.onAdditionalDetails(actionComponentData)
-    }
-
-    internal fun onError(componentError: ComponentError) {
-        onError.onError(componentError)
     }
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -71,4 +57,8 @@ fun interface OnAdditionalDetailsCallback : CheckoutCallback {
 
 fun interface OnErrorCallback : CheckoutCallback {
     fun onError(componentError: ComponentError)
+}
+
+fun interface OnFinishedCallback : CheckoutCallback {
+    fun onFinished(paymentResult: PaymentResult)
 }

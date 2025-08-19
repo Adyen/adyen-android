@@ -264,6 +264,26 @@ public final class com/adyen/checkout/core/common/Environment$Creator : android/
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/common/PaymentResult {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Lcom/adyen/checkout/core/components/data/OrderResponse;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;)Lcom/adyen/checkout/core/common/PaymentResult;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/PaymentResult;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/adyen/checkout/core/components/data/OrderResponse;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/PaymentResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getOrder ()Lcom/adyen/checkout/core/components/data/OrderResponse;
+	public final fun getResultCode ()Ljava/lang/String;
+	public final fun getSessionData ()Ljava/lang/String;
+	public final fun getSessionId ()Ljava/lang/String;
+	public final fun getSessionResult ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/common/exception/HttpException : java/lang/RuntimeException {
 	public static final field $stable I
 	public fun <init> (ILjava/lang/String;Lcom/adyen/checkout/core/common/internal/model/ErrorResponseBody;)V
@@ -355,8 +375,9 @@ public abstract interface class com/adyen/checkout/core/components/CheckoutCallb
 
 public final class com/adyen/checkout/core/components/CheckoutCallbacks {
 	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> ()V
+	public fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lcom/adyen/checkout/core/components/OnFinishedCallback;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/components/BeforeSubmitCallback;Lcom/adyen/checkout/core/components/OnSubmitCallback;Lcom/adyen/checkout/core/components/OnAdditionalDetailsCallback;Lcom/adyen/checkout/core/components/OnErrorCallback;Lcom/adyen/checkout/core/components/OnFinishedCallback;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
 public final class com/adyen/checkout/core/components/CheckoutConfiguration : android/os/Parcelable {
@@ -481,6 +502,10 @@ public abstract interface class com/adyen/checkout/core/components/OnAdditionalD
 
 public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
 	public abstract fun onError (Lcom/adyen/checkout/core/components/ComponentError;)V
+}
+
+public abstract interface class com/adyen/checkout/core/components/OnFinishedCallback : com/adyen/checkout/core/components/CheckoutCallback {
+	public abstract fun onFinished (Lcom/adyen/checkout/core/common/PaymentResult;)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {
