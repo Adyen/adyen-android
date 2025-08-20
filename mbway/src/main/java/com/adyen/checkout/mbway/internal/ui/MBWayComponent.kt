@@ -28,6 +28,7 @@ import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.toViewState
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import com.adyen.checkout.ui.internal.ComponentScaffold
+import com.adyen.checkout.ui.internal.PayButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -92,14 +93,15 @@ internal class MBWayComponent(
 
         ComponentScaffold(
             modifier = modifier,
-            content = {
-                MbWayComponent(
-                    viewState = viewState.value,
-                    fieldChangeListener = this,
-                )
+            footer = {
+                PayButton(onButtonClick = onButtonClick)
             },
-            onButtonClick = onButtonClick,
-        )
+        ) {
+            MbWayComponent(
+                viewState = viewState.value,
+                fieldChangeListener = this,
+            )
+        }
     }
 
     override fun <T> onFieldValueChanged(

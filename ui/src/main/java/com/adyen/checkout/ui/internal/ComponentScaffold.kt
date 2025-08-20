@@ -20,40 +20,15 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
+    footer: @Composable () -> Unit = {},
     content: @Composable () -> Unit,
-) {
-    ComponentScaffold(
-        modifier = modifier,
-        content = content,
-        button = { },
-        onButtonClick = { },
-    )
-}
-
-@Composable
-fun ComponentScaffold(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit,
-    button: (@Composable () -> Unit)? = null,
-    onButtonClick: () -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         content()
-
-        if (button != null) {
-            button()
-        } else {
-            Spacer(Modifier.size(16.dp))
-
-            // TODO - Properly implement the pay button
-            PrimaryButton(
-                onClick = onButtonClick,
-                text = "Pay $13.37",
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        Spacer(Modifier.size(16.dp))
+        footer()
     }
 }
