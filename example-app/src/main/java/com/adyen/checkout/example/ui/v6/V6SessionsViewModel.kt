@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.example.BuildConfig
@@ -68,7 +69,7 @@ internal class V6SessionsViewModel @Inject constructor(
         val result = Checkout.initialize(
             sessionModel = session,
             checkoutConfiguration = configuration,
-            checkoutCallbacks = null,
+            checkoutCallbacks = CheckoutCallbacks(),
         )
 
         checkoutContext = when (result) {

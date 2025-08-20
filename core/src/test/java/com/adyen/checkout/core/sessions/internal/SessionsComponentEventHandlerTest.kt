@@ -3,10 +3,13 @@ package com.adyen.checkout.core.sessions.internal
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
-import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.ComponentError
+import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
+import com.adyen.checkout.core.components.OnSubmitCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
+import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
 import com.adyen.checkout.core.components.paymentmethod.TestComponentState
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import kotlinx.coroutines.test.runTest
@@ -29,7 +32,7 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class)
 internal class SessionsComponentEventHandlerTest(
     @Mock private val sessionInteractor: SessionInteractor,
-    @Mock private val checkoutCallback: CheckoutCallbacks,
+    @Mock private val componentCallbacks: SessionsComponentCallbacks,
 ) {
 
     private lateinit var sessionsComponentEventHandler: SessionsComponentEventHandler<TestComponentState>
@@ -38,7 +41,7 @@ internal class SessionsComponentEventHandlerTest(
     fun beforeEach() {
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallbacks = checkoutCallback,
+            componentCallbacks = componentCallbacks,
         )
     }
 
@@ -47,7 +50,7 @@ internal class SessionsComponentEventHandlerTest(
         whenever(sessionInteractor.submitPayment(any())) doReturn SessionCallResult.Payments.Finished(mock())
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallbacks = null,
+            componentCallbacks = componentCallbacks,
         )
 
         val state = TestComponentState()
@@ -57,25 +60,21 @@ internal class SessionsComponentEventHandlerTest(
     }
 
     @Test
-    fun `when event is submit and beforeSubmit returns false, then session interactor is used`() = runTest {
-        whenever(checkoutCallback.beforeSubmit(any())) doReturn false
-        whenever(sessionInteractor.submitPayment(any())) doReturn SessionCallResult.Payments.Finished(mock())
+    fun `when event is submit and onSubmit is overridden and returns a result, then that result is returned`() = runTest {
+        val expectedResult = CheckoutResult.Finished()
+        whenever(componentCallbacks.onSubmit) doReturn object : OnSubmitCallback {
+            override suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
+                return expectedResult
+            }
+        }
+        whenever(componentCallbacks.onSubmit(any())) doReturn expectedResult
 
         val state = TestComponentState()
-        sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
+        val result = sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
-        verify(sessionInteractor).submitPayment(state)
-    }
-
-    @Test
-    fun `when event is submit and beforeSubmit returns true, then onSubmit is called`() = runTest {
-        whenever(checkoutCallback.beforeSubmit(any())) doReturn true
-        whenever(sessionInteractor.submitPayment(any())) doReturn SessionCallResult.Payments.Finished(mock())
-
-        val state = TestComponentState()
-        sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
-
-        verify(checkoutCallback).onSubmit(state)
+        assertEquals(expectedResult, result)
+        verify(componentCallbacks).onSubmit(state)
+        verify(sessionInteractor, never()).submitPayment(any())
     }
 
     @ParameterizedTest
@@ -84,7 +83,7 @@ internal class SessionsComponentEventHandlerTest(
         sessionResult: SessionCallResult.Payments,
         expectedResult: CheckoutResult,
     ) = runTest {
-        whenever(checkoutCallback.beforeSubmit(any())) doReturn false
+        whenever(componentCallbacks.beforeSubmit(any())) doReturn false
         whenever(sessionInteractor.submitPayment(any())) doReturn sessionResult
 
         val state = TestComponentState()
@@ -105,7 +104,7 @@ internal class SessionsComponentEventHandlerTest(
         whenever(sessionInteractor.submitDetails(any())) doReturn SessionCallResult.Details.Finished(mock())
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallbacks = null,
+            componentCallbacks = componentCallbacks,
         )
 
         val data = ActionComponentData(paymentData = "test")
@@ -115,16 +114,21 @@ internal class SessionsComponentEventHandlerTest(
     }
 
     @Test
-    fun `when event is action details and onAdditionalDetails returns a result, then that result is returned`() =
+    fun `when event is action details and onAdditionalDetails is overridden and returns a result, then that result is returned`() =
         runTest {
             val expectedResult = CheckoutResult.Finished()
-            whenever(checkoutCallback.onAdditionalDetails(any())) doReturn expectedResult
+            whenever(componentCallbacks.onAdditionalDetails) doReturn object : OnAdditionalDetailsCallback {
+                override suspend fun onAdditionalDetails(actionComponentData: ActionComponentData): CheckoutResult {
+                    return expectedResult
+                }
+            }
+            whenever(componentCallbacks.onAdditionalDetails(any())) doReturn expectedResult
 
             val data = ActionComponentData(paymentData = "test")
             val result = sessionsComponentEventHandler.onActionComponentEvent(ActionComponentEvent.ActionDetails(data))
 
             assertEquals(expectedResult, result)
-            verify(checkoutCallback).onAdditionalDetails(data)
+            verify(componentCallbacks).onAdditionalDetails(data)
             verify(sessionInteractor, never()).submitDetails(any())
         }
 
@@ -136,7 +140,7 @@ internal class SessionsComponentEventHandlerTest(
     ) = runTest {
         sessionsComponentEventHandler = SessionsComponentEventHandler(
             sessionInteractor = sessionInteractor,
-            checkoutCallbacks = null,
+            componentCallbacks = componentCallbacks,
         )
         whenever(sessionInteractor.submitDetails(any())) doReturn sessionResult
 
@@ -161,7 +165,7 @@ internal class SessionsComponentEventHandlerTest(
 
             val result = sessionsComponentEventHandler.onActionComponentEvent(event)
 
-            verify(checkoutCallback).onError(componentError)
+            verify(componentCallbacks).onError(componentError)
             assertEquals(CheckoutResult.Error(componentError), result)
         }
 

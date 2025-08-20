@@ -17,19 +17,12 @@ import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
-    private val checkoutCallbacks: CheckoutCallbacks?,
+    private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
-        if (checkoutCallbacks == null) {
-            throw IllegalArgumentException(
-                "Checkout callback is not set. " +
-                    "While using Advanced flow you must pass CheckoutCallback while initializing AdyenCheckout.",
-            )
-        }
-
         val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
@@ -38,7 +31,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
-            checkoutCallbacks,
+            componentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks(),
         )
 
         val actionProvider = ActionProvider(

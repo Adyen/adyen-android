@@ -16,12 +16,12 @@ sealed interface CheckoutContext {
     data class Sessions internal constructor(
         val checkoutSession: CheckoutSession,
         val checkoutConfiguration: CheckoutConfiguration,
-        val checkoutCallbacks: CheckoutCallbacks?
+        val checkoutCallbacks: CheckoutCallbacks,
     ) : CheckoutContext
 
     data class Advanced internal constructor(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration,
-        val checkoutCallbacks: CheckoutCallbacks
+        val checkoutCallbacks: CheckoutCallbacks,
     ) : CheckoutContext
 }
