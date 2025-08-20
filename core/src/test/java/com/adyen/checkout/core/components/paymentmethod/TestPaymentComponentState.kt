@@ -11,7 +11,7 @@ package com.adyen.checkout.core.components.paymentmethod
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
 
-class TestComponentState(
+class TestPaymentComponentState(
     override val data: PaymentComponentData<TestPaymentMethod> = PaymentComponentData(
         paymentMethod = TestPaymentMethod(),
         order = null,
