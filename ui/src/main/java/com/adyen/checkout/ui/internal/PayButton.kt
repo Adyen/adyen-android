@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 fun PayButton(
     onButtonClick: () -> Unit,
 ) {
-    // TODO - Properly implement the pay button
+    // TODO - Pass the amount to the button
     PrimaryButton(
         onClick = onButtonClick,
         text = "Pay $13.37",
