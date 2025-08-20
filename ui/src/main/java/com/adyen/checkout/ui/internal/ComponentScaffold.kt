@@ -18,11 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun StandardComponent(
+fun ComponentScaffold(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
-    StandardComponent(
+    ComponentScaffold(
         modifier = modifier,
         content = content,
         button = { },
@@ -31,7 +31,7 @@ fun StandardComponent(
 }
 
 @Composable
-fun StandardComponent(
+fun ComponentScaffold(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
     button: (@Composable () -> Unit)? = null,

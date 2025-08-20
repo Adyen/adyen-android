@@ -30,7 +30,7 @@ import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
-import com.adyen.checkout.ui.internal.StandardComponent
+import com.adyen.checkout.ui.internal.ComponentScaffold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
@@ -187,7 +187,7 @@ internal class AwaitComponent(
             onError = ::emitError,
         )
 
-        StandardComponent(
+        ComponentScaffold(
             modifier = modifier,
         ) {
             AwaitComponent()

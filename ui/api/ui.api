@@ -6,6 +6,11 @@ public final class com/adyen/checkout/test/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/ui/internal/ComponentScaffoldKt {
+	public static final fun ComponentScaffold (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ComponentScaffold (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt;
 	public fun <init> ()V
@@ -21,16 +26,16 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$CheckoutT
 	public final fun getLambda$1339090753$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class com/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt;
+	public fun <init> ()V
+	public final fun getLambda$1772493607$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ProgressBarKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ProgressBarKt;
 	public fun <init> ()V
 	public final fun getLambda$418839474$ui_release ()Lkotlin/jvm/functions/Function2;
-}
-
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$StandardComponentKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$StandardComponentKt;
-	public fun <init> ()V
-	public final fun getLambda$1486598272$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$StepperKt {
@@ -50,11 +55,6 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$TextKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$TextKt;
 	public fun <init> ()V
 	public final fun getLambda$-888577064$ui_release ()Lkotlin/jvm/functions/Function2;
-}
-
-public final class com/adyen/checkout/ui/internal/StandardComponentKt {
-	public static final fun StandardComponent (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-	public static final fun StandardComponent (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutAttributes {
