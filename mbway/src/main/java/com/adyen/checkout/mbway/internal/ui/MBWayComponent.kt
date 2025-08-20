@@ -94,7 +94,7 @@ internal class MBWayComponent(
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(onButtonClick = onButtonClick)
+                PayButton(onClick = onButtonClick)
             },
         ) {
             MbWayComponent(
