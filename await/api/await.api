@@ -6,6 +6,12 @@ public final class com/adyen/checkout/await/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/await/internal/ui/ComposableSingletons$AwaitComponentKt {
+	public static final field INSTANCE Lcom/adyen/checkout/await/internal/ui/ComposableSingletons$AwaitComponentKt;
+	public fun <init> ()V
+	public final fun getLambda$-321018787$await_release ()Lkotlin/jvm/functions/Function2;
+}
+
 public final class com/adyen/checkout/await/old/AwaitComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/await/old/AwaitComponent$Companion;

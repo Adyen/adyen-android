@@ -6,6 +6,10 @@ public final class com/adyen/checkout/test/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/ui/internal/ComponentScaffoldKt {
+	public static final fun ComponentScaffold (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt;
 	public fun <init> ()V
@@ -19,6 +23,12 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$CheckoutT
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$CheckoutTextFieldKt;
 	public fun <init> ()V
 	public final fun getLambda$1339090753$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt;
+	public fun <init> ()V
+	public final fun getLambda$1276426179$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ProgressBarKt {
@@ -44,6 +54,10 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$TextKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$TextKt;
 	public fun <init> ()V
 	public final fun getLambda$-888577064$ui_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/adyen/checkout/ui/internal/PayButtonKt {
+	public static final fun PayButton (Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/adyen/checkout/ui/theme/CheckoutAttributes {

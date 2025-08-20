@@ -8,20 +8,13 @@
 
 package com.adyen.checkout.core.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.PrimaryButton
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 // TODO - Change Name?
@@ -45,21 +38,6 @@ fun AdyenPaymentFlow(
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 
     InternalCheckoutTheme(theme) {
-        Column(
-            modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            adyenComponent.ViewFactory()
-
-            Spacer(Modifier.size(16.dp))
-
-            // TODO - Properly implement the pay button
-            // TODO - Should we move the payment button to each component
-            PrimaryButton(
-                onClick = checkoutController::submit,
-                text = "Pay $13.37",
-                modifier = Modifier.fillMaxWidth(),
-            )
-        }
+        adyenComponent.ViewFactory(modifier)
     }
 }

@@ -38,6 +38,7 @@ import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
+import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.CheckoutTextField
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
@@ -161,7 +162,7 @@ private fun CountryCodeDialog(
                     if (isSelected) {
                         Icon(
                             imageVector = ImageVector.vectorResource(
-                                com.adyen.checkout.test.R.drawable.ic_checkmark,
+                                R.drawable.ic_checkmark,
                             ),
                             contentDescription = null,
                             tint = CheckoutThemeProvider.colors.text,

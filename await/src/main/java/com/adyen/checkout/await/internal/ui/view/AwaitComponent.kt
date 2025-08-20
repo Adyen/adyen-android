@@ -26,7 +26,8 @@ internal fun AwaitComponent(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.padding(Dimensions.Medium),
+        modifier = modifier
+            .padding(Dimensions.Medium),
     ) {
         ProgressBar()
         Spacer(Modifier.size(Dimensions.Large))

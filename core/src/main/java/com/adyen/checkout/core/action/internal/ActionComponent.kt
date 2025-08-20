@@ -9,10 +9,15 @@
 package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.ComposableComponent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.ui.EventComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionComponent : ComposableComponent, EventComponent<ActionComponentEvent> {
+interface ActionComponent : EventComponent<ActionComponentEvent> {
+
+    @Composable
+    fun ViewFactory(modifier: Modifier)
+
     fun handleAction()
 }

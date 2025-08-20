@@ -9,15 +9,18 @@
 package com.adyen.checkout.core.components.internal.ui
 
 import androidx.annotation.RestrictTo
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 
 // TODO - Some components might not be composable,
 //  Move ComposableComponent to PaymentMethod specific component later
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PaymentComponent<T : BasePaymentComponentState> :
-    ComposableComponent,
-    EventComponent<PaymentComponentEvent<T>> {
+interface PaymentComponent<T : BasePaymentComponentState> : EventComponent<PaymentComponentEvent<T>> {
+
+    @Composable
+    fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit)
 
     fun submit()
 }

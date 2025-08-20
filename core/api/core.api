@@ -664,20 +664,6 @@ public final class com/adyen/checkout/core/components/data/PaymentComponentData 
 	public final fun getSupportNativeRedirect ()Ljava/lang/Boolean;
 	public final fun getTelephoneNumber ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setAmount (Lcom/adyen/checkout/core/components/data/model/Amount;)V
-	public final fun setBillingAddress (Lcom/adyen/checkout/core/components/data/Address;)V
-	public final fun setDateOfBirth (Ljava/lang/String;)V
-	public final fun setDeliveryAddress (Lcom/adyen/checkout/core/components/data/Address;)V
-	public final fun setInstallments (Lcom/adyen/checkout/core/components/data/Installments;)V
-	public final fun setOrder (Lcom/adyen/checkout/core/components/data/OrderRequest;)V
-	public final fun setPaymentMethod (Lcom/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails;)V
-	public final fun setShopperEmail (Ljava/lang/String;)V
-	public final fun setShopperName (Lcom/adyen/checkout/core/components/data/ShopperName;)V
-	public final fun setShopperReference (Ljava/lang/String;)V
-	public final fun setSocialSecurityNumber (Ljava/lang/String;)V
-	public final fun setStorePaymentMethod (Ljava/lang/Boolean;)V
-	public final fun setSupportNativeRedirect (Ljava/lang/Boolean;)V
-	public final fun setTelephoneNumber (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
