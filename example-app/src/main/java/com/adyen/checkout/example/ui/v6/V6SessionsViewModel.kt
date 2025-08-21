@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,8 +19,10 @@ import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutContext
+import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
+import com.adyen.checkout.example.extensions.getLogTag
 import com.adyen.checkout.example.repositories.PaymentsRepository
 import com.adyen.checkout.example.service.getSessionRequest
 import com.adyen.checkout.example.service.getSettingsInstallmentOptionsMode
@@ -69,12 +72,22 @@ internal class V6SessionsViewModel @Inject constructor(
         val result = Checkout.initialize(
             sessionModel = session,
             checkoutConfiguration = configuration,
-            checkoutCallbacks = CheckoutCallbacks(),
+            checkoutCallbacks = CheckoutCallbacks(
+                onError = ::onError,
+            ),
         )
 
         checkoutContext = when (result) {
             is Checkout.Result.Error -> null
             is Checkout.Result.Success -> result.checkoutContext
         }
+    }
+
+    private fun onError(componentError: ComponentError) {
+        Log.d(TAG, "onError: ${componentError.errorMessage}")
+    }
+
+    companion object {
+        private val TAG = getLogTag()
     }
 }
