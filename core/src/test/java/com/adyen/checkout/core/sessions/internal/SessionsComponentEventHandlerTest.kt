@@ -10,7 +10,7 @@ import com.adyen.checkout.core.components.OnSubmitCallback
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import com.adyen.checkout.core.components.paymentmethod.TestComponentState
+import com.adyen.checkout.core.components.paymentmethod.TestPaymentComponentState
 import com.adyen.checkout.core.sessions.SessionPaymentResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -35,7 +35,7 @@ internal class SessionsComponentEventHandlerTest(
     @Mock private val componentCallbacks: SessionsComponentCallbacks,
 ) {
 
-    private lateinit var sessionsComponentEventHandler: SessionsComponentEventHandler<TestComponentState>
+    private lateinit var sessionsComponentEventHandler: SessionsComponentEventHandler<TestPaymentComponentState>
 
     @BeforeEach
     fun beforeEach() {
@@ -53,7 +53,7 @@ internal class SessionsComponentEventHandlerTest(
             componentCallbacks = componentCallbacks,
         )
 
-        val state = TestComponentState()
+        val state = TestPaymentComponentState()
         sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
         verify(sessionInteractor).submitPayment(state)
@@ -69,7 +69,7 @@ internal class SessionsComponentEventHandlerTest(
         }
         whenever(componentCallbacks.onSubmit(any())) doReturn expectedResult
 
-        val state = TestComponentState()
+        val state = TestPaymentComponentState()
         val result = sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
         assertEquals(expectedResult, result)
@@ -86,7 +86,7 @@ internal class SessionsComponentEventHandlerTest(
         whenever(componentCallbacks.beforeSubmit(any())) doReturn false
         whenever(sessionInteractor.submitPayment(any())) doReturn sessionResult
 
-        val state = TestComponentState()
+        val state = TestPaymentComponentState()
         val result = sessionsComponentEventHandler.onPaymentComponentEvent(PaymentComponentEvent.Submit(state))
 
         if (result is CheckoutResult.Error && expectedResult is CheckoutResult.Error) {
