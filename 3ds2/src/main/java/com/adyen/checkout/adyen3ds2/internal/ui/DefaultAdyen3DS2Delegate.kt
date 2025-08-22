@@ -570,8 +570,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge completed and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -586,8 +584,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge is cancelled and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -602,8 +598,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge timed out and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -618,8 +612,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge failed and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
