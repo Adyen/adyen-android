@@ -734,6 +734,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun clearState() {
         action = null
         SharedChallengeStatusHandler.reset()
+        closeTransaction()
     }
 
     override fun onCleared() {
