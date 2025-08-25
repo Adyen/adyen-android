@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.ui.internal
 
+import androidx.annotation.RestrictTo
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
