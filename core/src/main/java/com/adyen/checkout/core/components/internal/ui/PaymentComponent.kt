@@ -20,7 +20,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 interface PaymentComponent<T : BasePaymentComponentState> : EventComponent<PaymentComponentEvent<T>> {
 
     @Composable
-    fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit)
+    fun ViewFactory(modifier: Modifier)
 
     fun submit()
 }

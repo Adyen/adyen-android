@@ -94,13 +94,13 @@ internal class MBWayComponent(
     }
 
     @Composable
-    override fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit) {
+    override fun ViewFactory(modifier: Modifier) {
         val viewState = viewStateFlow.collectAsStateWithLifecycle()
 
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(onClick = onButtonClick, isLoading = isLoading)
+                PayButton(onClick = ::submit, isLoading = isLoading)
             },
         ) {
             MbWayComponent(

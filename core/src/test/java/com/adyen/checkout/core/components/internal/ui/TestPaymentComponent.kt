@@ -21,7 +21,7 @@ internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState
     }
 
     @Composable
-    override fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit) {
+    override fun ViewFactory(modifier: Modifier) {
         // No-op
     }
 
