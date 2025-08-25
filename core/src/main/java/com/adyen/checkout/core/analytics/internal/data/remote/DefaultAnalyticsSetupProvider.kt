@@ -10,11 +10,11 @@ package com.adyen.checkout.core.analytics.internal.data.remote
 
 import android.app.Application
 import android.os.Build
-import com.adyen.checkout.core.analytics.internal.AnalyticsParamsLevel
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.analytics.internal.data.remote.model.AnalyticsSetupRequest
 import com.adyen.checkout.core.components.data.model.Amount
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import java.util.Locale
 
 @Suppress("LongParameterList")

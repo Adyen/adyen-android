@@ -94,39 +94,6 @@ public final class com/adyen/checkout/core/action/data/AwaitAction$Creator : and
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/core/analytics/AnalyticsConfiguration : android/os/Parcelable {
-	public static final field $stable I
-	public static final field CREATOR Landroid/os/Parcelable$Creator;
-	public fun <init> ()V
-	public fun <init> (Lcom/adyen/checkout/core/analytics/AnalyticsLevel;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/analytics/AnalyticsLevel;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1 ()Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-	public final fun copy (Lcom/adyen/checkout/core/analytics/AnalyticsLevel;)Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;Lcom/adyen/checkout/core/analytics/AnalyticsLevel;ILjava/lang/Object;)Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
-	public final fun describeContents ()I
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getLevel ()Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-	public final fun writeToParcel (Landroid/os/Parcel;I)V
-}
-
-public final class com/adyen/checkout/core/analytics/AnalyticsConfiguration$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/core/analytics/AnalyticsLevel : java/lang/Enum {
-	public static final field ALL Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-	public static final field NONE Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-	public static fun values ()[Lcom/adyen/checkout/core/analytics/AnalyticsLevel;
-}
-
 public final class com/adyen/checkout/core/analytics/internal/AnalyticsManagerFactory$Companion {
 }
 
@@ -332,6 +299,39 @@ public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
 	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutContext;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/adyen/checkout/core/components/AnalyticsConfiguration : android/os/Parcelable {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> ()V
+	public fun <init> (Lcom/adyen/checkout/core/components/AnalyticsLevel;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/components/AnalyticsLevel;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/components/AnalyticsLevel;
+	public final fun copy (Lcom/adyen/checkout/core/components/AnalyticsLevel;)Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/AnalyticsConfiguration;Lcom/adyen/checkout/core/components/AnalyticsLevel;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLevel ()Lcom/adyen/checkout/core/components/AnalyticsLevel;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/components/AnalyticsConfiguration$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/components/AnalyticsLevel : java/lang/Enum {
+	public static final field ALL Lcom/adyen/checkout/core/components/AnalyticsLevel;
+	public static final field NONE Lcom/adyen/checkout/core/components/AnalyticsLevel;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/components/AnalyticsLevel;
+	public static fun values ()[Lcom/adyen/checkout/core/components/AnalyticsLevel;
+}
+
 public abstract interface class com/adyen/checkout/core/components/BeforeSubmitCallback : com/adyen/checkout/core/components/CheckoutCallback {
 	public abstract fun beforeSubmit (Lcom/adyen/checkout/core/components/paymentmethod/PaymentComponentState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -384,11 +384,11 @@ public final class com/adyen/checkout/core/components/CheckoutConfiguration : an
 	public static final field $stable I
 	public static final field CREATOR Lcom/adyen/checkout/core/components/CheckoutConfiguration$CREATOR;
 	public synthetic fun <init> (Landroid/os/Parcel;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/data/model/Amount;Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)V
-	public synthetic fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/data/model/Amount;Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/data/model/Amount;Lcom/adyen/checkout/core/components/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;)V
+	public synthetic fun <init> (Lcom/adyen/checkout/core/common/Environment;Ljava/lang/String;Ljava/util/Locale;Lcom/adyen/checkout/core/components/data/model/Amount;Lcom/adyen/checkout/core/components/AnalyticsConfiguration;Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun describeContents ()I
 	public final fun getAmount ()Lcom/adyen/checkout/core/components/data/model/Amount;
-	public final fun getAnalyticsConfiguration ()Lcom/adyen/checkout/core/analytics/AnalyticsConfiguration;
+	public final fun getAnalyticsConfiguration ()Lcom/adyen/checkout/core/components/AnalyticsConfiguration;
 	public final fun getClientKey ()Ljava/lang/String;
 	public final fun getEnvironment ()Lcom/adyen/checkout/core/common/Environment;
 	public final fun getShopperLocale ()Ljava/util/Locale;

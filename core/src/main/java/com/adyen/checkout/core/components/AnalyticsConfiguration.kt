@@ -6,7 +6,7 @@
  * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.analytics
+package com.adyen.checkout.core.components
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

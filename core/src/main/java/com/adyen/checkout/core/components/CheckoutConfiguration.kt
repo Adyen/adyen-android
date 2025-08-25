@@ -13,7 +13,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.analytics.AnalyticsConfiguration
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil

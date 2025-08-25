@@ -6,11 +6,11 @@
  * Created by ararat on 27/6/2025.
  */
 
-package com.adyen.checkout.core.analytics.internal
+package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.analytics.AnalyticsConfiguration
-import com.adyen.checkout.core.analytics.AnalyticsLevel
+import com.adyen.checkout.core.components.AnalyticsConfiguration
+import com.adyen.checkout.core.components.AnalyticsLevel
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class AnalyticsParams(
