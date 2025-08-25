@@ -15,11 +15,13 @@ import androidx.compose.ui.Modifier
 @Composable
 fun PayButton(
     onClick: () -> Unit,
+    isLoading: Boolean = false,
 ) {
     // TODO - Pass the amount to the button
     PrimaryButton(
         onClick = onClick,
         text = "Pay $13.37",
+        isLoading = isLoading,
         modifier = Modifier.fillMaxWidth(),
     )
 }

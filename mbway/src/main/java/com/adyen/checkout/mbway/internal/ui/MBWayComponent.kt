@@ -9,6 +9,9 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -77,8 +80,11 @@ internal class MBWayComponent(
             .stateIn(coroutineScope, SharingStarted.Lazily, stateManager.state.value.toViewState())
     }
 
+    private var isLoading by mutableStateOf(false)
+
     override fun submit() {
         if (stateManager.isValid) {
+            isLoading = true
             eventChannel.trySend(
                 PaymentComponentEvent.Submit(paymentComponentStateFlow.value),
             )
@@ -94,7 +100,7 @@ internal class MBWayComponent(
         ComponentScaffold(
             modifier = modifier,
             footer = {
-                PayButton(onClick = onButtonClick)
+                PayButton(onClick = onButtonClick, isLoading = isLoading)
             },
         ) {
             MbWayComponent(
