@@ -8,27 +8,53 @@
 
 package com.adyen.checkout.ui.internal
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ComponentScaffold(
     modifier: Modifier = Modifier,
     footer: @Composable () -> Unit = {},
+    disableInteraction: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        content()
-        Spacer(Modifier.size(16.dp))
-        footer()
+    val focusManager = LocalFocusManager.current
+    LaunchedEffect(disableInteraction) {
+        if (disableInteraction) {
+            focusManager.clearFocus()
+        }
+    }
+
+    Box {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            content()
+            Spacer(Modifier.size(16.dp))
+            footer()
+        }
+
+        if (disableInteraction) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable(
+                        interactionSource = null,
+                        indication = null,
+                        onClick = {},
+                    ),
+            )
+        }
     }
 }
