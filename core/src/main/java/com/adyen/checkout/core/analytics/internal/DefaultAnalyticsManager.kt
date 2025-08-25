@@ -14,6 +14,8 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
+import com.adyen.checkout.core.components.internal.AnalyticsParams
+import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
