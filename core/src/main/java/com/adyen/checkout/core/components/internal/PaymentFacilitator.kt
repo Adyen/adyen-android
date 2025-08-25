@@ -46,7 +46,7 @@ internal class PaymentFacilitator(
         if (actionComponent != null) {
             actionComponent?.ViewFactory(modifier)
         } else {
-            paymentComponent.ViewFactory(modifier, onButtonClick = checkoutController::submit)
+            paymentComponent.ViewFactory(modifier)
         }
     }
 
