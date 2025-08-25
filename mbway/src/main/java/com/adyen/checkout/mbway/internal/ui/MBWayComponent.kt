@@ -99,6 +99,7 @@ internal class MBWayComponent(
 
         ComponentScaffold(
             modifier = modifier,
+            disableInteraction = isLoading,
             footer = {
                 PayButton(onClick = ::submit, isLoading = isLoading)
             },
