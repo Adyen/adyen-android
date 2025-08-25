@@ -38,16 +38,8 @@ internal class UPISelectedModeTest {
                 UPISelectedMode.INTENT,
             ),
             Arguments.arguments(
-                UPIMode.Intent(listOf(UPIIntentItem.ManualInput(null, true))),
-                UPISelectedMode.INTENT,
-            ),
-            Arguments.arguments(
                 UPIMode.Vpa,
                 UPISelectedMode.VPA,
-            ),
-            Arguments.arguments(
-                UPIMode.Qr,
-                UPISelectedMode.QR,
             ),
         )
     }

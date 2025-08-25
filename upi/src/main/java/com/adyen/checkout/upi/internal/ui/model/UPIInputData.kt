@@ -14,5 +14,4 @@ internal data class UPIInputData(
     var selectedMode: UPISelectedMode? = null,
     var selectedUPIIntentItem: UPIIntentItem? = null,
     var vpaVirtualPaymentAddress: String = "",
-    var intentVirtualPaymentAddress: String = "",
 ) : InputData

@@ -9,10 +9,13 @@
 
 <resources>
     <string name="checkout_upi_mode_selection">Kā vēlaties izmantot UPI?</string>
-    <string name="checkout_upi_vpa_validation">Ievadiet pareizu virtuālo maksājumu adresi</string>
-    <string name="checkout_upi_qr_generation">Lai pabeigtu maksājumu, ģenerējiet QR kodu, kuru varat lejupielādēt vai saglabāt kā ekrānuzņēmumu, un augšupielādējiet to UPI lietotnē.</string>
+    <string name="checkout_upi_vpa_validation">Ievadiet derīgu UPI</string>
     <string name="checkout_upi_continue">Turpināt</string>
-    <string name="checkout_upi_app_manual_input">Ievadiet UPI ID</string>
+    <string name="checkout_upi_id_label">UPI ID</string>
     <string name="checkout_upi_app_other_upi">Citi UPI</string>
-    <string name="checkout_upi_no_app_selected">Lai turpinātu, atlasiet maksājuma veidu</string>
+    <string name="checkout_upi_no_app_selected">Lai turpinātu, atlasiet vēlamo UPI lietotni.</string>
+    <string name="checkout_upi_app_tab_title">UPI lietotne</string>
+    <string name="checkout_upi_id_tab_title">UPI ID</string>
+    <string name="checkout_upi_id_instruction">Ievadiet savu UPI ID</string>
+    <string name="checkout_upi_app_instruction">Izvēlieties savu vēlamo UPI lietotni</string>
 </resources>
