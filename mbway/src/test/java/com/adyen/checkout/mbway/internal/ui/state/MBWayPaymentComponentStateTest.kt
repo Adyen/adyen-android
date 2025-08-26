@@ -38,6 +38,7 @@ internal class MBWayPaymentComponentStateTest {
 
         initialState = MBWayComponentState(
             countries = listOf(countryModel),
+            isLoading = false,
             countryCodeFieldState = countryCodeFieldState,
             localPhoneNumberFieldState = localPhoneNumberFieldState,
         )

@@ -184,6 +184,7 @@ private fun MbWayComponentPreview() {
     MbWayComponent(
         viewState = MBWayViewState(
             countries = countries,
+            isLoading = false,
             countryCodeFieldState = ViewFieldState(countries.first(), false),
             phoneNumberFieldState = ViewFieldState("", false),
         ),
@@ -206,6 +207,7 @@ private fun CountryCodeDialogPreview() {
         onDismissRequest = {},
         viewState = MBWayViewState(
             countries = countries,
+            isLoading = false,
             countryCodeFieldState = ViewFieldState(countries.first(), false),
             phoneNumberFieldState = ViewFieldState("", false),
         ),

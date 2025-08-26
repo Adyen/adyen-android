@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.internal.ui.state.model.ComponentField
 
 internal data class MBWayComponentState(
     val countries: List<CountryModel>,
+    val isLoading: Boolean,
     val countryCodeFieldState: ComponentFieldState<CountryModel>,
     val localPhoneNumberFieldState: ComponentFieldState<String> = ComponentFieldState(value = ""),
 ) : ComponentState {

@@ -20,6 +20,7 @@ internal class MBWayComponentStateFactory(
 
     override fun createDefaultComponentState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
+        isLoading = false,
         countryCodeFieldState = ComponentFieldState(getInitiallySelectedCountry(componentParams)),
     )
 

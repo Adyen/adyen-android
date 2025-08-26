@@ -14,12 +14,14 @@ import com.adyen.checkout.core.components.internal.ui.state.model.toViewFieldSta
 
 internal data class MBWayViewState(
     val countries: List<CountryModel>,
+    val isLoading: Boolean,
     val countryCodeFieldState: ViewFieldState<CountryModel>,
     val phoneNumberFieldState: ViewFieldState<String>,
 )
 
 internal fun MBWayComponentState.toViewState() = MBWayViewState(
     countries = this.countries,
+    isLoading = this.isLoading,
     countryCodeFieldState = this.countryCodeFieldState.toViewFieldState(),
     phoneNumberFieldState = this.localPhoneNumberFieldState.toViewFieldState(),
 )
