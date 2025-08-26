@@ -50,6 +50,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
+            commonComponentParams = componentParamsData.commonComponentParams,
         )
 
         return PaymentFacilitator(
