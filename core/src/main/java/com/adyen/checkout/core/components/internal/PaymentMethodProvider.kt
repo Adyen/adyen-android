@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -40,9 +41,11 @@ object PaymentMethodProvider {
      *
      * @return [PaymentComponent] for given txVariant.
      */
+    @Suppress("LongParameterList")
     fun get(
         txVariant: String,
         coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         commonComponentParams: CommonComponentParams,
         componentSessionParams: SessionParams?,
@@ -50,6 +53,7 @@ object PaymentMethodProvider {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             commonComponentParams = commonComponentParams,
             componentSessionParams = componentSessionParams,
