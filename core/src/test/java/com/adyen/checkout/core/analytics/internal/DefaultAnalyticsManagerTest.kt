@@ -9,10 +9,10 @@
 package com.adyen.checkout.core.analytics.internal
 
 import com.adyen.checkout.core.analytics.internal.data.AnalyticsRepository
+import com.adyen.checkout.core.common.LoggingExtension
+import com.adyen.checkout.core.common.TestDispatcherExtension
 import com.adyen.checkout.core.components.internal.AnalyticsParams
 import com.adyen.checkout.core.components.internal.AnalyticsParamsLevel
-import com.adyen.checkout.test.LoggingExtension
-import com.adyen.checkout.test.TestDispatcherExtension
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher

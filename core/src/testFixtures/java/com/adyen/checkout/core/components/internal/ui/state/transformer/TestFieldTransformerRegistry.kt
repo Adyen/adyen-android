@@ -3,13 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/3/2025.
+ * Created by ararat on 26/8/2025.
  */
 
-package com.adyen.checkout.test.ui.state
+package com.adyen.checkout.core.components.internal.ui.state.transformer
 
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
-import com.adyen.checkout.core.components.internal.ui.state.transformer.FieldTransformerRegistry
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 

@@ -5,7 +5,7 @@
  *
  * Created by onurk on 31/1/2023.
  */
-package com.adyen.checkout.test
+package com.adyen.checkout.core.common
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

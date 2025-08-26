@@ -11,7 +11,7 @@ package com.adyen.checkout.core.common.internal.ui.state
 import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStateManager
 import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
 import com.adyen.checkout.core.components.internal.ui.state.model.Validation
-import com.adyen.checkout.test.ui.state.TestFieldTransformerRegistry
+import com.adyen.checkout.core.components.internal.ui.state.transformer.TestFieldTransformerRegistry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal
 
-import com.adyen.checkout.test.BuildConfig
+import com.adyen.checkout.core.BuildConfig
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
