@@ -19,11 +19,13 @@ import com.adyen.checkout.core.components.internal.PaymentFacilitator
 import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.internal.toSessionsComponentCallbacks
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 internal class SessionsPaymentFacilitatorFactory(
     private val checkoutSession: CheckoutSession,
@@ -60,11 +62,22 @@ internal class SessionsPaymentFacilitatorFactory(
                 componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
             )
 
+        val componentParamsData = CommonComponentParamsMapper().mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+
+            // TODO - Add locale support, For now it's hardcoded to US
+            // deviceLocale = localeProvider.getLocale(application)
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = SessionParamsFactory.create(checkoutSession),
+        )
+
         val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-            componentSessionParams = SessionParamsFactory.create(checkoutSession),
+            commonComponentParams = componentParamsData.commonComponentParams,
+            componentSessionParams = componentParamsData.sessionParams,
         )
 
         val actionProvider = ActionProvider(
