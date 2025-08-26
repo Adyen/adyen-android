@@ -83,6 +83,7 @@ internal class SessionsPaymentFacilitatorFactory(
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
+            commonComponentParams = componentParamsData.commonComponentParams,
         )
 
         return PaymentFacilitator(
