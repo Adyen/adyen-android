@@ -1,15 +1,13 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 5/2/2024.
+ * Created by ararat on 26/8/2025.
  */
 
-package com.adyen.checkout.test
+package com.adyen.checkout.core.common
 
-import com.adyen.checkout.core.common.AdyenLogLevel
-import com.adyen.checkout.core.common.AdyenLogger
 import java.io.PrintWriter
 import java.io.StringWriter
 

@@ -3,12 +3,11 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 6/6/2025.
+ * Created by ararat on 26/8/2025.
  */
 
-package com.adyen.checkout.test
+package com.adyen.checkout.core.common
 
-import com.adyen.checkout.core.common.AdyenLogger
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
