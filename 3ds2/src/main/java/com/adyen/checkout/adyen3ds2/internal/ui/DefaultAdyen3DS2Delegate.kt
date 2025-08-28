@@ -313,7 +313,7 @@ internal class DefaultAdyen3DS2Delegate(
             if (submitFingerprintAutomatically) {
                 submitFingerprintAutomatically(activity, encodedFingerprint)
             } else {
-                emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint))
+                emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint), shouldClearState = false)
             }
         }
     }
@@ -567,8 +567,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge completed and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -583,8 +581,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge is cancelled and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -599,8 +595,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge timed out and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -615,8 +609,6 @@ internal class DefaultAdyen3DS2Delegate(
                 message = "Challenge failed and details cannot be created",
             )
             emitError(e)
-        } finally {
-            closeTransaction()
         }
     }
 
@@ -705,13 +697,16 @@ internal class DefaultAdyen3DS2Delegate(
         clearState()
     }
 
-    private fun emitDetails(details: JSONObject) {
+    private fun emitDetails(details: JSONObject, shouldClearState: Boolean = true) {
         val actionComponentData = ActionComponentData(
             details = details,
             paymentData = paymentDataRepository.paymentData,
         )
         detailsChannel.trySend(actionComponentData)
-        clearState()
+
+        if (shouldClearState) {
+            clearState()
+        }
     }
 
     private fun makeDetails(transactionStatus: String, errorDetails: String? = null): JSONObject {
@@ -734,6 +729,7 @@ internal class DefaultAdyen3DS2Delegate(
     private fun clearState() {
         action = null
         SharedChallengeStatusHandler.reset()
+        closeTransaction()
     }
 
     override fun onCleared() {
