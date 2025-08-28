@@ -94,7 +94,6 @@ internal fun MbWayComponent(
             label = "Phone Number",
             isError = viewState.phoneNumberFieldState.errorMessageId != null,
             supportingText = supportingTextPhoneNumber,
-            value = viewState.phoneNumberFieldState.value,
             prefix = country.callingCode,
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
