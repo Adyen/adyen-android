@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -79,6 +80,9 @@ internal class MBWayComponent(
 
     override fun submit() {
         if (stateManager.isValid) {
+            stateManager.updateState {
+                copy(isLoading = true)
+            }
             eventChannel.trySend(
                 PaymentComponentEvent.Submit(paymentComponentStateFlow.value),
             )
@@ -88,17 +92,18 @@ internal class MBWayComponent(
     }
 
     @Composable
-    override fun ViewFactory(modifier: Modifier, onButtonClick: () -> Unit) {
-        val viewState = viewStateFlow.collectAsStateWithLifecycle()
+    override fun ViewFactory(modifier: Modifier) {
+        val viewState by viewStateFlow.collectAsStateWithLifecycle()
 
         ComponentScaffold(
             modifier = modifier,
+            disableInteraction = viewState.isLoading,
             footer = {
-                PayButton(onClick = onButtonClick)
+                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
             },
         ) {
             MbWayComponent(
-                viewState = viewState.value,
+                viewState = viewState,
                 fieldChangeListener = this,
             )
         }
