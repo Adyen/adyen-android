@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
@@ -79,6 +81,8 @@ fun CheckoutTextField(
     enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
+    inputTransformation: InputTransformation? = null,
+    outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
@@ -92,6 +96,8 @@ fun CheckoutTextField(
         state = state,
         modifier = modifier,
         enabled = enabled,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
         textStyle = TextStyle(
             color = style.textColor,
             fontSize = innerTextStyle.size.sp,
@@ -122,8 +128,8 @@ fun CheckoutTextField(
             snapshotFlow { state.text }
                 .drop(1)
                 .collectLatest { value ->
-                onValueChange(value.toString())
-            }
+                    onValueChange(value.toString())
+                }
         }
     }
 }
