@@ -12,9 +12,7 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
-import com.adyen.checkout.core.old.internal.ui.model.isEmptyDate
 import com.adyen.checkout.core.old.internal.util.StringUtil
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidator
 import com.adyen.checkout.core.old.ui.validation.CardNumberValidationResult
@@ -47,6 +45,7 @@ object CardValidationUtils {
                 when (validationResult) {
                     is CardNumberValidationResult.Invalid.IllegalCharacters ->
                         CardNumberValidation.INVALID_ILLEGAL_CHARACTERS
+
                     is CardNumberValidationResult.Invalid.TooLong -> CardNumberValidation.INVALID_TOO_LONG
                     is CardNumberValidationResult.Invalid.TooShort -> CardNumberValidation.INVALID_TOO_SHORT
                     is CardNumberValidationResult.Invalid.LuhnCheck -> CardNumberValidation.INVALID_LUHN_CHECK
@@ -55,6 +54,7 @@ object CardValidationUtils {
                     }
                 }
             }
+
             is CardNumberValidationResult.Valid -> when {
                 !isBrandSupported -> CardNumberValidation.INVALID_UNSUPPORTED_BRAND
                 else -> CardNumberValidation.VALID
@@ -66,7 +66,7 @@ object CardValidationUtils {
      * Validate Expiry Date.
      */
     internal fun validateExpiryDate(
-        expiryDate: ExpiryDate,
+        expiryDate: String,
         fieldPolicy: Brand.FieldPolicy?,
     ): CardExpiryDateValidation {
         val result = CardExpiryDateValidator.validateExpiryDate(expiryDate)
@@ -75,7 +75,7 @@ object CardValidationUtils {
 
     @VisibleForTesting
     internal fun validateExpiryDate(
-        expiryDate: ExpiryDate,
+        expiryDate: String,
         validationResult: CardExpiryDateValidationResult,
         fieldPolicy: Brand.FieldPolicy?
     ): CardExpiryDateValidation {
@@ -91,7 +91,7 @@ object CardValidationUtils {
                         CardExpiryDateValidation.INVALID_TOO_OLD
 
                     is CardExpiryDateValidationResult.Invalid.NonParseableDate -> {
-                        if (expiryDate.isEmptyDate() && fieldPolicy?.isRequired() == false) {
+                        if (expiryDate.isBlank() && fieldPolicy?.isRequired() == false) {
                             CardExpiryDateValidation.VALID_NOT_REQUIRED
                         } else {
                             CardExpiryDateValidation.INVALID_OTHER_REASON
