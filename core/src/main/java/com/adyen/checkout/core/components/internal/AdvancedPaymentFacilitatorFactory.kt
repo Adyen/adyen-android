@@ -10,6 +10,8 @@ package com.adyen.checkout.core.components.internal
 
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
+import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
@@ -35,9 +37,18 @@ internal class AdvancedPaymentFacilitatorFactory(
             componentSessionParams = null,
         )
 
+        // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
+        val analyticsManager = AnalyticsManagerFactory().provide(
+            componentParams = componentParamsData.commonComponentParams,
+            application = null,
+            source = AnalyticsSource.PaymentComponent("AwaitAction"),
+            sessionId = null,
+        )
+
         val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             commonComponentParams = componentParamsData.commonComponentParams,
             componentSessionParams = null,
@@ -48,6 +59,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         )
 
         val actionProvider = ActionProvider(
+            analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
             commonComponentParams = componentParamsData.commonComponentParams,
