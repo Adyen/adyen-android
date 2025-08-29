@@ -12,6 +12,8 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.generateCommonComponentParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
@@ -75,6 +77,7 @@ internal class PaymentMethodProviderTest {
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
+                commonComponentParams = generateCommonComponentParams(),
                 componentSessionParams = null,
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
@@ -99,6 +102,7 @@ internal class PaymentMethodProviderTest {
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
+                commonComponentParams = generateCommonComponentParams(),
                 componentSessionParams = null,
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
@@ -112,6 +116,7 @@ internal class PaymentMethodProviderTest {
                 txVariant = "unregistered_txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
+                commonComponentParams = generateCommonComponentParams(),
                 componentSessionParams = null,
             )
         }
@@ -134,7 +139,8 @@ internal class PaymentMethodProviderTest {
             override fun create(
                 coroutineScope: CoroutineScope,
                 checkoutConfiguration: CheckoutConfiguration,
-                componentSessionParams: SessionParams?
+                commonComponentParams: CommonComponentParams,
+                componentSessionParams: SessionParams?,
             ) = paymentComponent
         }
 
