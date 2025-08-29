@@ -263,6 +263,9 @@ public final class com/adyen/checkout/core/common/exception/ModelSerializationEx
 	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
 }
 
+public final class com/adyen/checkout/core/common/internal/DefaultImageLoader$Companion {
+}
+
 public final class com/adyen/checkout/core/common/internal/model/EmptyResponse$Companion {
 }
 
