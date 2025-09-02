@@ -23,7 +23,6 @@ fun Context.createLocalizedContext(locale: Locale): Context {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         val localeList = LocaleList(locale)
-        LocaleList.setDefault(localeList)
         newConfig.setLocales(localeList)
     }
 
