@@ -13,7 +13,6 @@ import com.adyen.checkout.card.internal.util.CardExpiryDateValidation
 import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -29,7 +28,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is valid, then correct fieldState should be returned`() {
-            val expiryDate = ExpiryDate(4, 2025) // 04/2025
+            val expiryDate = "04/25"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.VALID,
@@ -40,7 +39,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is valid, then result should be valid`() {
-            val expiryDate = ExpiryDate(4, 2040) // 04/2040
+            val expiryDate = "04/40"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.VALID,
@@ -51,7 +50,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is too far in the future, then result should be invalid`() {
-            val expiryDate = ExpiryDate(4, 2099) // 04/2099
+            val expiryDate = "04/99"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE,
@@ -63,7 +62,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is too old, then result should be invalid`() {
-            val expiryDate = ExpiryDate(4, 2020) // 04/2020
+            val expiryDate = "04/20"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.INVALID_TOO_OLD,
@@ -76,7 +75,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is not in correct format, then result should be invalid`() {
-            val expiryDate = ExpiryDate(4, 20) // 04/2020
+            val expiryDate = "04/20"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.INVALID_OTHER_REASON,
@@ -89,7 +88,7 @@ internal class CardValidationMapperTest {
 
         @Test
         fun `date is invalid, then result should be invalid`() {
-            val expiryDate = ExpiryDate(4, 2020) // 04/2020
+            val expiryDate = "04/20"
             val actual = cardValidationMapper.mapExpiryDateValidation(
                 expiryDate,
                 CardExpiryDateValidation.INVALID_OTHER_REASON,

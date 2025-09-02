@@ -275,8 +275,6 @@ public final class com/adyen/checkout/ui/core/old/internal/ui/view/ExpiryDateInp
 	public static final field Companion Lcom/adyen/checkout/ui/core/old/internal/ui/view/ExpiryDateInput$Companion;
 	public static final field SEPARATOR Ljava/lang/String;
 	public fun afterTextChanged (Landroid/text/Editable;)V
-	public final fun getDate ()Lcom/adyen/checkout/core/old/ui/model/ExpiryDate;
-	public final fun setDate (Lcom/adyen/checkout/core/old/ui/model/ExpiryDate;)V
 }
 
 public final class com/adyen/checkout/ui/core/old/internal/ui/view/ExpiryDateInput$Companion {

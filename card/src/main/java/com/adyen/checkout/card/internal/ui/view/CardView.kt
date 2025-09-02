@@ -38,7 +38,6 @@ import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.internal.util.BuildUtils
-import com.adyen.checkout.core.old.ui.model.ExpiryDate
 import com.adyen.checkout.ui.core.old.internal.ui.AddressFormUIState
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
 import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
@@ -366,9 +365,9 @@ class CardView @JvmOverloads constructor(
         }
     }
 
-    private fun onExpiryDateValidated(expiryDateState: FieldState<ExpiryDate>) {
-        if (binding.editTextExpiryDate.date != expiryDateState.value) {
-            binding.editTextExpiryDate.date = expiryDateState.value
+    private fun onExpiryDateValidated(expiryDateState: FieldState<String>) {
+        if (binding.editTextExpiryDate.rawValue != expiryDateState.value) {
+            binding.editTextExpiryDate.setText(expiryDateState.value)
         }
 
         if (expiryDateState.validation.isValid()) {
@@ -417,8 +416,7 @@ class CardView @JvmOverloads constructor(
 
     private fun initExpiryDateInput() {
         binding.editTextExpiryDate.setOnChangeListener {
-            val date = binding.editTextExpiryDate.date
-            cardDelegate.updateInputData { expiryDate = date }
+            cardDelegate.updateInputData { expiryDate = binding.editTextExpiryDate.rawValue }
             binding.textInputLayoutExpiryDate.hideError()
         }
         binding.editTextExpiryDate.onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
@@ -754,7 +752,7 @@ class CardView @JvmOverloads constructor(
     private fun updateInputFields(cardOutputData: CardOutputData?) {
         cardOutputData?.let { outputData ->
             binding.editTextCardNumber.setText(outputData.cardNumberState.value)
-            binding.editTextExpiryDate.date = outputData.expiryDateState.value
+            binding.editTextExpiryDate.setText(outputData.expiryDateState.value)
             binding.editTextSecurityCode.setText(outputData.securityCodeState.value)
             binding.editTextCardHolder.setText(outputData.holderNameState.value)
             binding.editTextSocialSecurityNumber.setSocialSecurityNumber(outputData.socialSecurityNumberState.value)

@@ -52,7 +52,7 @@ internal class StoredCardView @JvmOverloads constructor(
     LinearLayout(
         context,
         attrs,
-        defStyleAttr
+        defStyleAttr,
     ),
     ComponentView {
 
@@ -97,15 +97,15 @@ internal class StoredCardView @JvmOverloads constructor(
     private fun initLocalizedStrings(localizedContext: Context) {
         binding.textInputLayoutCardNumber.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_CardNumberInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutExpiryDate.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_ExpiryDateInput,
-            localizedContext
+            localizedContext,
         )
         binding.textInputLayoutSecurityCode.setLocalizedHintFromStyle(
             R.style.AdyenCheckout_Card_SecurityCodeInput,
-            localizedContext
+            localizedContext,
         )
     }
 
@@ -136,10 +136,10 @@ internal class StoredCardView @JvmOverloads constructor(
         binding.editTextCardNumber.setText(
             localizedContext.getString(
                 R.string.card_number_4digit,
-                cardOutputData.cardNumberState.value
-            )
+                cardOutputData.cardNumberState.value,
+            ),
         )
-        binding.editTextExpiryDate.date = cardOutputData.expiryDateState.value
+        binding.editTextExpiryDate.setText(cardOutputData.expiryDateState.value)
         setDetectedCardBrand(cardOutputData)
     }
 
