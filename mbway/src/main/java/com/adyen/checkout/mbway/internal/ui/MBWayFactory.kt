@@ -13,14 +13,12 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStateManager
+import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
-import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayStateUpdaterRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayTransformerRegistry
-import com.adyen.checkout.mbway.internal.ui.state.MBWayValidatorRegistry
+import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
+import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
 import kotlinx.coroutines.CoroutineScope
 import java.util.Locale
 
@@ -52,23 +50,17 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
             sessionId = null,
         )
 
-        val transformerRegistry = MBWayTransformerRegistry()
-        val componentStateFactory = MBWayComponentStateFactory(componentParams)
-        val stateManager = DefaultComponentStateManager(
-            factory = componentStateFactory,
-            validationRegistry = MBWayValidatorRegistry(),
-            stateUpdaterRegistry = MBWayStateUpdaterRegistry(),
-            transformerRegistry = transformerRegistry,
+        val stateManager = DefaultViewStateManager(
+            factory = MBWayViewStateFactory(componentParams),
+            validator = MBWayViewStateValidator(),
         )
 
         return MBWayComponent(
-            coroutineScope = coroutineScope,
             componentParams = componentParams,
             analyticsManager = analyticsManager,
+            viewStateManager = stateManager,
             // TODO - Order to be passed later
             order = null,
-            transformerRegistry = transformerRegistry,
-            stateManager = stateManager,
         )
     }
 }

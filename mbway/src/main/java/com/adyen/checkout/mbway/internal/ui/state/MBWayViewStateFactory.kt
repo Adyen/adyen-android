@@ -11,17 +11,24 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.model.ComponentFieldState
+import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
-internal class MBWayComponentStateFactory(
+internal class MBWayViewStateFactory(
     private val componentParams: ComponentParams,
-) : ComponentStateFactory<MBWayComponentState, MBWayFieldId> {
+) : ViewStateFactory<MBWayViewState> {
 
-    override fun createDefaultComponentState() = MBWayComponentState(
+    override fun createDefaultViewState() = MBWayViewState(
         countries = getSupportedCountries(componentParams),
+        countryCode = getInitiallySelectedCountry(componentParams),
+        phoneNumber = TextInputState(
+            text = "",
+            errorMessage = null,
+            isFocused = true,
+            isEdited = false,
+            showError = false,
+        ),
         isLoading = false,
-        countryCodeFieldState = ComponentFieldState(getInitiallySelectedCountry(componentParams)),
     )
 
     private fun getSupportedCountries(componentParams: ComponentParams): List<CountryModel> =
@@ -33,8 +40,6 @@ internal class MBWayComponentStateFactory(
             ?: countries.firstOrNull()
             ?: throw IllegalArgumentException("Countries list can not be null")
     }
-
-    override fun getFieldIds(): List<MBWayFieldId> = MBWayFieldId.entries
 
     companion object {
         private const val ISO_CODE_PORTUGAL = "PT"

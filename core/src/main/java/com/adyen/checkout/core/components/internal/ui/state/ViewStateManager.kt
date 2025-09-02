@@ -9,27 +9,19 @@
 package com.adyen.checkout.core.components.internal.ui.state
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ComponentStateManager<S : ComponentState, FI : FieldId> {
+interface ViewStateManager<V : ViewState> {
 
-    val state: StateFlow<S>
+    val state: StateFlow<V>
 
     val isValid: Boolean
 
-    fun updateState(update: S.() -> S)
-
-    fun <T> updateFieldValue(
-        fieldId: FI,
-        value: T? = null,
-    )
-
-    fun updateFieldFocus(
-        fieldId: FI,
-        hasFocus: Boolean,
-    )
+    fun update(update: V.() -> V)
 
     fun highlightAllFieldValidationErrors()
 }
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ViewState
