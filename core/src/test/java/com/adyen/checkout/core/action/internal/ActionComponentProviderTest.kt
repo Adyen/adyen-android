@@ -13,6 +13,8 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.generateCommonComponentParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -76,6 +78,7 @@ internal class ActionComponentProviderTest {
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
+                commonComponentParams = generateCommonComponentParams(),
             )
             assertEquals(1, ActionComponentProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -100,6 +103,7 @@ internal class ActionComponentProviderTest {
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
+                commonComponentParams = generateCommonComponentParams(),
             )
             assertEquals(1, ActionComponentProvider.getFactoriesCount())
             Assert.assertSame(component, actualComponent)
@@ -113,6 +117,7 @@ internal class ActionComponentProviderTest {
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
+                commonComponentParams = generateCommonComponentParams(),
             )
         }
     }
@@ -134,7 +139,8 @@ internal class ActionComponentProviderTest {
                 action: Action,
                 coroutineScope: CoroutineScope,
                 checkoutConfiguration: CheckoutConfiguration,
-                savedStateHandle: SavedStateHandle
+                savedStateHandle: SavedStateHandle,
+                commonComponentParams: CommonComponentParams,
             ) = actionComponent
         }
 

@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import kotlinx.coroutines.CoroutineScope
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -22,5 +23,6 @@ interface ActionFactory<T : ActionComponent> {
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
+        commonComponentParams: CommonComponentParams,
     ): T
 }

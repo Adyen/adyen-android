@@ -11,11 +11,13 @@ package com.adyen.checkout.core.action.internal
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import kotlinx.coroutines.CoroutineScope
 
 internal class ActionProvider(
     val checkoutConfiguration: CheckoutConfiguration,
     val savedStateHandle: SavedStateHandle,
+    val commonComponentParams: CommonComponentParams
 ) {
 
     fun get(
@@ -26,5 +28,6 @@ internal class ActionProvider(
         coroutineScope = coroutineScope,
         checkoutConfiguration = checkoutConfiguration,
         savedStateHandle = savedStateHandle,
+        commonComponentParams = commonComponentParams,
     )
 }
