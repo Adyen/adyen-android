@@ -10,12 +10,10 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.adyen.checkout.core.action.data.Action
@@ -23,8 +21,8 @@ import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
-import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.common.localization.internal.helper.LocalizedComponent
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -45,16 +43,15 @@ internal class PaymentFacilitator(
     private var actionComponent by mutableStateOf<ActionComponent?>(null)
     private var actionObservationJob: Job? = null
 
-    @Suppress("UnusedParameter")
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier, localizationProvider: CheckoutLocalizationProvider?) {
         val actionComponent = this.actionComponent
         // TODO - Find an alternative for getting shopper locale without the need to
         //  expose component params from components
         val activeComponentParams = actionComponent?.componentParams ?: paymentComponent.componentParams
-        val localizedContext = LocalContext.current.createLocalizedContext(activeComponentParams.shopperLocale)
-        CompositionLocalProvider(
-            LocalContext provides localizedContext,
+        LocalizedComponent(
+            locale = activeComponentParams.shopperLocale,
+            localizationProvider = localizationProvider,
         ) {
             if (actionComponent != null) {
                 actionComponent.ViewFactory(modifier)
