@@ -13,27 +13,35 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.TestAction
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-internal class ActionComponentProviderTest {
+@ExtendWith(MockitoExtension::class)
+internal class ActionComponentProviderTest(
+    @Mock private val componentParams: CommonComponentParams,
+) {
 
-    private val component = TestActionComponent()
+    private val component = TestActionComponent(componentParams)
+
     private val factory = generateFactory(
         actionComponent = component,
     )
 
-    @Before
+    @BeforeEach
     fun setUp() {
         ActionComponentProvider.clear()
     }
@@ -63,7 +71,7 @@ internal class ActionComponentProviderTest {
     @Test
     fun `when register is called with an existing actionType, then the factory is overwritten`() =
         runTest {
-            val secondaryComponent = TestActionComponent()
+            val secondaryComponent = TestActionComponent(componentParams)
             val secondaryFactory = generateFactory(
                 actionComponent = secondaryComponent,
             )

@@ -72,6 +72,7 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
             redirectHandler = redirectHandler,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
+            componentParams = componentParams,
         )
     }
 }
