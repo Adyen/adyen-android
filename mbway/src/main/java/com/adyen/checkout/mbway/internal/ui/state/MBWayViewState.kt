@@ -9,19 +9,12 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
-import com.adyen.checkout.core.components.internal.ui.state.model.toViewFieldState
+import com.adyen.checkout.core.components.internal.ui.state.ViewState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
 internal data class MBWayViewState(
     val countries: List<CountryModel>,
+    val countryCode: CountryModel,
+    val phoneNumber: TextInputState,
     val isLoading: Boolean,
-    val countryCodeFieldState: ViewFieldState<CountryModel>,
-    val phoneNumberFieldState: ViewFieldState<String>,
-)
-
-internal fun MBWayComponentState.toViewState() = MBWayViewState(
-    countries = this.countries,
-    isLoading = this.isLoading,
-    countryCodeFieldState = this.countryCodeFieldState.toViewFieldState(),
-    phoneNumberFieldState = this.localPhoneNumberFieldState.toViewFieldState(),
-)
+) : ViewState

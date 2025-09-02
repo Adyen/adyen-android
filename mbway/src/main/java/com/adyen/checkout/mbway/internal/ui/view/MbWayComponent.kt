@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
-import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.test.R
@@ -61,17 +61,10 @@ internal fun MbWayComponent(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
     ) {
         // CountryCode
-        val supportingTextCountryCode = if (viewState.countryCodeFieldState.errorMessageId != null) {
-            "The country code is invalid"
-        } else {
-            null
-        }
-        val country = viewState.countryCodeFieldState.value
+        val country = viewState.countryCode
         ValuePickerField(
             value = "${country.callingCode} • ${country.countryName}",
             label = "Country Code",
-            supportingText = supportingTextCountryCode,
-            isError = viewState.countryCodeFieldState.errorMessageId != null,
             onClick = { showCountryCodeDialog = true },
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,11 +74,13 @@ internal fun MbWayComponent(
         )
 
         // PhoneNumber
-        val supportingTextPhoneNumber = if (viewState.phoneNumberFieldState.errorMessageId != null) {
-            "The phone number is invalid"
-        } else {
-            null
-        }
+        val isError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
+        val supportingTextPhoneNumber =
+            if (isError) {
+                "The phone number is invalid"
+            } else {
+                null
+            }
         CheckoutTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -93,7 +88,7 @@ internal fun MbWayComponent(
                     fieldChangeListener.onFieldFocusChanged(MBWayFieldId.PHONE_NUMBER, focusState.hasFocus)
                 },
             label = "Phone Number",
-            isError = viewState.phoneNumberFieldState.errorMessageId != null,
+            isError = isError,
             supportingText = supportingTextPhoneNumber,
             prefix = country.callingCode,
             onValueChange = { value ->
@@ -129,7 +124,7 @@ private fun CountryCodeDialog(
             modifier = Modifier.padding(Dimensions.Large),
         ) {
             viewState.countries.forEach { country ->
-                val isSelected = country == viewState.countryCodeFieldState.value
+                val isSelected = country == viewState.countryCode
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -186,8 +181,14 @@ private fun MbWayComponentPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCodeFieldState = ViewFieldState(countries.first(), false),
-            phoneNumberFieldState = ViewFieldState("", false),
+            countryCode = countries.first(),
+            phoneNumber = TextInputState(
+                text = "",
+                errorMessage = null,
+                isFocused = false,
+                isEdited = false,
+                showError = false,
+            ),
         ),
         fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
             override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
@@ -209,8 +210,14 @@ private fun CountryCodeDialogPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCodeFieldState = ViewFieldState(countries.first(), false),
-            phoneNumberFieldState = ViewFieldState("", false),
+            countryCode = countries.first(),
+            phoneNumber = TextInputState(
+                text = "",
+                errorMessage = null,
+                isFocused = false,
+                isEdited = false,
+                showError = false,
+            ),
         ),
         fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
             override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
