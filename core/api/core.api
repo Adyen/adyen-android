@@ -309,7 +309,7 @@ public abstract interface class com/adyen/checkout/core/common/localization/Chec
 }
 
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
-	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutContext;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutContext;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/adyen/checkout/core/components/AnalyticsConfiguration : android/os/Parcelable {

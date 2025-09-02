@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
@@ -25,6 +26,7 @@ fun AdyenPaymentFlow(
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
+    localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
     // TODO - Move Creation Logic to Adyen Checkout
     // TODO - Verify that this does not keep observing the previous values and adds extra observables
@@ -38,6 +40,6 @@ fun AdyenPaymentFlow(
     }.apply { observe(LocalLifecycleOwner.current.lifecycle) }
 
     InternalCheckoutTheme(theme) {
-        adyenComponent.ViewFactory(modifier)
+        adyenComponent.ViewFactory(modifier, localizationProvider)
     }
 }
