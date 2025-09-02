@@ -129,7 +129,7 @@ internal class MBWayComponent(
             MBWayFieldId.COUNTRY_CODE -> Unit
             MBWayFieldId.PHONE_NUMBER -> {
                 viewStateManager.update {
-                    copy(phoneNumber = phoneNumber.copy(isFocused = hasFocus, showError = !hasFocus))
+                    copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
                 }
             }
         }
