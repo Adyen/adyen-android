@@ -298,6 +298,16 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 	public abstract fun serialize (Lcom/adyen/checkout/core/common/internal/model/ModelObject;)Lorg/json/JSONObject;
 }
 
+public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static fun values ()[Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+}
+
+public abstract interface class com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
+	public abstract fun getString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
 	public static final fun AdyenPaymentFlow (Ljava/lang/String;Lcom/adyen/checkout/core/components/CheckoutContext;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Landroidx/compose/runtime/Composer;II)V
 }
