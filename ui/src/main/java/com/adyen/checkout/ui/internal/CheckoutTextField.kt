@@ -24,7 +24,9 @@ import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -124,11 +126,12 @@ fun CheckoutTextField(
     )
 
     if (onValueChange != null) {
+        val currentOnValueChange by rememberUpdatedState(onValueChange)
         LaunchedEffect(state) {
             snapshotFlow { state.text }
                 .drop(1)
                 .collectLatest { value ->
-                    onValueChange(value.toString())
+                    currentOnValueChange(value.toString())
                 }
         }
     }
