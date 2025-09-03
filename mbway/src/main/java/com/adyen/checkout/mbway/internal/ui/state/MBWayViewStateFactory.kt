@@ -21,13 +21,7 @@ internal class MBWayViewStateFactory(
     override fun createDefaultViewState() = MBWayViewState(
         countries = getSupportedCountries(componentParams),
         countryCode = getInitiallySelectedCountry(componentParams),
-        phoneNumber = TextInputState(
-            text = "",
-            errorMessage = null,
-            isFocused = true,
-            isEdited = false,
-            showError = false,
-        ),
+        phoneNumber = TextInputState(isFocused = true),
         isLoading = false,
     )
 
