@@ -61,6 +61,9 @@ internal object GooglePayUtils {
     private const val TOKEN = "token"
     private const val NOT_CURRENTLY_KNOWN = "NOT_CURRENTLY_KNOWN"
 
+    // Library information
+    private const val LIBRARY_SOFTWARE_ID = "android/adyen-dropin"
+
     /**
      * Create a [com.google.android.gms.wallet.Wallet.WalletOptions] based on the component configuration.
      *
@@ -95,6 +98,9 @@ internal object GooglePayUtils {
      */
     fun createPaymentDataRequest(params: GooglePayComponentParams): PaymentDataRequest {
         val paymentDataRequestModel = createPaymentDataRequestModel(params)
+
+        // TODO: Populate the softwareInfo property in MerchantInfo with the name and version of the library
+
         val requestJsonString = PaymentDataRequestModel.SERIALIZER.serialize(paymentDataRequestModel).toString()
         return PaymentDataRequest.fromJson(requestJsonString)
     }
