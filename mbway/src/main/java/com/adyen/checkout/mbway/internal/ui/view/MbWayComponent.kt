@@ -42,6 +42,7 @@ import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.CheckoutTextField
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.FullScreenDialog
 import com.adyen.checkout.ui.internal.SubHeadline
@@ -94,12 +95,12 @@ internal fun MbWayComponent(
             label = "Phone Number",
             isError = viewState.phoneNumberFieldState.errorMessageId != null,
             supportingText = supportingTextPhoneNumber,
-            value = viewState.phoneNumberFieldState.value,
             prefix = country.callingCode,
             onValueChange = { value ->
                 fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
             },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            inputTransformation = DigitOnlyInputTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
     }
 
