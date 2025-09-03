@@ -15,6 +15,7 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.common.localization.internal.LocalizationResolver
 import java.util.Locale
@@ -34,6 +35,17 @@ fun LocalizedComponent(
     ) {
         content()
     }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Composable
+fun resolveString(key: CheckoutLocalizationKey): String {
+    val localizationResolver = LocalLocalizationResolver.current
+    return localizationResolver.getLocalizedStringFor(
+        context = LocalContext.current,
+        locale = LocalLocale.current,
+        key = key,
+    )
 }
 
 private val LocalLocale = staticCompositionLocalOf { Locale.getDefault() }
