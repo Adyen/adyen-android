@@ -20,5 +20,5 @@ data class TextInputState(
     val showError: Boolean,
 ) {
 
-    fun updateFocus(hasFocus: Boolean) = copy(isFocused = hasFocus, showError = !hasFocus)
+    fun updateFocus(hasFocus: Boolean) = copy(isFocused = hasFocus, showError = !hasFocus && isEdited)
 }
