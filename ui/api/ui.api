@@ -18,7 +18,7 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$ButtonsKt
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$CheckoutTextFieldKt {
 	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$CheckoutTextFieldKt;
 	public fun <init> ()V
-	public final fun getLambda$1339090753$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1839293311$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt {
