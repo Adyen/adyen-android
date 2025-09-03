@@ -21,27 +21,31 @@ internal class MBWayViewStateValidator : ViewStateValidator<MBWayViewState> {
         } else {
             null
         }
+        val testError = if (viewState.test.text.isEmpty()) {
+            R.string.checkout_mbway_phone_number_not_valid
+        } else {
+            null
+        }
         return viewState.copy(
             phoneNumber = viewState.phoneNumber.copy(errorMessage = phoneNumberError),
+            test = viewState.test.copy(errorMessage = testError),
         )
     }
 
     override fun isValid(viewState: MBWayViewState): Boolean {
         val validated = validate(viewState)
-
         return validated.phoneNumber.errorMessage == null
     }
 
     override fun highlightAllValidationErrors(viewState: MBWayViewState): MBWayViewState {
-        // TODO - do we need to revalidate or can we rely on the validation done beforehand?
-        val validated = validate(viewState)
-        val hasError = validated.phoneNumber.errorMessage != null
+        val hasError = viewState.phoneNumber.errorMessage != null || viewState.test.errorMessage != null
 
         if (hasError) {
-            return validated.copy(
-                phoneNumber = validated.phoneNumber.copy(showError = true, isFocused = true),
+            return viewState.copy(
+                phoneNumber = viewState.phoneNumber.copy(showError = true, isFocused = true),
+                test = viewState.test.copy(showError = true, isFocused = false),
             )
         }
-        return validated
+        return viewState
     }
 }
