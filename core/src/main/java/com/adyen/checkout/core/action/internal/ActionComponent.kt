@@ -12,9 +12,12 @@ import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.ui.EventComponent
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ActionComponent : EventComponent<ActionComponentEvent> {
+
+    val componentParams: ComponentParams
 
     @Composable
     fun ViewFactory(modifier: Modifier)
