@@ -121,6 +121,12 @@ internal class MBWayComponent(
                     copy(phoneNumber = phoneNumber.copy(text = value as String, isEdited = true, showError = false))
                 }
             }
+
+            MBWayFieldId.TEST -> {
+                viewStateManager.update {
+                    copy(test = test.copy(text = value as String, isEdited = true, showError = false))
+                }
+            }
         }
     }
 
@@ -130,6 +136,12 @@ internal class MBWayComponent(
             MBWayFieldId.PHONE_NUMBER -> {
                 viewStateManager.update {
                     copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
+                }
+            }
+
+            MBWayFieldId.TEST -> {
+                viewStateManager.update {
+                    copy(test = test.updateFocus(hasFocus))
                 }
             }
         }

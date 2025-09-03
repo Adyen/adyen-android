@@ -97,6 +97,28 @@ internal fun MbWayComponent(
             inputTransformation = DigitOnlyInputTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         )
+
+        // Test
+        val isError2 = viewState.test.errorMessage != null && viewState.test.showError
+        val supportingTextTest =
+            if (isError2) {
+                "The test is invalid"
+            } else {
+                null
+            }
+        CheckoutTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { focusState ->
+                    fieldChangeListener.onFieldFocusChanged(MBWayFieldId.TEST, focusState.hasFocus)
+                },
+            label = "Test",
+            isError = isError2,
+            supportingText = supportingTextTest,
+            onValueChange = { value ->
+                fieldChangeListener.onFieldValueChanged(MBWayFieldId.TEST, value)
+            },
+        )
     }
 
     // TODO - replace with actual navigation after it has been implemented
@@ -189,6 +211,13 @@ private fun MbWayComponentPreview() {
                 isEdited = false,
                 showError = false,
             ),
+            test = TextInputState(
+                text = "",
+                errorMessage = null,
+                isFocused = false,
+                isEdited = false,
+                showError = false,
+            ),
         ),
         fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
             override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
@@ -212,6 +241,13 @@ private fun CountryCodeDialogPreview() {
             isLoading = false,
             countryCode = countries.first(),
             phoneNumber = TextInputState(
+                text = "",
+                errorMessage = null,
+                isFocused = false,
+                isEdited = false,
+                showError = false,
+            ),
+            test = TextInputState(
                 text = "",
                 errorMessage = null,
                 isFocused = false,

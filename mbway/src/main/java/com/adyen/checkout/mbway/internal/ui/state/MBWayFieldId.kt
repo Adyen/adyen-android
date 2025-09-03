@@ -12,5 +12,6 @@ import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 
 internal enum class MBWayFieldId : FieldId {
     COUNTRY_CODE,
-    PHONE_NUMBER
+    PHONE_NUMBER,
+    TEST,
 }
