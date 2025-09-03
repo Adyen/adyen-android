@@ -21,9 +21,10 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
+import com.adyen.checkout.core.components.internal.ui.state.FocusChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.mbway.internal.ui.state.InputChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
@@ -40,7 +41,8 @@ internal class MBWayComponent(
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
-    FieldChangeListener<MBWayFieldId> {
+    InputChangeListener,
+    FocusChangeListener<MBWayFieldId> {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
@@ -90,47 +92,25 @@ internal class MBWayComponent(
         )
     }
 
-    @Composable
-    override fun ViewFactory(modifier: Modifier) {
-        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
-
-        ComponentScaffold(
-            modifier = modifier,
-            disableInteraction = viewState.isLoading,
-            footer = {
-                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
-            },
-        ) {
-            MbWayComponent(
-                viewState = viewState,
-                fieldChangeListener = this,
-            )
+    override fun onCountryChanged(newCountryCode: CountryModel) {
+        viewStateManager.update {
+            copy(countryCode = newCountryCode)
         }
     }
 
-    override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) {
-        when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> {
-                viewStateManager.update {
-                    copy(countryCode = value as CountryModel)
-                }
-            }
-
-            MBWayFieldId.PHONE_NUMBER -> {
-                viewStateManager.update {
-                    copy(phoneNumber = phoneNumber.copy(text = value as String, isEdited = true, showError = false))
-                }
-            }
-
-            MBWayFieldId.TEST -> {
-                viewStateManager.update {
-                    copy(test = test.copy(text = value as String, isEdited = true, showError = false))
-                }
-            }
+    override fun onPhoneNumberChanged(newPhoneNumber: String) {
+        viewStateManager.update {
+            copy(phoneNumber = phoneNumber.updateText(newPhoneNumber))
         }
     }
 
-    override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
+    override fun onTestChanged(newTest: String) {
+        viewStateManager.update {
+            copy(test = test.updateText(newTest))
+        }
+    }
+
+    override fun onFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
         when (fieldId) {
             MBWayFieldId.COUNTRY_CODE -> Unit
             MBWayFieldId.PHONE_NUMBER -> {
@@ -144,6 +124,25 @@ internal class MBWayComponent(
                     copy(test = test.updateFocus(hasFocus))
                 }
             }
+        }
+    }
+
+    @Composable
+    override fun ViewFactory(modifier: Modifier) {
+        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
+
+        ComponentScaffold(
+            modifier = modifier,
+            disableInteraction = viewState.isLoading,
+            footer = {
+                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
+            },
+        ) {
+            MbWayComponent(
+                viewState = viewState,
+                inputChangeListener = this,
+                focusChangeListener = this,
+            )
         }
     }
 }

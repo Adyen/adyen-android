@@ -12,8 +12,6 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.internal.ui.state.model.FieldId
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface FieldChangeListener<FI : FieldId> {
-    fun <T> onFieldValueChanged(fieldId: FI, value: T)
-
-    fun onFieldFocusChanged(fieldId: FI, hasFocus: Boolean)
+interface FocusChangeListener<T : FieldId> {
+    fun onFocusChanged(fieldId: T, hasFocus: Boolean)
 }
