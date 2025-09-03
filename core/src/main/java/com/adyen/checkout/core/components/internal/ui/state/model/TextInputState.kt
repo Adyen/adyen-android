@@ -13,11 +13,11 @@ import androidx.annotation.StringRes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class TextInputState(
-    val text: String,
-    @StringRes val errorMessage: Int?,
-    val isFocused: Boolean,
-    val isEdited: Boolean,
-    val showError: Boolean,
+    val text: String = "",
+    @StringRes val errorMessage: Int? = null,
+    val isFocused: Boolean = false,
+    val isEdited: Boolean = false,
+    val showError: Boolean = false,
 ) {
 
     fun updateFocus(hasFocus: Boolean) = copy(isFocused = hasFocus, showError = !hasFocus && isEdited)
