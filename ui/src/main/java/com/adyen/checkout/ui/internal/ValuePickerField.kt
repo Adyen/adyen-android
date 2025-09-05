@@ -24,6 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.vectorResource
@@ -70,6 +76,13 @@ fun ValuePickerField(
                         onClick()
                     }
                 }
+            }
+            .onKeyEvent { event ->
+                if (event.type == KeyEventType.KeyUp && event.isEnter) {
+                    onClick()
+                    return@onKeyEvent true
+                }
+                return@onKeyEvent false
             },
         enabled = false,
         supportingText = supportingText,
@@ -85,6 +98,16 @@ fun ValuePickerField(
         innerIndication = ripple(color = style.textColor),
     )
 }
+
+private val KeyEvent.isEnter: Boolean
+    get() = when (key) {
+        Key.DirectionCenter,
+        Key.Enter,
+        Key.NumPadEnter,
+        Key.Spacebar -> true
+
+        else -> false
+    }
 
 @Preview
 @Composable
