@@ -8,6 +8,9 @@
 
 package com.adyen.checkout.ui.internal
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -110,12 +113,19 @@ internal fun CheckoutTextFieldDecorationBox(
 
             trailingIcon?.invoke()
         }
-        supportingText?.let {
+
+        AnimatedVisibility(
+            visible = supportingText != null,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
             val supportingTextColor = if (isError) style.errorColor else CheckoutThemeProvider.colors.textSecondary
-            Footnote(
-                text = supportingText,
-                color = supportingTextColor,
-            )
+            supportingText?.let {
+                Footnote(
+                    text = it,
+                    color = supportingTextColor,
+                )
+            }
         }
     }
 }
