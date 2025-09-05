@@ -10,17 +10,29 @@ package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -51,15 +63,30 @@ fun ValuePickerField(
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val state = remember(value) { TextFieldState(value) }
+
     CheckoutTextField(
-        initialValue = value,
         label = label,
-        // This makes sure the whole composable is clickable, but the ripple is not displayed outside of the inner field
-        modifier = modifier.clickable(
-            interactionSource = interactionSource,
-            indication = null,
-            onClick = onClick,
-        ),
+        inputState = state,
+        // Because we disable the CheckoutTextField we need to override focus and input events
+        modifier = modifier
+            .focusable(interactionSource = interactionSource)
+            .pointerInput(onClick) {
+                awaitEachGesture {
+                    awaitFirstDown(pass = PointerEventPass.Initial)
+                    val up = waitForUpOrCancellation(pass = PointerEventPass.Initial)
+                    if (up != null) {
+                        onClick()
+                    }
+                }
+            }
+            .onKeyEvent { event ->
+                if (event.type == KeyEventType.KeyUp && event.isEnter) {
+                    onClick()
+                    return@onKeyEvent true
+                }
+                return@onKeyEvent false
+            },
         enabled = false,
         supportingText = supportingText,
         isError = isError,
@@ -74,6 +101,16 @@ fun ValuePickerField(
         innerIndication = ripple(color = style.textColor),
     )
 }
+
+private val KeyEvent.isEnter: Boolean
+    get() = when (key) {
+        Key.DirectionCenter,
+        Key.Enter,
+        Key.NumPadEnter,
+        Key.Spacebar -> true
+
+        else -> false
+    }
 
 @Preview
 @Composable
