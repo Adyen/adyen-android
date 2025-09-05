@@ -10,6 +10,7 @@ package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -60,6 +61,7 @@ fun ValuePickerField(
         label = label,
         // Because we disable the CheckoutTextField we need to override focus and input events
         modifier = modifier
+            .focusable(interactionSource = interactionSource)
             .pointerInput(onClick) {
                 awaitEachGesture {
                     awaitFirstDown(pass = PointerEventPass.Initial)
