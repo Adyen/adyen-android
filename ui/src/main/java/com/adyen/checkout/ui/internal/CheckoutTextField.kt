@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -53,10 +54,10 @@ import kotlinx.coroutines.flow.collectLatest
  * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
  * styling defined by [InternalTextFieldStyle].
  *
- * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param label The label text to be displayed for the text field.
  * @param modifier Optional [Modifier] to be applied to this composable.
  * @param initialValue The initial text to be displayed in the text field.
+ * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param enabled Controls the enabled state of the text field. When `false`, the text field
  * is not interactable.
  * @param supportingText Optional supporting text to be displayed below the text field.
@@ -91,12 +92,48 @@ fun CheckoutTextField(
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
+    CheckoutTextField(
+        label = label,
+        inputState = rememberTextFieldState(initialValue),
+        modifier = modifier,
+        onValueChange = onValueChange,
+        enabled = enabled,
+        supportingText = supportingText,
+        isError = isError,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
+        keyboardOptions = keyboardOptions,
+        interactionSource = interactionSource,
+        innerIndication = innerIndication,
+        shouldFocus = shouldFocus,
+        prefix = prefix,
+        trailingIcon = trailingIcon,
+    )
+}
+
+@Composable
+internal fun CheckoutTextField(
+    label: String,
+    inputState: TextFieldState,
+    modifier: Modifier = Modifier,
+    onValueChange: ((String) -> Unit)? = null,
+    enabled: Boolean = true,
+    supportingText: String? = null,
+    isError: Boolean = false,
+    inputTransformation: InputTransformation? = null,
+    outputTransformation: OutputTransformation? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    innerIndication: Indication? = null,
+    shouldFocus: Boolean = false,
+    prefix: String? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
-    val state = rememberTextFieldState(initialValue)
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
-        state = state,
+        state = inputState,
         modifier = modifier.focusRequester(focusRequester),
         enabled = enabled,
         inputTransformation = inputTransformation,
@@ -128,8 +165,8 @@ fun CheckoutTextField(
 
     if (onValueChange != null) {
         val currentOnValueChange by rememberUpdatedState(onValueChange)
-        LaunchedEffect(state) {
-            snapshotFlow { state.text }
+        LaunchedEffect(inputState) {
+            snapshotFlow { inputState.text }
                 .collectLatest { value ->
                     currentOnValueChange(value.toString())
                 }
