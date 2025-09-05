@@ -18,6 +18,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -62,9 +63,11 @@ fun ValuePickerField(
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val state = remember(value) { TextFieldState(value) }
+
     CheckoutTextField(
-        initialValue = value,
         label = label,
+        inputState = state,
         // Because we disable the CheckoutTextField we need to override focus and input events
         modifier = modifier
             .focusable(interactionSource = interactionSource)
