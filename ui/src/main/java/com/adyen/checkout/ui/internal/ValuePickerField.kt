@@ -52,8 +52,7 @@ fun ValuePickerField(
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
     CheckoutTextField(
-        value = value,
-        onValueChange = {},
+        initialValue = value,
         label = label,
         // This makes sure the whole composable is clickable, but the ripple is not displayed outside of the inner field
         modifier = modifier.clickable(

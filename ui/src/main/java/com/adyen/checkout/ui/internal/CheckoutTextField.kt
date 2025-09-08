@@ -17,10 +17,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.OutputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -38,6 +45,8 @@ import com.adyen.checkout.ui.theme.CheckoutColor
 import com.adyen.checkout.ui.theme.CheckoutElements
 import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 import com.adyen.checkout.ui.theme.CheckoutTheme
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -45,10 +54,10 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
  * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
  * styling defined by [InternalTextFieldStyle].
  *
- * @param value The current text to be displayed in the text field.
  * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param label The label text to be displayed for the text field.
  * @param modifier Optional [Modifier] to be applied to this composable.
+ * @param initialValue The initial text to be displayed in the text field.
  * @param enabled Controls the enabled state of the text field. When `false`, the text field
  * is not interactable.
  * @param supportingText Optional supporting text to be displayed below the text field.
@@ -67,13 +76,15 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    initialValue: String = "",
+    onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
     isError: Boolean = false,
+    inputTransformation: InputTransformation? = null,
+    outputTransformation: OutputTransformation? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
@@ -82,22 +93,24 @@ fun CheckoutTextField(
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
+    val state = rememberTextFieldState(initialValue)
     BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
+        state = state,
         modifier = modifier,
         enabled = enabled,
+        inputTransformation = inputTransformation,
+        outputTransformation = outputTransformation,
         textStyle = TextStyle(
             color = style.textColor,
             fontSize = innerTextStyle.size.sp,
             fontWeight = FontWeight(innerTextStyle.weight),
             lineHeight = innerTextStyle.lineHeight.sp,
         ),
-        singleLine = true,
+        lineLimits = TextFieldLineLimits.SingleLine,
         cursorBrush = SolidColor(style.activeColor),
         keyboardOptions = keyboardOptions,
         interactionSource = interactionSource,
-        decorationBox = { innerTextField ->
+        decorator = { innerTextField ->
             CheckoutTextFieldDecorationBox(
                 label = label,
                 innerTextField = innerTextField,
@@ -111,6 +124,17 @@ fun CheckoutTextField(
             )
         },
     )
+
+    if (onValueChange != null) {
+        val currentOnValueChange by rememberUpdatedState(onValueChange)
+        LaunchedEffect(state) {
+            snapshotFlow { state.text }
+                .drop(1)
+                .collectLatest { value ->
+                    currentOnValueChange(value.toString())
+                }
+        }
+    }
 }
 
 @Preview
@@ -126,14 +150,12 @@ private fun CheckoutTextFieldPreview(
                 .padding(Dimensions.Large),
         ) {
             CheckoutTextField(
-                value = "",
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
             )
 
             CheckoutTextField(
-                value = "Value",
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
@@ -149,7 +171,6 @@ private fun CheckoutTextFieldPreview(
 
             val focusRequester = remember { FocusRequester() }
             CheckoutTextField(
-                value = "Value",
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
@@ -160,7 +181,6 @@ private fun CheckoutTextFieldPreview(
             }
 
             CheckoutTextField(
-                value = "Value",
                 onValueChange = {},
                 label = "Label",
                 supportingText = "Description",
