@@ -50,7 +50,7 @@ internal class MBWayViewStateFactoryTest(
                 text = "",
                 errorMessage = null,
                 isFocused = true,
-                isEdited = false,
+                isInteractedWith = false,
                 showError = false,
             ),
             isLoading = false,

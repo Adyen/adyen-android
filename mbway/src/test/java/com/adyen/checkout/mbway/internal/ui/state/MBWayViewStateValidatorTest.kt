@@ -31,7 +31,7 @@ internal class MBWayViewStateValidatorTest {
                     text = VALID_PHONE_NUMBER,
                     errorMessage = null,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,
@@ -51,7 +51,7 @@ internal class MBWayViewStateValidatorTest {
                     text = INVALID_PHONE_NUMBER,
                     errorMessage = null,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,
@@ -75,7 +75,7 @@ internal class MBWayViewStateValidatorTest {
                     text = VALID_PHONE_NUMBER,
                     errorMessage = null,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,
@@ -87,15 +87,15 @@ internal class MBWayViewStateValidatorTest {
         }
 
         @Test
-        fun `when phone number is invalid, then isValid should return false`() {
+        fun `when phone number has an error, then isValid should return false`() {
             val viewState = MBWayViewState(
                 countries = emptyList(),
                 countryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = null,
+                    errorMessage = R.string.checkout_mbway_phone_number_not_valid,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,
@@ -119,7 +119,7 @@ internal class MBWayViewStateValidatorTest {
                     text = VALID_PHONE_NUMBER,
                     errorMessage = null,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,
@@ -138,9 +138,9 @@ internal class MBWayViewStateValidatorTest {
                 countryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = null,
+                    errorMessage = R.string.checkout_mbway_phone_number_not_valid,
                     isFocused = false,
-                    isEdited = true,
+                    isInteractedWith = true,
                     showError = false,
                 ),
                 isLoading = false,

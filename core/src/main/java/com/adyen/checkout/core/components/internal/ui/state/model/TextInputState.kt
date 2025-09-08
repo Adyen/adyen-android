@@ -16,11 +16,15 @@ data class TextInputState(
     val text: String = "",
     @StringRes val errorMessage: Int? = null,
     val isFocused: Boolean = false,
-    val isEdited: Boolean = false,
+    val isInteractedWith: Boolean = false,
     val showError: Boolean = false,
 ) {
 
-    fun updateText(text: String) = copy(text = text, isEdited = true, showError = false)
+    fun updateText(text: String) = copy(text = text, isInteractedWith = true, showError = false)
 
-    fun updateFocus(hasFocus: Boolean) = copy(isFocused = hasFocus, showError = !hasFocus && isEdited)
+    fun updateFocus(hasFocus: Boolean) = copy(
+        isFocused = hasFocus,
+        showError = !hasFocus && isInteractedWith,
+        isInteractedWith = true,
+    )
 }
