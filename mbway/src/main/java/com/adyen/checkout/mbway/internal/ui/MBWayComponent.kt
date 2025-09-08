@@ -47,9 +47,6 @@ internal class MBWayComponent(
 
     override fun submit() {
         if (viewStateManager.isValid) {
-            viewStateManager.update {
-                copy(isLoading = true)
-            }
             val paymentComponentState = viewStateManager.state.value.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 order = order,
@@ -87,6 +84,12 @@ internal class MBWayComponent(
             data = paymentComponentData,
             isValid = true,
         )
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        viewStateManager.update {
+            copy(isLoading = isLoading)
+        }
     }
 
     override fun onCountryChanged(newCountryCode: CountryModel) {
