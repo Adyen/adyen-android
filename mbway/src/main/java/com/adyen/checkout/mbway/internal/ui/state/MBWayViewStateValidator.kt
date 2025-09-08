@@ -33,19 +33,30 @@ internal class MBWayViewStateValidator : ViewStateValidator<MBWayViewState> {
     }
 
     override fun isValid(viewState: MBWayViewState): Boolean {
-        val validated = validate(viewState)
-        return validated.phoneNumber.errorMessage == null
+        return viewState.phoneNumber.errorMessage == null &&
+            viewState.test.errorMessage == null
     }
 
     override fun highlightAllValidationErrors(viewState: MBWayViewState): MBWayViewState {
-        val hasError = viewState.phoneNumber.errorMessage != null || viewState.test.errorMessage != null
+        val hasPhoneNumberError = viewState.phoneNumber.errorMessage != null
+        val hasTestError = viewState.test.errorMessage != null
 
-        if (hasError) {
-            return viewState.copy(
-                phoneNumber = viewState.phoneNumber.copy(showError = true, isFocused = true),
-                test = viewState.test.copy(showError = true, isFocused = false),
-            )
+        var didFocus = false
+        fun shouldFocus(hasError: Boolean): Boolean {
+            return if (hasError && !didFocus) {
+                didFocus = true
+                true
+            } else {
+                false
+            }
         }
-        return viewState
+
+        return viewState.copy(
+            phoneNumber = viewState.phoneNumber.copy(
+                showError = hasPhoneNumberError,
+                isFocused = shouldFocus(hasPhoneNumberError),
+            ),
+            test = viewState.test.copy(showError = hasTestError, isFocused = shouldFocus(hasTestError)),
+        )
     }
 }
