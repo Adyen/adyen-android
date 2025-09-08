@@ -17,8 +17,4 @@ internal interface MBWayChangeListener {
     fun onPhoneNumberChanged(newPhoneNumber: String)
 
     fun onPhoneNumberFocusChanged(hasFocus: Boolean)
-
-    fun onTestChanged(newTest: String)
-
-    fun onTestFocusChanged(hasFocus: Boolean)
 }

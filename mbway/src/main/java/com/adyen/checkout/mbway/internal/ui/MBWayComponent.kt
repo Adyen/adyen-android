@@ -110,18 +110,6 @@ internal class MBWayComponent(
         }
     }
 
-    override fun onTestChanged(newTest: String) {
-        viewStateManager.update {
-            copy(test = test.updateText(newTest))
-        }
-    }
-
-    override fun onTestFocusChanged(hasFocus: Boolean) {
-        viewStateManager.update {
-            copy(test = test.updateFocus(hasFocus))
-        }
-    }
-
     @Composable
     override fun ViewFactory(modifier: Modifier) {
         val viewState by viewStateManager.state.collectAsStateWithLifecycle()

@@ -21,42 +21,23 @@ internal class MBWayViewStateValidator : ViewStateValidator<MBWayViewState> {
         } else {
             null
         }
-        val testError = if (viewState.test.text.isEmpty()) {
-            R.string.checkout_mbway_phone_number_not_valid
-        } else {
-            null
-        }
         return viewState.copy(
             phoneNumber = viewState.phoneNumber.copy(errorMessage = phoneNumberError),
-            test = viewState.test.copy(errorMessage = testError),
         )
     }
 
     override fun isValid(viewState: MBWayViewState): Boolean {
-        return viewState.phoneNumber.errorMessage == null &&
-            viewState.test.errorMessage == null
+        return viewState.phoneNumber.errorMessage == null
     }
 
     override fun highlightAllValidationErrors(viewState: MBWayViewState): MBWayViewState {
         val hasPhoneNumberError = viewState.phoneNumber.errorMessage != null
-        val hasTestError = viewState.test.errorMessage != null
-
-        var didFocus = false
-        fun shouldFocus(hasError: Boolean): Boolean {
-            return if (hasError && !didFocus) {
-                didFocus = true
-                true
-            } else {
-                false
-            }
-        }
 
         return viewState.copy(
             phoneNumber = viewState.phoneNumber.copy(
                 showError = hasPhoneNumberError,
-                isFocused = shouldFocus(hasPhoneNumberError),
+                isFocused = hasPhoneNumberError,
             ),
-            test = viewState.test.copy(showError = hasTestError, isFocused = shouldFocus(hasTestError)),
         )
     }
 }

@@ -22,7 +22,6 @@ internal class MBWayViewStateFactory(
         countries = getSupportedCountries(componentParams),
         countryCode = getInitiallySelectedCountry(componentParams),
         phoneNumber = TextInputState(isFocused = true),
-        test = TextInputState(),
         isLoading = false,
     )
 

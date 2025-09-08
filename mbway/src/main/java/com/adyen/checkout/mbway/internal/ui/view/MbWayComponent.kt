@@ -94,29 +94,6 @@ internal fun MbWayComponent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             shouldFocus = viewState.phoneNumber.isFocused,
         )
-
-        // Test
-        val isError2 = viewState.test.errorMessage != null && viewState.test.showError
-        val supportingTextTest =
-            if (isError2) {
-                "The test is invalid"
-            } else {
-                null
-            }
-        CheckoutTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    changeListener.onTestFocusChanged(focusState.hasFocus)
-                },
-            label = "Test",
-            isError = isError2,
-            supportingText = supportingTextTest,
-            onValueChange = { value ->
-                changeListener.onTestChanged(value)
-            },
-            shouldFocus = viewState.test.isFocused,
-        )
     }
 
     // TODO - replace with actual navigation after it has been implemented
@@ -203,14 +180,11 @@ private fun MbWayComponentPreview() {
             isLoading = false,
             countryCode = countries.first(),
             phoneNumber = TextInputState(),
-            test = TextInputState(),
         ),
         changeListener = object : MBWayChangeListener {
             override fun onCountryChanged(newCountryCode: CountryModel) = Unit
             override fun onPhoneNumberChanged(newPhoneNumber: String) = Unit
             override fun onPhoneNumberFocusChanged(hasFocus: Boolean) = Unit
-            override fun onTestChanged(newTest: String) = Unit
-            override fun onTestFocusChanged(hasFocus: Boolean) = Unit
         },
     )
 }
@@ -229,7 +203,6 @@ private fun CountryCodeDialogPreview() {
             isLoading = false,
             countryCode = countries.first(),
             phoneNumber = TextInputState(),
-            test = TextInputState(),
         ),
         onCountrySelected = {},
     )

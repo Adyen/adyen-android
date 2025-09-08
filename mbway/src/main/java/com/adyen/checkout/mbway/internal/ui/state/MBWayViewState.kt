@@ -16,6 +16,5 @@ internal data class MBWayViewState(
     val countries: List<CountryModel>,
     val countryCode: CountryModel,
     val phoneNumber: TextInputState,
-    val test: TextInputState,
     val isLoading: Boolean,
 ) : ViewState
