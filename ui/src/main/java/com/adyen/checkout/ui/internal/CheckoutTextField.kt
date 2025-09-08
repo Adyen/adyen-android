@@ -46,7 +46,6 @@ import com.adyen.checkout.ui.theme.CheckoutElements
 import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.drop
 
 /**
  * A composable that provides a styled text field with Adyen's theming.
@@ -88,15 +87,17 @@ fun CheckoutTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     innerIndication: Indication? = null,
+    shouldFocus: Boolean = false,
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val state = rememberTextFieldState(initialValue)
+    val focusRequester = remember { FocusRequester() }
     BasicTextField(
         state = state,
-        modifier = modifier,
+        modifier = modifier.focusRequester(focusRequester),
         enabled = enabled,
         inputTransformation = inputTransformation,
         outputTransformation = outputTransformation,
@@ -129,10 +130,15 @@ fun CheckoutTextField(
         val currentOnValueChange by rememberUpdatedState(onValueChange)
         LaunchedEffect(state) {
             snapshotFlow { state.text }
-                .drop(1)
                 .collectLatest { value ->
                     currentOnValueChange(value.toString())
                 }
+        }
+    }
+
+    LaunchedEffect(shouldFocus) {
+        if (shouldFocus) {
+            focusRequester.requestFocus()
         }
     }
 }

@@ -92,6 +92,7 @@ internal fun MbWayComponent(
             },
             inputTransformation = DigitOnlyInputTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shouldFocus = viewState.phoneNumber.isFocused,
         )
 
         // Test
@@ -114,6 +115,7 @@ internal fun MbWayComponent(
             onValueChange = { value ->
                 changeListener.onTestChanged(value)
             },
+            shouldFocus = viewState.test.isFocused,
         )
     }
 
