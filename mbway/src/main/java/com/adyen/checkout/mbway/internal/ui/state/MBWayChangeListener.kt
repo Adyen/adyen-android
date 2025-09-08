@@ -10,11 +10,15 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 
-internal interface InputChangeListener {
+internal interface MBWayChangeListener {
 
     fun onCountryChanged(newCountryCode: CountryModel)
 
     fun onPhoneNumberChanged(newPhoneNumber: String)
 
+    fun onPhoneNumberFocusChanged(hasFocus: Boolean)
+
     fun onTestChanged(newTest: String)
+
+    fun onTestFocusChanged(hasFocus: Boolean)
 }

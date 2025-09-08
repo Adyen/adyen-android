@@ -21,11 +21,9 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.FocusChangeListener
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
-import com.adyen.checkout.mbway.internal.ui.state.InputChangeListener
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
@@ -41,8 +39,7 @@ internal class MBWayComponent(
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
-    InputChangeListener,
-    FocusChangeListener<MBWayFieldId> {
+    MBWayChangeListener {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
@@ -104,26 +101,21 @@ internal class MBWayComponent(
         }
     }
 
+    override fun onPhoneNumberFocusChanged(hasFocus: Boolean) {
+        viewStateManager.update {
+            copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
+        }
+    }
+
     override fun onTestChanged(newTest: String) {
         viewStateManager.update {
             copy(test = test.updateText(newTest))
         }
     }
 
-    override fun onFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) {
-        when (fieldId) {
-            MBWayFieldId.COUNTRY_CODE -> Unit
-            MBWayFieldId.PHONE_NUMBER -> {
-                viewStateManager.update {
-                    copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
-                }
-            }
-
-            MBWayFieldId.TEST -> {
-                viewStateManager.update {
-                    copy(test = test.updateFocus(hasFocus))
-                }
-            }
+    override fun onTestFocusChanged(hasFocus: Boolean) {
+        viewStateManager.update {
+            copy(test = test.updateFocus(hasFocus))
         }
     }
 
@@ -140,8 +132,7 @@ internal class MBWayComponent(
         ) {
             MbWayComponent(
                 viewState = viewState,
-                inputChangeListener = this,
-                focusChangeListener = this,
+                changeListener = this,
             )
         }
     }
