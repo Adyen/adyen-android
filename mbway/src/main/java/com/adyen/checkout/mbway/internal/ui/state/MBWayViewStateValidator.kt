@@ -15,6 +15,7 @@ import com.adyen.checkout.mbway.R
 internal class MBWayViewStateValidator : ViewStateValidator<MBWayViewState> {
 
     override fun validate(viewState: MBWayViewState): MBWayViewState {
+        // TODO - Should we strip the leading zeros? Depends on validation
         val telephoneNumber = viewState.countryCode.callingCode + viewState.phoneNumber.text
         val phoneNumberError = if (!ValidationUtils.isPhoneNumberValid(telephoneNumber)) {
             R.string.checkout_mbway_phone_number_not_valid
