@@ -42,7 +42,10 @@ data class MerchantInfo(
                     JSONObject().apply {
                         putOpt(MERCHANT_NAME, modelObject.merchantName)
                         putOpt(MERCHANT_ID, modelObject.merchantId)
-                        putOpt(SOFTWARE_INFO, modelObject.softwareInfo)
+                        putOpt(
+                            SOFTWARE_INFO,
+                            ModelUtils.serializeOpt(modelObject.softwareInfo, SoftwareInfo.SERIALIZER),
+                        )
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(MerchantInfo::class.java, e)
@@ -52,7 +55,10 @@ data class MerchantInfo(
             override fun deserialize(jsonObject: JSONObject) = MerchantInfo(
                 merchantName = jsonObject.getStringOrNull(MERCHANT_NAME),
                 merchantId = jsonObject.getStringOrNull(MERCHANT_ID),
-                softwareInfo = ModelUtils.deserializeOpt(jsonObject.optJSONObject(SOFTWARE_INFO), SoftwareInfo.SERIALIZER),
+                softwareInfo = ModelUtils.deserializeOpt(
+                    jsonObject.optJSONObject(SOFTWARE_INFO),
+                    SoftwareInfo.SERIALIZER,
+                ),
             )
         }
     }

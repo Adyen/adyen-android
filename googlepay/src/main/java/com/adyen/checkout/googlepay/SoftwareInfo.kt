@@ -7,9 +7,8 @@
  */
 package com.adyen.checkout.googlepay
 
-import com.adyen.checkout.core.exception.ModelSerializationException
-import com.adyen.checkout.core.internal.data.model.ModelObject
-import com.adyen.checkout.core.internal.data.model.getString
+import com.adyen.checkout.core.old.exception.ModelSerializationException
+import com.adyen.checkout.core.old.internal.data.model.ModelObject
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -23,8 +22,8 @@ import org.json.JSONObject
  */
 @Parcelize
 data class SoftwareInfo(
-    var id: String,
-    var version: String,
+    val id: String,
+    val version: String,
 ) : ModelObject() {
 
     companion object {
@@ -36,18 +35,22 @@ data class SoftwareInfo(
             override fun serialize(modelObject: SoftwareInfo): JSONObject {
                 return try {
                     JSONObject().apply {
-                        putOpt(SOFTWARE_ID, modelObject.id)
-                        putOpt(SOFTWARE_VERSION, modelObject.version)
+                        put(SOFTWARE_ID, modelObject.id)
+                        put(SOFTWARE_VERSION, modelObject.version)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(SoftwareInfo::class.java, e)
                 }
             }
 
-            override fun deserialize(jsonObject: JSONObject) = SoftwareInfo(
-                id = jsonObject.getString(SOFTWARE_ID),
-                version = jsonObject.getString(SOFTWARE_VERSION),
-            )
+            override fun deserialize(jsonObject: JSONObject) = try {
+                SoftwareInfo(
+                    id = jsonObject.getString(SOFTWARE_ID),
+                    version = jsonObject.getString(SOFTWARE_VERSION),
+                )
+            } catch (e: JSONException) {
+                throw ModelSerializationException(SoftwareInfo::class.java, e)
+            }
         }
     }
 }
