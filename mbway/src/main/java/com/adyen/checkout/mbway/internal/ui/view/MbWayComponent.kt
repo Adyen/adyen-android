@@ -84,6 +84,7 @@ internal fun MbWayComponent(
                     changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
                 },
             label = "Phone Number",
+            initialValue = viewState.phoneNumber.text,
             isError = isError,
             supportingText = supportingTextPhoneNumber,
             prefix = country.callingCode,
