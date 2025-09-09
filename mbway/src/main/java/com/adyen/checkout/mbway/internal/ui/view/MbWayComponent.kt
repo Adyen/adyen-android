@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,13 +71,13 @@ internal fun MbWayComponent(
         )
 
         // PhoneNumber
-        val isError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
-        val supportingTextPhoneNumber =
-            if (isError) {
-                "The phone number is invalid"
-            } else {
-                null
-            }
+        val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
+        val supportingTextPhoneNumber = if (showPhoneNumberError) {
+            viewState.phoneNumber.errorMessage?.let { stringResource(it) }
+        } else {
+            null
+        }
+
         CheckoutTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -85,7 +86,7 @@ internal fun MbWayComponent(
                 },
             label = "Phone Number",
             initialValue = viewState.phoneNumber.text,
-            isError = isError,
+            isError = showPhoneNumberError,
             supportingText = supportingTextPhoneNumber,
             prefix = country.callingCode,
             onValueChange = { value ->
