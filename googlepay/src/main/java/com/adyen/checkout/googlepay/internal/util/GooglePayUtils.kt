@@ -7,12 +7,17 @@
  */
 package com.adyen.checkout.googlepay.internal.util
 
+import androidx.annotation.RestrictTo
+import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.util.AmountFormat
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
+import com.adyen.checkout.googlepay.BuildConfig
+import com.adyen.checkout.googlepay.MerchantInfo
+import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel
@@ -61,9 +66,6 @@ internal object GooglePayUtils {
     private const val TOKEN = "token"
     private const val NOT_CURRENTLY_KNOWN = "NOT_CURRENTLY_KNOWN"
 
-    // Library information
-    private const val LIBRARY_SOFTWARE_ID = "android/adyen-dropin"
-
     /**
      * Create a [com.google.android.gms.wallet.Wallet.WalletOptions] based on the component configuration.
      *
@@ -98,9 +100,6 @@ internal object GooglePayUtils {
      */
     fun createPaymentDataRequest(params: GooglePayComponentParams): PaymentDataRequest {
         val paymentDataRequestModel = createPaymentDataRequestModel(params)
-
-        // TODO: Populate the softwareInfo property in MerchantInfo with the name and version of the library
-
         val requestJsonString = PaymentDataRequestModel.SERIALIZER.serialize(paymentDataRequestModel).toString()
         return PaymentDataRequest.fromJson(requestJsonString)
     }
@@ -173,12 +172,26 @@ internal object GooglePayUtils {
         return PaymentDataRequestModel(
             apiVersion = MAJOR_API_VERSION,
             apiVersionMinor = MINOT_API_VERSION,
-            merchantInfo = params.merchantInfo,
+            merchantInfo = params.merchantInfo?.addSoftwareInfo(params),
             transactionInfo = createTransactionInfo(params),
             allowedPaymentMethods = getAllowedPaymentMethods(params),
             isEmailRequired = params.isEmailRequired,
             isShippingAddressRequired = params.isShippingAddressRequired,
             shippingAddressParameters = params.shippingAddressParameters,
+        )
+    }
+
+    private fun MerchantInfo.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
+        val integrationType = if (params.isCreatedByDropIn) {
+            IntegrationType.DROP_IN
+        } else {
+            IntegrationType.COMPONENTS
+        }
+        return copy(
+            softwareInfo = SoftwareInfo(
+                id = "${GooglePayParams.platform.value}/${integrationType.value}",
+                version = GooglePayParams.version,
+            ),
         )
     }
 
@@ -236,5 +249,39 @@ internal object GooglePayUtils {
             val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimalAmount)
             totalPrice = displayAmount
         }
+    }
+
+    private enum class IntegrationType(val value: String) {
+        DROP_IN("adyen-dropin"),
+        COMPONENTS("adyen-components"),
+    }
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class GooglePayPlatform(val value: String) {
+    ANDROID("android"),
+    FLUTTER("flutter"),
+    REACT_NATIVE("react-native"),
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object GooglePayParams {
+
+    internal var platform: GooglePayPlatform = GooglePayPlatform.ANDROID
+    internal var version: String = BuildConfig.CHECKOUT_VERSION
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun overrideForCrossPlatform(
+        platform: GooglePayPlatform,
+        version: String,
+    ) {
+        this.platform = platform
+        this.version = version
+    }
+
+    @VisibleForTesting
+    internal fun resetDefaults() {
+        platform = GooglePayPlatform.ANDROID
+        version = BuildConfig.CHECKOUT_VERSION
     }
 }
