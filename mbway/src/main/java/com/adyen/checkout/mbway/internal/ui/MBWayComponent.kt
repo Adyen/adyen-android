@@ -41,7 +41,7 @@ import kotlinx.coroutines.flow.stateIn
 @Suppress("UnusedPrivateProperty")
 internal class MBWayComponent(
     private val coroutineScope: CoroutineScope,
-    private val componentParams: ComponentParams,
+    override val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,

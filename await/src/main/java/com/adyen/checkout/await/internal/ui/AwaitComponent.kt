@@ -27,6 +27,7 @@ import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
@@ -42,7 +43,7 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 
 // TODO - Write tests
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class AwaitComponent(
     private val action: AwaitAction,
     private val coroutineScope: CoroutineScope,
@@ -50,6 +51,7 @@ internal class AwaitComponent(
     private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
+    override val componentParams: ComponentParams,
 ) : ActionComponent, StatusPollingComponent {
 
     private var statusPollingJob: Job? = null
