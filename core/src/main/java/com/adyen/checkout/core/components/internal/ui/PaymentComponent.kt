@@ -26,4 +26,6 @@ interface PaymentComponent<T : BasePaymentComponentState> : EventComponent<Payme
     fun ViewFactory(modifier: Modifier)
 
     fun submit()
+
+    fun setLoading(isLoading: Boolean)
 }

@@ -14,6 +14,7 @@ object ValidationUtils {
         "^(([a-z0-9!#$%&'*+\\-/=?^_`{|}~]+(\\.[a-z0-9!#$%&'*+\\-/=?^_`{|}~]+)*)|(\".+\"))@((\\[((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}])|((?!-)[a-z0-9-]{1,63}(?<!-)(\\.[a-z0-9-]{1,63}(?<!-))*\\.[a-z]{2,}))$"
     private val EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE)
 
+    // TODO -Check if this regex still holds up. Phone numbers can be longer than 14 digits for example
     private const val PHONE_REGEX = "^\\D*(\\d\\D*){9,14}$"
     private val PHONE_PATTERN = Pattern.compile(PHONE_REGEX)
 

@@ -29,14 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.FieldChangeListener
-import com.adyen.checkout.core.components.internal.ui.state.model.ViewFieldState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayFieldId
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.BodyEmphasized
@@ -52,7 +52,7 @@ import com.adyen.checkout.ui.internal.ValuePickerField
 @Composable
 internal fun MbWayComponent(
     viewState: MBWayViewState,
-    fieldChangeListener: FieldChangeListener<MBWayFieldId>,
+    changeListener: MBWayChangeListener,
     modifier: Modifier = Modifier,
 ) {
     var showCountryCodeDialog by remember { mutableStateOf(false) }
@@ -61,46 +61,40 @@ internal fun MbWayComponent(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
     ) {
         // CountryCode
-        val supportingTextCountryCode = if (viewState.countryCodeFieldState.errorMessageId != null) {
-            "The country code is invalid"
-        } else {
-            null
-        }
-        val country = viewState.countryCodeFieldState.value
+        val country = viewState.countryCode
         ValuePickerField(
             value = "${country.callingCode} • ${country.countryName}",
             label = "Country Code",
-            supportingText = supportingTextCountryCode,
-            isError = viewState.countryCodeFieldState.errorMessageId != null,
             onClick = { showCountryCodeDialog = true },
             modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    fieldChangeListener.onFieldFocusChanged(MBWayFieldId.COUNTRY_CODE, focusState.hasFocus)
-                },
+                .fillMaxWidth(),
         )
 
         // PhoneNumber
-        val supportingTextPhoneNumber = if (viewState.phoneNumberFieldState.errorMessageId != null) {
-            "The phone number is invalid"
+        val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
+        val supportingTextPhoneNumber = if (showPhoneNumberError) {
+            viewState.phoneNumber.errorMessage?.let { stringResource(it) }
         } else {
             null
         }
+
         CheckoutTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .onFocusChanged { focusState ->
-                    fieldChangeListener.onFieldFocusChanged(MBWayFieldId.PHONE_NUMBER, focusState.hasFocus)
+                    changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
                 },
             label = "Phone Number",
-            isError = viewState.phoneNumberFieldState.errorMessageId != null,
+            initialValue = viewState.phoneNumber.text,
+            isError = showPhoneNumberError,
             supportingText = supportingTextPhoneNumber,
             prefix = country.callingCode,
             onValueChange = { value ->
-                fieldChangeListener.onFieldValueChanged(MBWayFieldId.PHONE_NUMBER, value)
+                changeListener.onPhoneNumberChanged(value)
             },
             inputTransformation = DigitOnlyInputTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            shouldFocus = viewState.phoneNumber.isFocused,
         )
     }
 
@@ -109,7 +103,7 @@ internal fun MbWayComponent(
         CountryCodeDialog(
             onDismissRequest = { showCountryCodeDialog = false },
             viewState = viewState,
-            fieldChangeListener = fieldChangeListener,
+            onCountrySelected = changeListener::onCountryChanged,
         )
     }
 }
@@ -119,7 +113,7 @@ internal fun MbWayComponent(
 private fun CountryCodeDialog(
     onDismissRequest: () -> Unit,
     viewState: MBWayViewState,
-    fieldChangeListener: FieldChangeListener<MBWayFieldId>,
+    onCountrySelected: (CountryModel) -> Unit,
 ) {
     FullScreenDialog(
         onDismissRequest = onDismissRequest,
@@ -129,7 +123,7 @@ private fun CountryCodeDialog(
             modifier = Modifier.padding(Dimensions.Large),
         ) {
             viewState.countries.forEach { country ->
-                val isSelected = country == viewState.countryCodeFieldState.value
+                val isSelected = country == viewState.countryCode
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -146,7 +140,7 @@ private fun CountryCodeDialog(
                             interactionSource = null,
                             indication = ripple(color = CheckoutThemeProvider.colors.text),
                         ) {
-                            fieldChangeListener.onFieldValueChanged(MBWayFieldId.COUNTRY_CODE, country)
+                            onCountrySelected(country)
                             onDismissRequest()
                         }
                         .fillMaxWidth()
@@ -186,13 +180,13 @@ private fun MbWayComponentPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCodeFieldState = ViewFieldState(countries.first(), false),
-            phoneNumberFieldState = ViewFieldState("", false),
+            countryCode = countries.first(),
+            phoneNumber = TextInputState(),
         ),
-        fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
-            override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
-
-            override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) = Unit
+        changeListener = object : MBWayChangeListener {
+            override fun onCountryChanged(newCountryCode: CountryModel) = Unit
+            override fun onPhoneNumberChanged(newPhoneNumber: String) = Unit
+            override fun onPhoneNumberFocusChanged(hasFocus: Boolean) = Unit
         },
     )
 }
@@ -209,13 +203,9 @@ private fun CountryCodeDialogPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCodeFieldState = ViewFieldState(countries.first(), false),
-            phoneNumberFieldState = ViewFieldState("", false),
+            countryCode = countries.first(),
+            phoneNumber = TextInputState(),
         ),
-        fieldChangeListener = object : FieldChangeListener<MBWayFieldId> {
-            override fun <T> onFieldValueChanged(fieldId: MBWayFieldId, value: T) = Unit
-
-            override fun onFieldFocusChanged(fieldId: MBWayFieldId, hasFocus: Boolean) = Unit
-        },
+        onCountrySelected = {},
     )
 }

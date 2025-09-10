@@ -30,4 +30,6 @@ internal class TestPaymentComponent(
 
     override val eventFlow: Flow<PaymentComponentEvent<BasePaymentComponentState>>
         get() = flowOf()
+
+    override fun setLoading(isLoading: Boolean) = Unit
 }
