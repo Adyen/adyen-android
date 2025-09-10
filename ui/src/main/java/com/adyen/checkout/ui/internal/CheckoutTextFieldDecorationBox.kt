@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
  * the supporting text and border might change color to reflect an error.
  * @param interactionSource The [MutableInteractionSource] representing the stream of
  * interactions for this text field, used to determine focus state and apply indications.
- * @param indication An optional [Indication] that will be used for the background of the
+ * @param innerIndication An optional [Indication] that will be used for the background of the
  * text field. If `null`, no indication will be applied.
  * @param style The [InternalTextFieldStyle] that defines the visual appearance of the
  * text field, including colors, corner radius, and text styles.
@@ -64,8 +64,9 @@ internal fun CheckoutTextFieldDecorationBox(
     supportingText: String?,
     isError: Boolean,
     interactionSource: MutableInteractionSource,
-    indication: Indication?,
+    innerIndication: Indication?,
     style: InternalTextFieldStyle,
+    modifier: Modifier = Modifier,
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -73,6 +74,7 @@ internal fun CheckoutTextFieldDecorationBox(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
+        modifier = modifier,
     ) {
         val labelColor = if (isFocused) style.activeColor else style.textColor
         SubHeadline(
@@ -84,7 +86,7 @@ internal fun CheckoutTextFieldDecorationBox(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .clip(RoundedCornerShape(style.cornerRadius.dp))
-                .indication(interactionSource, indication)
+                .indication(interactionSource, innerIndication)
                 .styledBackground(style, isFocused, isError)
                 .fillMaxWidth()
                 .heightIn(Dimensions.MinTouchTarget)

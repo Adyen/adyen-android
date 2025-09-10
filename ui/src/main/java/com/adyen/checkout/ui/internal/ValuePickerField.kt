@@ -10,10 +10,7 @@ package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,14 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.input.pointer.PointerEventPass
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -62,31 +51,18 @@ fun ValuePickerField(
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-    CheckoutTextField(
-        initialValue = value,
+
+    CheckoutTextFieldDecorationBox(
         label = label,
-        // Because we disable the CheckoutTextField we need to override focus and input events
-        modifier = modifier
-            .focusable(interactionSource = interactionSource)
-            .pointerInput(onClick) {
-                awaitEachGesture {
-                    awaitFirstDown(pass = PointerEventPass.Initial)
-                    val up = waitForUpOrCancellation(pass = PointerEventPass.Initial)
-                    if (up != null) {
-                        onClick()
-                    }
-                }
-            }
-            .onKeyEvent { event ->
-                if (event.type == KeyEventType.KeyUp && event.isEnter) {
-                    onClick()
-                    return@onKeyEvent true
-                }
-                return@onKeyEvent false
-            },
-        enabled = false,
+        innerTextField = {
+            Body(value)
+        },
         supportingText = supportingText,
         isError = isError,
+        interactionSource = interactionSource,
+        innerIndication = ripple(color = style.textColor),
+        style = style,
+        prefix = null,
         trailingIcon = {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.ic_chevron_right),
@@ -94,20 +70,14 @@ fun ValuePickerField(
                 tint = style.textColor,
             )
         },
-        interactionSource = interactionSource,
-        innerIndication = ripple(color = style.textColor),
+        modifier = modifier.clickable(
+            interactionSource = interactionSource,
+            // Remove the default indication to not show a ripple over the whole composable
+            indication = null,
+            onClick = onClick,
+        ),
     )
 }
-
-private val KeyEvent.isEnter: Boolean
-    get() = when (key) {
-        Key.DirectionCenter,
-        Key.Enter,
-        Key.NumPadEnter,
-        Key.Spacebar -> true
-
-        else -> false
-    }
 
 @Preview
 @Composable

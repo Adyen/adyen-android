@@ -118,7 +118,7 @@ fun CheckoutTextField(
                 supportingText = supportingText,
                 isError = isError,
                 interactionSource = interactionSource,
-                indication = innerIndication,
+                innerIndication = innerIndication,
                 prefix = prefix,
                 trailingIcon = trailingIcon,
                 style = style,
