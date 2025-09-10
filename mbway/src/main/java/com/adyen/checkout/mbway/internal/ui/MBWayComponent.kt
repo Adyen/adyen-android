@@ -60,6 +60,7 @@ internal class MBWayComponent(
         }
     }
 
+    // TODO - After card, decide if we should extract this function
     private fun MBWayViewState.toPaymentComponentState(
         checkoutAttemptId: String,
         order: OrderRequest?,
