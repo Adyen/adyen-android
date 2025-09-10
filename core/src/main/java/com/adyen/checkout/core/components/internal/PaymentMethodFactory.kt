@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
@@ -22,6 +23,7 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
      *
      * @param coroutineScope Coroutine Scope.
      * @param checkoutConfiguration Checkout Configuration.
+     * @param commonComponentParams Configuration from the component.
      * @param componentSessionParams Configuration from Sessions.
      *
      * @return A [PaymentComponent] instance.
@@ -29,6 +31,7 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
     fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
+        commonComponentParams: CommonComponentParams,
 
         // TODO - Remove dependency to SessionParams. Investigate separating ComponentParams into two:
         //  CheckoutParams and PaymentMethodParams to reflect the structure in CheckoutConfiguration.

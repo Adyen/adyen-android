@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
@@ -34,6 +35,7 @@ object PaymentMethodProvider {
      * @param txVariant The payment method type to be handled.
      * @param coroutineScope The [CoroutineScope] to be used by the component.
      * @param checkoutConfiguration The global checkout configuration.
+     * @param commonComponentParams The [CommonComponentParams] from the component.
      * @param componentSessionParams The [SessionParams] from Sessions.
      *
      * @return [PaymentComponent] for given txVariant.
@@ -42,12 +44,14 @@ object PaymentMethodProvider {
         txVariant: String,
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
+        commonComponentParams: CommonComponentParams,
         componentSessionParams: SessionParams?,
     ): PaymentComponent<BasePaymentComponentState> {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
+            commonComponentParams = commonComponentParams,
             componentSessionParams = componentSessionParams,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()

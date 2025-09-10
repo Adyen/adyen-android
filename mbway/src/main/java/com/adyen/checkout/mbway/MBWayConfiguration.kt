@@ -13,9 +13,10 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.mbway.internal.ui.MBWayComponent
 import kotlinx.parcelize.Parcelize
 
-// TODO - Change MBWayComponent to the new name
+// TODO - Implement MBWayConfigurationBuilder
 /**
  * Configuration class for the [MBWayComponent].
  */

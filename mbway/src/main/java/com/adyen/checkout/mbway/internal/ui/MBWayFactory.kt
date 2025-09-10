@@ -12,7 +12,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
@@ -20,29 +20,19 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, MBWayComponent> {
 
     override fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
+        commonComponentParams: CommonComponentParams,
         componentSessionParams: SessionParams?,
     ): MBWayComponent {
-        val componentParams = CommonComponentParamsMapper().mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
-
-            // TODO - Add locale support, For now it's hardcoded to US
-            // deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
-            dropInOverrideParams = null,
-            componentSessionParams = componentSessionParams,
-        ).commonComponentParams
-
         // TODO - Analytics to be passed later, given that Drop-in might pass its own AnalyticsManager?
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
         val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = componentParams,
+            componentParams = commonComponentParams,
             application = null,
             source = AnalyticsSource.PaymentComponent(PaymentMethodTypes.MB_WAY),
             // TODO - When we move out componentParams logic creation to the payment facilitator
@@ -51,12 +41,12 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         )
 
         val stateManager = DefaultViewStateManager(
-            factory = MBWayViewStateFactory(componentParams),
+            factory = MBWayViewStateFactory(commonComponentParams),
             validator = MBWayViewStateValidator(),
         )
 
         return MBWayComponent(
-            componentParams = componentParams,
+            componentParams = commonComponentParams,
             analyticsManager = analyticsManager,
             viewStateManager = stateManager,
             // TODO - Order to be passed later
