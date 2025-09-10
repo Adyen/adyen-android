@@ -19,10 +19,9 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.components.internal.data.api.DefaultStatusRepository
 import com.adyen.checkout.core.components.internal.data.api.StatusService
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 internal class AwaitFactory : ActionFactory<AwaitComponent> {
 
@@ -32,6 +31,7 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
+        commonComponentParams: CommonComponentParams,
     ): AwaitComponent {
         if (action !is AwaitAction) {
 //          TODO - Error Propagation
@@ -39,18 +39,9 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
             throw RuntimeException("Unsupported action")
         }
 
-        val componentParams = CommonComponentParamsMapper().mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
-            // TODO - Add locale support, For now it's hardcoded to US
-            // deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
-            dropInOverrideParams = null,
-            componentSessionParams = null,
-        ).commonComponentParams
-
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
         val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = componentParams,
+            componentParams = commonComponentParams,
             application = null,
             // TODO - Analytics. When we move the analyticsManager, the source can also be adjusted
             source = AnalyticsSource.PaymentComponent("AwaitAction"),
@@ -60,9 +51,9 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
         )
 
         val redirectHandler = DefaultRedirectHandler()
-        val httpClient = HttpClientFactory.getHttpClient(componentParams.environment)
+        val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
         val statusService = StatusService(httpClient)
-        val statusRepository = DefaultStatusRepository(statusService, componentParams.clientKey)
+        val statusRepository = DefaultStatusRepository(statusService, commonComponentParams.clientKey)
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
 
         return AwaitComponent(
@@ -72,7 +63,7 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
             redirectHandler = redirectHandler,
             statusRepository = statusRepository,
             paymentDataRepository = paymentDataRepository,
-            componentParams = componentParams,
+            componentParams = commonComponentParams,
         )
     }
 }

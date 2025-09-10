@@ -13,7 +13,9 @@ import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import kotlinx.coroutines.CoroutineScope
+import java.util.Locale
 
 internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutConfiguration: CheckoutConfiguration,
@@ -23,11 +25,21 @@ internal class AdvancedPaymentFacilitatorFactory(
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
+        val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+
+            // TODO - Add locale support, For now it's hardcoded to US
+            // deviceLocale = localeProvider.getLocale(application)
+            deviceLocale = Locale.US,
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+        )
+
         val paymentComponent = PaymentMethodProvider.get(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-            componentSessionParams = null,
+            componentParamsBundle = componentParamsBundle,
         )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
@@ -37,6 +49,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
+            commonComponentParams = componentParamsBundle.commonComponentParams,
         )
 
         return PaymentFacilitator(

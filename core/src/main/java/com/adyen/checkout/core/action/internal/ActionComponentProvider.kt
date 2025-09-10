@@ -13,6 +13,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
 
@@ -44,6 +45,7 @@ object ActionComponentProvider {
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
+        commonComponentParams: CommonComponentParams,
     ): ActionComponent {
         return factories[action.type]?.create(
             // TODO - Action: Think about the case if merchants want to use the same action component
@@ -52,6 +54,7 @@ object ActionComponentProvider {
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
+            commonComponentParams = commonComponentParams,
         ) ?: run {
             error("Factory for action type: ${action.type} is not registered.")
         }

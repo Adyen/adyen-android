@@ -13,7 +13,8 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.components.internal.ui.model.generateComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -82,7 +83,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                componentSessionParams = null,
+                componentParamsBundle = generateComponentParamsBundle(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -106,7 +107,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                componentSessionParams = null,
+                componentParamsBundle = generateComponentParamsBundle(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             Assert.assertSame(component, actualComponent)
@@ -119,7 +120,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "unregistered_txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                componentSessionParams = null,
+                componentParamsBundle = generateComponentParamsBundle(),
             )
         }
     }
@@ -141,7 +142,7 @@ internal class PaymentMethodProviderTest(
             override fun create(
                 coroutineScope: CoroutineScope,
                 checkoutConfiguration: CheckoutConfiguration,
-                componentSessionParams: SessionParams?
+                componentParamsBundle: ComponentParamsBundle,
             ) = paymentComponent
         }
 

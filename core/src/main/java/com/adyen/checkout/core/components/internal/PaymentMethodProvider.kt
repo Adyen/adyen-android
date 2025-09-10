@@ -12,6 +12,8 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 import java.util.concurrent.ConcurrentHashMap
@@ -34,7 +36,7 @@ object PaymentMethodProvider {
      * @param txVariant The payment method type to be handled.
      * @param coroutineScope The [CoroutineScope] to be used by the component.
      * @param checkoutConfiguration The global checkout configuration.
-     * @param componentSessionParams The [SessionParams] from Sessions.
+     * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
      *
      * @return [PaymentComponent] for given txVariant.
      */
@@ -42,13 +44,13 @@ object PaymentMethodProvider {
         txVariant: String,
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
-        componentSessionParams: SessionParams?,
+        componentParamsBundle: ComponentParamsBundle,
     ): PaymentComponent<BasePaymentComponentState> {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-            componentSessionParams = componentSessionParams,
+            componentParamsBundle = componentParamsBundle,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")
