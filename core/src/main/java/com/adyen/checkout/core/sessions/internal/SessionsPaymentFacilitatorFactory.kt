@@ -62,7 +62,7 @@ internal class SessionsPaymentFacilitatorFactory(
                 componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
             )
 
-        val commonComponentParamsMapperData = CommonComponentParamsMapper().mapToParams(
+        val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
 
             // TODO - Add locale support, For now it's hardcoded to US
@@ -76,13 +76,13 @@ internal class SessionsPaymentFacilitatorFactory(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-            commonComponentParamsMapperData = commonComponentParamsMapperData,
+            componentParamsBundle = componentParamsBundle,
         )
 
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
-            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
+            commonComponentParams = componentParamsBundle.commonComponentParams,
         )
 
         return PaymentFacilitator(

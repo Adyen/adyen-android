@@ -17,7 +17,7 @@ import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Suppress("LongParameterList")
-fun generateCommonComponentParamsMapperData(
+fun generateComponentParamsBundle(
     shopperLocale: Locale = Locale("nl", "NL"),
     environment: Environment = Environment.TEST,
     clientKey: String = "test_qwertyuiopasdfghjklzxcvbnmqwerty",
@@ -28,7 +28,7 @@ fun generateCommonComponentParamsMapperData(
     isCreatedByDropIn: Boolean = false,
     amount: Amount? = null,
     isSubmitButtonVisible: Boolean = true,
-) = CommonComponentParamsMapperData(
+) = ComponentParamsBundle(
     commonComponentParams = generateCommonComponentParams(
         shopperLocale = shopperLocale,
         environment = environment,

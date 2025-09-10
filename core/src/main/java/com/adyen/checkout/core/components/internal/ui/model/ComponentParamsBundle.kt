@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class CommonComponentParamsMapperData(
+data class ComponentParamsBundle(
     val commonComponentParams: CommonComponentParams,
     val sessionParams: SessionParams?,
 )

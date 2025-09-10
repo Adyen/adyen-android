@@ -12,7 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapperData
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
@@ -24,13 +24,13 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
      *
      * @param coroutineScope Coroutine Scope.
      * @param checkoutConfiguration Checkout Configuration.
-     * @param commonComponentParamsMapperData The object which contains [CommonComponentParams] and [SessionParams].
+     * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
      *
      * @return A [PaymentComponent] instance.
      */
     fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
-        commonComponentParamsMapperData: CommonComponentParamsMapperData,
+        componentParamsBundle: ComponentParamsBundle,
     ): T
 }
