@@ -13,8 +13,8 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.model.generateCommonComponentParams
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapperData
+import com.adyen.checkout.core.components.internal.ui.model.generateCommonComponentParamsMapperData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -83,8 +83,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                commonComponentParams = generateCommonComponentParams(),
-                componentSessionParams = null,
+                commonComponentParamsMapperData = generateCommonComponentParamsMapperData(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -108,8 +107,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                commonComponentParams = generateCommonComponentParams(),
-                componentSessionParams = null,
+                commonComponentParamsMapperData = generateCommonComponentParamsMapperData(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             Assert.assertSame(component, actualComponent)
@@ -122,8 +120,7 @@ internal class PaymentMethodProviderTest(
                 txVariant = "unregistered_txVariant",
                 coroutineScope = this,
                 checkoutConfiguration = generateCheckoutConfiguration(),
-                commonComponentParams = generateCommonComponentParams(),
-                componentSessionParams = null,
+                commonComponentParamsMapperData = generateCommonComponentParamsMapperData(),
             )
         }
     }
@@ -145,8 +142,7 @@ internal class PaymentMethodProviderTest(
             override fun create(
                 coroutineScope: CoroutineScope,
                 checkoutConfiguration: CheckoutConfiguration,
-                commonComponentParams: CommonComponentParams,
-                componentSessionParams: SessionParams?,
+                commonComponentParamsMapperData: CommonComponentParamsMapperData,
             ) = paymentComponent
         }
 

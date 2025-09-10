@@ -25,7 +25,7 @@ internal class AdvancedPaymentFacilitatorFactory(
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
-        val componentParamsData = CommonComponentParamsMapper().mapToParams(
+        val commonComponentParamsMapperData = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
 
             // TODO - Add locale support, For now it's hardcoded to US
@@ -39,8 +39,7 @@ internal class AdvancedPaymentFacilitatorFactory(
             txVariant = txVariant,
             coroutineScope = coroutineScope,
             checkoutConfiguration = checkoutConfiguration,
-            commonComponentParams = componentParamsData.commonComponentParams,
-            componentSessionParams = null,
+            commonComponentParamsMapperData = commonComponentParamsMapperData,
         )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
@@ -50,7 +49,7 @@ internal class AdvancedPaymentFacilitatorFactory(
         val actionProvider = ActionProvider(
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
-            commonComponentParams = componentParamsData.commonComponentParams,
+            commonComponentParams = commonComponentParamsMapperData.commonComponentParams,
         )
 
         return PaymentFacilitator(

@@ -12,10 +12,9 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapperData
 import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
-import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
@@ -26,13 +25,12 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
     override fun create(
         coroutineScope: CoroutineScope,
         checkoutConfiguration: CheckoutConfiguration,
-        commonComponentParams: CommonComponentParams,
-        componentSessionParams: SessionParams?,
+        commonComponentParamsMapperData: CommonComponentParamsMapperData,
     ): MBWayComponent {
         // TODO - Analytics to be passed later, given that Drop-in might pass its own AnalyticsManager?
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
         val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = commonComponentParams,
+            componentParams = commonComponentParamsMapperData.commonComponentParams,
             application = null,
             source = AnalyticsSource.PaymentComponent(PaymentMethodTypes.MB_WAY),
             // TODO - When we move out componentParams logic creation to the payment facilitator
@@ -41,12 +39,12 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         )
 
         val stateManager = DefaultViewStateManager(
-            factory = MBWayViewStateFactory(commonComponentParams),
+            factory = MBWayViewStateFactory(commonComponentParamsMapperData.commonComponentParams),
             validator = MBWayViewStateValidator(),
         )
 
         return MBWayComponent(
-            componentParams = commonComponentParams,
+            componentParams = commonComponentParamsMapperData.commonComponentParams,
             analyticsManager = analyticsManager,
             viewStateManager = stateManager,
             // TODO - Order to be passed later
