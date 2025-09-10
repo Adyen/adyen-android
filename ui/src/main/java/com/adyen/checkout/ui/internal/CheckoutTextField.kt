@@ -20,7 +20,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -92,48 +91,12 @@ fun CheckoutTextField(
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    CheckoutTextField(
-        label = label,
-        inputState = rememberTextFieldState(initialValue),
-        modifier = modifier,
-        onValueChange = onValueChange,
-        enabled = enabled,
-        supportingText = supportingText,
-        isError = isError,
-        inputTransformation = inputTransformation,
-        outputTransformation = outputTransformation,
-        keyboardOptions = keyboardOptions,
-        interactionSource = interactionSource,
-        innerIndication = innerIndication,
-        shouldFocus = shouldFocus,
-        prefix = prefix,
-        trailingIcon = trailingIcon,
-    )
-}
-
-@Composable
-internal fun CheckoutTextField(
-    label: String,
-    inputState: TextFieldState,
-    modifier: Modifier = Modifier,
-    onValueChange: ((String) -> Unit)? = null,
-    enabled: Boolean = true,
-    supportingText: String? = null,
-    isError: Boolean = false,
-    inputTransformation: InputTransformation? = null,
-    outputTransformation: OutputTransformation? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    innerIndication: Indication? = null,
-    shouldFocus: Boolean = false,
-    prefix: String? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
+    val state = rememberTextFieldState(initialValue)
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
-        state = inputState,
+        state = state,
         modifier = modifier.focusRequester(focusRequester),
         enabled = enabled,
         inputTransformation = inputTransformation,
@@ -165,8 +128,8 @@ internal fun CheckoutTextField(
 
     if (onValueChange != null) {
         val currentOnValueChange by rememberUpdatedState(onValueChange)
-        LaunchedEffect(inputState) {
-            snapshotFlow { inputState.text }
+        LaunchedEffect(state) {
+            snapshotFlow { state.text }
                 .collectLatest { value ->
                     currentOnValueChange(value.toString())
                 }
