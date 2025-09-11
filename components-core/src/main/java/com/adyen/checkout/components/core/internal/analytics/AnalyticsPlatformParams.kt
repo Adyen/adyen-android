@@ -8,36 +8,23 @@
 
 package com.adyen.checkout.components.core.internal.analytics
 
-import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.components.core.BuildConfig
+import com.adyen.checkout.components.core.internal.util.CheckoutPlatform
+import com.adyen.checkout.components.core.internal.util.CheckoutPlatformParams
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object AnalyticsPlatformParams {
+internal object AnalyticsPlatformParams {
 
     @Suppress("ConstPropertyName", "ktlint:standard:property-naming")
     const val channel = "android"
 
-    var platform = AnalyticsPlatform.ANDROID.value
-        private set
+    val platform: String
+        get() = CheckoutPlatformParams.platform.toAnalyticsPlatform().value
 
-    var version = BuildConfig.CHECKOUT_VERSION
-        private set
+    val version: String
+        get() = CheckoutPlatformParams.version
 
-    @Suppress("unused")
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun overrideForCrossPlatform(
-        platform: AnalyticsPlatform,
-        version: String,
-    ) {
-        this.platform = platform.value
-        this.version = version
-    }
-
-    @Suppress("unused")
-    @VisibleForTesting
-    internal fun resetToDefaults() {
-        platform = AnalyticsPlatform.ANDROID.value
-        version = BuildConfig.CHECKOUT_VERSION
+    private fun CheckoutPlatform.toAnalyticsPlatform(): AnalyticsPlatform = when (this) {
+        CheckoutPlatform.ANDROID -> AnalyticsPlatform.ANDROID
+        CheckoutPlatform.FLUTTER -> AnalyticsPlatform.FLUTTER
+        CheckoutPlatform.REACT_NATIVE -> AnalyticsPlatform.REACT_NATIVE
     }
 }
