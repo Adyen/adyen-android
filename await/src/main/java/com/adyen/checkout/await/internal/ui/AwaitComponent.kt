@@ -27,7 +27,6 @@ import com.adyen.checkout.core.components.internal.data.api.StatusRepository
 import com.adyen.checkout.core.components.internal.data.api.helper.isFinalResult
 import com.adyen.checkout.core.components.internal.data.model.StatusResponse
 import com.adyen.checkout.core.components.internal.ui.StatusPollingComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
@@ -51,7 +50,6 @@ internal class AwaitComponent(
     private val redirectHandler: RedirectHandler,
     private val statusRepository: StatusRepository,
     private val paymentDataRepository: PaymentDataRepository,
-    override val componentParams: ComponentParams,
 ) : ActionComponent, StatusPollingComponent {
 
     private var statusPollingJob: Job? = null

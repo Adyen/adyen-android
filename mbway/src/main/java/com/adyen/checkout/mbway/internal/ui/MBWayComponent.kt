@@ -33,7 +33,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class MBWayComponent(
-    override val componentParams: ComponentParams,
+    private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val viewStateManager: ViewStateManager<MBWayViewState>,
     // TODO - Order to be passed later

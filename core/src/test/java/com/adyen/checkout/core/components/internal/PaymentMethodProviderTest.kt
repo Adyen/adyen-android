@@ -12,7 +12,6 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.components.internal.ui.model.generateComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
@@ -25,18 +24,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 @ExtendWith(MockitoExtension::class)
-internal class PaymentMethodProviderTest(
-    @Mock private val componentParams: CommonComponentParams,
-) {
+internal class PaymentMethodProviderTest {
 
-    private val component = TestPaymentComponent(componentParams)
+    private val component = TestPaymentComponent()
     private val factory = generateFactory(
         paymentComponent = component,
     )
@@ -71,7 +67,7 @@ internal class PaymentMethodProviderTest(
     @Test
     fun `when register is called with an existing txVariant, then the factory is overwritten`() =
         runTest {
-            val secondaryComponent = TestPaymentComponent(componentParams)
+            val secondaryComponent = TestPaymentComponent()
             val secondaryFactory = generateFactory(
                 paymentComponent = secondaryComponent,
             )

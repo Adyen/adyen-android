@@ -10,13 +10,10 @@ package com.adyen.checkout.core.action.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-internal class TestActionComponent(
-    override val componentParams: ComponentParams
-) : ActionComponent {
+internal class TestActionComponent : ActionComponent {
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
