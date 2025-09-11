@@ -1,14 +1,12 @@
-package com.adyen.checkout.components.core.internal.analytics
+package com.adyen.checkout.components.core.internal.util
 
 import com.adyen.checkout.components.core.BuildConfig
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatform
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatformParams
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-internal class AnalyticsPlatformParamsTest {
+internal class CheckoutPlatformParamsTest {
 
     @BeforeEach
     fun setup() {
@@ -22,8 +20,8 @@ internal class AnalyticsPlatformParamsTest {
 
     @Test
     fun `when no overriding, then default are returned`() {
-        assertEquals(AnalyticsPlatform.ANDROID.value, AnalyticsPlatformParams.platform)
-        assertEquals(BuildConfig.CHECKOUT_VERSION, AnalyticsPlatformParams.version)
+        assertEquals(CheckoutPlatform.ANDROID, CheckoutPlatformParams.platform)
+        assertEquals(BuildConfig.CHECKOUT_VERSION, CheckoutPlatformParams.version)
     }
 
     @Test
@@ -33,7 +31,7 @@ internal class AnalyticsPlatformParamsTest {
             "test version",
         )
 
-        assertEquals(AnalyticsPlatform.FLUTTER.value, AnalyticsPlatformParams.platform)
-        assertEquals("test version", AnalyticsPlatformParams.version)
+        assertEquals(CheckoutPlatform.FLUTTER, CheckoutPlatformParams.platform)
+        assertEquals("test version", CheckoutPlatformParams.version)
     }
 }
