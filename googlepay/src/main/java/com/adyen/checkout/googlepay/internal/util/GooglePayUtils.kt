@@ -9,10 +9,14 @@ package com.adyen.checkout.googlepay.internal.util
 
 import com.adyen.checkout.components.core.internal.util.AmountFormat
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
+import com.adyen.checkout.googlepay.MerchantInfo
+import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
 import com.adyen.checkout.googlepay.internal.data.model.GooglePayPaymentMethodModel
 import com.adyen.checkout.googlepay.internal.data.model.IsReadyToPayRequestModel
@@ -167,13 +171,33 @@ internal object GooglePayUtils {
         return PaymentDataRequestModel(
             apiVersion = MAJOR_API_VERSION,
             apiVersionMinor = MINOT_API_VERSION,
-            merchantInfo = params.merchantInfo,
+            merchantInfo = params.merchantInfo.addSoftwareInfo(params),
             transactionInfo = createTransactionInfo(params),
             allowedPaymentMethods = getAllowedPaymentMethods(params),
             isEmailRequired = params.isEmailRequired,
             isShippingAddressRequired = params.isShippingAddressRequired,
             shippingAddressParameters = params.shippingAddressParameters,
         )
+    }
+
+    private fun MerchantInfo?.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
+        val integrationType = if (params.isCreatedByDropIn) {
+            IntegrationType.DROP_IN
+        } else {
+            IntegrationType.COMPONENTS
+        }
+        val platform = CheckoutPlatformParams.platform.toGooglePayPlatform()
+        val softwareInfo = SoftwareInfo(
+            id = "${platform.value}/${integrationType.value}",
+            version = CheckoutPlatformParams.version,
+        )
+        return this?.copy(softwareInfo = softwareInfo) ?: MerchantInfo(softwareInfo = softwareInfo)
+    }
+
+    private fun CheckoutPlatform.toGooglePayPlatform(): GooglePayPlatform = when (this) {
+        CheckoutPlatform.ANDROID -> GooglePayPlatform.ANDROID
+        CheckoutPlatform.FLUTTER -> GooglePayPlatform.FLUTTER
+        CheckoutPlatform.REACT_NATIVE -> GooglePayPlatform.REACT_NATIVE
     }
 
     internal fun getAllowedPaymentMethods(params: GooglePayComponentParams): List<GooglePayPaymentMethodModel> {
@@ -230,5 +254,16 @@ internal object GooglePayUtils {
             val displayAmount = GOOGLE_PAY_DECIMAL_FORMAT.format(bigDecimalAmount)
             totalPrice = displayAmount
         }
+    }
+
+    private enum class IntegrationType(val value: String) {
+        DROP_IN("adyen-dropin"),
+        COMPONENTS("adyen-components"),
+    }
+
+    private enum class GooglePayPlatform(val value: String) {
+        ANDROID("android"),
+        FLUTTER("flutter"),
+        REACT_NATIVE("react-native"),
     }
 }

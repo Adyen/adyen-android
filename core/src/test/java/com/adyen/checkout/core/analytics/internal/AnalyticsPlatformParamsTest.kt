@@ -9,6 +9,8 @@
 package com.adyen.checkout.core.analytics.internal
 
 import com.adyen.checkout.core.BuildConfig
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -18,12 +20,12 @@ internal class AnalyticsPlatformParamsTest {
 
     @BeforeEach
     fun setup() {
-        AnalyticsPlatformParams.resetToDefaults()
+        CheckoutPlatformParams.resetDefaults()
     }
 
     @AfterEach
     fun cleanup() {
-        AnalyticsPlatformParams.resetToDefaults()
+        CheckoutPlatformParams.resetDefaults()
     }
 
     @Test
@@ -34,8 +36,8 @@ internal class AnalyticsPlatformParamsTest {
 
     @Test
     fun `when overriding, then set values are returned`() {
-        AnalyticsPlatformParams.overrideForCrossPlatform(
-            AnalyticsPlatform.FLUTTER,
+        CheckoutPlatformParams.overrideForCrossPlatform(
+            CheckoutPlatform.FLUTTER,
             "test version",
         )
 
