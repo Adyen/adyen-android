@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
@@ -24,6 +25,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
 
     override fun create(
         coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
     ): MBWayComponent {

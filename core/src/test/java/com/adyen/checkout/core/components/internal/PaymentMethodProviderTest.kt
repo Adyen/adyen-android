@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.core.components.internal
 
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -78,6 +80,7 @@ internal class PaymentMethodProviderTest {
             val actualComponent = PaymentMethodProvider.get(
                 txVariant = "txVariant",
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
             )
@@ -102,6 +105,7 @@ internal class PaymentMethodProviderTest {
             val actualComponent = PaymentMethodProvider.get(
                 txVariant = "txVariant",
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
             )
@@ -115,6 +119,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.get(
                 txVariant = "unregistered_txVariant",
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
             )
@@ -137,6 +142,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
             override fun create(
                 coroutineScope: CoroutineScope,
+                analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
             ) = paymentComponent

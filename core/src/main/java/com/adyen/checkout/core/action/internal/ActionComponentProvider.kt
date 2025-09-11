@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import kotlinx.coroutines.CoroutineScope
@@ -40,9 +41,11 @@ object ActionComponentProvider {
      * @return [ActionComponent] for given action type.
      * @throws IllegalStateException If a factory for the provided action type is not registered.
      */
+    @Suppress("LongParameterList")
     fun get(
         action: Action,
         coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
         commonComponentParams: CommonComponentParams,
@@ -52,6 +55,7 @@ object ActionComponentProvider {
             //  to handle multiple actions. Is it really necessary?
             action = action,
             coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             savedStateHandle = savedStateHandle,
             commonComponentParams = commonComponentParams,
