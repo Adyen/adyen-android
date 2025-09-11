@@ -12,6 +12,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.BuildConfig
@@ -251,16 +253,16 @@ internal class GooglePayUtilsTest {
     @ParameterizedTest
     @MethodSource("softwareInfoSource")
     fun `when creating payment data request, then software info is added correctly`(
-        platform: GooglePayPlatform,
+        platform: CheckoutPlatform,
         version: String?,
         isDropIn: Boolean,
         expectedId: String,
         expectedVersion: String,
     ) {
-        GooglePayParams.resetDefaults()
+        CheckoutPlatformParams.resetDefaults()
 
-        if (platform != GooglePayPlatform.ANDROID) {
-            GooglePayParams.overrideForCrossPlatform(platform, requireNotNull(version))
+        if (platform != CheckoutPlatform.ANDROID) {
+            CheckoutPlatformParams.overrideForCrossPlatform(platform, requireNotNull(version))
         }
 
         val paymentDataRequest =
@@ -356,12 +358,12 @@ internal class GooglePayUtilsTest {
         @JvmStatic
         fun softwareInfoSource() = listOf(
             // platform, version, isDropIn, expectedId, expectedVersion
-            arguments(GooglePayPlatform.ANDROID, null, true, "android/adyen-dropin", BuildConfig.CHECKOUT_VERSION),
-            arguments(GooglePayPlatform.ANDROID, null, false, "android/adyen-components", BuildConfig.CHECKOUT_VERSION),
-            arguments(GooglePayPlatform.FLUTTER, "1.2.3", true, "flutter/adyen-dropin", "1.2.3"),
-            arguments(GooglePayPlatform.FLUTTER, "3.2.1", false, "flutter/adyen-components", "3.2.1"),
-            arguments(GooglePayPlatform.REACT_NATIVE, "1.2.3", true, "react-native/adyen-dropin", "1.2.3"),
-            arguments(GooglePayPlatform.REACT_NATIVE, "3.2.1", false, "react-native/adyen-components", "3.2.1"),
+            arguments(CheckoutPlatform.ANDROID, null, true, "android/adyen-dropin", BuildConfig.CHECKOUT_VERSION),
+            arguments(CheckoutPlatform.ANDROID, null, false, "android/adyen-components", BuildConfig.CHECKOUT_VERSION),
+            arguments(CheckoutPlatform.FLUTTER, "1.2.3", true, "flutter/adyen-dropin", "1.2.3"),
+            arguments(CheckoutPlatform.FLUTTER, "3.2.1", false, "flutter/adyen-components", "3.2.1"),
+            arguments(CheckoutPlatform.REACT_NATIVE, "1.2.3", true, "react-native/adyen-dropin", "1.2.3"),
+            arguments(CheckoutPlatform.REACT_NATIVE, "3.2.1", false, "react-native/adyen-components", "3.2.1"),
         )
     }
 }

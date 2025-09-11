@@ -7,15 +7,14 @@
  */
 package com.adyen.checkout.googlepay.internal.util
 
-import androidx.annotation.RestrictTo
-import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.components.core.internal.util.AmountFormat
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.old.internal.util.runCompileOnly
-import com.adyen.checkout.googlepay.BuildConfig
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.data.model.CardParameters
@@ -187,12 +186,19 @@ internal object GooglePayUtils {
         } else {
             IntegrationType.COMPONENTS
         }
+        val platform = CheckoutPlatformParams.platform.toGooglePayPlatform()
         return copy(
             softwareInfo = SoftwareInfo(
-                id = "${GooglePayParams.platform.value}/${integrationType.value}",
-                version = GooglePayParams.version,
+                id = "${platform.value}/${integrationType.value}",
+                version = CheckoutPlatformParams.version,
             ),
         )
+    }
+
+    private fun CheckoutPlatform.toGooglePayPlatform(): GooglePayPlatform = when (this) {
+        CheckoutPlatform.ANDROID -> GooglePayPlatform.ANDROID
+        CheckoutPlatform.FLUTTER -> GooglePayPlatform.FLUTTER
+        CheckoutPlatform.REACT_NATIVE -> GooglePayPlatform.REACT_NATIVE
     }
 
     internal fun getAllowedPaymentMethods(params: GooglePayComponentParams): List<GooglePayPaymentMethodModel> {
@@ -255,33 +261,10 @@ internal object GooglePayUtils {
         DROP_IN("adyen-dropin"),
         COMPONENTS("adyen-components"),
     }
-}
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class GooglePayPlatform(val value: String) {
-    ANDROID("android"),
-    FLUTTER("flutter"),
-    REACT_NATIVE("react-native"),
-}
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object GooglePayParams {
-
-    internal var platform: GooglePayPlatform = GooglePayPlatform.ANDROID
-    internal var version: String = BuildConfig.CHECKOUT_VERSION
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun overrideForCrossPlatform(
-        platform: GooglePayPlatform,
-        version: String,
-    ) {
-        this.platform = platform
-        this.version = version
-    }
-
-    @VisibleForTesting
-    internal fun resetDefaults() {
-        platform = GooglePayPlatform.ANDROID
-        version = BuildConfig.CHECKOUT_VERSION
+    private enum class GooglePayPlatform(val value: String) {
+        ANDROID("android"),
+        FLUTTER("flutter"),
+        REACT_NATIVE("react-native"),
     }
 }
