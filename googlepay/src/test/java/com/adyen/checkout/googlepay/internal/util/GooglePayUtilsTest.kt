@@ -132,6 +132,14 @@ internal class GooglePayUtilsTest {
                 {
                     "apiVersionMinor": 0,
                     "apiVersion": 2,
+                    "merchantInfo":
+                    {
+                        "softwareInfo":
+                        {
+                            "id": "android/adyen-components",
+                            "version": "develop"
+                        }
+                    },
                     "allowedPaymentMethods":
                     [
                         {

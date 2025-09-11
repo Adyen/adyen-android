@@ -171,7 +171,7 @@ internal object GooglePayUtils {
         return PaymentDataRequestModel(
             apiVersion = MAJOR_API_VERSION,
             apiVersionMinor = MINOT_API_VERSION,
-            merchantInfo = params.merchantInfo?.addSoftwareInfo(params),
+            merchantInfo = params.merchantInfo.addSoftwareInfo(params),
             transactionInfo = createTransactionInfo(params),
             allowedPaymentMethods = getAllowedPaymentMethods(params),
             isEmailRequired = params.isEmailRequired,
@@ -180,19 +180,18 @@ internal object GooglePayUtils {
         )
     }
 
-    private fun MerchantInfo.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
+    private fun MerchantInfo?.addSoftwareInfo(params: GooglePayComponentParams): MerchantInfo {
         val integrationType = if (params.isCreatedByDropIn) {
             IntegrationType.DROP_IN
         } else {
             IntegrationType.COMPONENTS
         }
         val platform = CheckoutPlatformParams.platform.toGooglePayPlatform()
-        return copy(
-            softwareInfo = SoftwareInfo(
-                id = "${platform.value}/${integrationType.value}",
-                version = CheckoutPlatformParams.version,
-            ),
+        val softwareInfo = SoftwareInfo(
+            id = "${platform.value}/${integrationType.value}",
+            version = CheckoutPlatformParams.version,
         )
+        return this?.copy(softwareInfo = softwareInfo) ?: MerchantInfo(softwareInfo = softwareInfo)
     }
 
     private fun CheckoutPlatform.toGooglePayPlatform(): GooglePayPlatform = when (this) {
