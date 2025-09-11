@@ -31,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.Locale
 
 internal class PaymentFacilitator(
     private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
@@ -38,6 +39,7 @@ internal class PaymentFacilitator(
     private val componentEventHandler: ComponentEventHandler<BasePaymentComponentState>,
     private val actionProvider: ActionProvider,
     private val checkoutController: CheckoutController,
+    private val shopperLocale: Locale,
 ) {
 
     private var actionComponent by mutableStateOf<ActionComponent?>(null)
@@ -46,11 +48,8 @@ internal class PaymentFacilitator(
     @Composable
     fun ViewFactory(modifier: Modifier = Modifier, localizationProvider: CheckoutLocalizationProvider?) {
         val actionComponent = this.actionComponent
-        // TODO - Find an alternative for getting shopper locale without the need to
-        //  expose component params from components
-        val activeComponentParams = actionComponent?.componentParams ?: paymentComponent.componentParams
         LocalizedComponent(
-            locale = activeComponentParams.shopperLocale,
+            locale = shopperLocale,
             localizationProvider = localizationProvider,
         ) {
             if (actionComponent != null) {

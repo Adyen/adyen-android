@@ -58,6 +58,7 @@ internal class AdvancedPaymentFacilitatorFactory(
             componentEventHandler = componentEventHandler,
             actionProvider = actionProvider,
             checkoutController = checkoutController,
+            shopperLocale = componentParamsBundle.commonComponentParams.shopperLocale,
         )
     }
 }

@@ -25,18 +25,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 @ExtendWith(MockitoExtension::class)
-internal class ActionComponentProviderTest(
-    @Mock private val componentParams: CommonComponentParams,
-) {
+internal class ActionComponentProviderTest {
 
-    private val component = TestActionComponent(componentParams)
+    private val component = TestActionComponent()
 
     private val factory = generateFactory(
         actionComponent = component,
@@ -72,7 +69,7 @@ internal class ActionComponentProviderTest(
     @Test
     fun `when register is called with an existing actionType, then the factory is overwritten`() =
         runTest {
-            val secondaryComponent = TestActionComponent(componentParams)
+            val secondaryComponent = TestActionComponent()
             val secondaryFactory = generateFactory(
                 actionComponent = secondaryComponent,
             )

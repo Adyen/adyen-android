@@ -12,13 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-internal class TestPaymentComponent(
-    override val componentParams: ComponentParams
-) : PaymentComponent<BasePaymentComponentState> {
+internal class TestPaymentComponent : PaymentComponent<BasePaymentComponentState> {
     override fun submit() {
         // No-op
     }
