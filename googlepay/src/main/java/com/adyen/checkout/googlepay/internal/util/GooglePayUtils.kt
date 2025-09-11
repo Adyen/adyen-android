@@ -191,12 +191,7 @@ internal object GooglePayUtils {
             id = "${platform.value}/${integrationType.value}",
             version = CheckoutPlatformParams.version,
         )
-        return this?.copy(
-            softwareInfo = SoftwareInfo(
-                id = "${platform.value}/${integrationType.value}",
-                version = CheckoutPlatformParams.version,
-            ),
-        ) ?: MerchantInfo(softwareInfo = softwareInfo)
+        return this?.copy(softwareInfo = softwareInfo) ?: MerchantInfo(softwareInfo = softwareInfo)
     }
 
     private fun CheckoutPlatform.toGooglePayPlatform(): GooglePayPlatform = when (this) {
