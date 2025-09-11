@@ -53,10 +53,10 @@ import kotlinx.coroutines.flow.collectLatest
  * This function wraps [androidx.compose.foundation.text.BasicTextField] and applies
  * styling defined by [InternalTextFieldStyle].
  *
- * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param label The label text to be displayed for the text field.
  * @param modifier Optional [Modifier] to be applied to this composable.
  * @param initialValue The initial text to be displayed in the text field.
+ * @param onValueChange A callback that is triggered when the text in the field changes.
  * @param enabled Controls the enabled state of the text field. When `false`, the text field
  * is not interactable.
  * @param supportingText Optional supporting text to be displayed below the text field.
@@ -118,7 +118,7 @@ fun CheckoutTextField(
                 supportingText = supportingText,
                 isError = isError,
                 interactionSource = interactionSource,
-                indication = innerIndication,
+                innerIndication = innerIndication,
                 prefix = prefix,
                 trailingIcon = trailingIcon,
                 style = style,
