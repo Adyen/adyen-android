@@ -11,6 +11,8 @@ package com.adyen.checkout.core.action.internal
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.TestAction
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -80,6 +82,7 @@ internal class ActionComponentProviderTest {
             val actualComponent = ActionComponentProvider.get(
                 action = TestAction(type = "actionType"),
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
                 commonComponentParams = generateCommonComponentParams(),
@@ -105,6 +108,7 @@ internal class ActionComponentProviderTest {
             val actualComponent = ActionComponentProvider.get(
                 action = TestAction(type = "actionType"),
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
                 commonComponentParams = generateCommonComponentParams(),
@@ -119,6 +123,7 @@ internal class ActionComponentProviderTest {
             ActionComponentProvider.get(
                 action = TestAction(type = "unregistered_actionType"),
                 coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 savedStateHandle = SavedStateHandle(),
                 commonComponentParams = generateCommonComponentParams(),
@@ -142,6 +147,7 @@ internal class ActionComponentProviderTest {
             override fun create(
                 action: Action,
                 coroutineScope: CoroutineScope,
+                analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 savedStateHandle: SavedStateHandle,
                 commonComponentParams: CommonComponentParams,

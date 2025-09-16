@@ -12,8 +12,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.action.internal.ActionFactory
-import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
-import com.adyen.checkout.core.analytics.internal.AnalyticsSource
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
@@ -29,6 +28,7 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
     override fun create(
         action: Action,
         coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
         commonComponentParams: CommonComponentParams,
@@ -38,17 +38,6 @@ internal class AwaitFactory : ActionFactory<AwaitComponent> {
 //          throw ComponentException("Unsupported action")
             throw RuntimeException("Unsupported action")
         }
-
-        // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
-        val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = commonComponentParams,
-            application = null,
-            // TODO - Analytics. When we move the analyticsManager, the source can also be adjusted
-            source = AnalyticsSource.PaymentComponent("AwaitAction"),
-            // TODO - When we move out componentParams logic creation to the payment facilitator
-            //  factory level, Analytics manager should move there too and sessionId can be passed
-            sessionId = null,
-        )
 
         val redirectHandler = DefaultRedirectHandler()
         val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
