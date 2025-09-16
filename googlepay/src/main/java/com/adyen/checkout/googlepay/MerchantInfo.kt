@@ -21,6 +21,7 @@ import org.json.JSONObject
  *
  * @param merchantName The name of the merchant.
  * @param merchantId The id of the merchant.
+ * @param softwareInfo Information associated with the caller of the request.
  */
 @Parcelize
 data class MerchantInfo(
