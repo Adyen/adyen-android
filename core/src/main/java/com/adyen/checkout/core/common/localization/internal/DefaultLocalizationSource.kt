@@ -9,13 +9,23 @@
 package com.adyen.checkout.core.common.localization.internal
 
 import android.content.Context
+import com.adyen.checkout.core.R
+import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import java.util.Locale
 
 internal class DefaultLocalizationSource {
 
-    @Suppress("UnusedParameter")
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
-        TODO("Not yet implemented")
+        val localizedContext = context.createLocalizedContext(locale)
+
+        return when (key) {
+            CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
+                R.string.checkout_mbway_phone_number
+            )
+            CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> localizedContext.getString(
+                R.string.checkout_mbway_country_code
+            )
+        }
     }
 }
