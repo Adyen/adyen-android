@@ -10,5 +10,6 @@ package com.adyen.checkout.core.common.localization
 
 enum class CheckoutLocalizationKey {
     MBWAY_PHONE_NUMBER,
+    MBWAY_INVALID_PHONE_NUMBER,
     MBWAY_COUNTRY_CODE,
 }

@@ -23,6 +23,9 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
                 R.string.checkout_mbway_phone_number
             )
+            CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> localizedContext.getString(
+                R.string.checkout_mbway_invalid_phone_number
+            )
             CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> localizedContext.getString(
                 R.string.checkout_mbway_country_code
             )

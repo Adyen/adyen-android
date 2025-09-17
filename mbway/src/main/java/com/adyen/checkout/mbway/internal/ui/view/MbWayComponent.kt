@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -75,7 +74,7 @@ internal fun MbWayComponent(
         // PhoneNumber
         val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
         val supportingTextPhoneNumber = if (showPhoneNumberError) {
-            viewState.phoneNumber.errorMessage?.let { stringResource(it) }
+            viewState.phoneNumber.errorMessage?.let { resolveString(it) }
         } else {
             null
         }
