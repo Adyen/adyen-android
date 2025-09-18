@@ -9,6 +9,7 @@
 
 <!-- TODO - Add translations -->
 <resources>
+    <string name="checkout_await_loading" translatable="false">Awaiting confirmation…</string>
     <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
     <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
     <string name="checkout_mbway_country_code" translatable="false">Country code</string>
