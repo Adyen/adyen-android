@@ -299,6 +299,9 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 }
 
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
+	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field MBWAY_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static fun values ()[Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

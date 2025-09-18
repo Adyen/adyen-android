@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by ararat on 17/9/2025.
+  -->
+
+<!-- TODO - Add translations -->
+<resources>
+    <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
+    <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
+    <string name="checkout_mbway_country_code" translatable="false">Country code</string>
+</resources>

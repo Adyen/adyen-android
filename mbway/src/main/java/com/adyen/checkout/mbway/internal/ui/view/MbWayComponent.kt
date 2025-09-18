@@ -29,11 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
@@ -64,7 +65,7 @@ internal fun MbWayComponent(
         val country = viewState.countryCode
         ValuePickerField(
             value = "${country.callingCode} • ${country.countryName}",
-            label = "Country Code",
+            label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
             onClick = { showCountryCodeDialog = true },
             modifier = Modifier
                 .fillMaxWidth(),
@@ -73,7 +74,7 @@ internal fun MbWayComponent(
         // PhoneNumber
         val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
         val supportingTextPhoneNumber = if (showPhoneNumberError) {
-            viewState.phoneNumber.errorMessage?.let { stringResource(it) }
+            viewState.phoneNumber.errorMessage?.let { resolveString(it) }
         } else {
             null
         }
@@ -84,7 +85,7 @@ internal fun MbWayComponent(
                 .onFocusChanged { focusState ->
                     changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
                 },
-            label = "Phone Number",
+            label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
             initialValue = viewState.phoneNumber.text,
             isError = showPhoneNumberError,
             supportingText = supportingTextPhoneNumber,

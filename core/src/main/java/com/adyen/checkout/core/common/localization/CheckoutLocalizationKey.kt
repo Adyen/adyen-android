@@ -8,4 +8,8 @@
 
 package com.adyen.checkout.core.common.localization
 
-enum class CheckoutLocalizationKey
+enum class CheckoutLocalizationKey {
+    MBWAY_COUNTRY_CODE,
+    MBWAY_INVALID_PHONE_NUMBER,
+    MBWAY_PHONE_NUMBER,
+}

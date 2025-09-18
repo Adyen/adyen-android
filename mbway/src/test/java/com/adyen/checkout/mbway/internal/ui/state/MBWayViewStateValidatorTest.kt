@@ -1,8 +1,8 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.mbway.R
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -59,7 +59,7 @@ internal class MBWayViewStateValidatorTest {
 
             val actual = validator.validate(viewState)
 
-            assertEquals(R.string.checkout_mbway_phone_number_not_valid, actual.phoneNumber.errorMessage)
+            assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.errorMessage)
         }
     }
 
@@ -93,7 +93,7 @@ internal class MBWayViewStateValidatorTest {
                 countryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = R.string.checkout_mbway_phone_number_not_valid,
+                    errorMessage = CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER,
                     isFocused = false,
                     isInteractedWith = true,
                     showError = false,
@@ -138,7 +138,7 @@ internal class MBWayViewStateValidatorTest {
                 countryCode = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351"),
                 phoneNumber = TextInputState(
                     text = INVALID_PHONE_NUMBER,
-                    errorMessage = R.string.checkout_mbway_phone_number_not_valid,
+                    errorMessage = CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER,
                     isFocused = false,
                     isInteractedWith = true,
                     showError = false,
@@ -149,7 +149,7 @@ internal class MBWayViewStateValidatorTest {
             val actual = validator.highlightAllValidationErrors(viewState)
 
             assertTrue(actual.phoneNumber.showError)
-            assertEquals(R.string.checkout_mbway_phone_number_not_valid, actual.phoneNumber.errorMessage)
+            assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.errorMessage)
             assertTrue(actual.phoneNumber.isFocused)
         }
     }
