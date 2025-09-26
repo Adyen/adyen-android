@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote
 
-import android.app.Application
+import android.content.Context
 import android.os.Build
 import com.adyen.checkout.core.analytics.internal.AnalyticsPlatformParams
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
@@ -19,8 +19,7 @@ import java.util.Locale
 
 @Suppress("LongParameterList")
 internal class DefaultAnalyticsSetupProvider(
-    // TODO - Analytics, application should not be null, or we should ask for another data object
-    private val application: Application?,
+    private val applicationContext: Context,
     private val shopperLocale: Locale,
     private val isCreatedByDropIn: Boolean,
     private val analyticsLevel: AnalyticsParamsLevel,
@@ -40,9 +39,9 @@ internal class DefaultAnalyticsSetupProvider(
             level = getLevelQueryParameter(analyticsLevel),
             deviceBrand = Build.BRAND,
             deviceModel = Build.MODEL,
-            referrer = application?.packageName ?: "",
+            referrer = applicationContext.packageName,
             systemVersion = Build.VERSION.SDK_INT.toString(),
-            screenWidth = application?.resources?.displayMetrics?.widthPixels ?: 0,
+            screenWidth = applicationContext.resources.displayMetrics.widthPixels,
             paymentMethods = source.getPaymentMethods(),
             amount = amount,
             // unused for Android

@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal.data.remote
 
-import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import android.util.DisplayMetrics
@@ -31,7 +31,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when providing AnalyticsSetupRequest, then it should be mapped correctly`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -66,7 +66,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when created by drop in, then flavor should be dropin`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -83,7 +83,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when not created by drop in, then flavor should be components`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -100,7 +100,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when source is drop in, then component should be dropin`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -117,7 +117,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when source is a component, then component should be equal to it's payment method`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = true,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -134,7 +134,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when analytics params level is initial, then level should be initial`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
             analyticsLevel = AnalyticsParamsLevel.INITIAL,
@@ -151,7 +151,7 @@ internal class DefaultAnalyticsSetupProviderTest {
     @Test
     fun `when analytics params level is all, then level should be all`() {
         analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-            application = createMockApplication(),
+            applicationContext = createMockApplicationContext(),
             shopperLocale = Locale.US,
             isCreatedByDropIn = false,
             analyticsLevel = AnalyticsParamsLevel.ALL,
@@ -165,17 +165,17 @@ internal class DefaultAnalyticsSetupProviderTest {
         assertEquals("all", result.level)
     }
 
-    private fun createMockApplication(): Application {
-        val application = mock<Application>()
+    private fun createMockApplicationContext(): Context {
+        val applicationContext = mock<Context>()
         val resources = mock<Resources>()
         val displayMetrics = DisplayMetrics().apply {
             widthPixels = 420
         }
 
-        whenever(application.packageName) doReturn "com.adyen.checkout"
-        whenever(application.resources) doReturn resources
+        whenever(applicationContext.packageName) doReturn "com.adyen.checkout"
+        whenever(applicationContext.resources) doReturn resources
         whenever(resources.displayMetrics) doReturn displayMetrics
 
-        return application
+        return applicationContext
     }
 }

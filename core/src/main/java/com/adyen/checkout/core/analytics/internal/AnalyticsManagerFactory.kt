@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.core.analytics.internal
 
-import android.app.Application
+import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.data.DefaultAnalyticsRepository
 import com.adyen.checkout.core.analytics.internal.data.local.ErrorAnalyticsLocalDataStore
@@ -30,7 +30,7 @@ class AnalyticsManagerFactory {
 
     fun provide(
         componentParams: ComponentParams,
-        application: Application?,
+        applicationContext: Context,
         source: AnalyticsSource,
         sessionId: String?
     ): AnalyticsManager = provide(
@@ -40,7 +40,7 @@ class AnalyticsManagerFactory {
         analyticsParams = componentParams.analyticsParams,
         isCreatedByDropIn = componentParams.isCreatedByDropIn,
         amount = componentParams.amount,
-        application = application,
+        applicationContext = applicationContext,
         source = source,
         sessionId = sessionId,
     )
@@ -53,7 +53,7 @@ class AnalyticsManagerFactory {
         analyticsParams: AnalyticsParams,
         isCreatedByDropIn: Boolean,
         amount: Amount?,
-        application: Application?,
+        applicationContext: Context,
         source: AnalyticsSource,
         sessionId: String?
     ): AnalyticsManager = DefaultAnalyticsManager(
@@ -71,7 +71,7 @@ class AnalyticsManagerFactory {
                 errorSize = ERROR_SIZE,
             ),
             analyticsSetupProvider = DefaultAnalyticsSetupProvider(
-                application = application,
+                applicationContext = applicationContext,
                 shopperLocale = shopperLocale,
                 isCreatedByDropIn = isCreatedByDropIn,
                 analyticsLevel = analyticsParams.level,

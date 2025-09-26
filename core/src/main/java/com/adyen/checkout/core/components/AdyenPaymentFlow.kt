@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,10 +29,12 @@ fun AdyenPaymentFlow(
     checkoutController: CheckoutController = rememberCheckoutController(),
     localizationProvider: CheckoutLocalizationProvider? = null,
 ) {
+    val applicationContext = LocalContext.current.applicationContext
     // TODO - Move Creation Logic to Adyen Checkout
     // TODO - Verify that this does not keep observing the previous values and adds extra observables
     val adyenComponent = viewModel(key = txVariant) {
         AdyenComponent(
+            applicationContext = applicationContext,
             txVariant = txVariant,
             checkoutContext = checkoutContext,
             savedStateHandle = createSavedStateHandle(),
