@@ -20,6 +20,9 @@ internal class DefaultLocalizationSource {
         val localizedContext = context.createLocalizedContext(locale)
 
         return when (key) {
+            CheckoutLocalizationKey.AWAIT_LOADING -> localizedContext.getString(
+                R.string.checkout_await_loading
+            )
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
                 R.string.checkout_mbway_phone_number
             )

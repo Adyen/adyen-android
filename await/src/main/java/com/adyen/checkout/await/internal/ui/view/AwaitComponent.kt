@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.ProgressBar
@@ -31,8 +33,7 @@ internal fun AwaitComponent(
     ) {
         ProgressBar()
         Spacer(Modifier.size(Dimensions.Large))
-        // TODO - Localisation, add the correct text
-        Body("Awaiting confirmation...")
+        Body(resolveString(CheckoutLocalizationKey.AWAIT_LOADING))
     }
 }
 
