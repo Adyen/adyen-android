@@ -9,12 +9,12 @@
 package com.adyen.checkout.core.components.internal.ui.state.model
 
 import androidx.annotation.RestrictTo
-import androidx.annotation.StringRes
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class TextInputState(
     val text: String = "",
-    @StringRes val errorMessage: Int? = null,
+    val errorMessage: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,
     val isInteractedWith: Boolean = false,
     val showError: Boolean = false,
