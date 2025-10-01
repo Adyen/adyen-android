@@ -9,6 +9,9 @@
 package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.analytics.internal.ErrorEvent
+import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 internal class SessionInteractor(
     private val sessionRepository: SessionRepository,
     private val sessionSavedStateHandleContainer: SessionSavedStateHandleContainer,
+    private val analyticsManager: AnalyticsManager,
     sessionModel: SessionModel,
 
     // TODO - Taken Over Flow
@@ -52,12 +56,11 @@ internal class SessionInteractor(
         },
         onFailure = {
             paymentComponentState.data.paymentMethod?.type?.let { paymentMethodType ->
-                // TODO - Analytics track event
-//                    val event = GenericEvents.error(
-//                        component = paymentMethodType,
-//                        event = ErrorEvent.API_PAYMENTS,
-//                    )
-//                    analyticsManager?.trackEvent(event)
+                val event = GenericEvents.error(
+                    component = paymentMethodType,
+                    event = ErrorEvent.API_PAYMENTS,
+                )
+                analyticsManager.trackEvent(event)
             }
 
             SessionCallResult.Payments.Error(throwable = it)

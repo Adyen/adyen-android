@@ -45,24 +45,6 @@ internal class SessionsPaymentFacilitatorFactory(
             savedStateHandle = savedStateHandle,
             checkoutSession = checkoutSession,
         )
-        val sessionInteractor = SessionInteractor(
-            sessionRepository = SessionRepository(
-                sessionService = SessionService(
-                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
-                ),
-                clientKey = checkoutConfiguration.clientKey,
-            ),
-            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-            sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-        )
-
-        // TODO - Based on txVariant, needs to be abstracted away
-        val componentEventHandler =
-            SessionsComponentEventHandler<BasePaymentComponentState>(
-                sessionInteractor = sessionInteractor,
-                componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
-            )
 
         val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
@@ -90,6 +72,26 @@ internal class SessionsPaymentFacilitatorFactory(
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
         )
+
+        val sessionInteractor = SessionInteractor(
+            sessionRepository = SessionRepository(
+                sessionService = SessionService(
+                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
+                ),
+                clientKey = checkoutConfiguration.clientKey,
+            ),
+            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
+            analyticsManager = analyticsManager,
+            sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
+            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
+        )
+
+        // TODO - Based on txVariant, needs to be abstracted away
+        val componentEventHandler =
+            SessionsComponentEventHandler<BasePaymentComponentState>(
+                sessionInteractor = sessionInteractor,
+                componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
+            )
 
         val actionProvider = ActionProvider(
             analyticsManager = analyticsManager,
