@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.sessions.internal.data.api
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import com.adyen.checkout.core.components.data.OrderRequest
@@ -22,8 +21,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionPaymentsRespo
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupRequest
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SessionRepository(
+internal class SessionRepository(
     private val sessionService: SessionService,
     private val clientKey: String,
 ) {

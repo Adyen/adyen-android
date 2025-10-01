@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.sessions.internal.data.api
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.internal.api.DispatcherProvider
 import com.adyen.checkout.core.common.internal.api.HttpClient
 import com.adyen.checkout.core.common.internal.api.post
@@ -21,8 +20,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class SessionService(
+internal class SessionService(
     private val httpClient: HttpClient,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
 ) {
