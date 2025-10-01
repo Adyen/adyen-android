@@ -161,19 +161,15 @@ object JsonUtils {
      * @return A [List] of integers, or null if the jsonArray was null.
      */
     @JvmStatic
-    @Throws(JSONException::class)
     fun parseOptIntegerList(jsonArray: JSONArray?): List<Int>? {
         if (jsonArray == null) {
             return null
         }
         val list: MutableList<Int> = ArrayList()
         for (i in 0 until jsonArray.length()) {
-            val jsonValue = jsonArray.opt(i)
-            if (jsonValue is Int) {
-                val item = jsonArray.optInt(i)
-                list.add(item)
-            } else {
-                throw JSONException("type is not integer")
+            val value = jsonArray.opt(i)
+            if (value is Int) {
+                list.add(value)
             }
         }
         return Collections.unmodifiableList(list)
