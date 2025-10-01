@@ -49,4 +49,17 @@
         <item name="android:src">@drawable/ic_placeholder_image</item>
         <item name="android:contentDescription">@null</item>
     </style>
+
+    <style name="AdyenCheckout.QrCode.CodeTextAppearance" parent="AdyenCheckout.TextAppearance">
+        <item name="android:layout_marginStart">@dimen/standard_margin</item>
+        <item name="android:layout_marginEnd">@dimen/standard_margin</item>
+        <item name="android:layout_marginBottom">@dimen/standard_margin</item>
+        <item name="android:maxWidth">200dp</item>
+        <item name="android:textSize">@dimen/checkout_code_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
 </resources>

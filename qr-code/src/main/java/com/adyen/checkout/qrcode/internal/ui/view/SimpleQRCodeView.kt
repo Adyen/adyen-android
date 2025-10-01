@@ -93,6 +93,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         updateLogo(outputData.paymentMethodType)
         updateQrImage(outputData.qrImageUrl)
         updateAmount(delegate.componentParams)
+        updateCode(outputData.qrCodeData)
     }
 
     private fun updateMessageText(paymentMethodType: String?) {
@@ -136,6 +137,11 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         } else {
             binding.textviewAmount.isVisible = false
         }
+    }
+
+    private fun updateCode(code: String?) {
+        binding.textviewCode.isVisible = !code.isNullOrEmpty()
+        binding.textviewCode.text = code
     }
 
     private fun onTimerTick(timerData: TimerData) {
