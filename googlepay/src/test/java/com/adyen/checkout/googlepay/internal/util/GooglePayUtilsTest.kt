@@ -12,8 +12,8 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatform
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatformParams
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.googlepay.BillingAddressParameters
 import com.adyen.checkout.googlepay.BuildConfig

@@ -3,13 +3,13 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 11/9/2025.
+ * Created by oscars on 1/10/2025.
  */
 
-package com.adyen.checkout.components.core.internal.util
+package com.adyen.checkout.core.common.internal.helper
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.components.core.BuildConfig
+import com.adyen.checkout.core.BuildConfig
 import org.jetbrains.annotations.VisibleForTesting
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -26,8 +26,8 @@ object CheckoutPlatformParams {
         platform: CheckoutPlatform,
         version: String,
     ) {
-        this.platform = platform
-        this.version = version
+        CheckoutPlatformParams.platform = platform
+        CheckoutPlatformParams.version = version
     }
 
     @VisibleForTesting

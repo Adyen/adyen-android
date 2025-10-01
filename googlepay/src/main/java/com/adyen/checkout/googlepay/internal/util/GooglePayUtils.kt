@@ -8,9 +8,9 @@
 package com.adyen.checkout.googlepay.internal.util
 
 import com.adyen.checkout.components.core.internal.util.AmountFormat
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatform
-import com.adyen.checkout.components.core.internal.util.CheckoutPlatformParams
 import com.adyen.checkout.components.core.paymentmethod.GooglePayPaymentMethod
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.adyenLog
