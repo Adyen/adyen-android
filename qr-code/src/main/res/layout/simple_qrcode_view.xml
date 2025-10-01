@@ -30,6 +30,21 @@
         android:textIsSelectable="false"
         tools:text="@string/checkout_qr_code_pix" />
 
+    <ImageView
+        android:id="@+id/imageView_qrcode"
+        style="@style/AdyenCheckout.QrCode.Image"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/textview_amount"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textIsSelectable="false"
+        tools:text="$ 700,000,00" />
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"
         style="@style/AdyenCheckout.QrCode.ProgressIndicator"

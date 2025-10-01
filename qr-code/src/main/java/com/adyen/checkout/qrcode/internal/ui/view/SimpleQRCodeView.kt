@@ -14,9 +14,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
@@ -25,6 +28,7 @@ import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.load
 import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
@@ -90,6 +94,13 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)
+        updateQrImage(outputData.qrImageUrl)
+        updateAmount(delegate.componentParams)
+    }
+
+    private fun updateMessageText(paymentMethodType: String?) {
+        val resId = getMessageTextResource(paymentMethodType) ?: return
+        binding.textViewTopLabel.text = localizedContext.getString(resId)
     }
 
     @StringRes
@@ -110,9 +121,24 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         }
     }
 
-    private fun updateMessageText(paymentMethodType: String?) {
-        val resId = getMessageTextResource(paymentMethodType) ?: return
-        binding.textViewTopLabel.text = localizedContext.getString(resId)
+    private fun updateQrImage(qrImageUrl: String?) {
+        if (!qrImageUrl.isNullOrEmpty()) {
+            binding.imageViewQrcode.load(url = qrImageUrl)
+        }
+    }
+
+    private fun updateAmount(componentParams: ComponentParams) {
+        val amount = componentParams.amount
+        if (amount != null) {
+            val formattedAmount = CurrencyUtils.formatAmount(
+                amount,
+                componentParams.shopperLocale,
+            )
+            binding.textviewAmount.isVisible = true
+            binding.textviewAmount.text = formattedAmount
+        } else {
+            binding.textviewAmount.isVisible = false
+        }
     }
 
     private fun onTimerTick(timerData: TimerData) {
