@@ -32,9 +32,9 @@ fun Context.createLocalizedContext(locale: Locale): Context {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun Context.getLocale(): Locale {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        resources.configuration.locales[0]
+        resources.configuration.locales.takeIf { !it.isEmpty }?.get(0)
     } else {
         @Suppress("DEPRECATION")
         resources.configuration.locale
-    }
+    } ?: Locale.getDefault()
 }
