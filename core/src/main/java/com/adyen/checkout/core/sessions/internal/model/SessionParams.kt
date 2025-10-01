@@ -26,9 +26,7 @@ data class SessionParams(
     val environment: Environment,
     val clientKey: String,
     val enableStoreDetails: Boolean?,
-
-    // TODO - Installments
-//    val installmentConfiguration: SessionInstallmentConfiguration?,
+    val installmentConfiguration: SessionInstallmentConfiguration?,
     val showRemovePaymentMethodButton: Boolean?,
     val amount: Amount?,
     val returnUrl: String?,

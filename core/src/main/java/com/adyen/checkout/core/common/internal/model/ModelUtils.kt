@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.core.common.internal.model
 
+import androidx.annotation.RestrictTo
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Collections
 
-internal object ModelUtils {
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+object ModelUtils {
 
     /**
      * Parse a [JSONObject] to a class that extends [ModelObject] using its [ModelObject.Serializer].

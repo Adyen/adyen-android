@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.core.sessions.internal.model
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.LocaleUtil
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -17,8 +16,7 @@ import com.adyen.checkout.core.sessions.internal.data.model.SessionDetails
 import com.adyen.checkout.core.sessions.internal.data.model.mapToDetails
 import java.util.Locale
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object SessionParamsFactory {
+internal object SessionParamsFactory {
     // Used for components
     fun create(checkoutSession: CheckoutSession): SessionParams {
         return checkoutSession.mapToDetails().mapToParams()
@@ -34,18 +32,16 @@ object SessionParamsFactory {
             environment = environment,
             clientKey = clientKey,
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
-
-            // TODO - Installments
-//            installmentConfiguration = SessionInstallmentConfiguration(
-//                installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
-//                    it.key to SessionInstallmentOptionsParams(
-//                        plans = it.value?.plans,
-//                        preselectedValue = it.value?.preselectedValue,
-//                        values = it.value?.values,
-//                    )
-//                }?.toMap(),
-//                showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount,
-//            ),
+            installmentConfiguration = SessionInstallmentConfiguration(
+                installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
+                    it.key to SessionInstallmentOptionsParams(
+                        plans = it.value?.plans,
+                        preselectedValue = it.value?.preselectedValue,
+                        values = it.value?.values,
+                    )
+                }?.toMap(),
+                showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount,
+            ),
             showRemovePaymentMethodButton = sessionSetupConfiguration?.showRemovePaymentMethodButton,
             amount = amount,
             returnUrl = returnUrl,

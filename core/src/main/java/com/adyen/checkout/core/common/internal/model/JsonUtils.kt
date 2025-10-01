@@ -5,6 +5,7 @@
  *
  * Created by ozgur on 30/4/2025.
  */
+@file:Suppress("TooManyFunctions")
 
 package com.adyen.checkout.core.common.internal.model
 
@@ -50,6 +51,34 @@ fun JSONObject.toStringPretty(): String {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.optStringList(key: String): List<String>? {
     return JsonUtils.parseOptStringList(optJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.optIntList(key: String): List<Int>? {
+    return JsonUtils.parseOptIntegerList(optJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Throws(JSONException::class)
+inline fun <reified T : ModelObject> JSONObject.jsonToMap(
+    modelSerializer: ModelObject.Serializer<T>
+): Map<String, T?> {
+    val map = mutableMapOf<String, T?>()
+
+    if (this !== JSONObject.NULL) {
+        val keysItr = this.keys()
+
+        while (keysItr.hasNext()) {
+            val key = keysItr.next()
+            val value = this[key]
+
+            if (value is JSONObject) {
+                map[key] = ModelUtils.deserializeOpt(value, modelSerializer)
+            }
+        }
+    }
+
+    return map
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -120,6 +149,49 @@ object JsonUtils {
         }
         return JSONArray().apply {
             stringList.filter { !it.isNullOrEmpty() }.forEach {
+                put(it)
+            }
+        }
+    }
+
+    /**
+     * Parses a [JSONArray] to a list of integers.
+     *
+     * @param jsonArray The JSONArray to be read.
+     * @return A [List] of integers, or null if the jsonArray was null.
+     */
+    @JvmStatic
+    @Throws(JSONException::class)
+    fun parseOptIntegerList(jsonArray: JSONArray?): List<Int>? {
+        if (jsonArray == null) {
+            return null
+        }
+        val list: MutableList<Int> = ArrayList()
+        for (i in 0 until jsonArray.length()) {
+            val jsonValue = jsonArray.opt(i)
+            if (jsonValue is Int) {
+                val item = jsonArray.optInt(i)
+                list.add(item)
+            } else {
+                throw JSONException("type is not integer")
+            }
+        }
+        return Collections.unmodifiableList(list)
+    }
+
+    /**
+     * Serializes a List of integers to a [JSONArray].
+     *
+     * @param intList The [List] of integers to be serialized.
+     * @return The populated [JSONArray]. Could be null.
+     */
+    @JvmStatic
+    fun serializeOptIntegerList(intList: List<Int>?): JSONArray? {
+        if (intList == null) {
+            return null
+        }
+        return JSONArray().apply {
+            intList.forEach {
                 put(it)
             }
         }
