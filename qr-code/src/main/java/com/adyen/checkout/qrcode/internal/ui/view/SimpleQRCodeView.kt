@@ -162,23 +162,25 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
     }
 
     private fun onCopyClicked(qrCodeData: String?) {
+        qrCodeData ?: return
         binding.copyButton.setText(R.string.checkout_qr_code_copied_toast)
         copyCode(qrCodeData)
         binding.copyButton.postDelayed(
             { binding.copyButton.setText(R.string.checkout_qr_code_copy_button) },
-            2000,
+            COPY_BUTTON_TEXT_CHANGE_DELAY,
         )
     }
 
-    private fun copyCode(qrCodeData: String?) {
-        qrCodeData ?: return
-        context.copyTextToClipboard(
-            "Pix Code",
-            qrCodeData,
-        )
+    private fun copyCode(qrCodeData: String) {
+        context.copyTextToClipboard(COPY_LABEL, qrCodeData)
     }
 
     override fun getView(): View = this
 
     override fun highlightValidationErrors() = Unit
+
+    companion object {
+        private const val COPY_LABEL = "Pix Code"
+        private const val COPY_BUTTON_TEXT_CHANGE_DELAY = 2000L
+    }
 }
