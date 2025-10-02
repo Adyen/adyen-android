@@ -203,3 +203,5 @@ sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 resolve-dependencies = { id = "resolve-dependencies" }
+generate-dependency-list = { id = "generate-dependency-list" }
+aggregate-dependency-lists = { id = "aggregate-dependency-lists" }
