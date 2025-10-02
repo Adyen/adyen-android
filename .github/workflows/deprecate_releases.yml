@@ -1,0 +1,57 @@
+name: Deprecate Old Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      major_version:
+        type: number
+        description: 'The Major Version (X) to deprecate, e.g., "4". All versions starting with X will be deprecated.'
+        required: true
+      dry_run:
+        type: boolean
+        description: 'Set to "true" to test without making changes. Use "false" for actual deprecation.'
+        required: true
+        default: true
+      tag:
+        description: 'The tag to be used to mark the releases with'
+        required: true
+        type: choice
+        options:
+          - '[DEPRECATED]'
+          - '[END-OF-LIFE]'
+
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Validate Major Version
+        id: validate
+        run: |
+          MAJOR_VERSION="${{ github.event.inputs.major_version }}"
+          
+          if ! [[ "$MAJOR_VERSION" =~ ^[0-9]+$ ]]; then
+            echo "Error: 'major_version' input is not a numeric string (found: $MAJOR_VERSION)."
+            exit 1
+          fi
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Release Deprecation Script
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+          TAG: ${{ github.event.inputs.tag }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running deprecation for major version ${{ github.event.inputs.major_version }}"
+          DRY_RUN=${DRY_RUN} MAJOR_VERSION=${MAJOR_VERSION} TAG=${TAG} node .github/scripts/deprecate-releases.js
