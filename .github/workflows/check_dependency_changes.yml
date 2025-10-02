@@ -28,7 +28,7 @@ jobs:
     needs: [ get_head_dependency_list, get_base_dependency_list ]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           sparse-checkout: |
             scripts/check_dependency_changes.py
