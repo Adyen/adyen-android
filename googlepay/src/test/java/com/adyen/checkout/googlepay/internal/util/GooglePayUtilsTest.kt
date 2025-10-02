@@ -12,15 +12,22 @@ import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParams
 import com.adyen.checkout.components.core.internal.ui.model.AnalyticsParamsLevel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParams
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatform
+import com.adyen.checkout.core.common.internal.helper.CheckoutPlatformParams
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.googlepay.BillingAddressParameters
+import com.adyen.checkout.googlepay.BuildConfig
 import com.adyen.checkout.googlepay.MerchantInfo
 import com.adyen.checkout.googlepay.ShippingAddressParameters
+import com.adyen.checkout.googlepay.SoftwareInfo
 import com.adyen.checkout.googlepay.internal.ui.model.GooglePayComponentParams
 import com.google.android.gms.wallet.WalletConstants
 import org.json.JSONObject
 import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.MethodSource
 import java.util.Locale
 
 internal class GooglePayUtilsTest {
@@ -125,6 +132,14 @@ internal class GooglePayUtilsTest {
                 {
                     "apiVersionMinor": 0,
                     "apiVersion": 2,
+                    "merchantInfo":
+                    {
+                        "softwareInfo":
+                        {
+                            "id": "android/adyen-components",
+                            "version": "develop"
+                        }
+                    },
                     "allowedPaymentMethods":
                     [
                         {
@@ -172,7 +187,12 @@ internal class GooglePayUtilsTest {
                     "merchantInfo":
                     {
                         "merchantId": "MERCHANT_ID",
-                        "merchantName": "MERCHANT_NAME"
+                        "merchantName": "MERCHANT_NAME",
+                        "softwareInfo":
+                        {
+                            "id": "android/adyen-dropin",
+                            "version": "develop"
+                        }
                     },
                     "allowedPaymentMethods":
                     [
@@ -238,6 +258,32 @@ internal class GooglePayUtilsTest {
         assertEquals(expectedSerializedPaymentDataRequest, paymentDataRequest.toJson())
     }
 
+    @ParameterizedTest
+    @MethodSource("softwareInfoSource")
+    fun `when creating payment data request, then software info is added correctly`(
+        platform: CheckoutPlatform,
+        version: String?,
+        isDropIn: Boolean,
+        expectedId: String,
+        expectedVersion: String,
+    ) {
+        CheckoutPlatformParams.resetDefaults()
+
+        if (platform != CheckoutPlatform.ANDROID) {
+            CheckoutPlatformParams.overrideForCrossPlatform(platform, requireNotNull(version))
+        }
+
+        val paymentDataRequest =
+            GooglePayUtils.createPaymentDataRequest(getCustomGooglePayComponentParams(isCreatedByDropIn = isDropIn))
+        val softwareInfoJson = JSONObject(paymentDataRequest.toJson())
+            .getJSONObject("merchantInfo")
+            .getJSONObject("softwareInfo")
+        val softwareInfo = SoftwareInfo.SERIALIZER.deserialize(softwareInfoJson)
+
+        assertEquals(expectedId, softwareInfo.id)
+        assertEquals(expectedVersion, softwareInfo.version)
+    }
+
     private fun getEmptyGooglePayComponentParams(): GooglePayComponentParams {
         return GooglePayComponentParams(
             commonComponentParams = CommonComponentParams(
@@ -271,14 +317,14 @@ internal class GooglePayUtilsTest {
         )
     }
 
-    private fun getCustomGooglePayComponentParams(): GooglePayComponentParams {
+    private fun getCustomGooglePayComponentParams(isCreatedByDropIn: Boolean = true): GooglePayComponentParams {
         return GooglePayComponentParams(
             commonComponentParams = CommonComponentParams(
                 shopperLocale = Locale.GERMAN,
                 environment = Environment.EUROPE,
                 clientKey = "CLIENT_KEY_CUSTOM",
                 analyticsParams = AnalyticsParams(AnalyticsParamsLevel.INITIAL, "CLIENT_KEY_CUSTOM"),
-                isCreatedByDropIn = true,
+                isCreatedByDropIn = isCreatedByDropIn,
                 amount = Amount("EUR", 13_37),
             ),
             amount = Amount("EUR", 13_37),
@@ -310,6 +356,20 @@ internal class GooglePayUtilsTest {
             ),
             checkoutOption = "DEFAULT",
             googlePayButtonStyling = null,
+        )
+    }
+
+    companion object {
+
+        @JvmStatic
+        fun softwareInfoSource() = listOf(
+            // platform, version, isDropIn, expectedId, expectedVersion
+            arguments(CheckoutPlatform.ANDROID, null, true, "android/adyen-dropin", BuildConfig.CHECKOUT_VERSION),
+            arguments(CheckoutPlatform.ANDROID, null, false, "android/adyen-components", BuildConfig.CHECKOUT_VERSION),
+            arguments(CheckoutPlatform.FLUTTER, "1.2.3", true, "flutter/adyen-dropin", "1.2.3"),
+            arguments(CheckoutPlatform.FLUTTER, "3.2.1", false, "flutter/adyen-components", "3.2.1"),
+            arguments(CheckoutPlatform.REACT_NATIVE, "1.2.3", true, "react-native/adyen-dropin", "1.2.3"),
+            arguments(CheckoutPlatform.REACT_NATIVE, "3.2.1", false, "react-native/adyen-components", "3.2.1"),
         )
     }
 }

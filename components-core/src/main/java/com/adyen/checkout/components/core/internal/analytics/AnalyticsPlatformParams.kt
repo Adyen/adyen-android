@@ -30,8 +30,8 @@ object AnalyticsPlatformParams {
         platform: AnalyticsPlatform,
         version: String,
     ) {
-        this.platform = platform.value
-        this.version = version
+        AnalyticsPlatformParams.platform = platform.value
+        AnalyticsPlatformParams.version = version
     }
 
     @Suppress("unused")
