@@ -18,7 +18,7 @@ jobs:
       allowed-labels: ${{ steps.get_allowed_labels.outputs.allowed_labels }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Get the list of allowed pull request labels
         id: get_allowed_labels
@@ -42,7 +42,7 @@ jobs:
     needs: get_allowed_labels
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
