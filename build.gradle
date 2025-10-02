@@ -83,6 +83,41 @@ subprojects {
     tasks.withType(Test).configureEach {
         useJUnitPlatform()
     }
+
+    plugins.withType(MavenPublishPlugin).configureEach {
+        tasks.register('generateDependencyList') {
+            def outputDir = new File("${project.layout.buildDirectory.asFile.get()}/outputs/dependency_list/")
+            doFirst {
+                if (!outputDir.exists()) {
+                    outputDir.mkdirs()
+                }
+            }
+
+            doLast {
+                def groupedDependencies = configurations.releaseRuntimeClasspath
+                    .incoming
+                    .resolutionResult
+                    .allDependencies
+                    .collect { dependency ->
+                        [dependency: "${dependency.selected}"]
+                    }
+
+                def outputFileName = "dependency_list.txt"
+
+                def file = new File(outputDir, outputFileName)
+                def fileWriter = file.newWriter()
+
+                groupedDependencies
+                    .collect { it.dependency }
+                    .unique()
+                    .toSorted()
+                    .each { fileWriter.writeLine(it) }
+
+                fileWriter.flush()
+                fileWriter.close()
+            }
+        }
+    }
 }
 
 dependencies {
