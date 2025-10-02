@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.components.internal
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
@@ -18,8 +19,8 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 
-// TODO - App context - Check if context can be used here or how we can pass it here
 internal class AdyenComponent(
+    applicationContext: Context,
     txVariant: String,
     checkoutContext: CheckoutContext,
     savedStateHandle: SavedStateHandle,
@@ -28,6 +29,7 @@ internal class AdyenComponent(
 
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
+            applicationContext = applicationContext,
             txVariant = txVariant,
             checkoutContext = checkoutContext,
             coroutineScope = viewModelScope,

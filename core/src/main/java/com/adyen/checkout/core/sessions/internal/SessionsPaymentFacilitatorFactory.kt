@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.core.sessions.internal
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.common.internal.helper.getLocale
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
@@ -27,9 +29,9 @@ import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
-import java.util.Locale
 
 internal class SessionsPaymentFacilitatorFactory(
+    private val applicationContext: Context,
     private val checkoutSession: CheckoutSession,
     private val checkoutConfiguration: CheckoutConfiguration,
     private val checkoutCallbacks: CheckoutCallbacks,
@@ -48,10 +50,7 @@ internal class SessionsPaymentFacilitatorFactory(
 
         val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
-
-            // TODO - Add locale support, For now it's hardcoded to US
-            // deviceLocale = localeProvider.getLocale(application)
-            deviceLocale = Locale.US,
+            deviceLocale = applicationContext.getLocale(),
             dropInOverrideParams = null,
             componentSessionParams = SessionParamsFactory.create(checkoutSession),
         )
@@ -59,7 +58,7 @@ internal class SessionsPaymentFacilitatorFactory(
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
         val analyticsManager = AnalyticsManagerFactory().provide(
             componentParams = componentParamsBundle.commonComponentParams,
-            application = null,
+            applicationContext = applicationContext,
             // TODO - Analytics. Provide payment method type to source
             source = AnalyticsSource.PaymentComponent("AwaitAction"),
             sessionId = checkoutSession.sessionSetupResponse.id,

@@ -9,13 +9,10 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
-import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
-import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
-import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
@@ -29,17 +26,6 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
     ): MBWayComponent {
-        // TODO - Analytics to be passed later, given that Drop-in might pass its own AnalyticsManager?
-        // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
-        val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = componentParamsBundle.commonComponentParams,
-            application = null,
-            source = AnalyticsSource.PaymentComponent(PaymentMethodTypes.MB_WAY),
-            // TODO - When we move out componentParams logic creation to the payment facilitator
-            //  factory level, Analytics manager should move there too and sessionId can be passed
-            sessionId = null,
-        )
-
         val stateManager = DefaultViewStateManager(
             factory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),
             validator = MBWayViewStateValidator(),
