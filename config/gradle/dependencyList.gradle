@@ -7,7 +7,11 @@
  */
 
 // sample call from command line: ./gradlew dependencyList --no-configuration-cache -PoutputFileName=deps.txt -PincludeModules=true
-tasks.register('dependencyList') {
+tasks.register('dependencyList') { task ->
+    subprojects
+        .findAll { subproject -> subproject.plugins.hasPlugin("maven-publish") }
+        .each { task.dependsOn("${it.name}:generateDependencyList") }
+
     doLast {
         def includeModules = false
         if (project.hasProperty("includeModules") && project.property("includeModules") == "true") {
@@ -17,13 +21,12 @@ tasks.register('dependencyList') {
         def groupedDependencies = subprojects
             .findAll { subproject -> subproject.plugins.hasPlugin("maven-publish") }
             .collect { subproject ->
-                subproject.configurations
-                    .releaseRuntimeClasspath
-                    .incoming
-                    .resolutionResult
-                    .allDependencies
+                subproject.layout.buildDirectory.file('outputs/dependency_list/dependency_list.txt')
+                    .get()
+                    .asFile
                     .collect { dependency ->
-                        [dependency: "${dependency.selected}", module: subproject.name]
+                        println(dependency)
+                        [dependency: dependency, module: subproject.name]
                     }
             }.flatten()
 
