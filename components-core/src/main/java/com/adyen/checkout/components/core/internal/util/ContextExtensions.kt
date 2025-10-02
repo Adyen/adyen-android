@@ -20,12 +20,10 @@ import androidx.core.content.getSystemService
 import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun Context.copyTextToClipboard(label: String, text: String, toastText: String? = null) {
+fun Context.copyTextToClipboard(label: String, text: String) {
     val clipboardManager = getSystemService<ClipboardManager>() ?: return
     val clipData = ClipData.newPlainText(label, text)
     clipboardManager.setPrimaryClip(clipData)
-    if (toastText == null) return
-    toast(toastText)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -47,7 +45,3 @@ fun Context.createLocalizedContext(locale: Locale): Context {
 
     return createConfigurationContext(newConfig) ?: this
 }
-
-val Context.screenWidthPixels: Int
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    get() = resources.displayMetrics.widthPixels
