@@ -17,7 +17,7 @@ jobs:
       version-name: ${{ steps.generate_version_name.outputs.version_name }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Generate version name
         id: generate_version_name
         run: |

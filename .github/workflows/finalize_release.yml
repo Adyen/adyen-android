@@ -26,7 +26,7 @@ jobs:
     needs: update_release_notes
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Publish Github release and the tag
       - name: Publish Github release
@@ -49,7 +49,7 @@ jobs:
     needs: publish_draft_release
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Remove release branch
         env:

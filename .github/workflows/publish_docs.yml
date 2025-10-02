@@ -15,7 +15,7 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Setup Java 17
       # https://github.com/marketplace/actions/setup-java-jdk
