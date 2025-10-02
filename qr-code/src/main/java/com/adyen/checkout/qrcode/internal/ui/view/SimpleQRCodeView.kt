@@ -69,7 +69,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.copyButton.setOnClickListener { copyCode(delegate.outputData.qrCodeData) }
+        binding.copyButton.setOnClickListener { onCopyClicked(delegate.outputData.qrCodeData) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -161,12 +161,20 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
+    private fun onCopyClicked(qrCodeData: String?) {
+        binding.copyButton.setText(R.string.checkout_qr_code_copied_toast)
+        copyCode(qrCodeData)
+        binding.copyButton.postDelayed(
+            { binding.copyButton.setText(R.string.checkout_qr_code_copy_button) },
+            2000,
+        )
+    }
+
     private fun copyCode(qrCodeData: String?) {
         qrCodeData ?: return
         context.copyTextToClipboard(
             "Pix Code",
             qrCodeData,
-            localizedContext.getString(R.string.checkout_qr_code_copied_toast),
         )
     }
 
