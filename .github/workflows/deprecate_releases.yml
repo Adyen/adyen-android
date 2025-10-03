@@ -1,0 +1,39 @@
+name: Deprecate Old Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      major_version:
+        description: 'The current Major Version (X) to keep, e.g., "4". All < X will be deprecated.'
+        required: true
+        default: '1'
+      dry_run:
+        description: 'Set to "true" to test without making changes. Use "false" for actual deprecation.'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  deprecate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Run Release Deprecation Script
+        env:
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Running deprecation for major version ${{ github.event.inputs.major_version }}"
+          DRY_RUN=${DRY_RUN} MAJOR_VERSION=${MAJOR_VERSION} node .github/scripts/deprecate-releases.js
