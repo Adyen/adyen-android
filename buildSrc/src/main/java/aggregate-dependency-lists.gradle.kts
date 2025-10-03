@@ -63,3 +63,9 @@ tasks.register("aggregateDependencyLists") {
 }
 
 private data class DependencyUsage(val dependency: String, val module: String)
+
+// Deprecated task
+tasks.register("dependencyList") {
+    dependsOn("aggregateDependencyLists")
+    logger.warn("This task is deprecated. Use 'aggregateDependencyLists' instead.")
+}
