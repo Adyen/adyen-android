@@ -32,6 +32,7 @@
 
 [excluded]
 # We only need the package name, but since toml files are key value base we set an empty value.
+"aggregate-dependency-lists" = ""
 "androidx.arch.core:core-testing" = ""
 "androidx.compose.material:material-icons-core" = ""
 "androidx.compose.ui:ui" = ""
@@ -72,6 +73,7 @@
 "com.squareup.retrofit2:retrofit" = ""
 "com.squareup:javapoet" = ""
 "dokka-convention" = ""
+"generate-dependency-list" = ""
 "io.gitlab.arturbosch.detekt" = ""
 "io.gitlab.arturbosch.detekt:detekt-formatting" = ""
 "jacoco" = ""

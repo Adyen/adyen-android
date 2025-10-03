@@ -10,6 +10,7 @@ plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
     alias libs.plugins.dokka.convention
+    alias libs.plugins.generate.dependency.list
 }
 
 // Maven artifact

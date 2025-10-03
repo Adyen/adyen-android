@@ -15,11 +15,11 @@ plugins {
     alias libs.plugins.jacoco
     alias libs.plugins.binary.compatibility.validator
     alias libs.plugins.resolve.dependencies
+    alias libs.plugins.aggregate.dependency.lists
 }
 
 apply from: "config/gradle/sonarcloud.gradle"
 apply from: "config/gradle/apiValidator.gradle"
-apply from: "config/gradle/dependencyList.gradle"
 
 ext {
     if (project.hasProperty("version-name")) {
