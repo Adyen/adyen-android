@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Download release notes artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         env:
           VERSION_NAME: ${{ inputs.version-name }}
         with:
