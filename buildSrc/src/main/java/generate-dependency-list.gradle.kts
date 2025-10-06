@@ -6,32 +6,42 @@
  * Created by oscars on 2/10/2025.
  */
 
-tasks.register("generateDependencyList") {
-    notCompatibleWithConfigurationCache("Uses project during execution")
-    doNotTrackState("This task must always run to ensure the latest dependencies are resolved")
+abstract class GenerateDependencyListTask @Inject constructor() : DefaultTask() {
 
-    val outputDir = file("${project.layout.buildDirectory.asFile.get()}/outputs/dependency_list/")
-    doFirst {
-        if (!outputDir.exists()) {
-            outputDir.mkdirs()
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
+
+    @get:Input
+    abstract val dependencyDisplayNames: ListProperty<String>
+
+    @TaskAction
+    fun generateList() {
+        val file = outputFile.asFile.get()
+        file.parentFile.mkdirs()
+
+        file.writer().use { fileWriter ->
+            dependencyDisplayNames.get()
+                .distinct()
+                .sorted()
+                .forEach { fileWriter.appendLine(it) }
         }
     }
+}
 
-    doLast {
-        val outputFileName = "dependency_list.txt"
-        val file = file("$outputDir/$outputFileName")
-        val fileWriter = file.writer()
+tasks.register<GenerateDependencyListTask>("generateDependencyList") {
+    description = "Generates a list of all resolved dependencies for the releaseRuntimeClasspath configuration."
+    group = "Reporting"
 
-        configurations["releaseRuntimeClasspath"]
-            .incoming
+    val outputDir = project.layout.buildDirectory.dir("outputs/dependency_list").get()
+    outputFile.set(outputDir.file("dependency_list.txt"))
+
+    val deps = project.configurations.named("releaseRuntimeClasspath").map { config ->
+        config.incoming
             .resolutionResult
             .allDependencies
-            .map { (it as ResolvedDependencyResult).selected.id.displayName }
-            .distinct()
-            .sorted()
-            .forEach { fileWriter.appendLine(it) }
-
-        fileWriter.flush()
-        fileWriter.close()
+            .filterIsInstance<ResolvedDependencyResult>()
+            .map { it.selected.id.displayName }
     }
+
+    dependencyDisplayNames.set(deps)
 }

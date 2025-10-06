@@ -6,66 +6,76 @@
  * Created by oscars on 2/10/2025.
  */
 
-// sample call from command line: ./gradlew aggregateDependencyLists --no-configuration-cache -PoutputFileName=deps.txt -PincludeModules=true
-tasks.register("aggregateDependencyLists") {
-    val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin("generate-dependency-list") }
+abstract class AggregateDependencyListsTask : DefaultTask() {
 
-    filteredSubProjects.forEach { dependsOn("${it.name}:generateDependencyList") }
+    @get:InputFiles
+    abstract val dependencyLists: ConfigurableFileCollection
 
-    val outputDir = file("${project.layout.buildDirectory.asFile.get()}/outputs/dependency_list/")
-    doFirst {
-        if (!outputDir.exists()) {
-            outputDir.mkdirs()
-        }
-    }
+    @get:OutputFile
+    abstract val outputFile: RegularFileProperty
 
-    doLast {
-        val groupedDependencies = filteredSubProjects
-            .flatMap { subproject ->
-                subproject.layout.buildDirectory.file("outputs/dependency_list/dependency_list.txt")
-                    .get()
-                    .asFile
-                    .useLines { lines ->
-                        lines.map {
-                            DependencyUsage(it, subproject.name)
-                        }.toList()
-                    }
+    @get:Input
+    @get:Optional
+    abstract val includeModules: Property<Boolean>
+
+    @TaskAction
+    fun aggregate() {
+        val groupedDependencies = dependencyLists.files.flatMap { file ->
+            // The module name is derived from the input file's path.
+            val moduleName = file.parentFile.parentFile.parentFile.parentFile.name
+            file.useLines { lines ->
+                lines.map {
+                    DependencyUsage(it, moduleName)
+                }.toList()
             }
-
-        val outputFileName = if (project.hasProperty("outputFileName")) {
-            project.property("outputFileName") as String
-        } else {
-            "dependency_list.txt"
         }
 
-        val fileWriter = file("$outputDir/$outputFileName").writer()
-
-        val includeModules = project.hasProperty("includeModules") && project.property("includeModules") == "true"
-        if (!includeModules) {
-            groupedDependencies
-                .map { it.dependency }
-                .distinct()
-                .sorted()
-                .forEach { fileWriter.appendLine(it) }
-        } else {
-            groupedDependencies
-                .groupBy { it.dependency }
-                .toSortedMap { one, two -> one!!.compareTo(two!!) }
-                .forEach { (dep, usages) ->
-                    val modules = usages.map { it.module }.distinct()
-                    fileWriter.appendLine("$dep - used by: [${modules.joinToString()}]")
-                }
+        outputFile.get().asFile.writer().use { writer ->
+            if (includeModules.getOrElse(false)) {
+                groupedDependencies
+                    .groupBy { it.dependency }
+                    .toSortedMap()
+                    .forEach { (dep, usages) ->
+                        val modules = usages.map { it.module }.distinct().sorted()
+                        writer.appendLine("$dep - used by: [${modules.joinToString()}]")
+                    }
+            } else {
+                groupedDependencies
+                    .map { it.dependency }
+                    .distinct()
+                    .sorted()
+                    .forEach { dependency -> writer.appendLine(dependency) }
+            }
         }
-
-        fileWriter.flush()
-        fileWriter.close()
     }
 }
 
 private data class DependencyUsage(val dependency: String, val module: String)
 
+// Example call from command line: ./gradlew aggregateDependencyLists -PoutputFileName=deps.txt -PincludeModules=true
+val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
+    val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin("generate-dependency-list") }
+
+    filteredSubProjects.forEach {
+        dependsOn(it.tasks.named("generateDependencyList"))
+    }
+
+    dependencyLists.from(
+        filteredSubProjects.map {
+            it.layout.buildDirectory.file("outputs/dependency_list/dependency_list.txt")
+        },
+    )
+
+    val outputFileName = project.providers.gradleProperty("outputFileName").getOrElse("dependency_list.txt")
+    outputFile.set(project.layout.buildDirectory.file("outputs/dependency_list/$outputFileName"))
+
+    includeModules.set(project.providers.gradleProperty("includeModules").map { it.toBoolean() })
+}
+
 // Deprecated task
 tasks.register("dependencyList") {
-    dependsOn("aggregateDependencyLists")
-    logger.warn("This task is deprecated. Use 'aggregateDependencyLists' instead.")
+    dependsOn(aggregateDependencyLists)
+    doFirst {
+        logger.warn("This task is deprecated. Use 'aggregateDependencyLists' instead.")
+    }
 }
