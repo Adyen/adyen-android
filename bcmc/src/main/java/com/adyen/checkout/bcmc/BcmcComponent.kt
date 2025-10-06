@@ -11,8 +11,8 @@ package com.adyen.checkout.bcmc
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
-import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.old.CardComponent
+import com.adyen.checkout.card.old.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponent

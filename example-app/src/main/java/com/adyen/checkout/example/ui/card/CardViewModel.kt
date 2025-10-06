@@ -3,8 +3,8 @@ package com.adyen.checkout.example.ui.card
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.old.CardComponent
+import com.adyen.checkout.card.old.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.ComponentError

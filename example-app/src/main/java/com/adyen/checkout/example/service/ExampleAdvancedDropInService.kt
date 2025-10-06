@@ -9,8 +9,8 @@
 package com.adyen.checkout.example.service
 
 import android.util.Log
-import com.adyen.checkout.card.BinLookupData
-import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.old.BinLookupData
+import com.adyen.checkout.card.old.CardComponentState
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.BalanceResult

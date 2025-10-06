@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@null">
 
-            <com.adyen.checkout.card.internal.ui.view.CardNumberInput
+            <com.adyen.checkout.card.old.internal.ui.view.CardNumberInput
                 android:id="@+id/editText_cardNumber"
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:enabled="false"

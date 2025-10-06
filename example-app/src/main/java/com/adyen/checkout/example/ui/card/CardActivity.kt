@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.old.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.AddressLookupResult
 import com.adyen.checkout.components.core.LookupAddress

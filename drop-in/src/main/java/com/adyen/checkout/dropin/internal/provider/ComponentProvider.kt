@@ -24,9 +24,9 @@ import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
 import com.adyen.checkout.boleto.BoletoComponent
 import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.internal.provider.BoletoComponentProvider
-import com.adyen.checkout.card.CardComponent
-import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.internal.provider.CardComponentProvider
+import com.adyen.checkout.card.old.CardComponent
+import com.adyen.checkout.card.old.CardComponentState
+import com.adyen.checkout.card.old.internal.provider.CardComponentProvider
 import com.adyen.checkout.cashapppay.CashAppPayComponent
 import com.adyen.checkout.cashapppay.CashAppPayComponentState
 import com.adyen.checkout.cashapppay.internal.provider.CashAppPayComponentProvider

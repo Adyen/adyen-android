@@ -23,7 +23,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.old.BinLookupData
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.BalanceResult
 import com.adyen.checkout.components.core.CheckoutConfiguration

@@ -1,4 +1,4 @@
-public final class com/adyen/checkout/bcmc/BcmcComponent : com/adyen/checkout/card/CardComponent {
+public final class com/adyen/checkout/bcmc/BcmcComponent : com/adyen/checkout/card/old/CardComponent {
 	public static final field Companion Lcom/adyen/checkout/bcmc/BcmcComponent$Companion;
 	public static final field PAYMENT_METHOD_TYPES Ljava/util/List;
 	public static final field PROVIDER Lcom/adyen/checkout/bcmc/internal/provider/BcmcComponentProvider;

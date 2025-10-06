@@ -8,8 +8,12 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.old.internal.data.model.Brand
+import com.adyen.checkout.card.old.internal.ui.model.InputFieldUIState
+import com.adyen.checkout.card.old.internal.util.CardExpiryDateValidation
+import com.adyen.checkout.card.old.internal.util.CardNumberValidation
+import com.adyen.checkout.card.old.internal.util.CardSecurityCodeValidation
+import com.adyen.checkout.card.old.internal.util.CardValidationUtils
 import com.adyen.checkout.core.old.ui.validation.CardExpiryDateValidationResult
 import com.adyen.checkout.core.old.ui.validation.CardNumberValidationResult
 import com.adyen.checkout.core.old.ui.validation.CardSecurityCodeValidationResult
