@@ -8,11 +8,12 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopier koden og åpne appen med den registrerte PIX-nøkkelen, velg Betal med PIX og lim inn koden der.</string>
+    <string name="checkout_qr_code_pix">Bruk bankappen til å skanne QR-koden eller kopier PIX-koden nedenfor for å fullføre betalingen.</string>
     <string name="checkout_qr_code_upi">Ta et skjermbilde for opplasting i UPI-appen, eller skann QR-koden for å bruke din foretrukne UPI-app til å fullføre betalingen.</string>
-    <string name="checkout_qr_code_copy_button">Kopier kode</string>
+    <string name="checkout_qr_code_copy_button">Kopier PIX-koden</string>
     <string name="checkout_qr_code_timer_text">Du har %s igjen til å betale</string>
     <string name="checkout_qr_code_copied_toast">Koden er kopiert til utklippstavlen</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX-koden er kopiert</string>
     <string name="checkout_qr_code_duit_now">Ta et skjermbilde eller lagre QR-koden, åpne bankappen din og last opp QR-koden for å verifisere opplysningene og fullføre betalingen.</string>
     <string name="checkout_qr_code_prompt_pay">Ta et skjermbilde eller lagre QR-koden, åpne bankappen din og last opp QR-koden for å verifisere opplysningene og fullføre betalingen.</string>
     <string name="checkout_qr_code_pay_now">Ta et skjermbilde eller lagre QR-koden, åpne bankappen din og last opp QR-koden for å verifisere opplysningene og fullføre betalingen.</string>
