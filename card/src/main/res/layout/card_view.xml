@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:minHeight="@null">
 
-            <com.adyen.checkout.card.internal.ui.view.CardNumberInput
+            <com.adyen.checkout.card.old.internal.ui.view.CardNumberInput
                 android:id="@+id/editText_cardNumber"
                 style="@style/AdyenCheckout.Card.CardNumberInput"
                 android:nextFocusDown="@id/editText_expiryDate"
@@ -70,7 +70,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainer_cardScanning"
-                android:name="com.adyen.checkout.card.internal.ui.view.CardScanningFragment"
+                android:name="com.adyen.checkout.card.old.internal.ui.view.CardScanningFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:layout="@layout/fragment_card_scanning" />

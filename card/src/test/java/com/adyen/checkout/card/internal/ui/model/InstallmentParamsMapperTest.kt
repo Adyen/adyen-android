@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import com.adyen.checkout.card.InstallmentConfiguration
-import com.adyen.checkout.card.InstallmentOptions
+import com.adyen.checkout.card.old.InstallmentConfiguration
+import com.adyen.checkout.card.old.InstallmentOptions
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentOptionParams
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentsParamsMapper
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentOptionsParams

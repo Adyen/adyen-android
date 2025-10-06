@@ -14,8 +14,8 @@ import app.cash.turbine.test
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
 import com.adyen.checkout.bcmc.internal.ui.BcmcComponentViewType
-import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.old.CardComponentState
+import com.adyen.checkout.card.old.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.test.LoggingExtension

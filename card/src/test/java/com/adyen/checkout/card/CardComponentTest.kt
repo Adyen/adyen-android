@@ -13,8 +13,10 @@ import androidx.lifecycle.viewModelScope
 import app.cash.turbine.test
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
-import com.adyen.checkout.card.internal.ui.CardComponentViewType
-import com.adyen.checkout.card.internal.ui.CardDelegate
+import com.adyen.checkout.card.old.CardComponent
+import com.adyen.checkout.card.old.CardComponentState
+import com.adyen.checkout.card.old.internal.ui.CardComponentViewType
+import com.adyen.checkout.card.old.internal.ui.CardDelegate
 import com.adyen.checkout.components.core.internal.ComponentEventHandler
 import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.test.TestDispatcherExtension
@@ -106,7 +108,12 @@ internal class CardComponentTest(
     fun `when card delegate view flow emits a value then component view flow should match that value`() = runTest {
         val cardDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(cardDelegate.viewFlow) doReturn cardDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component = CardComponent(
+            cardDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
 
         component.viewFlow.test {
             assertEquals(TestComponentViewType.VIEW_TYPE_1, awaitItem())
@@ -122,7 +129,12 @@ internal class CardComponentTest(
     fun `when action delegate view flow emits a value then component view flow should match that value`() = runTest {
         val actionDelegateViewFlow = MutableStateFlow(TestComponentViewType.VIEW_TYPE_1)
         whenever(genericActionDelegate.viewFlow) doReturn actionDelegateViewFlow
-        component = CardComponent(cardDelegate, genericActionDelegate, actionHandlingComponent, componentEventHandler)
+        component = CardComponent(
+            cardDelegate,
+            genericActionDelegate,
+            actionHandlingComponent,
+            componentEventHandler
+        )
 
         component.viewFlow.test {
             // this value should match the value of the main delegate and not the action delegate

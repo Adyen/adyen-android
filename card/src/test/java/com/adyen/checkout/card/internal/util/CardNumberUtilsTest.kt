@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.util
 
+import com.adyen.checkout.card.old.internal.util.CardNumberUtils
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments

@@ -9,8 +9,9 @@
 package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.internal.util.CardExpiryDateValidation
-import com.adyen.checkout.card.internal.util.CardSecurityCodeValidation
+import com.adyen.checkout.card.old.internal.ui.CardValidationMapper
+import com.adyen.checkout.card.old.internal.util.CardExpiryDateValidation
+import com.adyen.checkout.card.old.internal.util.CardSecurityCodeValidation
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import org.junit.jupiter.api.Assertions.assertEquals

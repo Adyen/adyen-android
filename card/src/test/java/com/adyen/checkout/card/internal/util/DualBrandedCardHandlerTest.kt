@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
-import com.adyen.checkout.card.internal.ui.model.CardBrandItem
-import com.adyen.checkout.card.internal.ui.model.DualBrandData
+import com.adyen.checkout.card.old.internal.data.model.Brand
+import com.adyen.checkout.card.old.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.old.internal.ui.model.CardBrandItem
+import com.adyen.checkout.card.old.internal.ui.model.DualBrandData
+import com.adyen.checkout.card.old.internal.util.DualBrandedCardHandler
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import com.adyen.checkout.core.old.Environment
