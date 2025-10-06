@@ -8,11 +8,12 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Skopírujte kód, potom otvorte aplikáciu so zaregistrovaným kľúčom PIX, vyberte možnosť Zaplatiť pomocou PIX a prilepte kód.</string>
+    <string name="checkout_qr_code_pix">Pomocou svojej bankovej aplikácie naskenujte QR kód alebo skopírujte kód PIX nižšie a dokončite platbu.</string>
     <string name="checkout_qr_code_upi">Urobte snímku obrazovky, ktorú nahrajte do aplikácie UPI, alebo naskenujte kód QR pomocou preferovanej aplikácie UPI a dokončite platbu.</string>
-    <string name="checkout_qr_code_copy_button">Skopírovať kód</string>
+    <string name="checkout_qr_code_copy_button">Skopírovať kód PIX</string>
     <string name="checkout_qr_code_timer_text">Na zaplatenie máte %s</string>
     <string name="checkout_qr_code_copied_toast">Kód bol skopírovaný do schránky</string>
+    <string name="checkout_qr_code_pix_code_copied">Kód PIX bol skopírovaný</string>
     <string name="checkout_qr_code_duit_now">Urobte snímku obrazovky alebo si uložte QR kód, otvorte bankovú aplikáciu, nahrajte QR kód, overte údaje a dokončite platbu.</string>
     <string name="checkout_qr_code_prompt_pay">Urobte snímku obrazovky alebo si uložte QR kód, otvorte bankovú aplikáciu, nahrajte QR kód, overte údaje a dokončite platbu.</string>
     <string name="checkout_qr_code_pay_now">Urobte snímku obrazovky alebo si uložte QR kód, otvorte bankovú aplikáciu, nahrajte QR kód, overte údaje a dokončite platbu.</string>
