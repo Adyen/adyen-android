@@ -22,4 +22,8 @@ dependencies {
     implementation(libs.kotlin.gradle.plugin)
     // Needed to make sure Hilt and AGP use an aligned version
     implementation(libs.javapoet)
+
+    // Workaround to make libs available in the project
+    // This error can be safely ignored
+    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
