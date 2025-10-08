@@ -21,8 +21,8 @@ abstract class AggregateDependencyListsTask : DefaultTask() {
     @TaskAction
     fun aggregate() {
         val groupedDependencies = dependencyLists.files.flatMap { file ->
-            // The module name is derived from the input file's path.
-            val moduleName = file.parentFile.parentFile.parentFile.parentFile.name
+            // The files are named after the module name
+            val moduleName = file.nameWithoutExtension
             file.useLines { lines ->
                 lines.map {
                     DependencyUsage(it, moduleName)
@@ -62,7 +62,7 @@ val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("agg
 
     dependencyLists.from(
         filteredSubProjects.map {
-            it.layout.buildDirectory.file("outputs/dependency_list/dependency_list.txt")
+            it.layout.buildDirectory.file("outputs/dependency_list/${it.name}.txt")
         },
     )
 

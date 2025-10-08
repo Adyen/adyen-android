@@ -33,7 +33,7 @@ tasks.register<GenerateDependencyListTask>("generateDependencyList") {
     group = "Reporting"
 
     val outputDir = project.layout.buildDirectory.dir("outputs/dependency_list").get()
-    outputFile.set(outputDir.file("dependency_list.txt"))
+    outputFile.set(outputDir.file("${project.name}.txt"))
 
     val deps = project.configurations.named("releaseRuntimeClasspath").map { config ->
         config.incoming
