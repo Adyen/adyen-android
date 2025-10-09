@@ -33,13 +33,15 @@ internal object SessionParamsFactory {
             clientKey = clientKey,
             enableStoreDetails = sessionSetupConfiguration?.enableStoreDetails,
             installmentConfiguration = SessionInstallmentConfiguration(
-                installmentOptions = sessionSetupConfiguration?.installmentOptions?.map {
-                    it.key to SessionInstallmentOptionsParams(
-                        plans = it.value?.plans,
-                        preselectedValue = it.value?.preselectedValue,
-                        values = it.value?.values,
-                    )
-                }?.toMap(),
+                installmentOptions = sessionSetupConfiguration?.installmentOptions?.mapValues { entry ->
+                    entry.value?.let {
+                        SessionInstallmentOptionsParams(
+                            plans = it.plans,
+                            preselectedValue = it.preselectedValue,
+                            values = it.values,
+                        )
+                    }
+                },
                 showInstallmentAmount = sessionSetupConfiguration?.showInstallmentAmount,
             ),
             showRemovePaymentMethodButton = sessionSetupConfiguration?.showRemovePaymentMethodButton,
