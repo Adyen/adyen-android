@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("dokka-convention")
     id("generate-dependency-list")
+    id("publish-release")
 }
 
 private val libs = the<LibrariesForLibs>()
