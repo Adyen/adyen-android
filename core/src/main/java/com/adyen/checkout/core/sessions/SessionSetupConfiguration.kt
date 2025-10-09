@@ -10,8 +10,9 @@ package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptMap
+import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptMap
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
-import com.adyen.checkout.core.common.internal.model.jsonToMap
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,7 +40,10 @@ data class SessionSetupConfiguration(
                         putOpt(SHOW_INSTALLMENT_AMOUNT, modelObject.showInstallmentAmount)
                         putOpt(
                             INSTALLMENT_OPTIONS,
-                            modelObject.installmentOptions?.let { JSONObject(it) },
+                            serializeOptMap(
+                                modelObject.installmentOptions,
+                                SessionSetupInstallmentOptions.SERIALIZER,
+                            ),
                         )
                         putOpt(SHOW_REMOVE_PAYMENT_METHOD_BUTTON, modelObject.showRemovePaymentMethodButton)
                     }
@@ -53,8 +57,10 @@ data class SessionSetupConfiguration(
                     SessionSetupConfiguration(
                         enableStoreDetails = jsonObject.getBooleanOrNull(ENABLE_STORE_DETAILS),
                         showInstallmentAmount = jsonObject.getBooleanOrNull(SHOW_INSTALLMENT_AMOUNT) ?: false,
-                        installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
-                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
+                        installmentOptions = deserializeOptMap(
+                            jsonObject.optJSONObject(INSTALLMENT_OPTIONS),
+                            SessionSetupInstallmentOptions.SERIALIZER,
+                        ),
                         showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(
                             SHOW_REMOVE_PAYMENT_METHOD_BUTTON,
                         ),

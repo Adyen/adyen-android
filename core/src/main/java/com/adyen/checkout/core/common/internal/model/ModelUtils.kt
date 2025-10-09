@@ -56,6 +56,28 @@ object ModelUtils {
     }
 
     /**
+     * Parses a [JSONObject] to a [Map] of objects that extend [ModelObject].
+     * The result can be null if the input JSONObject is null.
+     *
+     * @param jsonObject The JSONObject to be parsed.
+     * @param serializer The serializer of the ModelObject class to be used.
+     * @param <T> The type of the ModelObject class to be parsed.
+     * @return The Map of objects from the JSONObject, or null.
+     */
+    @JvmStatic
+    fun <T : ModelObject> deserializeOptMap(
+        jsonObject: JSONObject?,
+        serializer: ModelObject.Serializer<T>
+    ): Map<String, T?>? {
+        if (jsonObject == null) {
+            return null
+        }
+        val map = jsonObject.jsonToMap(serializer)
+
+        return Collections.unmodifiableMap(map)
+    }
+
+    /**
      * Serializes a class extending [ModelObject] into a JSONObject.
      *
      * @param modelObject The object to be serialized.
@@ -86,5 +108,28 @@ object ModelUtils {
             jsonArray.put(serializer.serialize(model))
         }
         return jsonArray
+    }
+
+    /**
+     * Serializes a [Map] where the values are objects that extend [ModelObject] into a [JSONObject].
+     *
+     * @param modelMap The map to be serialized.
+     * @param serializer The serializer of the ModelObject class to be used.
+     * @param <T> The type of the ModelObject class to be serialized from.
+     * @return The JSONObject representing the map of ModelObjects.
+     */
+    @JvmStatic
+    fun <T : ModelObject> serializeOptMap(
+        modelMap: Map<String, T?>?,
+        serializer: ModelObject.Serializer<T>
+    ): JSONObject? {
+        if (modelMap == null) {
+            return null
+        }
+        return JSONObject().apply {
+            modelMap.forEach { (key, value) ->
+                put(key, serializeOpt(value, serializer))
+            }
+        }
     }
 }

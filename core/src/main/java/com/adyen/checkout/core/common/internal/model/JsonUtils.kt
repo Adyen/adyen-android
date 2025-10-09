@@ -60,7 +60,7 @@ fun JSONObject.optIntList(key: String): List<Int>? {
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Throws(JSONException::class)
-inline fun <reified T : ModelObject> JSONObject.jsonToMap(
+fun <T : ModelObject> JSONObject.jsonToMap(
     modelSerializer: ModelObject.Serializer<T>
 ): Map<String, T?> {
     val map = mutableMapOf<String, T?>()
