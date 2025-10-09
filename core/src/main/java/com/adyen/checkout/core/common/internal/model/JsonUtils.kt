@@ -63,22 +63,11 @@ fun JSONObject.optIntList(key: String): List<Int>? {
 fun <T : ModelObject> JSONObject.jsonToMap(
     modelSerializer: ModelObject.Serializer<T>
 ): Map<String, T?> {
-    val map = mutableMapOf<String, T?>()
-
-    if (this !== JSONObject.NULL) {
-        val keysItr = this.keys()
-
-        while (keysItr.hasNext()) {
-            val key = keysItr.next()
-            val value = this[key]
-
-            if (value is JSONObject) {
-                map[key] = ModelUtils.deserializeOpt(value, modelSerializer)
-            }
+    return keys().asSequence().mapNotNull { key ->
+        optJSONObject(key)?.let { value ->
+            key to ModelUtils.deserializeOpt(value, modelSerializer)
         }
-    }
-
-    return map
+    }.toMap()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -162,17 +151,10 @@ object JsonUtils {
      */
     @JvmStatic
     fun parseOptIntegerList(jsonArray: JSONArray?): List<Int>? {
-        if (jsonArray == null) {
-            return null
+        return jsonArray?.let { array ->
+            (0 until array.length())
+                .mapNotNull { i -> array.opt(i) as? Int }
         }
-        val list: MutableList<Int> = ArrayList()
-        for (i in 0 until jsonArray.length()) {
-            val value = jsonArray.opt(i)
-            if (value is Int) {
-                list.add(value)
-            }
-        }
-        return Collections.unmodifiableList(list)
     }
 
     /**
@@ -183,13 +165,6 @@ object JsonUtils {
      */
     @JvmStatic
     fun serializeOptIntegerList(intList: List<Int>?): JSONArray? {
-        if (intList == null) {
-            return null
-        }
-        return JSONArray().apply {
-            intList.forEach {
-                put(it)
-            }
-        }
+        return intList?.let { JSONArray(it) }
     }
 }
