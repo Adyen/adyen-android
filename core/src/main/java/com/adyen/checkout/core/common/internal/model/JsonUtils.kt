@@ -5,6 +5,7 @@
  *
  * Created by ozgur on 30/4/2025.
  */
+@file:Suppress("TooManyFunctions")
 
 package com.adyen.checkout.core.common.internal.model
 
@@ -50,6 +51,23 @@ fun JSONObject.toStringPretty(): String {
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun JSONObject.optStringList(key: String): List<String>? {
     return JsonUtils.parseOptStringList(optJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+fun JSONObject.optIntList(key: String): List<Int>? {
+    return JsonUtils.parseOptIntegerList(optJSONArray(key))
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Throws(JSONException::class)
+fun <T : ModelObject> JSONObject.jsonToMap(
+    modelSerializer: ModelObject.Serializer<T>
+): Map<String, T?> {
+    return keys().asSequence().mapNotNull { key ->
+        optJSONObject(key)?.let { value ->
+            key to ModelUtils.deserializeOpt(value, modelSerializer)
+        }
+    }.toMap()
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -123,5 +141,30 @@ object JsonUtils {
                 put(it)
             }
         }
+    }
+
+    /**
+     * Parses a [JSONArray] to a list of integers.
+     *
+     * @param jsonArray The JSONArray to be read.
+     * @return A [List] of integers, or null if the jsonArray was null.
+     */
+    @JvmStatic
+    fun parseOptIntegerList(jsonArray: JSONArray?): List<Int>? {
+        return jsonArray?.let { array ->
+            (0 until array.length())
+                .mapNotNull { i -> array.opt(i) as? Int }
+        }
+    }
+
+    /**
+     * Serializes a List of integers to a [JSONArray].
+     *
+     * @param intList The [List] of integers to be serialized.
+     * @return The populated [JSONArray]. Could be null.
+     */
+    @JvmStatic
+    fun serializeOptIntegerList(intList: List<Int>?): JSONArray? {
+        return intList?.let { JSONArray(it) }
     }
 }

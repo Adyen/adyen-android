@@ -10,6 +10,8 @@ package com.adyen.checkout.core.sessions
 
 import com.adyen.checkout.core.common.exception.ModelSerializationException
 import com.adyen.checkout.core.common.internal.model.ModelObject
+import com.adyen.checkout.core.common.internal.model.ModelUtils.deserializeOptMap
+import com.adyen.checkout.core.common.internal.model.ModelUtils.serializeOptMap
 import com.adyen.checkout.core.common.internal.model.getBooleanOrNull
 import kotlinx.parcelize.Parcelize
 import org.json.JSONException
@@ -19,18 +21,14 @@ import org.json.JSONObject
 data class SessionSetupConfiguration(
     val enableStoreDetails: Boolean? = null,
     val showInstallmentAmount: Boolean = false,
-    // TODO - Installments
-//    val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null,
+    val installmentOptions: Map<String, SessionSetupInstallmentOptions?>? = null,
     val showRemovePaymentMethodButton: Boolean? = null,
 ) : ModelObject() {
 
     companion object {
         private const val ENABLE_STORE_DETAILS = "enableStoreDetails"
         private const val SHOW_INSTALLMENT_AMOUNT = "showInstallmentAmount"
-
-        // TODO - Installments
-//        private const val INSTALLMENT_OPTIONS = "installmentOptions"
-
+        private const val INSTALLMENT_OPTIONS = "installmentOptions"
         private const val SHOW_REMOVE_PAYMENT_METHOD_BUTTON = "showRemovePaymentMethodButton"
 
         @JvmField
@@ -40,10 +38,13 @@ data class SessionSetupConfiguration(
                     JSONObject().apply {
                         putOpt(ENABLE_STORE_DETAILS, modelObject.enableStoreDetails)
                         putOpt(SHOW_INSTALLMENT_AMOUNT, modelObject.showInstallmentAmount)
-//                        putOpt(
-//                            INSTALLMENT_OPTIONS,
-//                            modelObject.installmentOptions?.let { JSONObject(it) },
-//                        )
+                        putOpt(
+                            INSTALLMENT_OPTIONS,
+                            serializeOptMap(
+                                modelObject.installmentOptions,
+                                SessionSetupInstallmentOptions.SERIALIZER,
+                            ),
+                        )
                         putOpt(SHOW_REMOVE_PAYMENT_METHOD_BUTTON, modelObject.showRemovePaymentMethodButton)
                     }
                 } catch (e: JSONException) {
@@ -56,10 +57,12 @@ data class SessionSetupConfiguration(
                     SessionSetupConfiguration(
                         enableStoreDetails = jsonObject.getBooleanOrNull(ENABLE_STORE_DETAILS),
                         showInstallmentAmount = jsonObject.getBooleanOrNull(SHOW_INSTALLMENT_AMOUNT) ?: false,
-//                        installmentOptions = jsonObject.optJSONObject(INSTALLMENT_OPTIONS)
-//                            ?.jsonToMap(SessionSetupInstallmentOptions.SERIALIZER),
+                        installmentOptions = deserializeOptMap(
+                            jsonObject.optJSONObject(INSTALLMENT_OPTIONS),
+                            SessionSetupInstallmentOptions.SERIALIZER,
+                        ),
                         showRemovePaymentMethodButton = jsonObject.getBooleanOrNull(
-                            SHOW_REMOVE_PAYMENT_METHOD_BUTTON
+                            SHOW_REMOVE_PAYMENT_METHOD_BUTTON,
                         ),
                     )
                 } catch (e: JSONException) {
