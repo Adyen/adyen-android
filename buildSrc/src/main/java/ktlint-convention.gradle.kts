@@ -27,7 +27,7 @@ val ktLintTask = tasks.register<JavaExec>("ktlint") {
     classpath = ktlint
     mainClass.set("com.pinterest.ktlint.Main")
     args(
-        "**/src/**/*.kt",
+        "**/src/**/main/**/*.kt",
         "**.kts",
         "!**/build/**",
     )
