@@ -15,6 +15,7 @@ plugins {
     id("publish-release")
     id("dokka-convention")
     id("jacoco-convention")
+    id("ktlint-convention")
 }
 
 private val libs = the<LibrariesForLibs>()
