@@ -30,7 +30,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
 
-        buildConfigField("String", "CHECKOUT_VERSION", "\"$rootProject.ext.versionName\"")
+        buildConfigField("String", "CHECKOUT_VERSION", "\"${rootProject.ext["versionName"]}\"")
     }
 
     buildFeatures {
