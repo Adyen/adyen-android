@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("generate-dependency-list")
     id("publish-release")
+    id("detekt-convention")
     id("dokka-convention")
     id("jacoco-convention")
     id("ktlint-convention")

@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
     implementation(libs.android.gradle.plugin)
+    implementation(libs.detekt.gradle.plugin)
     implementation(libs.dokka.gradle.plugin)
     implementation(libs.kotlin.gradle.plugin)
     // Needed to make sure Hilt and AGP use an aligned version
