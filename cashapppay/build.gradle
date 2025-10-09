@@ -7,30 +7,20 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-ext.mavenArtifactId = "cashapppay"
-ext.mavenArtifactName = "Adyen checkout Cash App Pay component"
-ext.mavenArtifactDescription = "Adyen checkout Cash App Pay component client for Adyen's Checkout API."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "cashapppay"
+    name = "Adyen checkout Cash App Pay component"
+    description = "Adyen checkout Cash App Pay component client for Adyen's Checkout API."
+}
 
 android {
     namespace 'com.adyen.checkout.cashapppay'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-
         // Get scheme for redirect result
         buildConfigField "String", "checkoutRedirectScheme", "\"$rootProject.ext.checkoutRedirectScheme\""
     }
