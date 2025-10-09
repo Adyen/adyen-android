@@ -1,32 +1,21 @@
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
-// Maven artifact
-ext.mavenArtifactId = "ach"
-ext.mavenArtifactName = "Adyen checkout ACH Direct Debit component"
-ext.mavenArtifactDescription = "Adyen checkout ACH Direct Debit component client for Adyen's Checkout API."
 
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "ach"
+    name = "Adyen checkout ACH Direct Debit component"
+    description = "Adyen checkout ACH Direct Debit component client for Adyen's Checkout API."
+}
 
 android {
     namespace 'com.adyen.checkout.ach'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     buildFeatures {
         viewBinding true
     }
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
