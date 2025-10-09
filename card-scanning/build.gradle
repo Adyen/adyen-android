@@ -7,30 +7,17 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
+    alias libs.plugins.checkout.library
 }
 
-// Maven artifact
-ext.mavenArtifactId = "card-scanning"
-ext.mavenArtifactName = "Adyen Checkout Card Scanning"
-ext.mavenArtifactDescription = "Adyen Checkout Card scanning."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "card-scanning"
+    name = "Adyen Checkout Card Scanning"
+    description = "Adyen Checkout Card scanning."
+}
 
 android {
     namespace 'com.adyen.checkout.card.scanning'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     buildFeatures {
         viewBinding true
