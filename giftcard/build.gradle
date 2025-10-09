@@ -7,30 +7,18 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-ext.mavenArtifactId = "giftcard"
-ext.mavenArtifactName = "Adyen checkout Gift Card component"
-ext.mavenArtifactDescription = "Adyen checkout Gift Card component client for Adyen's Checkout API."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "giftcard"
+    name = "Adyen checkout Gift Card component"
+    description = "Adyen checkout Gift Card component client for Adyen's Checkout API."
+}
 
 android {
     namespace 'com.adyen.checkout.giftcard'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     buildFeatures {
         viewBinding true
