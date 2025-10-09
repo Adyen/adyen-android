@@ -65,8 +65,6 @@ publishing {
                 artifactId = mavenArtifactId
                 version = versionName
 
-                artifact(tasks.named("dokkaJavadocJar"))
-
                 pom {
                     name = mavenArtifactName
                     description = mavenArtifactDescription
