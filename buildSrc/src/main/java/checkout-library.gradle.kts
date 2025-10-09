@@ -11,9 +11,10 @@ import org.gradle.accessors.dm.LibrariesForLibs
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("dokka-convention")
     id("generate-dependency-list")
     id("publish-release")
+    id("dokka-convention")
+    id("jacoco-convention")
 }
 
 private val libs = the<LibrariesForLibs>()
