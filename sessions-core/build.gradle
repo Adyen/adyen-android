@@ -7,30 +7,18 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-ext.mavenArtifactId = "sessions-core"
-ext.mavenArtifactName = "Adyen Checkout sessions core module"
-ext.mavenArtifactDescription = "Core module for Adyen Checkout sessions."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "sessions-core"
+    name = "Adyen Checkout sessions core module"
+    description = "Core module for Adyen Checkout sessions."
+}
 
 android {
     namespace 'com.adyen.checkout.sessions.core'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 }
 
 dependencies {
