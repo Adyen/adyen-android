@@ -195,9 +195,11 @@ kotlin = { id = "org.jetbrains.kotlin.jvm" }
 kotlin-android = { id = "org.jetbrains.kotlin.android" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ktlint-convention = { id = "ktlint-convention" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
 detekt = { id = "io.gitlab.arturbosch.detekt" }
+detekt-convention = { id = "detekt-convention" }
 dokka = { id = "org.jetbrains.dokka" }
 dokka-convention = { id = "dokka-convention" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
