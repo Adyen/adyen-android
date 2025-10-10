@@ -67,6 +67,10 @@ internal class FullVoucherView @JvmOverloads constructor(
     private var informationFieldsAdapter: VoucherInformationFieldsAdapter? = null
     private var coroutineScope: CoroutineScope? = null
 
+    private val resetCopyButtonTextRunnable = Runnable {
+        binding.buttonCopyCode.text = localizedContext.getString(R.string.checkout_voucher_copy_code)
+    }
+
     init {
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         this.setPadding(padding, padding, padding, padding)
@@ -223,19 +227,14 @@ internal class FullVoucherView @JvmOverloads constructor(
 
     private fun onCopyClicked(codeReference: String?) {
         codeReference ?: return
-        binding.buttonCopyCode.setText(R.string.checkout_voucher_copied_toast)
+        binding.buttonCopyCode.text = localizedContext.getString(R.string.checkout_voucher_copied_toast)
         copyCode(codeReference)
-        binding.buttonCopyCode.postDelayed(
-            { binding.buttonCopyCode.setText(R.string.checkout_voucher_copy_code) },
-            COPY_BUTTON_TEXT_CHANGE_DELAY,
-        )
+        binding.buttonCopyCode.removeCallbacks(resetCopyButtonTextRunnable)
+        binding.buttonCopyCode.postDelayed(resetCopyButtonTextRunnable, COPY_BUTTON_TEXT_CHANGE_DELAY)
     }
 
     private fun copyCode(codeReference: String) {
-        context.copyTextToClipboard(
-            COPY_LABEL,
-            codeReference,
-        )
+        context.copyTextToClipboard(COPY_LABEL, codeReference)
     }
 
     private fun handleEventFlow(event: VoucherUIEvent) {

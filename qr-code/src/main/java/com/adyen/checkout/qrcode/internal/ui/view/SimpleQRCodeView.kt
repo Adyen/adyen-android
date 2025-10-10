@@ -55,6 +55,10 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
     private lateinit var delegate: QRCodeDelegate
 
+    private val resetCopyButtonTextRunnable = Runnable {
+        binding.copyButton.text = localizedContext.getString(R.string.checkout_qr_code_copy_button)
+    }
+
     init {
         orientation = VERTICAL
     }
@@ -163,12 +167,10 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
     private fun onCopyClicked(qrCodeData: String?) {
         qrCodeData ?: return
-        binding.copyButton.setText(R.string.checkout_qr_code_pix_code_copied)
+        binding.copyButton.text = localizedContext.getString(R.string.checkout_qr_code_pix_code_copied)
         copyCode(qrCodeData)
-        binding.copyButton.postDelayed(
-            { binding.copyButton.setText(R.string.checkout_qr_code_copy_button) },
-            COPY_BUTTON_TEXT_CHANGE_DELAY,
-        )
+        binding.copyButton.removeCallbacks(resetCopyButtonTextRunnable)
+        binding.copyButton.postDelayed(resetCopyButtonTextRunnable, COPY_BUTTON_TEXT_CHANGE_DELAY)
     }
 
     private fun copyCode(qrCodeData: String) {
