@@ -58,7 +58,7 @@
         <item name="android:textSize">@dimen/checkout_code_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:singleLine">true</item>
-        <item name="android:lines">1</item>
+        <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textIsSelectable">true</item>
     </style>
