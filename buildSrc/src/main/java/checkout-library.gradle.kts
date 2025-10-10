@@ -17,6 +17,7 @@ plugins {
     id("dokka-convention")
     id("jacoco-convention")
     id("ktlint-convention")
+    id("sonar-convention")
 }
 
 private val libs = the<LibrariesForLibs>()

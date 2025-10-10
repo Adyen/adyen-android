@@ -169,6 +169,7 @@ android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", ve
 detekt-gradle-plugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
 dokka-gradle-plugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+sonarqube-gradle-plugin = { group = "org.sonarqube", name = "org.sonarqube.gradle.plugin", version.ref = "sonarqube" }
 javapoet = { group = "com.squareup", name = "javapoet", version.ref = "javapoet" }
 
 [bundles]
@@ -202,7 +203,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt" }
 detekt-convention = { id = "detekt-convention" }
 dokka = { id = "org.jetbrains.dokka" }
 dokka-convention = { id = "dokka-convention" }
-sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+sonarqube = { id = "org.sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
 resolve-dependencies = { id = "resolve-dependencies" }
