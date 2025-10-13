@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Za dokončanje plačila naredite posnetek zaslona, ki ga naložite v aplikacijo UPI, ali poskenirajte kodo QR z želeno aplikacijo UPI.</string>
     <string name="checkout_qr_code_copy_button">Kopiraj kodo PIX</string>
     <string name="checkout_qr_code_timer_text">Plačati morate %s</string>
-    <string name="checkout_qr_code_copied_toast">Koda je kopirana v odložišče</string>
     <string name="checkout_qr_code_pix_code_copied">Koda PIX je kopirana</string>
     <string name="checkout_qr_code_duit_now">Naredite posnetek zaslona ali shranite kodo QR, odprite bančno aplikacijo in naložite kodo QR, da preverite podatke in izvedete plačilo.</string>
     <string name="checkout_qr_code_prompt_pay">Naredite posnetek zaslona ali shranite kodo QR, odprite bančno aplikacijo in naložite kodo QR, da preverite podatke in izvedete plačilo.</string>

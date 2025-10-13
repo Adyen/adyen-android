@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">التقط لقطة شاشة لتحميلها في تطبيق UPI أو امسح رمز الاستجابة السريعة باستخدام تطبيق UPI الذي تُفضله لإتمام الدفع.</string>
     <string name="checkout_qr_code_copy_button">انسخ رمز PIX</string>
     <string name="checkout_qr_code_timer_text">لديك %s للدفع</string>
-    <string name="checkout_qr_code_copied_toast">تم نسخ الرمز إلى الحافظة</string>
     <string name="checkout_qr_code_pix_code_copied">تم نسخ رمز PIX</string>
     <string name="checkout_qr_code_duit_now">التقط لقطة شاشة أو احفظ رمز الاستجابة السريعة، وافتح تطبيقك المصرفي وحمِّل رمز الاستجابة السريعة للتحقق من التفاصيل وإتمام الدفع.</string>
     <string name="checkout_qr_code_prompt_pay">التقط لقطة شاشة أو احفظ رمز الاستجابة السريعة، وافتح تطبيقك المصرفي وحمِّل رمز الاستجابة السريعة للتحقق من التفاصيل وإتمام الدفع.</string>

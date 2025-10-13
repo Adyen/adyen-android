@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Zrób zrzut ekranu, aby przesłać go w aplikacji UPI lub zeskanuj kod QR za pomocą preferowanej aplikacji UPI, aby zakończyć płatność.</string>
     <string name="checkout_qr_code_copy_button">Skopiuj kod PIX</string>
     <string name="checkout_qr_code_timer_text">Masz do zapłacenia %s</string>
-    <string name="checkout_qr_code_copied_toast">Kod skopiowany do schowka</string>
     <string name="checkout_qr_code_pix_code_copied">Skopiowano kod PIX</string>
     <string name="checkout_qr_code_duit_now">Zrób zrzut ekranu lub zapisz kod QR, otwórz aplikację bankową i prześlij kod QR, aby zweryfikować szczegóły i dokończyć płatność.</string>
     <string name="checkout_qr_code_prompt_pay">Zrób zrzut ekranu lub zapisz kod QR, otwórz aplikację bankową i prześlij kod QR, aby zweryfikować szczegóły i dokończyć płatność.</string>

@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Pořiďte snímek obrazovky a nahrajte ho v aplikaci UPI nebo naskenujte QR kód ve své oblíbené aplikaci UPI a dokončete platbu.</string>
     <string name="checkout_qr_code_copy_button">Kopírovat kód PIX</string>
     <string name="checkout_qr_code_timer_text">Na zaplacení vám zbývá %s</string>
-    <string name="checkout_qr_code_copied_toast">Kód zkopírován do schránky</string>
     <string name="checkout_qr_code_pix_code_copied">Kód PIX zkopírován</string>
     <string name="checkout_qr_code_duit_now">Pořiďte snímek obrazovky nebo uložte QR kód, otevřete bankovní aplikaci a nahrajte QR kód pro ověření údajů a dokončení platby.</string>
     <string name="checkout_qr_code_prompt_pay">Pořiďte snímek obrazovky nebo uložte QR kód, otevřete bankovní aplikaci a nahrajte QR kód pro ověření údajů a dokončení platby.</string>
