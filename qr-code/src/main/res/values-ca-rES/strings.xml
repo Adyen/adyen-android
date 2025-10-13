@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Feu una captura de pantalla per pujar-la a l\'aplicació UPI o escanegeu el codi QR mitjançant l\'aplicació UPI preferida per completar el pagament.</string>
     <string name="checkout_qr_code_copy_button">Copiar el codi PIX</string>
     <string name="checkout_qr_code_timer_text">Teniu %s per pagar</string>
-    <string name="checkout_qr_code_copied_toast">Codi copiat al porta-retalls</string>
     <string name="checkout_qr_code_pix_code_copied">Codi PIX copiat</string>
     <string name="checkout_qr_code_duit_now">Feu una captura de pantalla o deseu el codi QR, obriu la vostra aplicació bancària i pugeu el codi QR per verificar les dades i completar el pagament.</string>
     <string name="checkout_qr_code_prompt_pay">Feu una captura de pantalla o deseu el codi QR, obriu la vostra aplicació bancària i pugeu el codi QR per verificar les dades i completar el pagament.</string>

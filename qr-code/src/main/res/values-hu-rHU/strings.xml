@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">A fizetés befejezéséhez készítsen képernyőképet és töltse fel az UPI-alkalmazásban, vagy a kívánt UPI-alkalmazással olvassa be a QR-kódot.</string>
     <string name="checkout_qr_code_copy_button">PIX-kód másolása</string>
     <string name="checkout_qr_code_timer_text">Fizetéshez rendelkezésre álló idő: %s</string>
-    <string name="checkout_qr_code_copied_toast">Kód a vágólapra másolva</string>
     <string name="checkout_qr_code_pix_code_copied">PIX-kód másolva</string>
     <string name="checkout_qr_code_duit_now">Készítsen képernyőképet vagy mentse el a QR-kódot, nyissa meg a banki alkalmazást, és töltse fel a QR-kódot az adatok ellenőrzéséhez, illetve a fizetés befejezéséhez.</string>
     <string name="checkout_qr_code_prompt_pay">Készítsen képernyőképet vagy mentse el a QR-kódot, nyissa meg a banki alkalmazást, és töltse fel a QR-kódot az adatok ellenőrzéséhez, illetve a fizetés befejezéséhez.</string>

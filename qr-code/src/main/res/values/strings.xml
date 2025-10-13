@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Take a screenshot to upload in the UPI app or scan the QR code using your preferred UPI app to complete the payment.</string>
     <string name="checkout_qr_code_copy_button">Copy PIX code</string>
     <string name="checkout_qr_code_timer_text">You have %s to pay</string>
-    <string name="checkout_qr_code_copied_toast">Code copied to clipboard</string>
     <string name="checkout_qr_code_pix_code_copied">PIX code copied</string>
     <string name="checkout_qr_code_duit_now">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>
     <string name="checkout_qr_code_prompt_pay">Take a screenshot or save the QR code, open your banking application and upload the QR code to verify the details and complete the payment.</string>

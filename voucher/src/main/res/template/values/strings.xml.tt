@@ -18,8 +18,8 @@
     <string name="checkout_voucher_phone_number">%%voucher.telephoneNumber%%</string>
     <string name="checkout_voucher_collection_institution_number">%%voucher.collectionInstitutionNumber%%</string>
     <string name="checkout_voucher_read_instructions">%%voucher.readInstructions%%</string>
-    <string name="checkout_voucher_copy_code">%%pix.instructions.copyButton%%</string>
-    <string name="checkout_voucher_copied_toast">%%pix.instructions.copiedMessage%%</string>
+    <string name="checkout_voucher_copy_code">%%voucher.code.copy.label%%</string>
+    <string name="checkout_voucher_copied_toast">%%voucher.code.copied.label%%</string>
     <string name="checkout_voucher_download_pdf">%%download.pdf%%</string>
     <string name="checkout_voucher_save_image">%%voucher.saveImage%%</string>
     <string name="checkout_voucher_image_saved">%%voucher.image.saved%%</string>

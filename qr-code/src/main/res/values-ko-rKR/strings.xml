@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">스크린샷을 찍어서 UPI 앱에 업로드하거나 즐겨 쓰는 UPI 앱에서 QR 코드를 스캔하여 결제하세요.</string>
     <string name="checkout_qr_code_copy_button">PIX 코드 복사</string>
     <string name="checkout_qr_code_timer_text">남은 결제 시한: %s</string>
-    <string name="checkout_qr_code_copied_toast">코드가 클립보드에 복사되었습니다</string>
     <string name="checkout_qr_code_pix_code_copied">PIX 코드가 복사되었습니다</string>
     <string name="checkout_qr_code_duit_now">화면을 캡처하거나 QR 코드를 저장한 다음, 은행 앱을 열고 QR 코드를 업로드하여 상세 정보를 확인하고 결제를 완료하세요.</string>
     <string name="checkout_qr_code_prompt_pay">화면을 캡처하거나 QR 코드를 저장한 다음, 은행 앱을 열고 QR 코드를 업로드하여 상세 정보를 확인하고 결제를 완료하세요.</string>

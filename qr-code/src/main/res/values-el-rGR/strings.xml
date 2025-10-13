@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Τραβήξτε ένα στιγμιότυπο οθόνης για να το ανεβάσετε στην εφαρμογή UPI ή σαρώστε τον κωδικό QR χρησιμοποιώντας την εφαρμογή UPI που προτιμάτε για να ολοκληρώσετε την πληρωμή.</string>
     <string name="checkout_qr_code_copy_button">Αντιγραφή κωδικού PIX</string>
     <string name="checkout_qr_code_timer_text">Έχετε στη διάθεσή σας %s για την πληρωμή</string>
-    <string name="checkout_qr_code_copied_toast">Ο κωδικός αντιγράφτηκε στο πρόχειρο</string>
     <string name="checkout_qr_code_pix_code_copied">Ο κωδικός PIX αντιγράφηκε</string>
     <string name="checkout_qr_code_duit_now">Τραβήξτε ένα στιγμιότυπο οθόνης ή αποθηκεύστε τον κωδικό QR, ανοίξτε την εφαρμογή τραπεζικής σας και ανεβάστε τον κωδικό QR για επαλήθευση των στοιχείων και ολοκλήρωση της πληρωμής.</string>
     <string name="checkout_qr_code_prompt_pay">Τραβήξτε ένα στιγμιότυπο οθόνης ή αποθηκεύστε τον κωδικό QR, ανοίξτε την εφαρμογή τραπεζικής σας και ανεβάστε τον κωδικό QR για επαλήθευση των στοιχείων και ολοκλήρωση της πληρωμής.</string>

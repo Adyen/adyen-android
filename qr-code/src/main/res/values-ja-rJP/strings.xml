@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">スクリーンショットを撮影してUPIアプリにアップロードするか、お好みのUPIアプリを使用してQRコードをスキャンし、支払を完了してください。</string>
     <string name="checkout_qr_code_copy_button">PIXコードをコピーしてください</string>
     <string name="checkout_qr_code_timer_text">%sをお支払い下さい。</string>
-    <string name="checkout_qr_code_copied_toast">コードをクリップボードにコピーしました</string>
     <string name="checkout_qr_code_pix_code_copied">PIXコードがコピーされました</string>
     <string name="checkout_qr_code_duit_now">スクリーンショットを撮影するかQRコードを保存して、バンキングアプリケーションを開き、QRコードをアップロードして、詳細を確認し、支払いを完了します。</string>
     <string name="checkout_qr_code_prompt_pay">スクリーンショットを撮影するかQRコードを保存して、バンキングアプリケーションを開き、QRコードをアップロードして、詳細を確認し、支払いを完了します。</string>

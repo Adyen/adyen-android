@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Направете снимка на екрана, за да я качите в приложението UPI, или сканирайте QR кода с предпочитаното от Вас приложение UPI, за да завършите плащането.</string>
     <string name="checkout_qr_code_copy_button">Копирайте PIX кода</string>
     <string name="checkout_qr_code_timer_text">Имате %s за плащане</string>
-    <string name="checkout_qr_code_copied_toast">Код, копиран в клипборда</string>
     <string name="checkout_qr_code_pix_code_copied">PIX кодът е копиран</string>
     <string name="checkout_qr_code_duit_now">Направете екранна снимка или запазете QR кода, отворете банковото си приложение и качете QR кода, за да проверите подробностите и да завършите плащането.</string>
     <string name="checkout_qr_code_prompt_pay">Направете екранна снимка или запазете QR кода, отворете банковото си приложение и качете QR кода, за да проверите подробностите и да завършите плащането.</string>

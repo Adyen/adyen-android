@@ -12,7 +12,6 @@
     <string name="checkout_qr_code_upi">Сделайте снимок экрана, чтобы загрузить его в приложение UPI, или отсканируйте QR-код своим любимым приложением UPI, чтобы оформить платеж.</string>
     <string name="checkout_qr_code_copy_button">Скопировать код PIX</string>
     <string name="checkout_qr_code_timer_text">У вас %s на оплату</string>
-    <string name="checkout_qr_code_copied_toast">Код скопирован в буфер обмена</string>
     <string name="checkout_qr_code_pix_code_copied">Код PIX скопирован</string>
     <string name="checkout_qr_code_duit_now">Сделайте снимок экрана или сохраните QR-код, откройте банковское приложение и загрузите QR-код, чтобы подтвердить данные и завершить платеж.</string>
     <string name="checkout_qr_code_prompt_pay">Сделайте снимок экрана или сохраните QR-код, откройте банковское приложение и загрузите QR-код, чтобы подтвердить данные и завершить платеж.</string>
