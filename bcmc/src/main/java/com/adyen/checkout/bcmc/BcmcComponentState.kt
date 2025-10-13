@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.bcmc
 
-import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.old.CardComponentState
 
 typealias BcmcComponentState = CardComponentState

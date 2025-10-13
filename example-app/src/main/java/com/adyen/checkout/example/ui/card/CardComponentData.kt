@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.card
 
-import com.adyen.checkout.card.CardComponentState
+import com.adyen.checkout.card.old.CardComponentState
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.PaymentMethod
 

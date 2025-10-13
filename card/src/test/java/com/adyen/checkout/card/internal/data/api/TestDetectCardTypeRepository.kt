@@ -8,8 +8,9 @@
 
 package com.adyen.checkout.card.internal.data.api
 
-import com.adyen.checkout.card.internal.data.model.Brand
-import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.old.internal.data.api.DetectCardTypeRepository
+import com.adyen.checkout.card.old.internal.data.model.Brand
+import com.adyen.checkout.card.old.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.core.old.CardType
 import kotlinx.coroutines.CoroutineScope

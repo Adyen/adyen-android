@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by ozgur on 6/10/2025.
+ */
+
+package com.adyen.checkout.card.old.internal.util
+
+import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
+
+internal object CardAddressValidationUtils {
+    fun isAddressOptional(addressParams: AddressParams, cardType: String?): Boolean {
+        return when (addressParams) {
+            is AddressParams.FullAddress -> {
+                (addressParams.addressFieldPolicy as? AddressFieldPolicyParams)?.isAddressOptional(
+                    cardType
+                )
+            }
+            is AddressParams.PostalCode -> {
+                (addressParams.addressFieldPolicy as? AddressFieldPolicyParams)?.isAddressOptional(
+                    cardType
+                )
+            }
+            AddressParams.None -> {
+                true
+            }
+            is AddressParams.Lookup -> {
+                false
+            }
+        } ?: true
+    }
+
+    private fun AddressFieldPolicyParams.isAddressOptional(cardType: String?): Boolean {
+        return when (this) {
+            is AddressFieldPolicyParams.Optional -> {
+                true
+            }
+            is AddressFieldPolicyParams.OptionalForCardTypes -> {
+                brands.contains(cardType)
+            }
+            is AddressFieldPolicyParams.Required -> {
+                false
+            }
+        }
+    }
+}

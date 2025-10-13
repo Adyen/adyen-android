@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin.internal.provider
 
 import com.adyen.checkout.bacs.BacsDirectDebitComponent
-import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.old.CardComponent
 import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.dropin.internal.ui.BacsDirectDebitDialogFragment

@@ -10,7 +10,7 @@ package com.adyen.checkout.bcmc.internal.ui
 
 import android.content.Context
 import android.view.LayoutInflater
-import com.adyen.checkout.card.internal.ui.view.CardView
+import com.adyen.checkout.card.old.internal.ui.view.CardView
 import com.adyen.checkout.ui.core.old.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView

@@ -1,5 +1,13 @@
 package com.adyen.checkout.card
 
+import com.adyen.checkout.card.old.AddressConfiguration
+import com.adyen.checkout.card.old.CardConfiguration
+import com.adyen.checkout.card.old.InstallmentConfiguration
+import com.adyen.checkout.card.old.KCPAuthVisibility
+import com.adyen.checkout.card.old.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.old.card
+import com.adyen.checkout.card.old.getCardConfiguration
+import com.adyen.checkout.card.old.toCheckoutConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

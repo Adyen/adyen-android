@@ -17,7 +17,7 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.old.BinLookupData
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
