@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kodu kopējiet, pēc tam atveriet lietotni ar reģistrēto PIX atslēgu, izvēlieties "Maksāt ar PIX" un šeit kodu ielīmējiet.</string>
+    <string name="checkout_qr_code_pix">Izmantojiet savu bankas lietotni, lai skenētu kvadrātkodu vai nokopētu zemāk esošo PIX kodu un pabeigtu maksājumu.</string>
     <string name="checkout_qr_code_upi">Lai pabeigtu maksājumu, uzņemiet ekrānuzņēmumu un augšupielādējiet to UPI lietotnē, vai skenējiet QR kodu, izmantojot vēlamo UPI lietotni.</string>
-    <string name="checkout_qr_code_copy_button">Kopēt kodu</string>
+    <string name="checkout_qr_code_copy_button">Kopēt PIX kodu</string>
     <string name="checkout_qr_code_timer_text">Jums ir jāmaksā %s</string>
-    <string name="checkout_qr_code_copied_toast">Kods ir nokopēts starpliktuvē</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX kods nokopēts</string>
     <string name="checkout_qr_code_duit_now">Uzņemiet ekrānuzņēmumu vai saglabājiet QR kodu, atveriet savu bankas lietojumprogrammu un augšupielādējiet QR kodu, lai pārbaudītu informāciju un pabeigtu maksājumu.</string>
     <string name="checkout_qr_code_prompt_pay">Uzņemiet ekrānuzņēmumu vai saglabājiet QR kodu, atveriet savu bankas lietojumprogrammu un augšupielādējiet QR kodu, lai pārbaudītu informāciju un pabeigtu maksājumu.</string>
     <string name="checkout_qr_code_pay_now">Uzņemiet ekrānuzņēmumu vai saglabājiet QR kodu, atveriet savu bankas lietojumprogrammu un augšupielādējiet QR kodu, lai pārbaudītu informāciju un pabeigtu maksājumu.</string>

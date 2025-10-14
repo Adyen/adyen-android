@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopioi koodi ja avaa sitten sovellus rekisteröidyllä PIX-avaimella, valitse Maksa PIX:llä ja liitä koodi.</string>
+    <string name="checkout_qr_code_pix">Suorita maksu skannaamalla QR-koodi pankkisovelluksellasi tai kopioimalla alla oleva PIX-koodi.</string>
     <string name="checkout_qr_code_upi">Suorita maksu ottamalla kuvakaappaus, jonka voit ladata UPI-sovellukseen, tai skannaamalla QR-koodi haluamallasi UPI-sovelluksella.</string>
-    <string name="checkout_qr_code_copy_button">Kopioi koodi</string>
+    <string name="checkout_qr_code_copy_button">Kopioi PIX-koodi</string>
     <string name="checkout_qr_code_timer_text">Sinulla on %s maksettavana</string>
-    <string name="checkout_qr_code_copied_toast">Koodi kopioitu leikepöydälle</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX-koodi kopioitu</string>
     <string name="checkout_qr_code_duit_now">Ota kuvakaappaus tai tallenna QR-koodi, avaa pankkisovelluksesi ja lataa QR-koodi, jolla varmistat tiedot, jonka jälkeen voit suorittaa maksun loppuun.</string>
     <string name="checkout_qr_code_prompt_pay">Ota kuvakaappaus tai tallenna QR-koodi, avaa pankkisovelluksesi ja lataa QR-koodi, jolla varmistat tiedot, jonka jälkeen voit suorittaa maksun loppuun.</string>
     <string name="checkout_qr_code_pay_now">Ota kuvakaappaus tai tallenna QR-koodi, avaa pankkisovelluksesi ja lataa QR-koodi, jolla varmistat tiedot, jonka jälkeen voit suorittaa maksun loppuun.</string>

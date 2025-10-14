@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopieer de code, open de app met de geregistreerde PIX-sleutel, kies betalen met PIX en plak de code.</string>
+    <string name="checkout_qr_code_pix">Gebruik uw bank-app om de QR-code te scannen of kopieer de PIX-code hieronder om uw betaling af te ronden.</string>
     <string name="checkout_qr_code_upi">Maak een schermafbeelding en upload deze in de UPI-app of scan de QR-code met je favoriete UPI-app om de betaling te voltooien.</string>
-    <string name="checkout_qr_code_copy_button">Code kopiëren</string>
+    <string name="checkout_qr_code_copy_button">PIX-code kopiëren</string>
     <string name="checkout_qr_code_timer_text">U heeft %s om te betalen</string>
-    <string name="checkout_qr_code_copied_toast">De code is naar het klembord gekopieerd</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX-code gekopieerd</string>
     <string name="checkout_qr_code_duit_now">Maak een schermafbeelding of sla de QR-code op, open uw bankapp en upload de QR-code om de gegevens te verifiëren en de betaling te voltooien.</string>
     <string name="checkout_qr_code_prompt_pay">Maak een schermafbeelding of sla de QR-code op, open uw bankapp en upload de QR-code om de gegevens te verifiëren en de betaling te voltooien.</string>
     <string name="checkout_qr_code_pay_now">Maak een schermafbeelding of sla de QR-code op, open uw bankapp en upload de QR-code om de gegevens te verifiëren en de betaling te voltooien.</string>

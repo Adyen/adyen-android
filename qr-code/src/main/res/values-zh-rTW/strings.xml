@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">複製代碼，然後用註冊的 PIX 金鑰打開應用程式，選擇「用 PIX 支付」並將代碼貼在此處。</string>
+    <string name="checkout_qr_code_pix">使用您的銀行帳戶應用程式來掃描 QR 碼，或是複製下列的 PIX 代碼以完成付款。</string>
     <string name="checkout_qr_code_upi">擷取螢幕畫面並上傳到 UPI 應用程式，或使用偏好的 UPI 應用程式掃描 QR 代碼以完成付款。</string>
-    <string name="checkout_qr_code_copy_button">複製代碼</string>
+    <string name="checkout_qr_code_copy_button">複製 PIX 代碼</string>
     <string name="checkout_qr_code_timer_text">您有 %s 可以支付</string>
-    <string name="checkout_qr_code_copied_toast">已將代碼複製到剪貼簿</string>
+    <string name="checkout_qr_code_pix_code_copied">已複製 PIX 代碼</string>
     <string name="checkout_qr_code_duit_now">擷取螢幕畫面或儲存 QR 代碼，開啟您的銀行應用程式並上傳 QR 代碼以驗證詳細資料並完成付款。</string>
     <string name="checkout_qr_code_prompt_pay">擷取螢幕畫面或儲存 QR 代碼，開啟您的銀行應用程式並上傳 QR 代碼以驗證詳細資料並完成付款。</string>
     <string name="checkout_qr_code_pay_now">擷取螢幕畫面或儲存 QR 代碼，開啟您的銀行應用程式並上傳 QR 代碼以驗證詳細資料並完成付款。</string>

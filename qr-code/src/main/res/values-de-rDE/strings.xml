@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopieren Sie den Code und öffnen Sie anschließend die App mit dem registrierten PIX-Schlüssel. Wählen Sie „Mit PIX bezahlen“ aus und fügen Sie den Code dort ein.</string>
+    <string name="checkout_qr_code_pix">Verwenden Sie Ihre Banking-App, um den QR-Code zu scannen, oder kopieren Sie den untenstehenden PIX-Code, um Ihre Zahlung abzuschließen.</string>
     <string name="checkout_qr_code_upi">Machen Sie einen Screenshot, um ihn in der UPI-App hochzuladen, oder scannen Sie den QR-Code mit Ihrer bevorzugten UPI-App, um die Zahlung abzuschließen.</string>
-    <string name="checkout_qr_code_copy_button">Code kopieren</string>
+    <string name="checkout_qr_code_copy_button">PIX-Code kopieren</string>
     <string name="checkout_qr_code_timer_text">Sie haben noch %s um zu zahlen</string>
-    <string name="checkout_qr_code_copied_toast">Code wurde in die Zwischenablage kopiert</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX-Code wurde kopiert</string>
     <string name="checkout_qr_code_duit_now">Erstellen Sie einen Screenshot oder speichern Sie den QR-Code, öffnen Sie Ihre Bankanwendung und laden Sie den QR-Code hoch, um die Details zu verifizieren und die Zahlung abzuschließen.</string>
     <string name="checkout_qr_code_prompt_pay">Erstellen Sie einen Screenshot oder speichern Sie den QR-Code, öffnen Sie Ihre Bankanwendung und laden Sie den QR-Code hoch, um die Details zu verifizieren und die Zahlung abzuschließen.</string>
     <string name="checkout_qr_code_pay_now">Erstellen Sie einen Screenshot oder speichern Sie den QR-Code, öffnen Sie Ihre Bankanwendung und laden Sie den QR-Code hoch, um die Details zu verifizieren und die Zahlung abzuschließen.</string>

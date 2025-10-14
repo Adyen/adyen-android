@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopirajte šifru, zatim otvorite aplikaciju pomoću registriranog PIX ključa, odaberite opciju Plati s PIX-om i tamo zalijepite šifru.</string>
+    <string name="checkout_qr_code_pix">Upotrijebite bankovnu aplikaciju za skeniranje QR koda ili kopirajte PIX kod u nastavku kako biste dovršili plaćanje.</string>
     <string name="checkout_qr_code_upi">Napravite snimku zaslona za prenošenje u aplikaciju UPI ili skenirajte kôd QR pomoću željene aplikacije UPI kako biste završili plaćanje.</string>
-    <string name="checkout_qr_code_copy_button">Kopiraj kôd</string>
+    <string name="checkout_qr_code_copy_button">Kopirajte PIX kôd</string>
     <string name="checkout_qr_code_timer_text">Imate %s za plaćanje</string>
-    <string name="checkout_qr_code_copied_toast">Kôd je kopiran u međuspremnik</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX kôd je kopiran</string>
     <string name="checkout_qr_code_duit_now">Napravite snimku zaslona ili spremite QR kôd, otvorite svoju bankarsku aplikaciju i prenesite QR kôd kako biste provjerili pojedinosti i završili plaćanje.</string>
     <string name="checkout_qr_code_prompt_pay">Napravite snimku zaslona ili spremite QR kôd, otvorite svoju bankarsku aplikaciju i prenesite QR kôd kako biste provjerili pojedinosti i završili plaćanje.</string>
     <string name="checkout_qr_code_pay_now">Napravite snimku zaslona ili spremite QR kôd, otvorite svoju bankarsku aplikaciju i prenesite QR kôd kako biste provjerili pojedinosti i završili plaćanje.</string>

@@ -67,6 +67,10 @@ internal class FullVoucherView @JvmOverloads constructor(
     private var informationFieldsAdapter: VoucherInformationFieldsAdapter? = null
     private var coroutineScope: CoroutineScope? = null
 
+    private val resetCopyButtonTextRunnable = Runnable {
+        binding.buttonCopyCode.text = localizedContext.getString(R.string.checkout_voucher_copy_code)
+    }
+
     init {
         val padding = resources.getDimension(UICoreR.dimen.standard_margin).toInt()
         this.setPadding(padding, padding, padding, padding)
@@ -83,7 +87,7 @@ internal class FullVoucherView @JvmOverloads constructor(
         observeDelegate(delegate, coroutineScope)
         this.coroutineScope = coroutineScope
 
-        binding.buttonCopyCode.setOnClickListener { copyCode(delegate.outputData.reference) }
+        binding.buttonCopyCode.setOnClickListener { onCopyClicked(delegate.outputData.reference) }
         binding.buttonDownloadPdf.setOnClickListener { onDownloadPdfClicked() }
         binding.buttonSaveImage.setOnClickListener { onSaveAsImageClicked() }
     }
@@ -221,13 +225,16 @@ internal class FullVoucherView @JvmOverloads constructor(
         updateStoreAction(delegate.outputData.storeAction)
     }
 
-    private fun copyCode(codeReference: String?) {
+    private fun onCopyClicked(codeReference: String?) {
         codeReference ?: return
-        context.copyTextToClipboard(
-            COPY_LABEL,
-            codeReference,
-            localizedContext.getString(R.string.checkout_voucher_copied_toast),
-        )
+        binding.buttonCopyCode.text = localizedContext.getString(R.string.checkout_voucher_copied_toast)
+        copyCode(codeReference)
+        binding.buttonCopyCode.removeCallbacks(resetCopyButtonTextRunnable)
+        binding.buttonCopyCode.postDelayed(resetCopyButtonTextRunnable, COPY_BUTTON_TEXT_CHANGE_DELAY)
+    }
+
+    private fun copyCode(codeReference: String) {
+        context.copyTextToClipboard(COPY_LABEL, codeReference)
     }
 
     private fun handleEventFlow(event: VoucherUIEvent) {
@@ -254,5 +261,6 @@ internal class FullVoucherView @JvmOverloads constructor(
 
     companion object {
         private const val COPY_LABEL = "Voucher code reference"
+        private const val COPY_BUTTON_TEXT_CHANGE_DELAY = 2000L
     }
 }

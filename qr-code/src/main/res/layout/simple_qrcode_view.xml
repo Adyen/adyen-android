@@ -30,6 +30,21 @@
         android:textIsSelectable="false"
         tools:text="@string/checkout_qr_code_pix" />
 
+    <ImageView
+        android:id="@+id/imageView_qrcode"
+        style="@style/AdyenCheckout.QrCode.Image"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/textview_amount"
+        style="@style/AdyenCheckout.TextAppearance.Primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textIsSelectable="false"
+        tools:text="$ 700,000,00" />
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_indicator"
         style="@style/AdyenCheckout.QrCode.ProgressIndicator"
@@ -50,6 +65,14 @@
         android:gravity="center"
         android:textIsSelectable="false"
         tools:text="You have 13:46 to pay" />
+
+    <TextView
+        android:id="@+id/textview_code"
+        style="@style/AdyenCheckout.QrCode.CodeTextAppearance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="00020101021226900014br.gov.bcb.pix2568pix.adyen.com/pixqrcodelocation/pixloc/v1/loc/BzbAFU9RTequrhYgj8SUrg5204000053039865802BR5925ADYEN DO BRASIL INSTITUIC6009SAO PAULO62070503***6304666F" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/copyButton"
