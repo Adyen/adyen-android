@@ -203,6 +203,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ktlint-convention = { id = "ktlint-convention" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt" }
 detekt-convention = { id = "detekt-convention" }
 dokka = { id = "org.jetbrains.dokka" }
