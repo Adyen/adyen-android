@@ -9,6 +9,7 @@
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
+    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
     alias libs.plugins.dokka.convention
 }
@@ -45,12 +46,14 @@ dependencies {
     // Checkout
     api project(':3ds2')
     api project(':action-core')
+    api project(':core')
     api project(':cse')
     api project(':ui-core')
     api project(':sessions-core')
     compileOnly project(':card-scanning')
 
     // Dependencies
+    implementation libs.androidx.startup
     implementation libs.material
 
     //Tests
