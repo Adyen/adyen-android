@@ -10,6 +10,9 @@ package com.adyen.checkout.core.common.localization
 
 enum class CheckoutLocalizationKey {
     AWAIT_LOADING,
+    CARD_NUMBER,
+    CARD_NUMBER_INVALID,
+    CARD_NUMBER_INVALID_UNSUPPORTED_BRAND,
     MBWAY_COUNTRY_CODE,
     MBWAY_INVALID_PHONE_NUMBER,
     MBWAY_PHONE_NUMBER,

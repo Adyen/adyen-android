@@ -9,7 +9,9 @@
 package com.adyen.checkout.core.common.internal.ui.state
 
 import com.adyen.checkout.core.common.test
-import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.DefaultStateManager
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
@@ -26,17 +28,19 @@ import org.mockito.kotlin.whenever
 @ExtendWith(MockitoExtension::class)
 internal class DefaultViewStateManagerTest(
     @Mock private val viewStateFactory: ViewStateFactory<TestViewState>,
+    @Mock private val componentStateFactory: ComponentStateFactory<TestComponentState>
 ) {
 
-    private val viewStateValidator = TestViewStateValidator()
-    private lateinit var stateManager: DefaultViewStateManager<TestViewState>
+    // TODO - Card.
+//    private val viewStateValidator = TestViewStateValidator()
+    private lateinit var stateManager: DefaultStateManager<TestViewState, TestComponentState>
 
     @Test
     fun `when initialized, then default state should be set`() = runTest {
         val initialViewState = TestViewState("initial")
         initStateManager(initialViewState)
 
-        val actual = stateManager.state.test(testScheduler).latestValue
+        val actual = stateManager.viewState.test(testScheduler).latestValue
 
         assertEquals(initialViewState, actual)
     }
@@ -45,9 +49,9 @@ internal class DefaultViewStateManagerTest(
     fun `when updating the state, then the new state should be updated and validated`() = runTest {
         val initialViewState = TestViewState("initial", false)
         initStateManager(initialViewState)
-        val viewStateFlow = stateManager.state.test(testScheduler)
+        val viewStateFlow = stateManager.viewState.test(testScheduler)
 
-        stateManager.update { copy(value = "updated") }
+        stateManager.updateViewState { copy(value = "updated") }
 
         val actual = viewStateFlow.latestValue
         assertEquals("updated", actual.value)
@@ -58,9 +62,10 @@ internal class DefaultViewStateManagerTest(
     fun `when highlighting all validation, then the new state should be reflecting that`() = runTest {
         val initialViewState = TestViewState("initial")
         initStateManager(initialViewState)
-        val viewStateFlow = stateManager.state.test(testScheduler)
+        val viewStateFlow = stateManager.viewState.test(testScheduler)
 
-        stateManager.highlightAllFieldValidationErrors()
+        // TODO - Card.
+//        stateManager.highlightAllFieldValidationErrors()
 
         val actual = viewStateFlow.latestValue
         assertTrue(actual.showError)
@@ -68,9 +73,9 @@ internal class DefaultViewStateManagerTest(
 
     private fun initStateManager(initialState: TestViewState) {
         whenever(viewStateFactory.createDefaultViewState()) doReturn initialState
-        stateManager = DefaultViewStateManager(
-            factory = viewStateFactory,
-            validator = viewStateValidator,
+        stateManager = DefaultStateManager(
+            viewStateFactory = viewStateFactory,
+            componentStateFactory = componentStateFactory,
         )
     }
 
@@ -81,9 +86,11 @@ internal class DefaultViewStateManagerTest(
         val showError: Boolean = false,
     ) : ViewState
 
-    class TestViewStateValidator : ViewStateValidator<TestViewState> {
+    class TestComponentState : ComponentState
 
-        override fun validate(viewState: TestViewState): TestViewState {
+    class TestViewStateValidator : ViewStateValidator<TestViewState, TestComponentState> {
+
+        override fun validate(viewState: TestViewState, componentState: TestComponentState): TestViewState {
             return viewState.copy(didValidate = true)
         }
 

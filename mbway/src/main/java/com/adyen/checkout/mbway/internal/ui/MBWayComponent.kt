@@ -21,11 +21,13 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
+import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import com.adyen.checkout.ui.internal.ComponentScaffold
 import com.adyen.checkout.ui.internal.PayButton
@@ -35,7 +37,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
-    private val viewStateManager: ViewStateManager<MBWayViewState>,
+    private val stateManager: StateManager<MBWayViewState, MBWayComponentState>,
+    private val validator: MBWayViewStateValidator,
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
@@ -44,10 +47,12 @@ internal class MBWayComponent(
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
         eventChannel.receiveAsFlow()
-
     override fun submit() {
-        if (viewStateManager.isValid) {
-            val paymentComponentState = viewStateManager.state.value.toPaymentComponentState(
+        val newViewState = validator.validate(stateManager.viewState.value, stateManager.componentState.value)
+        stateManager.updateViewState { copy(newViewState) }
+
+        if (validator.isValid(stateManager.viewState.value)) {
+            val paymentComponentState = stateManager.viewState.value.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 order = order,
                 amount = componentParams.amount,
@@ -56,7 +61,8 @@ internal class MBWayComponent(
                 PaymentComponentEvent.Submit(paymentComponentState),
             )
         } else {
-            viewStateManager.highlightAllFieldValidationErrors()
+            val newViewState = validator.highlightAllValidationErrors(stateManager.viewState.value)
+            stateManager.updateViewState { copy(newViewState) }
         }
     }
 
@@ -88,32 +94,32 @@ internal class MBWayComponent(
     }
 
     override fun setLoading(isLoading: Boolean) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(isLoading = isLoading)
         }
     }
 
     override fun onCountryChanged(newCountryCode: CountryModel) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(countryCode = newCountryCode)
         }
     }
 
     override fun onPhoneNumberChanged(newPhoneNumber: String) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(phoneNumber = phoneNumber.updateText(newPhoneNumber))
         }
     }
 
     override fun onPhoneNumberFocusChanged(hasFocus: Boolean) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
         }
     }
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
-        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
 
         ComponentScaffold(
             modifier = modifier,

@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 1/9/2025.
+ * Created by ozgur on 13/10/2025.
  */
 
 package com.adyen.checkout.core.components.internal.ui.state
@@ -11,11 +11,7 @@ package com.adyen.checkout.core.components.internal.ui.state
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ViewStateValidator<V : ViewState, C : ComponentState> {
+interface ComponentStateFactory<C : ComponentState> {
 
-    fun validate(viewState: V, componentState: C): V
-
-    fun isValid(viewState: V): Boolean
-
-    fun highlightAllValidationErrors(viewState: V): V
+    fun createDefaultComponentState(): C
 }

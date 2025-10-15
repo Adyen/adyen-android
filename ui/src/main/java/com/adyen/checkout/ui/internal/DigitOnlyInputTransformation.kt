@@ -16,7 +16,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.text.isDigitsOnly
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DigitOnlyInputTransformation : InputTransformation {
+class DigitOnlyInputTransformation() : InputTransformation {
 
     override val keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
 

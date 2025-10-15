@@ -19,6 +19,11 @@ public final class com/adyen/checkout/mbway/MBWayConfigurationKt {
 	public static synthetic fun mbWay$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/mbway/internal/ui/state/MBWayComponentState : com/adyen/checkout/core/components/internal/ui/state/ComponentState {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
 public final class com/adyen/checkout/mbway/old/MBWayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/mbway/old/MBWayComponent$Companion;

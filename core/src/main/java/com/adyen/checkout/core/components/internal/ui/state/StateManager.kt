@@ -12,16 +12,19 @@ import androidx.annotation.RestrictTo
 import kotlinx.coroutines.flow.StateFlow
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ViewStateManager<V : ViewState> {
+interface StateManager<V : ViewState, C : ComponentState> {
 
-    val state: StateFlow<V>
+    val viewState: StateFlow<V>
 
-    val isValid: Boolean
+    val componentState: StateFlow<C>
 
-    fun update(update: V.() -> V)
+    fun updateViewState(update: V.() -> V)
 
-    fun highlightAllFieldValidationErrors()
+    fun updateComponentState(update: C.() -> C)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface ViewState
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+interface ComponentState

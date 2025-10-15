@@ -17,4 +17,13 @@ internal data class MBWayViewState(
     val countryCode: CountryModel,
     val phoneNumber: TextInputState,
     val isLoading: Boolean,
-) : ViewState
+) : ViewState {
+    fun copy(other: MBWayViewState): MBWayViewState {
+        return copy(
+            countries = other.countries,
+            countryCode = other.countryCode,
+            phoneNumber = other.phoneNumber,
+            isLoading = other.isLoading,
+        )
+    }
+}

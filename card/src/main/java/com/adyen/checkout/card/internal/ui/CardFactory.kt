@@ -8,11 +8,16 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
+import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
+import com.adyen.checkout.card.internal.ui.state.CardViewStateFactory
+import com.adyen.checkout.card.internal.ui.state.CardViewStateValidator
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.core.components.internal.ui.state.DefaultStateManager
 import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, CardComponent> {
@@ -23,7 +28,18 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle
     ): CardComponent {
+        val stateManager = DefaultStateManager(
+            viewStateFactory = CardViewStateFactory(),
+            componentStateFactory = CardComponentStateFactory(),
+        )
         // TODO - Card full implementation
-        return CardComponent()
+        return CardComponent(
+            stateManager = stateManager,
+            validator = CardViewStateValidator(
+                cardValidationMapper = CardValidationMapper(),
+            )
+        ).apply {
+            initialize(coroutineScope)
+        }
     }
 }

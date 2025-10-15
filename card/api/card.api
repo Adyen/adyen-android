@@ -6,12 +6,6 @@ public final class com/adyen/checkout/card/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/card/internal/ui/ComposableSingletons$CardComponentKt {
-	public static final field INSTANCE Lcom/adyen/checkout/card/internal/ui/ComposableSingletons$CardComponentKt;
-	public fun <init> ()V
-	public final fun getLambda$2097967330$card_release ()Lkotlin/jvm/functions/Function2;
-}
-
 public abstract class com/adyen/checkout/card/old/AddressConfiguration : android/os/Parcelable {
 	public static final field $stable I
 }
