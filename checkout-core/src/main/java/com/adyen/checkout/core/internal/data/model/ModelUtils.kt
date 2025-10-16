@@ -13,6 +13,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.reflect.Modifier
 import java.util.Collections
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object ModelUtils {
@@ -45,6 +47,29 @@ object ModelUtils {
     @JvmStatic
     fun <T : ModelObject> deserializeOpt(jsonObject: JSONObject?, serializer: ModelObject.Serializer<T>): T? {
         return if (jsonObject == null) null else serializer.deserialize(jsonObject)
+    }
+
+    /**
+     * Decodes a Base64 [String], parses it to a [JSONObject], and then deserializes it to a [ModelObject].
+     *
+     * @param encodedString The Base64 encoded string to be deserialized.
+     * @param serializer The serializer of the ModelObject class to be used.
+     * @param <T> The type of the ModelObject class to be parsed.
+     * @return The decoded and parsed object, or null if the input string is null or empty.
+     */
+    @OptIn(ExperimentalEncodingApi::class)
+    @JvmStatic
+    fun <T : ModelObject> deserializeAndDecodeOpt(
+        encodedString: String?,
+        serializer: ModelObject.Serializer<T>
+    ): T? {
+        if (encodedString.isNullOrEmpty()) {
+            return null
+        }
+
+        val jsonString = Base64.decode(encodedString).toString(Charsets.UTF_8)
+        val jsonObject = JSONObject(jsonString)
+        return serializer.deserialize(jsonObject)
     }
 
     /**
@@ -83,6 +108,25 @@ object ModelUtils {
     @JvmStatic
     fun <T : ModelObject> serializeOpt(modelObject: T?, serializer: ModelObject.Serializer<T>): JSONObject? {
         return if (modelObject == null) null else serializer.serialize(modelObject)
+    }
+
+    /**
+     * Serializes and encodes class extending [ModelObject] into a JSONObject.
+     *
+     * @param modelObject The object to be serialized.
+     * @param serializer The serializer of the ModelObject class to be used.
+     * @param <T> The type o the ModelObject class to be serialized from.
+     * @return The String representing the encoded ModelObject.
+     */
+    @OptIn(ExperimentalEncodingApi::class)
+    @JvmStatic
+    fun <T : ModelObject> serializeAndEncodeOpt(modelObject: T?, serializer: ModelObject.Serializer<T>): String? {
+        if (modelObject == null) {
+            return null
+        }
+
+        val jsonObject = serializer.serialize(modelObject)
+        return Base64.encode(jsonObject.toString().toByteArray(Charsets.UTF_8))
     }
 
     /**

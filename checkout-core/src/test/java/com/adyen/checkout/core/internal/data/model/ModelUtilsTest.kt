@@ -7,13 +7,16 @@
  */
 package com.adyen.checkout.core.internal.data.model
 
+import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeAndDecodeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeModel
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOptList
+import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeAndEncodeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.serializeOptList
 import org.json.JSONArray
 import org.json.JSONObject
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -44,6 +47,31 @@ internal class ModelUtilsTest {
     }
 
     @Test
+    fun `when deserializeAndDecodeOpt is called for non null value, then model is deserialized`() {
+        val mockModelObject = MockModelObject("test", 123)
+        val encodedResult = serializeAndEncodeOpt(mockModelObject, MockModelObject.SERIALIZER)
+
+        val decodedResult = deserializeAndDecodeOpt(encodedResult, MockModelObject.SERIALIZER)
+
+        assertNotNull(decodedResult)
+        assertEquals(mockModelObject, decodedResult)
+    }
+
+    @Test
+    fun `when deserializeAndDecodeOpt is called for null, then null is returned`() {
+        val decodedResult = deserializeAndDecodeOpt(null, MockModelObject.SERIALIZER)
+
+        assertNull(decodedResult)
+    }
+
+    @Test
+    fun `when deserializeAndDecodeOpt is called for empty string, then null is returned`() {
+        val decodedResult = deserializeAndDecodeOpt("", MockModelObject.SERIALIZER)
+
+        assertNull(decodedResult)
+    }
+
+    @Test
     fun parseOptList_Pass_ParseMockedModel() {
         val jsonArray = JSONArray()
         val modelList = deserializeOptList(jsonArray, MockModelObject.SERIALIZER)
@@ -67,6 +95,23 @@ internal class ModelUtilsTest {
     fun serializeOpt_Pass_SerializeNull() {
         val jsonObject = serializeOpt(null, MockModelObject.SERIALIZER)
         assertNull(jsonObject)
+    }
+
+    @Test
+    fun `when serializeAndEncodeOpt is called for non null value, then model is serialized and encoded`() {
+        val mockModelObject = MockModelObject("test", 123)
+
+        val result = serializeAndEncodeOpt(mockModelObject, MockModelObject.SERIALIZER)
+
+        assertNotNull(result)
+        assertTrue(result is String && result.isNotBlank())
+    }
+
+    @Test
+    fun `when serializeAndEncodeOpt is called for null, then null is returned`() {
+        val result = serializeAndEncodeOpt(null, MockModelObject.SERIALIZER)
+
+        assertNull(result)
     }
 
     @Test
