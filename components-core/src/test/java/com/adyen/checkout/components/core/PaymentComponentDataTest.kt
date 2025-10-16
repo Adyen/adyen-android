@@ -32,6 +32,7 @@ internal class PaymentComponentDataTest {
             socialSecurityNumber = "socialSecurityNumber",
             installments = installments,
             supportNativeRedirect = true,
+            sdkData = "sdkData",
         )
 
         val actual = PaymentComponentData.SERIALIZER.serialize(request)
@@ -51,6 +52,7 @@ internal class PaymentComponentDataTest {
             .put("socialSecurityNumber", "socialSecurityNumber")
             .put("installments", Installments.SERIALIZER.serialize(installments))
             .put("supportNativeRedirect", true)
+            .put("sdkData", "sdkData")
 
         assertEquals(expected.toString(), actual.toString())
     }
@@ -79,6 +81,7 @@ internal class PaymentComponentDataTest {
             .put("socialSecurityNumber", "socialSecurityNumber")
             .put("installments", Installments.SERIALIZER.serialize(installments))
             .put("supportNativeRedirect", true)
+            .put("sdkData", "sdkData")
 
         val actual = PaymentComponentData.SERIALIZER.deserialize(response)
 
@@ -97,6 +100,7 @@ internal class PaymentComponentDataTest {
             socialSecurityNumber = "socialSecurityNumber",
             installments = installments,
             supportNativeRedirect = true,
+            sdkData = "sdkData",
         )
 
         assertEquals(expected, actual)
