@@ -8,10 +8,9 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.OrderRequest
@@ -21,17 +20,21 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.components.internal.ui.navigation.DisplayType
 import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
+import com.adyen.checkout.mbway.internal.ui.view.CountryCodeDialog
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import com.adyen.checkout.ui.internal.ComponentScaffold
 import com.adyen.checkout.ui.internal.PayButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.serialization.Serializable
 
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
@@ -41,6 +44,38 @@ internal class MBWayComponent(
     private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
     MBWayChangeListener {
+
+    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
+        MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { modifier, backStack ->
+            val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+
+            ComponentScaffold(
+                modifier = modifier,
+                disableInteraction = viewState.isLoading,
+                footer = {
+                    PayButton(onClick = ::submit, isLoading = viewState.isLoading)
+                },
+            ) {
+                MbWayComponent(
+                    viewState = viewState,
+                    changeListener = this,
+                    onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
+                )
+            }
+        },
+
+        MBWayCountryCodeNavKey to CheckoutNavEntry(MBWayCountryCodeNavKey, DisplayType.DIALOG) { _, backStack ->
+            val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+
+            CountryCodeDialog(
+                onDismissRequest = { backStack.removeLastOrNull() },
+                viewState = viewState,
+                onCountrySelected = ::onCountryChanged,
+            )
+        },
+    )
+
+    override val navigationStartingPoint: NavKey = MBWayNavKey
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<MBWayPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<MBWayPaymentComponentState>> =
@@ -111,22 +146,10 @@ internal class MBWayComponent(
             copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
         }
     }
-
-    @Composable
-    override fun ViewFactory(modifier: Modifier) {
-        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
-
-        ComponentScaffold(
-            modifier = modifier,
-            disableInteraction = viewState.isLoading,
-            footer = {
-                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
-            },
-        ) {
-            MbWayComponent(
-                viewState = viewState,
-                changeListener = this,
-            )
-        }
-    }
 }
+
+@Serializable
+private data object MBWayNavKey : NavKey
+
+@Serializable
+private data object MBWayCountryCodeNavKey : NavKey

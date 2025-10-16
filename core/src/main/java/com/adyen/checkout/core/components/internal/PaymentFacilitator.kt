@@ -10,17 +10,15 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntryDecorator
+import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
@@ -32,12 +30,12 @@ import com.adyen.checkout.core.common.localization.internal.helper.LocalizedComp
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.navigation.DisplayType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.serialization.Serializable
 import java.util.Locale
 
 internal class PaymentFacilitator(
@@ -49,25 +47,42 @@ internal class PaymentFacilitator(
     private val shopperLocale: Locale,
 ) {
 
-    private var actionComponent by mutableStateOf<ActionComponent?>(null)
+    private var actionComponent: ActionComponent? = null
     private var actionObservationJob: Job? = null
 
     private lateinit var backStack: NavBackStack<NavKey>
 
     @Composable
-    fun ViewFactory(modifier: Modifier = Modifier, localizationProvider: CheckoutLocalizationProvider?) {
-        backStack = rememberNavBackStack(PaymentNavKey)
+    fun ViewFactory(
+        modifier: Modifier = Modifier,
+        localizationProvider: CheckoutLocalizationProvider?,
+    ) {
+        backStack = rememberNavBackStack(paymentComponent.navigationStartingPoint)
         LocalizedComponent(
             locale = shopperLocale,
             localizationProvider = localizationProvider,
         ) {
             NavDisplay(
                 backStack = backStack,
-                entryProvider = entryProvider {
-                    entry<PaymentNavKey> { paymentComponent.ViewFactory(modifier) }
-                    entry<ActionNavKey> { actionComponent?.ViewFactory(modifier) }
-                },
-            )
+                sceneStrategy = DialogSceneStrategy(),
+            ) { key ->
+                val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
+                val entry = entries[key] ?: error("Unknown key: $key")
+                val metadata = when (entry.displayType) {
+                    DisplayType.INLINE -> emptyMap()
+                    DisplayType.DIALOG -> DialogSceneStrategy.dialog(
+                        DialogProperties(
+                            dismissOnBackPress = true,
+                            dismissOnClickOutside = false,
+                            usePlatformDefaultWidth = false,
+                            decorFitsSystemWindows = false,
+                        ),
+                    )
+                }
+                NavEntry(key = key, metadata = metadata) {
+                    entry.content(modifier, backStack)
+                }
+            }
         }
     }
 
@@ -123,7 +138,7 @@ internal class PaymentFacilitator(
         this.actionComponent = actionComponent
 
         backStack.clear()
-        backStack.add(ActionNavKey)
+        backStack.add(actionComponent.navigationStartingPoint)
 
         actionObservationJob = actionComponent.eventFlow
             .flowWithLifecycle(lifecycle)
@@ -143,14 +158,3 @@ internal class PaymentFacilitator(
         // TODO - handle intent with action component
     }
 }
-
-@Serializable
-private data object PaymentNavKey : NavKey
-
-@Serializable
-private data object ActionNavKey : NavKey
-
-class Test : NavEntryDecorator<NavKey>(
-    onPop = {},
-    decorate = { entry -> entry.Content() }
-)

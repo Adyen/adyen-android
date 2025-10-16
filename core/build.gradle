@@ -38,7 +38,7 @@ dependencies {
 
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui
-    implementation libs.bundles.androidx.navigation3
+    api libs.bundles.androidx.navigation3
     implementation libs.compose.viewmodel
     implementation libs.okhttp
     implementation libs.androidx.browser
