@@ -7,6 +7,7 @@
  */
 package com.adyen.checkout.core.internal.data.model
 
+import com.adyen.checkout.core.exception.ModelSerializationException
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeAndDecodeOpt
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeModel
 import com.adyen.checkout.core.internal.data.model.ModelUtils.deserializeOpt
@@ -21,7 +22,10 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 internal class ModelUtilsTest {
 
     @Test
@@ -72,6 +76,39 @@ internal class ModelUtilsTest {
     }
 
     @Test
+    fun `when deserializeAndDecodeOpt is called with invalid base64, then null is returned`() {
+        val result = deserializeAndDecodeOpt("invalid base64", MockModelObject.SERIALIZER)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `when deserializeAndDecodeOpt is called with invalid json, then null is returned`() {
+        val invalidJsonString = "{\"key\": \"value\""
+        val encodedString = Base64.encode(invalidJsonString.toByteArray())
+
+        val result = deserializeAndDecodeOpt(encodedString, MockModelObject.SERIALIZER)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `when deserializeAndDecodeOpt is called and deserializer throws exception, then null is returned`() {
+        val throwingDeserializer = object : ModelObject.Serializer<MockModelObject> {
+            override fun serialize(modelObject: MockModelObject) = JSONObject()
+            override fun deserialize(jsonObject: JSONObject): MockModelObject {
+                throw ModelSerializationException(MockModelObject::class.java, null)
+            }
+        }
+        val mockModelObject = MockModelObject("test", 123)
+        val encodedResult = serializeAndEncodeOpt(mockModelObject, MockModelObject.SERIALIZER)
+
+        val result = deserializeAndDecodeOpt(encodedResult, throwingDeserializer)
+
+        assertNull(result)
+    }
+
+    @Test
     fun `when deserializeOptList is called for non null value, then model is deserialized`() {
         val jsonArray = JSONArray()
         val modelList = deserializeOptList(jsonArray, MockModelObject.SERIALIZER)
@@ -110,6 +147,21 @@ internal class ModelUtilsTest {
     @Test
     fun `when serializeAndEncodeOpt is called for null, then null is returned`() {
         val result = serializeAndEncodeOpt(null, MockModelObject.SERIALIZER)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `when serializeAndEncodeOpt is called and serializer throws exception, then null is returned`() {
+        val throwingSerializer = object : ModelObject.Serializer<MockModelObject> {
+            override fun serialize(modelObject: MockModelObject): JSONObject {
+                throw ModelSerializationException(MockModelObject::class.java, null)
+            }
+            override fun deserialize(jsonObject: JSONObject) = MockModelObject()
+        }
+        val mockModelObject = MockModelObject("test", 123)
+
+        val result = serializeAndEncodeOpt(mockModelObject, throwingSerializer)
 
         assertNull(result)
     }

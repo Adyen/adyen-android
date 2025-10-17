@@ -8,8 +8,12 @@
 package com.adyen.checkout.core.internal.data.model
 
 import androidx.annotation.RestrictTo
+import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.exception.BadModelException
+import com.adyen.checkout.core.exception.ModelSerializationException
+import com.adyen.checkout.core.internal.util.adyenLog
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.lang.reflect.Modifier
 import java.util.Collections
@@ -67,9 +71,20 @@ object ModelUtils {
             return null
         }
 
-        val jsonString = Base64.decode(encodedString).toString(Charsets.UTF_8)
-        val jsonObject = JSONObject(jsonString)
-        return serializer.deserialize(jsonObject)
+        return try {
+            val jsonString = Base64.decode(encodedString).toString(Charsets.UTF_8)
+            val jsonObject = JSONObject(jsonString)
+            serializer.deserialize(jsonObject)
+        } catch (e: IllegalArgumentException) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to deserialize the model object" }
+            null
+        } catch (e: JSONException) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to deserialize the model object" }
+            null
+        } catch (e: ModelSerializationException) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to deserialize the model object" }
+            null
+        }
     }
 
     /**
@@ -125,8 +140,13 @@ object ModelUtils {
             return null
         }
 
-        val jsonObject = serializer.serialize(modelObject)
-        return Base64.encode(jsonObject.toString().toByteArray(Charsets.UTF_8))
+        return try {
+            val jsonObject = serializer.serialize(modelObject)
+            Base64.encode(jsonObject.toString().toByteArray(Charsets.UTF_8))
+        } catch (e: ModelSerializationException) {
+            adyenLog(AdyenLogLevel.ERROR, e) { "Failed to serialize the model object" }
+            null
+        }
     }
 
     /**
