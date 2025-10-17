@@ -7,31 +7,18 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-// Maven artifact
-ext.mavenArtifactId = "ideal"
-ext.mavenArtifactName = "Adyen checkout iDEAL component"
-ext.mavenArtifactDescription = "Adyen checkout iDEAL component client for Adyen's Checkout API."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "ideal"
+    name = "Adyen checkout iDEAL component"
+    description = "Adyen checkout iDEAL component client for Adyen's Checkout API."
+}
 
 android {
     namespace 'com.adyen.checkout.ideal'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 }
 
 dependencies {

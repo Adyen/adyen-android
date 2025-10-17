@@ -7,31 +7,18 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.compose
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-// Maven artifact
-ext.mavenArtifactId = "components-compose"
-ext.mavenArtifactName = "Adyen checkout components compose"
-ext.mavenArtifactDescription = "Compose compat Adyen checkout components."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "components-compose"
+    name = "Adyen checkout components compose"
+    description = "Compose compat Adyen checkout components."
+}
 
 android {
     namespace 'com.adyen.checkout.components.compose'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     buildFeatures {
         compose true

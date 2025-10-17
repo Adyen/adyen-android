@@ -7,31 +7,18 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-// Maven artifact
-ext.mavenArtifactId = "components-core"
-ext.mavenArtifactName = "Adyen Checkout Components Core"
-ext.mavenArtifactDescription = "Adyen checkout Components Core module."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "components-core"
+    name = "Adyen Checkout Components Core"
+    description = "Adyen checkout Components Core module."
+}
 
 android {
     namespace 'com.adyen.checkout.components.core'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     testFixtures {
         enable = true

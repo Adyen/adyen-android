@@ -9,9 +9,9 @@
 plugins {
     alias libs.plugins.android.library
     alias libs.plugins.kotlin.android
+    alias libs.plugins.detekt.convention
+    alias libs.plugins.ktlint.convention
 }
-
-apply from: "${rootDir}/config/gradle/codeQuality.gradle"
 
 android {
     namespace 'com.adyen.checkout.test'

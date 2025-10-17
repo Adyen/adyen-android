@@ -7,33 +7,20 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-// Maven artifact
-ext.mavenArtifactId = "ui"
-ext.mavenArtifactName = "Adyen Checkout UI"
-ext.mavenArtifactDescription = "UI and styling foundation for Adyen Checkout."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "ui"
+    name = "Adyen Checkout UI"
+    description = "UI and styling foundation for Adyen Checkout."
+}
 
 android {
     // TODO - change to com.adyen.checkout.ui once we get rid of ui-core
     namespace 'com.adyen.checkout.test'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
-
-    defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-    }
 
     buildFeatures {
         compose = true

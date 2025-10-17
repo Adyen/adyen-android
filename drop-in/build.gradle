@@ -7,31 +7,20 @@
  */
 
 plugins {
-    alias libs.plugins.android.library
-    alias libs.plugins.kotlin.android
+    alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.parcelize
-    alias libs.plugins.dokka.convention
-    alias libs.plugins.generate.dependency.list
 }
 
-// Maven artifact
-ext.mavenArtifactId = "drop-in"
-ext.mavenArtifactName = "Adyen checkout drop-in component"
-ext.mavenArtifactDescription = "Adyen checkout drop-in component client for Adyen's Checkout API."
-
-apply from: "${rootDir}/config/gradle/sharedTasks.gradle"
+checkoutPublishing {
+    id = "drop-in"
+    name = "Adyen checkout drop-in component"
+    description = "Adyen checkout drop-in component client for Adyen's Checkout API."
+}
 
 android {
     namespace 'com.adyen.checkout.dropin'
-    compileSdk libs.versions.compile.sdk.get().toInteger()
 
     defaultConfig {
-        minSdk libs.versions.min.sdk.get().toInteger()
-        targetSdk libs.versions.target.sdk.get().toInteger()
-
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        consumerProguardFiles "consumer-rules.pro"
-
         // Get scheme for redirect result
         manifestPlaceholders = ["checkoutRedirectScheme": rootProject.ext.checkoutRedirectScheme]
     }
