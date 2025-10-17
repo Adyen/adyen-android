@@ -38,11 +38,13 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: "DEPENDENCY_LIST_BASE"
+          path: dependency-lists/base
 
       - name: Download head dependency list artifact
         uses: actions/download-artifact@v5
         with:
           name: "DEPENDENCY_LIST_HEAD"
+          path: dependency-lists/head
 
       - name: Compare dependencies between base and head
         id: compare_deps
@@ -50,8 +52,8 @@ jobs:
           DEPENDENCY_LIST_BASE: "DEPENDENCY_LIST_BASE"
           DEPENDENCY_LIST_HEAD: "DEPENDENCY_LIST_HEAD"
         run: |
-          base_deps="$(cat ${DEPENDENCY_LIST_BASE})"
-          head_deps="$(cat ${DEPENDENCY_LIST_HEAD})"
+          base_deps="$(cat $(find dependency-lists/base -type f -name "${DEPENDENCY_LIST_BASE}"))"
+          head_deps="$(cat $(find dependency-lists/head -type f -name "${DEPENDENCY_LIST_HEAD}"))"
           chmod +x scripts/check_dependency_changes.py
           FIRST_DEPENDENCY_LIST=$(echo "$base_deps") SECOND_DEPENDENCY_LIST=$(echo "$head_deps") python scripts/check_dependency_changes.py dependency_changes.md
           if [ -s dependency_changes.md ]; then
