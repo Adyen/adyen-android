@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Authentication
+import com.adyen.checkout.components.core.internal.data.model.sdkData.DirectSdkDataCreation
 import com.adyen.checkout.components.core.internal.data.model.sdkData.SdkData
 import com.adyen.checkout.core.internal.data.model.ModelUtils
 import java.util.Date
@@ -19,6 +20,7 @@ import java.util.Date
 /**
  * A provider that creates an [SdkData] object with the necessary information.
  */
+@OptIn(DirectSdkDataCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SdkDataProvider(
     private val analyticsManager: AnalyticsManager

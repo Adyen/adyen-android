@@ -19,7 +19,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-internal data class SdkData(
+internal data class SdkData @DirectSdkDataCreation constructor(
     val schemaVersion: Int,
     val analytics: Analytics? = null,
     val authentication: Authentication? = null,
@@ -41,7 +41,10 @@ internal data class SdkData(
                     JSONObject().apply {
                         putOpt(SCHEMA_VERSION, modelObject.schemaVersion)
                         putOpt(ANALYTICS, serializeOpt(modelObject.analytics, Analytics.SERIALIZER))
-                        putOpt(AUTHENTICATION, serializeOpt(modelObject.authentication, Authentication.SERIALIZER))
+                        putOpt(
+                            AUTHENTICATION,
+                            serializeOpt(modelObject.authentication, Authentication.SERIALIZER)
+                        )
                         putOpt(CREATED_AT, modelObject.createdAt)
                         putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
                     }
@@ -50,11 +53,15 @@ internal data class SdkData(
                 }
             }
 
+            @OptIn(DirectSdkDataCreation::class)
             override fun deserialize(jsonObject: JSONObject): SdkData {
                 return try {
                     SdkData(
                         schemaVersion = jsonObject.getInt(SCHEMA_VERSION),
-                        analytics = deserializeOpt(jsonObject.optJSONObject(ANALYTICS), Analytics.SERIALIZER),
+                        analytics = deserializeOpt(
+                            jsonObject.optJSONObject(ANALYTICS),
+                            Analytics.SERIALIZER
+                        ),
                         authentication = deserializeOpt(
                             jsonObject.optJSONObject(AUTHENTICATION),
                             Authentication.SERIALIZER,
