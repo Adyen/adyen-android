@@ -393,6 +393,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
                 cardValidationMapper = CardValidationMapper(),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -491,6 +492,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 cardConfigDataGenerator = CardConfigDataGenerator(),
                 cardValidationMapper = CardValidationMapper(),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =

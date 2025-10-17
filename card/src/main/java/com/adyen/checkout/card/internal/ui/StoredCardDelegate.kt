@@ -33,6 +33,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -80,7 +81,8 @@ internal class StoredCardDelegate(
     private val publicKeyRepository: PublicKeyRepository,
     private val submitHandler: SubmitHandler<CardComponentState>,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
-    private val cardValidationMapper: CardValidationMapper
+    private val cardValidationMapper: CardValidationMapper,
+    private val sdkDataProvider: SdkDataProvider,
 ) : CardDelegate {
 
     private val noCvcBrands: Set<CardBrand> = hashSetOf(CardBrand(cardType = CardType.BCMC))
@@ -391,6 +393,9 @@ internal class StoredCardDelegate(
             shopperReference = componentParams.shopperReference,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(
+                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            ),
         )
     }
 
