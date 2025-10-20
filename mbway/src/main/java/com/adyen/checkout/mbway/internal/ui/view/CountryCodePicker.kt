@@ -13,13 +13,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -43,57 +40,51 @@ import com.adyen.checkout.ui.internal.SubHeadline
 internal fun CountryCodePicker(
     viewState: MBWayViewState,
     onCountrySelected: (CountryModel) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Surface(
-        color = CheckoutThemeProvider.colors.background,
-        modifier = Modifier.fillMaxSize(),
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+        modifier = modifier,
     ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
-            modifier = Modifier
-                .systemBarsPadding()
-                .padding(Dimensions.Large),
-        ) {
-            viewState.countries.forEach { country ->
-                val isSelected = country == viewState.countryCode
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
-                        .let {
-                            if (isSelected) {
-                                it.background(CheckoutThemeProvider.colors.container)
-                            } else {
-                                it
-                            }
+        viewState.countries.forEach { country ->
+            val isSelected = country == viewState.countryCode
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
+                    .let {
+                        if (isSelected) {
+                            it.background(CheckoutThemeProvider.colors.container)
+                        } else {
+                            it
                         }
-                        .clickable(
-                            interactionSource = null,
-                            indication = ripple(color = CheckoutThemeProvider.colors.text),
-                        ) {
-                            onCountrySelected(country)
-                        }
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                ) {
-                    Column {
-                        BodyEmphasized(country.callingCode)
-                        SubHeadline(
-                            text = "${country.isoCode} • ${country.countryName}",
-                            color = CheckoutThemeProvider.colors.textSecondary,
-                        )
                     }
+                    .clickable(
+                        interactionSource = null,
+                        indication = ripple(color = CheckoutThemeProvider.colors.text),
+                    ) {
+                        onCountrySelected(country)
+                    }
+                    .fillMaxWidth()
+                    .padding(12.dp),
+            ) {
+                Column {
+                    BodyEmphasized(country.callingCode)
+                    SubHeadline(
+                        text = "${country.isoCode} • ${country.countryName}",
+                        color = CheckoutThemeProvider.colors.textSecondary,
+                    )
+                }
 
-                    if (isSelected) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(
-                                R.drawable.ic_checkmark,
-                            ),
-                            contentDescription = null,
-                            tint = CheckoutThemeProvider.colors.text,
-                        )
-                    }
+                if (isSelected) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(
+                            R.drawable.ic_checkmark,
+                        ),
+                        contentDescription = null,
+                        tint = CheckoutThemeProvider.colors.text,
+                    )
                 }
             }
         }

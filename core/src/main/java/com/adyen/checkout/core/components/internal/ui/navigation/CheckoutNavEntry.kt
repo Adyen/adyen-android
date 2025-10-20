@@ -10,7 +10,6 @@ package com.adyen.checkout.core.components.internal.ui.navigation
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
@@ -18,7 +17,7 @@ import androidx.navigation3.runtime.NavKey
 class CheckoutNavEntry(
     val key: NavKey,
     val displayStrategy: CheckoutDisplayStrategy = CheckoutDisplayStrategy.INLINE,
-    val content: @Composable (Modifier, NavBackStack<NavKey>) -> Unit,
+    val content: @Composable (NavBackStack<NavKey>) -> Unit,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

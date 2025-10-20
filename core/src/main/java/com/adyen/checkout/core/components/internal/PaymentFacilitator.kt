@@ -9,6 +9,11 @@
 package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
@@ -31,6 +36,8 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
+import com.adyen.checkout.ui.internal.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.Dimensions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
@@ -80,7 +87,24 @@ internal class PaymentFacilitator(
                     )
                 }
                 NavEntry(key = key, metadata = metadata) {
-                    entry.content(modifier, backStack)
+                    if (entry.displayStrategy == CheckoutDisplayStrategy.DIALOG) {
+                        Surface(
+                            color = CheckoutThemeProvider.colors.background,
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .systemBarsPadding()
+                                    .padding(Dimensions.Large),
+                            ) {
+                                entry.content(backStack)
+                            }
+                        }
+                    } else {
+                        Column(modifier) {
+                            entry.content(backStack)
+                        }
+                    }
                 }
             }
         }

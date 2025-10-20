@@ -10,7 +10,6 @@ package com.adyen.checkout.mbway.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -33,8 +32,6 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
-import com.adyen.checkout.ui.internal.ComponentScaffold
-import com.adyen.checkout.ui.internal.PayButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
@@ -49,16 +46,12 @@ internal class MBWayComponent(
     MBWayChangeListener {
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { modifier, backStack ->
-            MainScreen(modifier = modifier, backStack = backStack)
-        },
+        MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { backStack -> MainScreen(backStack) },
 
         MBWayCountryCodeNavKey to CheckoutNavEntry(
             MBWayCountryCodeNavKey,
             CheckoutDisplayStrategy.DIALOG,
-        ) { _, backStack ->
-            CountryCodePickerScreen(backStack)
-        },
+        ) { backStack -> CountryCodePickerScreen(backStack) },
     )
 
     override val navigationStartingPoint: NavKey = MBWayNavKey
@@ -134,22 +127,15 @@ internal class MBWayComponent(
     }
 
     @Composable
-    private fun MainScreen(modifier: Modifier, backStack: NavBackStack<NavKey>) {
+    private fun MainScreen(backStack: NavBackStack<NavKey>) {
         val viewState by stateManager.viewState.collectAsStateWithLifecycle()
 
-        ComponentScaffold(
-            modifier = modifier,
-            disableInteraction = viewState.isLoading,
-            footer = {
-                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
-            },
-        ) {
-            MbWayComponent(
-                viewState = viewState,
-                changeListener = this,
-                onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
-            )
-        }
+        MbWayComponent(
+            viewState = viewState,
+            changeListener = this,
+            onSubmitClick = ::submit,
+            onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
+        )
     }
 
     @Composable

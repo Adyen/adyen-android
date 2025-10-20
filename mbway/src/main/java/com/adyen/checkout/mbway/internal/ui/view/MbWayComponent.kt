@@ -24,57 +24,67 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.CheckoutTextField
+import com.adyen.checkout.ui.internal.ComponentScaffold
 import com.adyen.checkout.ui.internal.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.PayButton
 import com.adyen.checkout.ui.internal.ValuePickerField
 
 @Composable
 internal fun MbWayComponent(
     viewState: MBWayViewState,
     changeListener: MBWayChangeListener,
+    onSubmitClick: () -> Unit,
     onCountryCodePickerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    ComponentScaffold(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        disableInteraction = viewState.isLoading,
+        footer = {
+            PayButton(onClick = onSubmitClick, isLoading = viewState.isLoading)
+        },
     ) {
-        // CountryCode
-        val country = viewState.countryCode
-        ValuePickerField(
-            value = "${country.callingCode} • ${country.countryName}",
-            label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
-            onClick = onCountryCodePickerClick,
-            modifier = Modifier
-                .fillMaxWidth(),
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        ) {
+            // CountryCode
+            val country = viewState.countryCode
+            ValuePickerField(
+                value = "${country.callingCode} • ${country.countryName}",
+                label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
+                onClick = onCountryCodePickerClick,
+                modifier = Modifier
+                    .fillMaxWidth(),
+            )
 
-        // PhoneNumber
-        val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
-        val supportingTextPhoneNumber = if (showPhoneNumberError) {
-            viewState.phoneNumber.errorMessage?.let { resolveString(it) }
-        } else {
-            null
-        }
+            // PhoneNumber
+            val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
+            val supportingTextPhoneNumber = if (showPhoneNumberError) {
+                viewState.phoneNumber.errorMessage?.let { resolveString(it) }
+            } else {
+                null
+            }
 
-        CheckoutTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
+            CheckoutTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
+                    },
+                label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
+                initialValue = viewState.phoneNumber.text,
+                isError = showPhoneNumberError,
+                supportingText = supportingTextPhoneNumber,
+                prefix = country.callingCode,
+                onValueChange = { value ->
+                    changeListener.onPhoneNumberChanged(value)
                 },
-            label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
-            initialValue = viewState.phoneNumber.text,
-            isError = showPhoneNumberError,
-            supportingText = supportingTextPhoneNumber,
-            prefix = country.callingCode,
-            onValueChange = { value ->
-                changeListener.onPhoneNumberChanged(value)
-            },
-            inputTransformation = DigitOnlyInputTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            shouldFocus = viewState.phoneNumber.isFocused,
-        )
+                inputTransformation = DigitOnlyInputTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shouldFocus = viewState.phoneNumber.isFocused,
+            )
+        }
     }
 }
 
@@ -97,6 +107,7 @@ private fun MbWayComponentPreview() {
             override fun onPhoneNumberChanged(newPhoneNumber: String) = Unit
             override fun onPhoneNumberFocusChanged(hasFocus: Boolean) = Unit
         },
+        onSubmitClick = {},
         onCountryCodePickerClick = {},
     )
 }
