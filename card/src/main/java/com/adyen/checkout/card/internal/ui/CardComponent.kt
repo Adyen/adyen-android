@@ -9,26 +9,37 @@
 package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
+import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
 import com.adyen.checkout.ui.internal.ComponentScaffold
 import kotlinx.coroutines.flow.Flow
 
 // TODO - Card full implementation
-internal class CardComponent : PaymentComponent<CardPaymentComponentState> {
+internal class CardComponent(
+    private val viewStateManager: ViewStateManager<CardViewState>,
+) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>>
         get() = TODO("Not yet implemented")
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
+        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
         ComponentScaffold(
             modifier = modifier,
         ) {
-            CardComponent()
+            CardComponent(
+                viewState = viewState,
+                changeListener = this,
+            )
         }
     }
 
@@ -38,5 +49,21 @@ internal class CardComponent : PaymentComponent<CardPaymentComponentState> {
 
     override fun setLoading(isLoading: Boolean) {
         TODO("Not yet implemented")
+    }
+
+    override fun onCardNumberChanged(newCardNumber: String) {
+        viewStateManager.update {
+            copy(
+                cardNumber = cardNumber.updateText(newCardNumber),
+            )
+        }
+    }
+
+    override fun onCardNumberFocusChanged(hasFocus: Boolean) {
+        viewStateManager.update {
+            copy(
+                cardNumber = cardNumber.updateFocus(hasFocus),
+            )
+        }
     }
 }
