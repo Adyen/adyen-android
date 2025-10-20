@@ -21,7 +21,8 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
+import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
+import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
-    private val viewStateManager: ViewStateManager<MBWayViewState>,
+    private val stateManager: StateManager<MBWayViewState, DefaultComponentState>,
     // TODO - Order to be passed later
     private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
@@ -46,8 +47,8 @@ internal class MBWayComponent(
         eventChannel.receiveAsFlow()
 
     override fun submit() {
-        if (viewStateManager.isValid) {
-            val paymentComponentState = viewStateManager.state.value.toPaymentComponentState(
+        if (stateManager.isValid) {
+            val paymentComponentState = stateManager.viewState.value.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 order = order,
                 amount = componentParams.amount,
@@ -56,7 +57,7 @@ internal class MBWayComponent(
                 PaymentComponentEvent.Submit(paymentComponentState),
             )
         } else {
-            viewStateManager.highlightAllFieldValidationErrors()
+            stateManager.highlightAllValidationErrors()
         }
     }
 
@@ -88,32 +89,32 @@ internal class MBWayComponent(
     }
 
     override fun setLoading(isLoading: Boolean) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(isLoading = isLoading)
         }
     }
 
     override fun onCountryChanged(newCountryCode: CountryModel) {
-        viewStateManager.update {
+        stateManager.updateViewStateAndValidate {
             copy(countryCode = newCountryCode)
         }
     }
 
     override fun onPhoneNumberChanged(newPhoneNumber: String) {
-        viewStateManager.update {
+        stateManager.updateViewStateAndValidate {
             copy(phoneNumber = phoneNumber.updateText(newPhoneNumber))
         }
     }
 
     override fun onPhoneNumberFocusChanged(hasFocus: Boolean) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
         }
     }
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
-        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
 
         ComponentScaffold(
             modifier = modifier,

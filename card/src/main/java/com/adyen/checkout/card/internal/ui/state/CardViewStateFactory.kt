@@ -17,5 +17,6 @@ internal class CardViewStateFactory : ViewStateFactory<CardViewState> {
     override fun createDefaultViewState() = CardViewState(
         cardNumber = TextInputState(isFocused = true),
         isAmex = false,
+        isLoading = false,
     )
 }

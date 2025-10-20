@@ -13,28 +13,36 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
+import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateManager
+import com.adyen.checkout.core.components.internal.ui.state.StateManager
+import com.adyen.checkout.core.old.AdyenLogLevel
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.ui.internal.ComponentScaffold
+import com.adyen.checkout.ui.internal.PayButton
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 
 // TODO - Card full implementation
 internal class CardComponent(
-    private val viewStateManager: ViewStateManager<CardViewState>,
+    private val stateManager: StateManager<CardViewState, CardComponentState>,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
-    override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>>
-        get() = TODO("Not yet implemented")
+    // TODO - Card. Emit events.
+    override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> = flowOf()
 
     @Composable
     override fun ViewFactory(modifier: Modifier) {
-        val viewState by viewStateManager.state.collectAsStateWithLifecycle()
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
         ComponentScaffold(
             modifier = modifier,
+            footer = {
+                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
+            },
         ) {
             CardComponent(
                 viewState = viewState,
@@ -44,15 +52,22 @@ internal class CardComponent(
     }
 
     override fun submit() {
-        TODO("Not yet implemented")
+        if (stateManager.isValid) {
+            // TODO - Card. Create payment component state.
+            adyenLog(AdyenLogLevel.DEBUG) { "CardComponent: Submit Triggered." }
+        } else {
+            stateManager.highlightAllValidationErrors()
+        }
     }
 
     override fun setLoading(isLoading: Boolean) {
-        TODO("Not yet implemented")
+        stateManager.updateViewState {
+            copy(isLoading = isLoading)
+        }
     }
 
     override fun onCardNumberChanged(newCardNumber: String) {
-        viewStateManager.update {
+        stateManager.updateViewStateAndValidate {
             copy(
                 cardNumber = cardNumber.updateText(newCardNumber),
             )
@@ -60,7 +75,7 @@ internal class CardComponent(
     }
 
     override fun onCardNumberFocusChanged(hasFocus: Boolean) {
-        viewStateManager.update {
+        stateManager.updateViewState {
             copy(
                 cardNumber = cardNumber.updateFocus(hasFocus),
             )
