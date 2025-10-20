@@ -23,6 +23,10 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.AWAIT_LOADING -> localizedContext.getString(
                 R.string.checkout_await_loading
             )
+            // TODO - Card localization
+            CheckoutLocalizationKey.CARD_NUMBER -> "Card number"
+            CheckoutLocalizationKey.CARD_NUMBER_INVALID -> "Invalid card number"
+            CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND -> "The entered card brand isn't supported"
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
                 R.string.checkout_mbway_phone_number
             )
