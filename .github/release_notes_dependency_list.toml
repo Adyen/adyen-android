@@ -88,6 +88,7 @@
 "org.bitbucket.b_c:jose4j" = ""
 "org.jetbrains.dokka" = ""
 "org.jetbrains.dokka:dokka-gradle-plugin" = ""
+"org.jetbrains.kotlin.plugin.serialization" = ""
 "org.jetbrains.kotlinx.binary-compatibility-validator" = ""
 "org.jetbrains.kotlinx:kotlinx-coroutines-test" = ""
 "org.json:json" = ""
