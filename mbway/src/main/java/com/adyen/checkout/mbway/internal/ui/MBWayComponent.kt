@@ -24,7 +24,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.components.internal.ui.navigation.DisplayType
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
@@ -53,7 +53,7 @@ internal class MBWayComponent(
             MainScreen(modifier = modifier, backStack = backStack)
         },
 
-        MBWayCountryCodeNavKey to CheckoutNavEntry(MBWayCountryCodeNavKey, DisplayType.DIALOG) { _, backStack ->
+        MBWayCountryCodeNavKey to CheckoutNavEntry(MBWayCountryCodeNavKey, CheckoutDisplayStrategy.DIALOG) { _, backStack ->
             CountryCodePickerScreen(backStack)
         },
     )

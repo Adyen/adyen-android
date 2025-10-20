@@ -30,7 +30,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.LocalizedComp
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.DisplayType
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
@@ -68,9 +68,9 @@ internal class PaymentFacilitator(
             ) { key ->
                 val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
                 val entry = entries[key] ?: error("Unknown key: $key")
-                val metadata = when (entry.displayType) {
-                    DisplayType.INLINE -> emptyMap()
-                    DisplayType.DIALOG -> DialogSceneStrategy.dialog(
+                val metadata = when (entry.displayStrategy) {
+                    CheckoutDisplayStrategy.INLINE -> emptyMap()
+                    CheckoutDisplayStrategy.DIALOG -> DialogSceneStrategy.dialog(
                         DialogProperties(
                             dismissOnBackPress = true,
                             dismissOnClickOutside = false,

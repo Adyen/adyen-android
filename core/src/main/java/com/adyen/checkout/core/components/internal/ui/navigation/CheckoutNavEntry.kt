@@ -17,12 +17,12 @@ import androidx.navigation3.runtime.NavKey
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CheckoutNavEntry(
     val key: NavKey,
-    val displayType: DisplayType = DisplayType.INLINE,
+    val displayStrategy: CheckoutDisplayStrategy = CheckoutDisplayStrategy.INLINE,
     val content: @Composable (Modifier, NavBackStack<NavKey>) -> Unit,
 )
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class DisplayType {
+enum class CheckoutDisplayStrategy {
     INLINE,
     DIALOG,
 }
