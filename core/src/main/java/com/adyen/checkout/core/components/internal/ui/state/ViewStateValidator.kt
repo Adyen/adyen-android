@@ -11,9 +11,9 @@ package com.adyen.checkout.core.components.internal.ui.state
 import androidx.annotation.RestrictTo
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ViewStateValidator<V : ViewState> {
+interface ViewStateValidator<V : ViewState, C : ComponentState> {
 
-    fun validate(viewState: V): V
+    fun validate(viewState: V, componentState: C): V
 
     fun isValid(viewState: V): Boolean
 

@@ -2,6 +2,7 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -37,7 +38,8 @@ internal class MBWayViewStateValidatorTest {
                 isLoading = false,
             )
 
-            val actual = validator.validate(viewState)
+            // TODO - Component State
+            val actual = validator.validate(viewState, DefaultComponentState())
 
             assertEquals(null, actual.phoneNumber.errorMessage)
         }
@@ -57,7 +59,8 @@ internal class MBWayViewStateValidatorTest {
                 isLoading = false,
             )
 
-            val actual = validator.validate(viewState)
+            // TODO - Component State
+            val actual = validator.validate(viewState, DefaultComponentState())
 
             assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.errorMessage)
         }

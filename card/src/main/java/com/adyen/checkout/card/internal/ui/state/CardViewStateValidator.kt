@@ -12,17 +12,16 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
 
 internal class CardViewStateValidator(
     private val cardValidationMapper: CardValidationMapper,
-) : ViewStateValidator<CardViewState> {
+) : ViewStateValidator<CardViewState, CardComponentState> {
 
-    override fun validate(viewState: CardViewState): CardViewState {
+    override fun validate(viewState: CardViewState, componentState: CardComponentState): CardViewState {
         val cardNumber = viewState.cardNumber
         // TODO - Card Full Validation
         val cardNumberError = cardValidationMapper.mapCardNumberValidation(
             // TODO - Card Number Luhn Check & Brand Supported
             validation = CardValidationUtils.validateCardNumber(
                 number = cardNumber.text,
-                // TODO - Card Enable Luhn Check from component state
-                enableLuhnCheck = true,
+                enableLuhnCheck = componentState.enableLuhnCheck,
                 isBrandSupported = true,
             ),
         )
@@ -38,6 +37,13 @@ internal class CardViewStateValidator(
     }
 
     override fun highlightAllValidationErrors(viewState: CardViewState): CardViewState {
-        TODO("Not yet implemented")
+        val hasCardNumberError = viewState.cardNumber.errorMessage != null
+
+        return viewState.copy(
+            cardNumber = viewState.cardNumber.copy(
+                showError = hasCardNumberError,
+                isFocused = hasCardNumberError,
+            ),
+        )
     }
 }

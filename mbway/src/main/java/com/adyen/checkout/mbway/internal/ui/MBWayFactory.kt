@@ -12,7 +12,8 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.components.internal.ui.state.DefaultViewStateManager
+import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.DefaultStateManager
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
@@ -26,15 +27,16 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
     ): MBWayComponent {
-        val stateManager = DefaultViewStateManager(
-            factory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),
+        val stateManager = DefaultStateManager(
+            viewStateFactory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),
+            componentStateFactory = DefaultComponentStateFactory(),
             validator = MBWayViewStateValidator(),
         )
 
         return MBWayComponent(
             componentParams = componentParamsBundle.commonComponentParams,
             analyticsManager = analyticsManager,
-            viewStateManager = stateManager,
+            stateManager = stateManager,
             // TODO - Order to be passed later
             order = null,
         )

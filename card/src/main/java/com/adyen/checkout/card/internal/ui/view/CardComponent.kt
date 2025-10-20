@@ -99,6 +99,7 @@ private fun CardComponentPreview() {
                 "5555444433331111",
             ),
             isAmex = false,
+            isLoading = false,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit
