@@ -23,15 +23,15 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.mbway.internal.ui.view.CountryCodeDialog
+import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import com.adyen.checkout.ui.internal.ComponentScaffold
 import com.adyen.checkout.ui.internal.PayButton
@@ -53,7 +53,10 @@ internal class MBWayComponent(
             MainScreen(modifier = modifier, backStack = backStack)
         },
 
-        MBWayCountryCodeNavKey to CheckoutNavEntry(MBWayCountryCodeNavKey, CheckoutDisplayStrategy.DIALOG) { _, backStack ->
+        MBWayCountryCodeNavKey to CheckoutNavEntry(
+            MBWayCountryCodeNavKey,
+            CheckoutDisplayStrategy.DIALOG,
+        ) { _, backStack ->
             CountryCodePickerScreen(backStack)
         },
     )
@@ -153,7 +156,7 @@ internal class MBWayComponent(
     private fun CountryCodePickerScreen(backStack: NavBackStack<NavKey>) {
         val viewState by stateManager.viewState.collectAsStateWithLifecycle()
 
-        CountryCodeDialog(
+        CountryCodePicker(
             onDismissRequest = { backStack.removeLastOrNull() },
             viewState = viewState,
             onCountrySelected = ::onCountryChanged,
