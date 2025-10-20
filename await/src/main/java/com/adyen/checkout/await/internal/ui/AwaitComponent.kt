@@ -9,6 +9,8 @@
 package com.adyen.checkout.await.internal.ui
 
 import androidx.annotation.VisibleForTesting
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
 import com.adyen.checkout.core.action.data.ActionComponentData
@@ -62,19 +64,7 @@ internal class AwaitComponent(
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        AwaitNavKey to CheckoutNavEntry(AwaitNavKey) { modifier, _ ->
-            redirectEvent(
-                redirectHandler = redirectHandler,
-                viewEventFlow = redirectEventFlow,
-                onError = ::emitError,
-            )
-
-            ComponentScaffold(
-                modifier = modifier,
-            ) {
-                AwaitComponent()
-            }
-        },
+        AwaitNavKey to CheckoutNavEntry(AwaitNavKey) { modifier, _ -> MainScreen(modifier) },
     )
 
     override val navigationStartingPoint: NavKey = AwaitNavKey
@@ -105,8 +95,8 @@ internal class AwaitComponent(
         try {
             adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $redirectUrl" }
             val paymentData = paymentDataRepository.paymentData
-                // TODO - Error Propagation
-                // ?: throw CheckoutException("Payment data should not be null")
+            // TODO - Error Propagation
+            // ?: throw CheckoutException("Payment data should not be null")
                 ?: throw RuntimeException("Payment data should not be null")
             startStatusPolling(paymentData)
             // TODO - Error Propagation
@@ -196,6 +186,21 @@ internal class AwaitComponent(
             details = details,
             paymentData = paymentDataRepository.paymentData,
         )
+    }
+
+    @Composable
+    private fun MainScreen(modifier: Modifier) {
+        redirectEvent(
+            redirectHandler = redirectHandler,
+            viewEventFlow = redirectEventFlow,
+            onError = ::emitError,
+        )
+
+        ComponentScaffold(
+            modifier = modifier,
+        ) {
+            AwaitComponent()
+        }
     }
 
     companion object {

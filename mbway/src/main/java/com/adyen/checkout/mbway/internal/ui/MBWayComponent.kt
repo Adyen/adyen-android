@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.mbway.internal.ui
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
@@ -47,31 +50,11 @@ internal class MBWayComponent(
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
         MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { modifier, backStack ->
-            val viewState by stateManager.viewState.collectAsStateWithLifecycle()
-
-            ComponentScaffold(
-                modifier = modifier,
-                disableInteraction = viewState.isLoading,
-                footer = {
-                    PayButton(onClick = ::submit, isLoading = viewState.isLoading)
-                },
-            ) {
-                MbWayComponent(
-                    viewState = viewState,
-                    changeListener = this,
-                    onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
-                )
-            }
+            MainScreen(modifier = modifier, backStack = backStack)
         },
 
         MBWayCountryCodeNavKey to CheckoutNavEntry(MBWayCountryCodeNavKey, DisplayType.DIALOG) { _, backStack ->
-            val viewState by stateManager.viewState.collectAsStateWithLifecycle()
-
-            CountryCodeDialog(
-                onDismissRequest = { backStack.removeLastOrNull() },
-                viewState = viewState,
-                onCountrySelected = ::onCountryChanged,
-            )
+            CountryCodePickerScreen(backStack)
         },
     )
 
@@ -145,6 +128,36 @@ internal class MBWayComponent(
         stateManager.updateViewState {
             copy(phoneNumber = phoneNumber.updateFocus(hasFocus))
         }
+    }
+
+    @Composable
+    private fun MainScreen(modifier: Modifier, backStack: NavBackStack<NavKey>) {
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+
+        ComponentScaffold(
+            modifier = modifier,
+            disableInteraction = viewState.isLoading,
+            footer = {
+                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
+            },
+        ) {
+            MbWayComponent(
+                viewState = viewState,
+                changeListener = this,
+                onCountryCodePickerClick = { backStack.add(MBWayCountryCodeNavKey) },
+            )
+        }
+    }
+
+    @Composable
+    private fun CountryCodePickerScreen(backStack: NavBackStack<NavKey>) {
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+
+        CountryCodeDialog(
+            onDismissRequest = { backStack.removeLastOrNull() },
+            viewState = viewState,
+            onCountrySelected = ::onCountryChanged,
+        )
     }
 }
 
