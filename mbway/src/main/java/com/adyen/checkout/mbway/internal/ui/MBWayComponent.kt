@@ -157,9 +157,11 @@ internal class MBWayComponent(
         val viewState by stateManager.viewState.collectAsStateWithLifecycle()
 
         CountryCodePicker(
-            onDismissRequest = { backStack.removeLastOrNull() },
             viewState = viewState,
-            onCountrySelected = ::onCountryChanged,
+            onCountrySelected = {
+                onCountryChanged(it)
+                backStack.removeLastOrNull()
+            },
         )
     }
 }

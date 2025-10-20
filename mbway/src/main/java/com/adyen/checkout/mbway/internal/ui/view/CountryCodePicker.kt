@@ -41,7 +41,6 @@ import com.adyen.checkout.ui.internal.SubHeadline
 @Suppress("LongMethod")
 @Composable
 internal fun CountryCodePicker(
-    onDismissRequest: () -> Unit,
     viewState: MBWayViewState,
     onCountrySelected: (CountryModel) -> Unit,
 ) {
@@ -74,7 +73,6 @@ internal fun CountryCodePicker(
                             indication = ripple(color = CheckoutThemeProvider.colors.text),
                         ) {
                             onCountrySelected(country)
-                            onDismissRequest()
                         }
                         .fillMaxWidth()
                         .padding(12.dp),
@@ -110,7 +108,6 @@ private fun CountryCodePickerPreview() {
         CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34"),
     )
     CountryCodePicker(
-        onDismissRequest = {},
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
