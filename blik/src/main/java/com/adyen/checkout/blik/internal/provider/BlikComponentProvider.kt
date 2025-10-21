@@ -34,6 +34,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
@@ -124,6 +125,7 @@ constructor(
                 order = order,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -209,6 +211,7 @@ constructor(
                 order = order,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -297,6 +300,7 @@ constructor(
                 order = checkoutSession.order,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -405,6 +409,7 @@ constructor(
                 order = checkoutSession.order,
                 analyticsManager = analyticsManager,
                 submitHandler = SubmitHandler(savedStateHandle),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
