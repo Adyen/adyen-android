@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -49,6 +50,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 class StoredBlikDelegateTest(
     @Mock private val submitHandler: SubmitHandler<BlikComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -172,6 +174,7 @@ class StoredBlikDelegateTest(
         order = TEST_ORDER,
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(
