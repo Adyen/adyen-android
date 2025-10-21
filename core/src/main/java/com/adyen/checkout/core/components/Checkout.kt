@@ -8,6 +8,11 @@
 
 package com.adyen.checkout.core.components
 
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.common.internal.data.api.DefaultPublicKeyRepository
+import com.adyen.checkout.core.common.internal.data.api.PublicKeyService
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.CheckoutSessionResult
@@ -23,16 +28,22 @@ object Checkout {
     ): Result {
         // TODO - Fetch checkoutAttemptId
         val checkoutSession = getCheckoutSession(sessionModel, checkoutConfiguration)
+        val publicKey = fetchPublicKey(checkoutConfiguration)
         return when {
-            checkoutSession != null -> Result.Success(
+            checkoutSession == null -> {
+                Result.Error("Failed to initialize sessions.")
+            }
+            publicKey == null -> {
+                Result.Error("Failed to fetch public key.")
+            }
+            else -> Result.Success(
                 checkoutContext = CheckoutContext.Sessions(
                     checkoutSession = checkoutSession,
                     checkoutConfiguration = checkoutConfiguration,
                     checkoutCallbacks = checkoutCallbacks,
+                    publicKey = publicKey,
                 ),
             )
-
-            else -> Result.Error("Session initialization failed.")
         }
     }
 
@@ -41,14 +52,23 @@ object Checkout {
         checkoutConfiguration: CheckoutConfiguration,
         checkoutCallbacks: CheckoutCallbacks,
     ): Result {
+        val publicKey = fetchPublicKey(checkoutConfiguration)
         // TODO - Fetch checkoutAttemptId
-        return Result.Success(
-            CheckoutContext.Advanced(
-                paymentMethodsApiResponse = paymentMethodsApiResponse,
-                checkoutConfiguration = checkoutConfiguration,
-                checkoutCallbacks = checkoutCallbacks,
-            )
-        )
+        return when {
+            publicKey == null -> {
+                return Result.Error("Failed to fetch public key.")
+            }
+            else -> {
+                Result.Success(
+                    CheckoutContext.Advanced(
+                        paymentMethodsApiResponse = paymentMethodsApiResponse,
+                        checkoutConfiguration = checkoutConfiguration,
+                        checkoutCallbacks = checkoutCallbacks,
+                        publicKey = publicKey
+                    ),
+                )
+            }
+        }
     }
 
     private suspend fun getCheckoutSession(
@@ -61,6 +81,28 @@ object Checkout {
             is CheckoutSessionResult.Success -> result.checkoutSession
             is CheckoutSessionResult.Error -> null
         }
+    }
+
+    private suspend fun fetchPublicKey(checkoutConfiguration: CheckoutConfiguration): String? {
+        val httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment)
+        val publicKeyRepository = DefaultPublicKeyRepository(PublicKeyService(httpClient))
+        publicKeyRepository.fetchPublicKey(
+            environment = checkoutConfiguration.environment,
+            clientKey = checkoutConfiguration.clientKey,
+        ).fold(
+            onSuccess = { key ->
+                adyenLog(AdyenLogLevel.DEBUG) { "Public key fetched" }
+                return key
+            },
+            onFailure = { e ->
+                adyenLog(AdyenLogLevel.ERROR) { "Unable to fetch public key" }
+
+                // TODO - Public Key. Analytics.
+//                val event = GenericEvents.error(paymentMethod.type.orEmpty(), ErrorEvent.API_PUBLIC_KEY)
+//                analyticsManager.trackEvent(event)
+                return null
+            },
+        )
     }
 
     sealed interface Result {
