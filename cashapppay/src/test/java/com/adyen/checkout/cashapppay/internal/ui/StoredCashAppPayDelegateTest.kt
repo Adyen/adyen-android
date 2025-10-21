@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.Environment
@@ -38,12 +39,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class)
-internal class StoredCashAppPayDelegateTest {
+internal class StoredCashAppPayDelegateTest(
+    @Mock private val sdkDataProvider: SdkDataProvider,
+) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: StoredCashAppPayDelegate
@@ -167,6 +171,7 @@ internal class StoredCashAppPayDelegateTest {
             storedPaymentMethod = StoredPaymentMethod(),
             context = Application(),
         ),
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(
