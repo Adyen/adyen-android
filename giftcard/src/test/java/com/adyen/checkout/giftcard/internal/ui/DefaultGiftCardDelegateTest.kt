@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -67,6 +68,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultGiftCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GiftCardComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -460,6 +462,7 @@ internal class DefaultGiftCardDelegateTest(
         submitHandler = submitHandler,
         validator = DefaultGiftCardValidator(),
         protocol = DefaultGiftCardProtocol(),
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

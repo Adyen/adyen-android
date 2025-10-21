@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
@@ -71,7 +72,8 @@ class DefaultGiftCardDelegate(
     private val cardEncryptor: BaseCardEncryptor,
     private val submitHandler: SubmitHandler<GiftCardComponentState>,
     private val validator: GiftCardValidator,
-    private val protocol: GiftCardProtocol
+    private val protocol: GiftCardProtocol,
+    private val sdkDataProvider: SdkDataProvider,
 ) : GiftCardDelegate {
 
     private val inputData: GiftCardInputData = GiftCardInputData()
@@ -243,6 +245,7 @@ class DefaultGiftCardDelegate(
             paymentMethod = giftCardPaymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return GiftCardComponentState(
