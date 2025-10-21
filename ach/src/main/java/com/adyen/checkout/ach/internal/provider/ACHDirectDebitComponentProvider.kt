@@ -40,6 +40,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.provider.StoredPaymentComponentProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
@@ -293,6 +294,7 @@ constructor(
             genericEncryptor = genericEncryptor,
             componentParams = componentParams,
             order = order,
+            sdkDataProvider = SdkDataProvider(analyticsManager),
         )
     }
 
@@ -474,6 +476,7 @@ constructor(
             analyticsManager = analyticsManager,
             componentParams = componentParams,
             order = order,
+            sdkDataProvider = SdkDataProvider(analyticsManager),
         )
     }
 

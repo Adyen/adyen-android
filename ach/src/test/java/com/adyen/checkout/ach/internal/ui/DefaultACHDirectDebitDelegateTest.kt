@@ -27,6 +27,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -75,7 +76,8 @@ import java.util.Locale
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, TestDispatcherExtension::class)
 internal class DefaultACHDirectDebitDelegateTest(
-    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>
+    @Mock private val submitHandler: SubmitHandler<ACHDirectDebitComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var publicKeyRepository: TestPublicKeyRepository
@@ -757,6 +759,7 @@ internal class DefaultACHDirectDebitDelegateTest(
         componentParams = ACHDirectDebitComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, DEVICE_LOCALE, null, null),
         order = order,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(
@@ -780,7 +783,7 @@ internal class DefaultACHDirectDebitDelegateTest(
             apartmentSuite = "apartment",
             city = "Istanbul",
             country = "TR",
-            countryDisplayName = "Turkey"
+            countryDisplayName = "Turkey",
         )
     }
 
