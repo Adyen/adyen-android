@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.issuerlist.IssuerListViewType
@@ -58,6 +59,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultIssuerListDelegateTest(
     @Mock private val submitHandler: SubmitHandler<TestIssuerComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -196,6 +198,7 @@ internal class DefaultIssuerListDelegateTest(
                     isReady = isReady,
                 )
             },
+            sdkDataProvider = sdkDataProvider,
         )
 
         delegate.viewFlow.test {
@@ -231,6 +234,7 @@ internal class DefaultIssuerListDelegateTest(
                     isReady = isReady,
                 )
             },
+            sdkDataProvider = sdkDataProvider,
         )
         delegate.viewFlow.test {
             assertEquals(IssuerListComponentViewType.SpinnerView, expectMostRecentItem())
@@ -383,6 +387,7 @@ internal class DefaultIssuerListDelegateTest(
                 isReady,
             )
         },
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(
