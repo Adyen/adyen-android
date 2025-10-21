@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BacsDirectDebitPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -36,7 +37,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultBacsDirectDebitDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
@@ -44,6 +45,7 @@ internal class DefaultBacsDirectDebitDelegate(
     private val order: Order?,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<BacsDirectDebitComponentState>,
+    private val sdkDataProvider: SdkDataProvider,
 ) : BacsDirectDebitDelegate {
 
     private val inputData: BacsDirectDebitInputData = BacsDirectDebitInputData()
@@ -205,6 +207,7 @@ internal class DefaultBacsDirectDebitDelegate(
             paymentMethod = bacsDirectDebitPaymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return BacsDirectDebitComponentState(
