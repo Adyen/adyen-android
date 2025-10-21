@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.PayToPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -42,7 +43,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultPayToDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
@@ -50,6 +51,7 @@ internal class DefaultPayToDelegate(
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<PayToComponentState>,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PayToDelegate, ButtonDelegate, UIStateDelegate {
 
     private val inputData: PayToInputData = PayToInputData()
@@ -159,6 +161,7 @@ internal class DefaultPayToDelegate(
                 firstName = outputData.firstNameFieldState.value,
                 lastName = outputData.lastNameFieldState.value,
             ),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayToComponentState(
