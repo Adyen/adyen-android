@@ -28,6 +28,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManagerFactory
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -106,6 +107,7 @@ constructor(
                 order = order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -193,6 +195,7 @@ constructor(
                 order = checkoutSession.order,
                 componentParams = componentParams,
                 analyticsManager = analyticsManager,
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
