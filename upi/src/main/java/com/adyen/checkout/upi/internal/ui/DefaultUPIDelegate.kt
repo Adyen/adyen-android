@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -44,7 +45,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultUPIDelegate(
     private val submitHandler: SubmitHandler<UPIComponentState>,
     private val analyticsManager: AnalyticsManager,
@@ -52,6 +53,7 @@ internal class DefaultUPIDelegate(
     private val paymentMethod: PaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
 ) : UPIDelegate {
 
     private val inputData = UPIInputData()
@@ -211,6 +213,7 @@ internal class DefaultUPIDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return UPIComponentState(
