@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.components.core.paymentmethod.PaymentMethodDetails
@@ -33,12 +34,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("LongParameterList")
 internal class DefaultInstantPaymentDelegate(
     private val observerRepository: PaymentObserverRepository,
     private val paymentMethod: PaymentMethod,
     private val order: Order?,
     override val componentParams: InstantComponentParams,
     private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
 ) : InstantPaymentDelegate {
 
     override val componentStateFlow: StateFlow<InstantComponentState> = MutableStateFlow(createComponentState())
@@ -64,6 +67,7 @@ internal class DefaultInstantPaymentDelegate(
             ),
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }
