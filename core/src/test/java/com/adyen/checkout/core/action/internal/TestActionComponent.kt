@@ -8,17 +8,17 @@
 
 package com.adyen.checkout.core.action.internal
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
 internal class TestActionComponent : ActionComponent {
 
-    @Composable
-    override fun ViewFactory(modifier: Modifier) {
-        // No-op
-    }
+    override val navigation: Map<NavKey, CheckoutNavEntry> = emptyMap()
+
+    override val navigationStartingPoint: NavKey
+        get() = error("Not implemented for testing")
 
     override fun handleAction() {
         // No-op
