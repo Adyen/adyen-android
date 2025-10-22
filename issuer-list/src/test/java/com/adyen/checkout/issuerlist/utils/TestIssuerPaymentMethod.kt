@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 
 internal class TestIssuerPaymentMethod(
     override var issuer: String? = "issuer",
+    @Deprecated("This property is deprecated.")
     override var checkoutAttemptId: String? = "checkoutAttemptId",
     override var type: String? = "type"
 ) : IssuerListPaymentMethod() {

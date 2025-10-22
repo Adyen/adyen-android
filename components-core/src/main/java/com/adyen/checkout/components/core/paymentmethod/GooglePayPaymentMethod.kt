@@ -16,9 +16,11 @@ import org.json.JSONObject
 @Parcelize
 data class GooglePayPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var googlePayToken: String? = null,
     var googlePayCardNetwork: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var threeDS2SdkVersion: String? = null,
 ) : PaymentMethodDetails() {
 
