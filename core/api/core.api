@@ -197,6 +197,38 @@ public final class com/adyen/checkout/core/common/AdyenLogger$Companion {
 	public final fun setLogger (Lcom/adyen/checkout/core/common/AdyenLogger;)V
 }
 
+public final class com/adyen/checkout/core/common/CardBrand : android/os/Parcelable {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/common/CardBrand$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardBrand;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/CardBrand;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/CardBrand;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getTxVariant ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/common/CardBrand$Companion {
+	public final fun estimate (Ljava/lang/String;)Ljava/util/List;
+}
+
+public final class com/adyen/checkout/core/common/CardBrand$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/common/CardBrand;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/common/CardBrand;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/common/CardType$Companion {
+	public final fun getByBrandName (Ljava/lang/String;)Lcom/adyen/checkout/core/common/CardType;
+}
+
 public final class com/adyen/checkout/core/common/Environment : android/os/Parcelable {
 	public static final field $stable I
 	public static final field APSE Lcom/adyen/checkout/core/common/Environment;

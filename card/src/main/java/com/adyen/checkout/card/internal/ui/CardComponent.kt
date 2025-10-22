@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
@@ -26,7 +27,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
@@ -44,7 +44,7 @@ internal class CardComponent(
     private val analyticsManager: AnalyticsManager,
     private val stateManager: StateManager<CardViewState, CardComponentState>,
     private val cardEncryptor: BaseCardEncryptor,
-    private val componentParams: ComponentParams,
+    private val componentParams: CardComponentParams,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
