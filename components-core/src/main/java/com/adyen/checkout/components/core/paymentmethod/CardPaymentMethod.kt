@@ -17,6 +17,7 @@ import org.json.JSONObject
 @Parcelize
 data class CardPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var encryptedCardNumber: String? = null,
     var encryptedExpiryMonth: String? = null,
@@ -27,6 +28,7 @@ data class CardPaymentMethod(
     var storedPaymentMethodId: String? = null,
     var taxNumber: String? = null,
     var brand: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var threeDS2SdkVersion: String? = null,
     var fundingSource: String? = null,
 ) : PaymentMethodDetails() {
@@ -83,7 +85,7 @@ data class CardPaymentMethod(
                     taxNumber = jsonObject.getStringOrNull(TAX_NUMBER),
                     brand = jsonObject.getStringOrNull(BRAND),
                     threeDS2SdkVersion = jsonObject.getStringOrNull(THREEDS2_SDK_VERSION),
-                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE)
+                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                 )
             }
         }
