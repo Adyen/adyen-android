@@ -13,6 +13,7 @@ import com.adyen.checkout.components.core.paymentmethod.EContextPaymentMethod
 
 internal class TestEContextPaymentMethod(
     override var firstName: String? = "firstName",
+    @Deprecated("This property is deprecated.")
     override var checkoutAttemptId: String? = "checkoutAttemptId",
     override var lastName: String? = "lastName",
     override var telephoneNumber: String? = "telephoneNumber",
