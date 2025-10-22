@@ -17,6 +17,7 @@ import org.json.JSONObject
 @Parcelize
 data class BacsDirectDebitPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var holderName: String?,
     var bankAccountNumber: String?,
