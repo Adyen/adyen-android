@@ -41,12 +41,14 @@ object PaymentMethodProvider {
      *
      * @return [PaymentComponent] for given txVariant.
      */
+    @Suppress("LongParameterList")
     fun get(
         txVariant: String,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        publicKey: String,
     ): PaymentComponent<BasePaymentComponentState> {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
@@ -54,6 +56,7 @@ object PaymentMethodProvider {
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            publicKey = publicKey,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")

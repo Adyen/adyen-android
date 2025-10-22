@@ -30,6 +30,7 @@ import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("LongParameterList")
 internal class SessionsPaymentFacilitatorFactory(
     private val applicationContext: Context,
     private val checkoutSession: CheckoutSession,
@@ -37,6 +38,7 @@ internal class SessionsPaymentFacilitatorFactory(
     private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
+    private val publicKey: String,
 ) : PaymentFacilitatorFactory {
 
     override fun create(
@@ -70,6 +72,7 @@ internal class SessionsPaymentFacilitatorFactory(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            publicKey = publicKey,
         )
 
         val sessionInteractor = SessionInteractor(

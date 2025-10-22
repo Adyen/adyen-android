@@ -83,6 +83,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                publicKey = "test_key_12345",
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -108,6 +109,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                publicKey = "test_key_12345",
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             Assert.assertSame(component, actualComponent)
@@ -122,6 +124,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                publicKey = "test_key_12345",
             )
         }
     }
@@ -145,6 +148,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
+                publicKey: String,
             ) = paymentComponent
         }
 

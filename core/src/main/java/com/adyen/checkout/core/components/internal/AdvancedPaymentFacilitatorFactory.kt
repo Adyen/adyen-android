@@ -26,6 +26,7 @@ internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
+    private val publicKey: String,
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
@@ -51,6 +52,7 @@ internal class AdvancedPaymentFacilitatorFactory(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            publicKey = publicKey,
         )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(

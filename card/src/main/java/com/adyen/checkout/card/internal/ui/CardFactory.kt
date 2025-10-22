@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.components.internal.ui.state.DefaultStateManager
+import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, CardComponent> {
@@ -26,16 +27,25 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle
+        componentParamsBundle: ComponentParamsBundle,
+        // TODO - Card Component Params. Store public key in card component params and read from there.
+        publicKey: String,
     ): CardComponent {
         val stateManager = DefaultStateManager(
             viewStateFactory = CardViewStateFactory(),
             componentStateFactory = CardComponentStateFactory(),
             validator = CardViewStateValidator(cardValidationMapper = CardValidationMapper())
         )
+
+        val cardEncryptor = CardEncryptorFactory.provide()
+
         // TODO - Card full implementation
         return CardComponent(
+            analyticsManager = analyticsManager,
             stateManager = stateManager,
+            componentParams = componentParamsBundle.commonComponentParams,
+            publicKey = publicKey,
+            cardEncryptor = cardEncryptor,
         )
     }
 }
