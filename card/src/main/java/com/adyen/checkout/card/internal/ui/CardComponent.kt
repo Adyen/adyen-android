@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
@@ -22,7 +23,9 @@ import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.helper.runCompileOnly
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -35,7 +38,12 @@ import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
 
@@ -45,7 +53,11 @@ internal class CardComponent(
     private val stateManager: StateManager<CardViewState, CardComponentState>,
     private val cardEncryptor: BaseCardEncryptor,
     private val componentParams: CardComponentParams,
+    private val detectCardTypeRepository: DetectCardTypeRepository,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
+
+    private var _coroutineScope: CoroutineScope? = null
+    private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
@@ -56,6 +68,11 @@ internal class CardComponent(
     )
 
     override val navigationStartingPoint: NavKey = CardNavKey
+
+    fun initialize(coroutineScope: CoroutineScope) {
+        _coroutineScope = coroutineScope
+        subscribeToDetectedCardTypes()
+    }
 
     override fun submit() {
         if (stateManager.isValid) {
@@ -74,6 +91,14 @@ internal class CardComponent(
     }
 
     override fun onCardNumberChanged(newCardNumber: String) {
+        detectCardTypeRepository.detectCardType(
+            cardNumber = newCardNumber,
+            publicKey = componentParams.publicKey,
+            supportedCardBrands = componentParams.supportedCardBrands,
+            clientKey = componentParams.clientKey,
+            coroutineScope = coroutineScope,
+            type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+        )
         stateManager.updateViewStateAndValidate {
             copy(
                 cardNumber = cardNumber.updateText(newCardNumber),
@@ -176,6 +201,31 @@ internal class CardComponent(
             data = paymentComponentData,
             isValid = true,
         )
+    }
+
+    private fun subscribeToDetectedCardTypes() {
+        detectCardTypeRepository.detectedCardTypesFlow
+            .onEach { detectedCardTypes ->
+                adyenLog(AdyenLogLevel.DEBUG) {
+                    "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
+                        "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
+                }
+//                if (detectedCardTypes != outputData.detectedCardTypes) {
+//                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+//                }
+                stateManager.updateComponentState {
+                    copy(detectedCardTypes = detectedCardTypes)
+                }
+            }
+            .map { detectedCardTypes ->
+                detectedCardTypes.filter { it.isReliable && it.isSupported }.map { it.cardBrand }
+            }
+            .distinctUntilChanged()
+            .onEach {
+                // TODO - Card. Dual brands reset brand
+                // inputData.selectedCardBrand = null
+            }
+            .launchIn(coroutineScope)
     }
 }
 

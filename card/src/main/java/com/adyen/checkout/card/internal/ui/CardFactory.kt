@@ -9,6 +9,8 @@
 package com.adyen.checkout.card.internal.ui
 
 import com.adyen.checkout.card.getCardConfiguration
+import com.adyen.checkout.card.internal.data.api.BinLookupService
+import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
 import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
@@ -16,6 +18,7 @@ import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateValidator
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -45,6 +48,9 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         )
 
         val cardEncryptor = CardEncryptorFactory.provide()
+        val httpClient = HttpClientFactory.getHttpClient(componentParamsBundle.commonComponentParams.environment)
+        val binLookupService = BinLookupService(httpClient)
+        val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
 
         // TODO - Card full implementation
         return CardComponent(
@@ -52,6 +58,9 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             stateManager = stateManager,
             componentParams = cardComponentParams,
             cardEncryptor = cardEncryptor,
-        )
+            detectCardTypeRepository = detectCardTypeRepository,
+        ).apply {
+            initialize(coroutineScope)
+        }
     }
 }
