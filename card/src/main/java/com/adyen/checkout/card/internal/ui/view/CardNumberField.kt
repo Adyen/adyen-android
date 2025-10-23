@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
@@ -46,6 +48,7 @@ internal fun CardNumberField(
     cardNumberState: TextInputState,
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
+    detectedBrand: CardBrand?,
     isAmex: Boolean,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
@@ -57,6 +60,7 @@ internal fun CardNumberField(
         CardNumberInputField(
             cardNumberState = cardNumberState,
             isAmex = isAmex,
+            detectedBrand = detectedBrand,
             onCardNumberChanged = onCardNumberChanged,
             onCardNumberFocusChanged = onCardNumberFocusChanged,
         )
@@ -72,6 +76,7 @@ internal fun CardNumberField(
 private fun CardNumberInputField(
     cardNumberState: TextInputState,
     isAmex: Boolean,
+    detectedBrand: CardBrand?,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,6 +112,16 @@ private fun CardNumberInputField(
         outputTransformation = outputTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
+        trailingIcon = {
+            detectedBrand?.let {
+                CheckoutNetworkLogo(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .width(24.dp),
+                    txVariant = detectedBrand.txVariant,
+                )
+            }
+        },
     )
 }
 
@@ -158,6 +173,7 @@ private fun CardNumberFieldPreview() {
             CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
         ),
         isSupportedCardBrandsShown = true,
+        detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
         isAmex = false,
         onCardNumberChanged = {},
         onCardNumberFocusChanged = {},
