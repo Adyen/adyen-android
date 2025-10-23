@@ -24,4 +24,17 @@ internal class CardValidationMapper {
             CardNumberValidation.INVALID_OTHER_REASON -> CheckoutLocalizationKey.CARD_NUMBER_INVALID
         }
     }
+
+    fun mapExpiryDateValidation(
+        validation: CardExpiryDateValidation,
+    ): CheckoutLocalizationKey? {
+        return when (validation) {
+            CardExpiryDateValidation.VALID -> null
+            CardExpiryDateValidation.VALID_NOT_REQUIRED -> null
+            CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE ->
+                CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE
+            CardExpiryDateValidation.INVALID_TOO_OLD -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD
+            CardExpiryDateValidation.INVALID_OTHER_REASON -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID
+        }
+    }
 }
