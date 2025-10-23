@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.serialization.Serializable
 
 // TODO - Card full implementation
+@Suppress("TooManyFunctions")
 internal class CardComponent(
     private val analyticsManager: AnalyticsManager,
     private val stateManager: StateManager<CardViewState, CardComponentState>,
@@ -126,6 +127,22 @@ internal class CardComponent(
     }
 
     // TODO - Card. Extract payment component state creation to a separate file.
+    override fun onExpiryDateChanged(newExpiryDate: String) {
+        stateManager.updateViewStateAndValidate {
+            copy(
+                expiryDate = expiryDate.updateText(newExpiryDate),
+            )
+        }
+    }
+
+    override fun onExpiryDateFocusChanged(hasFocus: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                expiryDate = expiryDate.updateFocus(hasFocus),
+            )
+        }
+    }
+
     @Suppress("ReturnCount")
     private fun CardViewState.toPaymentComponentState(): CardPaymentComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
