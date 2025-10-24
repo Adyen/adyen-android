@@ -17,4 +17,8 @@ internal interface CardChangeListener {
     fun onExpiryDateChanged(newExpiryDate: String)
 
     fun onExpiryDateFocusChanged(hasFocus: Boolean)
+
+    fun onSecurityCodeChanged(newSecurityCode: String)
+
+    fun onSecurityCodeFocusChanged(hasFocus: Boolean)
 }

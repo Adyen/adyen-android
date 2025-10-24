@@ -20,6 +20,7 @@ internal class CardViewStateFactory(
     override fun createDefaultViewState() = CardViewState(
         cardNumber = TextInputState(isFocused = true),
         expiryDate = TextInputState(),
+        securityCode = TextInputState(),
         isAmex = false,
         isLoading = false,
         detectedBrand = null,

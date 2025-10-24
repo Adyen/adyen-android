@@ -32,6 +32,8 @@ internal class DefaultLocalizationSource {
                 "Expiry date too far in the future"
             CheckoutLocalizationKey.CARD_NUMBER_INVALID -> "Invalid card number"
             CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND -> "The entered card brand isn't supported"
+            CheckoutLocalizationKey.CARD_SECURITY_CODE -> "Security code"
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID -> "Invalid security code"
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
                 R.string.checkout_mbway_phone_number
             )

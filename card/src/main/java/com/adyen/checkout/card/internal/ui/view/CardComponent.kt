@@ -54,6 +54,11 @@ internal fun CardComponent(
                 onExpiryDateChanged = changeListener::onExpiryDateChanged,
                 onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
             )
+            SecurityCodeField(
+                securityCodeState = viewState.securityCode,
+                onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
+                onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
+            )
         }
     }
     // TODO - Card Full UI
@@ -68,13 +73,16 @@ private fun CardComponentPreview() {
                 "5555444433331111",
             ),
             expiryDate = TextInputState(
-                text = "12",
+                text = "12/34",
+            ),
+            securityCode = TextInputState(
+                text = "737",
             ),
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isAmex = false,
             isLoading = false,
-            detectedBrand = CardBrand(CardType.MASTERCARD.txVariant)
+            detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit
@@ -84,6 +92,10 @@ private fun CardComponentPreview() {
             override fun onExpiryDateChanged(newExpiryDate: String) = Unit
 
             override fun onExpiryDateFocusChanged(hasFocus: Boolean) = Unit
+
+            override fun onSecurityCodeChanged(newSecurityCode: String) = Unit
+
+            override fun onSecurityCodeFocusChanged(hasFocus: Boolean) = Unit
         },
         onSubmitClick = {},
     )
