@@ -60,6 +60,8 @@ internal class SepaView @JvmOverloads constructor(
         this.localizedContext = localizedContext
         initLocalizedStrings(localizedContext)
 
+        updateInputFields(sepaDelegate.outputData)
+
         binding.editTextHolderName.setOnChangeListener {
             sepaDelegate.updateInputData { name = binding.editTextHolderName.rawValue }
             binding.textInputLayoutHolderName.hideError()
@@ -89,6 +91,11 @@ internal class SepaView @JvmOverloads constructor(
             R.style.AdyenCheckout_Sepa_AccountNumberInput,
             localizedContext,
         )
+    }
+
+    private fun updateInputFields(outputData: SepaOutputData) {
+        binding.editTextHolderName.setText(outputData.ownerNameField.value)
+        binding.editTextIbanNumber.setText(outputData.ibanNumberField.value)
     }
 
     override fun highlightValidationErrors() {
