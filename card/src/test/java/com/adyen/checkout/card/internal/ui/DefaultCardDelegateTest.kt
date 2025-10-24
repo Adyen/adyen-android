@@ -52,6 +52,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -113,6 +114,7 @@ internal class DefaultCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>,
     @Mock private val addressLookupDelegate: AddressLookupDelegate,
     @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -804,6 +806,7 @@ internal class DefaultCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
+                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
@@ -925,6 +928,7 @@ internal class DefaultCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
+                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
@@ -1410,7 +1414,8 @@ internal class DefaultCardDelegateTest(
         analyticsManager: AnalyticsManager = this.analyticsManager,
         submitHandler: SubmitHandler<CardComponentState> = this.submitHandler,
         order: OrderRequest? = TEST_ORDER,
-        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate
+        addressLookupDelegate: AddressLookupDelegate = this.addressLookupDelegate,
+        sdkDataProvider: SdkDataProvider = this.sdkDataProvider,
     ): DefaultCardDelegate {
         val componentParams = CardComponentParamsMapper(
             commonComponentParamsMapper = CommonComponentParamsMapper(),
@@ -1439,6 +1444,7 @@ internal class DefaultCardDelegateTest(
             addressLookupDelegate = addressLookupDelegate,
             cardConfigDataGenerator = cardConfigDataGenerator,
             dualBrandedCardHandler = DualBrandedCardHandler(componentParams.environment),
+            sdkDataProvider = sdkDataProvider,
         )
     }
 
