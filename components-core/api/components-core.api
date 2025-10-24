@@ -1818,30 +1818,6 @@ public final class com/adyen/checkout/components/core/internal/data/model/Status
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/components/core/internal/data/model/sdkData/Analytics$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/internal/data/model/sdkData/Analytics;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/components/core/internal/data/model/sdkData/Analytics;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/components/core/internal/data/model/sdkData/Authentication$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/internal/data/model/sdkData/Authentication;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/components/core/internal/data/model/sdkData/Authentication;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
-public final class com/adyen/checkout/components/core/internal/data/model/sdkData/SdkData$Creator : android/os/Parcelable$Creator {
-	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/components/core/internal/data/model/sdkData/SdkData;
-	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/components/core/internal/data/model/sdkData/SdkData;
-	public synthetic fun newArray (I)[Ljava/lang/Object;
-}
-
 public abstract interface class com/adyen/checkout/components/core/internal/provider/ActionComponentProvider : com/adyen/checkout/components/core/internal/provider/ComponentProvider {
 	public abstract fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public abstract fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
