@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class CheckoutNavEntry(
@@ -19,9 +20,3 @@ class CheckoutNavEntry(
     val displayStrategy: CheckoutDisplayStrategy = CheckoutDisplayStrategy.INLINE,
     val content: @Composable (NavBackStack<NavKey>) -> Unit,
 )
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class CheckoutDisplayStrategy {
-    INLINE,
-    DIALOG,
-}
