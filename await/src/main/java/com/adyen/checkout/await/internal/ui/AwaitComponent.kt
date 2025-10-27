@@ -11,6 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.await.AwaitMainNavigationKey
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
@@ -62,7 +63,7 @@ internal class AwaitComponent(
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        AwaitNavKey to CheckoutNavEntry(AwaitNavKey) { _ -> MainScreen() },
+        AwaitNavKey to CheckoutNavEntry(AwaitNavKey, AwaitMainNavigationKey) { _ -> MainScreen() },
     )
 
     override val navigationStartingPoint: NavKey = AwaitNavKey
