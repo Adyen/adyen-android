@@ -36,6 +36,8 @@ import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationProperties
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
 import kotlinx.coroutines.CoroutineScope
@@ -60,8 +62,9 @@ internal class PaymentFacilitator(
 
     @Composable
     fun ViewFactory(
-        modifier: Modifier = Modifier,
+        modifier: Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
+        navigationProvider: ((CheckoutNavigationKey) -> CheckoutNavigationProperties)?,
     ) {
         CheckoutCompositionLocalProvider(
             locale = commonComponentParams.shopperLocale,
