@@ -27,6 +27,8 @@ import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStat
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
+import com.adyen.checkout.mbway.MBWayMainNavigationKey
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
@@ -46,10 +48,11 @@ internal class MBWayComponent(
     MBWayChangeListener {
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { backStack -> MainScreen(backStack) },
+        MBWayNavKey to CheckoutNavEntry(MBWayNavKey, MBWayMainNavigationKey) { backStack -> MainScreen(backStack) },
 
         MBWayCountryCodeNavKey to CheckoutNavEntry(
             MBWayCountryCodeNavKey,
+            MBWayCountryCodePickerNavigationKey,
             CheckoutDisplayStrategy.DIALOG,
         ) { backStack -> CountryCodePickerScreen(backStack) },
     )
