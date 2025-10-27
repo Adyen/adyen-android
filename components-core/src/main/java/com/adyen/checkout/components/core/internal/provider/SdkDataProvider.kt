@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Analytics
 import com.adyen.checkout.components.core.internal.data.model.sdkData.Authentication
+import com.adyen.checkout.components.core.internal.data.model.sdkData.DirectSdkDataCreation
 import com.adyen.checkout.components.core.internal.data.model.sdkData.SdkData
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -23,6 +24,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 /**
  * A provider that creates an [SdkData] object with the necessary information.
  */
+@OptIn(DirectSdkDataCreation::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class SdkDataProvider(
     private val analyticsManager: AnalyticsManager
