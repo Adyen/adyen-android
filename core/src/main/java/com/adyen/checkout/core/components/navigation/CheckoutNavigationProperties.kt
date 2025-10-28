@@ -8,10 +8,13 @@
 
 package com.adyen.checkout.core.components.navigation
 
+import androidx.compose.animation.ContentTransform
 import androidx.compose.runtime.Composable
 
 data class CheckoutNavigationProperties(
     val displayStrategy: CheckoutDisplayStrategy? = null,
     val header: (@Composable () -> Unit)? = null,
     val footer: (@Composable () -> Unit)? = null,
+    val inTransitions: ContentTransform? = null,
+    val outTransitions: ContentTransform? = null,
 )

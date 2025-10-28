@@ -19,6 +19,7 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.scene.DialogSceneStrategy
+import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProperties
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
@@ -41,6 +42,15 @@ internal fun CheckoutNavEntry.toNavEntry(
                 decorFitsSystemWindows = false,
             ),
         )
+    }
+
+    properties?.inTransitions?.let { inTransitions ->
+        metadata += NavDisplay.transitionSpec { inTransitions }
+    }
+
+    properties?.outTransitions?.let { outTransitions ->
+        metadata += NavDisplay.popTransitionSpec { outTransitions }
+        metadata += NavDisplay.predictivePopTransitionSpec { outTransitions }
     }
 
     return NavEntry(key = key, metadata = metadata) {
