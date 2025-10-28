@@ -19,6 +19,22 @@ public final class com/adyen/checkout/mbway/MBWayConfigurationKt {
 	public static synthetic fun mbWay$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/mbway/MBWayCountryCodePickerNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/mbway/MBWayCountryCodePickerNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/mbway/MBWayMainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/mbway/MBWayMainNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/mbway/old/MBWayComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
 	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/mbway/old/MBWayComponent$Companion;
