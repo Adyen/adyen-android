@@ -14,6 +14,7 @@ import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import java.util.Locale
 
+@Suppress("CyclomaticComplexMethod")
 internal class DefaultLocalizationSource {
 
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
@@ -36,8 +37,15 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE ->
                 R.string.checkout_card_expiry_date_invalid_too_far_in_the_future
 
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT -> R.string.checkout_card_expiry_date_hint
             CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.checkout_card_security_code
             CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID -> R.string.checkout_card_security_code_invalid
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS ->
+                R.string.checkout_card_security_code_hint_3_digits
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS ->
+                R.string.checkout_card_security_code_hint_4_digits
+
             // MBWay
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number
             CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> R.string.checkout_mbway_invalid_phone_number

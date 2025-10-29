@@ -32,7 +32,7 @@ internal fun ExpiryDateField(
     val supportingTextExpiryDate = if (showExpiryDateError) {
         expiryDateState.errorMessage?.let { resolveString(it) }
     } else {
-        null
+        resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
     }
 
     CheckoutTextField(
