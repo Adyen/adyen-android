@@ -10,9 +10,9 @@ package com.adyen.checkout.core.common.localization.internal.helper
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 import com.adyen.checkout.core.common.internal.helper.LocalLocale
 import com.adyen.checkout.core.common.internal.helper.LocalLocalizationResolver
+import com.adyen.checkout.core.common.internal.helper.LocalLocalizedContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -20,7 +20,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 fun resolveString(key: CheckoutLocalizationKey): String {
     val localizationResolver = LocalLocalizationResolver.current
     return localizationResolver.getLocalizedStringFor(
-        context = LocalContext.current,
+        context = LocalLocalizedContext.current,
         locale = LocalLocale.current,
         key = key,
     )

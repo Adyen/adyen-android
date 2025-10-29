@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
+import com.adyen.checkout.redirect.old.RedirectComponent
 import com.adyen.checkout.ui.theme.CheckoutColors
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,8 +47,18 @@ class V6SessionsActivity : AppCompatActivity() {
                 V6Screen(
                     theme = theme,
                     uiState = viewModel.uiState,
+                    checkoutController = viewModel.checkoutController,
                 )
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        val data = intent.data
+        if (data != null && data.toString().startsWith(RedirectComponent.REDIRECT_RESULT_SCHEME)) {
+            viewModel.handleIntent(intent)
         }
     }
 }

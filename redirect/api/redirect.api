@@ -7,7 +7,24 @@ public final class com/adyen/checkout/redirect/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
 public final class com/adyen/checkout/redirect/old/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
+	public static final field $stable I
 	public static final field Companion Lcom/adyen/checkout/redirect/old/RedirectComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/components/core/internal/provider/ActionComponentProvider;
 	public static final field REDIRECT_RESULT_SCHEME Ljava/lang/String;
@@ -25,6 +42,7 @@ public final class com/adyen/checkout/redirect/old/RedirectComponent$Companion {
 }
 
 public final class com/adyen/checkout/redirect/old/RedirectConfiguration : com/adyen/checkout/components/core/internal/Configuration {
+	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
@@ -37,6 +55,7 @@ public final class com/adyen/checkout/redirect/old/RedirectConfiguration : com/a
 }
 
 public final class com/adyen/checkout/redirect/old/RedirectConfiguration$Builder : com/adyen/checkout/components/core/internal/BaseConfigurationBuilder {
+	public static final field $stable I
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
@@ -73,6 +92,7 @@ public final class com/adyen/checkout/redirect/old/internal/data/model/NativeRed
 }
 
 public final class com/adyen/checkout/redirect/old/internal/provider/RedirectComponentProvider : com/adyen/checkout/components/core/internal/provider/ActionComponentProvider {
+	public static final field $stable I
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
 	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;

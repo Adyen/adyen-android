@@ -26,6 +26,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
@@ -140,8 +141,14 @@ internal class PaymentFacilitator(
         adyenLog(AdyenLogLevel.DEBUG) { "Created component of type ${actionComponent::class.simpleName}" }
     }
 
-    @Suppress("UNUSED_PARAMETER")
     private fun handleIntent(intent: Intent) {
-        // TODO - handle intent with action component
+        val actionComponent = actionComponent
+        if (actionComponent !is IntentHandlingComponent) {
+            adyenLog(AdyenLogLevel.DEBUG) {
+                "Action component ${actionComponent?.javaClass?.simpleName} is not type of IntentHandlingComponent"
+            }
+            error("Action component does not implement IntentHandlingComponent")
+        }
+        actionComponent.handleIntent(intent)
     }
 }

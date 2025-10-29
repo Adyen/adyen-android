@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.KeyValueStorage
@@ -41,6 +43,8 @@ internal class V6SessionsViewModel @Inject constructor(
         Environment.TEST,
         BuildConfig.CLIENT_KEY,
     )
+
+    val checkoutController = CheckoutController()
 
     var uiState by mutableStateOf<V6UiState>(V6UiState.Loading)
 
@@ -88,6 +92,10 @@ internal class V6SessionsViewModel @Inject constructor(
 
     private fun onError(componentError: ComponentError) {
         Log.d(TAG, "onError: ${componentError.errorMessage}")
+    }
+
+    fun handleIntent(intent: Intent) {
+        checkoutController.handleIntent(intent)
     }
 
     companion object {

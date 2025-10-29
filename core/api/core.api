@@ -58,6 +58,8 @@ public final class com/adyen/checkout/core/action/data/ActionTypes {
 	public static final field $stable I
 	public static final field AWAIT Ljava/lang/String;
 	public static final field INSTANCE Lcom/adyen/checkout/core/action/data/ActionTypes;
+	public static final field NATIVE_REDIRECT Ljava/lang/String;
+	public static final field REDIRECT Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/action/data/AwaitAction : com/adyen/checkout/core/action/data/Action {
@@ -91,6 +93,52 @@ public final class com/adyen/checkout/core/action/data/AwaitAction$Creator : and
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/action/data/AwaitAction;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/core/action/data/AwaitAction;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/action/data/RedirectAction : com/adyen/checkout/core/action/data/Action {
+	public static final field $stable I
+	public static final field ACTION_TYPE Ljava/lang/String;
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/action/data/RedirectAction$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/RedirectAction;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/action/data/RedirectAction;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/action/data/RedirectAction;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMethod ()Ljava/lang/String;
+	public final fun getNativeRedirectData ()Ljava/lang/String;
+	public fun getPaymentData ()Ljava/lang/String;
+	public fun getPaymentMethodType ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public final fun getUrl ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun setMethod (Ljava/lang/String;)V
+	public final fun setNativeRedirectData (Ljava/lang/String;)V
+	public fun setPaymentData (Ljava/lang/String;)V
+	public fun setPaymentMethodType (Ljava/lang/String;)V
+	public fun setType (Ljava/lang/String;)V
+	public final fun setUrl (Ljava/lang/String;)V
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/action/data/RedirectAction$Companion {
+}
+
+public final class com/adyen/checkout/core/action/data/RedirectAction$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/action/data/RedirectAction;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/action/data/RedirectAction;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 

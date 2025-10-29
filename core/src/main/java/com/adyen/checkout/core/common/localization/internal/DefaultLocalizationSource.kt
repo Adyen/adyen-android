@@ -10,16 +10,13 @@ package com.adyen.checkout.core.common.localization.internal
 
 import android.content.Context
 import com.adyen.checkout.core.R
-import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import java.util.Locale
 
-@Suppress("CyclomaticComplexMethod")
 internal class DefaultLocalizationSource {
 
+    @Suppress("CyclomaticComplexMethod", "UnusedParameter")
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
-        val localizedContext = context.createLocalizedContext(locale)
-
         val resId = when (key) {
             // Await
             CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
@@ -52,6 +49,6 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> R.string.checkout_mbway_country_code
         }
 
-        return localizedContext.getString(resId)
+        return context.getString(resId)
     }
 }
