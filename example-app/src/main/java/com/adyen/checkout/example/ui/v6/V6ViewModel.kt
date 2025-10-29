@@ -8,10 +8,12 @@
 
 package com.adyen.checkout.example.ui.v6
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.action.data.Action
@@ -20,6 +22,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.data.PaymentComponentData
@@ -39,9 +42,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class V6ViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
+
+    val checkoutController = CheckoutController()
 
     // TODO - Replace with checkoutConfigurationProvider once it's updated COSDK-563
     private val configuration = CheckoutConfiguration(
@@ -104,7 +110,8 @@ internal class V6ViewModel @Inject constructor(
             countryCode = keyValueStorage.getCountry(),
             merchantAccount = keyValueStorage.getMerchantAccount(),
             // TODO - Replace with correct URL once redirects are implemented
-            redirectUrl = "test",
+            redirectUrl = savedStateHandle.get<String>(V6Activity.RETURN_URL_EXTRA)
+                ?: error("Return url should be set"),
             threeDSMode = keyValueStorage.getThreeDSMode(),
             shopperEmail = keyValueStorage.getShopperEmail(),
         )
@@ -136,6 +143,10 @@ internal class V6ViewModel @Inject constructor(
 
     private fun onError(componentError: ComponentError) {
         uiState = V6UiState.Error(UIText.String(componentError.errorMessage))
+    }
+
+    fun handleIntent(intent: Intent) {
+        checkoutController.handleIntent(intent)
     }
 
     companion object {

@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.core.common.internal.helper
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -27,7 +28,7 @@ internal fun CheckoutCompositionLocalProvider(
     val localizedContext = LocalContext.current.createLocalizedContext(locale)
     CompositionLocalProvider(
         LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
-        LocalContext provides localizedContext,
+        LocalLocalizedContext provides localizedContext,
         LocalLocale provides locale,
         LocalEnvironment provides environment,
     ) {
@@ -43,3 +44,5 @@ internal val LocalLocale = staticCompositionLocalOf<Locale> { error("No locale p
 
 internal val LocalLocalizationResolver =
     staticCompositionLocalOf<LocalizationResolver> { error("No localizationProvider provided") }
+
+internal val LocalLocalizedContext = staticCompositionLocalOf<Context> { error("No default Localized Context.") }

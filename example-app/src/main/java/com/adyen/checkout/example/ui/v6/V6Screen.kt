@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.adyen.checkout.core.components.AdyenPaymentFlow
+import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
@@ -60,6 +61,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun V6Screen(
     theme: CheckoutTheme,
     uiState: V6UiState,
+    checkoutController: CheckoutController,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Scaffold(
@@ -79,7 +81,7 @@ fun V6Screen(
         },
     ) { contentPadding ->
         when (uiState) {
-            is V6UiState.Component -> Component(theme, uiState, Modifier.padding(contentPadding))
+            is V6UiState.Component -> Component(theme, uiState, checkoutController, Modifier.padding(contentPadding))
             is V6UiState.Final -> Final(uiState, Modifier.padding(contentPadding))
             is V6UiState.Error -> Error(uiState, Modifier.padding(contentPadding))
             is V6UiState.Loading -> Loading(Modifier.padding(contentPadding))
@@ -91,6 +93,7 @@ fun V6Screen(
 private fun Component(
     theme: CheckoutTheme,
     uiState: V6UiState.Component,
+    checkoutController: CheckoutController,
     modifier: Modifier,
 ) {
     Column(
@@ -122,6 +125,7 @@ private fun Component(
             checkoutCallbacks = uiState.checkoutCallbacks,
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
+            checkoutController = checkoutController
         )
     }
 }
