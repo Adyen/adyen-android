@@ -11,7 +11,7 @@ package com.adyen.checkout.action.core
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action

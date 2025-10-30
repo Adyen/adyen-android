@@ -10,7 +10,7 @@ package com.adyen.checkout.action.core.internal
 
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration

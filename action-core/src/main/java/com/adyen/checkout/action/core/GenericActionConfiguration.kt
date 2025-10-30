@@ -11,7 +11,7 @@ package com.adyen.checkout.action.core
 import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.ActionHandlingConfigurationBuilder
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration

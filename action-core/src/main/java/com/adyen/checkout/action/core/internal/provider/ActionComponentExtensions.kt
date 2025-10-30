@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.action.core.internal.provider
 
-import com.adyen.checkout.adyen3ds2.Adyen3DS2Component
+import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Component
 import com.adyen.checkout.await.old.AwaitComponent
 import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
