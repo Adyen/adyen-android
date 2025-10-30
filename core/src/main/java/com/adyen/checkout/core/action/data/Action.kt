@@ -59,6 +59,7 @@ abstract class Action : ModelObject() {
                 // TODO - Investigate if it is possible to move `getChildSerializer` to specific modules
                 AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
                 RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
+                Threeds2Action.ACTION_TYPE -> Threeds2Action.SERIALIZER
                 else ->
                     // TODO - Error Propagation
                     // throw CheckoutException("Action type not found - $actionType")
