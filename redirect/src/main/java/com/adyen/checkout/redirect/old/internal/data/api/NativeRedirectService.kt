@@ -6,13 +6,13 @@
  * Created by oscars on 17/10/2023.
  */
 
-package com.adyen.checkout.redirect.internal.data.api
+package com.adyen.checkout.redirect.old.internal.data.api
 
 import com.adyen.checkout.core.old.DispatcherProvider
 import com.adyen.checkout.core.old.internal.data.api.HttpClient
 import com.adyen.checkout.core.old.internal.data.api.post
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectRequest
+import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectResponse
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
@@ -29,8 +29,8 @@ internal class NativeRedirectService(
             path = "v1/nativeRedirect/redirectResult",
             queryParameters = mapOf("clientKey" to clientKey),
             body = request,
-            requestSerializer = NativeRedirectRequest.SERIALIZER,
-            responseSerializer = NativeRedirectResponse.SERIALIZER,
+            requestSerializer = NativeRedirectRequest.Companion.SERIALIZER,
+            responseSerializer = NativeRedirectResponse.Companion.SERIALIZER,
         )
     }
 }

@@ -28,7 +28,7 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.provider.QRCodeComponentProvider
-import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
+import com.adyen.checkout.redirect.old.internal.provider.RedirectComponentProvider
 import com.adyen.checkout.twint.action.internal.provider.TwintActionComponentProvider
 import com.adyen.checkout.voucher.internal.provider.VoucherComponentProvider
 import com.adyen.checkout.wechatpay.internal.provider.WeChatPayActionComponentProvider

@@ -21,7 +21,7 @@ import com.adyen.checkout.blik.BlikComponent
 import com.adyen.checkout.example.databinding.ActivityBlikBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
-import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

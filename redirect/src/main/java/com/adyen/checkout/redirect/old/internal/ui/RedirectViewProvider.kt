@@ -6,7 +6,7 @@
  * Created by oscars on 23/9/2022.
  */
 
-package com.adyen.checkout.redirect.internal.ui
+package com.adyen.checkout.redirect.old.internal.ui
 
 import android.content.Context
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView

@@ -5,7 +5,7 @@
  *
  * Created by caiof on 25/8/2020.
  */
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.old
 
 import android.content.Context
 import com.adyen.checkout.components.core.Amount

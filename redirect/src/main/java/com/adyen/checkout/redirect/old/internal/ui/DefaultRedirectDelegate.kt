@@ -6,7 +6,7 @@
  * Created by josephj on 18/8/2022.
  */
 
-package com.adyen.checkout.redirect.internal.ui
+package com.adyen.checkout.redirect.old.internal.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -34,9 +34,9 @@ import com.adyen.checkout.core.old.exception.HttpException
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.data.model.getStringOrNull
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.old.internal.data.api.NativeRedirectService
+import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectRequest
+import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectResponse
 import com.adyen.checkout.ui.core.old.internal.RedirectHandler
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import kotlinx.coroutines.CoroutineScope
@@ -185,11 +185,12 @@ constructor(
         coroutineScope.launch {
             val request = NativeRedirectRequest(
                 redirectData = nativeRedirectData,
-                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER).orEmpty(),
+                returnQueryString = details.getStringOrNull(RETURN_URL_QUERY_STRING_PARAMETER)
+                    .orEmpty(),
             )
             try {
                 val response = nativeRedirectService.makeNativeRedirect(request, componentParams.clientKey)
-                val detailsJson = NativeRedirectResponse.SERIALIZER.serialize(response)
+                val detailsJson = NativeRedirectResponse.Companion.SERIALIZER.serialize(response)
                 emitDetails(detailsJson)
             } catch (e: HttpException) {
                 trackNativeRedirectError("Network error")

@@ -6,7 +6,7 @@
  * Created by josephj on 28/5/2021.
  */
 
-package com.adyen.checkout.redirect.internal.provider
+package com.adyen.checkout.redirect.old.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -32,12 +32,12 @@ import com.adyen.checkout.components.core.internal.util.get
 import com.adyen.checkout.components.core.internal.util.viewModelFactory
 import com.adyen.checkout.core.old.internal.data.api.HttpClientFactory
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
-import com.adyen.checkout.redirect.RedirectComponent
-import com.adyen.checkout.redirect.RedirectConfiguration
-import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
-import com.adyen.checkout.redirect.internal.ui.DefaultRedirectDelegate
-import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
-import com.adyen.checkout.redirect.toCheckoutConfiguration
+import com.adyen.checkout.redirect.old.RedirectComponent
+import com.adyen.checkout.redirect.old.RedirectConfiguration
+import com.adyen.checkout.redirect.old.internal.data.api.NativeRedirectService
+import com.adyen.checkout.redirect.old.internal.ui.DefaultRedirectDelegate
+import com.adyen.checkout.redirect.old.internal.ui.RedirectDelegate
+import com.adyen.checkout.redirect.old.toCheckoutConfiguration
 import com.adyen.checkout.ui.core.old.internal.DefaultRedirectHandler
 
 class RedirectComponentProvider
