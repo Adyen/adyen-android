@@ -263,6 +263,43 @@ public final class com/adyen/checkout/core/common/exception/ModelSerializationEx
 	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
 }
 
+public abstract interface class com/adyen/checkout/core/common/helper/CardNumberValidationResult {
+}
+
+public abstract interface class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid : com/adyen/checkout/core/common/helper/CardNumberValidationResult {
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid$IllegalCharacters : com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid$LuhnCheck : com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid$TooLong : com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid$TooShort : com/adyen/checkout/core/common/helper/CardNumberValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidationResult$Valid : com/adyen/checkout/core/common/helper/CardNumberValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardNumberValidator {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/common/helper/CardNumberValidator;
+	public final fun validateCardNumber (Ljava/lang/String;Z)Lcom/adyen/checkout/core/common/helper/CardNumberValidationResult;
+}
+
 public final class com/adyen/checkout/core/common/internal/DefaultImageLoader$Companion {
 }
 
@@ -300,6 +337,9 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
 	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
