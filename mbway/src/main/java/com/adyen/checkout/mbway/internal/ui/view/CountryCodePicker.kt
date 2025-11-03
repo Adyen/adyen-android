@@ -8,91 +8,43 @@
 
 package com.adyen.checkout.mbway.internal.ui.view
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.BodyEmphasized
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.SubHeadline
+import com.adyen.checkout.ui.internal.SearchableValuePicker
+import com.adyen.checkout.ui.internal.ValuePickerItem
 
-// TODO - Create reusable ValuePicker composable
-@Suppress("LongMethod")
 @Composable
 internal fun CountryCodePicker(
     viewState: MBWayViewState,
-    onCountrySelected: (CountryModel) -> Unit,
+    onItemClick: (CountryModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
-        modifier = modifier,
-    ) {
-        viewState.countries.forEach { country ->
-            val isSelected = country == viewState.countryCode
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
-                    .let {
-                        if (isSelected) {
-                            it.background(CheckoutThemeProvider.colors.container)
-                        } else {
-                            it
-                        }
-                    }
-                    .clickable(
-                        interactionSource = null,
-                        indication = ripple(color = CheckoutThemeProvider.colors.text),
-                    ) {
-                        onCountrySelected(country)
-                    }
-                    .fillMaxWidth()
-                    .padding(12.dp),
-            ) {
-                Column {
-                    BodyEmphasized(country.callingCode)
-                    SubHeadline(
-                        text = "${country.isoCode} • ${country.countryName}",
-                        color = CheckoutThemeProvider.colors.textSecondary,
-                    )
-                }
-
-                if (isSelected) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(
-                            R.drawable.ic_checkmark,
-                        ),
-                        contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.text,
-                    )
-                }
-            }
+    val countries = remember(viewState.countries) {
+        viewState.countries.map {
+            ValuePickerItem(
+                id = it.isoCode,
+                title = it.callingCode,
+                subtitle = "${it.isoCode} • ${it.countryName}",
+                isSelected = it == viewState.countryCode,
+            )
         }
     }
+    SearchableValuePicker(
+        items = countries,
+        onItemClick = { item ->
+            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.countryCode
+            onItemClick(country)
+        },
+        modifier = modifier,
+    )
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun CountryCodePickerPreview() {
     val countries = listOf(
@@ -106,6 +58,6 @@ private fun CountryCodePickerPreview() {
             countryCode = countries.first(),
             phoneNumber = TextInputState(),
         ),
-        onCountrySelected = {},
+        onItemClick = {},
     )
 }
