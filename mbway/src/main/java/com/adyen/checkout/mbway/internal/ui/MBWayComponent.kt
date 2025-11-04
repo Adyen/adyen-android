@@ -36,7 +36,6 @@ import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
@@ -154,9 +153,3 @@ internal class MBWayComponent(
         )
     }
 }
-
-@Serializable
-private data object MBWayNavKey : NavKey
-
-@Serializable
-private data object MBWayCountryCodeNavKey : NavKey

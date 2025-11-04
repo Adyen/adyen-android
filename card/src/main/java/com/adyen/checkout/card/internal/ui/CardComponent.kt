@@ -48,7 +48,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 
 // TODO - Card full implementation
 @Suppress("TooManyFunctions")
@@ -252,6 +251,3 @@ internal class CardComponent(
 //        }
     }
 }
-
-@Serializable
-private data object CardNavKey : NavKey

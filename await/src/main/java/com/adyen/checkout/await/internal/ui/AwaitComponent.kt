@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -205,6 +204,3 @@ internal class AwaitComponent(
         internal const val PAYLOAD_DETAILS_KEY = "payload"
     }
 }
-
-@Serializable
-private data object AwaitNavKey : NavKey
