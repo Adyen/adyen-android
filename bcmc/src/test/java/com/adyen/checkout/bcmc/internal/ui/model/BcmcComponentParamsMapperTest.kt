@@ -10,11 +10,11 @@ package com.adyen.checkout.bcmc.internal.ui.model
 
 import com.adyen.checkout.bcmc.BcmcConfiguration
 import com.adyen.checkout.bcmc.bcmc
-import com.adyen.checkout.card.KCPAuthVisibility
-import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
-import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.model.StoredCVCVisibility
+import com.adyen.checkout.card.old.KCPAuthVisibility
+import com.adyen.checkout.card.old.SocialSecurityNumberVisibility
+import com.adyen.checkout.card.old.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.old.internal.ui.model.CardComponentParams
+import com.adyen.checkout.card.old.internal.ui.model.StoredCVCVisibility
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

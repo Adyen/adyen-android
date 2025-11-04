@@ -9,7 +9,7 @@
 package com.adyen.checkout.dropin
 
 import android.os.Bundle
-import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.old.BinLookupData
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.old.exception.MethodNotImplementedException

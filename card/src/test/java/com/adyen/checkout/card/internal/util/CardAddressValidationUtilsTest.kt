@@ -8,7 +8,8 @@
 
 package com.adyen.checkout.card.internal.util
 
-import com.adyen.checkout.card.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.card.old.internal.ui.model.AddressFieldPolicyParams
+import com.adyen.checkout.card.old.internal.util.CardAddressValidationUtils
 import com.adyen.checkout.ui.core.old.internal.ui.model.AddressParams
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

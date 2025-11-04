@@ -13,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
-import com.adyen.checkout.card.CardComponent
+import com.adyen.checkout.card.old.CardComponent
 import com.adyen.checkout.components.core.AddressLookupCallback
 import com.adyen.checkout.components.core.LookupAddress
 import com.adyen.checkout.core.old.AdyenLogLevel

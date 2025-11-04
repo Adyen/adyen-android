@@ -74,7 +74,7 @@ private fun Component(
     modifier: Modifier,
 ) {
     AdyenPaymentFlow(
-        txVariant = "mbway",
+        txVariant = "scheme",
         checkoutContext = uiState.checkoutContext,
         theme = theme,
         modifier = modifier.padding(16.dp),

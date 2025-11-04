@@ -1,7 +1,7 @@
 package com.adyen.checkout.dropin
 
 import com.adyen.checkout.adyen3ds2.Adyen3DS2Configuration
-import com.adyen.checkout.card.CardConfiguration
+import com.adyen.checkout.card.old.CardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel

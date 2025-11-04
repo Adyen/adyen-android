@@ -10,13 +10,14 @@ package com.adyen.checkout.card.internal.util
 
 import android.content.Context
 import androidx.annotation.StringRes
-import com.adyen.checkout.card.InstallmentConfiguration
-import com.adyen.checkout.card.InstallmentOptions
 import com.adyen.checkout.card.R
-import com.adyen.checkout.card.internal.ui.model.InstallmentOption
-import com.adyen.checkout.card.internal.ui.model.InstallmentOptionParams
-import com.adyen.checkout.card.internal.ui.model.InstallmentParams
-import com.adyen.checkout.card.internal.ui.view.InstallmentModel
+import com.adyen.checkout.card.old.InstallmentConfiguration
+import com.adyen.checkout.card.old.InstallmentOptions
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentOption
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentOptionParams
+import com.adyen.checkout.card.old.internal.ui.model.InstallmentParams
+import com.adyen.checkout.card.old.internal.ui.view.InstallmentModel
+import com.adyen.checkout.card.old.internal.util.InstallmentUtils
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.internal.util.formatToLocalizedString
 import com.adyen.checkout.core.old.CardBrand

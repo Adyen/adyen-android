@@ -12,9 +12,9 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.card.CardBrand
-import com.adyen.checkout.card.CardComponentState
-import com.adyen.checkout.card.CardType
+import com.adyen.checkout.card.old.CardBrand
+import com.adyen.checkout.card.old.CardComponentState
+import com.adyen.checkout.card.old.CardType
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentError
