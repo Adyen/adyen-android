@@ -35,10 +35,10 @@ dependencies {
     api project(":ui")
 
     api libs.bundles.androidx.lifecycle
+    api libs.bundles.androidx.navigation3
 
     implementation platform(libs.compose.bom)
     implementation libs.bundles.compose.ui
-    api libs.bundles.androidx.navigation3
     implementation libs.compose.viewmodel
     implementation libs.okhttp
     implementation libs.androidx.browser
