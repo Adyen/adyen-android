@@ -19,7 +19,7 @@ internal object CheckoutTextFieldDefaults {
         return InternalTextFieldStyle(
             backgroundColor = style.backgroundColor?.toCompose() ?: colors.container,
             textColor = style.textColor?.toCompose() ?: colors.text,
-            activeColor = style.activeColor?.toCompose() ?: colors.highlight,
+            activeColor = style.activeColor?.toCompose() ?: colors.primary,
             errorColor = style.errorColor?.toCompose() ?: colors.destructive,
             cornerRadius = style.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
             borderColor = style.borderColor?.toCompose() ?: colors.container,
