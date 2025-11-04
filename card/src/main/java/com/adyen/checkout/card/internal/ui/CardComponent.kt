@@ -10,8 +10,9 @@ package com.adyen.checkout.card.internal.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
@@ -19,13 +20,13 @@ import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.ui.internal.ComponentScaffold
-import com.adyen.checkout.ui.internal.PayButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.serialization.Serializable
 
 // TODO - Card full implementation
 internal class CardComponent(
@@ -35,21 +36,11 @@ internal class CardComponent(
     // TODO - Card. Emit events.
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> = flowOf()
 
-    @Composable
-    override fun ViewFactory(modifier: Modifier) {
-        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
-        ComponentScaffold(
-            modifier = modifier,
-            footer = {
-                PayButton(onClick = ::submit, isLoading = viewState.isLoading)
-            },
-        ) {
-            CardComponent(
-                viewState = viewState,
-                changeListener = this,
-            )
-        }
-    }
+    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
+        CardNavKey to CheckoutNavEntry(CardNavKey) { backStack -> MainScreen(backStack) },
+    )
+
+    override val navigationStartingPoint: NavKey = CardNavKey
 
     override fun submit() {
         if (stateManager.isValid) {
@@ -81,4 +72,17 @@ internal class CardComponent(
             )
         }
     }
+
+    @Composable
+    private fun MainScreen(@Suppress("UNUSED_PARAMETER") backStack: NavBackStack<NavKey>) {
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+        CardComponent(
+            viewState = viewState,
+            changeListener = this,
+            onSubmitClick = ::submit,
+        )
+    }
 }
+
+@Serializable
+private data object CardNavKey : NavKey
