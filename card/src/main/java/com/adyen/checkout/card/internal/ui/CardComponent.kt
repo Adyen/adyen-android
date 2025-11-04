@@ -38,7 +38,6 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 
 // TODO - Card full implementation
 internal class CardComponent(
@@ -179,6 +178,3 @@ internal class CardComponent(
         )
     }
 }
-
-@Serializable
-private data object CardNavKey : NavKey
