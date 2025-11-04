@@ -34,7 +34,7 @@ internal fun CheckoutNavEntry.toNavEntry(
     val metadata = mutableMapOf<String, Any>()
 
     val displayStrategy = properties?.displayStrategy ?: this.displayStrategy
-    if (displayStrategy == CheckoutDisplayStrategy.DIALOG) {
+    if (displayStrategy == CheckoutDisplayStrategy.FULL_SCREEN_DIALOG) {
         metadata += DialogSceneStrategy.dialog(
             DialogProperties(
                 dismissOnBackPress = true,
@@ -66,7 +66,7 @@ internal fun CheckoutNavEntry.toNavEntry(
                 Inline(modifier, navContent)
             }
 
-            CheckoutDisplayStrategy.DIALOG -> {
+            CheckoutDisplayStrategy.FULL_SCREEN_DIALOG -> {
                 FullScreenDialog(navContent)
             }
         }

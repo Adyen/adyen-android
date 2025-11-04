@@ -1013,7 +1013,7 @@ public final class com/adyen/checkout/core/components/internal/data/model/Status
 }
 
 public final class com/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy : java/lang/Enum {
-	public static final field DIALOG Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;
+	public static final field FULL_SCREEN_DIALOG Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;
 	public static final field INLINE Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;

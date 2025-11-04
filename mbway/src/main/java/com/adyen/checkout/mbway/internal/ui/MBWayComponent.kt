@@ -53,7 +53,7 @@ internal class MBWayComponent(
         MBWayCountryCodeNavKey to CheckoutNavEntry(
             MBWayCountryCodeNavKey,
             MBWayCountryCodePickerNavigationKey,
-            CheckoutDisplayStrategy.DIALOG,
+            CheckoutDisplayStrategy.FULL_SCREEN_DIALOG,
         ) { backStack -> CountryCodePickerScreen(backStack) },
     )
 
