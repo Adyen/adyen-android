@@ -9,16 +9,13 @@
 package com.adyen.checkout.core.action.internal
 
 import androidx.annotation.RestrictTo
-import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.internal.ui.EventComponent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.components.internal.ui.NavigationComponent
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ActionComponent : EventComponent<ActionComponentEvent> {
-
-    val navigation: Map<NavKey, CheckoutNavEntry>
-
-    val navigationStartingPoint: NavKey
+interface ActionComponent :
+    EventComponent<ActionComponentEvent>,
+    NavigationComponent {
 
     fun handleAction()
 }

@@ -9,19 +9,15 @@
 package com.adyen.checkout.core.components.internal.ui
 
 import androidx.annotation.RestrictTo
-import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 
 // TODO - Some components might not be composable,
 //  Move ComposableComponent to PaymentMethod specific component later
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface PaymentComponent<T : BasePaymentComponentState> : EventComponent<PaymentComponentEvent<T>> {
-
-    val navigation: Map<NavKey, CheckoutNavEntry>
-
-    val navigationStartingPoint: NavKey
+interface PaymentComponent<T : BasePaymentComponentState> :
+    EventComponent<PaymentComponentEvent<T>>,
+    NavigationComponent {
 
     fun submit()
 
