@@ -10,5 +10,5 @@ package com.adyen.checkout.core.components.navigation
 
 enum class CheckoutDisplayStrategy {
     INLINE,
-    DIALOG,
+    FULL_SCREEN_DIALOG,
 }
