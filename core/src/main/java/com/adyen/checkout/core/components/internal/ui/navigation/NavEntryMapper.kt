@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation3.runtime.NavBackStack
@@ -54,27 +55,48 @@ internal fun CheckoutNavEntry.toNavEntry(
     }
 
     return NavEntry(key = key, metadata = metadata) {
-        if (displayStrategy == CheckoutDisplayStrategy.DIALOG) {
-            Surface(
-                color = CheckoutThemeProvider.colors.background,
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                Column(
-                    modifier = Modifier
-                        .systemBarsPadding()
-                        .padding(Dimensions.Large),
-                ) {
-                    properties?.header?.invoke()
-                    content(backStack)
-                    properties?.footer?.invoke()
-                }
+        val navContent: @Composable () -> Unit = {
+            properties?.header?.invoke()
+            content(backStack)
+            properties?.footer?.invoke()
+        }
+
+        when (displayStrategy) {
+            CheckoutDisplayStrategy.INLINE -> {
+                Inline(modifier, navContent)
             }
-        } else {
-            Column(modifier) {
-                properties?.header?.invoke()
-                content(backStack)
-                properties?.footer?.invoke()
+
+            CheckoutDisplayStrategy.DIALOG -> {
+                FullScreenDialog(navContent)
             }
         }
+    }
+}
+
+@Composable
+private fun FullScreenDialog(
+    content: @Composable () -> Unit,
+) {
+    Surface(
+        color = CheckoutThemeProvider.colors.background,
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(
+            modifier = Modifier
+                .systemBarsPadding()
+                .padding(Dimensions.Large),
+        ) {
+            content()
+        }
+    }
+}
+
+@Composable
+private fun Inline(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    Column(modifier) {
+        content()
     }
 }
