@@ -210,6 +210,7 @@ internal class CardComponent(
                     "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                         "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
                 }
+                // TODO - Card. Optional bin lookup callback.
 //                if (detectedCardTypes != outputData.detectedCardTypes) {
 //                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
 //                }
