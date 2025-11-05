@@ -13,8 +13,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.dropin.DropInResult
-import com.adyen.checkout.dropin.SessionDropInResult
+import com.adyen.checkout.dropin.old.DropInResult
+import com.adyen.checkout.dropin.old.SessionDropInResult
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag

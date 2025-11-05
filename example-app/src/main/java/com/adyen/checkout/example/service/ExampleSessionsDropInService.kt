@@ -15,9 +15,9 @@ import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.dropin.DropInServiceResult
-import com.adyen.checkout.dropin.ErrorDialog
-import com.adyen.checkout.dropin.SessionDropInService
+import com.adyen.checkout.dropin.old.DropInServiceResult
+import com.adyen.checkout.dropin.old.ErrorDialog
+import com.adyen.checkout.dropin.old.SessionDropInService
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag

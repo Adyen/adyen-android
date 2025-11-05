@@ -1,67 +1,3 @@
-public abstract class com/adyen/checkout/dropin/AddressLookupDropInServiceResult : com/adyen/checkout/dropin/BaseDropInServiceResult {
-}
-
-public final class com/adyen/checkout/dropin/AddressLookupDropInServiceResult$Error : com/adyen/checkout/dropin/AddressLookupDropInServiceResult, com/adyen/checkout/dropin/DropInServiceResultError {
-	public fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getDismissDropIn ()Z
-	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/ErrorDialog;
-	public fun getReason ()Ljava/lang/String;
-}
-
-public final class com/adyen/checkout/dropin/AddressLookupDropInServiceResult$LookupComplete : com/adyen/checkout/dropin/AddressLookupDropInServiceResult {
-	public fun <init> (Lcom/adyen/checkout/components/core/LookupAddress;)V
-	public final fun getLookupAddress ()Lcom/adyen/checkout/components/core/LookupAddress;
-}
-
-public final class com/adyen/checkout/dropin/AddressLookupDropInServiceResult$LookupResult : com/adyen/checkout/dropin/AddressLookupDropInServiceResult {
-	public fun <init> (Ljava/util/List;)V
-	public final fun getOptions ()Ljava/util/List;
-}
-
-public abstract class com/adyen/checkout/dropin/BalanceDropInServiceResult : com/adyen/checkout/dropin/BaseDropInServiceResult {
-}
-
-public final class com/adyen/checkout/dropin/BalanceDropInServiceResult$Balance : com/adyen/checkout/dropin/BalanceDropInServiceResult {
-	public fun <init> (Lcom/adyen/checkout/components/core/BalanceResult;)V
-	public final fun getBalance ()Lcom/adyen/checkout/components/core/BalanceResult;
-}
-
-public final class com/adyen/checkout/dropin/BalanceDropInServiceResult$Error : com/adyen/checkout/dropin/BalanceDropInServiceResult, com/adyen/checkout/dropin/DropInServiceResultError {
-	public fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun getDismissDropIn ()Z
-	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/ErrorDialog;
-	public fun getReason ()Ljava/lang/String;
-}
-
-public abstract interface class com/adyen/checkout/dropin/BaseDropInServiceContract {
-	public abstract fun getAdditionalData ()Landroid/os/Bundle;
-	public abstract fun onAddressLookupCompletion (Lcom/adyen/checkout/components/core/LookupAddress;)Z
-	public abstract fun onAddressLookupQueryChanged (Ljava/lang/String;)V
-	public abstract fun onBinLookup (Ljava/util/List;)V
-	public abstract fun onBinValue (Ljava/lang/String;)V
-	public abstract fun onRedirect ()V
-	public abstract fun onRemoveStoredPaymentMethod (Lcom/adyen/checkout/components/core/StoredPaymentMethod;)V
-	public abstract fun sendAddressLookupResult (Lcom/adyen/checkout/dropin/AddressLookupDropInServiceResult;)V
-	public abstract fun sendBalanceResult (Lcom/adyen/checkout/dropin/BalanceDropInServiceResult;)V
-	public abstract fun sendOrderResult (Lcom/adyen/checkout/dropin/OrderDropInServiceResult;)V
-	public abstract fun sendRecurringResult (Lcom/adyen/checkout/dropin/RecurringDropInServiceResult;)V
-	public abstract fun sendResult (Lcom/adyen/checkout/dropin/DropInServiceResult;)V
-}
-
-public final class com/adyen/checkout/dropin/BaseDropInServiceContract$DefaultImpls {
-	public static fun onAddressLookupCompletion (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;Lcom/adyen/checkout/components/core/LookupAddress;)Z
-	public static fun onAddressLookupQueryChanged (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;Ljava/lang/String;)V
-	public static fun onBinLookup (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;Ljava/util/List;)V
-	public static fun onBinValue (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;Ljava/lang/String;)V
-	public static fun onRedirect (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;)V
-	public static fun onRemoveStoredPaymentMethod (Lcom/adyen/checkout/dropin/BaseDropInServiceContract;Lcom/adyen/checkout/components/core/StoredPaymentMethod;)V
-}
-
-public abstract class com/adyen/checkout/dropin/BaseDropInServiceResult {
-}
-
 public final class com/adyen/checkout/dropin/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
@@ -70,23 +6,87 @@ public final class com/adyen/checkout/dropin/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/dropin/DropIn {
-	public static final field INSTANCE Lcom/adyen/checkout/dropin/DropIn;
-	public static final fun registerForDropInResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/DropInCallback;)Landroidx/activity/result/ActivityResultLauncher;
-	public static final fun registerForDropInResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/SessionDropInCallback;)Landroidx/activity/result/ActivityResultLauncher;
+public abstract class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
+}
+
+public final class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult$Error : com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult, com/adyen/checkout/dropin/old/DropInServiceResultError {
+	public fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDismissDropIn ()Z
+	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/old/ErrorDialog;
+	public fun getReason ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult$LookupComplete : com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult {
+	public fun <init> (Lcom/adyen/checkout/components/core/LookupAddress;)V
+	public final fun getLookupAddress ()Lcom/adyen/checkout/components/core/LookupAddress;
+}
+
+public final class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult$LookupResult : com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult {
+	public fun <init> (Ljava/util/List;)V
+	public final fun getOptions ()Ljava/util/List;
+}
+
+public abstract class com/adyen/checkout/dropin/old/BalanceDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
+}
+
+public final class com/adyen/checkout/dropin/old/BalanceDropInServiceResult$Balance : com/adyen/checkout/dropin/old/BalanceDropInServiceResult {
+	public fun <init> (Lcom/adyen/checkout/components/core/BalanceResult;)V
+	public final fun getBalance ()Lcom/adyen/checkout/components/core/BalanceResult;
+}
+
+public final class com/adyen/checkout/dropin/old/BalanceDropInServiceResult$Error : com/adyen/checkout/dropin/old/BalanceDropInServiceResult, com/adyen/checkout/dropin/old/DropInServiceResultError {
+	public fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun getDismissDropIn ()Z
+	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/old/ErrorDialog;
+	public fun getReason ()Ljava/lang/String;
+}
+
+public abstract interface class com/adyen/checkout/dropin/old/BaseDropInServiceContract {
+	public abstract fun getAdditionalData ()Landroid/os/Bundle;
+	public abstract fun onAddressLookupCompletion (Lcom/adyen/checkout/components/core/LookupAddress;)Z
+	public abstract fun onAddressLookupQueryChanged (Ljava/lang/String;)V
+	public abstract fun onBinLookup (Ljava/util/List;)V
+	public abstract fun onBinValue (Ljava/lang/String;)V
+	public abstract fun onRedirect ()V
+	public abstract fun onRemoveStoredPaymentMethod (Lcom/adyen/checkout/components/core/StoredPaymentMethod;)V
+	public abstract fun sendAddressLookupResult (Lcom/adyen/checkout/dropin/old/AddressLookupDropInServiceResult;)V
+	public abstract fun sendBalanceResult (Lcom/adyen/checkout/dropin/old/BalanceDropInServiceResult;)V
+	public abstract fun sendOrderResult (Lcom/adyen/checkout/dropin/old/OrderDropInServiceResult;)V
+	public abstract fun sendRecurringResult (Lcom/adyen/checkout/dropin/old/RecurringDropInServiceResult;)V
+	public abstract fun sendResult (Lcom/adyen/checkout/dropin/old/DropInServiceResult;)V
+}
+
+public final class com/adyen/checkout/dropin/old/BaseDropInServiceContract$DefaultImpls {
+	public static fun onAddressLookupCompletion (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;Lcom/adyen/checkout/components/core/LookupAddress;)Z
+	public static fun onAddressLookupQueryChanged (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;Ljava/lang/String;)V
+	public static fun onBinLookup (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;Ljava/util/List;)V
+	public static fun onBinValue (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;Ljava/lang/String;)V
+	public static fun onRedirect (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;)V
+	public static fun onRemoveStoredPaymentMethod (Lcom/adyen/checkout/dropin/old/BaseDropInServiceContract;Lcom/adyen/checkout/components/core/StoredPaymentMethod;)V
+}
+
+public abstract class com/adyen/checkout/dropin/old/BaseDropInServiceResult {
+}
+
+public final class com/adyen/checkout/dropin/old/DropIn {
+	public static final field INSTANCE Lcom/adyen/checkout/dropin/old/DropIn;
+	public static final fun registerForDropInResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/old/DropInCallback;)Landroidx/activity/result/ActivityResultLauncher;
+	public static final fun registerForDropInResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/old/SessionDropInCallback;)Landroidx/activity/result/ActivityResultLauncher;
 	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;)V
-	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/dropin/DropInConfiguration;Ljava/lang/Class;)V
+	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/dropin/old/DropInConfiguration;Ljava/lang/Class;)V
 	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;)V
-	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/DropInConfiguration;Ljava/lang/Class;)V
+	public static final fun startPayment (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/old/DropInConfiguration;Ljava/lang/Class;)V
 	public static synthetic fun startPayment$default (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;ILjava/lang/Object;)V
-	public static synthetic fun startPayment$default (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/DropInConfiguration;Ljava/lang/Class;ILjava/lang/Object;)V
+	public static synthetic fun startPayment$default (Landroid/content/Context;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/old/DropInConfiguration;Ljava/lang/Class;ILjava/lang/Object;)V
 }
 
-public abstract interface class com/adyen/checkout/dropin/DropInCallback {
-	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/DropInResult;)V
+public abstract interface class com/adyen/checkout/dropin/old/DropInCallback {
+	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/old/DropInResult;)V
 }
 
-public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/checkout/components/core/internal/Configuration {
+public final class com/adyen/checkout/dropin/old/DropInConfiguration : com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Ljava/util/HashMap;Lcom/adyen/checkout/action/core/GenericActionConfiguration;Ljava/lang/Boolean;Ljava/lang/Boolean;Ljava/lang/Boolean;Landroid/os/Bundle;Ljava/util/HashMap;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
@@ -102,95 +102,95 @@ public final class com/adyen/checkout/dropin/DropInConfiguration : com/adyen/che
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/dropin/DropInConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder {
+public final class com/adyen/checkout/dropin/old/DropInConfiguration$Builder : com/adyen/checkout/action/core/internal/ActionHandlingPaymentMethodConfigurationBuilder {
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
-	public final fun addAchDirectDebitConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addBacsDirectDebitConfiguration (Lcom/adyen/checkout/bacs/BacsDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addBcmcConfiguration (Lcom/adyen/checkout/bcmc/BcmcConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addBlikConfiguration (Lcom/adyen/checkout/blik/BlikConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addBoletoConfiguration (Lcom/adyen/checkout/boleto/BoletoConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addCardConfiguration (Lcom/adyen/checkout/card/old/CardConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addCashAppPayConfiguration (Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addConvenienceStoresJPConfiguration (Lcom/adyen/checkout/conveniencestoresjp/ConvenienceStoresJPConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addDotpayConfiguration (Lcom/adyen/checkout/dotpay/DotpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addEntercashConfiguration (Lcom/adyen/checkout/entercash/EntercashConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addEpsConfiguration (Lcom/adyen/checkout/eps/EPSConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addGiftCardConfiguration (Lcom/adyen/checkout/giftcard/GiftCardConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addGooglePayConfiguration (Lcom/adyen/checkout/googlepay/GooglePayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addIdealConfiguration (Lcom/adyen/checkout/ideal/IdealConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public static synthetic fun addInstantPaymentConfiguration$default (Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMBWayConfiguration (Lcom/adyen/checkout/mbway/old/MBWayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMealVoucherFRConfiguration (Lcom/adyen/checkout/mealvoucherfr/MealVoucherFRConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMolpayMalasyaConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMolpayThailandConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addMolpayVietnamConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addOnlineBankingCZConfiguration (Lcom/adyen/checkout/onlinebankingcz/OnlineBankingCZConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addOnlineBankingJPConfiguration (Lcom/adyen/checkout/onlinebankingjp/OnlineBankingJPConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addOnlineBankingPLConfiguration (Lcom/adyen/checkout/onlinebankingpl/OnlineBankingPLConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addOnlineBankingSKConfiguration (Lcom/adyen/checkout/onlinebankingsk/OnlineBankingSKConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addOpenBankingConfiguration (Lcom/adyen/checkout/openbanking/OpenBankingConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addPayByBankUSConfiguration (Lcom/adyen/checkout/paybybankus/PayByBankUSConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addPayEasyConfiguration (Lcom/adyen/checkout/payeasy/PayEasyConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addPayToConfiguration (Lcom/adyen/checkout/payto/PayToConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addSepaConfiguration (Lcom/adyen/checkout/sepa/SepaConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addSevenElevenConfiguration (Lcom/adyen/checkout/seveneleven/SevenElevenConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addTwintConfiguration (Lcom/adyen/checkout/twint/TwintConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun addUPIConfiguration (Lcom/adyen/checkout/upi/UPIConfiguration;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun addAchDirectDebitConfiguration (Lcom/adyen/checkout/ach/ACHDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addBacsDirectDebitConfiguration (Lcom/adyen/checkout/bacs/BacsDirectDebitConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addBcmcConfiguration (Lcom/adyen/checkout/bcmc/BcmcConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addBlikConfiguration (Lcom/adyen/checkout/blik/BlikConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addBoletoConfiguration (Lcom/adyen/checkout/boleto/BoletoConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addCardConfiguration (Lcom/adyen/checkout/card/old/CardConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addCashAppPayConfiguration (Lcom/adyen/checkout/cashapppay/CashAppPayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addConvenienceStoresJPConfiguration (Lcom/adyen/checkout/conveniencestoresjp/ConvenienceStoresJPConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addDotpayConfiguration (Lcom/adyen/checkout/dotpay/DotpayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addEntercashConfiguration (Lcom/adyen/checkout/entercash/EntercashConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addEpsConfiguration (Lcom/adyen/checkout/eps/EPSConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addGiftCardConfiguration (Lcom/adyen/checkout/giftcard/GiftCardConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addGooglePayConfiguration (Lcom/adyen/checkout/googlepay/GooglePayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addIdealConfiguration (Lcom/adyen/checkout/ideal/IdealConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addInstantPaymentConfiguration (Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public static synthetic fun addInstantPaymentConfiguration$default (Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;Lcom/adyen/checkout/instant/InstantPaymentConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addMBWayConfiguration (Lcom/adyen/checkout/mbway/old/MBWayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addMealVoucherFRConfiguration (Lcom/adyen/checkout/mealvoucherfr/MealVoucherFRConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addMolpayMalasyaConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addMolpayThailandConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addMolpayVietnamConfiguration (Lcom/adyen/checkout/molpay/MolpayConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addOnlineBankingCZConfiguration (Lcom/adyen/checkout/onlinebankingcz/OnlineBankingCZConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addOnlineBankingJPConfiguration (Lcom/adyen/checkout/onlinebankingjp/OnlineBankingJPConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addOnlineBankingPLConfiguration (Lcom/adyen/checkout/onlinebankingpl/OnlineBankingPLConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addOnlineBankingSKConfiguration (Lcom/adyen/checkout/onlinebankingsk/OnlineBankingSKConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addOpenBankingConfiguration (Lcom/adyen/checkout/openbanking/OpenBankingConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addPayByBankUSConfiguration (Lcom/adyen/checkout/paybybankus/PayByBankUSConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addPayEasyConfiguration (Lcom/adyen/checkout/payeasy/PayEasyConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addPayToConfiguration (Lcom/adyen/checkout/payto/PayToConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addSepaConfiguration (Lcom/adyen/checkout/sepa/SepaConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addSevenElevenConfiguration (Lcom/adyen/checkout/seveneleven/SevenElevenConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addTwintConfiguration (Lcom/adyen/checkout/twint/TwintConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun addUPIConfiguration (Lcom/adyen/checkout/upi/UPIConfiguration;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
-	public final fun overridePaymentMethodName (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun setAdditionalDataForDropInService (Landroid/os/Bundle;)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun setEnableRemovingStoredPaymentMethods (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun setShowPreselectedStoredPaymentMethod (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
-	public final fun setSkipListWhenSinglePaymentMethod (Z)Lcom/adyen/checkout/dropin/DropInConfiguration$Builder;
+	public final fun overridePaymentMethodName (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun setAdditionalDataForDropInService (Landroid/os/Bundle;)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun setEnableRemovingStoredPaymentMethods (Z)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun setShowPreselectedStoredPaymentMethod (Z)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
+	public final fun setSkipListWhenSinglePaymentMethod (Z)Lcom/adyen/checkout/dropin/old/DropInConfiguration$Builder;
 }
 
-public final class com/adyen/checkout/dropin/DropInConfiguration$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/dropin/old/DropInConfiguration$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/DropInConfiguration;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/old/DropInConfiguration;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/dropin/DropInConfiguration;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/old/DropInConfiguration;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/dropin/DropInConfigurationKt {
+public final class com/adyen/checkout/dropin/old/DropInConfigurationKt {
 	public static final fun dropIn (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun dropIn$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
-public final class com/adyen/checkout/dropin/DropInRedirectHandlingActivity : androidx/appcompat/app/AppCompatActivity {
+public final class com/adyen/checkout/dropin/old/DropInRedirectHandlingActivity : androidx/appcompat/app/AppCompatActivity {
 	public fun <init> ()V
 }
 
-public abstract class com/adyen/checkout/dropin/DropInResult {
+public abstract class com/adyen/checkout/dropin/old/DropInResult {
 }
 
-public final class com/adyen/checkout/dropin/DropInResult$CancelledByUser : com/adyen/checkout/dropin/DropInResult {
+public final class com/adyen/checkout/dropin/old/DropInResult$CancelledByUser : com/adyen/checkout/dropin/old/DropInResult {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/dropin/DropInResult$Error : com/adyen/checkout/dropin/DropInResult {
+public final class com/adyen/checkout/dropin/old/DropInResult$Error : com/adyen/checkout/dropin/old/DropInResult {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getReason ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/DropInResult$Finished : com/adyen/checkout/dropin/DropInResult {
+public final class com/adyen/checkout/dropin/old/DropInResult$Finished : com/adyen/checkout/dropin/old/DropInResult {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getResult ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/DropInResultContract : androidx/activity/result/contract/ActivityResultContract {
+public final class com/adyen/checkout/dropin/old/DropInResultContract : androidx/activity/result/contract/ActivityResultContract {
 	public fun <init> ()V
-	public fun createIntent (Landroid/content/Context;Lcom/adyen/checkout/dropin/internal/ui/model/DropInResultContractParams;)Landroid/content/Intent;
+	public fun createIntent (Landroid/content/Context;Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInResultContractParams;)Landroid/content/Intent;
 	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
-	public fun parseResult (ILandroid/content/Intent;)Lcom/adyen/checkout/dropin/DropInResult;
+	public fun parseResult (ILandroid/content/Intent;)Lcom/adyen/checkout/dropin/old/DropInResult;
 	public synthetic fun parseResult (ILandroid/content/Intent;)Ljava/lang/Object;
 }
 
-public abstract class com/adyen/checkout/dropin/DropInService : com/adyen/checkout/dropin/internal/service/BaseDropInService, com/adyen/checkout/dropin/DropInServiceContract {
+public abstract class com/adyen/checkout/dropin/old/DropInService : com/adyen/checkout/dropin/old/internal/service/BaseDropInService, com/adyen/checkout/dropin/old/DropInServiceContract {
 	public fun <init> ()V
 	public fun onBalanceCheck (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 	public fun onOrderCancel (Lcom/adyen/checkout/components/core/OrderRequest;Z)V
@@ -202,7 +202,7 @@ public abstract class com/adyen/checkout/dropin/DropInService : com/adyen/checko
 	public final fun requestPaymentsCall (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 }
 
-public abstract interface class com/adyen/checkout/dropin/DropInServiceContract {
+public abstract interface class com/adyen/checkout/dropin/old/DropInServiceContract {
 	public abstract fun onAdditionalDetails (Lcom/adyen/checkout/components/core/ActionComponentData;)V
 	public abstract fun onBalanceCheck (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 	public abstract fun onOrderCancel (Lcom/adyen/checkout/components/core/OrderRequest;Z)V
@@ -210,56 +210,56 @@ public abstract interface class com/adyen/checkout/dropin/DropInServiceContract 
 	public abstract fun onSubmit (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceContract$DefaultImpls {
-	public static fun onBalanceCheck (Lcom/adyen/checkout/dropin/DropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)V
-	public static fun onOrderCancel (Lcom/adyen/checkout/dropin/DropInServiceContract;Lcom/adyen/checkout/components/core/OrderRequest;Z)V
-	public static fun onOrderRequest (Lcom/adyen/checkout/dropin/DropInServiceContract;)V
+public final class com/adyen/checkout/dropin/old/DropInServiceContract$DefaultImpls {
+	public static fun onBalanceCheck (Lcom/adyen/checkout/dropin/old/DropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)V
+	public static fun onOrderCancel (Lcom/adyen/checkout/dropin/old/DropInServiceContract;Lcom/adyen/checkout/components/core/OrderRequest;Z)V
+	public static fun onOrderRequest (Lcom/adyen/checkout/dropin/old/DropInServiceContract;)V
 }
 
-public abstract class com/adyen/checkout/dropin/DropInServiceResult : com/adyen/checkout/dropin/BaseDropInServiceResult {
+public abstract class com/adyen/checkout/dropin/old/DropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceResult$Action : com/adyen/checkout/dropin/DropInServiceResult {
+public final class com/adyen/checkout/dropin/old/DropInServiceResult$Action : com/adyen/checkout/dropin/old/DropInServiceResult {
 	public fun <init> (Lcom/adyen/checkout/components/core/action/Action;)V
 	public final fun getAction ()Lcom/adyen/checkout/components/core/action/Action;
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceResult$Error : com/adyen/checkout/dropin/DropInServiceResult, com/adyen/checkout/dropin/DropInServiceResultError {
-	public fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class com/adyen/checkout/dropin/old/DropInServiceResult$Error : com/adyen/checkout/dropin/old/DropInServiceResult, com/adyen/checkout/dropin/old/DropInServiceResultError {
+	public fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getDismissDropIn ()Z
-	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/ErrorDialog;
+	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/old/ErrorDialog;
 	public fun getReason ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceResult$Finished : com/adyen/checkout/dropin/DropInServiceResult {
-	public fun <init> (Ljava/lang/String;Lcom/adyen/checkout/dropin/FinishedDialog;)V
-	public synthetic fun <init> (Ljava/lang/String;Lcom/adyen/checkout/dropin/FinishedDialog;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun getFinishedDialog ()Lcom/adyen/checkout/dropin/FinishedDialog;
+public final class com/adyen/checkout/dropin/old/DropInServiceResult$Finished : com/adyen/checkout/dropin/old/DropInServiceResult {
+	public fun <init> (Ljava/lang/String;Lcom/adyen/checkout/dropin/old/FinishedDialog;)V
+	public synthetic fun <init> (Ljava/lang/String;Lcom/adyen/checkout/dropin/old/FinishedDialog;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getFinishedDialog ()Lcom/adyen/checkout/dropin/old/FinishedDialog;
 	public final fun getResult ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceResult$ToPaymentMethodsList : com/adyen/checkout/dropin/DropInServiceResult {
+public final class com/adyen/checkout/dropin/old/DropInServiceResult$ToPaymentMethodsList : com/adyen/checkout/dropin/old/DropInServiceResult {
 	public fun <init> ()V
 	public fun <init> (Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;)V
 	public synthetic fun <init> (Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getPaymentMethodsApiResponse ()Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;
 }
 
-public final class com/adyen/checkout/dropin/DropInServiceResult$Update : com/adyen/checkout/dropin/DropInServiceResult {
+public final class com/adyen/checkout/dropin/old/DropInServiceResult$Update : com/adyen/checkout/dropin/old/DropInServiceResult {
 	public fun <init> (Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/components/core/OrderResponse;)V
 	public final fun getOrder ()Lcom/adyen/checkout/components/core/OrderResponse;
 	public final fun getPaymentMethodsApiResponse ()Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;
 }
 
-public final class com/adyen/checkout/dropin/ErrorDialog {
+public final class com/adyen/checkout/dropin/old/ErrorDialog {
 	public fun <init> ()V
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/ErrorDialog;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/ErrorDialog;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/old/ErrorDialog;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/old/ErrorDialog;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMessage ()Ljava/lang/String;
 	public final fun getTitle ()Ljava/lang/String;
@@ -267,12 +267,12 @@ public final class com/adyen/checkout/dropin/ErrorDialog {
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/FinishedDialog {
+public final class com/adyen/checkout/dropin/old/FinishedDialog {
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Ljava/lang/String;
-	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/FinishedDialog;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/FinishedDialog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/FinishedDialog;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/dropin/old/FinishedDialog;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/old/FinishedDialog;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/old/FinishedDialog;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getMessage ()Ljava/lang/String;
 	public final fun getTitle ()Ljava/lang/String;
@@ -280,68 +280,68 @@ public final class com/adyen/checkout/dropin/FinishedDialog {
 	public fun toString ()Ljava/lang/String;
 }
 
-public abstract class com/adyen/checkout/dropin/OrderDropInServiceResult : com/adyen/checkout/dropin/BaseDropInServiceResult {
+public abstract class com/adyen/checkout/dropin/old/OrderDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
 }
 
-public final class com/adyen/checkout/dropin/OrderDropInServiceResult$Error : com/adyen/checkout/dropin/OrderDropInServiceResult, com/adyen/checkout/dropin/DropInServiceResultError {
-	public fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class com/adyen/checkout/dropin/old/OrderDropInServiceResult$Error : com/adyen/checkout/dropin/old/OrderDropInServiceResult, com/adyen/checkout/dropin/old/DropInServiceResultError {
+	public fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getDismissDropIn ()Z
-	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/ErrorDialog;
+	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/old/ErrorDialog;
 	public fun getReason ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/OrderDropInServiceResult$OrderCreated : com/adyen/checkout/dropin/OrderDropInServiceResult {
+public final class com/adyen/checkout/dropin/old/OrderDropInServiceResult$OrderCreated : com/adyen/checkout/dropin/old/OrderDropInServiceResult {
 	public fun <init> (Lcom/adyen/checkout/components/core/OrderResponse;)V
 	public final fun getOrder ()Lcom/adyen/checkout/components/core/OrderResponse;
 }
 
-public abstract class com/adyen/checkout/dropin/RecurringDropInServiceResult : com/adyen/checkout/dropin/BaseDropInServiceResult {
+public abstract class com/adyen/checkout/dropin/old/RecurringDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
 }
 
-public final class com/adyen/checkout/dropin/RecurringDropInServiceResult$Error : com/adyen/checkout/dropin/RecurringDropInServiceResult, com/adyen/checkout/dropin/DropInServiceResultError {
-	public fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;Z)V
-	public synthetic fun <init> (Lcom/adyen/checkout/dropin/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+public final class com/adyen/checkout/dropin/old/RecurringDropInServiceResult$Error : com/adyen/checkout/dropin/old/RecurringDropInServiceResult, com/adyen/checkout/dropin/old/DropInServiceResultError {
+	public fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;Z)V
+	public synthetic fun <init> (Lcom/adyen/checkout/dropin/old/ErrorDialog;Ljava/lang/String;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun getDismissDropIn ()Z
-	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/ErrorDialog;
+	public fun getErrorDialog ()Lcom/adyen/checkout/dropin/old/ErrorDialog;
 	public fun getReason ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/RecurringDropInServiceResult$PaymentMethodRemoved : com/adyen/checkout/dropin/RecurringDropInServiceResult {
+public final class com/adyen/checkout/dropin/old/RecurringDropInServiceResult$PaymentMethodRemoved : com/adyen/checkout/dropin/old/RecurringDropInServiceResult {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getId ()Ljava/lang/String;
 }
 
-public abstract interface class com/adyen/checkout/dropin/SessionDropInCallback {
-	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/SessionDropInResult;)V
+public abstract interface class com/adyen/checkout/dropin/old/SessionDropInCallback {
+	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/old/SessionDropInResult;)V
 }
 
-public abstract class com/adyen/checkout/dropin/SessionDropInResult {
+public abstract class com/adyen/checkout/dropin/old/SessionDropInResult {
 }
 
-public final class com/adyen/checkout/dropin/SessionDropInResult$CancelledByUser : com/adyen/checkout/dropin/SessionDropInResult {
+public final class com/adyen/checkout/dropin/old/SessionDropInResult$CancelledByUser : com/adyen/checkout/dropin/old/SessionDropInResult {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/dropin/SessionDropInResult$Error : com/adyen/checkout/dropin/SessionDropInResult {
+public final class com/adyen/checkout/dropin/old/SessionDropInResult$Error : com/adyen/checkout/dropin/old/SessionDropInResult {
 	public fun <init> (Ljava/lang/String;)V
 	public final fun getReason ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/SessionDropInResult$Finished : com/adyen/checkout/dropin/SessionDropInResult {
+public final class com/adyen/checkout/dropin/old/SessionDropInResult$Finished : com/adyen/checkout/dropin/old/SessionDropInResult {
 	public fun <init> (Lcom/adyen/checkout/sessions/core/SessionPaymentResult;)V
 	public final fun getResult ()Lcom/adyen/checkout/sessions/core/SessionPaymentResult;
 }
 
-public final class com/adyen/checkout/dropin/SessionDropInResultContract : androidx/activity/result/contract/ActivityResultContract {
+public final class com/adyen/checkout/dropin/old/SessionDropInResultContract : androidx/activity/result/contract/ActivityResultContract {
 	public fun <init> ()V
-	public fun createIntent (Landroid/content/Context;Lcom/adyen/checkout/dropin/internal/ui/model/SessionDropInResultContractParams;)Landroid/content/Intent;
+	public fun createIntent (Landroid/content/Context;Lcom/adyen/checkout/dropin/old/internal/ui/model/SessionDropInResultContractParams;)Landroid/content/Intent;
 	public synthetic fun createIntent (Landroid/content/Context;Ljava/lang/Object;)Landroid/content/Intent;
-	public fun parseResult (ILandroid/content/Intent;)Lcom/adyen/checkout/dropin/SessionDropInResult;
+	public fun parseResult (ILandroid/content/Intent;)Lcom/adyen/checkout/dropin/old/SessionDropInResult;
 	public synthetic fun parseResult (ILandroid/content/Intent;)Ljava/lang/Object;
 }
 
-public class com/adyen/checkout/dropin/SessionDropInService : com/adyen/checkout/dropin/internal/service/BaseDropInService, com/adyen/checkout/dropin/SessionDropInServiceContract, com/adyen/checkout/dropin/internal/service/SessionDropInServiceInterface {
+public class com/adyen/checkout/dropin/old/SessionDropInService : com/adyen/checkout/dropin/old/internal/service/BaseDropInService, com/adyen/checkout/dropin/old/SessionDropInServiceContract, com/adyen/checkout/dropin/old/internal/service/SessionDropInServiceInterface {
 	public fun <init> ()V
 	public final fun initialize (Lcom/adyen/checkout/sessions/core/SessionModel;Ljava/lang/String;Lcom/adyen/checkout/core/old/Environment;ZLcom/adyen/checkout/components/core/internal/analytics/AnalyticsManager;)V
 	public final fun isFlowTakenOver ()Z
@@ -358,7 +358,7 @@ public class com/adyen/checkout/dropin/SessionDropInService : com/adyen/checkout
 	public final fun requestPaymentsCall (Lcom/adyen/checkout/components/core/PaymentComponentState;)V
 }
 
-public abstract interface class com/adyen/checkout/dropin/SessionDropInServiceContract {
+public abstract interface class com/adyen/checkout/dropin/old/SessionDropInServiceContract {
 	public abstract fun onAdditionalDetails (Lcom/adyen/checkout/components/core/ActionComponentData;)Z
 	public abstract fun onBalanceCheck (Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 	public abstract fun onOrderCancel (Lcom/adyen/checkout/components/core/OrderRequest;Z)Z
@@ -366,17 +366,17 @@ public abstract interface class com/adyen/checkout/dropin/SessionDropInServiceCo
 	public abstract fun onSubmit (Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 }
 
-public final class com/adyen/checkout/dropin/SessionDropInServiceContract$DefaultImpls {
-	public static fun onAdditionalDetails (Lcom/adyen/checkout/dropin/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/ActionComponentData;)Z
-	public static fun onBalanceCheck (Lcom/adyen/checkout/dropin/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
-	public static fun onOrderCancel (Lcom/adyen/checkout/dropin/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/OrderRequest;Z)Z
-	public static fun onOrderRequest (Lcom/adyen/checkout/dropin/SessionDropInServiceContract;)Z
-	public static fun onSubmit (Lcom/adyen/checkout/dropin/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
+public final class com/adyen/checkout/dropin/old/SessionDropInServiceContract$DefaultImpls {
+	public static fun onAdditionalDetails (Lcom/adyen/checkout/dropin/old/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/ActionComponentData;)Z
+	public static fun onBalanceCheck (Lcom/adyen/checkout/dropin/old/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
+	public static fun onOrderCancel (Lcom/adyen/checkout/dropin/old/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/OrderRequest;Z)Z
+	public static fun onOrderRequest (Lcom/adyen/checkout/dropin/old/SessionDropInServiceContract;)Z
+	public static fun onSubmit (Lcom/adyen/checkout/dropin/old/SessionDropInServiceContract;Lcom/adyen/checkout/components/core/PaymentComponentState;)Z
 }
 
-public abstract class com/adyen/checkout/dropin/internal/service/BaseDropInService : android/app/Service, com/adyen/checkout/dropin/BaseDropInServiceContract, com/adyen/checkout/dropin/internal/service/BaseDropInServiceInterface, kotlinx/coroutines/CoroutineScope {
-	public static final field Companion Lcom/adyen/checkout/dropin/internal/service/BaseDropInService$Companion;
-	protected final fun emitResult (Lcom/adyen/checkout/dropin/BaseDropInServiceResult;)V
+public abstract class com/adyen/checkout/dropin/old/internal/service/BaseDropInService : android/app/Service, com/adyen/checkout/dropin/old/BaseDropInServiceContract, com/adyen/checkout/dropin/old/internal/service/BaseDropInServiceInterface, kotlinx/coroutines/CoroutineScope {
+	public static final field Companion Lcom/adyen/checkout/dropin/old/internal/service/BaseDropInService$Companion;
+	protected final fun emitResult (Lcom/adyen/checkout/dropin/old/BaseDropInServiceResult;)V
 	public final fun getAdditionalData ()Landroid/os/Bundle;
 	public final fun getCoroutineContext ()Lkotlin/coroutines/CoroutineContext;
 	public final fun observeResult (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -398,30 +398,30 @@ public abstract class com/adyen/checkout/dropin/internal/service/BaseDropInServi
 	public fun onStartCommand (Landroid/content/Intent;II)I
 	public fun onUnbind (Landroid/content/Intent;)Z
 	public final fun requestRemoveStoredPaymentMethod (Lcom/adyen/checkout/components/core/StoredPaymentMethod;)V
-	public final fun sendAddressLookupResult (Lcom/adyen/checkout/dropin/AddressLookupDropInServiceResult;)V
-	public final fun sendBalanceResult (Lcom/adyen/checkout/dropin/BalanceDropInServiceResult;)V
-	public final fun sendOrderResult (Lcom/adyen/checkout/dropin/OrderDropInServiceResult;)V
-	public final fun sendRecurringResult (Lcom/adyen/checkout/dropin/RecurringDropInServiceResult;)V
-	public final fun sendResult (Lcom/adyen/checkout/dropin/DropInServiceResult;)V
+	public final fun sendAddressLookupResult (Lcom/adyen/checkout/dropin/old/AddressLookupDropInServiceResult;)V
+	public final fun sendBalanceResult (Lcom/adyen/checkout/dropin/old/BalanceDropInServiceResult;)V
+	public final fun sendOrderResult (Lcom/adyen/checkout/dropin/old/OrderDropInServiceResult;)V
+	public final fun sendRecurringResult (Lcom/adyen/checkout/dropin/old/RecurringDropInServiceResult;)V
+	public final fun sendResult (Lcom/adyen/checkout/dropin/old/DropInServiceResult;)V
 }
 
-public final class com/adyen/checkout/dropin/internal/service/BaseDropInService$Companion {
+public final class com/adyen/checkout/dropin/old/internal/service/BaseDropInService$Companion {
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/model/DropInPaymentMethodInformation$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/dropin/old/internal/ui/model/DropInPaymentMethodInformation$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/ui/model/DropInPaymentMethodInformation;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInPaymentMethodInformation;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/dropin/internal/ui/model/DropInPaymentMethodInformation;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInPaymentMethodInformation;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/model/DropInResultContractParams {
+public final class com/adyen/checkout/dropin/old/internal/ui/model/DropInResultContractParams {
 	public final fun component1 ()Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public final fun component2 ()Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;
 	public final fun component3 ()Ljava/lang/Class;
-	public final fun copy (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Ljava/lang/Class;)Lcom/adyen/checkout/dropin/internal/ui/model/DropInResultContractParams;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/internal/ui/model/DropInResultContractParams;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Ljava/lang/Class;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/internal/ui/model/DropInResultContractParams;
+	public final fun copy (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Ljava/lang/Class;)Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInResultContractParams;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInResultContractParams;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Ljava/lang/Class;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/old/internal/ui/model/DropInResultContractParams;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCheckoutConfiguration ()Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public final fun getPaymentMethodsApiResponse ()Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;
@@ -430,28 +430,28 @@ public final class com/adyen/checkout/dropin/internal/ui/model/DropInResultContr
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/model/GiftCardPaymentConfirmationData$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/dropin/old/internal/ui/model/GiftCardPaymentConfirmationData$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/ui/model/GiftCardPaymentConfirmationData;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/old/internal/ui/model/GiftCardPaymentConfirmationData;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/dropin/internal/ui/model/GiftCardPaymentConfirmationData;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/old/internal/ui/model/GiftCardPaymentConfirmationData;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/model/OrderModel$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/dropin/old/internal/ui/model/OrderModel$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/ui/model/OrderModel;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/old/internal/ui/model/OrderModel;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/dropin/internal/ui/model/OrderModel;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/old/internal/ui/model/OrderModel;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/model/SessionDropInResultContractParams {
+public final class com/adyen/checkout/dropin/old/internal/ui/model/SessionDropInResultContractParams {
 	public final fun component1 ()Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public final fun component2 ()Lcom/adyen/checkout/sessions/core/CheckoutSession;
 	public final fun component3 ()Ljava/lang/Class;
-	public final fun copy (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/sessions/core/CheckoutSession;Ljava/lang/Class;)Lcom/adyen/checkout/dropin/internal/ui/model/SessionDropInResultContractParams;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/internal/ui/model/SessionDropInResultContractParams;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/sessions/core/CheckoutSession;Ljava/lang/Class;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/internal/ui/model/SessionDropInResultContractParams;
+	public final fun copy (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/sessions/core/CheckoutSession;Ljava/lang/Class;)Lcom/adyen/checkout/dropin/old/internal/ui/model/SessionDropInResultContractParams;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/old/internal/ui/model/SessionDropInResultContractParams;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/sessions/core/CheckoutSession;Ljava/lang/Class;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/old/internal/ui/model/SessionDropInResultContractParams;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getCheckoutConfiguration ()Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public final fun getCheckoutSession ()Lcom/adyen/checkout/sessions/core/CheckoutSession;

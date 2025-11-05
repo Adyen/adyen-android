@@ -15,10 +15,10 @@ import com.adyen.checkout.components.core.PaymentComponentData
 import com.adyen.checkout.components.core.PaymentComponentState
 import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.components.core.action.Action
-import com.adyen.checkout.dropin.DropInService
-import com.adyen.checkout.dropin.DropInServiceResult
-import com.adyen.checkout.dropin.ErrorDialog
-import com.adyen.checkout.dropin.RecurringDropInServiceResult
+import com.adyen.checkout.dropin.old.DropInService
+import com.adyen.checkout.dropin.old.DropInServiceResult
+import com.adyen.checkout.dropin.old.ErrorDialog
+import com.adyen.checkout.dropin.old.RecurringDropInServiceResult
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.IODispatcher
 import com.adyen.checkout.example.extensions.getLogTag
