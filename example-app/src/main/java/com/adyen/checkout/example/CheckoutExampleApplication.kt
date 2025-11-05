@@ -9,11 +9,13 @@
 package com.adyen.checkout.example
 
 import android.app.Application
-import com.adyen.checkout.core.old.AdyenLogLevel
-import com.adyen.checkout.core.old.AdyenLogger
+import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.AdyenLogger
 import com.adyen.checkout.example.ui.theme.UIThemeRepository
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
+import com.adyen.checkout.core.old.AdyenLogLevel as OldAdyenLogLevel
+import com.adyen.checkout.core.old.AdyenLogger as OldAdyenLogger
 
 @HiltAndroidApp
 class CheckoutExampleApplication : Application() {
@@ -22,6 +24,7 @@ class CheckoutExampleApplication : Application() {
     internal lateinit var uiThemeRepository: UIThemeRepository
 
     init {
+        OldAdyenLogger.setLogLevel(OldAdyenLogLevel.VERBOSE)
         AdyenLogger.setLogLevel(AdyenLogLevel.VERBOSE)
     }
 
