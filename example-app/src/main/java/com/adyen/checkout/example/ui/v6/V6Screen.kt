@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -97,7 +98,7 @@ private fun Component(
         modifier = modifier.fillMaxSize(),
     ) {
         var shouldShowDialog by remember { mutableStateOf(false) }
-        var selectedPaymentMethod by remember { mutableStateOf(uiState.paymentMethods.first()) }
+        var selectedPaymentMethod by rememberSaveable { mutableStateOf(uiState.paymentMethods.first()) }
 
         DropDownButton(
             theme = theme,
@@ -107,7 +108,7 @@ private fun Component(
         )
 
         if (shouldShowDialog) {
-            PaymentMethodDialog(
+            PaymentMethodOptionsDialog(
                 paymentMethods = uiState.paymentMethods,
                 onItemClick = { selectedPaymentMethod = it },
                 onDismissRequest = { shouldShowDialog = false },
@@ -156,7 +157,7 @@ private fun DropDownButton(
 }
 
 @Composable
-private fun PaymentMethodDialog(
+private fun PaymentMethodOptionsDialog(
     paymentMethods: List<PaymentMethod>,
     onItemClick: (PaymentMethod) -> Unit,
     onDismissRequest: () -> Unit,
