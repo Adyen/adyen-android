@@ -15,14 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
@@ -57,14 +56,13 @@ internal class PaymentFacilitator(
     private var actionComponent: ActionComponent? = null
     private var actionObservationJob: Job? = null
 
-    private lateinit var backStack: NavBackStack<NavKey>
+    private val backStack = NavBackStack(mutableStateListOf(paymentComponent.navigationStartingPoint))
 
     @Composable
     fun ViewFactory(
         modifier: Modifier = Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
     ) {
-        backStack = rememberNavBackStack(paymentComponent.navigationStartingPoint)
         CheckoutCompositionLocalProvider(
             locale = commonComponentParams.shopperLocale,
             localizationProvider = localizationProvider,
