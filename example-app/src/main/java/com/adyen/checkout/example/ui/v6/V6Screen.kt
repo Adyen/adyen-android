@@ -49,8 +49,8 @@ import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText
+import com.adyen.checkout.example.ui.theme.ExampleTheme
 import com.adyen.checkout.ui.internal.Body
-import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.SubHeadline
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -119,7 +119,7 @@ private fun Component(
             txVariant = selectedPaymentMethod.type ?: error("Payment method has no type"),
             checkoutContext = uiState.checkoutContext,
             theme = theme,
-            modifier = Modifier.padding(Dimensions.Large),
+            modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
         )
     }
 }
@@ -136,18 +136,18 @@ private fun DropDownButton(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .clip(RoundedCornerShape(Dimensions.Large))
+            .clip(RoundedCornerShape(ExampleTheme.dimensions.grid_4))
             .border(
                 width = 1.dp,
                 color = Color(theme.colors.outline.value),
-                shape = RoundedCornerShape(Dimensions.ExtraLarge),
+                shape = RoundedCornerShape(ExampleTheme.dimensions.grid_4),
             )
             .clickable(onClick = onClick)
             .padding(
-                start = Dimensions.Large,
-                top = Dimensions.Small,
-                end = Dimensions.Small,
-                bottom = Dimensions.Small,
+                start = ExampleTheme.dimensions.grid_2,
+                top = ExampleTheme.dimensions.grid_1,
+                end = ExampleTheme.dimensions.grid_1,
+                bottom = ExampleTheme.dimensions.grid_1,
             ),
     ) {
         Text(text)
@@ -166,11 +166,11 @@ private fun PaymentMethodDialog(
         onDismissRequest,
     ) {
         Surface(
-            shape = RoundedCornerShape(Dimensions.Small),
-            modifier = Modifier.padding(vertical = Dimensions.Large),
+            shape = RoundedCornerShape(ExampleTheme.dimensions.grid_1),
+            modifier = Modifier.padding(vertical = ExampleTheme.dimensions.grid_2),
         ) {
             LazyColumn(
-                modifier = Modifier.padding(vertical = Dimensions.Small),
+                modifier = Modifier.padding(vertical = ExampleTheme.dimensions.grid_1),
             ) {
                 items(paymentMethods) { paymentMethod ->
                     Column(
@@ -180,9 +180,14 @@ private fun PaymentMethodDialog(
                                 onItemClick(paymentMethod)
                                 onDismissRequest()
                             }
-                            .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+                            .padding(
+                                horizontal = ExampleTheme.dimensions.grid_2,
+                                vertical = ExampleTheme.dimensions.grid_1_5,
+                            ),
                     ) {
+                        @Suppress("RestrictedApi")
                         Body(paymentMethod.name.orEmpty())
+                        @Suppress("RestrictedApi")
                         SubHeadline(paymentMethod.type.orEmpty(), color = Color(theme.colors.textSecondary.value))
                     }
                 }
