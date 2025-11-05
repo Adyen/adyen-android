@@ -24,9 +24,21 @@ val ktLintTask = tasks.register<JavaExec>("ktlint") {
     description = "Check Kotlin code style"
     group = LifecycleBasePlugin.VERIFICATION_GROUP
 
+    val inputFiles = project.fileTree("src") {
+        include("**/*.kt", "**/*.kts")
+        exclude("**/build/**", "**/.gradle/**")
+    }
+    inputs.files(inputFiles)
+
+    val outputDir = project.layout.buildDirectory.dir("reports/ktlint").get()
+    val outputFile = outputDir.file("ktlint-report.txt")
+    outputs.file(outputFile)
+
     classpath = ktlint
     mainClass.set("com.pinterest.ktlint.Main")
     args(
+        "--reporter=plain",
+        "--reporter=plain,output=${outputFile}",
         "**/src/**/main/**/*.kt",
         "**.kts",
         "!**/build/**",
