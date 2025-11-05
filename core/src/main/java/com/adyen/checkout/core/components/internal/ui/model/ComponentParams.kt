@@ -23,4 +23,5 @@ interface ComponentParams {
     val isCreatedByDropIn: Boolean
     val amount: Amount?
     val isSubmitButtonVisible: Boolean
+    val publicKey: String?
 }

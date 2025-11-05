@@ -23,4 +23,5 @@ data class CommonComponentParams(
     override val isCreatedByDropIn: Boolean,
     override val amount: Amount?,
     override val isSubmitButtonVisible: Boolean,
+    override val publicKey: String?,
 ) : ComponentParams

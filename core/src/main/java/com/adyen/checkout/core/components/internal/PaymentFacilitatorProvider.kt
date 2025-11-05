@@ -34,6 +34,7 @@ internal class PaymentFacilitatorProvider {
                     checkoutCallbacks = checkoutContext.checkoutCallbacks,
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
+                    publicKey = checkoutContext.publicKey,
                 )
             }
 
@@ -45,6 +46,7 @@ internal class PaymentFacilitatorProvider {
                     checkoutCallbacks = checkoutContext.checkoutCallbacks,
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
+                    publicKey = checkoutContext.publicKey,
                 )
             }
         }

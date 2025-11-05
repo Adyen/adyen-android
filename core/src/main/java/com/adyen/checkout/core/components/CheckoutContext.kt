@@ -17,11 +17,13 @@ sealed interface CheckoutContext {
         val checkoutSession: CheckoutSession,
         val checkoutConfiguration: CheckoutConfiguration,
         val checkoutCallbacks: CheckoutCallbacks,
+        internal val publicKey: String?,
     ) : CheckoutContext
 
     data class Advanced internal constructor(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration,
         val checkoutCallbacks: CheckoutCallbacks,
+        internal val publicKey: String?,
     ) : CheckoutContext
 }

@@ -19,6 +19,21 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+suspend fun <T : ModelObject> HttpClient.get(
+    path: String,
+    responseSerializer: ModelObject.Serializer<T>,
+    queryParameters: Map<String, String> = emptyMap(),
+): T {
+    adyenLog(AdyenLogLevel.DEBUG) { "GET - $path" }
+
+    val response = runAndLogHttpException { get(path, queryParameters) }
+
+    logResponse(response)
+
+    return responseSerializer.deserialize(response.body.toJSONObject())
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 suspend fun <T : ModelObject, R : ModelObject> HttpClient.post(
     path: String,
     body: T,

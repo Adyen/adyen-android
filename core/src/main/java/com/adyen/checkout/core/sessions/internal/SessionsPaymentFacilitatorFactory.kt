@@ -30,6 +30,7 @@ import com.adyen.checkout.core.sessions.internal.data.api.SessionService
 import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import kotlinx.coroutines.CoroutineScope
 
+@Suppress("LongParameterList")
 internal class SessionsPaymentFacilitatorFactory(
     private val applicationContext: Context,
     private val checkoutSession: CheckoutSession,
@@ -37,6 +38,7 @@ internal class SessionsPaymentFacilitatorFactory(
     private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
+    private val publicKey: String?,
 ) : PaymentFacilitatorFactory {
 
     override fun create(
@@ -53,6 +55,7 @@ internal class SessionsPaymentFacilitatorFactory(
             deviceLocale = applicationContext.getLocale(),
             dropInOverrideParams = null,
             componentSessionParams = SessionParamsFactory.create(checkoutSession),
+            publicKey = publicKey,
         )
 
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
