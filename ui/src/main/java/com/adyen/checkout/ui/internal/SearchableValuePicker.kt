@@ -49,6 +49,7 @@ fun SearchableValuePicker(
     }
 }
 
+@Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
 private fun SearchableValuePickerPreview() {
