@@ -33,9 +33,6 @@ object Checkout {
             checkoutSession == null -> {
                 Result.Error("Failed to initialize sessions.")
             }
-            publicKey == null -> {
-                Result.Error("Failed to fetch public key.")
-            }
             else -> Result.Success(
                 checkoutContext = CheckoutContext.Sessions(
                     checkoutSession = checkoutSession,
@@ -54,21 +51,14 @@ object Checkout {
     ): Result {
         val publicKey = fetchPublicKey(checkoutConfiguration)
         // TODO - Fetch checkoutAttemptId
-        return when {
-            publicKey == null -> {
-                return Result.Error("Failed to fetch public key.")
-            }
-            else -> {
-                Result.Success(
-                    CheckoutContext.Advanced(
-                        paymentMethodsApiResponse = paymentMethodsApiResponse,
-                        checkoutConfiguration = checkoutConfiguration,
-                        checkoutCallbacks = checkoutCallbacks,
-                        publicKey = publicKey
-                    ),
-                )
-            }
-        }
+        return Result.Success(
+            CheckoutContext.Advanced(
+                paymentMethodsApiResponse = paymentMethodsApiResponse,
+                checkoutConfiguration = checkoutConfiguration,
+                checkoutCallbacks = checkoutCallbacks,
+                publicKey = publicKey
+            ),
+        )
     }
 
     private suspend fun getCheckoutSession(

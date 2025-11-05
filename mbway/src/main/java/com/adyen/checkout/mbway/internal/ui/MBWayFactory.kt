@@ -26,7 +26,6 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        publicKey: String,
     ): MBWayComponent {
         val stateManager = DefaultStateManager(
             viewStateFactory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),

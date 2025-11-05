@@ -45,7 +45,6 @@ internal class CardComponent(
     private val stateManager: StateManager<CardViewState, CardComponentState>,
     private val cardEncryptor: BaseCardEncryptor,
     private val componentParams: ComponentParams,
-    private val publicKey: String,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
@@ -100,8 +99,17 @@ internal class CardComponent(
         )
     }
 
+    @Suppress("ReturnCount")
     private fun CardViewState.toPaymentComponentState(): CardPaymentComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
+
+        val publicKey = componentParams.publicKey
+        if (publicKey == null) {
+            return CardPaymentComponentState(
+                data = PaymentComponentData(null, null, null),
+                isValid = false,
+            )
+        }
 
         val encryptedCard: EncryptedCard = try {
             unencryptedCardBuilder.setNumber(cardNumber.text)

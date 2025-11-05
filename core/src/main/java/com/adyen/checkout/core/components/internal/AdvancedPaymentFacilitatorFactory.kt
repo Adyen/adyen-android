@@ -26,7 +26,7 @@ internal class AdvancedPaymentFacilitatorFactory(
     private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
-    private val publicKey: String,
+    private val publicKey: String?,
 ) : PaymentFacilitatorFactory {
 
     override fun create(txVariant: String, coroutineScope: CoroutineScope): PaymentFacilitator {
@@ -35,6 +35,7 @@ internal class AdvancedPaymentFacilitatorFactory(
             deviceLocale = applicationContext.getLocale(),
             dropInOverrideParams = null,
             componentSessionParams = null,
+            publicKey = publicKey,
         )
 
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
@@ -52,7 +53,6 @@ internal class AdvancedPaymentFacilitatorFactory(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
-            publicKey = publicKey,
         )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(

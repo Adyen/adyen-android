@@ -28,8 +28,6 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        // TODO - Card Component Params. Store public key in card component params and read from there.
-        publicKey: String,
     ): CardComponent {
         val stateManager = DefaultStateManager(
             viewStateFactory = CardViewStateFactory(),
@@ -44,7 +42,6 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             analyticsManager = analyticsManager,
             stateManager = stateManager,
             componentParams = componentParamsBundle.commonComponentParams,
-            publicKey = publicKey,
             cardEncryptor = cardEncryptor,
         )
     }

@@ -38,7 +38,7 @@ internal class SessionsPaymentFacilitatorFactory(
     private val checkoutCallbacks: CheckoutCallbacks,
     private val savedStateHandle: SavedStateHandle,
     private val checkoutController: CheckoutController,
-    private val publicKey: String,
+    private val publicKey: String?,
 ) : PaymentFacilitatorFactory {
 
     override fun create(
@@ -55,6 +55,7 @@ internal class SessionsPaymentFacilitatorFactory(
             deviceLocale = applicationContext.getLocale(),
             dropInOverrideParams = null,
             componentSessionParams = SessionParamsFactory.create(checkoutSession),
+            publicKey = publicKey,
         )
 
         // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
@@ -72,7 +73,6 @@ internal class SessionsPaymentFacilitatorFactory(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
-            publicKey = publicKey,
         )
 
         val sessionInteractor = SessionInteractor(

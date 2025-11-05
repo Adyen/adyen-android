@@ -22,6 +22,7 @@ class CommonComponentParamsMapper {
         deviceLocale: Locale,
         dropInOverrideParams: DropInOverrideParams?,
         componentSessionParams: SessionParams?,
+        publicKey: String?,
     ): ComponentParamsBundle {
         val sessionParams: SessionParams? = dropInOverrideParams?.sessionParams ?: componentSessionParams
         val commonComponentParams = CommonComponentParams(
@@ -38,6 +39,7 @@ class CommonComponentParamsMapper {
                 ?: checkoutConfiguration.amount,
             isSubmitButtonVisible = dropInOverrideParams?.isSubmitButtonVisible
                 ?: checkoutConfiguration.isSubmitButtonVisible ?: true,
+            publicKey = publicKey,
         )
         return ComponentParamsBundle(commonComponentParams, sessionParams)
     }

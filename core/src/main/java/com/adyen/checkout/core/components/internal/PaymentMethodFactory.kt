@@ -34,6 +34,5 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        publicKey: String,
     ): T
 }
