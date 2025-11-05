@@ -12,9 +12,11 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.components.core.CheckoutConfiguration
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.dropin.old.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
+import com.adyen.checkout.example.BuildConfig
 import com.adyen.checkout.example.data.storage.IntegrationFlow
 import com.adyen.checkout.example.data.storage.KeyValueStorage
 import com.adyen.checkout.example.extensions.getLogTag
@@ -34,6 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
 
 @Suppress("TooManyFunctions")
 @HiltViewModel
@@ -128,6 +131,8 @@ internal class MainViewModel @Inject constructor(
             is ComponentItem.Entry.DropIn -> startDropInFlow()
             is ComponentItem.Entry.DropInWithSession -> startSessionDropInFlow(false)
             is ComponentItem.Entry.DropInWithCustomSession -> startSessionDropInFlow(true)
+            is ComponentItem.Entry.V6DropIn -> startV6DropInFlow()
+            is ComponentItem.Entry.V6DropInWithSession -> startV6SessionsDropInFlow()
         }
     }
 
@@ -135,7 +140,7 @@ internal class MainViewModel @Inject constructor(
         viewModelScope.launch {
             showLoading(true)
 
-            val paymentMethods = getPaymentMethods()
+            val paymentMethods = paymentsRepository.getPaymentMethodsOld(createPaymentMethodRequest())
 
             showLoading(false)
 
@@ -154,7 +159,7 @@ internal class MainViewModel @Inject constructor(
 
             val checkoutConfiguration = checkoutConfigurationProvider.checkoutConfig
 
-            val session = getSession(checkoutConfiguration)
+            val session = getSessionOld(checkoutConfiguration)
 
             showLoading(false)
 
@@ -171,42 +176,84 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getPaymentMethods() = paymentsRepository.getPaymentMethodsOld(
-        getPaymentMethodRequest(
-            merchantAccount = keyValueStorage.getMerchantAccount(),
-            shopperReference = keyValueStorage.getShopperReference(),
-            amount = keyValueStorage.getAmount(),
-            countryCode = keyValueStorage.getCountry(),
-            shopperLocale = keyValueStorage.getShopperLocale(),
-            splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-        ),
+    private fun startV6DropInFlow() {
+        viewModelScope.launch {
+            showLoading(true)
+
+            val paymentMethods = paymentsRepository.getPaymentMethods(createPaymentMethodRequest())
+
+            showLoading(false)
+
+            if (paymentMethods != null) {
+                // TODO - Get config from provider
+                val checkoutConfiguration = CheckoutConfiguration(
+                    Environment.TEST,
+                    BuildConfig.CLIENT_KEY,
+                )
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6DropIn(paymentMethods, checkoutConfiguration)))
+            } else {
+                onError("Something went wrong while fetching payment methods")
+            }
+        }
+    }
+
+    private fun startV6SessionsDropInFlow() {
+        viewModelScope.launch {
+            showLoading(true)
+
+            // TODO - Get config from provider
+            val checkoutConfiguration = CheckoutConfiguration(
+                Environment.TEST,
+                BuildConfig.CLIENT_KEY,
+            )
+
+            val sessionModel = paymentsRepository.createSession(createSessionRequest())
+
+            showLoading(false)
+
+            if (sessionModel != null) {
+                val navigation = MainNavigation.V6DropInWithSession(sessionModel, checkoutConfiguration)
+                _eventFlow.tryEmit(MainEvent.NavigateTo(navigation))
+            } else {
+                onError("Something went wrong while starting session")
+            }
+        }
+    }
+
+    private fun createPaymentMethodRequest() = getPaymentMethodRequest(
+        merchantAccount = keyValueStorage.getMerchantAccount(),
+        shopperReference = keyValueStorage.getShopperReference(),
+        amount = keyValueStorage.getAmount(),
+        countryCode = keyValueStorage.getCountry(),
+        shopperLocale = keyValueStorage.getShopperLocale(),
+        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
     )
 
-    private suspend fun getSession(checkoutConfiguration: CheckoutConfiguration): CheckoutSession? {
-        val sessionModel = paymentsRepository.createSessionOld(
-            getSessionRequest(
-                merchantAccount = keyValueStorage.getMerchantAccount(),
-                shopperReference = keyValueStorage.getShopperReference(),
-                amount = keyValueStorage.getAmount(),
-                countryCode = keyValueStorage.getCountry(),
-                shopperLocale = keyValueStorage.getShopperLocale(),
-                splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
-                threeDSMode = keyValueStorage.getThreeDSMode(),
-                redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
-                    ?: error("Return url should be set"),
-                shopperEmail = keyValueStorage.getShopperEmail(),
-                installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
-                showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
-                showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
-            ),
-        ) ?: return null
+    private fun createSessionRequest() = getSessionRequest(
+        merchantAccount = keyValueStorage.getMerchantAccount(),
+        shopperReference = keyValueStorage.getShopperReference(),
+        amount = keyValueStorage.getAmount(),
+        countryCode = keyValueStorage.getCountry(),
+        shopperLocale = keyValueStorage.getShopperLocale(),
+        splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
+        threeDSMode = keyValueStorage.getThreeDSMode(),
+        redirectUrl = savedStateHandle.get<String>(MainActivity.RETURN_URL_EXTRA)
+            ?: error("Return url should be set"),
+        shopperEmail = keyValueStorage.getShopperEmail(),
+        installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
+        showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
+        showRemovePaymentMethodButton = keyValueStorage.isRemoveStoredPaymentMethodEnabled(),
+    )
+
+    private suspend fun getSessionOld(checkoutConfiguration: OldCheckoutConfiguration): CheckoutSession? {
+        val sessionModel = paymentsRepository.createSessionOld(createSessionRequest()) ?: return null
 
         return getCheckoutSession(sessionModel, checkoutConfiguration)
     }
 
     private suspend fun getCheckoutSession(
         sessionModel: SessionModel,
-        checkoutConfiguration: CheckoutConfiguration
+        checkoutConfiguration: OldCheckoutConfiguration,
     ): CheckoutSession? {
         return when (val result = CheckoutSessionProvider.createSession(sessionModel, checkoutConfiguration)) {
             is CheckoutSessionResult.Success -> result.checkoutSession
