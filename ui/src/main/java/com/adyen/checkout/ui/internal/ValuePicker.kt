@@ -109,6 +109,7 @@ private fun ValuePickerItem(
     }
 }
 
+@Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
 private fun ValuePickerPreview() {
