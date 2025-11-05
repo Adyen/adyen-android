@@ -31,6 +31,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -63,12 +64,6 @@ fun SearchField(
     val interactionSource = remember { MutableInteractionSource() }
     val state = rememberTextFieldState()
 
-    val trailingIconResource = if (state.text.isEmpty()) {
-        R.drawable.ic_search
-    } else {
-        R.drawable.ic_cross
-    }
-
     BasicTextField(
         state = state,
         modifier = modifier.focusRequester(focusRequester),
@@ -92,23 +87,10 @@ fun SearchField(
                 interactionSource = interactionSource,
                 innerIndication = null,
                 trailingIcon = {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(trailingIconResource),
-                        contentDescription = null,
-                        tint = CheckoutThemeProvider.colors.text,
-                        modifier = Modifier.let {
-                            if (state.text.isNotEmpty()) {
-                                it.clickable(
-                                    interactionSource = null,
-                                    indication = ripple(color = style.textColor, radius = Dimensions.Medium),
-                                    role = Role.Button,
-                                ) {
-                                    state.edit { delete(0, state.text.length) }
-                                }
-                            } else {
-                                it
-                            }
-                        },
+                    TrailingSearchIcon(
+                        isQueryEmpty = state.text.isEmpty(),
+                        onDeleteClick = { state.edit { delete(0, state.text.length) } },
+                        rippleColor = style.textColor,
                     )
                 },
                 style = style,
@@ -131,6 +113,35 @@ fun SearchField(
             focusRequester.requestFocus()
         }
     }
+}
+
+@Composable
+private fun TrailingSearchIcon(
+    isQueryEmpty: Boolean,
+    onDeleteClick: () -> Unit,
+    rippleColor: Color,
+) {
+    val trailingIconResource = if (isQueryEmpty) {
+        R.drawable.ic_search
+    } else {
+        R.drawable.ic_cross
+    }
+
+    Icon(
+        imageVector = ImageVector.vectorResource(trailingIconResource),
+        contentDescription = null,
+        tint = CheckoutThemeProvider.colors.text,
+        modifier = if (!isQueryEmpty) {
+            Modifier.clickable(
+                interactionSource = null,
+                indication = ripple(color = rippleColor, radius = Dimensions.Medium),
+                role = Role.Button,
+                onClick = onDeleteClick,
+            )
+        } else {
+            Modifier
+        },
+    )
 }
 
 @Preview
