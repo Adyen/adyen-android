@@ -99,6 +99,7 @@ internal class CardComponent(
         )
     }
 
+    // TODO - Card. Extract payment component state creation to a separate file.
     @Suppress("ReturnCount")
     private fun CardViewState.toPaymentComponentState(): CardPaymentComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
