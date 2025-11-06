@@ -17,12 +17,22 @@ internal class CardViewStateValidator(
     override fun validate(viewState: CardViewState, componentState: CardComponentState): CardViewState {
         val cardNumber = viewState.cardNumber
         // TODO - Card Full Validation
+
+        val isReliable = componentState.detectedCardTypes.any { it.isReliable }
+        val filteredDetectedCardTypes = componentState.detectedCardTypes.filter { it.isSupported }
+
+        val selectedOrFirstCardType = filteredDetectedCardTypes.firstOrNull()
+
+        // perform a Luhn Check if no brands are detected
+        val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
+        val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
+
         val cardNumberError = cardValidationMapper.mapCardNumberValidation(
             // TODO - Card Number Luhn Check & Brand Supported
             validation = CardValidationUtils.validateCardNumber(
                 number = cardNumber.text,
-                enableLuhnCheck = componentState.enableLuhnCheck,
-                isBrandSupported = true,
+                enableLuhnCheck = enableLuhnCheck,
+                isBrandSupported = !shouldFailWithUnsupportedBrand,
             ),
         )
 

@@ -12,6 +12,6 @@ import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactor
 
 internal class CardComponentStateFactory : ComponentStateFactory<CardComponentState> {
     override fun createDefaultComponentState(): CardComponentState {
-        return CardComponentState(enableLuhnCheck = true)
+        return CardComponentState(detectedCardTypes = emptyList())
     }
 }
