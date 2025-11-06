@@ -8,8 +8,8 @@
 
 package com.adyen.checkout.card
 
-import com.adyen.checkout.core.old.CardBrand
-import com.adyen.checkout.core.old.CardType
+import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
@@ -30,7 +30,7 @@ internal class CardTypeTest {
 
     @Test
     fun `test if card number is part of predefined card brand enum`() {
-        val amexCard = CardBrand(cardType = CardType.AMERICAN_EXPRESS)
+        val amexCard = CardBrand(txVariant = CardType.AMERICAN_EXPRESS.txVariant)
         val cardTypes = CardBrand.estimate(AMEX_CARD_NUMBER)
 
         val isPredefinedBrand = cardTypes.contains(amexCard)

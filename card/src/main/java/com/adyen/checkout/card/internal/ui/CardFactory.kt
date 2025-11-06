@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.getCardConfiguration
+import com.adyen.checkout.card.internal.ui.model.CardComponentParamsMapper
 import com.adyen.checkout.card.internal.ui.state.CardComponentStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
@@ -29,6 +31,13 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
     ): CardComponent {
+        val cardComponentParams = CardComponentParamsMapper().mapToParams(
+            componentParamsBundle = componentParamsBundle,
+            cardConfiguration = checkoutConfiguration.getCardConfiguration(),
+            // TODO - Card. Payment Method.
+            paymentMethod = null,
+        )
+
         val stateManager = DefaultStateManager(
             viewStateFactory = CardViewStateFactory(),
             componentStateFactory = CardComponentStateFactory(),
@@ -41,7 +50,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         return CardComponent(
             analyticsManager = analyticsManager,
             stateManager = stateManager,
-            componentParams = componentParamsBundle.commonComponentParams,
+            componentParams = cardComponentParams,
             cardEncryptor = cardEncryptor,
         )
     }
