@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -119,6 +120,8 @@ private fun CardNumberInputField(
                         .height(16.dp)
                         .width(24.dp),
                     txVariant = detectedBrand.txVariant,
+                    placeholder = R.drawable.ic_card_placeholder,
+                    errorFallback = R.drawable.ic_card_placeholder,
                 )
             }
         },
