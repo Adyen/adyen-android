@@ -36,7 +36,9 @@ class DropInActivity : AppCompatActivity() {
                     entryProvider = entryProvider {
                         entry<PreselectedPaymentMethodNavKey>(
                             metadata = BottomSheetSceneStrategy.bottomSheet(),
-                        ) {}
+                        ) {
+                            PreselectedPaymentMethodScreen(backStack)
+                        }
 
                         entry<PaymentMethodListNavKey> {}
 
