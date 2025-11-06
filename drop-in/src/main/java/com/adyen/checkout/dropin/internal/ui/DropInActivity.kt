@@ -13,14 +13,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -31,18 +26,19 @@ class DropInActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             InternalCheckoutTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    containerColor = CheckoutThemeProvider.colors.background,
-                ) { innerPadding ->
-                    NavDisplay(
-                        backStack = rememberNavBackStack(),
-                        modifier = Modifier.padding(innerPadding),
-                        entryProvider = entryProvider {
+                val backStack = rememberNavBackStack(PreselectedPaymentMethodNavKey)
+                NavDisplay(
+                    backStack = backStack,
+                    entryProvider = entryProvider {
+                        entry<PreselectedPaymentMethodNavKey> {}
 
-                        },
-                    )
-                }
+                        entry<PaymentMethodListNavKey> {}
+
+                        entry<ManageFavoritesNavKey> {}
+
+                        entry<PaymentMethodNavKey> {}
+                    },
+                )
             }
         }
     }
