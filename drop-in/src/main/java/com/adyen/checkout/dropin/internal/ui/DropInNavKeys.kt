@@ -12,6 +12,9 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
+internal data object EmptyNavKey : NavKey
+
+@Serializable
 internal data object PreselectedPaymentMethodNavKey : NavKey
 
 @Serializable
