@@ -13,6 +13,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
@@ -40,7 +43,18 @@ class DropInActivity : AppCompatActivity() {
                             PreselectedPaymentMethodScreen(backStack)
                         }
 
-                        entry<PaymentMethodListNavKey> {
+                        entry<PaymentMethodListNavKey>(
+                            metadata = NavDisplay.transitionSpec {
+                                slideInVertically(initialOffsetY = { it }) togetherWith
+                                    slideOutVertically(targetOffsetY = { -it })
+                            } + NavDisplay.popTransitionSpec {
+                                slideInVertically(initialOffsetY = { -it }) togetherWith
+                                    slideOutVertically(targetOffsetY = { it })
+                            } + NavDisplay.predictivePopTransitionSpec {
+                                slideInVertically(initialOffsetY = { -it }) togetherWith
+                                    slideOutVertically(targetOffsetY = { it })
+                            },
+                        ) {
                             PaymentMethodListScreen()
                         }
 
