@@ -21,7 +21,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.adyen.checkout.test.R
 
@@ -72,7 +71,7 @@ fun NetworkImage(
                 //  "Failed loading image for $url - ${it::class.simpleName}: ${it.message}"
                 // }
                 imageLoadState = ImageLoadState.Error
-            }
+            },
         )
     }
 
@@ -82,21 +81,23 @@ fun NetworkImage(
             Image(
                 painter = placeholder,
                 contentDescription = contentDescription,
-                modifier = modifier
+                modifier = modifier,
             )
         }
+
         is ImageLoadState.Success -> {
             Image(
                 bitmap = state.bitmap.asImageBitmap(),
                 contentDescription = contentDescription,
-                modifier = modifier
+                modifier = modifier,
             )
         }
+
         is ImageLoadState.Error -> {
             Image(
                 painter = errorFallback,
                 contentDescription = contentDescription,
-                modifier = modifier
+                modifier = modifier,
             )
         }
     }
@@ -121,62 +122,6 @@ fun NetworkImage(
         contentDescription = contentDescription,
         imageLoader = imageLoader,
         placeholder = painterResource(id = placeholder),
-        errorFallback = painterResource(id = errorFallback)
+        errorFallback = painterResource(id = errorFallback),
     )
-}
-
-/**
- * A composable to load a logo using the Adyen environment and txVariant.
- * This mirrors the functionality of the existing ImageView.loadLogo extension function.
- */
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Suppress("LongParameterList")
-@Composable
-fun PaymentMethodLogo(
-    baseUrl: String,
-    txVariant: String,
-    imageLoader: ImageLoader,
-    modifier: Modifier = Modifier,
-    txSubVariant: String = "",
-    size: LogoSize = LogoSize.SMALL,
-    contentDescription: String? = null,
-    @DrawableRes placeholder: Int = R.drawable.ic_placeholder_image,
-    @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
-) {
-    val context = LocalContext.current
-    val fullUrl = remember(context, baseUrl, size, txVariant, txSubVariant) {
-        val densityExtension = context.resources.displayMetrics.densityDpi.getDensityExtension()
-        val logoPath = buildLogoPath(size, txVariant, txSubVariant, densityExtension)
-        baseUrl + logoPath
-    }
-
-    NetworkImage(
-        url = fullUrl,
-        modifier = modifier,
-        contentDescription = contentDescription,
-        imageLoader = imageLoader,
-        placeholder = placeholder,
-        errorFallback = errorFallback
-    )
-}
-
-private fun Int.getDensityExtension(): String {
-    return when {
-        this <= android.util.DisplayMetrics.DENSITY_LOW -> "-ldpi"
-        this <= android.util.DisplayMetrics.DENSITY_MEDIUM -> "" // no extension
-        this <= android.util.DisplayMetrics.DENSITY_HIGH -> "-hdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XHIGH -> "-xhdpi"
-        this <= android.util.DisplayMetrics.DENSITY_XXHIGH -> "-xxhdpi"
-        else -> "-xxxhdpi"
-    }
-}
-
-private fun buildLogoPath(
-    size: LogoSize,
-    txVariant: String,
-    txSubVariant: String,
-    densityExtension: String,
-): String {
-    val txString = if (txSubVariant.isEmpty()) txVariant else "$txVariant/$txSubVariant"
-    return "images/logos/$size/$txString$densityExtension.png"
 }
