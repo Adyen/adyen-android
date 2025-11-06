@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.ui.internal.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.Title
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -27,11 +29,16 @@ class DropInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Column(
-                    modifier = Modifier.padding(innerPadding),
-                ) {
-                    Title("Drop-in")
+            InternalCheckoutTheme {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = CheckoutThemeProvider.colors.background,
+                ) { innerPadding ->
+                    Column(
+                        modifier = Modifier.padding(innerPadding),
+                    ) {
+                        Title("Drop-in")
+                    }
                 }
             }
         }
