@@ -8,15 +8,20 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
+import com.adyen.checkout.ui.internal.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.Dimensions
 
 internal class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
@@ -62,8 +67,12 @@ private class BottomSheetScene<T : Any>(
         ModalBottomSheet(
             onDismissRequest = onBack,
             properties = modalBottomSheetProperties,
+            containerColor = CheckoutThemeProvider.colors.background,
+            dragHandle = null,
         ) {
+            Spacer(Modifier.size(Dimensions.Small))
             entry.Content()
+            Spacer(Modifier.size(Dimensions.Large))
         }
     }
 }
