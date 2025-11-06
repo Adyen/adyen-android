@@ -108,6 +108,8 @@ private fun CardComponentPreview() {
             cardNumber = TextInputState(
                 "5555444433331111",
             ),
+            supportedCardBrands = emptyList(),
+            isSupportedCardBrandsShown = false,
             isAmex = false,
             isLoading = false,
         ),

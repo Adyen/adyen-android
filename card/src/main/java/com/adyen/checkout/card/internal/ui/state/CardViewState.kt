@@ -8,11 +8,14 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
 internal data class CardViewState(
     val cardNumber: TextInputState,
+    val supportedCardBrands: List<CardBrand>,
+    val isSupportedCardBrandsShown: Boolean,
     // TODO - Card. isAmex flag is added for simplicity, to be used in formatting.
     //  should be removed once detected card types are available.
     val isAmex: Boolean,

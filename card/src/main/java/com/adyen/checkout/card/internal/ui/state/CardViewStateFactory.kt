@@ -8,15 +8,20 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
-internal class CardViewStateFactory : ViewStateFactory<CardViewState> {
+internal class CardViewStateFactory(
+    private val componentParams: CardComponentParams
+) : ViewStateFactory<CardViewState> {
 
     // TODO - Card Full Implementation
     override fun createDefaultViewState() = CardViewState(
         cardNumber = TextInputState(isFocused = true),
         isAmex = false,
         isLoading = false,
+        supportedCardBrands = componentParams.supportedCardBrands,
+        isSupportedCardBrandsShown = true,
     )
 }
