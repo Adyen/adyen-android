@@ -40,7 +40,9 @@ class DropInActivity : AppCompatActivity() {
                             PreselectedPaymentMethodScreen(backStack)
                         }
 
-                        entry<PaymentMethodListNavKey> {}
+                        entry<PaymentMethodListNavKey> {
+                            PaymentMethodListScreen()
+                        }
 
                         entry<ManageFavoritesNavKey> {}
 
