@@ -13,14 +13,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RestrictTo
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.Title
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DropInActivity : AppCompatActivity() {
@@ -34,11 +35,13 @@ class DropInActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize(),
                     containerColor = CheckoutThemeProvider.colors.background,
                 ) { innerPadding ->
-                    Column(
+                    NavDisplay(
+                        backStack = rememberNavBackStack(),
                         modifier = Modifier.padding(innerPadding),
-                    ) {
-                        Title("Drop-in")
-                    }
+                        entryProvider = entryProvider {
+
+                        },
+                    )
                 }
             }
         }
