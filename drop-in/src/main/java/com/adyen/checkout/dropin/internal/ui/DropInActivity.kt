@@ -32,11 +32,22 @@ class DropInActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContent {
             InternalCheckoutTheme {
-                val backStack = rememberNavBackStack(PreselectedPaymentMethodNavKey)
+                val backStack = rememberNavBackStack(EmptyNavKey, PreselectedPaymentMethodNavKey)
                 NavDisplay(
                     backStack = backStack,
                     sceneStrategy = remember { BottomSheetSceneStrategy() },
+                    onBack = {
+                        backStack.removeLastOrNull()
+
+                        if (backStack.size == 1 && backStack.first() == EmptyNavKey) {
+                            finish()
+                        }
+                    },
                     entryProvider = entryProvider {
+                        entry<EmptyNavKey> {
+                            // This empty entry makes sure a bottom sheet can be rendered on top of nothing
+                        }
+
                         entry<PreselectedPaymentMethodNavKey>(
                             metadata = BottomSheetSceneStrategy.bottomSheet(),
                         ) {
