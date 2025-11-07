@@ -4,13 +4,13 @@
 
     <application android:supportsRtl="true">
         <activity
-            android:name=".internal.ui.DropInActivity"
+            android:name=".old.internal.ui.DropInActivity"
             android:launchMode="singleTask"
             android:theme="@style/AdyenCheckout.Translucent"
             android:enableOnBackInvokedCallback="false" />
 
         <activity
-            android:name=".DropInRedirectHandlingActivity"
+            android:name=".old.DropInRedirectHandlingActivity"
             android:exported="true"
             android:theme="@style/AdyenCheckout.Translucent">
             <intent-filter>
@@ -33,7 +33,7 @@
         </activity>
 
         <service
-            android:name=".SessionDropInService"
+            android:name=".old.SessionDropInService"
             android:exported="false" />
     </application>
 

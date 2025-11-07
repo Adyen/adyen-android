@@ -19,9 +19,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.dropin.DropIn
-import com.adyen.checkout.dropin.DropInCallback
-import com.adyen.checkout.dropin.SessionDropInCallback
+import com.adyen.checkout.dropin.old.DropIn
+import com.adyen.checkout.dropin.old.DropInCallback
+import com.adyen.checkout.dropin.old.SessionDropInCallback
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout

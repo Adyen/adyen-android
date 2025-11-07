@@ -7,11 +7,11 @@ public final class com/adyen/checkout/dropin/compose/BuildConfig {
 }
 
 public final class com/adyen/checkout/dropin/compose/ComposeExtensionsKt {
-	public static final fun rememberLauncherForDropInResult (Lcom/adyen/checkout/dropin/DropInCallback;Landroidx/compose/runtime/Composer;I)Landroidx/activity/result/ActivityResultLauncher;
-	public static final fun rememberLauncherForDropInResult (Lcom/adyen/checkout/dropin/SessionDropInCallback;Landroidx/compose/runtime/Composer;I)Landroidx/activity/result/ActivityResultLauncher;
-	public static final fun startPayment (Lcom/adyen/checkout/dropin/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;I)V
-	public static final fun startPayment (Lcom/adyen/checkout/dropin/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/dropin/DropInConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;I)V
-	public static final fun startPayment (Lcom/adyen/checkout/dropin/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;II)V
-	public static final fun startPayment (Lcom/adyen/checkout/dropin/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/DropInConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;II)V
+	public static final fun rememberLauncherForDropInResult (Lcom/adyen/checkout/dropin/old/DropInCallback;Landroidx/compose/runtime/Composer;I)Landroidx/activity/result/ActivityResultLauncher;
+	public static final fun rememberLauncherForDropInResult (Lcom/adyen/checkout/dropin/old/SessionDropInCallback;Landroidx/compose/runtime/Composer;I)Landroidx/activity/result/ActivityResultLauncher;
+	public static final fun startPayment (Lcom/adyen/checkout/dropin/old/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;I)V
+	public static final fun startPayment (Lcom/adyen/checkout/dropin/old/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/components/core/PaymentMethodsApiResponse;Lcom/adyen/checkout/dropin/old/DropInConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;I)V
+	public static final fun startPayment (Lcom/adyen/checkout/dropin/old/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;II)V
+	public static final fun startPayment (Lcom/adyen/checkout/dropin/old/DropIn;Landroidx/activity/result/ActivityResultLauncher;Lcom/adyen/checkout/sessions/core/CheckoutSession;Lcom/adyen/checkout/dropin/old/DropInConfiguration;Ljava/lang/Class;Landroidx/compose/runtime/Composer;II)V
 }
 
