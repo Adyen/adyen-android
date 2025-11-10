@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
+// TODO - KDocs
 @Suppress("UnusedReceiverParameter")
 suspend fun Checkout.initialize(
     sessionModel: SessionModel,

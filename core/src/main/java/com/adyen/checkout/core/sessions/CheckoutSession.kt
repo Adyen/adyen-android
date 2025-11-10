@@ -8,35 +8,17 @@
 
 package com.adyen.checkout.core.sessions
 
-import androidx.annotation.RestrictTo
+import android.os.Parcelable
 import com.adyen.checkout.core.common.Environment
-import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.Order
-import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.sessions.internal.data.model.SessionSetupResponse
+import kotlinx.parcelize.Parcelize
 
-/**
- * A class holding the data required to launch Drop-in or a component with the sessions flow.
- * Use [CheckoutSessionProvider.createSession] to create this class.
- */
+// TODO - KDocs
+@Parcelize
 data class CheckoutSession(
     val sessionSetupResponse: SessionSetupResponse,
     val order: Order?,
     val environment: Environment,
     val clientKey: String,
-) {
-    fun getPaymentMethod(paymentMethodType: String): PaymentMethod? {
-        return sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods.orEmpty()
-            .firstOrNull {
-                it.type == paymentMethodType
-            }
-    }
-
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    fun getConfiguration(): CheckoutConfiguration {
-        return CheckoutConfiguration(
-            environment = environment,
-            clientKey = clientKey,
-        )
-    }
-}
+) : Parcelable
