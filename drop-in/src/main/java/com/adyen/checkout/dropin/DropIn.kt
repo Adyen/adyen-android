@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.dropin
 
+import android.app.Service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
@@ -21,6 +22,37 @@ object DropIn {
         callback: DropInResultCallback
     ): ActivityResultLauncher<DropInResultContract.Input> {
         return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+    }
+
+    fun start(
+        launcher: ActivityResultLauncher<DropInResultContract.Input>,
+        dropInContext: CheckoutDropInContext.Sessions,
+        // TODO - define drop in session service and add default value
+        serviceClass: Class<out Service>,
+    ) {
+        val input = createLauncherInput(dropInContext, serviceClass)
+        launcher.launch(input)
+    }
+
+    fun start(
+        launcher: ActivityResultLauncher<DropInResultContract.Input>,
+        dropInContext: CheckoutDropInContext.Advanced,
+        // TODO - define drop in service
+        serviceClass: Class<out Service>,
+    ) {
+        val input = createLauncherInput(dropInContext, serviceClass)
+        launcher.launch(input)
+    }
+
+    private fun createLauncherInput(
+        dropInContext: CheckoutDropInContext,
+        // TODO - define drop in service
+        serviceClass: Class<out Service>,
+    ): DropInResultContract.Input {
+        return DropInResultContract.Input(
+            dropInContext = dropInContext,
+            serviceClass = serviceClass,
+        )
     }
 }
 
