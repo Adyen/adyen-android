@@ -11,54 +11,45 @@ package com.adyen.checkout.dropin
 import android.app.Service
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import com.adyen.checkout.dropin.internal.DropInResultContract
 
 // TODO - KDocs
 object DropIn {
 
     fun registerForResult(
         caller: ActivityResultCaller,
-        callback: DropInResultCallback
-    ): ActivityResultLauncher<DropInResultContract.Input> {
-        return caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+        callback: DropInResultCallback,
+    ): DropInLauncher {
+        val activityResultLauncher = caller.registerForActivityResult(DropInResultContract(), callback::onDropInResult)
+        return DropInLauncher(activityResultLauncher)
     }
 
     fun start(
-        launcher: ActivityResultLauncher<DropInResultContract.Input>,
+        launcher: DropInLauncher,
         dropInContext: CheckoutDropInContext.Sessions,
-        // TODO - define drop in session service and add default value
-        serviceClass: Class<out Service>,
+        // TODO - define drop in session service
+        serviceClass: Class<out Service> = Service::class.java,
     ) {
-        val input = createLauncherInput(dropInContext, serviceClass)
-        launcher.launch(input)
+        launcher.launch(dropInContext, serviceClass)
     }
 
     fun start(
-        launcher: ActivityResultLauncher<DropInResultContract.Input>,
+        launcher: DropInLauncher,
         dropInContext: CheckoutDropInContext.Advanced,
         // TODO - define drop in service
         serviceClass: Class<out Service>,
     ) {
-        val input = createLauncherInput(dropInContext, serviceClass)
-        launcher.launch(input)
-    }
-
-    private fun createLauncherInput(
-        dropInContext: CheckoutDropInContext,
-        // TODO - define drop in service
-        serviceClass: Class<out Service>,
-    ): DropInResultContract.Input {
-        return DropInResultContract.Input(
-            dropInContext = dropInContext,
-            serviceClass = serviceClass,
-        )
+        launcher.launch(dropInContext, serviceClass)
     }
 }
 
 @Composable
 fun rememberLauncherForDropInResult(
     callback: DropInResultCallback
-): ActivityResultLauncher<DropInResultContract.Input> {
-    return rememberLauncherForActivityResult(DropInResultContract(), callback::onDropInResult)
+): DropInLauncher {
+    val activityResultLauncher = rememberLauncherForActivityResult(DropInResultContract(), callback::onDropInResult)
+    val dropInLauncher = remember { DropInLauncher(activityResultLauncher) }
+    return dropInLauncher
 }

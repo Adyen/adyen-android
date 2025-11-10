@@ -6,7 +6,7 @@
  * Created by oscars on 10/11/2025.
  */
 
-package com.adyen.checkout.dropin
+package com.adyen.checkout.dropin.internal
 
 import android.app.Service
 import android.content.Context
@@ -15,10 +15,12 @@ import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
+import com.adyen.checkout.dropin.CheckoutDropInContext
+import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 import kotlinx.parcelize.Parcelize
 
-class DropInResultContract : ActivityResultContract<DropInResultContract.Input, DropInResult>() {
+internal class DropInResultContract : ActivityResultContract<DropInResultContract.Input, DropInResult>() {
 
     override fun createIntent(context: Context, input: Input): Intent {
         return Intent(context, DropInActivity::class.java)
@@ -35,7 +37,7 @@ class DropInResultContract : ActivityResultContract<DropInResultContract.Input, 
     }
 
     @Parcelize
-    data class Input(
+    internal data class Input(
         val dropInContext: CheckoutDropInContext,
         val serviceClass: Class<out Service>,
     ) : Parcelable
@@ -46,8 +48,8 @@ class DropInResultContract : ActivityResultContract<DropInResultContract.Input, 
     ) : Parcelable
 
     companion object {
-        private const val EXTRA_INPUT = "com.adyen.checkout.dropin.DropInResultContract.EXTRA_INPUT"
+        private const val EXTRA_INPUT = "com.adyen.checkout.dropin.internal.DropInResultContract.EXTRA_INPUT"
 
-        private const val EXTRA_RESULT = "com.adyen.checkout.dropin.DropInResultContract.EXTRA_RESULT"
+        private const val EXTRA_RESULT = "com.adyen.checkout.dropin.internal.DropInResultContract.EXTRA_RESULT"
     }
 }
