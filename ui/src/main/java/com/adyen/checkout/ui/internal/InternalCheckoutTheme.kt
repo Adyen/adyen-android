@@ -59,6 +59,7 @@ object CheckoutThemeProvider {
         get() = LocalElements.current
 }
 
+// TODO - CompositionLocal: Change the default values to an error()
 private val LocalColors = staticCompositionLocalOf { InternalColors.from(CheckoutColors.light()) }
 private val LocalTextStyles = staticCompositionLocalOf { CheckoutTextStyles.default() }
 private val LocalAttributes = staticCompositionLocalOf { CheckoutAttributes.default() }

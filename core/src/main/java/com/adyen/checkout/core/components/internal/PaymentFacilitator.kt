@@ -29,12 +29,13 @@ import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.common.AdyenLogLevel
+import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.core.common.localization.internal.helper.LocalizedComponent
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
@@ -43,7 +44,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import java.util.Locale
 
 internal class PaymentFacilitator(
     private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
@@ -51,7 +51,7 @@ internal class PaymentFacilitator(
     private val componentEventHandler: ComponentEventHandler<BasePaymentComponentState>,
     private val actionProvider: ActionProvider,
     private val checkoutController: CheckoutController,
-    private val shopperLocale: Locale,
+    private val commonComponentParams: CommonComponentParams,
 ) {
 
     private var actionComponent: ActionComponent? = null
@@ -65,9 +65,10 @@ internal class PaymentFacilitator(
         localizationProvider: CheckoutLocalizationProvider?,
     ) {
         backStack = rememberNavBackStack(paymentComponent.navigationStartingPoint)
-        LocalizedComponent(
-            locale = shopperLocale,
+        CheckoutCompositionLocalProvider(
+            locale = commonComponentParams.shopperLocale,
             localizationProvider = localizationProvider,
+            environment = commonComponentParams.environment,
         ) {
             NavDisplay(
                 backStack = backStack,

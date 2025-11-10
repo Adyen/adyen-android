@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.helper.LocalEnvironment
 import com.adyen.checkout.core.common.internal.imageLoader
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.ImageLoader
@@ -39,7 +40,6 @@ import com.adyen.checkout.ui.internal.NetworkImage
 @Composable
 fun CheckoutNetworkLogo(
     txVariant: String,
-    environment: Environment,
     modifier: Modifier = Modifier,
     imageLoader: ImageLoader = LocalContext.current.imageLoader,
     txSubVariant: String = "",
@@ -49,6 +49,7 @@ fun CheckoutNetworkLogo(
     @DrawableRes errorFallback: Int = R.drawable.ic_placeholder_image,
 ) {
     val resources = LocalResources.current
+    val environment = LocalEnvironment.current
     val fullUrl = remember(resources, txVariant, environment, txSubVariant, size) {
         val densityExtension = resources.displayMetrics.densityDpi.getDensityExtension()
         val logoPath = buildLogoPath(size, txVariant, txSubVariant, densityExtension)

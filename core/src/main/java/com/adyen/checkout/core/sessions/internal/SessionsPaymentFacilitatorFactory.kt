@@ -108,7 +108,7 @@ internal class SessionsPaymentFacilitatorFactory(
             componentEventHandler = componentEventHandler,
             actionProvider = actionProvider,
             checkoutController = checkoutController,
-            shopperLocale = componentParamsBundle.commonComponentParams.shopperLocale,
+            commonComponentParams = componentParamsBundle.commonComponentParams,
         )
     }
 }
