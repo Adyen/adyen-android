@@ -8,6 +8,10 @@
 
 package com.adyen.checkout.await
 
+import com.adyen.checkout.core.action.data.AwaitAction
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
 
+/**
+ * Represent the main content of the [AwaitAction].
+ */
 data object AwaitMainNavigationKey : CheckoutNavigationKey

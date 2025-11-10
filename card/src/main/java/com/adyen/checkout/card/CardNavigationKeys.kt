@@ -9,8 +9,15 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
+/**
+ * Represent the main form of the [PaymentMethodTypes.SCHEME] payment method.
+ */
 data object CardMainNavigationKey : CheckoutNavigationKey
 
+/**
+ * Represent the address form opened from the [CardMainNavigationKey]'s content.
+ */
 @Suppress("unused")
 data object CardAddressNavigationKey : CheckoutNavigationKey

@@ -9,7 +9,14 @@
 package com.adyen.checkout.mbway
 
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 
+/**
+ * Represent the main form of the [PaymentMethodTypes.MB_WAY] payment method.
+ */
 data object MBWayMainNavigationKey : CheckoutNavigationKey
 
+/**
+ * Represent the country code picker opened from the [MBWayMainNavigationKey]'s content.
+ */
 data object MBWayCountryCodePickerNavigationKey : CheckoutNavigationKey

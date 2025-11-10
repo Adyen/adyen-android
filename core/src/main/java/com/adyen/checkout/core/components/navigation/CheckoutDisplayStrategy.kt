@@ -8,7 +8,19 @@
 
 package com.adyen.checkout.core.components.navigation
 
+/**
+ * Defines how the content of a [CheckoutNavigationKey] should be displayed.
+ */
 enum class CheckoutDisplayStrategy {
+    /**
+     * The content is displayed directly within the current layout.
+     * This is suitable for payment method forms that should be part of the rest of the content of your screen.
+     */
     INLINE,
+
+    /**
+     * The content is displayed in a full-screen dialog.
+     * This is typically used for secondary screens, like a phone number picker or address input.
+     */
     FULL_SCREEN_DIALOG,
 }

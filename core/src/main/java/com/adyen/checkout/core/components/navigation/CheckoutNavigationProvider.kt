@@ -8,6 +8,11 @@
 
 package com.adyen.checkout.core.components.navigation
 
+/**
+ * Provides [CheckoutNavigationProperties] for a given [CheckoutNavigationKey].
+ *
+ * Implementing this interface allows to customize the navigation between content of the checkout flow.
+ */
 fun interface CheckoutNavigationProvider {
     fun provide(key: CheckoutNavigationKey): CheckoutNavigationProperties?
 }

@@ -8,4 +8,7 @@
 
 package com.adyen.checkout.core.components.navigation
 
+/**
+ * A marker interface for identifying a specific screen or content within the checkout navigation flow.
+ */
 interface CheckoutNavigationKey
