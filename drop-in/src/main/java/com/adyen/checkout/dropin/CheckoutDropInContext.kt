@@ -8,18 +8,23 @@
 
 package com.adyen.checkout.dropin
 
+import android.os.Parcelable
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
+import kotlinx.parcelize.Parcelize
 
-interface CheckoutDropInContext {
+// TODO - KDocs
+interface CheckoutDropInContext : Parcelable {
 
+    @Parcelize
     data class Sessions internal constructor(
         val checkoutSession: CheckoutSession,
         val checkoutConfiguration: CheckoutConfiguration,
         internal val publicKey: String?,
     ) : CheckoutDropInContext
 
+    @Parcelize
     data class Advanced internal constructor(
         val paymentMethodsApiResponse: PaymentMethodsApiResponse,
         val checkoutConfiguration: CheckoutConfiguration,
