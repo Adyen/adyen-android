@@ -6,9 +6,160 @@ public final class com/adyen/checkout/dropin/BuildConfig {
 	public fun <init> ()V
 }
 
+public abstract interface class com/adyen/checkout/dropin/CheckoutDropInContext : android/os/Parcelable {
+}
+
+public final class com/adyen/checkout/dropin/CheckoutDropInContext$Advanced : com/adyen/checkout/dropin/CheckoutDropInContext {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun component1 ()Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;
+	public final fun component2 ()Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public final fun copy (Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckoutConfiguration ()Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public final fun getPaymentMethodsApiResponse ()Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/dropin/CheckoutDropInContext$Advanced$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/dropin/CheckoutDropInContext$Sessions : com/adyen/checkout/dropin/CheckoutDropInContext {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun component1 ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public final fun component2 ()Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public final fun copy (Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;Lcom/adyen/checkout/core/sessions/CheckoutSession;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCheckoutConfiguration ()Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public final fun getCheckoutSession ()Lcom/adyen/checkout/core/sessions/CheckoutSession;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/dropin/CheckoutDropInContext$Sessions$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
 public final class com/adyen/checkout/dropin/CheckoutExtKt {
-	public static final fun startDropIn (Lcom/adyen/checkout/core/components/Checkout;Landroid/app/Activity;Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;)V
-	public static final fun startDropIn (Lcom/adyen/checkout/core/components/Checkout;Landroid/app/Activity;Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/components/CheckoutConfiguration;)V
+	public static final fun initialize (Lcom/adyen/checkout/core/components/Checkout;Lcom/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun initialize (Lcom/adyen/checkout/core/components/Checkout;Lcom/adyen/checkout/core/sessions/SessionModel;Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/dropin/DropIn {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/dropin/DropIn;
+	public final fun registerForResult (Landroidx/activity/result/ActivityResultCaller;Lcom/adyen/checkout/dropin/DropInResultCallback;)Lcom/adyen/checkout/dropin/DropInLauncher;
+	public final fun start (Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/dropin/CheckoutDropInContext$Advanced;Ljava/lang/Class;)V
+	public final fun start (Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;Ljava/lang/Class;)V
+	public static synthetic fun start$default (Lcom/adyen/checkout/dropin/DropIn;Lcom/adyen/checkout/dropin/DropInLauncher;Lcom/adyen/checkout/dropin/CheckoutDropInContext$Sessions;Ljava/lang/Class;ILjava/lang/Object;)V
+}
+
+public final class com/adyen/checkout/dropin/DropInKt {
+	public static final fun rememberLauncherForDropInResult (Lcom/adyen/checkout/dropin/DropInResultCallback;Landroidx/compose/runtime/Composer;I)Lcom/adyen/checkout/dropin/DropInLauncher;
+}
+
+public final class com/adyen/checkout/dropin/DropInLauncher {
+	public static final field $stable I
+}
+
+public abstract interface class com/adyen/checkout/dropin/DropInResult : android/os/Parcelable {
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Cancelled : com/adyen/checkout/dropin/DropInResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> ()V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Cancelled$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/DropInResult$Cancelled;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/DropInResult$Cancelled;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Completed : com/adyen/checkout/dropin/DropInResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun component1 ()Lcom/adyen/checkout/core/common/PaymentResult;
+	public final fun copy (Lcom/adyen/checkout/core/common/PaymentResult;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/DropInResult$Completed;Lcom/adyen/checkout/core/common/PaymentResult;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getResult ()Lcom/adyen/checkout/core/common/PaymentResult;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Completed$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/DropInResult$Completed;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Failed : com/adyen/checkout/dropin/DropInResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/adyen/checkout/dropin/DropInResult$Failed;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/dropin/DropInResult$Failed;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/dropin/DropInResult$Failed;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getError ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/dropin/DropInResult$Failed$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/DropInResult$Failed;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/DropInResult$Failed;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public abstract interface class com/adyen/checkout/dropin/DropInResultCallback {
+	public abstract fun onDropInResult (Lcom/adyen/checkout/dropin/DropInResult;)V
+}
+
+public final class com/adyen/checkout/dropin/internal/DropInResultContract$Input$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/DropInResultContract$Input;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/internal/DropInResultContract$Input;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/dropin/internal/DropInResultContract$Result$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/dropin/internal/DropInResultContract$Result;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/dropin/internal/DropInResultContract$Result;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
 public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$DropInActivityKt {
