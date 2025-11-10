@@ -82,6 +82,8 @@ class DefaultStatusRepository(
                 fetchStatus(it)
             }
             .filterNot {
+                // For API >= 35, apps lose connectivity if in background. That results in an UnknownHostException here.
+                // We do not emit this since connection can be recovered and thus, it's not a payment critical failure.
                 it.exceptionOrNull() is UnknownHostException
             }
             .transform { result ->
