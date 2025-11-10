@@ -8,15 +8,12 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Activity
-import android.content.Intent
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.Checkout.Result
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.sessions.SessionModel
-import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
 // TODO - KDocs
 @Suppress("UnusedReceiverParameter")
@@ -61,29 +58,4 @@ suspend fun Checkout.initialize(
             publicKey = initializationData.publicKey,
         ),
     )
-}
-
-// TODO - Remove after migrating the example implementation
-@Suppress("UnusedReceiverParameter", "UnusedParameter")
-fun Checkout.startDropIn(
-    activity: Activity,
-    sessionModel: SessionModel,
-    checkoutConfiguration: CheckoutConfiguration,
-) {
-    startDropInActivity(activity)
-}
-
-// TODO - Remove after migrating the example implementation
-@Suppress("UnusedReceiverParameter", "UnusedParameter")
-fun Checkout.startDropIn(
-    activity: Activity,
-    paymentMethodsApiResponse: PaymentMethodsApiResponse,
-    checkoutConfiguration: CheckoutConfiguration,
-) {
-    startDropInActivity(activity)
-}
-
-private fun startDropInActivity(activity: Activity) {
-    val intent = Intent(activity, DropInActivity::class.java)
-    activity.startActivity(intent)
 }
