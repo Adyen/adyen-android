@@ -16,8 +16,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.AdyenComponent
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationProperties
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -30,7 +29,7 @@ fun AdyenPaymentFlow(
     theme: CheckoutTheme = CheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
     localizationProvider: CheckoutLocalizationProvider? = null,
-    navigationProvider: ((CheckoutNavigationKey) -> CheckoutNavigationProperties)? = null,
+    navigationProvider: CheckoutNavigationProvider? = null,
 ) {
     val applicationContext = LocalContext.current.applicationContext
     // TODO - Move Creation Logic to Adyen Checkout

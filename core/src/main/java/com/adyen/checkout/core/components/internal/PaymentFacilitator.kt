@@ -29,8 +29,7 @@ import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
-import com.adyen.checkout.core.components.navigation.CheckoutNavigationProperties
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
@@ -55,7 +54,7 @@ internal class PaymentFacilitator(
     fun ViewFactory(
         modifier: Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
-        navigationProvider: ((CheckoutNavigationKey) -> CheckoutNavigationProperties)?,
+        navigationProvider: CheckoutNavigationProvider?,
     ) {
         CheckoutCompositionLocalProvider(
             locale = commonComponentParams.shopperLocale,
@@ -68,7 +67,7 @@ internal class PaymentFacilitator(
             ) { key ->
                 val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
                 val entry = entries[key] ?: error("Unknown key: $key")
-                val properties = navigationProvider?.invoke(entry.publicKey)
+                val properties = navigationProvider?.provide(entry.publicKey)
                 entry.toNavEntry(modifier, backStack, properties)
             }
         }
