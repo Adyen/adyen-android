@@ -9,10 +9,10 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RestrictTo
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -21,10 +21,15 @@ import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class DropInActivity : AppCompatActivity() {
+class DropInActivity : ComponentActivity() {
+
+    private val input: DropInResultContract.Input? by lazy {
+        DropInResultContract.Input.from(intent)
+    }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
