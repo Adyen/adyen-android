@@ -38,6 +38,8 @@ internal class CardViewStateValidator(
 
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
+            // TODO - State: Create an updater logic which would update the viewState when component state is updated
+            isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
         )
     }
 

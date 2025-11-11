@@ -10,32 +10,10 @@ package com.adyen.checkout.core.common.localization.internal.helper
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ProvidableCompositionLocal
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
-import com.adyen.checkout.core.common.internal.helper.createLocalizedContext
+import com.adyen.checkout.core.common.internal.helper.LocalLocale
+import com.adyen.checkout.core.common.internal.helper.LocalLocalizationResolver
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
-import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
-import com.adyen.checkout.core.common.localization.internal.LocalizationResolver
-import java.util.Locale
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Composable
-fun LocalizedComponent(
-    locale: Locale,
-    localizationProvider: CheckoutLocalizationProvider?,
-    content: @Composable () -> Unit,
-) {
-    val localizedContext = LocalContext.current.createLocalizedContext(locale)
-    CompositionLocalProvider(
-        LocalLocalizationResolver provides LocalizationResolver(localizationProvider),
-        LocalContext provides localizedContext,
-        LocalLocale provides locale,
-    ) {
-        content()
-    }
-}
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
@@ -47,7 +25,3 @@ fun resolveString(key: CheckoutLocalizationKey): String {
         key = key,
     )
 }
-
-private val LocalLocale = staticCompositionLocalOf { Locale.getDefault() }
-private val LocalLocalizationResolver: ProvidableCompositionLocal<LocalizationResolver> =
-    staticCompositionLocalOf { LocalizationResolver(localizationProvider = null) }

@@ -42,9 +42,13 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         )
 
         val stateManager = DefaultStateManager(
-            viewStateFactory = CardViewStateFactory(),
+            viewStateFactory = CardViewStateFactory(
+                componentParams = cardComponentParams,
+            ),
             componentStateFactory = CardComponentStateFactory(),
-            validator = CardViewStateValidator(cardValidationMapper = CardValidationMapper())
+            validator = CardViewStateValidator(
+                cardValidationMapper = CardValidationMapper(),
+            ),
         )
 
         val cardEncryptor = CardEncryptorFactory.provide()
