@@ -40,7 +40,16 @@ internal class DropInResultContract : ActivityResultContract<DropInResultContrac
     internal data class Input(
         val checkoutContext: CheckoutContext,
         val serviceClass: Class<out Service>,
-    ) : Parcelable
+    ) : Parcelable {
+
+        companion object {
+
+            @Suppress("DEPRECATION")
+            fun from(intent: Intent): Input? {
+                return intent.getParcelableExtra(EXTRA_INPUT)
+            }
+        }
+    }
 
     @Parcelize
     internal data class Result(
