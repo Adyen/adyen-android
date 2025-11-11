@@ -12,6 +12,7 @@
 COSDK-XXX
 
 ## Release notes
+[//]: # (Remove all comments in this section after adding release notes to avoid including them in the final output instead of the actual release notes.)
 [//]: # (Use the headers listed below to organize your release notes. Each section should begin with ### followed by a valid label)
 [//]: # (Allowed labels: `Breaking changes`, `New`, `Fixed`, `Improved`, `Changed`, `Removed`, `Deprecated`)
 [//]: # (Content will be grouped under a specific label until the next header #, ##, or ### is found)
