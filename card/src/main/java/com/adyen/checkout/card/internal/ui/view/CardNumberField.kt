@@ -117,7 +117,8 @@ private fun CardNumberInputField(
             CheckoutNetworkLogo(
                 modifier = Modifier
                     .height(16.dp)
-                    .width(24.dp),
+                    .width(24.dp)
+                    .clip(RoundedCornerShape(Dimensions.CornerRadius)),
                 txVariant = detectedBrand?.txVariant.orEmpty(),
                 placeholder = R.drawable.ic_card_placeholder,
                 errorFallback = R.drawable.ic_card_placeholder,
