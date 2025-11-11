@@ -114,16 +114,14 @@ private fun CardNumberInputField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
-            detectedBrand?.let {
-                CheckoutNetworkLogo(
-                    modifier = Modifier
-                        .height(16.dp)
-                        .width(24.dp),
-                    txVariant = detectedBrand.txVariant,
-                    placeholder = R.drawable.ic_card_placeholder,
-                    errorFallback = R.drawable.ic_card_placeholder,
-                )
-            }
+            CheckoutNetworkLogo(
+                modifier = Modifier
+                    .height(16.dp)
+                    .width(24.dp),
+                txVariant = detectedBrand?.txVariant.orEmpty(),
+                placeholder = R.drawable.ic_card_placeholder,
+                errorFallback = R.drawable.ic_card_placeholder,
+            )
         },
     )
 }
