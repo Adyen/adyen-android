@@ -12,6 +12,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RestrictTo
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
@@ -27,6 +28,8 @@ class DropInActivity : ComponentActivity() {
     private val input: DropInResultContract.Input? by lazy {
         DropInResultContract.Input.from(intent)
     }
+
+    private val viewModel: DropInViewModel by viewModels { DropInViewModel.Factory { input } }
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
