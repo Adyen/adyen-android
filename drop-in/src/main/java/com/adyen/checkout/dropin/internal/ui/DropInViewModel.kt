@@ -47,8 +47,13 @@ internal class DropInViewModel(
     }
 
     private fun initializeBackStack() {
-        // TODO - Check if there are stored payment methods, if not replace preselected with payment method list
-        backStack = mutableStateListOf(EmptyNavKey, PreselectedPaymentMethodNavKey)
+        val storedPaymentMethods = paymentMethods.storedPaymentMethods
+        val startingPoint = if (storedPaymentMethods.isNullOrEmpty()) {
+            PaymentMethodListNavKey
+        } else {
+            PreselectedPaymentMethodNavKey
+        }
+        backStack = mutableStateListOf(EmptyNavKey, startingPoint)
     }
 
     class Factory(
