@@ -26,9 +26,10 @@ import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.core.old.exception.HttpException
 import com.adyen.checkout.core.old.exception.ModelSerializationException
-import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
-import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
-import com.adyen.checkout.redirect.redirect
+import com.adyen.checkout.redirect.old.internal.data.api.NativeRedirectService
+import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.redirect.old.internal.ui.DefaultRedirectDelegate
+import com.adyen.checkout.redirect.old.redirect
 import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -24,7 +24,7 @@ import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
-import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
+import com.adyen.checkout.redirect.old.internal.ui.RedirectDelegate
 import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate

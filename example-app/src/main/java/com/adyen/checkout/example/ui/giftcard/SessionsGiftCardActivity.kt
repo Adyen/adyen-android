@@ -21,7 +21,7 @@ import com.adyen.checkout.components.core.action.Action
 import com.adyen.checkout.example.databinding.ActivityGiftCardBinding
 import com.adyen.checkout.example.ui.configuration.CheckoutConfigurationProvider
 import com.adyen.checkout.giftcard.GiftCardComponent
-import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

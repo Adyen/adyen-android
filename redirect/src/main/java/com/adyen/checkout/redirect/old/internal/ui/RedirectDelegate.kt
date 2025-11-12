@@ -6,7 +6,7 @@
  * Created by josephj on 18/8/2022.
  */
 
-package com.adyen.checkout.redirect.internal.ui
+package com.adyen.checkout.redirect.old.internal.ui
 
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.components.core.internal.ui.ActionDelegate

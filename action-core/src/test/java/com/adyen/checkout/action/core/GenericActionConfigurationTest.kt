@@ -8,7 +8,7 @@ import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.redirect.old.RedirectConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals

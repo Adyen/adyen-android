@@ -6,7 +6,7 @@
  * Created by oscars on 17/10/2023.
  */
 
-package com.adyen.checkout.redirect.internal.data.model
+package com.adyen.checkout.redirect.old.internal.data.model
 
 import com.adyen.checkout.core.old.exception.ModelSerializationException
 import com.adyen.checkout.core.old.internal.data.model.ModelObject

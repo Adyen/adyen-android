@@ -41,7 +41,7 @@ import com.adyen.checkout.example.ui.instant.InstantFragment
 import com.adyen.checkout.example.ui.settings.SettingsActivity
 import com.adyen.checkout.example.ui.v6.V6Activity
 import com.adyen.checkout.example.ui.v6.V6SessionsActivity
-import com.adyen.checkout.redirect.RedirectComponent
+import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

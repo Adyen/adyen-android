@@ -5,6 +5,10 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.redirect.old.RedirectConfiguration
+import com.adyen.checkout.redirect.old.getRedirectConfiguration
+import com.adyen.checkout.redirect.old.redirect
+import com.adyen.checkout.redirect.old.toCheckoutConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Locale

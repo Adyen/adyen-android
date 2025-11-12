@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2019 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 5/4/2019.
+ * Created by ozgur on 24/10/2025.
  */
-package com.adyen.checkout.redirect
+package com.adyen.checkout.redirect.old
 
 import android.app.Activity
 import android.content.Context
@@ -22,8 +22,9 @@ import com.adyen.checkout.components.core.internal.IntentHandlingComponent
 import com.adyen.checkout.components.core.internal.provider.ActionComponentProvider
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.redirect.internal.provider.RedirectComponentProvider
-import com.adyen.checkout.redirect.internal.ui.RedirectDelegate
+import com.adyen.checkout.redirect.BuildConfig
+import com.adyen.checkout.redirect.old.internal.provider.RedirectComponentProvider
+import com.adyen.checkout.redirect.old.internal.ui.RedirectDelegate
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ViewableComponent
 import kotlinx.coroutines.flow.Flow

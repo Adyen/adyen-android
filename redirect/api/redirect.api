@@ -7,24 +7,24 @@ public final class com/adyen/checkout/redirect/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/redirect/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
-	public static final field Companion Lcom/adyen/checkout/redirect/RedirectComponent$Companion;
+public final class com/adyen/checkout/redirect/old/RedirectComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/components/core/RedirectableActionComponent, com/adyen/checkout/components/core/internal/ActionComponent, com/adyen/checkout/components/core/internal/IntentHandlingComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
+	public static final field Companion Lcom/adyen/checkout/redirect/old/RedirectComponent$Companion;
 	public static final field PROVIDER Lcom/adyen/checkout/components/core/internal/provider/ActionComponentProvider;
 	public static final field REDIRECT_RESULT_SCHEME Ljava/lang/String;
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public synthetic fun getDelegate ()Lcom/adyen/checkout/components/core/internal/ui/ComponentDelegate;
-	public fun getDelegate ()Lcom/adyen/checkout/redirect/internal/ui/RedirectDelegate;
+	public fun getDelegate ()Lcom/adyen/checkout/redirect/old/internal/ui/RedirectDelegate;
 	public fun getViewFlow ()Lkotlinx/coroutines/flow/Flow;
 	public fun handleAction (Lcom/adyen/checkout/components/core/action/Action;Landroid/app/Activity;)V
 	public fun handleIntent (Landroid/content/Intent;)V
 	public fun setOnRedirectListener (Lkotlin/jvm/functions/Function0;)V
 }
 
-public final class com/adyen/checkout/redirect/RedirectComponent$Companion {
+public final class com/adyen/checkout/redirect/old/RedirectComponent$Companion {
 	public final fun getReturnUrl (Landroid/content/Context;)Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/redirect/RedirectConfiguration : com/adyen/checkout/components/core/internal/Configuration {
+public final class com/adyen/checkout/redirect/old/RedirectConfiguration : com/adyen/checkout/components/core/internal/Configuration {
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public synthetic fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;Lcom/adyen/checkout/components/core/AnalyticsConfiguration;Lcom/adyen/checkout/components/core/Amount;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun describeContents ()I
@@ -36,58 +36,58 @@ public final class com/adyen/checkout/redirect/RedirectConfiguration : com/adyen
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
-public final class com/adyen/checkout/redirect/RedirectConfiguration$Builder : com/adyen/checkout/components/core/internal/BaseConfigurationBuilder {
+public final class com/adyen/checkout/redirect/old/RedirectConfiguration$Builder : com/adyen/checkout/components/core/internal/BaseConfigurationBuilder {
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public synthetic fun buildInternal ()Lcom/adyen/checkout/components/core/internal/Configuration;
 }
 
-public final class com/adyen/checkout/redirect/RedirectConfiguration$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/redirect/old/RedirectConfiguration$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/RedirectConfiguration;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/old/RedirectConfiguration;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/redirect/RedirectConfiguration;
+	public final fun newArray (I)[Lcom/adyen/checkout/redirect/old/RedirectConfiguration;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/redirect/RedirectConfigurationKt {
+public final class com/adyen/checkout/redirect/old/RedirectConfigurationKt {
 	public static final fun redirect (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 	public static synthetic fun redirect$default (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/components/core/CheckoutConfiguration;
 }
 
-public final class com/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/redirect/old/internal/data/model/NativeRedirectRequest$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/old/internal/data/model/NativeRedirectRequest;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest;
+	public final fun newArray (I)[Lcom/adyen/checkout/redirect/old/internal/data/model/NativeRedirectRequest;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse$Creator : android/os/Parcelable$Creator {
+public final class com/adyen/checkout/redirect/old/internal/data/model/NativeRedirectResponse$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
-	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse;
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/old/internal/data/model/NativeRedirectResponse;
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
-	public final fun newArray (I)[Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectResponse;
+	public final fun newArray (I)[Lcom/adyen/checkout/redirect/old/internal/data/model/NativeRedirectResponse;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/redirect/internal/provider/RedirectComponentProvider : com/adyen/checkout/components/core/internal/provider/ActionComponentProvider {
+public final class com/adyen/checkout/redirect/old/internal/provider/RedirectComponentProvider : com/adyen/checkout/components/core/internal/provider/ActionComponentProvider {
 	public fun canHandleAction (Lcom/adyen/checkout/components/core/action/Action;)Z
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/redirect/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/activity/ComponentActivity;Lcom/adyen/checkout/redirect/old/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/redirect/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/fragment/app/Fragment;Lcom/adyen/checkout/redirect/old/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/components/core/CheckoutConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/components/core/internal/Configuration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/components/core/internal/ActionComponent;
-	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/redirect/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/RedirectComponent;
+	public fun get (Landroidx/savedstate/SavedStateRegistryOwner;Landroidx/lifecycle/ViewModelStoreOwner;Landroidx/lifecycle/LifecycleOwner;Landroid/app/Application;Lcom/adyen/checkout/redirect/old/RedirectConfiguration;Lcom/adyen/checkout/components/core/ActionComponentCallback;Ljava/lang/String;)Lcom/adyen/checkout/redirect/old/RedirectComponent;
 	public synthetic fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/components/core/internal/ui/ActionDelegate;
-	public fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/redirect/internal/ui/RedirectDelegate;
+	public fun getDelegate (Lcom/adyen/checkout/components/core/CheckoutConfiguration;Landroidx/lifecycle/SavedStateHandle;Landroid/app/Application;)Lcom/adyen/checkout/redirect/old/internal/ui/RedirectDelegate;
 	public fun getSupportedActionTypes ()Ljava/util/List;
 	public fun providesDetails (Lcom/adyen/checkout/components/core/action/Action;)Z
 }

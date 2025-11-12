@@ -19,7 +19,7 @@ import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
-import com.adyen.checkout.redirect.RedirectConfiguration
+import com.adyen.checkout.redirect.old.RedirectConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
