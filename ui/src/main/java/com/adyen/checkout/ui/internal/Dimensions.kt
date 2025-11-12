@@ -9,11 +9,13 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 object Dimensions {
 
+    // TODO - Dimensions: Move all spacing dimensions inside Spacing object
     val ExtraSmall = 4.dp
 
     val Small = 8.dp
@@ -31,4 +33,11 @@ object Dimensions {
     val MinTouchTarget = 48.dp
 
     val CornerRadius = 4.dp
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    object LogoSize {
+        val small = DpSize(width = 27.dp, height = 18.dp)
+
+        val large = DpSize(width = 40.dp, height = 26.dp)
+    }
 }
