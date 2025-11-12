@@ -54,8 +54,8 @@ class DropInActivity : ComponentActivity() {
 
                         entry<PreselectedPaymentMethodNavKey>(
                             metadata = BottomSheetSceneStrategy.bottomSheet(),
-                        ) {
-                            PreselectedPaymentMethodScreen(backStack)
+                        ) { key ->
+                            PreselectedPaymentMethodScreen(backStack, key.storedPaymentMethod)
                         }
 
                         entry<PaymentMethodListNavKey>(
