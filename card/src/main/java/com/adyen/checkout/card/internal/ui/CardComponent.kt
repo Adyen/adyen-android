@@ -28,6 +28,7 @@ import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.helper.runCompileOnly
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
@@ -161,14 +162,13 @@ internal class CardComponent(
 //                val cvc = outputData.securityCodeState.value
 //                if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
 //            }
-//            val expiryDateResult = outputData.expiryDateState.value
-//            if (expiryDateResult.isNotBlank()) {
-//                val expiryDate = ExpiryDate.from(expiryDateResult)
-//                unencryptedCardBuilder.setExpiryDate(
-//                    expiryMonth = expiryDate.expiryMonth.toString(),
-//                    expiryYear = expiryDate.expiryYear.toString(),
-//                )
-//            }
+            if (expiryDate.text.isNotBlank()) {
+                val expiryDate = ExpiryDate.from(expiryDate.text)
+                unencryptedCardBuilder.setExpiryDate(
+                    expiryMonth = expiryDate.expiryMonth.toString(),
+                    expiryYear = expiryDate.expiryYear.toString(),
+                )
+            }
 
             cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
         } catch (_: EncryptionException) {
@@ -193,8 +193,8 @@ internal class CardComponent(
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
         ).apply {
             encryptedCardNumber = encryptedCard.encryptedCardNumber
-//            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
-//            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
+            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
+            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
 
 //            if (!isCvcHidden()) {
 //                encryptedSecurityCode = encryptedCard.encryptedSecurityCode
