@@ -19,6 +19,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.dropin.internal.DropInResultContract
@@ -58,7 +59,10 @@ class DropInActivity : ComponentActivity() {
                         entry<PreselectedPaymentMethodNavKey>(
                             metadata = BottomSheetSceneStrategy.bottomSheet(),
                         ) { key ->
-                            PreselectedPaymentMethodScreen(backStack, key.storedPaymentMethod)
+                            PreselectedPaymentMethodScreen(
+                                backStack,
+                                viewModel(factory = PreselectedPaymentMethodViewModel.Factory(key.storedPaymentMethod)),
+                            )
                         }
 
                         entry<PaymentMethodListNavKey>(
