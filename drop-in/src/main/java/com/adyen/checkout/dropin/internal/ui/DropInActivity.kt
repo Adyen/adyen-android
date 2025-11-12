@@ -17,7 +17,6 @@ import androidx.annotation.RestrictTo
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
@@ -37,7 +36,7 @@ class DropInActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             InternalCheckoutTheme {
-                val backStack = rememberNavBackStack(EmptyNavKey, PreselectedPaymentMethodNavKey)
+                val backStack = viewModel.backStack
                 NavDisplay(
                     backStack = backStack,
                     sceneStrategy = remember { BottomSheetSceneStrategy() },
