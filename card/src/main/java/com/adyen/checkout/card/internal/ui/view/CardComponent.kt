@@ -45,7 +45,7 @@ internal fun CardComponent(
                 cardNumberState = viewState.cardNumber,
                 supportedCardBrands = viewState.supportedCardBrands,
                 isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
-                detectedBrand = viewState.detectedBrand,
+                detectedCardBrands = viewState.detectedCardBrands,
                 isAmex = viewState.isAmex,
                 onCardNumberChanged = changeListener::onCardNumberChanged,
                 onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
@@ -83,7 +83,7 @@ private fun CardComponentPreview() {
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
-            detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
+            detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit

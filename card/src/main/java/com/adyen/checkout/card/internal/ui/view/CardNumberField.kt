@@ -12,6 +12,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,7 +41,7 @@ internal fun CardNumberField(
     cardNumberState: TextInputState,
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
-    detectedBrand: CardBrand?,
+    detectedCardBrands: List<CardBrand>,
     isAmex: Boolean?,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
@@ -52,7 +53,7 @@ internal fun CardNumberField(
         CardNumberInputField(
             cardNumberState = cardNumberState,
             isAmex = isAmex,
-            detectedBrand = detectedBrand,
+            detectedCardBrands = detectedCardBrands,
             onCardNumberChanged = onCardNumberChanged,
             onCardNumberFocusChanged = onCardNumberFocusChanged,
         )
@@ -68,7 +69,7 @@ internal fun CardNumberField(
 private fun CardNumberInputField(
     cardNumberState: TextInputState,
     isAmex: Boolean?,
-    detectedBrand: CardBrand?,
+    detectedCardBrands: List<CardBrand>,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -105,13 +106,40 @@ private fun CardNumberInputField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
-            CheckoutNetworkLogo(
-                modifier = Modifier.size(Dimensions.LogoSize.small),
-                txVariant = detectedBrand?.txVariant.orEmpty(),
-                placeholder = R.drawable.ic_card_placeholder,
-                errorFallback = R.drawable.ic_card_placeholder,
-            )
+            DetectedBrandsList(detectedCardBrands)
         },
+    )
+}
+
+@Composable
+private fun DetectedBrandsList(
+    detectedCardBrands: List<CardBrand>,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
+    ) {
+        if (detectedCardBrands.isEmpty()) {
+            BrandLogo(txVariant = null)
+        } else {
+            detectedCardBrands.take(2).forEach { cardBrand ->
+                BrandLogo(cardBrand.txVariant)
+            }
+        }
+    }
+}
+
+@Composable
+private fun BrandLogo(
+    txVariant: String?,
+    modifier: Modifier = Modifier,
+) {
+    CheckoutNetworkLogo(
+        modifier = modifier.size(Dimensions.LogoSize.small),
+        txVariant = txVariant.orEmpty(),
+        placeholder = R.drawable.ic_card_placeholder,
+        errorFallback = R.drawable.ic_card_placeholder,
     )
 }
 
@@ -131,10 +159,7 @@ private fun CardBrandsList(
             verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraSmall),
         ) {
             for (cardBrand in cardBrands) {
-                CheckoutNetworkLogo(
-                    modifier = Modifier.size(Dimensions.LogoSize.small),
-                    txVariant = cardBrand.txVariant,
-                )
+                BrandLogo(cardBrand.txVariant)
             }
         }
     }
@@ -153,7 +178,7 @@ private fun CardNumberFieldPreview() {
             CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
         ),
         isSupportedCardBrandsShown = true,
-        detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
+        detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
         isAmex = false,
         onCardNumberChanged = {},
         onCardNumberFocusChanged = {},
