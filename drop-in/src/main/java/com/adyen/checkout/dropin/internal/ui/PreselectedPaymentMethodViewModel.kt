@@ -12,11 +12,40 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.reflect.KClass
 
 internal class PreselectedPaymentMethodViewModel(
     private val storedPaymentMethod: StoredPaymentMethod,
 ) : ViewModel() {
+
+    private val _viewState = MutableStateFlow(createInitialViewState())
+    val viewState: StateFlow<PreselectedPaymentMethodViewState> = _viewState.asStateFlow()
+
+    private fun createInitialViewState(): PreselectedPaymentMethodViewState {
+        val logoTxVariant = if (storedPaymentMethod.type == PaymentMethodTypes.SCHEME) {
+            storedPaymentMethod.brand.orEmpty()
+        } else {
+            storedPaymentMethod.type.orEmpty()
+        }
+
+        val title = if (storedPaymentMethod.lastFour != null) {
+            "${storedPaymentMethod.name} •••• ${storedPaymentMethod.lastFour}"
+        } else {
+            storedPaymentMethod.name.orEmpty()
+        }
+
+        return PreselectedPaymentMethodViewState(
+            logoTxVariant = logoTxVariant,
+            title = title,
+            // TODO - get amount
+            subtitle = "Use your ${storedPaymentMethod.name} to pay {AMOUNT}",
+            payButtonText = "Use $title",
+        )
+    }
 
     class Factory(
         private val storedPaymentMethod: StoredPaymentMethod,
