@@ -19,17 +19,24 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.common.internal.imageLoader
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.NetworkImage
 import com.adyen.checkout.ui.internal.PrimaryButton
 import com.adyen.checkout.ui.internal.SecondaryButton
 import com.adyen.checkout.ui.internal.Title
@@ -40,6 +47,7 @@ internal fun PreselectedPaymentMethodScreen(
     viewModel: PreselectedPaymentMethodViewModel,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxWidth()) {
         IconButton(
             onClick = { backPressedDispatcher?.onBackPressed() },
@@ -48,19 +56,37 @@ internal fun PreselectedPaymentMethodScreen(
             Icon(Icons.Default.Close, "Close")
         }
 
-        // TODO - Center text
+        Spacer(Modifier.size(Dimensions.ExtraLarge))
+
+        // TODO - Replace with CheckoutNetworkLogo
+        val logoUrl = "https://checkoutshopper-test.adyen.com" +
+            "/checkoutshopper/images/logos/medium/${viewState.logoTxVariant}-xxxhdpi.png"
+        NetworkImage(
+            url = logoUrl,
+            contentDescription = null,
+            imageLoader = LocalContext.current.imageLoader,
+            modifier = Modifier
+                .size(80.dp, 52.dp)
+                .align(Alignment.CenterHorizontally),
+        )
+
+        Spacer(Modifier.size(Dimensions.ExtraLarge))
+
         Title(
-            text = "Stored payment method",
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
+            text = viewState.title,
+            modifier = Modifier
+                .padding(horizontal = Dimensions.Large)
+                .align(Alignment.CenterHorizontally),
         )
 
         Spacer(Modifier.size(Dimensions.Small))
 
-        // TODO - Center text
         Body(
-            text = "Description",
+            text = viewState.subtitle,
             color = CheckoutThemeProvider.colors.textSecondary,
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
+            modifier = Modifier
+                .padding(horizontal = Dimensions.Large)
+                .align(Alignment.CenterHorizontally),
         )
 
         Spacer(Modifier.size(Dimensions.Large))
@@ -68,7 +94,7 @@ internal fun PreselectedPaymentMethodScreen(
 
         PrimaryButton(
             onClick = {},
-            text = "Pay now",
+            text = viewState.payButtonText,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimensions.Large),
@@ -93,8 +119,13 @@ internal fun PreselectedPaymentMethodScreen(
 @Preview(showBackground = true)
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
+    val storedPaymentMethod = StoredPaymentMethod(
+        type = "scheme",
+        name = "Visa",
+        lastFour = "4556",
+    )
     PreselectedPaymentMethodScreen(
         backStack = remember { mutableStateListOf() },
-        viewModel = viewModel(factory = PreselectedPaymentMethodViewModel.Factory(StoredPaymentMethod())),
+        viewModel = viewModel(factory = PreselectedPaymentMethodViewModel.Factory(storedPaymentMethod)),
     )
 }
