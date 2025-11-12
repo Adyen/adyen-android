@@ -13,4 +13,8 @@ internal interface CardChangeListener {
     fun onCardNumberChanged(newCardNumber: String)
 
     fun onCardNumberFocusChanged(hasFocus: Boolean)
+
+    fun onExpiryDateChanged(newExpiryDate: String)
+
+    fun onExpiryDateFocusChanged(hasFocus: Boolean)
 }

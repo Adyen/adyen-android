@@ -25,6 +25,7 @@ internal class DefaultLocalizationSource {
             )
             // TODO - Card localization
             CheckoutLocalizationKey.CARD_NUMBER -> "Card number"
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE -> "Expiry Date"
             CheckoutLocalizationKey.CARD_NUMBER_INVALID -> "Invalid card number"
             CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND -> "The entered card brand isn't supported"
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
