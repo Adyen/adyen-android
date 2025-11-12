@@ -295,6 +295,39 @@ public final class com/adyen/checkout/core/common/exception/ModelSerializationEx
 	public fun <init> (Ljava/lang/Class;Lorg/json/JSONException;)V
 }
 
+public abstract interface class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult {
+}
+
+public abstract interface class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid : com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult {
+}
+
+public final class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid$NonParseableDate : com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid$TooFarInTheFuture : com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid$TooOld : com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Invalid {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult$Valid : com/adyen/checkout/core/common/helper/CardExpiryDateValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardExpiryDateValidator {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/common/helper/CardExpiryDateValidator;
+	public final fun validateExpiryDate (Lcom/adyen/checkout/core/common/ui/model/ExpiryDate;)Lcom/adyen/checkout/core/common/helper/CardExpiryDateValidationResult;
+	public final fun validateExpiryDate (Ljava/lang/String;)Lcom/adyen/checkout/core/common/helper/CardExpiryDateValidationResult;
+}
+
 public abstract interface class com/adyen/checkout/core/common/helper/CardNumberValidationResult {
 }
 
@@ -378,6 +411,9 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
 	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_EXPIRY_DATE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_EXPIRY_DATE_INVALID_TOO_OLD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -391,6 +427,25 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 
 public abstract interface class com/adyen/checkout/core/common/localization/CheckoutLocalizationProvider {
 	public abstract fun getString (Landroid/content/Context;Ljava/util/Locale;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;)Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/common/ui/model/ExpiryDate {
+	public static final field $stable I
+	public static final field Companion Lcom/adyen/checkout/core/common/ui/model/ExpiryDate$Companion;
+	public fun <init> (II)V
+	public final fun component1 ()I
+	public final fun component2 ()I
+	public final fun copy (II)Lcom/adyen/checkout/core/common/ui/model/ExpiryDate;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/common/ui/model/ExpiryDate;IIILjava/lang/Object;)Lcom/adyen/checkout/core/common/ui/model/ExpiryDate;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiryMonth ()I
+	public final fun getExpiryYear ()I
+	public fun hashCode ()I
+	public final fun toMMyyString ()Ljava/lang/String;
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/adyen/checkout/core/common/ui/model/ExpiryDate$Companion {
 }
 
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {

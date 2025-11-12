@@ -8,7 +8,10 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
 internal class CardViewStateValidator(
     private val cardValidationMapper: CardValidationMapper,
@@ -18,14 +21,53 @@ internal class CardViewStateValidator(
         viewState: CardViewState,
         componentState: CardComponentState
     ): CardViewState {
-        val cardNumber = viewState.cardNumber
-        // TODO - Card Full Validation
-
         val isReliable = componentState.detectedCardTypes.any { it.isReliable }
         val filteredDetectedCardTypes = componentState.detectedCardTypes.filter { it.isSupported }
-
         val selectedOrFirstCardType = filteredDetectedCardTypes.firstOrNull()
 
+        val cardNumber = viewState.cardNumber
+        val cardNumberError = validateCardNumber(cardNumber, selectedOrFirstCardType, isReliable)
+
+        val expiryDate = viewState.expiryDate
+        val expiryDateError = validateExpiryDate(expiryDate, selectedOrFirstCardType)
+
+        return viewState.copy(
+            cardNumber = cardNumber.copy(errorMessage = cardNumberError),
+            expiryDate = expiryDate.copy(errorMessage = expiryDateError),
+            // TODO - State: Create an updater logic which would update the viewState when component state is updated
+            isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
+            detectedBrand = selectedOrFirstCardType?.cardBrand
+        )
+    }
+
+    override fun isValid(viewState: CardViewState): Boolean {
+        // TODO - Card Full Validation
+        return viewState.cardNumber.errorMessage == null &&
+            viewState.expiryDate.errorMessage == null
+    }
+
+    override fun highlightAllValidationErrors(viewState: CardViewState): CardViewState {
+        val hasCardNumberError = viewState.cardNumber.errorMessage != null
+        val hasExpiryDateError = viewState.expiryDate.errorMessage != null
+
+        return viewState.copy(
+            cardNumber = viewState.cardNumber.copy(
+                showError = hasCardNumberError,
+                isFocused = hasCardNumberError,
+            ),
+            expiryDate = viewState.expiryDate.copy(
+                showError = hasExpiryDateError,
+                isFocused = hasExpiryDateError && !hasCardNumberError,
+            )
+        )
+    }
+
+    private fun validateCardNumber(
+        cardNumber: TextInputState,
+        selectedOrFirstCardType: DetectedCardType?,
+        isReliable: Boolean,
+    ): CheckoutLocalizationKey? {
+        val cardNumber = cardNumber
         // perform a Luhn Check if no brands are detected
         val enableLuhnCheck = selectedOrFirstCardType?.enableLuhnCheck ?: true
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
@@ -39,27 +81,20 @@ internal class CardViewStateValidator(
             ),
         )
 
-        return viewState.copy(
-            cardNumber = cardNumber.copy(errorMessage = cardNumberError),
-            // TODO - State: Create an updater logic which would update the viewState when component state is updated
-            isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
-            detectedBrand = selectedOrFirstCardType?.cardBrand
-        )
+        return cardNumberError
     }
 
-    override fun isValid(viewState: CardViewState): Boolean {
-        // TODO - Card Full Validation
-        return viewState.cardNumber.errorMessage == null
-    }
-
-    override fun highlightAllValidationErrors(viewState: CardViewState): CardViewState {
-        val hasCardNumberError = viewState.cardNumber.errorMessage != null
-
-        return viewState.copy(
-            cardNumber = viewState.cardNumber.copy(
-                showError = hasCardNumberError,
-                isFocused = hasCardNumberError,
-            ),
+    private fun validateExpiryDate(
+        expiryDate: TextInputState,
+        selectedOrFirstCardType: DetectedCardType?,
+    ): CheckoutLocalizationKey? {
+        val expiryDateError = cardValidationMapper.mapExpiryDateValidation(
+            validation = CardValidationUtils.validateExpiryDate(
+                expiryDate = expiryDate.text,
+                fieldPolicy = selectedOrFirstCardType?.expiryDatePolicy,
+            )
         )
+
+        return expiryDateError
     }
 }
