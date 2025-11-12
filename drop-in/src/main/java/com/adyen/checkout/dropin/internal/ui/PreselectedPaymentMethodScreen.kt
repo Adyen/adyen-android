@@ -25,6 +25,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
@@ -35,6 +36,7 @@ import com.adyen.checkout.ui.internal.Title
 @Composable
 internal fun PreselectedPaymentMethodScreen(
     backStack: SnapshotStateList<NavKey>,
+    storedPaymentMethod: StoredPaymentMethod,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Column(Modifier.fillMaxWidth()) {
@@ -92,5 +94,6 @@ internal fun PreselectedPaymentMethodScreen(
 private fun PreselectedPaymentMethodScreenPreview() {
     PreselectedPaymentMethodScreen(
         backStack = remember { mutableStateListOf() },
+        storedPaymentMethod = StoredPaymentMethod(),
     )
 }

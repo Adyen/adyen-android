@@ -51,7 +51,7 @@ internal class DropInViewModel(
         val startingPoint = if (storedPaymentMethods.isNullOrEmpty()) {
             PaymentMethodListNavKey
         } else {
-            PreselectedPaymentMethodNavKey
+            PreselectedPaymentMethodNavKey(storedPaymentMethods.first())
         }
         val startingEntries = listOf(EmptyNavKey, startingPoint)
         backStack.addAll(startingEntries)
