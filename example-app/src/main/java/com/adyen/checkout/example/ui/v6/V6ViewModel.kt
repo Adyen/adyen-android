@@ -88,7 +88,10 @@ internal class V6ViewModel @Inject constructor(
 
         uiState = when (result) {
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.errorReason))
-            is Checkout.Result.Success -> V6UiState.Component(result.checkoutContext)
+            is Checkout.Result.Success -> V6UiState.Component(
+                checkoutContext = result.checkoutContext,
+                paymentMethods = result.checkoutContext.getPaymentMethods(),
+            )
         }
     }
 
