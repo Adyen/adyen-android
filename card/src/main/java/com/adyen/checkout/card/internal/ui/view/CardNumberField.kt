@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -46,6 +49,7 @@ internal fun CardNumberField(
     cardNumberState: TextInputState,
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
+    detectedBrand: CardBrand?,
     isAmex: Boolean,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
@@ -57,6 +61,7 @@ internal fun CardNumberField(
         CardNumberInputField(
             cardNumberState = cardNumberState,
             isAmex = isAmex,
+            detectedBrand = detectedBrand,
             onCardNumberChanged = onCardNumberChanged,
             onCardNumberFocusChanged = onCardNumberFocusChanged,
         )
@@ -72,6 +77,7 @@ internal fun CardNumberField(
 private fun CardNumberInputField(
     cardNumberState: TextInputState,
     isAmex: Boolean,
+    detectedBrand: CardBrand?,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -107,6 +113,17 @@ private fun CardNumberInputField(
         outputTransformation = outputTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
+        trailingIcon = {
+            CheckoutNetworkLogo(
+                modifier = Modifier
+                    .height(16.dp)
+                    .width(24.dp)
+                    .clip(RoundedCornerShape(Dimensions.CornerRadius)),
+                txVariant = detectedBrand?.txVariant.orEmpty(),
+                placeholder = R.drawable.ic_card_placeholder,
+                errorFallback = R.drawable.ic_card_placeholder,
+            )
+        },
     )
 }
 
@@ -158,6 +175,7 @@ private fun CardNumberFieldPreview() {
             CardBrand(CardType.AMERICAN_EXPRESS.txVariant),
         ),
         isSupportedCardBrandsShown = true,
+        detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
         isAmex = false,
         onCardNumberChanged = {},
         onCardNumberFocusChanged = {},

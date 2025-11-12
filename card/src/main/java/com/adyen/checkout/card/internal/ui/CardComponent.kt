@@ -14,6 +14,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
+import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
@@ -206,17 +207,7 @@ internal class CardComponent(
     private fun subscribeToDetectedCardTypes() {
         detectCardTypeRepository.detectedCardTypesFlow
             .onEach { detectedCardTypes ->
-                adyenLog(AdyenLogLevel.DEBUG) {
-                    "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
-                        "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
-                }
-                // TODO - Card. Optional bin lookup callback.
-//                if (detectedCardTypes != outputData.detectedCardTypes) {
-//                    onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
-//                }
-                stateManager.updateComponentState {
-                    copy(detectedCardTypes = detectedCardTypes)
-                }
+                onDetectedCardTypes(detectedCardTypes)
             }
             .map { detectedCardTypes ->
                 detectedCardTypes.filter { it.isReliable && it.isSupported }.map { it.cardBrand }
@@ -227,6 +218,20 @@ internal class CardComponent(
                 // inputData.selectedCardBrand = null
             }
             .launchIn(coroutineScope)
+    }
+
+    private fun onDetectedCardTypes(detectedCardTypes: List<DetectedCardType>) {
+        adyenLog(AdyenLogLevel.DEBUG) {
+            "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
+                "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
+        }
+        stateManager.updateComponentState {
+            copy(detectedCardTypes = detectedCardTypes)
+        }
+        // TODO - Card. Optional bin lookup callback.
+//        if (detectedCardTypes != outputData.detectedCardTypes) {
+//            onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
+//        }
     }
 }
 

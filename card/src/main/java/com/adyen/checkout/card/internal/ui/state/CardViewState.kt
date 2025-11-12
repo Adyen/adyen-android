@@ -16,6 +16,7 @@ internal data class CardViewState(
     val cardNumber: TextInputState,
     val supportedCardBrands: List<CardBrand>,
     val isSupportedCardBrandsShown: Boolean,
+    val detectedBrand: CardBrand?,
     // TODO - Card. isAmex flag is added for simplicity, to be used in formatting.
     //  should be removed once detected card types are available.
     val isAmex: Boolean,

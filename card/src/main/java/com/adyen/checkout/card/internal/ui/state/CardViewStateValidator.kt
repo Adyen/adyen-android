@@ -14,7 +14,10 @@ internal class CardViewStateValidator(
     private val cardValidationMapper: CardValidationMapper,
 ) : ViewStateValidator<CardViewState, CardComponentState> {
 
-    override fun validate(viewState: CardViewState, componentState: CardComponentState): CardViewState {
+    override fun validate(
+        viewState: CardViewState,
+        componentState: CardComponentState
+    ): CardViewState {
         val cardNumber = viewState.cardNumber
         // TODO - Card Full Validation
 
@@ -40,6 +43,7 @@ internal class CardViewStateValidator(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
+            detectedBrand = selectedOrFirstCardType?.cardBrand
         )
     }
 
