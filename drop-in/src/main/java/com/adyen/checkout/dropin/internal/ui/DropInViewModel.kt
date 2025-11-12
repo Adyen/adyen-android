@@ -14,6 +14,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import kotlin.reflect.KClass
 
@@ -23,8 +25,25 @@ internal class DropInViewModel(
 
     lateinit var backStack: SnapshotStateList<NavKey>
 
+    private lateinit var paymentMethods: PaymentMethodsApiResponse
+
     init {
+        initializeInput(input)
         initializeBackStack()
+    }
+
+    private fun initializeInput(input: DropInResultContract.Input?) {
+        val paymentMethods = when (val context = input?.checkoutContext) {
+            is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
+            is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
+            else -> null
+        }
+
+        if (paymentMethods == null) {
+            // TODO - Return DropInResult.Failed and close drop-in
+            return
+        }
+        this.paymentMethods = paymentMethods
     }
 
     private fun initializeBackStack() {
