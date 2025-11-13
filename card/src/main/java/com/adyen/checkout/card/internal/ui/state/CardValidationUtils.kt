@@ -21,8 +21,7 @@ import com.adyen.checkout.core.common.helper.CardSecurityCodeValidationResult
 import com.adyen.checkout.core.common.helper.CardSecurityCodeValidator
 import com.adyen.checkout.core.common.internal.helper.StringUtil
 
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-object CardValidationUtils {
+internal object CardValidationUtils {
 
     /**
      * Validate card number.
