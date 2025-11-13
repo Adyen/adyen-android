@@ -7,6 +7,14 @@ public final class com/adyen/checkout/redirect/BuildConfig {
 	public fun <init> ()V
 }
 
+public final class com/adyen/checkout/redirect/RedirectMainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/redirect/RedirectMainNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/redirect/internal/data/model/NativeRedirectRequest;

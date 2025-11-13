@@ -33,6 +33,7 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.checkout.core.redirect.internal.ui.RedirectViewEvent
 import com.adyen.checkout.core.redirect.internal.ui.redirectEvent
+import com.adyen.checkout.redirect.RedirectMainNavigationKey
 import com.adyen.checkout.redirect.internal.data.api.NativeRedirectService
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectRequest
 import com.adyen.checkout.redirect.internal.data.model.NativeRedirectResponse
@@ -40,7 +41,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import org.json.JSONObject
 
 internal class RedirectComponent(
@@ -62,7 +62,7 @@ internal class RedirectComponent(
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        RedirectNavKey to CheckoutNavEntry(RedirectNavKey) { _ -> MainScreen() },
+        RedirectNavKey to CheckoutNavEntry(RedirectNavKey, RedirectMainNavigationKey) { _ -> MainScreen() },
     )
 
     override val navigationStartingPoint: NavKey = RedirectNavKey
@@ -200,6 +200,3 @@ internal class RedirectComponent(
         private const val RETURN_URL_QUERY_STRING_PARAMETER = "returnUrlQueryString"
     }
 }
-
-@Serializable
-private data object RedirectNavKey : NavKey
