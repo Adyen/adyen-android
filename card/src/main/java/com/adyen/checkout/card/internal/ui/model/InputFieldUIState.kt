@@ -8,10 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import androidx.annotation.RestrictTo
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-enum class InputFieldUIState {
+internal enum class InputFieldUIState {
     REQUIRED,
     OPTIONAL,
     HIDDEN
