@@ -26,7 +26,7 @@ api_files=($(find . -name '*.api'))
 api_files_size=${#api_files[@]}
 
 for ((i = 0 ; i < $api_files_size ; i+= 2 )); do
-  git_diff=$(git diff --no-index "${api_files[i + 1]}" "${api_files[i]}")
+  git_diff=$(git diff --no-index "${api_files[i]}" "${api_files[i + 1]}")
   if [ -n "$git_diff" ]
   then
     # Add module name as title
