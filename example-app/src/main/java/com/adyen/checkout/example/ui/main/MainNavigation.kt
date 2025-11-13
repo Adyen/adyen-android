@@ -8,9 +8,12 @@
 
 package com.adyen.checkout.example.ui.main
 
-import com.adyen.checkout.components.core.CheckoutConfiguration
-import com.adyen.checkout.components.core.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.sessions.SessionModel
 import com.adyen.checkout.sessions.core.CheckoutSession
+import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
+import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse
 
 internal sealed class MainNavigation {
 
@@ -39,17 +42,27 @@ internal sealed class MainNavigation {
     data object V6Sessions : MainNavigation()
 
     data class DropIn(
-        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
-        val checkoutConfiguration: CheckoutConfiguration
+        val paymentMethodsApiResponse: OldPaymentMethodsApiResponse,
+        val checkoutConfiguration: OldCheckoutConfiguration
     ) : MainNavigation()
 
     data class DropInWithSession(
         val checkoutSession: CheckoutSession,
-        val checkoutConfiguration: CheckoutConfiguration
+        val checkoutConfiguration: OldCheckoutConfiguration
     ) : MainNavigation()
 
     data class DropInWithCustomSession(
         val checkoutSession: CheckoutSession,
+        val checkoutConfiguration: OldCheckoutConfiguration
+    ) : MainNavigation()
+
+    data class V6DropIn(
+        val paymentMethodsApiResponse: PaymentMethodsApiResponse,
+        val checkoutConfiguration: CheckoutConfiguration
+    ) : MainNavigation()
+
+    data class V6DropInWithSession(
+        val sessionModel: SessionModel,
         val checkoutConfiguration: CheckoutConfiguration
     ) : MainNavigation()
 }

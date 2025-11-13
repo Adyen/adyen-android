@@ -4,10 +4,16 @@
 
     <application android:supportsRtl="true">
         <activity
-            android:name=".old.internal.ui.DropInActivity"
+            android:name=".internal.ui.DropInActivity"
+            android:exported="false"
             android:launchMode="singleTask"
-            android:theme="@style/AdyenCheckout.Translucent"
-            android:enableOnBackInvokedCallback="false" />
+            android:theme="@style/AdyenCheckout.Translucent" />
+
+        <activity
+            android:name=".old.internal.ui.DropInActivity"
+            android:enableOnBackInvokedCallback="false"
+            android:launchMode="singleTask"
+            android:theme="@style/AdyenCheckout.Translucent" />
 
         <activity
             android:name=".old.DropInRedirectHandlingActivity"

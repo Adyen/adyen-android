@@ -7,6 +7,7 @@ internal object ComponentItemProvider {
     fun getDefaultItems(instantPaymentMethodType: String) = listOf(
         ComponentItem.Title(R.string.drop_in_title),
         ComponentItem.Entry.DropIn,
+        ComponentItem.Entry.V6DropIn,
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.Bacs,
         ComponentItem.Entry.Blik,
@@ -23,6 +24,7 @@ internal object ComponentItemProvider {
         ComponentItem.Title(R.string.drop_in_title),
         ComponentItem.Entry.DropInWithSession,
         ComponentItem.Entry.DropInWithCustomSession,
+        ComponentItem.Entry.V6DropInWithSession,
         ComponentItem.Title(R.string.components_title),
         ComponentItem.Entry.CardWithSession,
         ComponentItem.Entry.CardWithSessionTakenOver,
