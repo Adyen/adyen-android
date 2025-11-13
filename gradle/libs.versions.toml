@@ -19,7 +19,7 @@ javapoet = "1.13.0"
 detekt = "1.23.8"
 jacoco = "0.8.12"
 ktlint = "1.5.0"
-sonarqube = "5.1.0.4882"
+sonarqube = "7.0.1.6134"
 binary-compatibility-validator = "0.17.0"
 
 # Android dependencies
