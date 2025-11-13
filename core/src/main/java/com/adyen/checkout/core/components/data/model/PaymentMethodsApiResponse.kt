@@ -22,13 +22,12 @@ import org.json.JSONObject
  */
 @Parcelize
 data class PaymentMethodsApiResponse(
-    // TODO - Stored Payment Methods
-//    var storedPaymentMethods: List<StoredPaymentMethod>? = null,
+    val storedPaymentMethods: List<StoredPaymentMethod>? = null,
     val paymentMethods: List<PaymentMethod>? = null,
 ) : ModelObject() {
 
     companion object {
-        //        private const val STORED_PAYMENT_METHODS = "storedPaymentMethods"
+        private const val STORED_PAYMENT_METHODS = "storedPaymentMethods"
         private const val PAYMENT_METHODS = "paymentMethods"
 
         @JvmField
@@ -36,10 +35,10 @@ data class PaymentMethodsApiResponse(
             override fun serialize(modelObject: PaymentMethodsApiResponse): JSONObject {
                 return try {
                     JSONObject().apply {
-//                        putOpt(
-//                            STORED_PAYMENT_METHODS,
-//                            serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER)
-//                        )
+                        putOpt(
+                            STORED_PAYMENT_METHODS,
+                            serializeOptList(modelObject.storedPaymentMethods, StoredPaymentMethod.SERIALIZER),
+                        )
                         putOpt(
                             PAYMENT_METHODS,
                             serializeOptList(
@@ -55,10 +54,10 @@ data class PaymentMethodsApiResponse(
 
             override fun deserialize(jsonObject: JSONObject): PaymentMethodsApiResponse {
                 return PaymentMethodsApiResponse(
-//                    storedPaymentMethods = deserializeOptList(
-//                        jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
-//                        StoredPaymentMethod.SERIALIZER
-//                    ),
+                    storedPaymentMethods = deserializeOptList(
+                        jsonObject.optJSONArray(STORED_PAYMENT_METHODS),
+                        StoredPaymentMethod.SERIALIZER,
+                    ),
                     paymentMethods = deserializeOptList(
                         jsonObject.optJSONArray(PAYMENT_METHODS),
                         PaymentMethod.SERIALIZER,
