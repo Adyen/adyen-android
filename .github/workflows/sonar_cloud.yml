@@ -40,4 +40,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./gradlew detekt assDeb jacocoDebugTestReport lintDeb -Pstrip-resources=true
-          ./gradlew sonar
+          ./gradlew sonar --no-parallel
