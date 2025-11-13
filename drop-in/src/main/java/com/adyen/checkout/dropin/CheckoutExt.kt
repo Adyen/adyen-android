@@ -8,37 +8,54 @@
 
 package com.adyen.checkout.dropin
 
-import android.app.Activity
-import android.content.Intent
 import com.adyen.checkout.core.components.Checkout
+import com.adyen.checkout.core.components.Checkout.Result
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.components.internal.CheckoutInitializer
 import com.adyen.checkout.core.sessions.SessionModel
-import com.adyen.checkout.dropin.internal.ui.DropInActivity
 
-// TODO - Add launcher and service
-@Suppress("UnusedReceiverParameter", "UnusedParameter")
-fun Checkout.startDropIn(
-    activity: Activity,
+// TODO - KDocs
+@Suppress("UnusedReceiverParameter")
+suspend fun Checkout.initialize(
     sessionModel: SessionModel,
     checkoutConfiguration: CheckoutConfiguration,
-) {
-    // TODO - Call Checkout.initialize internally
-    startDropInActivity(activity)
+): Result<CheckoutDropInContext.Sessions> {
+    val initializationData = CheckoutInitializer.initialize(
+        checkoutConfiguration = checkoutConfiguration,
+        sessionModel = sessionModel,
+    )
+
+    return when (val session = initializationData.checkoutSession) {
+        null -> {
+            Result.Error("Failed to initialize sessions.")
+        }
+
+        else -> Result.Success(
+            checkoutContext = CheckoutDropInContext.Sessions(
+                checkoutSession = session,
+                checkoutConfiguration = checkoutConfiguration,
+                publicKey = initializationData.publicKey,
+            ),
+        )
+    }
 }
 
-// TODO - Add launcher and service
-@Suppress("UnusedReceiverParameter", "UnusedParameter")
-fun Checkout.startDropIn(
-    activity: Activity,
+@Suppress("UnusedReceiverParameter")
+suspend fun Checkout.initialize(
     paymentMethodsApiResponse: PaymentMethodsApiResponse,
     checkoutConfiguration: CheckoutConfiguration,
-) {
-    // TODO - Call Checkout.initialize internally
-    startDropInActivity(activity)
-}
+): Result<CheckoutDropInContext.Advanced> {
+    val initializationData = CheckoutInitializer.initialize(
+        checkoutConfiguration = checkoutConfiguration,
+        sessionModel = null,
+    )
 
-private fun startDropInActivity(activity: Activity) {
-    val intent = Intent(activity, DropInActivity::class.java)
-    activity.startActivity(intent)
+    return Result.Success(
+        checkoutContext = CheckoutDropInContext.Advanced(
+            paymentMethodsApiResponse = paymentMethodsApiResponse,
+            checkoutConfiguration = checkoutConfiguration,
+            publicKey = initializationData.publicKey,
+        ),
+    )
 }
