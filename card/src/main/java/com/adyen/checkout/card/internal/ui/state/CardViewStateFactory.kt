@@ -21,7 +21,6 @@ internal class CardViewStateFactory(
         cardNumber = TextInputState(isFocused = true),
         expiryDate = TextInputState(),
         securityCode = TextInputState(),
-        isAmex = false,
         isLoading = false,
         detectedBrand = null,
         supportedCardBrands = componentParams.supportedCardBrands,

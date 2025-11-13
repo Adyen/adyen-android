@@ -26,6 +26,7 @@ internal fun SecurityCodeField(
     securityCodeState: TextInputState,
     onSecurityCodeChanged: (String) -> Unit,
     onSecurityCodeFocusChanged: (Boolean) -> Unit,
+    isAmex: Boolean?,
     modifier: Modifier = Modifier,
 ) {
     val showSecurityCodeError =
@@ -49,10 +50,17 @@ internal fun SecurityCodeField(
         onValueChange = { value ->
             onSecurityCodeChanged(value)
         },
-        inputTransformation = DigitOnlyInputTransformation().maxLength(MAX_LENGTH_SECURITY_CODE),
+        inputTransformation = DigitOnlyInputTransformation().maxLength(
+            if (isAmex == false) {
+                MAX_LENGTH_SECURITY_CODE_DEFAULT
+            } else {
+                MAX_LENGTH_SECURITY_CODE_AMEX
+            }
+        ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = securityCodeState.isFocused,
     )
 }
 
-private const val MAX_LENGTH_SECURITY_CODE = 4
+private const val MAX_LENGTH_SECURITY_CODE_DEFAULT = 3
+private const val MAX_LENGTH_SECURITY_CODE_AMEX = 4

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -58,6 +59,7 @@ internal fun CardComponent(
                 securityCodeState = viewState.securityCode,
                 onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
                 onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
+                isAmex = viewState.isAmex,
             )
         }
     }
@@ -80,7 +82,6 @@ private fun CardComponentPreview() {
             ),
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
-            isAmex = false,
             isLoading = false,
             detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
         ),

@@ -50,7 +50,7 @@ internal fun CardNumberField(
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
     detectedBrand: CardBrand?,
-    isAmex: Boolean,
+    isAmex: Boolean?,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -76,7 +76,7 @@ internal fun CardNumberField(
 @Composable
 private fun CardNumberInputField(
     cardNumberState: TextInputState,
-    isAmex: Boolean,
+    isAmex: Boolean?,
     detectedBrand: CardBrand?,
     onCardNumberChanged: (String) -> Unit,
     onCardNumberFocusChanged: (Boolean) -> Unit,
@@ -91,7 +91,7 @@ private fun CardNumberInputField(
     }
 
     val outputTransformation = remember(isAmex) {
-        CardNumberOutputTransformation(isAmex = isAmex)
+        CardNumberOutputTransformation(isAmex = isAmex ?: false)
     }
 
     CheckoutTextField(
