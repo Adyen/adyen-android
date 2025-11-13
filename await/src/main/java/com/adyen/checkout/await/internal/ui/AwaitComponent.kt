@@ -11,6 +11,7 @@ package com.adyen.checkout.await.internal.ui
 import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.await.AwaitMainNavigationKey
 import com.adyen.checkout.await.internal.ui.view.AwaitComponent
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.AwaitAction
@@ -37,7 +38,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.concurrent.TimeUnit
@@ -62,7 +62,7 @@ internal class AwaitComponent(
     private val redirectEventFlow: Flow<RedirectViewEvent> = redirectEventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        AwaitNavKey to CheckoutNavEntry(AwaitNavKey) { _ -> MainScreen() },
+        AwaitNavKey to CheckoutNavEntry(AwaitNavKey, AwaitMainNavigationKey) { _ -> MainScreen() },
     )
 
     override val navigationStartingPoint: NavKey = AwaitNavKey
@@ -204,6 +204,3 @@ internal class AwaitComponent(
         internal const val PAYLOAD_DETAILS_KEY = "payload"
     }
 }
-
-@Serializable
-private data object AwaitNavKey : NavKey

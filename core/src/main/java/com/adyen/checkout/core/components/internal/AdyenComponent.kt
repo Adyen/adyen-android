@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
     applicationContext: Context,
@@ -38,8 +39,12 @@ internal class AdyenComponent(
         )
 
     @Composable
-    internal fun ViewFactory(modifier: Modifier = Modifier, localizationProvider: CheckoutLocalizationProvider?) {
-        paymentFacilitator.ViewFactory(modifier, localizationProvider)
+    internal fun ViewFactory(
+        modifier: Modifier,
+        localizationProvider: CheckoutLocalizationProvider?,
+        navigationProvider: CheckoutNavigationProvider?,
+    ) {
+        paymentFacilitator.ViewFactory(modifier, localizationProvider, navigationProvider)
     }
 
     fun observe(lifecycle: Lifecycle) {

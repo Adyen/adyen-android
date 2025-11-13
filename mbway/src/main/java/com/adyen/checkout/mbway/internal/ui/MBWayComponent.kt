@@ -22,11 +22,13 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentState
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
+import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
+import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
+import com.adyen.checkout.mbway.MBWayMainNavigationKey
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
@@ -34,7 +36,6 @@ import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
@@ -46,11 +47,12 @@ internal class MBWayComponent(
     MBWayChangeListener {
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        MBWayNavKey to CheckoutNavEntry(MBWayNavKey) { backStack -> MainScreen(backStack) },
+        MBWayNavKey to CheckoutNavEntry(MBWayNavKey, MBWayMainNavigationKey) { backStack -> MainScreen(backStack) },
 
         MBWayCountryCodeNavKey to CheckoutNavEntry(
             MBWayCountryCodeNavKey,
-            CheckoutDisplayStrategy.DIALOG,
+            MBWayCountryCodePickerNavigationKey,
+            CheckoutDisplayStrategy.FULL_SCREEN_DIALOG,
         ) { backStack -> CountryCodePickerScreen(backStack) },
     )
 
@@ -151,9 +153,3 @@ internal class MBWayComponent(
         )
     }
 }
-
-@Serializable
-private data object MBWayNavKey : NavKey
-
-@Serializable
-private data object MBWayCountryCodeNavKey : NavKey

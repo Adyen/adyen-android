@@ -9,19 +9,12 @@
 package com.adyen.checkout.core.components.internal
 
 import android.content.Intent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
@@ -35,9 +28,8 @@ import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
-import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutDisplayStrategy
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.core.components.internal.ui.navigation.toNavEntry
+import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
@@ -60,8 +52,9 @@ internal class PaymentFacilitator(
 
     @Composable
     fun ViewFactory(
-        modifier: Modifier = Modifier,
+        modifier: Modifier,
         localizationProvider: CheckoutLocalizationProvider?,
+        navigationProvider: CheckoutNavigationProvider?,
     ) {
         CheckoutCompositionLocalProvider(
             locale = commonComponentParams.shopperLocale,
@@ -74,37 +67,8 @@ internal class PaymentFacilitator(
             ) { key ->
                 val entries = paymentComponent.navigation + actionComponent?.navigation.orEmpty()
                 val entry = entries[key] ?: error("Unknown key: $key")
-                val metadata = when (entry.displayStrategy) {
-                    CheckoutDisplayStrategy.INLINE -> emptyMap()
-                    CheckoutDisplayStrategy.DIALOG -> DialogSceneStrategy.dialog(
-                        DialogProperties(
-                            dismissOnBackPress = true,
-                            dismissOnClickOutside = false,
-                            usePlatformDefaultWidth = false,
-                            decorFitsSystemWindows = false,
-                        ),
-                    )
-                }
-                NavEntry(key = key, metadata = metadata) {
-                    if (entry.displayStrategy == CheckoutDisplayStrategy.DIALOG) {
-                        Surface(
-                            color = CheckoutThemeProvider.colors.background,
-                            modifier = Modifier.fillMaxSize(),
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .systemBarsPadding()
-                                    .padding(Dimensions.Large),
-                            ) {
-                                entry.content(backStack)
-                            }
-                        }
-                    } else {
-                        Column(modifier) {
-                            entry.content(backStack)
-                        }
-                    }
-                }
+                val properties = navigationProvider?.provide(entry.publicKey)
+                entry.toNavEntry(modifier, backStack, properties)
             }
         }
     }

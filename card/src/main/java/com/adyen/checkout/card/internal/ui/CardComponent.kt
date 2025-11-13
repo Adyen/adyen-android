@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.card.CardMainNavigationKey
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -47,7 +48,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.serialization.Serializable
 
 // TODO - Card full implementation
 @Suppress("TooManyFunctions")
@@ -67,7 +67,7 @@ internal class CardComponent(
         eventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        CardNavKey to CheckoutNavEntry(CardNavKey) { backStack -> MainScreen(backStack) },
+        CardNavKey to CheckoutNavEntry(CardNavKey, CardMainNavigationKey) { backStack -> MainScreen(backStack) },
     )
 
     override val navigationStartingPoint: NavKey = CardNavKey
@@ -251,6 +251,3 @@ internal class CardComponent(
 //        }
     }
 }
-
-@Serializable
-private data object CardNavKey : NavKey
