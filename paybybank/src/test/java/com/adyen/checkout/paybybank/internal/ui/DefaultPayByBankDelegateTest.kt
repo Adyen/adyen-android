@@ -18,6 +18,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -57,6 +58,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultPayByBankDelegateTest(
     @Mock private val submitHandler: SubmitHandler<PayByBankComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -328,6 +330,7 @@ internal class DefaultPayByBankDelegateTest(
             order = order,
             analyticsManager = analyticsManager,
             submitHandler = submitHandler,
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

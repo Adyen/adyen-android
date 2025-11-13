@@ -22,6 +22,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -59,6 +60,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultBoletoDelegateTest(
     @Mock private val submitHandler: SubmitHandler<BoletoComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var addressRepository: TestAddressRepository
@@ -582,6 +584,7 @@ internal class DefaultBoletoDelegateTest(
         componentParams = BoletoComponentParamsMapper(CommonComponentParamsMapper())
             .mapToParams(configuration, Locale.US, null, null),
         addressRepository = addressRepository,
+        sdkDataProvider = sdkDataProvider,
     )
 
     @Suppress("LongParameterList")

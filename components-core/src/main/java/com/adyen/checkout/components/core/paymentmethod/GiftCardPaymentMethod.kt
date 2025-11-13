@@ -18,6 +18,7 @@ import org.json.JSONObject
 @Suppress("LongParameterList")
 class GiftCardPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var encryptedCardNumber: String?,
     var encryptedSecurityCode: String?,

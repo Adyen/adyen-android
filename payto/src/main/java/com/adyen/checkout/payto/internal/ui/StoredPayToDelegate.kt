@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.PayToPaymentMethod
@@ -42,6 +43,7 @@ internal class StoredPayToDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PayToDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -148,6 +150,7 @@ internal class StoredPayToDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayToComponentState(

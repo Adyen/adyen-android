@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.paymentmethod.SepaPaymentMethod
@@ -56,6 +57,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class)
 internal class DefaultSepaDelegateTest(
     @Mock private val submitHandler: SubmitHandler<SepaComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -252,6 +254,7 @@ internal class DefaultSepaDelegateTest(
         ),
         analyticsManager = analyticsManager,
         submitHandler = submitHandler,
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

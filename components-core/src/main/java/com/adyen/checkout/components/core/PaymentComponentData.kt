@@ -39,7 +39,9 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var dateOfBirth: String? = null,
     var socialSecurityNumber: String? = null,
     var installments: Installments? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var supportNativeRedirect: Boolean? = true,
+    val sdkData: String? = null
 ) : ModelObject() {
 
     companion object {
@@ -57,6 +59,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
         private const val INSTALLMENTS = "installments"
         private const val ORDER = "order"
         private const val SUPPORT_NATIVE_REDIRECT = "supportNativeRedirect"
+        private const val SDK_DATA = "sdkData"
 
         @JvmField
         val SERIALIZER: Serializer<PaymentComponentData<*>> = object : Serializer<PaymentComponentData<*>> {
@@ -77,6 +80,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                         putOpt(SOCIAL_SECURITY_NUMBER, modelObject.socialSecurityNumber)
                         putOpt(INSTALLMENTS, serializeOpt(modelObject.installments, Installments.SERIALIZER))
                         putOpt(SUPPORT_NATIVE_REDIRECT, modelObject.supportNativeRedirect)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(PaymentComponentData::class.java, e)
@@ -87,7 +91,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                 return PaymentComponentData(
                     paymentMethod = deserializeOpt(
                         jsonObject.optJSONObject(PAYMENT_METHOD),
-                        PaymentMethodDetails.SERIALIZER
+                        PaymentMethodDetails.SERIALIZER,
                     ),
                     order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
                     amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),
@@ -102,6 +106,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                     socialSecurityNumber = jsonObject.getStringOrNull(SOCIAL_SECURITY_NUMBER),
                     installments = deserializeOpt(jsonObject.optJSONObject(INSTALLMENTS), Installments.SERIALIZER),
                     supportNativeRedirect = jsonObject.getBooleanOrNull(SUPPORT_NATIVE_REDIRECT),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                 )
             }
         }

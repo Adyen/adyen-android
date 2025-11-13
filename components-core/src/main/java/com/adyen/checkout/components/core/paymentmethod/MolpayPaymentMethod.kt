@@ -16,6 +16,7 @@ import org.json.JSONObject
 @Parcelize
 class MolpayPaymentMethod(
     override var type: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String? = null,
     override var issuer: String? = null,
 ) : IssuerListPaymentMethod() {

@@ -17,6 +17,7 @@ import org.json.JSONObject
 @Parcelize
 data class UPIPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var virtualPaymentAddress: String?,
     var appId: String?,

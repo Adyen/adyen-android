@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -39,6 +40,7 @@ internal class StoredCashAppPayDelegate(
     private val paymentMethod: StoredPaymentMethod,
     private val order: OrderRequest?,
     override val componentParams: CashAppPayComponentParams,
+    private val sdkDataProvider: SdkDataProvider,
 ) : CashAppPayDelegate {
 
     private val _componentStateFlow = MutableStateFlow(createComponentState())
@@ -115,6 +117,7 @@ internal class StoredCashAppPayDelegate(
             paymentMethod = cashAppPayPaymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return CashAppPayComponentState(

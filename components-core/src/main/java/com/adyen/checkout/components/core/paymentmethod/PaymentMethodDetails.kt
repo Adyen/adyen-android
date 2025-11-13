@@ -23,6 +23,8 @@ import org.json.JSONObject
 abstract class PaymentMethodDetails : ModelObject() {
 
     abstract var type: String?
+
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     abstract var checkoutAttemptId: String?
 
     companion object {

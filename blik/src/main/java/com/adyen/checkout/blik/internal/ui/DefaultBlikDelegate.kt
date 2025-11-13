@@ -21,6 +21,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.paymentmethod.BlikPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -35,7 +36,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LongParameterList")
 internal class DefaultBlikDelegate(
     private val observerRepository: PaymentObserverRepository,
     override val componentParams: ButtonComponentParams,
@@ -43,6 +44,7 @@ internal class DefaultBlikDelegate(
     private val order: OrderRequest?,
     private val analyticsManager: AnalyticsManager,
     private val submitHandler: SubmitHandler<BlikComponentState>,
+    private val sdkDataProvider: SdkDataProvider,
 ) : BlikDelegate {
 
     private val inputData: BlikInputData = BlikInputData()
@@ -142,6 +144,7 @@ internal class DefaultBlikDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return BlikComponentState(

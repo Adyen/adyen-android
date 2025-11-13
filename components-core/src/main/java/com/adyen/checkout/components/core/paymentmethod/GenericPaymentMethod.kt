@@ -16,6 +16,7 @@ import org.json.JSONObject
 @Parcelize
 data class GenericPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
     var subtype: String?,
 ) : PaymentMethodDetails() {
