@@ -52,7 +52,7 @@ internal fun CardComponent(
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,
                 onExpiryDateChanged = changeListener::onExpiryDateChanged,
-                onExpiryDateFocusChanged = changeListener::onCardNumberFocusChanged,
+                onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
             )
         }
     }
