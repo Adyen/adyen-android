@@ -27,9 +27,11 @@ jobs:
 
       - name: Get label
         id: get_label
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         run: |
           chmod +x scripts/generate_pr_label.sh
-          branch_name="${{github.event.pull_request.head.ref}}"
+          branch_name="$BRANCH_NAME"
           LABEL=$(./scripts/generate_pr_label.sh "$branch_name")
           echo -e "label=$LABEL" >> $GITHUB_OUTPUT
           echo -e $LABEL
