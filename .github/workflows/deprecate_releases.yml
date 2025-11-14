@@ -20,6 +20,9 @@ on:
           - '[DEPRECATED]'
           - '[END-OF-LIFE]'
 
+permissions:
+  contents: write
+
 jobs:
   deprecate:
     runs-on: ubuntu-latest
