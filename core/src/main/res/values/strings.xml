@@ -13,4 +13,13 @@
     <string name="checkout_mbway_phone_number" translatable="false">Phone number</string>
     <string name="checkout_mbway_invalid_phone_number" translatable="false">Invalid phone number</string>
     <string name="checkout_mbway_country_code" translatable="false">Country code</string>
+    <string name="checkout_card_number" translatable="false">Card Number</string>
+    <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
+    <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
+    <string name="checkout_card_expiry_date" translatable="false">Expiry Date</string>
+    <string name="checkout_card_expiry_date_invalid" translatable="false">Invalid Expiry Date</string>
+    <string name="checkout_card_expiry_date_invalid_too_old" translatable="false">Card too old</string>
+    <string name="checkout_card_expiry_date_invalid_too_far_in_the_future" translatable="false">Expiry date too far in the future</string>
+    <string name="checkout_card_security_code" translatable="false">Security Code</string>
+    <string name="checkout_card_security_code_invalid" translatable="false">Invalid security code</string>
 </resources>

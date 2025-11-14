@@ -19,28 +19,31 @@ internal class DefaultLocalizationSource {
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
         val localizedContext = context.createLocalizedContext(locale)
 
-        return when (key) {
-            CheckoutLocalizationKey.AWAIT_LOADING -> localizedContext.getString(
-                R.string.checkout_await_loading
-            )
-            // TODO - Card localization
-            CheckoutLocalizationKey.CARD_NUMBER -> "Card number"
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE -> "Expiry Date"
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID -> "Invalid Expiry Date"
-            CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD -> "Card too old"
+        val resId = when (key) {
+            // Await
+            CheckoutLocalizationKey.AWAIT_LOADING -> R.string.checkout_await_loading
+            // Card
+            CheckoutLocalizationKey.CARD_NUMBER -> R.string.checkout_card_number
+            CheckoutLocalizationKey.CARD_NUMBER_INVALID -> R.string.checkout_card_number_invalid
+            CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND ->
+                R.string.checkout_card_number_invalid_unsupported_brand
+
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE -> R.string.checkout_card_expiry_date
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID -> R.string.checkout_card_expiry_date_invalid
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD ->
+                R.string.checkout_card_expiry_date_invalid_too_old
+
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE ->
-                "Expiry date too far in the future"
-            CheckoutLocalizationKey.CARD_NUMBER_INVALID -> "Invalid card number"
-            CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND -> "The entered card brand isn't supported"
-            CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> localizedContext.getString(
-                R.string.checkout_mbway_phone_number
-            )
-            CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> localizedContext.getString(
-                R.string.checkout_mbway_invalid_phone_number
-            )
-            CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> localizedContext.getString(
-                R.string.checkout_mbway_country_code
-            )
+                R.string.checkout_card_expiry_date_invalid_too_far_in_the_future
+
+            CheckoutLocalizationKey.CARD_SECURITY_CODE -> R.string.checkout_card_security_code
+            CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID -> R.string.checkout_card_security_code_invalid
+            // MBWay
+            CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number
+            CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> R.string.checkout_mbway_invalid_phone_number
+            CheckoutLocalizationKey.MBWAY_COUNTRY_CODE -> R.string.checkout_mbway_country_code
         }
+
+        return localizedContext.getString(resId)
     }
 }

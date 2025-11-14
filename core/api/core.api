@@ -365,6 +365,26 @@ public final class com/adyen/checkout/core/common/helper/CardNumberValidator {
 	public final fun validateCardNumber (Ljava/lang/String;Z)Lcom/adyen/checkout/core/common/helper/CardNumberValidationResult;
 }
 
+public abstract interface class com/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult {
+}
+
+public final class com/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult$Invalid : com/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult$Valid : com/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult {
+	public static final field $stable I
+	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/core/common/helper/CardSecurityCodeValidator {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidator;
+	public final fun validateSecurityCode (Ljava/lang/String;Lcom/adyen/checkout/core/common/CardBrand;)Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult;
+	public static synthetic fun validateSecurityCode$default (Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidator;Ljava/lang/String;Lcom/adyen/checkout/core/common/CardBrand;ILjava/lang/Object;)Lcom/adyen/checkout/core/common/helper/CardSecurityCodeValidationResult;
+}
+
 public final class com/adyen/checkout/core/common/internal/DefaultImageLoader$Companion {
 }
 
@@ -417,6 +437,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SECURITY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

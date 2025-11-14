@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -54,6 +55,12 @@ internal fun CardComponent(
                 onExpiryDateChanged = changeListener::onExpiryDateChanged,
                 onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
             )
+            SecurityCodeField(
+                securityCodeState = viewState.securityCode,
+                onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
+                onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
+                isAmex = viewState.isAmex,
+            )
         }
     }
     // TODO - Card Full UI
@@ -68,13 +75,15 @@ private fun CardComponentPreview() {
                 "5555444433331111",
             ),
             expiryDate = TextInputState(
-                text = "12",
+                text = "12/34",
+            ),
+            securityCode = TextInputState(
+                text = "737",
             ),
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
-            isAmex = false,
             isLoading = false,
-            detectedBrand = CardBrand(CardType.MASTERCARD.txVariant)
+            detectedBrand = CardBrand(CardType.MASTERCARD.txVariant),
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit
@@ -84,6 +93,10 @@ private fun CardComponentPreview() {
             override fun onExpiryDateChanged(newExpiryDate: String) = Unit
 
             override fun onExpiryDateFocusChanged(hasFocus: Boolean) = Unit
+
+            override fun onSecurityCodeChanged(newSecurityCode: String) = Unit
+
+            override fun onSecurityCodeFocusChanged(hasFocus: Boolean) = Unit
         },
         onSubmitClick = {},
     )

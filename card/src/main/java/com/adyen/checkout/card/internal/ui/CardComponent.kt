@@ -144,6 +144,22 @@ internal class CardComponent(
         }
     }
 
+    override fun onSecurityCodeChanged(newSecurityCode: String) {
+        stateManager.updateViewStateAndValidate {
+            copy(
+                securityCode = securityCode.updateText(newSecurityCode),
+            )
+        }
+    }
+
+    override fun onSecurityCodeFocusChanged(hasFocus: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                securityCode = securityCode.updateFocus(hasFocus),
+            )
+        }
+    }
+
     @Suppress("ReturnCount")
     private fun CardViewState.toPaymentComponentState(): CardPaymentComponentState {
         val unencryptedCardBuilder = UnencryptedCard.Builder()
@@ -159,8 +175,8 @@ internal class CardComponent(
         val encryptedCard: EncryptedCard = try {
             unencryptedCardBuilder.setNumber(cardNumber.text)
 //            if (!isCvcHidden()) {
-//                val cvc = outputData.securityCodeState.value
-//                if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
+            val cvc = securityCode.text
+            if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
 //            }
             if (expiryDate.text.isNotBlank()) {
                 val expiryDate = ExpiryDate.from(expiryDate.text)
@@ -197,7 +213,7 @@ internal class CardComponent(
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear
 
 //            if (!isCvcHidden()) {
-//                encryptedSecurityCode = encryptedCard.encryptedSecurityCode
+            encryptedSecurityCode = encryptedCard.encryptedSecurityCode
 //            }
 
 //            if (isHolderNameRequired()) {

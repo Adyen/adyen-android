@@ -21,6 +21,7 @@ internal class CardValidationMapper {
             CardNumberValidation.INVALID_TOO_LONG -> CheckoutLocalizationKey.CARD_NUMBER_INVALID
             CardNumberValidation.INVALID_UNSUPPORTED_BRAND ->
                 CheckoutLocalizationKey.CARD_NUMBER_INVALID_UNSUPPORTED_BRAND
+
             CardNumberValidation.INVALID_OTHER_REASON -> CheckoutLocalizationKey.CARD_NUMBER_INVALID
         }
     }
@@ -33,8 +34,20 @@ internal class CardValidationMapper {
             CardExpiryDateValidation.VALID_NOT_REQUIRED -> null
             CardExpiryDateValidation.INVALID_TOO_FAR_IN_THE_FUTURE ->
                 CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE
+
             CardExpiryDateValidation.INVALID_TOO_OLD -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD
             CardExpiryDateValidation.INVALID_OTHER_REASON -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID
+        }
+    }
+
+    fun mapSecurityCodeValidation(
+        validation: CardSecurityCodeValidation
+    ): CheckoutLocalizationKey? {
+        return when (validation) {
+            CardSecurityCodeValidation.VALID -> null
+            CardSecurityCodeValidation.VALID_HIDDEN -> null
+            CardSecurityCodeValidation.VALID_OPTIONAL_EMPTY -> null
+            CardSecurityCodeValidation.INVALID -> CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID
         }
     }
 }

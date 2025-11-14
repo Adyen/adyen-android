@@ -9,6 +9,7 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -31,9 +32,14 @@ internal class CardViewStateValidator(
         val expiryDate = viewState.expiryDate
         val expiryDateError = validateExpiryDate(expiryDate, selectedOrFirstCardType)
 
+        // TODO - Card. Security Code UI State.
+        val securityCode = viewState.securityCode
+        val securityCodeError = validateSecurityCode(securityCode, selectedOrFirstCardType, InputFieldUIState.REQUIRED)
+
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = expiryDate.copy(errorMessage = expiryDateError),
+            securityCode = securityCode.copy(errorMessage = securityCodeError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
             detectedBrand = selectedOrFirstCardType?.cardBrand
@@ -43,12 +49,14 @@ internal class CardViewStateValidator(
     override fun isValid(viewState: CardViewState): Boolean {
         // TODO - Card Full Validation
         return viewState.cardNumber.errorMessage == null &&
-            viewState.expiryDate.errorMessage == null
+            viewState.expiryDate.errorMessage == null &&
+            viewState.securityCode.errorMessage == null
     }
 
     override fun highlightAllValidationErrors(viewState: CardViewState): CardViewState {
         val hasCardNumberError = viewState.cardNumber.errorMessage != null
         val hasExpiryDateError = viewState.expiryDate.errorMessage != null
+        val hasSecurityCodeError = viewState.expiryDate.errorMessage != null
 
         return viewState.copy(
             cardNumber = viewState.cardNumber.copy(
@@ -58,6 +66,10 @@ internal class CardViewStateValidator(
             expiryDate = viewState.expiryDate.copy(
                 showError = hasExpiryDateError,
                 isFocused = hasExpiryDateError && !hasCardNumberError,
+            ),
+            securityCode = viewState.securityCode.copy(
+                showError = hasSecurityCodeError,
+                isFocused = hasSecurityCodeError && !hasCardNumberError && !hasExpiryDateError,
             )
         )
     }
@@ -96,5 +108,19 @@ internal class CardViewStateValidator(
         )
 
         return expiryDateError
+    }
+
+    private fun validateSecurityCode(
+        securityCode: TextInputState,
+        selectedOrFirstCardType: DetectedCardType?,
+        uiState: InputFieldUIState,
+    ): CheckoutLocalizationKey? {
+        return cardValidationMapper.mapSecurityCodeValidation(
+            validation = CardValidationUtils.validateSecurityCode(
+                securityCode = securityCode.text,
+                detectedCardType = selectedOrFirstCardType,
+                uiState = uiState,
+            )
+        )
     }
 }
