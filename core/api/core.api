@@ -431,6 +431,7 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
 	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_EXPIRY_DATE_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_OLD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
@@ -438,6 +439,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SECURITY_CODE_HINT_3_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

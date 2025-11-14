@@ -34,7 +34,13 @@ internal fun SecurityCodeField(
     val supportingTextSecurityCode = if (showSecurityCodeError) {
         securityCodeState.errorMessage?.let { resolveString(it) }
     } else {
-        null
+        resolveString(
+            if (isAmex == null || !isAmex) {
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
+            } else {
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
+            }
+        )
     }
 
     CheckoutTextField(
