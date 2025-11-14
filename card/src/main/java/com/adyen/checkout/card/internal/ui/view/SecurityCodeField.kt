@@ -35,10 +35,10 @@ internal fun SecurityCodeField(
         securityCodeState.errorMessage?.let { resolveString(it) }
     } else {
         resolveString(
-            if (isAmex == false) {
-                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
-            } else {
+            if (isAmex == null || !isAmex) {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
+            } else {
+                CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
             }
         )
     }
