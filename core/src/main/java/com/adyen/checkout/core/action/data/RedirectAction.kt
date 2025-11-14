@@ -15,12 +15,12 @@ import org.json.JSONObject
 
 @Parcelize
 data class RedirectAction(
-    override var type: String? = null,
-    override var paymentData: String? = null,
-    override var paymentMethodType: String? = null,
-    var method: String? = null,
-    var url: String? = null,
-    var nativeRedirectData: String? = null,
+    override val type: String? = null,
+    override val paymentData: String? = null,
+    override val paymentMethodType: String? = null,
+    val method: String? = null,
+    val url: String? = null,
+    val nativeRedirectData: String? = null,
 ) : Action() {
 
     companion object {
