@@ -23,26 +23,29 @@ internal class CardViewStateValidator(
         componentState: CardComponentState
     ): CardViewState {
         val isReliable = componentState.detectedCardTypes.any { it.isReliable }
-        val filteredDetectedCardTypes = componentState.detectedCardTypes.filter { it.isSupported }
-        val selectedOrFirstCardType = filteredDetectedCardTypes.firstOrNull()
+        val supportedDetectedCardTypes = componentState.detectedCardTypes.filter { it.isSupported }
+        val firstSupportedDetectedCardType = supportedDetectedCardTypes.firstOrNull()
 
         val cardNumber = viewState.cardNumber
-        val cardNumberError = validateCardNumber(cardNumber, selectedOrFirstCardType, isReliable)
+        val cardNumberError = validateCardNumber(cardNumber, firstSupportedDetectedCardType, isReliable)
 
         val expiryDate = viewState.expiryDate
-        val expiryDateError = validateExpiryDate(expiryDate, selectedOrFirstCardType)
+        val expiryDateError = validateExpiryDate(expiryDate, firstSupportedDetectedCardType)
+
+        // TODO Dual brand: Change this when dual branded cards are implemented
+        val detectedCardBrands = firstSupportedDetectedCardType?.cardBrand?.let { listOf(it) } ?: listOf()
 
         // TODO - Card. Security Code UI State.
         val securityCode = viewState.securityCode
-        val securityCodeError = validateSecurityCode(securityCode, selectedOrFirstCardType, InputFieldUIState.REQUIRED)
+        val securityCodeError = validateSecurityCode(securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
 
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = expiryDate.copy(errorMessage = expiryDateError),
             securityCode = securityCode.copy(errorMessage = securityCodeError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
-            isSupportedCardBrandsShown = filteredDetectedCardTypes.isEmpty(),
-            detectedBrand = selectedOrFirstCardType?.cardBrand
+            isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
+            detectedCardBrands = detectedCardBrands,
         )
     }
 
