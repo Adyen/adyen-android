@@ -52,6 +52,13 @@ public final class com/adyen/checkout/ui/internal/ComposableSingletons$TextKt {
 	public final fun getLambda$-888577064$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
+public final class com/adyen/checkout/ui/internal/Dimensions$LogoSize {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/Dimensions$LogoSize;
+	public final fun getLarge-MYxV2XQ ()J
+	public final fun getSmall-MYxV2XQ ()J
+}
+
 public final class com/adyen/checkout/ui/internal/PayButtonKt {
 	public static final fun PayButton (Lkotlin/jvm/functions/Function0;ZLandroidx/compose/runtime/Composer;II)V
 }
