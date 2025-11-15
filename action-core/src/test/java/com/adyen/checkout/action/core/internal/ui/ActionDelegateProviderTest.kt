@@ -3,7 +3,7 @@ package com.adyen.checkout.action.core.internal.ui
 import android.app.Application
 import android.os.Parcel
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.internal.ui.Adyen3DS2Delegate
+import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.await.old.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
