@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   label_pr_size:
+    runs-on: ubuntu-latest
     steps:
       - name: Label PR size
         uses: codelytv/pr-size-labeler@4ec67706cd878fbc1c8db0a5dcd28b6bb412e85a
