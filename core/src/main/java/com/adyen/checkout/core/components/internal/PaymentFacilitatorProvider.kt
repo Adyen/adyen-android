@@ -10,8 +10,8 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutCallbacks
-import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope

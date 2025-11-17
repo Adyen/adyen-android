@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.v6
 
-import com.adyen.checkout.core.components.CheckoutContext
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 
 @Suppress("RestrictedApi")

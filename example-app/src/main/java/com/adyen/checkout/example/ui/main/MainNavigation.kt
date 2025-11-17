@@ -8,7 +8,7 @@
 
 package com.adyen.checkout.example.ui.main
 
-import com.adyen.checkout.core.components.CheckoutContext
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.sessions.core.CheckoutSession
 import com.adyen.checkout.components.core.CheckoutConfiguration as OldCheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodsApiResponse as OldPaymentMethodsApiResponse

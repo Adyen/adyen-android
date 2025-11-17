@@ -13,7 +13,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import com.adyen.checkout.core.components.CheckoutContext
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
 
 // TODO - KDocs
