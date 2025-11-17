@@ -99,6 +99,7 @@ internal class GooglePayComponentParamsMapperTest {
                 setMerchantInfo(merchantInfo)
                 setAllowedAuthMethods(allowedAuthMethods)
                 setAllowedCardNetworks(allowedCardNetworks)
+                allowedIssuerCountryCodes = listOf("US")
                 setBillingAddressParameters(billingAddressParameters)
                 setBillingAddressRequired(true)
                 setEmailRequired(true)
@@ -133,6 +134,7 @@ internal class GooglePayComponentParamsMapperTest {
             merchantInfo = merchantInfo,
             allowedAuthMethods = allowedAuthMethods,
             allowedCardNetworks = allowedCardNetworks,
+            allowedIssuerCountryCodes = listOf("US"),
             isAllowPrepaidCards = true,
             isAllowCreditCards = true,
             isAssuranceDetailsRequired = true,
@@ -619,6 +621,8 @@ internal class GooglePayComponentParamsMapperTest {
         merchantInfo: MerchantInfo? = null,
         allowedAuthMethods: List<String> = AllowedAuthMethods.allAllowedAuthMethods,
         allowedCardNetworks: List<String> = AllowedCardNetworks.allAllowedCardNetworks,
+        allowedIssuerCountryCodes: List<String>? = null,
+        blockedIssuerCountryCodes: List<String>? = null,
         isAllowPrepaidCards: Boolean = false,
         isAllowCreditCards: Boolean? = null,
         isAssuranceDetailsRequired: Boolean? = null,
@@ -648,6 +652,8 @@ internal class GooglePayComponentParamsMapperTest {
         merchantInfo = merchantInfo,
         allowedAuthMethods = allowedAuthMethods,
         allowedCardNetworks = allowedCardNetworks,
+        allowedIssuerCountryCodes = allowedIssuerCountryCodes,
+        blockedIssuerCountryCodes = blockedIssuerCountryCodes,
         isAllowPrepaidCards = isAllowPrepaidCards,
         isAllowCreditCards = isAllowCreditCards,
         isAssuranceDetailsRequired = isAssuranceDetailsRequired,

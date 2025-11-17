@@ -28,6 +28,8 @@ internal data class GooglePayComponentParams(
     val merchantInfo: MerchantInfo?,
     val allowedAuthMethods: List<String>,
     val allowedCardNetworks: List<String>,
+    val allowedIssuerCountryCodes: List<String>?,
+    val blockedIssuerCountryCodes: List<String>?,
     val isAllowPrepaidCards: Boolean,
     val isAllowCreditCards: Boolean?,
     val isAssuranceDetailsRequired: Boolean?,
