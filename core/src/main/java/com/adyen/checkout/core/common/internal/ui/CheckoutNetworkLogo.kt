@@ -10,15 +10,22 @@ package com.adyen.checkout.core.common.internal.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalResources
-import com.adyen.checkout.core.common.Environment
+import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.common.internal.helper.LocalEnvironment
 import com.adyen.checkout.core.common.internal.imageLoader
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.ImageLoader
 import com.adyen.checkout.ui.internal.LogoSize
 import com.adyen.checkout.ui.internal.NetworkImage
@@ -27,7 +34,6 @@ import com.adyen.checkout.ui.internal.NetworkImage
  * Composable that loads a logo using the Adyen environment and txVariant.
  *
  * @param txVariant The txVariant to be handled.
- * @param environment The [Environment] to be used for internal network calls.
  * @param modifier The modifier to be applied to the Image.
  * @param imageLoader The ImageLoader instance to use. Defaults to the one provided by the Context.
  * @param size The [LogoSize] required to download the correct sized image.
@@ -56,9 +62,21 @@ fun CheckoutNetworkLogo(
         environment.checkoutShopperBaseUrl.toString() + logoPath
     }
 
+    @Suppress("MagicNumber")
     NetworkImage(
         url = fullUrl,
-        modifier = modifier,
+        modifier = modifier
+            .dropShadow(
+                shape = RoundedCornerShape(Dimensions.CornerRadius),
+                shadow = Shadow(
+                    radius = 1.dp,
+                    offset = DpOffset(x = 0.dp, 2.dp),
+                    // TODO - Colors: Move this color to the Internal colors file, but not expose to the public layer
+                    color = Color(0xFF121212),
+                    alpha = 0.04f,
+                ),
+            )
+            .clip(RoundedCornerShape(Dimensions.CornerRadius)),
         contentDescription = contentDescription,
         imageLoader = imageLoader,
         placeholder = placeholder,
