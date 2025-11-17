@@ -174,10 +174,11 @@ private fun CardBrandsList(
 private fun CardNumberFieldIcon(
     state: TextInputState,
     detectedBrands: List<CardBrand>,
+    modifier: Modifier = Modifier,
 ) {
     val isInvalid = state.errorMessage != null && state.showError
 
-    AnimatedContent(isInvalid) { isInvalid ->
+    AnimatedContent(targetState = isInvalid, modifier = modifier) { isInvalid ->
         if (isInvalid) {
             Icon(
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),

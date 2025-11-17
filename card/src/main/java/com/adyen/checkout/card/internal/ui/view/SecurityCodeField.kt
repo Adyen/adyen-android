@@ -81,6 +81,7 @@ internal fun SecurityCodeField(
 private fun SecurityCodeIcon(
     state: TextInputState,
     isAmex: Boolean?,
+    modifier: Modifier = Modifier,
 ) {
     val isValid = state.isInteractedWith && state.errorMessage == null
     val isInvalid = state.errorMessage != null && state.showError
@@ -93,6 +94,7 @@ private fun SecurityCodeIcon(
 
     AnimatedContent(
         targetState = resourceId,
+        modifier = modifier,
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(it),
