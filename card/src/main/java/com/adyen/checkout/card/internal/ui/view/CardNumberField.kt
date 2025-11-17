@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
@@ -181,6 +182,7 @@ private fun CardNumberFieldIcon(
     AnimatedContent(targetState = isInvalid, modifier = modifier) { isInvalid ->
         if (isInvalid) {
             Icon(
+                modifier = Modifier.width(Dimensions.LogoSize.small.width),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
                 contentDescription = null,
                 tint = Color.Unspecified,
