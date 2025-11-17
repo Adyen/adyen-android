@@ -60,13 +60,14 @@ internal fun ExpiryDateField(
         shouldFocus = expiryDateState.isFocused,
         trailingIcon = {
             ExpiryDateIcon(expiryDateState)
-        }
+        },
     )
 }
 
 @Composable
 private fun ExpiryDateIcon(
     state: TextInputState,
+    modifier: Modifier = Modifier,
 ) {
     val isValid = state.isInteractedWith && state.errorMessage == null
     val isInvalid = state.errorMessage != null && state.showError
@@ -76,7 +77,7 @@ private fun ExpiryDateIcon(
         else -> R.drawable.ic_card_expiry_date
     }
 
-    AnimatedContent(resourceId) {
+    AnimatedContent(targetState = resourceId, modifier = modifier) {
         Icon(
             imageVector = ImageVector.vectorResource(it),
             contentDescription = null,
