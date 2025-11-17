@@ -5,9 +5,11 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.Environment
+import com.adyen.checkout.core.exception.CheckoutException
 import com.google.android.gms.wallet.WalletConstants
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.Locale
 
 internal class GooglePayConfigurationTest {
@@ -29,6 +31,7 @@ internal class GooglePayConfigurationTest {
                 setCountryCode("US")
                 setAllowedAuthMethods(listOf(AllowedAuthMethods.PAN_ONLY))
                 setAllowedCardNetworks(listOf(AllowedCardNetworks.VISA))
+                allowedIssuerCountryCodes = listOf("US")
                 setAllowPrepaidCards(true)
                 setAllowCreditCards(false)
                 setAssuranceDetailsRequired(true)
@@ -58,6 +61,7 @@ internal class GooglePayConfigurationTest {
             .setCountryCode("US")
             .setAllowedAuthMethods(listOf(AllowedAuthMethods.PAN_ONLY))
             .setAllowedCardNetworks(listOf(AllowedCardNetworks.VISA))
+            .setAllowedIssuerCountryCodes(listOf("US"))
             .setAllowPrepaidCards(true)
             .setAllowCreditCards(false)
             .setAssuranceDetailsRequired(true)
@@ -109,6 +113,7 @@ internal class GooglePayConfigurationTest {
             .setCountryCode("US")
             .setAllowedAuthMethods(listOf(AllowedAuthMethods.PAN_ONLY))
             .setAllowedCardNetworks(listOf(AllowedCardNetworks.VISA))
+            .setBlockedIssuerCountryCodes(listOf("US"))
             .setAllowPrepaidCards(true)
             .setAllowCreditCards(false)
             .setAssuranceDetailsRequired(true)
@@ -150,6 +155,8 @@ internal class GooglePayConfigurationTest {
         assertEquals(config.countryCode, actualGooglePayCardConfig?.countryCode)
         assertEquals(config.allowedAuthMethods, actualGooglePayCardConfig?.allowedAuthMethods)
         assertEquals(config.allowedCardNetworks, actualGooglePayCardConfig?.allowedCardNetworks)
+        assertEquals(config.allowedIssuerCountryCodes, actualGooglePayCardConfig?.allowedIssuerCountryCodes)
+        assertEquals(config.blockedIssuerCountryCodes, actualGooglePayCardConfig?.blockedIssuerCountryCodes)
         assertEquals(config.isAllowPrepaidCards, actualGooglePayCardConfig?.isAllowPrepaidCards)
         assertEquals(config.isAllowCreditCards, actualGooglePayCardConfig?.isAllowCreditCards)
         assertEquals(config.isAssuranceDetailsRequired, actualGooglePayCardConfig?.isAssuranceDetailsRequired)
@@ -160,6 +167,24 @@ internal class GooglePayConfigurationTest {
         assertEquals(config.isBillingAddressRequired, actualGooglePayCardConfig?.isBillingAddressRequired)
         assertEquals(config.billingAddressParameters, actualGooglePayCardConfig?.billingAddressParameters)
         assertEquals(config.totalPriceStatus, actualGooglePayCardConfig?.totalPriceStatus)
+    }
+
+    @Test
+    fun `when allowedIssuerCountryCodes and blockedIssuerCountryCodes are both set, then an exception is thrown`() {
+        assertThrows<CheckoutException> {
+            CheckoutConfiguration(
+                shopperLocale = Locale.US,
+                environment = Environment.TEST,
+                clientKey = TEST_CLIENT_KEY,
+                amount = Amount("EUR", 123L),
+                analyticsConfiguration = AnalyticsConfiguration(AnalyticsLevel.ALL),
+            ) {
+                googlePay {
+                    allowedIssuerCountryCodes = listOf("US")
+                    blockedIssuerCountryCodes = listOf("US")
+                }
+            }
+        }
     }
 
     companion object {

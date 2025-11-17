@@ -485,6 +485,12 @@ class GooglePayConfiguration private constructor(
         }
 
         override fun buildInternal(): GooglePayConfiguration {
+            if (allowedIssuerCountryCodes != null && blockedIssuerCountryCodes != null) {
+                val message = "allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive, " +
+                    "please set only one at a time"
+                throw CheckoutException(message)
+            }
+
             return GooglePayConfiguration(
                 shopperLocale = shopperLocale,
                 environment = environment,
