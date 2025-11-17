@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Kopeerige kood, seejärel avage rakendus registreeritud PIX-võtmega, valige PIX-iga maksmine ja kleepige kood sinna.</string>
+    <string name="checkout_qr_code_pix">Makse lõpuleviimiseks skannige oma pangarakenduse abil QR-kood või kopeerige allolev PIX-kood.</string>
     <string name="checkout_qr_code_upi">Tehke UPI rakenduses üleslaadimiseks kuvatõmmis või skannige QR-kood, kasutades oma eelistatud UPI rakendust, et makse lõpule viia.</string>
-    <string name="checkout_qr_code_copy_button">Kopeeri kood</string>
+    <string name="checkout_qr_code_copy_button">Kopeeri PIX-kood</string>
     <string name="checkout_qr_code_timer_text">Teil on maksmiseks %s</string>
-    <string name="checkout_qr_code_copied_toast">Kood kopeeriti lõikelauale</string>
+    <string name="checkout_qr_code_pix_code_copied">PIX-kood kopeeritud</string>
     <string name="checkout_qr_code_duit_now">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>
     <string name="checkout_qr_code_prompt_pay">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>
     <string name="checkout_qr_code_pay_now">Tehke kuvatõmmis või salvestage QR-kood, avage oma pangarakendus ja laadige QR-kood üles, et andmed kinnitada ja makse lõpule viia.</string>

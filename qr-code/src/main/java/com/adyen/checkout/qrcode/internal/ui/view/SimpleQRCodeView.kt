@@ -14,9 +14,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ui.ComponentDelegate
+import com.adyen.checkout.components.core.internal.ui.model.ComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.TimerData
+import com.adyen.checkout.components.core.internal.util.CurrencyUtils
 import com.adyen.checkout.components.core.internal.util.copyTextToClipboard
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
@@ -25,13 +28,13 @@ import com.adyen.checkout.qrcode.databinding.SimpleQrcodeViewBinding
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView
+import com.adyen.checkout.ui.core.old.internal.ui.load
 import com.adyen.checkout.ui.core.old.internal.ui.loadLogo
 import com.adyen.checkout.ui.core.old.internal.util.setLocalizedTextFromStyle
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.util.concurrent.TimeUnit
-import com.adyen.checkout.ui.core.R as UICoreR
 
 @Suppress("TooManyFunctions")
 internal class SimpleQRCodeView @JvmOverloads constructor(
@@ -52,10 +55,12 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
     private lateinit var delegate: QRCodeDelegate
 
+    private val resetCopyButtonTextRunnable = Runnable {
+        binding.copyButton.text = localizedContext.getString(R.string.checkout_qr_code_copy_button)
+    }
+
     init {
         orientation = VERTICAL
-        val padding = resources.getDimension(UICoreR.dimen.standard_double_margin).toInt()
-        setPadding(padding, padding, padding, padding)
     }
 
     override fun initView(delegate: ComponentDelegate, coroutineScope: CoroutineScope, localizedContext: Context) {
@@ -68,7 +73,7 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
         observeDelegate(delegate, coroutineScope)
 
-        binding.copyButton.setOnClickListener { copyCode(delegate.outputData.qrCodeData) }
+        binding.copyButton.setOnClickListener { onCopyClicked(delegate.outputData.qrCodeData) }
     }
 
     private fun initLocalizedStrings(localizedContext: Context) {
@@ -90,6 +95,14 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
 
         updateMessageText(outputData.paymentMethodType)
         updateLogo(outputData.paymentMethodType)
+        updateQrImage(outputData.qrImageUrl)
+        updateAmount(delegate.componentParams)
+        updateCode(outputData.qrCodeData)
+    }
+
+    private fun updateMessageText(paymentMethodType: String?) {
+        val resId = getMessageTextResource(paymentMethodType) ?: return
+        binding.textViewTopLabel.text = localizedContext.getString(resId)
     }
 
     @StringRes
@@ -110,9 +123,29 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         }
     }
 
-    private fun updateMessageText(paymentMethodType: String?) {
-        val resId = getMessageTextResource(paymentMethodType) ?: return
-        binding.textViewTopLabel.text = localizedContext.getString(resId)
+    private fun updateQrImage(qrImageUrl: String?) {
+        if (!qrImageUrl.isNullOrEmpty()) {
+            binding.imageViewQrcode.load(url = qrImageUrl)
+        }
+    }
+
+    private fun updateAmount(componentParams: ComponentParams) {
+        val amount = componentParams.amount
+        if (amount != null) {
+            val formattedAmount = CurrencyUtils.formatAmount(
+                amount,
+                componentParams.shopperLocale,
+            )
+            binding.textviewAmount.isVisible = true
+            binding.textviewAmount.text = formattedAmount
+        } else {
+            binding.textviewAmount.isVisible = false
+        }
+    }
+
+    private fun updateCode(code: String?) {
+        binding.textviewCode.isVisible = !code.isNullOrEmpty()
+        binding.textviewCode.text = code
     }
 
     private fun onTimerTick(timerData: TimerData) {
@@ -132,16 +165,24 @@ internal class SimpleQRCodeView @JvmOverloads constructor(
         binding.progressIndicator.progress = timerData.progress
     }
 
-    private fun copyCode(qrCodeData: String?) {
+    private fun onCopyClicked(qrCodeData: String?) {
         qrCodeData ?: return
-        context.copyTextToClipboard(
-            "Pix Code",
-            qrCodeData,
-            localizedContext.getString(R.string.checkout_qr_code_copied_toast),
-        )
+        binding.copyButton.text = localizedContext.getString(R.string.checkout_qr_code_pix_code_copied)
+        copyCode(qrCodeData)
+        binding.copyButton.removeCallbacks(resetCopyButtonTextRunnable)
+        binding.copyButton.postDelayed(resetCopyButtonTextRunnable, COPY_BUTTON_TEXT_CHANGE_DELAY)
+    }
+
+    private fun copyCode(qrCodeData: String) {
+        context.copyTextToClipboard(COPY_LABEL, qrCodeData)
     }
 
     override fun getView(): View = this
 
     override fun highlightValidationErrors() = Unit
+
+    companion object {
+        private const val COPY_LABEL = "Pix Code"
+        private const val COPY_BUTTON_TEXT_CHANGE_DELAY = 2000L
+    }
 }

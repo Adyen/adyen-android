@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Nukopijuokite kodą, tada atidarykite programą su registruotu PIX raktu, pasirinkite „Mokėti su PIX“ ir įklijuokite kodą.</string>
+    <string name="checkout_qr_code_pix">Norėdami užbaigti mokėjimą, savo banko programėle nuskaitykite QR kodą arba nukopijuokite toliau pateiktą PIX kodą.</string>
     <string name="checkout_qr_code_upi">Padarykite ekrano kopiją ir įkelkite ją į UPI programą arba nuskaitykite QR kodą naudodami pageidaujamą UPI programą, kad užbaigtumėte mokėjimą.</string>
-    <string name="checkout_qr_code_copy_button">Kopijuoti kodą</string>
+    <string name="checkout_qr_code_copy_button">Kopijuoti „PIX“ kodą</string>
     <string name="checkout_qr_code_timer_text">Jūs turite mokėti %s</string>
-    <string name="checkout_qr_code_copied_toast">Į iškarpinę nukopijuotas kodas</string>
+    <string name="checkout_qr_code_pix_code_copied">„PIX“ kodas nukopijuotas</string>
     <string name="checkout_qr_code_duit_now">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>
     <string name="checkout_qr_code_prompt_pay">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>
     <string name="checkout_qr_code_pay_now">Padarykite ekrano kopiją arba išsaugokite QR kodą, atidarykite banko programą ir įkelkite QR kodą, kad patikrintumėte duomenis ir užbaigtumėte mokėjimą.</string>

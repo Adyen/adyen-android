@@ -248,10 +248,9 @@ internal class DefaultQRCodeDelegate(
     private fun createOutputData(statusResponse: StatusResponse?, action: QrCodeAction) {
         val isValid = statusResponse != null && StatusResponseUtils.isFinalResult(statusResponse)
 
-        var qrImageUrl: String? = null
-        if (_viewFlow.value == QrCodeComponentViewType.FULL_QR_CODE) {
+        val qrImageUrl = action.qrCodeData?.let {
             val encodedQrCodeData = Uri.encode(action.qrCodeData)
-            qrImageUrl = String.format(
+            String.format(
                 QR_IMAGE_BASE_PATH,
                 componentParams.environment.checkoutShopperBaseUrl.toString(),
                 encodedQrCodeData,
@@ -337,7 +336,7 @@ internal class DefaultQRCodeDelegate(
 
         val event = GenericEvents.download(
             component = paymentMethodType,
-            target = ANALYTICS_TARGET_QR_BUTTON
+            target = ANALYTICS_TARGET_QR_BUTTON,
         )
         analyticsManager?.trackEvent(event)
 

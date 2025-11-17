@@ -8,11 +8,11 @@
   -->
 
 <resources>
-    <string name="checkout_qr_code_pix">Copiați codul, apoi deschideți aplicația cu cheia PIX înregistrată, alegeți Plătiți cu PIX și lipiți codul acolo.</string>
+    <string name="checkout_qr_code_pix">Utilizați aplicația de banking pentru a scana codul QR sau pentru a copia codul PIX de mai jos pentru a finaliza plata.</string>
     <string name="checkout_qr_code_upi">Faceți o captură de ecran pentru a o încărca în aplicația UPI sau scanați codul QR folosind aplicația UPI preferată pentru a finaliza plata.</string>
-    <string name="checkout_qr_code_copy_button">Copiați codul</string>
+    <string name="checkout_qr_code_copy_button">Copiați codul PIX</string>
     <string name="checkout_qr_code_timer_text">Trebuie să achitați %s</string>
-    <string name="checkout_qr_code_copied_toast">Cod copiat în clipboard</string>
+    <string name="checkout_qr_code_pix_code_copied">Codul PIX a fost copiat</string>
     <string name="checkout_qr_code_duit_now">Faceți o captură de ecran sau salvați codul QR, deschideți aplicația bancară și încărcați codul QR pentru a verifica detaliile și a finaliza plata.</string>
     <string name="checkout_qr_code_prompt_pay">Faceți o captură de ecran sau salvați codul QR, deschideți aplicația bancară și încărcați codul QR pentru a verifica detaliile și a finaliza plata.</string>
     <string name="checkout_qr_code_pay_now">Faceți o captură de ecran sau salvați codul QR, deschideți aplicația bancară și încărcați codul QR pentru a verifica detaliile și a finaliza plata.</string>
