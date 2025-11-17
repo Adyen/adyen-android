@@ -23,7 +23,7 @@ internal class DropInViewModel(
     input: DropInResultContract.Input?,
 ) : ViewModel() {
 
-    lateinit var backStack: SnapshotStateList<NavKey>
+    val backStack: SnapshotStateList<NavKey> = mutableStateListOf()
 
     private lateinit var paymentMethods: PaymentMethodsApiResponse
 
@@ -48,7 +48,8 @@ internal class DropInViewModel(
 
     private fun initializeBackStack() {
         // TODO - Check if there are stored payment methods, if not replace preselected with payment method list
-        backStack = mutableStateListOf(EmptyNavKey, PreselectedPaymentMethodNavKey)
+        val startingEntries = listOf(EmptyNavKey, PreselectedPaymentMethodNavKey)
+        backStack.addAll(startingEntries)
     }
 
     class Factory(
