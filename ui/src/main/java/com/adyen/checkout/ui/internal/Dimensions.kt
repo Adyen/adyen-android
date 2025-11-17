@@ -36,7 +36,7 @@ object Dimensions {
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     object LogoSize {
-        val small = DpSize(width = 27.dp, height = 18.dp)
+        val small = DpSize(width = 24.dp, height = 16.dp)
 
         val medium = DpSize(width = 40.dp, height = 26.dp)
 
