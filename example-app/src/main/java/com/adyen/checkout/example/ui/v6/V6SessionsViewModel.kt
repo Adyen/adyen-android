@@ -72,15 +72,15 @@ internal class V6SessionsViewModel @Inject constructor(
         val result = Checkout.initialize(
             sessionModel = session,
             checkoutConfiguration = configuration,
-            checkoutCallbacks = CheckoutCallbacks(
-                onError = ::onError,
-            ),
         )
 
         uiState = when (result) {
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.errorReason))
             is Checkout.Result.Success -> V6UiState.Component(
                 checkoutContext = result.checkoutContext,
+                checkoutCallbacks = CheckoutCallbacks(
+                    onError = ::onError,
+                ),
                 paymentMethods = result.checkoutContext.getPaymentMethods(),
             )
         }

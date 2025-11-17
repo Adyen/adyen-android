@@ -25,6 +25,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun AdyenPaymentFlow(
     txVariant: String,
     checkoutContext: CheckoutContext,
+    checkoutCallbacks: CheckoutCallbacks,
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
@@ -39,6 +40,7 @@ fun AdyenPaymentFlow(
             applicationContext = applicationContext,
             txVariant = txVariant,
             checkoutContext = checkoutContext,
+            checkoutCallbacks = checkoutCallbacks,
             savedStateHandle = createSavedStateHandle(),
             checkoutController = checkoutController,
         )

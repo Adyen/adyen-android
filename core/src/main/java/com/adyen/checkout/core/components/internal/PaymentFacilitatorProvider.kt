@@ -10,6 +10,7 @@ package com.adyen.checkout.core.components.internal
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
@@ -22,6 +23,7 @@ internal class PaymentFacilitatorProvider {
         applicationContext: Context,
         txVariant: String,
         checkoutContext: CheckoutContext,
+        checkoutCallbacks: CheckoutCallbacks,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
         checkoutController: CheckoutController,
@@ -31,7 +33,7 @@ internal class PaymentFacilitatorProvider {
                 AdvancedPaymentFacilitatorFactory(
                     applicationContext = applicationContext,
                     checkoutConfiguration = checkoutContext.checkoutConfiguration,
-                    checkoutCallbacks = checkoutContext.checkoutCallbacks,
+                    checkoutCallbacks = checkoutCallbacks,
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
@@ -43,7 +45,7 @@ internal class PaymentFacilitatorProvider {
                     applicationContext = applicationContext,
                     checkoutSession = checkoutContext.checkoutSession,
                     checkoutConfiguration = checkoutContext.checkoutConfiguration,
-                    checkoutCallbacks = checkoutContext.checkoutCallbacks,
+                    checkoutCallbacks = checkoutCallbacks,
                     savedStateHandle = savedStateHandle,
                     checkoutController = checkoutController,
                     publicKey = checkoutContext.publicKey,
