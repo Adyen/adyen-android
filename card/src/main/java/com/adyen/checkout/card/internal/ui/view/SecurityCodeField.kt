@@ -8,13 +8,19 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
+import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -65,7 +71,35 @@ internal fun SecurityCodeField(
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = securityCodeState.isFocused,
+        trailingIcon = {
+            SecurityCodeIcon(state = securityCodeState, isAmex = isAmex)
+        }
     )
+}
+
+@Composable
+private fun SecurityCodeIcon(
+    state: TextInputState,
+    isAmex: Boolean?,
+) {
+    val isValid = state.isInteractedWith && state.errorMessage == null
+    val isInvalid = state.errorMessage != null && state.showError
+    val resourceId = when {
+        isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
+        isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
+        isAmex == true -> R.drawable.ic_card_cvc_front
+        else -> R.drawable.ic_card_cvc_back
+    }
+
+    AnimatedContent(
+        targetState = resourceId,
+    ) {
+        Icon(
+            imageVector = ImageVector.vectorResource(it),
+            contentDescription = null,
+            tint = Color.Unspecified,
+        )
+    }
 }
 
 private const val MAX_LENGTH_SECURITY_CODE_DEFAULT = 3
