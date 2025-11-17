@@ -122,7 +122,7 @@ internal class DefaultPayToDelegate(
     private fun createOutputData() = PayToOutputData(
         mode = inputData.mode,
         payIdTypeModel = inputData.payIdTypeModel,
-        mobilePhoneNumber = inputData.phoneNumber.trimStart('0'),
+        mobilePhoneNumber = inputData.phoneNumber,
         emailAddress = inputData.emailAddress,
         abnNumber = inputData.abnNumber,
         organizationId = inputData.organizationId,

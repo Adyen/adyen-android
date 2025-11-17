@@ -50,6 +50,7 @@ internal class PayToValidationUtilsTest {
         @JvmStatic
         fun getPhoneNumberTestCases() = listOf(
             // phoneNumber, expectedValidationResult
+            arguments("0123456789", true),
             arguments("123456789", true),
             arguments("789456123", true),
             arguments("9876543210", true),
@@ -57,11 +58,11 @@ internal class PayToValidationUtilsTest {
             arguments("1523456789", true),
             arguments("412345678", true),
             arguments("9076543210", true),
+            arguments("000000000000000000000000000000", true),
             arguments("+31-123456789", false),
             arguments("+1-", false),
             arguments("abc", false),
             arguments("++1-123456789", false),
-            arguments("000000000000000000000000000000", false),
             arguments("+1-00000000000000000000000000000", false),
         )
 
