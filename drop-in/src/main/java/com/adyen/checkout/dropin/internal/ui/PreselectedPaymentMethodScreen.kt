@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -90,6 +91,6 @@ internal fun PreselectedPaymentMethodScreen(
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
     PreselectedPaymentMethodScreen(
-        backStack = mutableStateListOf(),
+        backStack = remember { mutableStateListOf() },
     )
 }
