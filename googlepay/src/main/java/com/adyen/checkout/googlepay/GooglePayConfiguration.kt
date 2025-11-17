@@ -47,6 +47,8 @@ class GooglePayConfiguration private constructor(
     val merchantInfo: MerchantInfo?,
     val allowedAuthMethods: List<String>?,
     val allowedCardNetworks: List<String>?,
+    val allowedIssuerCountryCodes: List<String>?,
+    val blockedIssuerCountryCodes: List<String>?,
     val isAllowPrepaidCards: Boolean?,
     val isAllowCreditCards: Boolean?,
     val isAssuranceDetailsRequired: Boolean?,
@@ -84,6 +86,8 @@ class GooglePayConfiguration private constructor(
         var countryCode: String? = null
         var allowedAuthMethods: List<String>? = null
         var allowedCardNetworks: List<String>? = null
+        var allowedIssuerCountryCodes: List<String>? = null
+        var blockedIssuerCountryCodes: List<String>? = null
         var isAllowPrepaidCards: Boolean? = null
         var isAllowCreditCards: Boolean? = null
         var isAssuranceDetailsRequired: Boolean? = null
@@ -233,6 +237,38 @@ class GooglePayConfiguration private constructor(
         @Deprecated("Use property access syntax instead.")
         fun setAllowedCardNetworks(allowedCardNetworks: List<String>?): Builder {
             this.allowedCardNetworks = allowedCardNetworks
+            return this
+        }
+
+        /**
+         * Sets the allowed issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set
+         * the shopper will only be able the select payment methods issued in the provided countries.
+         *
+         * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive. Only set one at a time.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         */
+        @Deprecated("Use property access syntax instead.")
+        fun setAllowedIssuerCountryCodes(allowedIssuerCountryCodes: List<String>): Builder {
+            this.allowedIssuerCountryCodes = allowedIssuerCountryCodes
+            return this
+        }
+
+        /**
+         * Sets the blocked issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set
+         * the shopper will not be able the select payment methods issued in the provided countries.
+         *
+         * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive. Only set one at a time.
+         *
+         * Check the
+         * [Google Pay docs](https://developers.google.com/pay/api/android/reference/request-objects#CardParameters)
+         * for more details.
+         */
+        @Deprecated("Use property access syntax instead.")
+        fun setBlockedIssuerCountryCodes(blockedIssuerCountryCodes: List<String>): Builder {
+            this.blockedIssuerCountryCodes = blockedIssuerCountryCodes
             return this
         }
 
@@ -463,6 +499,8 @@ class GooglePayConfiguration private constructor(
                 merchantInfo = merchantInfo,
                 allowedAuthMethods = allowedAuthMethods,
                 allowedCardNetworks = allowedCardNetworks,
+                allowedIssuerCountryCodes = allowedIssuerCountryCodes,
+                blockedIssuerCountryCodes = blockedIssuerCountryCodes,
                 isAllowPrepaidCards = isAllowPrepaidCards,
                 isAllowCreditCards = isAllowCreditCards,
                 isAssuranceDetailsRequired = isAssuranceDetailsRequired,
