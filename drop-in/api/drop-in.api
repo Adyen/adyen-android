@@ -30,10 +30,10 @@ public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$Pa
 	public final fun getLambda$1669686423$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreSelectedPaymentMethodScreenKt {
-	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreSelectedPaymentMethodScreenKt;
+public final class com/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreselectedPaymentMethodScreenKt {
+	public static final field INSTANCE Lcom/adyen/checkout/dropin/internal/ui/ComposableSingletons$PreselectedPaymentMethodScreenKt;
 	public fun <init> ()V
-	public final fun getLambda$-568108029$drop_in_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-205991965$drop_in_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public abstract class com/adyen/checkout/dropin/old/AddressLookupDropInServiceResult : com/adyen/checkout/dropin/old/BaseDropInServiceResult {
