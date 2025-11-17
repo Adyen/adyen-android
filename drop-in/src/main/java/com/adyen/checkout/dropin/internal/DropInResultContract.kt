@@ -13,7 +13,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
-import com.adyen.checkout.core.components.CheckoutContext
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.DropInResult

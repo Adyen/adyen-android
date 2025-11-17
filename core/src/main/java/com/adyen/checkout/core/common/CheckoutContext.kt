@@ -6,9 +6,10 @@
  * Created by ozgur on 22/7/2025.
  */
 
-package com.adyen.checkout.core.components
+package com.adyen.checkout.core.common
 
 import android.os.Parcelable
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.sessions.CheckoutSession
 import kotlinx.parcelize.Parcelize
