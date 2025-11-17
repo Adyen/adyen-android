@@ -15,7 +15,6 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.dropin.initialize
 import com.adyen.checkout.dropin.old.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
 import com.adyen.checkout.example.BuildConfig

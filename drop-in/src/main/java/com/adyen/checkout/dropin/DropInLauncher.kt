@@ -10,6 +10,7 @@ package com.adyen.checkout.dropin
 
 import android.app.Service
 import androidx.activity.result.ActivityResultLauncher
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
 
 // TODO - KDocs
@@ -18,12 +19,12 @@ class DropInLauncher internal constructor(
 ) {
 
     internal fun launch(
-        dropInContext: CheckoutDropInContext,
+        dropInContext: CheckoutContext,
         // TODO - define drop in service
         serviceClass: Class<out Service>,
     ) {
         val input = DropInResultContract.Input(
-            dropInContext = dropInContext,
+            checkoutContext = dropInContext,
             serviceClass = serviceClass,
         )
         activityResultLauncher.launch(input)

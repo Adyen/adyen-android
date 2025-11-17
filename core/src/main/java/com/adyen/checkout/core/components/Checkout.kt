@@ -17,7 +17,6 @@ object Checkout {
     suspend fun initialize(
         sessionModel: SessionModel,
         checkoutConfiguration: CheckoutConfiguration,
-        checkoutCallbacks: CheckoutCallbacks,
     ): Result<CheckoutContext.Sessions> {
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = checkoutConfiguration,
@@ -33,7 +32,6 @@ object Checkout {
                 checkoutContext = CheckoutContext.Sessions(
                     checkoutSession = initializationData.checkoutSession,
                     checkoutConfiguration = checkoutConfiguration,
-                    checkoutCallbacks = checkoutCallbacks,
                     publicKey = initializationData.publicKey,
                 ),
             )
@@ -43,7 +41,6 @@ object Checkout {
     suspend fun initialize(
         paymentMethodsApiResponse: PaymentMethodsApiResponse,
         checkoutConfiguration: CheckoutConfiguration,
-        checkoutCallbacks: CheckoutCallbacks,
     ): Result<CheckoutContext.Advanced> {
         val initializationData = CheckoutInitializer.initialize(
             checkoutConfiguration = checkoutConfiguration,
@@ -54,14 +51,13 @@ object Checkout {
             CheckoutContext.Advanced(
                 paymentMethodsApiResponse = paymentMethodsApiResponse,
                 checkoutConfiguration = checkoutConfiguration,
-                checkoutCallbacks = checkoutCallbacks,
                 publicKey = initializationData.publicKey,
             ),
         )
     }
 
-    sealed interface Result<T : Any> {
-        data class Success<T : Any>(val checkoutContext: T) : Result<T>
-        data class Error<T : Any>(val errorReason: String) : Result<T>
+    sealed interface Result<T : CheckoutContext> {
+        data class Success<T : CheckoutContext>(val checkoutContext: T) : Result<T>
+        data class Error<T : CheckoutContext>(val errorReason: String) : Result<T>
     }
 }

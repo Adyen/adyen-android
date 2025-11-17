@@ -13,9 +13,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
 import androidx.activity.result.contract.ActivityResultContract
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.core.old.AdyenLogLevel
 import com.adyen.checkout.core.old.internal.util.adyenLog
-import com.adyen.checkout.dropin.CheckoutDropInContext
 import com.adyen.checkout.dropin.DropInResult
 import com.adyen.checkout.dropin.internal.ui.DropInActivity
 import kotlinx.parcelize.Parcelize
@@ -38,7 +38,7 @@ internal class DropInResultContract : ActivityResultContract<DropInResultContrac
 
     @Parcelize
     internal data class Input(
-        val dropInContext: CheckoutDropInContext,
+        val checkoutContext: CheckoutContext,
         val serviceClass: Class<out Service>,
     ) : Parcelable
 

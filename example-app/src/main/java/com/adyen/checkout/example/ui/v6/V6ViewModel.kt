@@ -79,17 +79,17 @@ internal class V6ViewModel @Inject constructor(
         val result = Checkout.initialize(
             paymentMethodsApiResponse = paymentMethodResponse,
             checkoutConfiguration = configuration,
-            checkoutCallbacks = CheckoutCallbacks(
-                onSubmit = ::onSubmit,
-                onAdditionalDetails = ::onAdditionalDetails,
-                onError = ::onError,
-            ),
         )
 
         uiState = when (result) {
             is Checkout.Result.Error -> V6UiState.Error(UIText.String(result.errorReason))
             is Checkout.Result.Success -> V6UiState.Component(
                 checkoutContext = result.checkoutContext,
+                checkoutCallbacks = CheckoutCallbacks(
+                    onSubmit = ::onSubmit,
+                    onAdditionalDetails = ::onAdditionalDetails,
+                    onError = ::onError,
+                ),
                 paymentMethods = result.checkoutContext.getPaymentMethods(),
             )
         }

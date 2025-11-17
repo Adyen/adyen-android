@@ -13,6 +13,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultCaller
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import com.adyen.checkout.core.components.CheckoutContext
 import com.adyen.checkout.dropin.internal.DropInResultContract
 
 // TODO - KDocs
@@ -28,7 +29,7 @@ object DropIn {
 
     fun start(
         launcher: DropInLauncher,
-        dropInContext: CheckoutDropInContext.Sessions,
+        dropInContext: CheckoutContext.Sessions,
         // TODO - define drop in session service
         serviceClass: Class<out Service> = Service::class.java,
     ) {
@@ -37,7 +38,7 @@ object DropIn {
 
     fun start(
         launcher: DropInLauncher,
-        dropInContext: CheckoutDropInContext.Advanced,
+        dropInContext: CheckoutContext.Advanced,
         // TODO - define drop in service
         serviceClass: Class<out Service>,
     ) {
