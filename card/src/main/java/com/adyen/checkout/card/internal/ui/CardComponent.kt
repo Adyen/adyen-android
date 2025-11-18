@@ -14,6 +14,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.card.CardMainNavigationKey
+import com.adyen.checkout.card.OnBinLookupCallback
+import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
@@ -59,6 +61,9 @@ internal class CardComponent(
     private val detectCardTypeRepository: DetectCardTypeRepository,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
+    private var onBinValueCallback: OnBinValueCallback? = null
+    private var onBinLookupCallback: OnBinLookupCallback? = null
+
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
@@ -75,6 +80,14 @@ internal class CardComponent(
     fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
         subscribeToDetectedCardTypes()
+    }
+
+    fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
+        this.onBinValueCallback = onBinValueCallback
+    }
+
+    fun setOnBinLookupCallback(onBinLookupCallback: OnBinLookupCallback?) {
+        this.onBinLookupCallback = onBinLookupCallback
     }
 
     override fun submit() {

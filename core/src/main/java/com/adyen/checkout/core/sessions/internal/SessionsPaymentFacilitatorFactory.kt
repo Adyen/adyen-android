@@ -73,6 +73,7 @@ internal class SessionsPaymentFacilitatorFactory(
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
         )
 
         val sessionInteractor = SessionInteractor(
