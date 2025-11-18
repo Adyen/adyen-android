@@ -9,17 +9,8 @@
 package com.adyen.checkout.card
 
 import com.adyen.checkout.core.components.CheckoutCallback
-import com.adyen.checkout.core.components.CheckoutCallbacks
 
 fun interface OnBinValueCallback : CheckoutCallback {
 
     fun onBinValue(binValue: String)
-}
-
-fun CheckoutCallbacks.onBinValue(onBinValueCallback: OnBinValueCallback) {
-    addCallback(onBinValueCallback, OnBinValueCallback::class)
-}
-
-fun CheckoutCallbacks.onBinLookup(onBinLookupCallback: OnBinLookupCallback) {
-    addCallback(onBinLookupCallback, OnBinLookupCallback::class)
 }

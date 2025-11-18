@@ -42,6 +42,7 @@ object PaymentMethodProvider {
      *
      * @return [PaymentComponent] for given txVariant.
      */
+    @Suppress("LongParameterList")
     fun get(
         txVariant: String,
         coroutineScope: CoroutineScope,
