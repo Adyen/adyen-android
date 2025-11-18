@@ -1,7 +1,7 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
-import com.adyen.checkout.adyen3ds2.adyen3DS2
+import com.adyen.checkout.adyen3ds2.old.adyen3DS2
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.CardBrand
