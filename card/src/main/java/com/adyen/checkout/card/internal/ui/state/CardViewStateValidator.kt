@@ -54,6 +54,7 @@ internal class CardViewStateValidator(
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
             detectedCardBrands = detectedCardBrands,
+            dualBrandData = dualBrandData,
         )
     }
 

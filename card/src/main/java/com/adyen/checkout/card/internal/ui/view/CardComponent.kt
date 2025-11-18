@@ -84,6 +84,7 @@ private fun CardComponentPreview() {
             isSupportedCardBrandsShown = false,
             isLoading = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
+            dualBrandData = null,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit
