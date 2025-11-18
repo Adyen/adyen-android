@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.example.ui.main
 
+import android.app.Service
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,11 +20,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.adyen.checkout.core.components.Checkout
-import com.adyen.checkout.dropin.old.DropIn
+import com.adyen.checkout.dropin.DropIn
 import com.adyen.checkout.dropin.old.DropInCallback
 import com.adyen.checkout.dropin.old.SessionDropInCallback
-import com.adyen.checkout.dropin.startDropIn
 import com.adyen.checkout.example.R
 import com.adyen.checkout.example.databinding.ActivityMainBinding
 import com.adyen.checkout.example.extensions.applyInsetsToRootLayout
@@ -46,6 +45,7 @@ import com.adyen.checkout.example.ui.v6.V6SessionsActivity
 import com.adyen.checkout.redirect.old.RedirectComponent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import com.adyen.checkout.dropin.old.DropIn as OldDropIn
 
 @Suppress("TooManyFunctions")
 @AndroidEntryPoint
@@ -54,15 +54,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
-    private val dropInLauncher = DropIn.registerForDropInResult(
+    private val oldDropInLauncher = OldDropIn.registerForDropInResult(
         this,
         DropInCallback { dropInResult -> viewModel.onDropInResult(dropInResult) },
     )
 
-    private val sessionDropInLauncher = DropIn.registerForDropInResult(
+    private val sessionDropInLauncher = OldDropIn.registerForDropInResult(
         this,
         SessionDropInCallback { sessionDropInResult -> viewModel.onDropInResult(sessionDropInResult) },
     )
+
+    private val dropInLauncher = DropIn.registerForResult(this) { result ->
+        Log.d(TAG, "Drop-in result: $result")
+    }
 
     private var componentItemAdapter: ComponentItemAdapter? = null
 
@@ -148,9 +152,9 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigateTo(navigation: MainNavigation) {
         when (navigation) {
             is MainNavigation.DropIn -> {
-                DropIn.startPayment(
+                OldDropIn.startPayment(
                     this,
-                    dropInLauncher,
+                    oldDropInLauncher,
                     navigation.paymentMethodsApiResponse,
                     navigation.checkoutConfiguration,
                     ExampleAdvancedDropInService::class.java,
@@ -158,7 +162,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             is MainNavigation.DropInWithSession -> {
-                DropIn.startPayment(
+                OldDropIn.startPayment(
                     this,
                     sessionDropInLauncher,
                     navigation.checkoutSession,
@@ -167,7 +171,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             is MainNavigation.DropInWithCustomSession -> {
-                DropIn.startPayment(
+                OldDropIn.startPayment(
                     this,
                     sessionDropInLauncher,
                     navigation.checkoutSession,
@@ -177,18 +181,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             is MainNavigation.V6DropIn -> {
-                Checkout.startDropIn(
-                    this,
-                    navigation.paymentMethodsApiResponse,
-                    navigation.checkoutConfiguration,
+                DropIn.start(
+                    launcher = dropInLauncher,
+                    dropInContext = navigation.dropInContext,
+                    serviceClass = Service::class.java,
                 )
             }
 
             is MainNavigation.V6DropInWithSession -> {
-                Checkout.startDropIn(
-                    this,
-                    navigation.sessionModel,
-                    navigation.checkoutConfiguration,
+                DropIn.start(
+                    launcher = dropInLauncher,
+                    dropInContext = navigation.dropInContext,
+                    serviceClass = Service::class.java,
                 )
             }
 

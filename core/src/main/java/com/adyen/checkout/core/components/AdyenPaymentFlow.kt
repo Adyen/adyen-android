@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
@@ -25,6 +26,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 fun AdyenPaymentFlow(
     txVariant: String,
     checkoutContext: CheckoutContext,
+    checkoutCallbacks: CheckoutCallbacks,
     modifier: Modifier = Modifier,
     theme: CheckoutTheme = CheckoutTheme(),
     checkoutController: CheckoutController = rememberCheckoutController(),
@@ -39,6 +41,7 @@ fun AdyenPaymentFlow(
             applicationContext = applicationContext,
             txVariant = txVariant,
             checkoutContext = checkoutContext,
+            checkoutCallbacks = checkoutCallbacks,
             savedStateHandle = createSavedStateHandle(),
             checkoutController = checkoutController,
         )

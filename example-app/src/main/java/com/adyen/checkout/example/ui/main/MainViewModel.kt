@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.dropin.old.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
@@ -182,15 +183,23 @@ internal class MainViewModel @Inject constructor(
 
             val paymentMethods = paymentsRepository.getPaymentMethods(createPaymentMethodRequest())
 
+            // TODO - Get config from provider
+            val checkoutConfiguration = CheckoutConfiguration(
+                Environment.TEST,
+                BuildConfig.CLIENT_KEY,
+            )
+
+            val result = paymentMethods?.let {
+                Checkout.initialize(
+                    paymentMethods,
+                    checkoutConfiguration,
+                )
+            }
+
             showLoading(false)
 
-            if (paymentMethods != null) {
-                // TODO - Get config from provider
-                val checkoutConfiguration = CheckoutConfiguration(
-                    Environment.TEST,
-                    BuildConfig.CLIENT_KEY,
-                )
-                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6DropIn(paymentMethods, checkoutConfiguration)))
+            if (result is Checkout.Result.Success) {
+                _eventFlow.tryEmit(MainEvent.NavigateTo(MainNavigation.V6DropIn(result.checkoutContext)))
             } else {
                 onError("Something went wrong while fetching payment methods")
             }
@@ -209,10 +218,17 @@ internal class MainViewModel @Inject constructor(
 
             val sessionModel = paymentsRepository.createSession(createSessionRequest())
 
+            val result = sessionModel?.let {
+                Checkout.initialize(
+                    sessionModel,
+                    checkoutConfiguration,
+                )
+            }
+
             showLoading(false)
 
-            if (sessionModel != null) {
-                val navigation = MainNavigation.V6DropInWithSession(sessionModel, checkoutConfiguration)
+            if (result is Checkout.Result.Success) {
+                val navigation = MainNavigation.V6DropInWithSession(result.checkoutContext)
                 _eventFlow.tryEmit(MainEvent.NavigateTo(navigation))
             } else {
                 onError("Something went wrong while starting session")
