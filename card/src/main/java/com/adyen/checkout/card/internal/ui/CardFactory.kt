@@ -48,6 +48,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             componentStateFactory = CardComponentStateFactory(),
             validator = CardViewStateValidator(
                 cardValidationMapper = CardValidationMapper(),
+                dualBrandedCardHandler = DualBrandedCardHandler(),
             ),
         )
 
