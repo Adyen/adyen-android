@@ -30,6 +30,12 @@ public final class com/adyen/checkout/card/CardAddressNavigationKey : com/adyen/
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/adyen/checkout/card/CardCallbackExtKt {
+	public static final fun card (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lkotlin/jvm/functions/Function1;)V
+	public static final fun onBinLookup (Lcom/adyen/checkout/card/internal/CardCallbacks;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
+	public static final fun onBinValue (Lcom/adyen/checkout/card/internal/CardCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
+}
+
 public final class com/adyen/checkout/card/CardConfiguration : com/adyen/checkout/core/components/internal/Configuration {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -101,11 +107,6 @@ public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : co
 
 public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutCallback {
 	public abstract fun onBinValue (Ljava/lang/String;)V
-}
-
-public final class com/adyen/checkout/card/OnBinValueCallbackKt {
-	public static final fun onBinLookup (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
-	public static final fun onBinValue (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
 }
 
 public final class com/adyen/checkout/card/SocialSecurityNumberVisibility : java/lang/Enum {
