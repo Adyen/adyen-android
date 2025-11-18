@@ -1,3 +1,19 @@
+public final class com/adyen/checkout/card/BinLookupData {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Z)Lcom/adyen/checkout/card/BinLookupData;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/card/BinLookupData;Ljava/lang/String;Ljava/lang/String;ZILjava/lang/Object;)Lcom/adyen/checkout/card/BinLookupData;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrand ()Ljava/lang/String;
+	public final fun getPaymentMethodVariant ()Ljava/lang/String;
+	public fun hashCode ()I
+	public final fun isReliable ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/card/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
@@ -77,6 +93,19 @@ public final class com/adyen/checkout/card/KCPAuthVisibility : java/lang/Enum {
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/card/KCPAuthVisibility;
 	public static fun values ()[Lcom/adyen/checkout/card/KCPAuthVisibility;
+}
+
+public abstract interface class com/adyen/checkout/card/OnBinLookupCallback : com/adyen/checkout/core/components/CheckoutCallback {
+	public abstract fun onBinLookup (Ljava/util/List;)V
+}
+
+public abstract interface class com/adyen/checkout/card/OnBinValueCallback : com/adyen/checkout/core/components/CheckoutCallback {
+	public abstract fun onBinValue (Ljava/lang/String;)V
+}
+
+public final class com/adyen/checkout/card/OnBinValueCallbackKt {
+	public static final fun onBinLookup (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinLookupCallback;)V
+	public static final fun onBinValue (Lcom/adyen/checkout/core/components/CheckoutCallbacks;Lcom/adyen/checkout/card/OnBinValueCallback;)V
 }
 
 public final class com/adyen/checkout/card/SocialSecurityNumberVisibility : java/lang/Enum {
