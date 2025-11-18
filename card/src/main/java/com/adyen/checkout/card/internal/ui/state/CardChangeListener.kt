@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.core.common.CardBrand
+
 internal interface CardChangeListener {
 
     fun onCardNumberChanged(newCardNumber: String)
@@ -21,4 +23,6 @@ internal interface CardChangeListener {
     fun onSecurityCodeChanged(newSecurityCode: String)
 
     fun onSecurityCodeFocusChanged(hasFocus: Boolean)
+
+    fun onBrandSelected(cardBrand: CardBrand)
 }

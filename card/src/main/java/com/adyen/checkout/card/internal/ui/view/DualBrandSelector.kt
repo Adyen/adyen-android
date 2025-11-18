@@ -27,6 +27,7 @@ import com.adyen.checkout.ui.internal.ListOption
 @Composable
 internal fun DualBrandSelector(
     dualBrandData: DualBrandData?,
+    onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (dualBrandData == null || !dualBrandData.selectable || dualBrandData.brandOptions.size < 2) return
@@ -38,7 +39,7 @@ internal fun DualBrandSelector(
         TitleSection()
         BrandsListSection(
             dualBrandData = dualBrandData,
-            onBrandSelected = {},
+            onBrandSelected = onBrandSelected,
         )
     }
 }
