@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import androidx.annotation.RestrictTo
 import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -47,6 +48,7 @@ object PaymentMethodProvider {
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
     ): PaymentComponent<BasePaymentComponentState> {
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
@@ -54,6 +56,7 @@ object PaymentMethodProvider {
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
             componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
         ) as? PaymentComponent<BasePaymentComponentState> ?: run {
             // TODO - Errors Propagation [COSDK-85]. Propagate an initialization error via onError()
             error("Factory for payment method type: $txVariant is not registered.")

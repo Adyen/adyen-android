@@ -9,6 +9,7 @@
 package com.adyen.checkout.mbway.internal.ui
 
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -26,6 +27,7 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
     ): MBWayComponent {
         val stateManager = DefaultStateManager(
             viewStateFactory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),
