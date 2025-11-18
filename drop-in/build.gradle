@@ -10,6 +10,7 @@ plugins {
     alias libs.plugins.checkout.library
     alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.serialization
 }
 
 checkoutPublishing {
@@ -76,6 +77,8 @@ dependencies {
 
     // Dependencies
     implementation libs.androidx.recyclerview
+    implementation libs.compose.material
+    implementation libs.compose.material.icons
     implementation libs.material
 
     //Tests
