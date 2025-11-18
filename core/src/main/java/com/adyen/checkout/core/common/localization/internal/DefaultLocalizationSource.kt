@@ -43,6 +43,12 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS ->
                 R.string.checkout_card_security_code_hint_4_digits
 
+            CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_TITLE ->
+                R.string.checkout_card_dual_brand_selector_title
+
+            CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION ->
+                R.string.checkout_card_dual_brand_selector_description
+
             // MBWay
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number
             CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER -> R.string.checkout_mbway_invalid_phone_number
