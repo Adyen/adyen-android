@@ -244,6 +244,22 @@
             android:exported="true"
             android:launchMode="singleTop">
 
+            <!-- Use a different intent filter then the one used to handle the Drop-In result
+            (if you have both Drop-In and standalone components in your app). If you don't do this
+            the user will have to choose which Activity is used to handle the result, which is a
+            confusing user experience. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="${applicationId}"
+                    android:path="/v6sessions"
+                    android:scheme="adyencheckout" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
