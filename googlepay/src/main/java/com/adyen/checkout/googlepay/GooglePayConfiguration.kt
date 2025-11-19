@@ -242,7 +242,7 @@ class GooglePayConfiguration private constructor(
 
         /**
          * Sets the allowed issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set
-         * the shopper will only be able the select payment methods issued in the provided countries.
+         * the shopper will only be able to select payment methods issued in the provided countries.
          *
          * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive. Only set one at a time.
          *
@@ -258,7 +258,7 @@ class GooglePayConfiguration private constructor(
 
         /**
          * Sets the blocked issuer country codes. This list should contain ISO 3166-1 alpha-2 country codes. When set
-         * the shopper will not be able the select payment methods issued in the provided countries.
+         * the shopper will not be able to select payment methods issued in the provided countries.
          *
          * Note: allowedIssuerCountryCodes and blockedIssuerCountryCodes are mutually exclusive. Only set one at a time.
          *
