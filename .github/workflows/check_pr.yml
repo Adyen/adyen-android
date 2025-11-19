@@ -28,6 +28,7 @@ jobs:
     name: SonarCloud
     uses: ./.github/workflows/sonar_cloud.yml
     secrets: inherit
+    needs: test
   validate_public_api:
     name: Validate public API
     uses: ./.github/workflows/validate_public_api.yml
