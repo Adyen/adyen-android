@@ -16,8 +16,12 @@ jobs:
   assemble:
     name: Assemble
     uses: ./.github/workflows/assemble.yml
+  test:
+    name: Test
+    uses: ./.github/workflows/run_tests.yml
+    needs: assemble
   sonar_cloud:
     name: SonarCloud
     uses: ./.github/workflows/sonar_cloud.yml
-    needs: assemble
+    needs: test
     secrets: inherit
