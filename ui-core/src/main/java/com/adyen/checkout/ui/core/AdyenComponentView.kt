@@ -70,6 +70,8 @@ class AdyenComponentView @JvmOverloads constructor(
 
     private var attachedComponent = WeakReference<Component?>(null)
 
+    private var currentViewType: ComponentViewType? = null
+
     init {
         isVisible = isInEditMode
         orientation = VERTICAL
@@ -91,6 +93,12 @@ class AdyenComponentView @JvmOverloads constructor(
 
         component.viewFlow
             .onEach { componentViewType ->
+                if (currentViewType == componentViewType) {
+                    adyenLog(AdyenLogLevel.DEBUG) { "Same component view type emitted, skipping view recreation." }
+                    return@onEach
+                }
+                currentViewType = componentViewType
+
                 binding.frameLayoutComponentContainer.removeAllViews()
 
                 if (componentViewType == null) {
