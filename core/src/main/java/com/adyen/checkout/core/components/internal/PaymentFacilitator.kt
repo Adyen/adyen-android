@@ -19,6 +19,7 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionComponent
+import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.action.internal.ActionProvider
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
@@ -26,6 +27,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.CheckoutResult
+import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.ui.IntentHandlingComponent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -36,6 +38,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 internal class PaymentFacilitator(
     private val paymentComponent: PaymentComponent<BasePaymentComponentState>,
@@ -147,7 +150,16 @@ internal class PaymentFacilitator(
             adyenLog(AdyenLogLevel.DEBUG) {
                 "Action component ${actionComponent?.javaClass?.simpleName} is not type of IntentHandlingComponent"
             }
-            error("Action component does not implement IntentHandlingComponent")
+            coroutineScope.launch {
+                componentEventHandler.onActionComponentEvent(
+                    event = ActionComponentEvent.Error(
+                        error = ComponentError(
+                            RuntimeException("Action component does not implement IntentHandlingComponent"),
+                        ),
+                    ),
+                )
+            }
+            return
         }
         actionComponent.handleIntent(intent)
     }
