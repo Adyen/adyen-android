@@ -11,7 +11,6 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,12 +32,11 @@ import com.adyen.checkout.test.R
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-fun ListOption(
+fun ListItem(
     title: String,
     onClick: () -> Unit,
-    subtitle: String? = null,
     modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
+    subtitle: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
@@ -49,13 +46,6 @@ fun ListOption(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp))
-            .background(
-                color = if (isSelected) {
-                    CheckoutThemeProvider.colors.container
-                } else {
-                    Color.Transparent
-                },
-            )
             .clickable(
                 interactionSource = null,
                 indication = ripple(),
@@ -83,33 +73,25 @@ fun ListOption(
         trailingIcon?.let { icon ->
             icon()
         }
-
-        if (isSelected) {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.ic_checkmark),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionPreview() {
-    ListOption(title = "Title", onClick = {}, subtitle = "Subtitle")
+private fun ListItemPreview() {
+    ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionNoSubtitlePreview() {
-    ListOption(title = "Title", onClick = {})
+private fun ListItemNoSubtitlePreview() {
+    ListItem(title = "Title", onClick = {})
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionWithLeadingIconNoSubtitlePreview() {
-    ListOption(
+private fun ListItemWithLeadingIconNoSubtitlePreview() {
+    ListItem(
         title = "Title",
         onClick = {},
         leadingIcon = {
@@ -126,8 +108,8 @@ private fun ListOptionWithLeadingIconNoSubtitlePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionWithLeadingIconPreview() {
-    ListOption(
+private fun ListItemWithLeadingIconPreview() {
+    ListItem(
         title = "Title",
         onClick = {},
         subtitle = "Subtitle",
@@ -145,8 +127,8 @@ private fun ListOptionWithLeadingIconPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionWithTrailingIconPreview() {
-    ListOption(
+private fun ListItemWithTrailingIconPreview() {
+    ListItem(
         title = "Title",
         onClick = {},
         subtitle = "Subtitle",
@@ -164,8 +146,8 @@ private fun ListOptionWithTrailingIconPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionWithIconsPreview() {
-    ListOption(
+private fun ListItemWithIconsPreview() {
+    ListItem(
         title = "Title",
         onClick = {},
         subtitle = "Subtitle",
@@ -178,44 +160,6 @@ private fun ListOptionWithIconsPreview() {
                 tint = CheckoutThemeProvider.colors.text,
             )
         },
-        trailingIcon = {
-            Icon(
-                imageVector = ImageVector.vectorResource(
-                    R.drawable.ic_placeholder_image,
-                ),
-                contentDescription = null,
-                tint = CheckoutThemeProvider.colors.text,
-            )
-        },
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SelectedListOptionPreview() {
-    ListOption(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = true)
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SelectedListOptionLongTitlePreview() {
-    ListOption(
-        title = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the " +
-            "industry's standard dummy text ever since the 1500s.",
-        onClick = {},
-        subtitle = "Subtitle",
-        isSelected = true,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SelectedListOptionWithTrailingIconPreview() {
-    ListOption(
-        title = "Title",
-        onClick = {},
-        subtitle = "Subtitle",
-        isSelected = true,
         trailingIcon = {
             Icon(
                 imageVector = ImageVector.vectorResource(
@@ -231,10 +175,10 @@ private fun SelectedListOptionWithTrailingIconPreview() {
 @Suppress("MagicNumber")
 @Preview(showBackground = true)
 @Composable
-private fun ListOptionListPreview() {
+private fun ListItemListPreview() {
     Column {
         repeat(5) {
-            ListOption(title = "Title", onClick = {}, subtitle = "Subtitle", isSelected = it == 1)
+            ListItem(title = "Title", onClick = {}, subtitle = "Subtitle")
         }
     }
 }

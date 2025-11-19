@@ -22,7 +22,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.BodyEmphasized
 import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.ListOption
+import com.adyen.checkout.ui.internal.SelectableListItem
 
 @Composable
 internal fun DualBrandSelector(
@@ -68,7 +68,7 @@ private fun BrandsListSection(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
     ) {
         dualBrandData.brandOptions.take(2).map { brandItem ->
-            ListOption(
+            SelectableListItem(
                 title = brandItem.name,
                 onClick = { onBrandSelected.invoke(brandItem.brand) },
                 isSelected = brandItem.isSelected,
