@@ -13,8 +13,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      # Setup Java 17
-      # https://github.com/marketplace/actions/setup-java-jdk
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
