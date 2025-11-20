@@ -31,6 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
@@ -50,8 +52,7 @@ internal fun PreselectedPaymentMethodScreen(
         IconButton(
             onClick = { backPressedDispatcher?.onBackPressed() },
         ) {
-            // TODO - String resources
-            Icon(Icons.Default.Close, "Close")
+            Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
         }
 
         Spacer(Modifier.size(Dimensions.ExtraLarge))
@@ -101,8 +102,7 @@ internal fun PreselectedPaymentMethodScreen(
                 backStack.removeLastOrNull()
                 backStack.add(PaymentMethodListNavKey)
             },
-            // TODO - String resources
-            text = "Other payment solutions",
+            text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimensions.Large),
