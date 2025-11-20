@@ -38,6 +38,7 @@ import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.TestPublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -86,6 +87,7 @@ import java.util.Locale
 internal class StoredCardDelegateTest(
     @Mock private val submitHandler: SubmitHandler<CardComponentState>,
     @Mock private val cardConfigDataGenerator: CardConfigDataGenerator,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var cardEncryptor: TestCardEncryptor
@@ -341,6 +343,7 @@ internal class StoredCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
+                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
@@ -532,6 +535,7 @@ internal class StoredCardDelegateTest(
             order = order,
             cardConfigDataGenerator = cardConfigDataGenerator,
             cardValidationMapper = CardValidationMapper(),
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

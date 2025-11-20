@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test
 internal class ModelUtilsTest {
 
     @Test
-    fun parseModel_Pass_ParseMockedModelByClass() {
+    fun `when deserializeModel is called, then model is deserialized`() {
         val jsonObject = JSONObject()
 
         // Verify is deserializeModel is able to get the Serializer by the class
@@ -31,46 +31,46 @@ internal class ModelUtilsTest {
     }
 
     @Test
-    fun parseOpt_Pass_ParseMockedModel() {
+    fun `when deserializeOpt is called for non null value, then model is deserialized`() {
         val jsonObject = JSONObject()
         val parsedResult = deserializeOpt(jsonObject, MockModelObject.SERIALIZER)
         assertNotNull(parsedResult)
     }
 
     @Test
-    fun parseOpt_Pass_ParseNull() {
+    fun `when deserializeOpt is called for null, then null is returned`() {
         val parsedResult = deserializeOpt(null, MockModelObject.SERIALIZER)
         assertNull(parsedResult)
     }
 
     @Test
-    fun parseOptList_Pass_ParseMockedModel() {
+    fun `when deserializeOptList is called for non null value, then model is deserialized`() {
         val jsonArray = JSONArray()
         val modelList = deserializeOptList(jsonArray, MockModelObject.SERIALIZER)
         assertNotNull(modelList)
     }
 
     @Test
-    fun parseOptList_Pass_ParseNull() {
+    fun `when deserializeOptList is called for null, then null is returned`() {
         val modelList = deserializeOptList(null, MockModelObject.SERIALIZER)
         assertNull(modelList)
     }
 
     @Test
-    fun serializeOpt_Pass_SerializeMockedModel() {
+    fun `when serializeOpt is called for non null value, then model is serialized`() {
         val mockModelObject = MockModelObject()
         val jsonObject = serializeOpt(mockModelObject, MockModelObject.SERIALIZER)
         assertNotNull(jsonObject)
     }
 
     @Test
-    fun serializeOpt_Pass_SerializeNull() {
+    fun `when serializeOpt is called for null, then null is returned`() {
         val jsonObject = serializeOpt(null, MockModelObject.SERIALIZER)
         assertNull(jsonObject)
     }
 
     @Test
-    fun serializeOptList_Pass_SerializeMockedModelList() {
+    fun `when serializeOptList is called for non null value, then model is serialized`() {
         val modelObjectList: MutableList<MockModelObject> = ArrayList()
         modelObjectList.add(MockModelObject())
         val jsonArray = serializeOptList(modelObjectList, MockModelObject.SERIALIZER)
@@ -79,7 +79,7 @@ internal class ModelUtilsTest {
     }
 
     @Test
-    fun serializeOptList_Pass_SerializeNull() {
+    fun `when serializeOptList is called for null, then null is returned`() {
         val jsonArray = serializeOptList(null, MockModelObject.SERIALIZER)
         assertNull(jsonArray)
     }

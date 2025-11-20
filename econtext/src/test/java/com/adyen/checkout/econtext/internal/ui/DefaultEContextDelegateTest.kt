@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
@@ -57,6 +58,7 @@ import java.util.Locale
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
 internal class DefaultEContextDelegateTest(
     @Mock private val submitHandler: SubmitHandler<TestEContextComponentState>,
+    @Mock private val sdkDataProvider: SdkDataProvider
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -343,6 +345,7 @@ internal class DefaultEContextDelegateTest(
                 isReady = isReady,
             )
         },
+        sdkDataProvider = sdkDataProvider,
     )
 
     private fun createCheckoutConfiguration(

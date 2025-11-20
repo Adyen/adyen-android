@@ -36,6 +36,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.CashAppPayPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -68,6 +69,7 @@ constructor(
     override val componentParams: CashAppPayComponentParams,
     private val cashAppPayFactory: CashAppPayFactory,
     private val coroutineDispatcher: CoroutineDispatcher = DispatcherProvider.IO,
+    private val sdkDataProvider: SdkDataProvider,
 ) : CashAppPayDelegate, ButtonDelegate, CashAppPayListener {
 
     private val inputData = CashAppPayInputData()
@@ -184,6 +186,7 @@ constructor(
             order = order,
             amount = componentParams.amount,
             storePaymentMethod = onFileData != null,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return CashAppPayComponentState(

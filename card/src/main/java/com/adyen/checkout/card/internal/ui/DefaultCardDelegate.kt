@@ -49,6 +49,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyRepository
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -114,6 +115,7 @@ class DefaultCardDelegate(
     private val addressLookupDelegate: AddressLookupDelegate,
     private val cardConfigDataGenerator: CardConfigDataGenerator,
     private val dualBrandedCardHandler: DualBrandedCardHandler,
+    private val sdkDataProvider: SdkDataProvider,
 ) : CardDelegate, AddressLookupDelegate by addressLookupDelegate {
 
     private val inputData: CardInputData = CardInputData()
@@ -823,6 +825,9 @@ class DefaultCardDelegate(
             shopperReference = componentParams.shopperReference,
             order = order,
             amount = componentParams.amount,
+            sdkData = sdkDataProvider.createEncodedSdkData(
+                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            ),
         ).apply {
             if (isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value
