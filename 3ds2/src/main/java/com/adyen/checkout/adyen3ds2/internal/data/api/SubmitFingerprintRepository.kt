@@ -10,6 +10,7 @@ package com.adyen.checkout.adyen3ds2.internal.data.api
 
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintRequest
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
+import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -40,10 +41,10 @@ internal class SubmitFingerprintRepository internal constructor(
                 SubmitFingerprintResult.Completed(JSONObject(response.details))
             }
 
-//            response.type == RESPONSE_TYPE_ACTION && response.action is RedirectAction -> {
-//                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: received new RedirectAction" }
-//                SubmitFingerprintResult.Redirect(response.action)
-//            }
+            response.type == RESPONSE_TYPE_ACTION && response.action is RedirectAction -> {
+                adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: received new RedirectAction" }
+                SubmitFingerprintResult.Redirect(response.action)
+            }
 
             response.type == RESPONSE_TYPE_ACTION && response.action is Threeds2Action -> {
                 adyenLog(AdyenLogLevel.DEBUG) { "submitFingerprint: received new Threeds2Action" }

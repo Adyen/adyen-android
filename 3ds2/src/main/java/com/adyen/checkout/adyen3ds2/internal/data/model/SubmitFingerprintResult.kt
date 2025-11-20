@@ -8,13 +8,13 @@
 
 package com.adyen.checkout.adyen3ds2.internal.data.model
 
-// import com.adyen.checkout.core.action.data.RedirectAction
+import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
 import org.json.JSONObject
 
 internal sealed class SubmitFingerprintResult {
     class Completed(val details: JSONObject) : SubmitFingerprintResult()
 
-    //    class Redirect(val action: RedirectAction) : SubmitFingerprintResult()
+    class Redirect(val action: RedirectAction) : SubmitFingerprintResult()
     class Threeds2(val action: Threeds2Action) : SubmitFingerprintResult()
 }

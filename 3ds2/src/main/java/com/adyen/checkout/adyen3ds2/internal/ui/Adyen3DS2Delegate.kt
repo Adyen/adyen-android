@@ -23,6 +23,7 @@ import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParams
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.BaseThreeds2Action
+import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
 import com.adyen.checkout.core.action.data.Threeds2ChallengeAction
 import com.adyen.checkout.core.action.data.Threeds2FingerprintAction
@@ -37,6 +38,8 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
+import com.adyen.checkout.core.old.exception.CheckoutException
+import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
@@ -423,10 +426,10 @@ internal class Adyen3DS2Delegate(
                 emitDetails(result.details)
             }
 
-//            is SubmitFingerprintResult.Redirect -> {
-//                trackFingerprintCompletedEvent(ThreeDS2Events.Result.REDIRECT)
-//                makeRedirect(activity, result.action)
-//            }
+            is SubmitFingerprintResult.Redirect -> {
+                trackFingerprintCompletedEvent(ThreeDS2Events.Result.REDIRECT)
+                makeRedirect(activity, result.action)
+            }
 
             is SubmitFingerprintResult.Threeds2 -> {
                 trackFingerprintCompletedEvent(ThreeDS2Events.Result.THREEDS2)
@@ -504,6 +507,16 @@ internal class Adyen3DS2Delegate(
             if (challenge.messageVersion != PROTOCOL_VERSION_2_1_0) {
                 threeDSRequestorAppURL = componentParams.threeDSRequestorAppURL
             }
+        }
+    }
+
+    private fun makeRedirect(activity: Activity, action: RedirectAction) {
+        val url = action.url
+        try {
+            adyenLog(AdyenLogLevel.DEBUG) { "makeRedirect - $url" }
+            redirectHandler.launchUriRedirect(activity, url.orEmpty())
+        } catch (e: CheckoutException) {
+            emitError(e)
         }
     }
 
