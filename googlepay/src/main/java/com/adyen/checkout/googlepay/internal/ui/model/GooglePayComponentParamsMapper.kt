@@ -70,6 +70,8 @@ internal class GooglePayComponentParamsMapper(
             gatewayMerchantId = googlePayConfiguration.getPreferredGatewayMerchantId(paymentMethod),
             allowedAuthMethods = googlePayConfiguration.getAvailableAuthMethods(),
             allowedCardNetworks = googlePayConfiguration.getAvailableCardNetworks(paymentMethod),
+            allowedIssuerCountryCodes = googlePayConfiguration?.allowedIssuerCountryCodes,
+            blockedIssuerCountryCodes = googlePayConfiguration?.blockedIssuerCountryCodes,
             googlePayEnvironment = getGooglePayEnvironment(commonComponentParams.environment, googlePayConfiguration),
             totalPriceStatus = googlePayConfiguration?.totalPriceStatus ?: DEFAULT_TOTAL_PRICE_STATUS,
             countryCode = googlePayConfiguration?.countryCode,

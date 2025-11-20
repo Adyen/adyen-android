@@ -25,6 +25,8 @@ internal data class CardParameters(
     var allowedCardNetworks: List<String?>?,
     var isAllowPrepaidCards: Boolean,
     var isAllowCreditCards: Boolean?,
+    var allowedIssuerCountryCodes: List<String>?,
+    var blockedIssuerCountryCodes: List<String>?,
     var isAssuranceDetailsRequired: Boolean?,
     var isBillingAddressRequired: Boolean,
     var billingAddressParameters: BillingAddressParameters?,
@@ -35,6 +37,8 @@ internal data class CardParameters(
         private const val ALLOWED_CARD_NETWORKS = "allowedCardNetworks"
         private const val ALLOW_PREPAID_CARDS = "allowPrepaidCards"
         private const val ALLOW_CREDIT_CARDS = "allowCreditCards"
+        private const val ALLOWED_ISSUER_COUNTRY_CODES = "allowedIssuerCountryCodes"
+        private const val BLOCKED_ISSUER_COUNTRY_CODES = "blockedIssuerCountryCodes"
         private const val ASSURANCE_DETAILS_REQUIRED = "assuranceDetailsRequired"
         private const val BILLING_ADDRESS_REQUIRED = "billingAddressRequired"
         private const val BILLING_ADDRESS_PARAMETERS = "billingAddressParameters"
@@ -48,6 +52,14 @@ internal data class CardParameters(
                         putOpt(ALLOWED_CARD_NETWORKS, serializeOptStringList(modelObject.allowedCardNetworks))
                         putOpt(ALLOW_PREPAID_CARDS, modelObject.isAllowPrepaidCards)
                         putOpt(ALLOW_CREDIT_CARDS, modelObject.isAllowCreditCards)
+                        putOpt(
+                            ALLOWED_ISSUER_COUNTRY_CODES,
+                            serializeOptStringList(modelObject.allowedIssuerCountryCodes),
+                        )
+                        putOpt(
+                            BLOCKED_ISSUER_COUNTRY_CODES,
+                            serializeOptStringList(modelObject.blockedIssuerCountryCodes),
+                        )
                         putOpt(ASSURANCE_DETAILS_REQUIRED, modelObject.isAssuranceDetailsRequired)
                         putOpt(BILLING_ADDRESS_REQUIRED, modelObject.isBillingAddressRequired)
                         putOpt(
@@ -65,6 +77,8 @@ internal data class CardParameters(
                 allowedCardNetworks = parseOptStringList(jsonObject.optJSONArray(ALLOWED_CARD_NETWORKS)),
                 isAllowPrepaidCards = jsonObject.getBooleanOrNull(ALLOW_PREPAID_CARDS) ?: false,
                 isAllowCreditCards = jsonObject.getBooleanOrNull(ALLOW_CREDIT_CARDS),
+                allowedIssuerCountryCodes = parseOptStringList(jsonObject.optJSONArray(ALLOWED_ISSUER_COUNTRY_CODES)),
+                blockedIssuerCountryCodes = parseOptStringList(jsonObject.optJSONArray(BLOCKED_ISSUER_COUNTRY_CODES)),
                 isAssuranceDetailsRequired = jsonObject.getBooleanOrNull(ASSURANCE_DETAILS_REQUIRED),
                 isBillingAddressRequired = jsonObject.getBooleanOrNull(BILLING_ADDRESS_REQUIRED) ?: false,
                 billingAddressParameters = deserializeOpt(

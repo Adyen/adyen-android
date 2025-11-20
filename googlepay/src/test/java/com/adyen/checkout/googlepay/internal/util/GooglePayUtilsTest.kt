@@ -102,7 +102,9 @@ internal class GooglePayUtilsTest {
                                     "CARD_NETWORK_2",
                                     "CARD_NETWORK_3"
                                 ],
+                                "blockedIssuerCountryCodes":["DE","ES"],
                                 "allowCreditCards": true,
+                                "allowedIssuerCountryCodes":["NL","FR","GB"],
                                 "allowPrepaidCards": true
                             },
                             "tokenizationSpecification":
@@ -218,7 +220,9 @@ internal class GooglePayUtilsTest {
                                     "CARD_NETWORK_2",
                                     "CARD_NETWORK_3"
                                 ],
+                                "blockedIssuerCountryCodes":["DE","ES"],
                                 "allowCreditCards": true,
+                                "allowedIssuerCountryCodes":["NL","FR","GB"],
                                 "allowPrepaidCards": true
                             },
                             "tokenizationSpecification":
@@ -303,6 +307,8 @@ internal class GooglePayUtilsTest {
             merchantInfo = null,
             allowedAuthMethods = emptyList(),
             allowedCardNetworks = emptyList(),
+            allowedIssuerCountryCodes = null,
+            blockedIssuerCountryCodes = null,
             isAllowPrepaidCards = false,
             isAllowCreditCards = null,
             isAssuranceDetailsRequired = null,
@@ -336,6 +342,8 @@ internal class GooglePayUtilsTest {
             merchantInfo = MerchantInfo(merchantName = "MERCHANT_NAME", merchantId = "MERCHANT_ID"),
             allowedAuthMethods = listOf("AUTH_METHOD_1", "AUTH_METHOD_2"),
             allowedCardNetworks = listOf("CARD_NETWORK_1", "CARD_NETWORK_2", "CARD_NETWORK_3"),
+            allowedIssuerCountryCodes = listOf("NL", "FR", "GB"),
+            blockedIssuerCountryCodes = listOf("DE", "ES"),
             isAllowPrepaidCards = true,
             isAllowCreditCards = true,
             isAssuranceDetailsRequired = true,
