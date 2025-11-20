@@ -45,10 +45,13 @@ internal fun CardComponent(
                 viewState = viewState,
                 changeListener = changeListener,
             )
-            DualBrandSelector(
-                dualBrandData = viewState.dualBrandData,
-                onBrandSelected = changeListener::onBrandSelected,
-            )
+
+            viewState.dualBrandData?.let { dualBrandData ->
+                DualBrandSelector(
+                    dualBrandData = dualBrandData,
+                    onBrandSelected = changeListener::onBrandSelected,
+                )
+            }
         }
     }
     // TODO - Card Full UI

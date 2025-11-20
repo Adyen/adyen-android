@@ -24,69 +24,34 @@ internal class DualBrandedCardHandler {
 
         if (!isDualBrandedFlow(reliableAndSupportedTypes)) return null
 
-        val isSelectable = isSelectable(reliableAndSupportedTypes = reliableAndSupportedTypes)
         val brandOptions = mapToCardBrandItemList(
-            detectedCardTypes = detectedCardTypes,
+            reliableAndSupportedTypes = reliableAndSupportedTypes,
             selectedBrand = selectedBrand,
-            isSelectable = isSelectable,
-        )
-
-        val selectedCardBrand = getSelectedCardBrand(
-            isSelectable = isSelectable,
-            detectedCardTypes = detectedCardTypes,
-            selectedBrand = selectedBrand,
-            brandOptions = brandOptions,
         )
 
         return DualBrandData(
-            selectedBrand = selectedCardBrand,
-            brandOptions = brandOptions,
-            selectable = isSelectable,
+            brandOptionFirst = brandOptions[0],
+            brandOptionSecond = brandOptions[1],
         )
     }
 
-    private fun isSelectable(reliableAndSupportedTypes: List<DetectedCardType>) = reliableAndSupportedTypes.any {
+    private fun isDualBrandedFlow(reliableAndSupportedTypes: List<DetectedCardType>) =
+        reliableAndSupportedTypes.size > 1 && hasSupportedBrands(reliableAndSupportedTypes)
+
+    private fun hasSupportedBrands(reliableAndSupportedTypes: List<DetectedCardType>) = reliableAndSupportedTypes.any {
         it.cardBrand.txVariant in SUPPORTED_CARD_BRANDS
     }
 
-    private fun getSelectedCardBrand(
-        isSelectable: Boolean,
-        detectedCardTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?,
-        brandOptions: List<CardBrandItem>
-    ): CardBrand? {
-        return if (isSelectable) {
-            findSelectedCardType(detectedCardTypes, selectedBrand)?.cardBrand
-                ?: brandOptions.firstOrNull()?.brand
-        } else {
-            null
-        }
-    }
-
-    private fun findSelectedCardType(
-        detectedCardTypes: List<DetectedCardType>,
-        selectedBrand: CardBrand?
-    ): DetectedCardType? {
-        return detectedCardTypes.find { it.cardBrand.txVariant == selectedBrand?.txVariant }
-    }
-
-    private fun isDualBrandedFlow(reliableAndSupportedTypes: List<DetectedCardType>) =
-        reliableAndSupportedTypes.size > 1
-
     private fun mapToCardBrandItemList(
-        detectedCardTypes: List<DetectedCardType>,
+        reliableAndSupportedTypes: List<DetectedCardType>,
         selectedBrand: CardBrand?,
-        isSelectable: Boolean,
-    ): List<CardBrandItem> {
-        val filteredCardBrands = detectedCardTypes.filter { it.isSupported && it.isReliable }
-        return filteredCardBrands.mapIndexed { index, detectedCardType ->
-            if (selectedBrand == null) {
-                detectedCardType.mapToCardBrandItem(isSelectable && index == 0)
-            } else {
-                detectedCardType.mapToCardBrandItem(
-                    isSelectable && detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
-                )
-            }
+    ) = reliableAndSupportedTypes.mapIndexed { index, detectedCardType ->
+        if (selectedBrand == null) {
+            detectedCardType.mapToCardBrandItem(index == 0)
+        } else {
+            detectedCardType.mapToCardBrandItem(
+                detectedCardType.cardBrand.txVariant == selectedBrand.txVariant,
+            )
         }
     }
 

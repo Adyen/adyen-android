@@ -8,10 +8,14 @@
 
 package com.adyen.checkout.card.internal.ui.model
 
-import com.adyen.checkout.core.common.CardBrand
-
 internal data class DualBrandData(
-    val selectedBrand: CardBrand?,
-    val brandOptions: List<CardBrandItem>,
-    val selectable: Boolean
+    val brandOptionFirst: CardBrandItem,
+    val brandOptionSecond: CardBrandItem,
 )
+
+internal val DualBrandData.selectedBrand
+    get() = when {
+        brandOptionFirst.isSelected -> brandOptionFirst.brand
+        brandOptionSecond.isSelected -> brandOptionSecond.brand
+        else -> null
+    }

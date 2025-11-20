@@ -59,7 +59,7 @@ internal class CardViewStateValidator(
     }
 
     private fun getDetectedCardBrands(dualBrandData: DualBrandData?, fallbackDetectedCardBrand: CardBrand?) = when {
-        dualBrandData != null -> dualBrandData.brandOptions.map { it.brand }
+        dualBrandData != null -> listOf(dualBrandData.brandOptionFirst.brand, dualBrandData.brandOptionSecond.brand)
         fallbackDetectedCardBrand != null -> listOf(fallbackDetectedCardBrand)
         else -> listOf()
     }

@@ -99,20 +99,16 @@ internal class DualBrandedCardHandlerTest {
                 ),
                 null,
                 DualBrandData(
-                    brandOptions = listOf(
-                        CardBrandItem(
-                            name = "Visa",
-                            brand = CardBrand(CardType.VISA.txVariant),
-                            isSelected = true,
-                        ),
-                        CardBrandItem(
-                            name = "Cartes Bancaire",
-                            brand = CardBrand(CardType.CARTEBANCAIRE.txVariant),
-                            isSelected = false,
-                        ),
+                    brandOptionFirst = CardBrandItem(
+                        name = "Visa",
+                        brand = CardBrand(CardType.VISA.txVariant),
+                        isSelected = true,
                     ),
-                    selectedBrand = CardBrand(CardType.VISA.txVariant),
-                    selectable = true,
+                    brandOptionSecond = CardBrandItem(
+                        name = "Cartes Bancaire",
+                        brand = CardBrand(CardType.CARTEBANCAIRE.txVariant),
+                        isSelected = false,
+                    ),
                 ),
             ),
             arguments(
@@ -142,20 +138,16 @@ internal class DualBrandedCardHandlerTest {
                 ),
                 CardBrand(CardType.DANKORT.txVariant),
                 DualBrandData(
-                    brandOptions = listOf(
-                        CardBrandItem(
-                            name = "Visa",
-                            brand = CardBrand(CardType.VISA.txVariant),
-                            isSelected = false,
-                        ),
-                        CardBrandItem(
-                            name = "Dankort",
-                            brand = CardBrand(CardType.DANKORT.txVariant),
-                            isSelected = true,
-                        ),
+                    brandOptionFirst = CardBrandItem(
+                        name = "Visa",
+                        brand = CardBrand(CardType.VISA.txVariant),
+                        isSelected = false,
                     ),
-                    selectedBrand = CardBrand(CardType.DANKORT.txVariant),
-                    selectable = true,
+                    brandOptionSecond = CardBrandItem(
+                        name = "Dankort",
+                        brand = CardBrand(CardType.DANKORT.txVariant),
+                        isSelected = true,
+                    ),
                 ),
             ),
             arguments(
@@ -184,22 +176,7 @@ internal class DualBrandedCardHandlerTest {
                     ),
                 ),
                 null,
-                DualBrandData(
-                    brandOptions = listOf(
-                        CardBrandItem(
-                            name = "Mastercard",
-                            brand = CardBrand(CardType.MASTERCARD.txVariant),
-                            isSelected = false,
-                        ),
-                        CardBrandItem(
-                            name = "eftpos_australia",
-                            brand = CardBrand("eft_pos"),
-                            isSelected = false,
-                        ),
-                    ),
-                    selectedBrand = null,
-                    selectable = false,
-                ),
+                null,
             ),
         )
     }

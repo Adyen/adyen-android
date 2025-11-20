@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.card.internal.ui.model.CardBrandItem
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
@@ -26,12 +27,10 @@ import com.adyen.checkout.ui.internal.SelectableListItem
 
 @Composable
 internal fun DualBrandSelector(
-    dualBrandData: DualBrandData?,
+    dualBrandData: DualBrandData,
     onBrandSelected: (CardBrand) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (dualBrandData == null || !dualBrandData.selectable || dualBrandData.brandOptions.size < 2) return
-
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
@@ -67,18 +66,25 @@ private fun BrandsListSection(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
     ) {
-        dualBrandData.brandOptions.take(2).map { brandItem ->
-            SelectableListItem(
-                title = brandItem.name,
-                onClick = { onBrandSelected.invoke(brandItem.brand) },
-                isSelected = brandItem.isSelected,
-                leadingIcon = {
-                    CheckoutNetworkLogo(
-                        modifier = Modifier.size(Dimensions.LogoSize.large),
-                        txVariant = brandItem.brand.txVariant,
-                    )
-                },
-            )
-        }
+        BrandOption(dualBrandData.brandOptionFirst, onBrandSelected)
+        BrandOption(dualBrandData.brandOptionSecond, onBrandSelected)
     }
+}
+
+@Composable
+private fun BrandOption(
+    brandItem: CardBrandItem,
+    onBrandSelected: (CardBrand) -> Unit,
+) {
+    SelectableListItem(
+        title = brandItem.name,
+        onClick = { onBrandSelected.invoke(brandItem.brand) },
+        isSelected = brandItem.isSelected,
+        leadingIcon = {
+            CheckoutNetworkLogo(
+                modifier = Modifier.size(Dimensions.LogoSize.large),
+                txVariant = brandItem.brand.txVariant,
+            )
+        },
+    )
 }
