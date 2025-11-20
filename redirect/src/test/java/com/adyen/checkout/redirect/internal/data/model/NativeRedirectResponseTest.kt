@@ -1,7 +1,6 @@
 package com.adyen.checkout.redirect.internal.data.model
 
-import com.adyen.checkout.core.old.exception.ModelSerializationException
-import com.adyen.checkout.redirect.old.internal.data.model.NativeRedirectResponse
+import com.adyen.checkout.core.common.exception.ModelSerializationException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

@@ -58,6 +58,7 @@ abstract class Action : ModelObject() {
             val childSerializer = when (actionType) {
                 // TODO - Investigate if it is possible to move `getChildSerializer` to specific modules
                 AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
+                RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
                 else ->
                     // TODO - Error Propagation
                     // throw CheckoutException("Action type not found - $actionType")

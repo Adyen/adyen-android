@@ -12,4 +12,6 @@ package com.adyen.checkout.core.action.data
  */
 object ActionTypes {
     const val AWAIT = "await"
+    const val REDIRECT = "redirect"
+    const val NATIVE_REDIRECT = "nativeRedirect"
 }
