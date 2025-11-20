@@ -13,26 +13,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  code_analysis:
-    name: Code analysis
-    uses: ./.github/workflows/code_analysis.yml
-  assemble:
-    name: Assemble
-    uses: ./.github/workflows/assemble.yml
-    needs: code_analysis
-  test:
-    name: Test
-    uses: ./.github/workflows/run_tests.yml
-    needs: assemble
-  sonar_cloud:
-    name: SonarCloud
-    uses: ./.github/workflows/sonar_cloud.yml
+  build_and_test:
+    name: Build and test
+    uses: ./.github/workflows/build_and_test.yml
     secrets: inherit
-    needs: test
   validate_public_api:
     name: Validate public API
     uses: ./.github/workflows/validate_public_api.yml
-    secrets: inherit
   verify_dependencies:
     name: Validate dependencies
     uses: ./.github/workflows/validate_dependencies.yml
