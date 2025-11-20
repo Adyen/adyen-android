@@ -21,8 +21,8 @@ import org.json.JSONObject
  */
 abstract class PaymentMethodDetails : ModelObject() {
 
-    abstract var type: String?
-    abstract var checkoutAttemptId: String?
+    abstract val type: String?
+    abstract val checkoutAttemptId: String?
 
     companion object {
         const val TYPE = "type"
