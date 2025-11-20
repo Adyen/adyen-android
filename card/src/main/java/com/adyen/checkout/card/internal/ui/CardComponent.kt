@@ -271,10 +271,10 @@ internal class CardComponent(
             brand = cardBrand?.txVariant,
         )
 
-        val paymentComponentData = PaymentComponentData<CardPaymentMethod>(
+        val paymentComponentData = PaymentComponentData(
             paymentMethod = cardPaymentMethod,
             storePaymentMethod = null,
-            shopperReference = null, // TODO - Card Component Params
+            shopperReference = componentParams.shopperReference,
             order = null,
             amount = componentParams.amount,
         )
