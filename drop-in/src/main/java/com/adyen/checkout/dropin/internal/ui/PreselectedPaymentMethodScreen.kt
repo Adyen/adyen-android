@@ -25,18 +25,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.core.common.internal.imageLoader
+import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.NetworkImage
 import com.adyen.checkout.ui.internal.PrimaryButton
 import com.adyen.checkout.ui.internal.SecondaryButton
 import com.adyen.checkout.ui.internal.Title
@@ -58,13 +56,9 @@ internal fun PreselectedPaymentMethodScreen(
 
         Spacer(Modifier.size(Dimensions.ExtraLarge))
 
-        // TODO - Replace with CheckoutNetworkLogo
-        val logoUrl = "https://checkoutshopper-test.adyen.com" +
-            "/checkoutshopper/images/logos/medium/${viewState.logoTxVariant}-xxxhdpi.png"
-        NetworkImage(
-            url = logoUrl,
+        CheckoutNetworkLogo(
+            txVariant = viewState.logoTxVariant,
             contentDescription = null,
-            imageLoader = LocalContext.current.imageLoader,
             modifier = Modifier
                 .size(80.dp, 52.dp)
                 .align(Alignment.CenterHorizontally),
