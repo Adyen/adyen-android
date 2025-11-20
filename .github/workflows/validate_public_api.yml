@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
@@ -24,6 +27,7 @@ jobs:
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v4
         with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
       - name: Check public API
