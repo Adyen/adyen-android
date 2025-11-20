@@ -16,9 +16,9 @@ import org.json.JSONObject
 
 @Parcelize
 data class GenericPaymentMethod(
-    override var type: String?,
-    override var checkoutAttemptId: String?,
-    var subtype: String?,
+    override val type: String?,
+    override val checkoutAttemptId: String?,
+    val subtype: String?,
 ) : PaymentMethodDetails() {
 
     companion object {

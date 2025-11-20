@@ -15,19 +15,19 @@ import org.json.JSONObject
 
 @Parcelize
 data class CardPaymentMethod(
-    override var type: String?,
-    override var checkoutAttemptId: String?,
-    var encryptedCardNumber: String? = null,
-    var encryptedExpiryMonth: String? = null,
-    var encryptedExpiryYear: String? = null,
-    var encryptedSecurityCode: String? = null,
-    var encryptedPassword: String? = null,
-    var holderName: String? = null,
-    var storedPaymentMethodId: String? = null,
-    var taxNumber: String? = null,
-    var brand: String? = null,
-    var threeDS2SdkVersion: String? = null,
-    var fundingSource: String? = null,
+    override val type: String?,
+    override val checkoutAttemptId: String?,
+    val encryptedCardNumber: String? = null,
+    val encryptedExpiryMonth: String? = null,
+    val encryptedExpiryYear: String? = null,
+    val encryptedSecurityCode: String? = null,
+    val encryptedPassword: String? = null,
+    val holderName: String? = null,
+    val storedPaymentMethodId: String? = null,
+    val taxNumber: String? = null,
+    val brand: String? = null,
+    val threeDS2SdkVersion: String? = null,
+    val fundingSource: String? = null,
 ) : PaymentMethodDetails() {
 
     companion object {
