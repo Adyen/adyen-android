@@ -213,12 +213,11 @@ internal class CardComponent(
             // TODO - Card. Add isCvcHidden check
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
             threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-        ).apply {
             // TODO - Card. Holder name
 //            if (isHolderNameRequired()) {
 //                holderName = stateOutputData.holderNameState.value
 //            }
-        }
+        )
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>(
             paymentMethod = cardPaymentMethod,
