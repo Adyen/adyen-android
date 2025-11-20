@@ -41,6 +41,7 @@ internal class PreselectedPaymentMethodViewModel(
         return PreselectedPaymentMethodViewState(
             logoTxVariant = logoTxVariant,
             title = title,
+            // TODO - Move to string resources after we support arguments
             // TODO - get amount
             subtitle = "Use your ${storedPaymentMethod.name} to pay {AMOUNT}",
             payButtonText = "Use $title",
