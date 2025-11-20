@@ -207,20 +207,17 @@ internal class CardComponent(
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            encryptedCardNumber = encryptedCard.encryptedCardNumber,
+            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
+            encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
+            // TODO - Card. Add isCvcHidden check
+            encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
         ).apply {
-            encryptedCardNumber = encryptedCard.encryptedCardNumber
-            encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
-            encryptedExpiryYear = encryptedCard.encryptedExpiryYear
-
-//            if (!isCvcHidden()) {
-            encryptedSecurityCode = encryptedCard.encryptedSecurityCode
-//            }
-
+            // TODO - Card. Holder name
 //            if (isHolderNameRequired()) {
 //                holderName = stateOutputData.holderNameState.value
 //            }
-
-            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion }
         }
 
         val paymentComponentData = PaymentComponentData<CardPaymentMethod>(

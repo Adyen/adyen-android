@@ -16,9 +16,9 @@ import org.json.JSONObject
 
 @Parcelize
 class MBWayPaymentMethod(
-    override var type: String?,
-    override var checkoutAttemptId: String?,
-    var telephoneNumber: String?,
+    override val type: String?,
+    override val checkoutAttemptId: String?,
+    val telephoneNumber: String?,
 ) : PaymentMethodDetails() {
 
     companion object {

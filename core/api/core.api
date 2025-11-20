@@ -1252,19 +1252,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/CardPaymentM
 	public final fun getThreeDS2SdkVersion ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setBrand (Ljava/lang/String;)V
-	public fun setCheckoutAttemptId (Ljava/lang/String;)V
-	public final fun setEncryptedCardNumber (Ljava/lang/String;)V
-	public final fun setEncryptedExpiryMonth (Ljava/lang/String;)V
-	public final fun setEncryptedExpiryYear (Ljava/lang/String;)V
-	public final fun setEncryptedPassword (Ljava/lang/String;)V
-	public final fun setEncryptedSecurityCode (Ljava/lang/String;)V
-	public final fun setFundingSource (Ljava/lang/String;)V
-	public final fun setHolderName (Ljava/lang/String;)V
-	public final fun setStoredPaymentMethodId (Ljava/lang/String;)V
-	public final fun setTaxNumber (Ljava/lang/String;)V
-	public final fun setThreeDS2SdkVersion (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1296,9 +1283,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/GenericPayme
 	public final fun getSubtype ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setCheckoutAttemptId (Ljava/lang/String;)V
-	public final fun setSubtype (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1324,9 +1308,6 @@ public final class com/adyen/checkout/core/components/paymentmethod/MBWayPayment
 	public fun getCheckoutAttemptId ()Ljava/lang/String;
 	public final fun getTelephoneNumber ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
-	public fun setCheckoutAttemptId (Ljava/lang/String;)V
-	public final fun setTelephoneNumber (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
@@ -1355,8 +1336,6 @@ public abstract class com/adyen/checkout/core/components/paymentmethod/PaymentMe
 	public fun <init> ()V
 	public abstract fun getCheckoutAttemptId ()Ljava/lang/String;
 	public abstract fun getType ()Ljava/lang/String;
-	public abstract fun setCheckoutAttemptId (Ljava/lang/String;)V
-	public abstract fun setType (Ljava/lang/String;)V
 }
 
 public final class com/adyen/checkout/core/components/paymentmethod/PaymentMethodDetails$Companion {
