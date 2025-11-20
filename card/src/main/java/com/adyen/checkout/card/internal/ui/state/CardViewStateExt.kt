@@ -26,16 +26,13 @@ internal fun CardViewState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     checkoutAttemptId: String,
-    onEncryptionError: () -> Unit,
+    onEncryptionError: (EncryptionException) -> Unit,
 ): CardPaymentComponentState {
     val unencryptedCardBuilder = UnencryptedCard.Builder()
 
     val publicKey = componentParams.publicKey
     if (publicKey == null) {
-        return CardPaymentComponentState(
-            data = PaymentComponentData(null, null, null),
-            isValid = false,
-        )
+        return invalidCardPaymentComponentState()
     }
 
     val encryptedCard: EncryptedCard = try {
@@ -54,12 +51,9 @@ internal fun CardViewState.toPaymentComponentState(
         }
 
         cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
-    } catch (_: EncryptionException) {
-        onEncryptionError()
-        return CardPaymentComponentState(
-            data = PaymentComponentData(null, null, null),
-            isValid = false,
-        )
+    } catch (e: EncryptionException) {
+        onEncryptionError(e)
+        return invalidCardPaymentComponentState()
     }
     val cardBrand = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
     val holderName = if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
@@ -104,3 +98,8 @@ private fun mapComponentState(
         isValid = true,
     )
 }
+
+private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
+    data = PaymentComponentData(null, null, null),
+    isValid = false,
+)

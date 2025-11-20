@@ -92,7 +92,7 @@ internal class CardComponent(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            ) {
+            ) { e ->
                 val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
                 analyticsManager.trackEvent(event)
                 // exceptionChannel.trySend(e)
