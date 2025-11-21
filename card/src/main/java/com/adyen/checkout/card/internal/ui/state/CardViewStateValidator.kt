@@ -89,7 +89,6 @@ internal class CardViewStateValidator(
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         val cardNumberError = cardValidationMapper.mapCardNumberValidation(
-            // TODO - Card Number Luhn Check & Brand Supported
             validation = CardValidationUtils.validateCardNumber(
                 number = cardNumber.text,
                 enableLuhnCheck = enableLuhnCheck,
