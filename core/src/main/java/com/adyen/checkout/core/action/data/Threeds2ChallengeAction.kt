@@ -15,10 +15,10 @@ import org.json.JSONObject
 
 @Parcelize
 data class Threeds2ChallengeAction(
-    override var type: String? = null,
-    override var paymentData: String? = null,
-    override var paymentMethodType: String? = null,
-    var token: String? = null
+    override val type: String? = null,
+    override val paymentData: String? = null,
+    override val paymentMethodType: String? = null,
+    val token: String? = null
 ) : BaseThreeds2Action() {
 
     companion object {

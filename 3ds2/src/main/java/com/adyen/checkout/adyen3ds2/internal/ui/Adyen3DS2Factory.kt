@@ -33,7 +33,7 @@ internal class Adyen3DS2Factory(private val application: Application) : ActionFa
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
-        commonComponentParams: CommonComponentParams
+        commonComponentParams: CommonComponentParams,
     ): Adyen3DS2Component {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
