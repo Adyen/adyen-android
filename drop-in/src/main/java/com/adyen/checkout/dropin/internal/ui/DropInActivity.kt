@@ -16,12 +16,16 @@ import androidx.activity.viewModels
 import androidx.annotation.RestrictTo
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.remember
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DropInActivity : ComponentActivity() {
@@ -36,6 +40,16 @@ class DropInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        viewModel.navigator.finishFlow
+            .flowWithLifecycle(lifecycle)
+            .onEach { shouldFinish ->
+                if (shouldFinish) {
+                    finish()
+                }
+            }
+            .launchIn(lifecycleScope)
+
         setContent {
             InternalCheckoutTheme {
                 CheckoutCompositionLocalProvider(
@@ -47,14 +61,7 @@ class DropInActivity : ComponentActivity() {
                     NavDisplay(
                         backStack = viewModel.navigator.backStack,
                         sceneStrategy = remember { BottomSheetSceneStrategy() },
-                        onBack = {
-                            viewModel.navigator.back()
-
-                            val backStack = viewModel.navigator.backStack
-                            if (backStack.size == 1 && backStack.first() == EmptyNavKey) {
-                                finish()
-                            }
-                        },
+                        onBack = { viewModel.navigator.back() },
                         entryProvider = entryProvider {
                             entry<EmptyNavKey> {
                                 // This empty entry makes sure a bottom sheet can be rendered on top of nothing

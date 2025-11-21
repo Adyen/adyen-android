@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,10 +47,9 @@ private fun PreselectedPaymentMethodContent(
     navigator: DropInNavigator,
     viewState: PreselectedPaymentMethodViewState,
 ) {
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Column(Modifier.fillMaxWidth()) {
         IconButton(
-            onClick = { backPressedDispatcher?.onBackPressed() },
+            onClick = { navigator.back() },
         ) {
             Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
         }
