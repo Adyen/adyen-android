@@ -39,7 +39,6 @@ import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.PaymentDataRepository
 import com.adyen.checkout.core.old.exception.CheckoutException
-import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.core.redirect.internal.RedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult
