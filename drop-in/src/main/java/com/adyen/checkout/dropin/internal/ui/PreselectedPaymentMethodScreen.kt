@@ -19,11 +19,12 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.rememberNavBackStack
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
@@ -33,7 +34,7 @@ import com.adyen.checkout.ui.internal.Title
 
 @Composable
 internal fun PreselectedPaymentMethodScreen(
-    backStack: NavBackStack<NavKey>,
+    backStack: SnapshotStateList<NavKey>,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Column(Modifier.fillMaxWidth()) {
@@ -90,6 +91,6 @@ internal fun PreselectedPaymentMethodScreen(
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
     PreselectedPaymentMethodScreen(
-        backStack = rememberNavBackStack(),
+        backStack = remember { mutableStateListOf() },
     )
 }
