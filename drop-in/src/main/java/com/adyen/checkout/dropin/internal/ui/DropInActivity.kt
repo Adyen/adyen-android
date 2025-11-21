@@ -19,11 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
-import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import com.adyen.checkout.ui.internal.InternalCheckoutTheme
-import java.util.Locale
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DropInActivity : ComponentActivity() {
@@ -40,11 +38,11 @@ class DropInActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             InternalCheckoutTheme {
-                // TODO - Provide correct parameters
                 CheckoutCompositionLocalProvider(
-                    locale = Locale.getDefault(),
+                    locale = viewModel.dropInParams.shopperLocale,
+                    // TODO - support custom localization for drop-in
                     localizationProvider = null,
-                    environment = Environment.TEST,
+                    environment = viewModel.dropInParams.environment,
                 ) {
                     val backStack = viewModel.backStack
                     NavDisplay(
