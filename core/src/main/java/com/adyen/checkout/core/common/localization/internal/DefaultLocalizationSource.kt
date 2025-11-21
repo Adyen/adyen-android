@@ -15,7 +15,7 @@ import java.util.Locale
 
 internal class DefaultLocalizationSource {
 
-    @Suppress("CyclomaticComplexMethod", "UnusedParameter")
+    @Suppress("CyclomaticComplexMethod", "UNUSED_PARAMETER")
     fun getString(context: Context, locale: Locale, key: CheckoutLocalizationKey): String {
         val resId = when (key) {
             // Await
@@ -42,6 +42,12 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS ->
                 R.string.checkout_card_security_code_hint_4_digits
+
+            // Drop-in
+            CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
+
+            // General
+            CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
 
             // MBWay
             CheckoutLocalizationKey.MBWAY_PHONE_NUMBER -> R.string.checkout_mbway_phone_number

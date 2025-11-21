@@ -79,6 +79,7 @@ dependencies {
     implementation libs.androidx.recyclerview
     implementation libs.compose.material
     implementation libs.compose.material.icons
+    implementation libs.compose.viewmodel
     implementation libs.material
 
     //Tests
