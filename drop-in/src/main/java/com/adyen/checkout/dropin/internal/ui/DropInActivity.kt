@@ -44,13 +44,13 @@ class DropInActivity : ComponentActivity() {
                     localizationProvider = null,
                     environment = viewModel.dropInParams.environment,
                 ) {
-                    val backStack = viewModel.backStack
                     NavDisplay(
-                        backStack = backStack,
+                        backStack = viewModel.navigator.backStack,
                         sceneStrategy = remember { BottomSheetSceneStrategy() },
                         onBack = {
-                            backStack.removeLastOrNull()
+                            viewModel.navigator.back()
 
+                            val backStack = viewModel.navigator.backStack
                             if (backStack.size == 1 && backStack.first() == EmptyNavKey) {
                                 finish()
                             }
@@ -64,7 +64,7 @@ class DropInActivity : ComponentActivity() {
                                 metadata = BottomSheetSceneStrategy.bottomSheet(),
                             ) { key ->
                                 PreselectedPaymentMethodScreen(
-                                    backStack,
+                                    viewModel.navigator,
                                     viewModel(
                                         factory = PreselectedPaymentMethodViewModel.Factory(
                                             dropInParams = viewModel.dropInParams,
