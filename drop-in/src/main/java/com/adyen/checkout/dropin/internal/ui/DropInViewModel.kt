@@ -8,12 +8,9 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
@@ -33,7 +30,7 @@ internal class DropInViewModel(
 
     lateinit var dropInParams: DropInParams
 
-    val backStack: SnapshotStateList<NavKey> = mutableStateListOf()
+    val navigator: DropInNavigator = DropInNavigator()
 
     init {
         if (verifyInput(input)) {
@@ -94,8 +91,7 @@ internal class DropInViewModel(
         } else {
             PreselectedPaymentMethodNavKey(storedPaymentMethods.first())
         }
-        val startingEntries = listOf(EmptyNavKey, startingPoint)
-        backStack.addAll(startingEntries)
+        navigator.navigateTo(startingPoint)
     }
 
     private fun CheckoutContext.getCheckoutConfiguration(): CheckoutConfiguration {
