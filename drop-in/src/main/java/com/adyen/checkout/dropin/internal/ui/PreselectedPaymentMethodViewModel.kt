@@ -11,14 +11,21 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.components.core.CheckoutCurrency
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.util.Currency
+import java.util.Locale
 import kotlin.reflect.KClass
 
 internal class PreselectedPaymentMethodViewModel(
+    private val dropInParams: DropInParams,
     private val storedPaymentMethod: StoredPaymentMethod,
 ) : ViewModel() {
 
@@ -38,23 +45,38 @@ internal class PreselectedPaymentMethodViewModel(
             storedPaymentMethod.name.orEmpty()
         }
 
+        val formattedAmount = formatAmount(dropInParams.amount, dropInParams.shopperLocale)
+
         return PreselectedPaymentMethodViewState(
             logoTxVariant = logoTxVariant,
             title = title,
             // TODO - Move to string resources after we support arguments
-            // TODO - get amount
-            subtitle = "Use your ${storedPaymentMethod.name} to pay {AMOUNT}",
+            subtitle = "Use your ${storedPaymentMethod.name} to pay $formattedAmount",
             payButtonText = "Use $title",
         )
     }
 
+    private fun formatAmount(amount: Amount, locale: Locale): String {
+        val currencyCode = amount.currency
+        val checkoutCurrency = CheckoutCurrency.find(currencyCode.orEmpty())
+        val currency = Currency.getInstance(currencyCode)
+        val currencyFormat = DecimalFormat.getCurrencyInstance(locale)
+        currencyFormat.currency = currency
+        currencyFormat.minimumFractionDigits = checkoutCurrency.fractionDigits
+        currencyFormat.maximumFractionDigits = checkoutCurrency.fractionDigits
+        val value = BigDecimal.valueOf(amount.value, checkoutCurrency.fractionDigits)
+        return currencyFormat.format(value)
+    }
+
     class Factory(
+        private val dropInParams: DropInParams,
         private val storedPaymentMethod: StoredPaymentMethod,
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return PreselectedPaymentMethodViewModel(
+                dropInParams = dropInParams,
                 storedPaymentMethod = storedPaymentMethod,
             ) as T
         }
