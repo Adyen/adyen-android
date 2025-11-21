@@ -66,7 +66,10 @@ class DropInActivity : ComponentActivity() {
                                 PreselectedPaymentMethodScreen(
                                     backStack,
                                     viewModel(
-                                        factory = PreselectedPaymentMethodViewModel.Factory(key.storedPaymentMethod),
+                                        factory = PreselectedPaymentMethodViewModel.Factory(
+                                            dropInParams = viewModel.dropInParams,
+                                            storedPaymentMethod = key.storedPaymentMethod,
+                                        ),
                                     ),
                                 )
                             }
