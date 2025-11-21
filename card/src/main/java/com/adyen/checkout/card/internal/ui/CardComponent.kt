@@ -14,13 +14,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.card.CardMainNavigationKey
+import com.adyen.checkout.card.OnBinLookupCallback
+import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.internal.data.api.DetectCardTypeRepository
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.card.internal.helper.toBinLookupData
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.binValue
 import com.adyen.checkout.card.internal.ui.view.CardComponent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -59,6 +63,9 @@ internal class CardComponent(
     private val detectCardTypeRepository: DetectCardTypeRepository,
 ) : PaymentComponent<CardPaymentComponentState>, CardChangeListener {
 
+    private var onBinValueCallback: OnBinValueCallback? = null
+    private var onBinLookupCallback: OnBinLookupCallback? = null
+
     private var _coroutineScope: CoroutineScope? = null
     private val coroutineScope: CoroutineScope get() = requireNotNull(_coroutineScope)
 
@@ -75,6 +82,14 @@ internal class CardComponent(
     fun initialize(coroutineScope: CoroutineScope) {
         _coroutineScope = coroutineScope
         subscribeToDetectedCardTypes()
+    }
+
+    fun setOnBinValueCallback(onBinValueCallback: OnBinValueCallback?) {
+        this.onBinValueCallback = onBinValueCallback
+    }
+
+    fun setOnBinLookupCallback(onBinLookupCallback: OnBinLookupCallback?) {
+        this.onBinLookupCallback = onBinLookupCallback
     }
 
     override fun submit() {
@@ -102,11 +117,16 @@ internal class CardComponent(
             coroutineScope = coroutineScope,
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
         )
+
+        val oldBinValue = stateManager.viewState.value.binValue
         stateManager.updateViewStateAndValidate {
             copy(
                 cardNumber = cardNumber.updateText(newCardNumber),
             )
         }
+        val newBinValue = stateManager.viewState.value.binValue
+
+        onBinValueChange(oldBin = oldBinValue, newBin = newBinValue)
     }
 
     override fun onCardNumberFocusChanged(hasFocus: Boolean) {
@@ -254,12 +274,20 @@ internal class CardComponent(
             "New detected card types emitted - detectedCardTypes: ${detectedCardTypes.map { it.cardBrand }} " +
                 "- isReliable: ${detectedCardTypes.firstOrNull()?.isReliable}"
         }
+        val isReliable = detectedCardTypes.any { it.isReliable }
+        if (stateManager.componentState.detectedCardTypes != detectedCardTypes && isReliable) {
+            onBinLookupCallback?.onBinLookup(
+                binLookupData = detectedCardTypes.map(DetectedCardType::toBinLookupData),
+            )
+        }
         stateManager.updateComponentState {
             copy(detectedCardTypes = detectedCardTypes)
         }
-        // TODO - Card. Optional bin lookup callback.
-//        if (detectedCardTypes != outputData.detectedCardTypes) {
-//            onBinLookupListener?.invoke(detectedCardTypes.map(DetectedCardType::toBinLookupData))
-//        }
+    }
+
+    private fun onBinValueChange(oldBin: String, newBin: String) {
+        if (oldBin != newBin) {
+            onBinValueCallback?.onBinValue(newBin)
+        }
     }
 }

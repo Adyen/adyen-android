@@ -8,6 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import com.adyen.checkout.card.OnBinLookupCallback
+import com.adyen.checkout.card.OnBinValueCallback
 import com.adyen.checkout.card.getCardConfiguration
 import com.adyen.checkout.card.internal.data.api.BinLookupService
 import com.adyen.checkout.card.internal.data.api.DefaultDetectCardTypeRepository
@@ -19,6 +21,7 @@ import com.adyen.checkout.card.internal.ui.state.CardViewStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateValidator
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -33,6 +36,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
@@ -65,6 +69,8 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             detectCardTypeRepository = detectCardTypeRepository,
         ).apply {
             initialize(coroutineScope)
+            setOnBinValueCallback(checkoutCallbacks.getCallback(OnBinValueCallback::class))
+            setOnBinLookupCallback(checkoutCallbacks.getCallback(OnBinLookupCallback::class))
         }
     }
 }

@@ -20,6 +20,9 @@ data class TextInputState(
     val showError: Boolean = false,
 ) {
 
+    val isValid: Boolean
+        get() = isInteractedWith && errorMessage == null
+
     fun updateText(text: String) = copy(text = text, isInteractedWith = true, showError = false)
 
     fun updateFocus(hasFocus: Boolean) = copy(
