@@ -21,9 +21,9 @@ internal class DropInParamsMapper {
         checkoutConfiguration: CheckoutConfiguration,
         deviceLocale: Locale,
         sessionParams: SessionParams?,
-    ): com.adyen.checkout.dropin.old.internal.ui.model.DropInParams {
+    ): DropInParams {
         val dropInConfiguration = checkoutConfiguration.getDropInConfiguration()
-        return com.adyen.checkout.dropin.old.internal.ui.model.DropInParams(
+        return DropInParams(
             shopperLocale = getShopperLocale(checkoutConfiguration, sessionParams) ?: deviceLocale,
             environment = sessionParams?.environment ?: checkoutConfiguration.environment,
             clientKey = sessionParams?.clientKey ?: checkoutConfiguration.clientKey,
