@@ -16,12 +16,12 @@ import org.json.JSONObject
 
 @Parcelize
 internal data class ChallengeToken(
-    var acsReferenceNumber: String? = null,
-    var acsSignedContent: String? = null,
-    var acsTransID: String? = null,
-    var acsURL: String? = null,
-    var messageVersion: String? = null,
-    var threeDSServerTransID: String? = null
+    val acsReferenceNumber: String? = null,
+    val acsSignedContent: String? = null,
+    val acsTransID: String? = null,
+    val acsURL: String? = null,
+    val messageVersion: String? = null,
+    val threeDSServerTransID: String? = null
 ) : ModelObject() {
 
     companion object {
