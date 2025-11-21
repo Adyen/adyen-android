@@ -81,7 +81,11 @@ private fun ExpiryDateIcon(
 
     AnimatedContent(targetState = resourceId, modifier = modifier) {
         Icon(
-            modifier = modifier.width(Dimensions.LogoSize.small.width),
+            modifier = if (isInvalid) {
+                Modifier.size(Dimensions.LogoSize.small.width)
+            } else {
+                Modifier.size(Dimensions.LogoSize.small)
+            },
             imageVector = ImageVector.vectorResource(it),
             contentDescription = null,
             tint = Color.Unspecified,
