@@ -159,12 +159,6 @@ public final class com/adyen/checkout/core/action/data/Threeds2Action : com/adye
 	public final fun getSubtype ()Ljava/lang/String;
 	public final fun getToken ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
-	public final fun setAuthorisationToken (Ljava/lang/String;)V
-	public fun setPaymentData (Ljava/lang/String;)V
-	public fun setPaymentMethodType (Ljava/lang/String;)V
-	public final fun setSubtype (Ljava/lang/String;)V
-	public final fun setToken (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 
@@ -215,10 +209,6 @@ public final class com/adyen/checkout/core/action/data/Threeds2ChallengeAction :
 	public final fun getToken ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setPaymentData (Ljava/lang/String;)V
-	public fun setPaymentMethodType (Ljava/lang/String;)V
-	public final fun setToken (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -255,10 +245,6 @@ public final class com/adyen/checkout/core/action/data/Threeds2FingerprintAction
 	public final fun getToken ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public fun setPaymentData (Ljava/lang/String;)V
-	public fun setPaymentMethodType (Ljava/lang/String;)V
-	public final fun setToken (Ljava/lang/String;)V
-	public fun setType (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
