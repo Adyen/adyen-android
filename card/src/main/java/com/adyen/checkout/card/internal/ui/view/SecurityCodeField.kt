@@ -10,6 +10,8 @@ package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
@@ -26,6 +28,7 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.ui.internal.CheckoutTextField
 import com.adyen.checkout.ui.internal.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.Dimensions
 
 @Composable
 internal fun SecurityCodeField(
@@ -45,7 +48,7 @@ internal fun SecurityCodeField(
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
             } else {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
-            }
+            },
         )
     }
 
@@ -67,13 +70,13 @@ internal fun SecurityCodeField(
                 MAX_LENGTH_SECURITY_CODE_DEFAULT
             } else {
                 MAX_LENGTH_SECURITY_CODE_AMEX
-            }
+            },
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
             SecurityCodeIcon(state = securityCodeState, isAmex = isAmex)
-        }
+        },
     )
 }
 
@@ -97,6 +100,11 @@ private fun SecurityCodeIcon(
         modifier = modifier,
     ) {
         Icon(
+            modifier = if (isInvalid) {
+                Modifier.size(Dimensions.LogoSize.small.width)
+            } else {
+                Modifier.size(Dimensions.LogoSize.small)
+            },
             imageVector = ImageVector.vectorResource(it),
             contentDescription = null,
             tint = Color.Unspecified,
