@@ -15,25 +15,40 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
-    input: DropInResultContract.Input?,
+    startingInput: DropInResultContract.Input?,
 ) : ViewModel() {
 
-    val backStack: SnapshotStateList<NavKey> = mutableStateListOf()
+    private lateinit var input: DropInResultContract.Input
 
     private lateinit var paymentMethods: PaymentMethodsApiResponse
 
+    val backStack: SnapshotStateList<NavKey> = mutableStateListOf()
+
+    val checkoutConfiguration: CheckoutConfiguration = input.checkoutContext.getCheckoutConfiguration()
+
     init {
-        initializeInput(input)
+        initializeInput(startingInput)
+        initializePaymentMethods()
         initializeBackStack()
     }
 
-    private fun initializeInput(input: DropInResultContract.Input?) {
-        val paymentMethods = when (val context = input?.checkoutContext) {
+    private fun initializeInput(startingInput: DropInResultContract.Input?) {
+        if (startingInput == null) {
+            // TODO - Return DropInResult.Failed and close drop-in
+            return
+        } else {
+            input = startingInput
+        }
+    }
+
+    private fun initializePaymentMethods() {
+        val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
             else -> null
@@ -57,6 +72,13 @@ internal class DropInViewModel(
         backStack.addAll(startingEntries)
     }
 
+    private fun CheckoutContext.getCheckoutConfiguration(): CheckoutConfiguration {
+        return when (this) {
+            is CheckoutContext.Sessions -> checkoutConfiguration
+            is CheckoutContext.Advanced -> checkoutConfiguration
+        }
+    }
+
     class Factory(
         private val inputProvider: () -> DropInResultContract.Input?,
     ) : ViewModelProvider.Factory {
@@ -64,7 +86,7 @@ internal class DropInViewModel(
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return DropInViewModel(
-                input = inputProvider(),
+                startingInput = inputProvider(),
             ) as T
         }
     }
