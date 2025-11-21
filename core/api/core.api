@@ -534,6 +534,8 @@ public abstract interface class com/adyen/checkout/core/common/internal/model/Mo
 
 public final class com/adyen/checkout/core/common/localization/CheckoutLocalizationKey : java/lang/Enum {
 	public static final field AWAIT_LOADING Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_DUAL_BRAND_SELECTOR_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_DUAL_BRAND_SELECTOR_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

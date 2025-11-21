@@ -9,8 +9,10 @@
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
+import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
 
 internal data class CardComponentState(
     val detectedCardTypes: List<DetectedCardType>,
+    val selectedCardBrand: CardBrand?,
 ) : ComponentState

@@ -25,5 +25,6 @@ internal class CardViewStateFactory(
         detectedCardBrands = listOf(),
         supportedCardBrands = componentParams.supportedCardBrands,
         isSupportedCardBrandsShown = true,
+        dualBrandData = null,
     )
 }

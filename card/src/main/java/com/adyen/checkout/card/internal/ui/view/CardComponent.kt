@@ -39,31 +39,55 @@ internal fun CardComponent(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+            verticalArrangement = Arrangement.spacedBy(Dimensions.ExtraLarge),
         ) {
-            CardNumberField(
-                cardNumberState = viewState.cardNumber,
-                supportedCardBrands = viewState.supportedCardBrands,
-                isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
-                detectedCardBrands = viewState.detectedCardBrands,
-                isAmex = viewState.isAmex,
-                onCardNumberChanged = changeListener::onCardNumberChanged,
-                onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
+            CardDetailsSection(
+                viewState = viewState,
+                changeListener = changeListener,
             )
-            ExpiryDateField(
-                expiryDateState = viewState.expiryDate,
-                onExpiryDateChanged = changeListener::onExpiryDateChanged,
-                onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
-            )
-            SecurityCodeField(
-                securityCodeState = viewState.securityCode,
-                onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
-                onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
-                isAmex = viewState.isAmex,
-            )
+
+            viewState.dualBrandData?.let { dualBrandData ->
+                DualBrandSelector(
+                    dualBrandData = dualBrandData,
+                    onBrandSelected = changeListener::onBrandSelected,
+                )
+            }
         }
     }
     // TODO - Card Full UI
+}
+
+@Composable
+private fun CardDetailsSection(
+    viewState: CardViewState,
+    changeListener: CardChangeListener,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+    ) {
+        CardNumberField(
+            cardNumberState = viewState.cardNumber,
+            supportedCardBrands = viewState.supportedCardBrands,
+            isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
+            detectedCardBrands = viewState.detectedCardBrands,
+            isAmex = viewState.isAmex,
+            onCardNumberChanged = changeListener::onCardNumberChanged,
+            onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
+        )
+        ExpiryDateField(
+            expiryDateState = viewState.expiryDate,
+            onExpiryDateChanged = changeListener::onExpiryDateChanged,
+            onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
+        )
+        SecurityCodeField(
+            securityCodeState = viewState.securityCode,
+            onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
+            onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
+            isAmex = viewState.isAmex,
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -84,6 +108,7 @@ private fun CardComponentPreview() {
             isSupportedCardBrandsShown = false,
             isLoading = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
+            dualBrandData = null,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit
@@ -97,6 +122,8 @@ private fun CardComponentPreview() {
             override fun onSecurityCodeChanged(newSecurityCode: String) = Unit
 
             override fun onSecurityCodeFocusChanged(hasFocus: Boolean) = Unit
+
+            override fun onBrandSelected(cardBrand: CardBrand) = Unit
         },
         onSubmitClick = {},
     )
