@@ -15,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.Checkout
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.dropin.old.DropInResult
 import com.adyen.checkout.dropin.old.SessionDropInResult
 import com.adyen.checkout.example.BuildConfig
@@ -185,8 +186,9 @@ internal class MainViewModel @Inject constructor(
 
             // TODO - Get config from provider
             val checkoutConfiguration = CheckoutConfiguration(
-                Environment.TEST,
-                BuildConfig.CLIENT_KEY,
+                environment = Environment.TEST,
+                clientKey = BuildConfig.CLIENT_KEY,
+                amount = Amount("USD", 1337),
             )
 
             val result = paymentMethods?.let {
@@ -212,8 +214,9 @@ internal class MainViewModel @Inject constructor(
 
             // TODO - Get config from provider
             val checkoutConfiguration = CheckoutConfiguration(
-                Environment.TEST,
-                BuildConfig.CLIENT_KEY,
+                environment = Environment.TEST,
+                clientKey = BuildConfig.CLIENT_KEY,
+                amount = Amount("USD", 1337),
             )
 
             val sessionModel = paymentsRepository.createSession(createSessionRequest())
