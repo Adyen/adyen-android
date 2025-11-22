@@ -1,0 +1,52 @@
+name: Build and test
+
+on:
+  workflow_call
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Analyse, build and test
+    runs-on:
+      group: larger-runners
+      labels: ubuntu-latest-8-cores
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-read-only: false
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Run static code analysis
+        run: ./gradlew detekt ktlint -Pstrip-resources=true
+
+      - name: Assemble debug
+        run: ./gradlew assembleDebug -Pstrip-resources=true
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest jacocoDebugTestReport -Pstrip-resources=true
+
+      - name: Check lint
+        run: ./gradlew lintDebug
+
+      - name: Upload reports to Sonar
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew sonar --no-parallel
