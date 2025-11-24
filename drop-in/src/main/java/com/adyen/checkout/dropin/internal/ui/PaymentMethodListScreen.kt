@@ -17,14 +17,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
@@ -49,21 +52,25 @@ internal fun PaymentMethodListScreen(
     PaymentMethodListContent(navigator, viewState)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
         topBar = {
-            TopAppBar(
+            MediumFlexibleTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = CheckoutThemeProvider.colors.background,
+                    scrolledContainerColor = CheckoutThemeProvider.colors.background,
                     navigationIconContentColor = CheckoutThemeProvider.colors.text,
                 ),
-                title = {},
+                title = {
+                    Title(viewState.amount)
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = { navigator.back() },
@@ -71,14 +78,16 @@ private fun PaymentMethodListContent(
                         Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
                     }
                 },
+                scrollBehavior = scrollBehavior,
             )
         },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding),
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
         ) {
-            Title(viewState.amount, modifier = Modifier.padding(horizontal = Dimensions.Large))
-
             Spacer(Modifier.size(Dimensions.ExtraSmall))
 
             // TODO - Extract to string resources
@@ -88,7 +97,7 @@ private fun PaymentMethodListContent(
                 modifier = Modifier.padding(horizontal = Dimensions.Large),
             )
 
-            Spacer(Modifier.size(Dimensions.ExtraLarge))
+            Spacer(Modifier.size(Dimensions.Large))
 
             viewState.paymentOptionsSection?.let { PaymentOptionsSection(it) }
         }
@@ -99,9 +108,7 @@ private fun PaymentMethodListContent(
 private fun PaymentOptionsSection(
     paymentOptionsSection: PaymentOptionsSection,
 ) {
-    Column(
-        modifier = Modifier.verticalScroll(rememberScrollState()),
-    ) {
+    Column {
         SubHeadlineEmphasized(
             text = paymentOptionsSection.title,
             modifier = Modifier.padding(horizontal = Dimensions.Large),
