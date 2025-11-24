@@ -11,10 +11,10 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.data.model.format
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +31,10 @@ internal class PaymentMethodListViewModel(
         val paymentOptionsSection = paymentMethodsApiResponse.paymentMethods?.let { paymentMethods ->
             PaymentOptionsSection(
                 title = "Other options",
-                options = paymentMethods.map { it.toPaymentMethodItem() },
+                options = paymentMethods
+                    // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
+                    .filter { !PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(it.type) }
+                    .map { it.toPaymentMethodItem() },
             )
         }
 
