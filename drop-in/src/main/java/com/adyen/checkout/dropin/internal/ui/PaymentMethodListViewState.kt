@@ -12,8 +12,8 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 internal data class PaymentMethodListViewState(
     val amount: String,
+    val favoritesSection: FavoritesSection?,
     val paymentOptionsSection: PaymentOptionsSection?,
-    val favoritesSection: FavoritesSection? = null,
 )
 
 internal data class FavoritesSection(

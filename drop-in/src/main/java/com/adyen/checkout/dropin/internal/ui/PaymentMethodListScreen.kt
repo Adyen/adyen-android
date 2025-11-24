@@ -88,7 +88,42 @@ private fun PaymentMethodListContent(
 
             Spacer(Modifier.size(Dimensions.Large))
 
+            viewState.favoritesSection?.let {
+                FavoritesSection(it)
+
+                Spacer(Modifier.size(Dimensions.Small))
+            }
+
             viewState.paymentOptionsSection?.let { PaymentOptionsSection(it) }
+        }
+    }
+}
+
+@Composable
+private fun FavoritesSection(
+    favoritesSection: FavoritesSection,
+) {
+    Column {
+        SubHeadlineEmphasized(
+            text = "Favorites",
+            modifier = Modifier.padding(horizontal = Dimensions.Large),
+        )
+
+        Spacer(Modifier.size(Dimensions.Small))
+
+        favoritesSection.options.forEach { item ->
+            ListItem(
+                leadingIcon = {
+                    CheckoutNetworkLogo(
+                        txVariant = item.icon,
+                        modifier = Modifier.size(Dimensions.LogoSize.large),
+                    )
+                },
+                title = item.title,
+                subtitle = item.subtitle,
+                onClick = {},
+                modifier = Modifier.padding(Dimensions.ExtraSmall),
+            )
         }
     }
 }
@@ -129,6 +164,19 @@ private fun PaymentMethodListContentPreview() {
         localizationProvider = null,
         environment = Environment.TEST,
     ) {
+        val storedPaymentMethods = listOf(
+            PaymentMethodItem(
+                icon = "mc",
+                title = "Mastercard •••• 0023",
+                subtitle = "AAdvantage card",
+            ),
+            PaymentMethodItem(
+                icon = "wechat",
+                title = "@someName",
+                subtitle = "WeChat Pay",
+            ),
+        )
+
         val paymentMethods = listOf(
             PaymentMethodItem(
                 icon = "card",
@@ -143,10 +191,14 @@ private fun PaymentMethodListContentPreview() {
                 title = "iDEAL",
             ),
         )
+
         PaymentMethodListContent(
             navigator = DropInNavigator(),
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
+                favoritesSection = FavoritesSection(
+                    options = storedPaymentMethods,
+                ),
                 paymentOptionsSection = PaymentOptionsSection(
                     title = CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS,
                     options = paymentMethods,
