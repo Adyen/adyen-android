@@ -18,15 +18,15 @@ import kotlinx.coroutines.flow.Flow
 @SuppressLint("ComposableNaming")
 @Composable
 internal fun threeDsEvent(
-    adyen3DS2Delegate: Adyen3DS2Delegate,
-    viewEventFlow: Flow<Adyen3DS2Event>,
+    threeDS2Delegate: ThreeDS2Delegate,
+    viewEventFlow: Flow<ThreeDS2Event>,
     onError: (RuntimeException) -> Unit,
 ) {
     val context = LocalContext.current
-    LaunchedEffect(adyen3DS2Delegate, viewEventFlow, onError) {
+    LaunchedEffect(threeDS2Delegate, viewEventFlow, onError) {
         viewEventFlow.collect { event ->
             when (event) {
-                is Adyen3DS2Event.HandleAction -> adyen3DS2Delegate.handleAction(context)
+                is ThreeDS2Event.HandleAction -> threeDS2Delegate.handleAction(context)
             }
         }
     }

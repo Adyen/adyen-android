@@ -12,7 +12,7 @@ import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParam
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.threeds2.customization.UiCustomization
 
-internal data class Adyen3DS2ComponentParams(
+internal data class ThreeDS2ComponentParams(
     private val commonComponentParams: CommonComponentParams,
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,

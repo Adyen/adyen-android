@@ -11,7 +11,7 @@ package com.adyen.checkout.adyen3ds2.internal.data.model
 import org.json.JSONException
 import org.json.JSONObject
 
-internal class Adyen3DS2Serializer {
+internal class ThreeDS2Serializer {
 
     @Suppress("TooGenericExceptionThrown")
     @Throws(RuntimeException::class)

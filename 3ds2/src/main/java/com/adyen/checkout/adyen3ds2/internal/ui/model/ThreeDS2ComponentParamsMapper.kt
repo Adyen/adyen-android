@@ -13,14 +13,14 @@ import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 
-internal class Adyen3DS2ComponentParamsMapper {
+internal class ThreeDS2ComponentParamsMapper {
 
     fun mapToParams(
         checkoutConfiguration: CheckoutConfiguration,
         commonComponentParams: CommonComponentParams,
-    ): Adyen3DS2ComponentParams {
+    ): ThreeDS2ComponentParams {
         val adyen3ds2Configuration = checkoutConfiguration.getAdyen3DS2Configuration()
-        return Adyen3DS2ComponentParams(
+        return ThreeDS2ComponentParams(
             commonComponentParams = commonComponentParams,
             uiCustomization = adyen3ds2Configuration?.uiCustomization,
             threeDSRequestorAppURL = adyen3ds2Configuration?.threeDSRequestorAppURL,

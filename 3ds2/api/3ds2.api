@@ -6,25 +6,25 @@ public final class com/adyen/checkout/adyen3ds2/Adyen3DS2Configuration$Creator :
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/adyen3ds2/Adyen3DS2ConfigurationKt {
-	public static final fun adyen3ds2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun adyen3ds2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-}
-
-public final class com/adyen/checkout/adyen3ds2/Adyen3DS2MainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
-	public static final field $stable I
-	public static final field INSTANCE Lcom/adyen/checkout/adyen3ds2/Adyen3DS2MainNavigationKey;
-	public fun equals (Ljava/lang/Object;)Z
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
 public final class com/adyen/checkout/adyen3ds2/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
 	public static final field DEBUG Z
 	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
 	public fun <init> ()V
+}
+
+public final class com/adyen/checkout/adyen3ds2/ThreeDS2ConfigurationKt {
+	public static final fun adyen3ds2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun adyen3ds2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+}
+
+public final class com/adyen/checkout/adyen3ds2/ThreeDS2MainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/adyen3ds2/ThreeDS2MainNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/adyen3ds2/internal/data/model/ChallengeToken$Creator : android/os/Parcelable$Creator {

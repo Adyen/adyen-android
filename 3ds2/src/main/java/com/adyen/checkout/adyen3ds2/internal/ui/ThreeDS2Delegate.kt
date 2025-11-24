@@ -15,11 +15,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
-import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.data.model.ChallengeToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.FingerprintToken
 import com.adyen.checkout.adyen3ds2.internal.data.model.SubmitFingerprintResult
-import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParams
+import com.adyen.checkout.adyen3ds2.internal.data.model.ThreeDS2Serializer
+import com.adyen.checkout.adyen3ds2.internal.ui.model.ThreeDS2ComponentParams
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.data.BaseThreeds2Action
@@ -65,13 +65,13 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Suppress("LongParameterList", "TooManyFunctions", "UnusedPrivateProperty")
-internal class Adyen3DS2Delegate(
+internal class ThreeDS2Delegate(
     private val action: Action,
-    private val componentParams: Adyen3DS2ComponentParams,
+    private val componentParams: ThreeDS2ComponentParams,
     override val savedStateHandle: SavedStateHandle,
     private val analyticsManager: AnalyticsManager,
     private val redirectHandler: RedirectHandler,
-    private val adyen3DS2Serializer: Adyen3DS2Serializer,
+    private val threeDS2Serializer: ThreeDS2Serializer,
     private val threeDS2Service: ThreeDS2Service,
     private val submitFingerprintRepository: SubmitFingerprintRepository,
     private val paymentDataRepository: PaymentDataRepository,
@@ -283,7 +283,7 @@ internal class Adyen3DS2Delegate(
             if (submitFingerprintAutomatically) {
                 submitFingerprintAutomatically(activity, encodedFingerprint)
             } else {
-                emitDetails(adyen3DS2Serializer.createFingerprintDetails(encodedFingerprint), shouldClearState = false)
+                emitDetails(threeDS2Serializer.createFingerprintDetails(encodedFingerprint), shouldClearState = false)
             }
         }
     }
@@ -655,12 +655,12 @@ internal class Adyen3DS2Delegate(
         // Check whether authorizationToken was set and create the corresponding details object
         val token = (action as? Threeds2Action)?.authorisationToken
         return if (token == null) {
-            adyen3DS2Serializer.createChallengeDetails(
+            threeDS2Serializer.createChallengeDetails(
                 transactionStatus = transactionStatus,
                 errorDetails = errorDetails,
             )
         } else {
-            adyen3DS2Serializer.createThreeDsResultDetails(
+            threeDS2Serializer.createThreeDsResultDetails(
                 transactionStatus = transactionStatus,
                 errorDetails = errorDetails,
                 authorisationToken = token,

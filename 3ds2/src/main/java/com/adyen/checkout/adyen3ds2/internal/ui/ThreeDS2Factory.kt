@@ -12,8 +12,8 @@ import android.app.Application
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.adyen3ds2.internal.data.api.SubmitFingerprintService
-import com.adyen.checkout.adyen3ds2.internal.data.model.Adyen3DS2Serializer
-import com.adyen.checkout.adyen3ds2.internal.ui.model.Adyen3DS2ComponentParamsMapper
+import com.adyen.checkout.adyen3ds2.internal.data.model.ThreeDS2Serializer
+import com.adyen.checkout.adyen3ds2.internal.ui.model.ThreeDS2ComponentParamsMapper
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.internal.ActionFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
@@ -26,7 +26,7 @@ import com.adyen.checkout.core.redirect.internal.DefaultRedirectHandler
 import com.adyen.threeds2.ThreeDS2Service
 import kotlinx.coroutines.CoroutineScope
 
-internal class Adyen3DS2Factory(private val application: Application) : ActionFactory<Adyen3DS2Component> {
+internal class ThreeDS2Factory(private val application: Application) : ActionFactory<ThreeDS2Component> {
     override fun create(
         action: Action,
         coroutineScope: CoroutineScope,
@@ -34,18 +34,18 @@ internal class Adyen3DS2Factory(private val application: Application) : ActionFa
         checkoutConfiguration: CheckoutConfiguration,
         savedStateHandle: SavedStateHandle,
         commonComponentParams: CommonComponentParams,
-    ): Adyen3DS2Component {
+    ): ThreeDS2Component {
         val redirectHandler = DefaultRedirectHandler()
         val paymentDataRepository = PaymentDataRepository(savedStateHandle)
         val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
-        val adyen3DS2DetailsSerializer = Adyen3DS2Serializer()
+        val adyen3DS2DetailsSerializer = ThreeDS2Serializer()
 
         val adyen3DS2ComponentParams =
-            Adyen3DS2ComponentParamsMapper().mapToParams(checkoutConfiguration, commonComponentParams)
+            ThreeDS2ComponentParamsMapper().mapToParams(checkoutConfiguration, commonComponentParams)
 
-        val adyen3DS2Delegate = Adyen3DS2Delegate(
+        val threeDS2Delegate = ThreeDS2Delegate(
             action = action,
             componentParams = adyen3DS2ComponentParams,
             savedStateHandle = savedStateHandle,
@@ -55,14 +55,14 @@ internal class Adyen3DS2Factory(private val application: Application) : ActionFa
             paymentDataRepository = paymentDataRepository,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             coroutineDispatcher = DispatcherProvider.Default,
-            adyen3DS2Serializer = adyen3DS2DetailsSerializer,
+            threeDS2Serializer = adyen3DS2DetailsSerializer,
             application = application,
         ).apply {
             initialize(coroutineScope)
         }
 
-        return Adyen3DS2Component(
-            adyen3DS2Delegate = adyen3DS2Delegate,
+        return ThreeDS2Component(
+            threeDS2Delegate = threeDS2Delegate,
         )
     }
 }

@@ -8,6 +8,6 @@
 
 package com.adyen.checkout.adyen3ds2.internal.ui
 
-internal sealed class Adyen3DS2Event {
-    data object HandleAction : Adyen3DS2Event()
+internal sealed class ThreeDS2Event {
+    data object HandleAction : ThreeDS2Event()
 }

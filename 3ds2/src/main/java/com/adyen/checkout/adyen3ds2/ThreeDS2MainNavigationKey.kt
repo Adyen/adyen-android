@@ -13,4 +13,4 @@ import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
 /**
  * Represent the main content of the [com.adyen.checkout.core.action.data.Threeds2Action].
  */
-data object Adyen3DS2MainNavigationKey : CheckoutNavigationKey
+data object ThreeDS2MainNavigationKey : CheckoutNavigationKey
