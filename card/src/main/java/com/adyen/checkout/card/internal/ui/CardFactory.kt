@@ -57,7 +57,6 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         val binLookupService = BinLookupService(httpClient)
         val detectCardTypeRepository = DefaultDetectCardTypeRepository(cardEncryptor, binLookupService)
 
-        // TODO - Card full implementation
         return CardComponent(
             analyticsManager = analyticsManager,
             stateManager = stateManager,

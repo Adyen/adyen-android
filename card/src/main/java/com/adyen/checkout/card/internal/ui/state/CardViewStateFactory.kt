@@ -16,7 +16,6 @@ internal class CardViewStateFactory(
     private val componentParams: CardComponentParams
 ) : ViewStateFactory<CardViewState> {
 
-    // TODO - Card Full Implementation
     override fun createDefaultViewState() = CardViewState(
         cardNumber = TextInputState(isFocused = true),
         expiryDate = TextInputState(),

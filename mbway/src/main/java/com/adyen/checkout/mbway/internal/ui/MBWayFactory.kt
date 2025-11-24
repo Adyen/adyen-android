@@ -37,8 +37,6 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
             componentParams = componentParamsBundle.commonComponentParams,
             analyticsManager = analyticsManager,
             stateManager = stateManager,
-            // TODO - Order to be passed later
-            order = null,
         )
     }
 }

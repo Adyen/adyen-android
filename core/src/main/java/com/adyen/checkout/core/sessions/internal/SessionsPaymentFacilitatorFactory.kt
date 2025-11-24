@@ -58,7 +58,6 @@ internal class SessionsPaymentFacilitatorFactory(
             publicKey = publicKey,
         )
 
-        // TODO - Analytics. We might need to change the logic on AnalyticsManager creation.
         val analyticsManager = AnalyticsManagerFactory().provide(
             componentParams = componentParamsBundle.commonComponentParams,
             applicationContext = applicationContext,

@@ -15,7 +15,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.data.OrderRequest
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
@@ -41,8 +40,6 @@ internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val stateManager: StateManager<MBWayViewState, DefaultComponentState>,
-    // TODO - Order to be passed later
-    private val order: OrderRequest? = null,
 ) : PaymentComponent<MBWayPaymentComponentState>,
     MBWayChangeListener {
 
@@ -66,7 +63,6 @@ internal class MBWayComponent(
         if (stateManager.isValid) {
             val paymentComponentState = stateManager.viewState.value.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-                order = order,
                 amount = componentParams.amount,
             )
             eventChannel.trySend(
@@ -80,7 +76,6 @@ internal class MBWayComponent(
     // TODO - After card, decide if we should extract this function
     private fun MBWayViewState.toPaymentComponentState(
         checkoutAttemptId: String,
-        order: OrderRequest?,
         amount: Amount?,
     ): MBWayPaymentComponentState {
         val sanitizedPhoneNumber = phoneNumber.text.trimStart('0')
@@ -94,7 +89,7 @@ internal class MBWayComponent(
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
-            order = order,
+            order = null,
             amount = amount,
         )
 

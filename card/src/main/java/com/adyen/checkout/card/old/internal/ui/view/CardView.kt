@@ -429,7 +429,6 @@ class CardView @JvmOverloads constructor(
         binding.editTextExpiryDate.setAccessibilityDescription()
     }
 
-    // TODO - Investigate contentDescription in ViewFieldState [COSDK-490]
     private fun ExpiryDateInput.setAccessibilityDescription() {
         val expiryDateHint = localizedContext.getString(R.string.checkout_card_expiry_date_hint)
         val expiryDateFormatLabel = localizedContext.getString(R.string.checkout_card_expiry_date_format_label)
@@ -454,7 +453,6 @@ class CardView @JvmOverloads constructor(
         binding.editTextSecurityCode.setAccessibilityDescription(false)
     }
 
-    // TODO - Investigate contentDescription in ViewFieldState [COSDK-490]
     private fun SecurityCodeInput.setAccessibilityDescription(isAmex: Boolean) {
         val securityCodeHint = localizedContext.getString(R.string.checkout_card_security_code_hint)
         val contentDescription = if (isAmex) {
