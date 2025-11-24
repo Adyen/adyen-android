@@ -45,7 +45,7 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
         val adyen3DS2ComponentParams =
             ThreeDS2ComponentParamsMapper().mapToParams(checkoutConfiguration, commonComponentParams)
 
-        val threeDS2Delegate = ThreeDS2Delegate(
+        return ThreeDS2Component(
             action = action,
             componentParams = adyen3DS2ComponentParams,
             savedStateHandle = savedStateHandle,
@@ -60,9 +60,5 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
         ).apply {
             initialize(coroutineScope)
         }
-
-        return ThreeDS2Component(
-            threeDS2Delegate = threeDS2Delegate,
-        )
     }
 }

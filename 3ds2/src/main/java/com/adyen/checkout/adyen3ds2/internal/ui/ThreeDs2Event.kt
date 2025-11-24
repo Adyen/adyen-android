@@ -9,6 +9,7 @@
 package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -18,15 +19,15 @@ import kotlinx.coroutines.flow.Flow
 @SuppressLint("ComposableNaming")
 @Composable
 internal fun threeDsEvent(
-    threeDS2Delegate: ThreeDS2Delegate,
+    handleAction: (Context) -> Unit,
     viewEventFlow: Flow<ThreeDS2Event>,
     onError: (RuntimeException) -> Unit,
 ) {
     val context = LocalContext.current
-    LaunchedEffect(threeDS2Delegate, viewEventFlow, onError) {
+    LaunchedEffect(handleAction, viewEventFlow, onError) {
         viewEventFlow.collect { event ->
             when (event) {
-                is ThreeDS2Event.HandleAction -> threeDS2Delegate.handleAction(context)
+                is ThreeDS2Event.HandleAction -> handleAction(context)
             }
         }
     }
