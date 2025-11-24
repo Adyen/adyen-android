@@ -21,7 +21,7 @@ class Threeds2Action(
     val token: String? = null,
     val subtype: String? = null,
     val authorisationToken: String? = null
-) : BaseThreeds2Action() {
+) : Action() {
 
     companion object {
         const val ACTION_TYPE = ActionTypes.THREEDS2

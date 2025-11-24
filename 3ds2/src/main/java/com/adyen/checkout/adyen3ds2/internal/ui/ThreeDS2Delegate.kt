@@ -22,11 +22,8 @@ import com.adyen.checkout.adyen3ds2.internal.data.model.ThreeDS2Serializer
 import com.adyen.checkout.adyen3ds2.internal.ui.model.ThreeDS2ComponentParams
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
-import com.adyen.checkout.core.action.data.BaseThreeds2Action
 import com.adyen.checkout.core.action.data.RedirectAction
 import com.adyen.checkout.core.action.data.Threeds2Action
-import com.adyen.checkout.core.action.data.Threeds2ChallengeAction
-import com.adyen.checkout.core.action.data.Threeds2FingerprintAction
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
@@ -97,40 +94,14 @@ internal class ThreeDS2Delegate(
     }
 
     private fun handleAction(action: Action, activity: Activity) {
-        if (action !is BaseThreeds2Action) {
+        if (action !is Threeds2Action) {
             emitError(RuntimeException("Unsupported action"))
             return
         }
 
         val paymentData = action.paymentData
         paymentDataRepository.paymentData = paymentData
-        when (action) {
-            is Threeds2FingerprintAction -> handleThreeds2FingerprintAction(action, activity)
-            is Threeds2ChallengeAction -> handleThreeds2ChallengeAction(action, activity)
-            is Threeds2Action -> handleThreeds2Action(action, activity)
-        }
-    }
-
-    private fun handleThreeds2FingerprintAction(
-        action: Threeds2FingerprintAction,
-        activity: Activity,
-    ) {
-        if (action.token.isNullOrEmpty()) {
-            trackFingerprintErrorEvent(
-                errorEvent = ErrorEvent.THREEDS2_TOKEN_MISSING,
-                message = "Token is missing for Threeds2FingerprintAction",
-            )
-            emitError(RuntimeException("Fingerprint token not found."))
-            return
-        }
-
-        trackFingerprintActionEvent(action)
-
-        identifyShopper(
-            activity = activity,
-            encodedFingerprintToken = action.token.orEmpty(),
-            submitFingerprintAutomatically = false,
-        )
+        handleThreeds2Action(action, activity)
     }
 
     private fun handleThreeds2ActionSubtype(
@@ -174,24 +145,6 @@ internal class ThreeDS2Delegate(
                 challengeShopper(activity, token)
             }
         }
-    }
-
-    private fun handleThreeds2ChallengeAction(
-        action: Threeds2ChallengeAction,
-        activity: Activity,
-    ) {
-        if (action.token.isNullOrEmpty()) {
-            trackChallengeErrorEvent(
-                errorEvent = ErrorEvent.THREEDS2_TOKEN_MISSING,
-                message = "Token is missing for Threeds2ChallengeAction",
-            )
-            emitError(RuntimeException("Challenge token not found."))
-            return
-        }
-
-        trackChallengeActionEvent(action)
-
-        challengeShopper(activity, action.token.orEmpty())
     }
 
     private fun handleThreeds2Action(

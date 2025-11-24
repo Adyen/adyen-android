@@ -14,7 +14,5 @@ object ActionTypes {
     const val AWAIT = "await"
     const val REDIRECT = "redirect"
     const val NATIVE_REDIRECT = "nativeRedirect"
-    const val THREEDS2_CHALLENGE = "threeDS2Challenge"
-    const val THREEDS2_FINGERPRINT = "threeDS2Fingerprint"
     const val THREEDS2 = "threeDS2"
 }
