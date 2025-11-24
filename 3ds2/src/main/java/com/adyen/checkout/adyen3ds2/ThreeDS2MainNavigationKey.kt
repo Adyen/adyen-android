@@ -8,9 +8,10 @@
 
 package com.adyen.checkout.adyen3ds2
 
+import com.adyen.checkout.core.action.data.Threeds2Action
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationKey
 
 /**
- * Represent the main content of the [com.adyen.checkout.core.action.data.Threeds2Action].
+ * Represent the main content of the [Threeds2Action].
  */
 data object ThreeDS2MainNavigationKey : CheckoutNavigationKey
