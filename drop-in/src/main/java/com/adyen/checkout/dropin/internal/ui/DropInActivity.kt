@@ -85,6 +85,7 @@ class DropInActivity : ComponentActivity() {
                                 metadata = DropInTransitions.slideInAndOutVertically(),
                             ) {
                                 PaymentMethodListScreen(
+                                    viewModel.navigator,
                                     viewModel(
                                         factory = PaymentMethodListViewModel.Factory(
                                             dropInParams = viewModel.dropInParams,
