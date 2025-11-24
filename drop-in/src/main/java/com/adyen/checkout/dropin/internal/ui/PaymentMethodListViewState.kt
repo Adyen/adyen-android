@@ -8,8 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-
 internal data class PaymentMethodListViewState(
     val amount: String,
     val paymentOptionsSection: PaymentOptionsSection?,
@@ -17,5 +15,10 @@ internal data class PaymentMethodListViewState(
 
 internal data class PaymentOptionsSection(
     val title: String,
-    val options: List<PaymentMethod>,
+    val options: List<PaymentMethodItem>,
+)
+
+internal data class PaymentMethodItem(
+    val icon: String,
+    val title: String,
 )

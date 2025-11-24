@@ -32,7 +32,6 @@ import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalPr
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
@@ -110,15 +109,15 @@ private fun PaymentOptionsSection(
 
         Spacer(Modifier.size(Dimensions.Small))
 
-        paymentOptionsSection.options.forEach { paymentMethod ->
+        paymentOptionsSection.options.forEach { item ->
             ListItem(
                 leadingIcon = {
                     CheckoutNetworkLogo(
-                        paymentMethod.type.orEmpty(),
-                        Modifier.size(Dimensions.LogoSize.large),
+                        txVariant = item.icon,
+                        modifier = Modifier.size(Dimensions.LogoSize.large),
                     )
                 },
-                title = paymentMethod.name.orEmpty(),
+                title = item.title,
                 onClick = {},
                 modifier = Modifier.padding(Dimensions.ExtraSmall),
             )
@@ -135,17 +134,17 @@ private fun PaymentMethodListContentPreview() {
         environment = Environment.TEST,
     ) {
         val paymentMethods = listOf(
-            PaymentMethod(
-                type = "scheme",
-                name = "Cards",
+            PaymentMethodItem(
+                icon = "card",
+                title = "Cards",
             ),
-            PaymentMethod(
-                type = "klarna",
-                name = "Klarna pay in 30 days",
+            PaymentMethodItem(
+                icon = "klarna",
+                title = "Klarna pay in 30 days",
             ),
-            PaymentMethod(
-                type = "ideal",
-                name = "iDEAL",
+            PaymentMethodItem(
+                icon = "ideal",
+                title = "iDEAL",
             ),
         )
         PaymentMethodListContent(

@@ -11,6 +11,8 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.components.core.PaymentMethodTypes
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.data.model.format
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +31,7 @@ internal class PaymentMethodListViewModel(
         val paymentOptionsSection = paymentMethodsApiResponse.paymentMethods?.let { paymentMethods ->
             PaymentOptionsSection(
                 title = "Other options",
-                options = paymentMethods,
+                options = paymentMethods.map { it.toPaymentMethodItem() },
             )
         }
 
@@ -37,6 +39,23 @@ internal class PaymentMethodListViewModel(
             amount = dropInParams.amount.format(dropInParams.shopperLocale),
             paymentOptionsSection = paymentOptionsSection,
         )
+    }
+
+    private fun PaymentMethod.toPaymentMethodItem(): PaymentMethodItem {
+        val icon = when (type) {
+            PaymentMethodTypes.SCHEME -> CARD_LOGO
+            PaymentMethodTypes.GIFTCARD -> brand.orEmpty()
+            else -> type.orEmpty()
+        }
+
+        return PaymentMethodItem(
+            icon = icon,
+            title = name.orEmpty(),
+        )
+    }
+
+    companion object {
+        private const val CARD_LOGO = "card"
     }
 
     class Factory(
