@@ -27,7 +27,9 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun PaymentMethodListScreen() {
+internal fun PaymentMethodListScreen(
+    viewModel: PaymentMethodListViewModel,
+) {
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
         topBar = {
