@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -28,6 +27,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PaymentMethodListScreen(
+    navigator: DropInNavigator,
     viewModel: PaymentMethodListViewModel,
 ) {
     Scaffold(
@@ -40,9 +40,8 @@ internal fun PaymentMethodListScreen(
                 ),
                 title = {},
                 navigationIcon = {
-                    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
                     IconButton(
-                        onClick = { backPressedDispatcher?.onBackPressed() },
+                        onClick = { navigator.back() },
                     ) {
                         // TODO - String resources
                         Icon(Icons.Default.Close, "Close")
