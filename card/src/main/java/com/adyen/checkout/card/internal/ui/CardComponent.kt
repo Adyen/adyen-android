@@ -290,7 +290,7 @@ internal class CardComponent(
         val isReliable = detectedCardTypes.any { it.isReliable }
         if (stateManager.componentState.detectedCardTypes != detectedCardTypes && isReliable) {
             onBinLookupCallback?.onBinLookup(
-                binLookupData = detectedCardTypes.map(DetectedCardType::toBinLookupData),
+                data = detectedCardTypes.map(DetectedCardType::toBinLookupData),
             )
         }
         stateManager.updateComponentState {
