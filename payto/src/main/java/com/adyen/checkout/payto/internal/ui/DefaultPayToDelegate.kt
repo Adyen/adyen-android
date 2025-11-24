@@ -150,6 +150,7 @@ internal class DefaultPayToDelegate(
         val paymentMethod = PayToPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             shopperAccountIdentifier = getShopperAccountIdentifier(outputData),
         )
 
@@ -161,7 +162,6 @@ internal class DefaultPayToDelegate(
                 firstName = outputData.firstNameFieldState.value,
                 lastName = outputData.lastNameFieldState.value,
             ),
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayToComponentState(

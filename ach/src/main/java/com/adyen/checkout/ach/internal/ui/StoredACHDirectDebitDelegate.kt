@@ -127,6 +127,7 @@ internal class StoredACHDirectDebitDelegate(
         val paymentMethod = ACHDirectDebitPaymentMethod(
             type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 
@@ -134,7 +135,6 @@ internal class StoredACHDirectDebitDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return ACHDirectDebitComponentState(

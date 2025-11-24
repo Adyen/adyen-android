@@ -239,6 +239,7 @@ internal class DefaultBoletoDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 subtype = null,
             ),
             order = order,
@@ -248,7 +249,6 @@ internal class DefaultBoletoDelegate(
                 firstName = outputData.firstNameState.value,
                 lastName = outputData.lastNameState.value,
             ),
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         if (outputData.isSendEmailSelected) {
             paymentComponentData.shopperEmail = outputData.shopperEmailState.value

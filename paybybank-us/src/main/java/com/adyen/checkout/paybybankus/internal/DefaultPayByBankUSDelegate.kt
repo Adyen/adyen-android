@@ -108,13 +108,13 @@ internal class DefaultPayByBankUSDelegate(
         val payByBankUsPaymentMethod = PayByBankUSPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = payByBankUsPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayByBankUSComponentState(

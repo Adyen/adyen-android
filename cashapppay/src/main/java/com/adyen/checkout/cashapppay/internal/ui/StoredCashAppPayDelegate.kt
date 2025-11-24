@@ -110,6 +110,7 @@ internal class StoredCashAppPayDelegate(
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = paymentMethod.id,
         )
 
@@ -117,7 +118,6 @@ internal class StoredCashAppPayDelegate(
             paymentMethod = cashAppPayPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return CashAppPayComponentState(

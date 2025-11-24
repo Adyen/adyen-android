@@ -19,6 +19,7 @@ data class UPIPaymentMethod(
     override var type: String?,
     @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var virtualPaymentAddress: String?,
     var appId: String?,
 ) : PaymentMethodDetails() {
@@ -34,6 +35,7 @@ data class UPIPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(VIRTUAL_PAYMENT_ADDRESS, modelObject.virtualPaymentAddress)
                         putOpt(APP_ID, modelObject.appId)
                     }
@@ -46,6 +48,7 @@ data class UPIPaymentMethod(
                 return UPIPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     virtualPaymentAddress = jsonObject.getStringOrNull(VIRTUAL_PAYMENT_ADDRESS),
                     appId = jsonObject.getStringOrNull(APP_ID),
                 )

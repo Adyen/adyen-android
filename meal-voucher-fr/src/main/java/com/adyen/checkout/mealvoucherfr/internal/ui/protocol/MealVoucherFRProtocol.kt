@@ -24,11 +24,13 @@ internal class MealVoucherFRProtocol : GiftCardProtocol {
     override fun createPaymentMethod(
         paymentMethod: PaymentMethod,
         encryptedCard: EncryptedCard,
-        checkoutAttemptId: String?
+        checkoutAttemptId: String?,
+        sdkData: String?
     ): GiftCardPaymentMethod {
         return GiftCardPaymentMethod(
             type = PaymentMethodTypes.MEAL_VOUCHER_FR,
             checkoutAttemptId = checkoutAttemptId,
+            sdkData = sdkData,
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,

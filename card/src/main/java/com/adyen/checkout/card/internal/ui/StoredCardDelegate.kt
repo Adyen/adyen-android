@@ -361,6 +361,9 @@ internal class StoredCardDelegate(
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(
+                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            ),
         ).apply {
             storedPaymentMethodId = getPaymentMethodId()
 
@@ -393,9 +396,6 @@ internal class StoredCardDelegate(
             shopperReference = componentParams.shopperReference,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(
-                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-            ),
         )
     }
 

@@ -205,6 +205,7 @@ internal class DefaultUPIDelegate(
         val paymentMethod = UPIPaymentMethod(
             type = getUPIPaymentMethodType(outputData),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             appId = getIntentItemAppIdForComponentStateOrNull(outputData),
             virtualPaymentAddress = getVirtualPaymentAddress(outputData),
         )
@@ -213,7 +214,6 @@ internal class DefaultUPIDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return UPIComponentState(

@@ -63,11 +63,11 @@ internal class DefaultInstantPaymentDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 subtype = getSubtype(paymentMethod),
             ),
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         return InstantComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }

@@ -175,6 +175,7 @@ constructor(
         val cashAppPayPaymentMethod = CashAppPayPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             grantId = oneTimeData?.grantId,
             customerId = onFileData?.customerId ?: oneTimeData?.customerId,
             onFileGrantId = onFileData?.grantId,
@@ -186,7 +187,6 @@ constructor(
             order = order,
             amount = componentParams.amount,
             storePaymentMethod = onFileData != null,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return CashAppPayComponentState(

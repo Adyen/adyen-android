@@ -163,6 +163,7 @@ internal class DefaultIssuerListDelegate<
         val issuerListPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             issuer = outputData.selectedIssuer?.id.orEmpty()
         }
 
@@ -170,7 +171,6 @@ internal class DefaultIssuerListDelegate<
             paymentMethod = issuerListPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return componentStateFactory(paymentComponentData, outputData.isValid, true)

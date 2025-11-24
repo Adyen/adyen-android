@@ -19,6 +19,7 @@ class MBWayPaymentMethod(
     override var type: String?,
     @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var telephoneNumber: String?,
 ) : PaymentMethodDetails() {
 
@@ -34,6 +35,7 @@ class MBWayPaymentMethod(
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
                         putOpt(TELEPHONE_NUMBER, modelObject.telephoneNumber)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                     }
                 } catch (e: JSONException) {
                     throw ModelSerializationException(GooglePayPaymentMethod::class.java, e)
@@ -45,6 +47,7 @@ class MBWayPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
                     telephoneNumber = jsonObject.getStringOrNull(TELEPHONE_NUMBER),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                 )
             }
         }
