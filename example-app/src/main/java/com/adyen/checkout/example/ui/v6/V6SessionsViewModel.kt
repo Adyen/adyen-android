@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.core.common.Environment
@@ -34,6 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class V6SessionsViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val paymentsRepository: PaymentsRepository,
     private val keyValueStorage: KeyValueStorage,
 ) : ViewModel() {
@@ -64,8 +66,8 @@ internal class V6SessionsViewModel @Inject constructor(
                 shopperLocale = keyValueStorage.getShopperLocale(),
                 splitCardFundingSources = keyValueStorage.isSplitCardFundingSources(),
                 threeDSMode = keyValueStorage.getThreeDSMode(),
-                // TODO - Replace with correct URL once redirects are implemented
-                redirectUrl = "test",
+                redirectUrl = savedStateHandle.get<String>(V6SessionsActivity.RETURN_URL_EXTRA)
+                    ?: error("Return url should be set"),
                 shopperEmail = keyValueStorage.getShopperEmail(),
                 installmentOptions = getSettingsInstallmentOptionsMode(keyValueStorage.getInstallmentOptionsMode()),
                 showInstallmentAmount = keyValueStorage.isInstallmentAmountShown(),
