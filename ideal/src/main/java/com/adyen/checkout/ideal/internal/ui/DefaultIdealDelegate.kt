@@ -93,12 +93,12 @@ internal class DefaultIdealDelegate(
             paymentMethod = IdealPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 // Set issuer to null to force redirect flow (ideal 2.0)
                 issuer = null,
             ),
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         return IdealComponentState(paymentComponentData, isInputValid = true, isReady = true)
     }

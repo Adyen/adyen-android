@@ -132,7 +132,8 @@ internal object GooglePayUtils {
     fun createGooglePayPaymentMethod(
         paymentData: PaymentData?,
         paymentMethodType: String?,
-        checkoutAttemptId: String?
+        checkoutAttemptId: String?,
+        sdkData: String?
     ): GooglePayPaymentMethod? {
         if (paymentData == null) {
             return null
@@ -140,6 +141,7 @@ internal object GooglePayUtils {
         return GooglePayPaymentMethod(
             type = paymentMethodType,
             checkoutAttemptId = checkoutAttemptId,
+            sdkData = sdkData,
         ).apply {
             try {
                 val paymentDataJson = JSONObject(paymentData.toJson())

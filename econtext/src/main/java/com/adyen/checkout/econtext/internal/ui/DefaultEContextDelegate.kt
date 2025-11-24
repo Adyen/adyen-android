@@ -125,6 +125,7 @@ internal class DefaultEContextDelegate<
         val eContextPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             firstName = outputData.firstNameState.value
             lastName = outputData.lastNameState.value
             telephoneNumber = outputData.phoneNumberState.value
@@ -135,7 +136,6 @@ internal class DefaultEContextDelegate<
             paymentMethod = eContextPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         return componentStateFactory(paymentComponentData, isInputValid, true)
     }

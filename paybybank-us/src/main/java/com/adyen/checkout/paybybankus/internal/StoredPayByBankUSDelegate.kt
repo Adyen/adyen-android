@@ -118,6 +118,7 @@ internal class StoredPayByBankUSDelegate(
         val payByBankUsPaymentMethod = PayByBankUSPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 
@@ -125,7 +126,6 @@ internal class StoredPayByBankUSDelegate(
             paymentMethod = payByBankUsPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayByBankUSComponentState(

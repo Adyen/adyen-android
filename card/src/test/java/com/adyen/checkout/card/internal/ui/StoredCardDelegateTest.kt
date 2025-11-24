@@ -343,7 +343,6 @@ internal class StoredCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
-                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {

@@ -137,6 +137,7 @@ internal class DefaultBlikDelegate(
         val paymentMethod = BlikPaymentMethod(
             type = BlikPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             blikCode = outputData.blikCodeField.value,
         )
 
@@ -144,7 +145,6 @@ internal class DefaultBlikDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return BlikComponentState(
