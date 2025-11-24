@@ -9,7 +9,11 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,16 +23,38 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.common.internal.helper.CheckoutCompositionLocalProvider
+import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.ui.internal.element.ListItem
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
+import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PaymentMethodListScreen(
     navigator: DropInNavigator,
     viewModel: PaymentMethodListViewModel,
+) {
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    PaymentMethodListContent(navigator, viewState)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PaymentMethodListContent(
+    navigator: DropInNavigator,
+    viewState: PaymentMethodListViewState,
 ) {
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
@@ -43,19 +69,94 @@ internal fun PaymentMethodListScreen(
                     IconButton(
                         onClick = { navigator.back() },
                     ) {
-                        // TODO - String resources
-                        Icon(Icons.Default.Close, "Close")
+                        Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
                     }
                 },
             )
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .padding(horizontal = Dimensions.Large),
+            modifier = Modifier.padding(innerPadding),
         ) {
-            Title("Payment method list")
+            Title(viewState.amount, modifier = Modifier.padding(horizontal = Dimensions.Large))
+
+            Spacer(Modifier.size(Dimensions.ExtraSmall))
+
+            // TODO - Extract to string resources
+            Body(
+                text = "Select your preferred payment option and complete your payment",
+                color = CheckoutThemeProvider.colors.textSecondary,
+                modifier = Modifier.padding(horizontal = Dimensions.Large),
+            )
+
+            Spacer(Modifier.size(Dimensions.ExtraLarge))
+
+            viewState.paymentOptionsSection?.let { PaymentOptionsSection(it) }
         }
+    }
+}
+
+@Composable
+private fun PaymentOptionsSection(
+    paymentOptionsSection: PaymentOptionsSection,
+) {
+    Column(
+        modifier = Modifier.verticalScroll(rememberScrollState()),
+    ) {
+        SubHeadlineEmphasized(
+            text = paymentOptionsSection.title,
+            modifier = Modifier.padding(horizontal = Dimensions.Large),
+        )
+
+        Spacer(Modifier.size(Dimensions.Small))
+
+        paymentOptionsSection.options.forEach { paymentMethod ->
+            ListItem(
+                leadingIcon = {
+                    CheckoutNetworkLogo(
+                        paymentMethod.type.orEmpty(),
+                        Modifier.size(Dimensions.LogoSize.large),
+                    )
+                },
+                title = paymentMethod.name.orEmpty(),
+                onClick = {},
+                modifier = Modifier.padding(Dimensions.ExtraSmall),
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PaymentMethodListContentPreview() {
+    CheckoutCompositionLocalProvider(
+        locale = Locale.getDefault(),
+        localizationProvider = null,
+        environment = Environment.TEST,
+    ) {
+        val paymentMethods = listOf(
+            PaymentMethod(
+                type = "scheme",
+                name = "Cards",
+            ),
+            PaymentMethod(
+                type = "klarna",
+                name = "Klarna pay in 30 days",
+            ),
+            PaymentMethod(
+                type = "ideal",
+                name = "iDEAL",
+            ),
+        )
+        PaymentMethodListContent(
+            navigator = DropInNavigator(),
+            viewState = PaymentMethodListViewState(
+                amount = "$140.38",
+                paymentOptionsSection = PaymentOptionsSection(
+                    title = "Payment options",
+                    options = paymentMethods,
+                ),
+            ),
+        )
     }
 }
