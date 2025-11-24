@@ -9,7 +9,6 @@
 package com.adyen.checkout.adyen3ds2.internal.ui
 
 import android.annotation.SuppressLint
-import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Suppress("TooGenericExceptionCaught")
 @SuppressLint("ComposableNaming")
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 internal fun threeDsEvent(
     adyen3DS2Delegate: Adyen3DS2Delegate,

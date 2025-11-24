@@ -14,7 +14,6 @@ import org.json.JSONObject
 
 internal sealed class SubmitFingerprintResult {
     class Completed(val details: JSONObject) : SubmitFingerprintResult()
-
     class Redirect(val action: RedirectAction) : SubmitFingerprintResult()
     class Threeds2(val action: Threeds2Action) : SubmitFingerprintResult()
 }

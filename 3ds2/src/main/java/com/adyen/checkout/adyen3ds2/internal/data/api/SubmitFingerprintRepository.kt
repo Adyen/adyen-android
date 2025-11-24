@@ -17,7 +17,7 @@ import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.common.internal.helper.runSuspendCatching
 import org.json.JSONObject
 
-internal class SubmitFingerprintRepository internal constructor(
+internal class SubmitFingerprintRepository(
     private val submitFingerprintService: SubmitFingerprintService
 ) {
 

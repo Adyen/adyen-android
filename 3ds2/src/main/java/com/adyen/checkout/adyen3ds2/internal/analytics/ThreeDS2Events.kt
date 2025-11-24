@@ -8,14 +8,12 @@
 
 package com.adyen.checkout.adyen3ds2.internal.analytics
 
-import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsEvent
 import com.adyen.checkout.core.analytics.internal.DirectAnalyticsEventCreation
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 
 @OptIn(DirectAnalyticsEventCreation::class)
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 internal object ThreeDS2Events {
 
     fun threeDS2Fingerprint(
