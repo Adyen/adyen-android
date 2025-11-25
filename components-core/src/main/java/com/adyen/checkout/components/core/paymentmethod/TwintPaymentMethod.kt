@@ -19,6 +19,7 @@ data class TwintPaymentMethod(
     override var type: String?,
     @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var subtype: String? = null,
     var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
@@ -34,6 +35,7 @@ data class TwintPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(SUBTYPE, modelObject.subtype)
                         putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
@@ -46,6 +48,7 @@ data class TwintPaymentMethod(
                 return TwintPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     subtype = jsonObject.getStringOrNull(SUBTYPE),
                     storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                 )

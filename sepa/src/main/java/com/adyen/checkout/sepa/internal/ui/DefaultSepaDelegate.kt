@@ -128,6 +128,7 @@ internal class DefaultSepaDelegate(
         val paymentMethod = SepaPaymentMethod(
             type = SepaPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             ownerName = outputData.ownerNameField.value,
             iban = outputData.ibanNumberField.value,
         )
@@ -135,7 +136,6 @@ internal class DefaultSepaDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
         return SepaComponentState(
             data = paymentComponentData,

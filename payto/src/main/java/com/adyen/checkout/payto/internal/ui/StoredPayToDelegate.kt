@@ -143,6 +143,7 @@ internal class StoredPayToDelegate(
         val paymentMethod = PayToPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 
@@ -150,7 +151,6 @@ internal class StoredPayToDelegate(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayToComponentState(

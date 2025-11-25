@@ -806,7 +806,6 @@ internal class DefaultCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
-                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {
@@ -928,7 +927,6 @@ internal class DefaultCardDelegateTest(
                     assertNull(shopperEmail)
                     assertNull(shopperName)
                     assertNull(telephoneNumber)
-                    assertNull(sdkData)
                 }
 
                 with(requireNotNull(paymentComponentData.paymentMethod)) {

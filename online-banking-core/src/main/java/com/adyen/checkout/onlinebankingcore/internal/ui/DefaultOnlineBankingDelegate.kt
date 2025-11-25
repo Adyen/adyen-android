@@ -159,6 +159,7 @@ internal class DefaultOnlineBankingDelegate<
         val issuerListPaymentMethod = paymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             issuer = outputData.selectedIssuer?.id
         }
 
@@ -166,7 +167,6 @@ internal class DefaultOnlineBankingDelegate<
             paymentMethod = issuerListPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return componentStateFactory(paymentComponentData, outputData.isValid, true)

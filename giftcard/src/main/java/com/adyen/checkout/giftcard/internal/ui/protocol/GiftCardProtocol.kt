@@ -22,6 +22,7 @@ interface GiftCardProtocol {
     fun createPaymentMethod(
         paymentMethod: PaymentMethod,
         encryptedCard: EncryptedCard,
-        checkoutAttemptId: String?
+        checkoutAttemptId: String?,
+        sdkData: String?
     ): GiftCardPaymentMethod
 }

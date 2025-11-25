@@ -237,6 +237,7 @@ class DefaultGiftCardDelegate(
             paymentMethod = paymentMethod,
             encryptedCard = encryptedCard,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val lastDigits = outputData.numberFieldState.value.takeLast(LAST_DIGITS_LENGTH)
@@ -245,7 +246,6 @@ class DefaultGiftCardDelegate(
             paymentMethod = giftCardPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return GiftCardComponentState(

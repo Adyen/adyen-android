@@ -22,11 +22,13 @@ internal class DefaultGiftCardProtocol : GiftCardProtocol {
     override fun createPaymentMethod(
         paymentMethod: PaymentMethod,
         encryptedCard: EncryptedCard,
-        checkoutAttemptId: String?
+        checkoutAttemptId: String?,
+        sdkData: String?
     ): GiftCardPaymentMethod {
         return GiftCardPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = checkoutAttemptId,
+            sdkData = sdkData,
             encryptedCardNumber = encryptedCard.encryptedCardNumber,
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,

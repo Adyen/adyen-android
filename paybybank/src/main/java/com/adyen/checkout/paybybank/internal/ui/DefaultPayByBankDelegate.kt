@@ -149,6 +149,7 @@ internal class DefaultPayByBankDelegate(
         val payByBankPaymentMethod = PayByBankPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             issuer = outputData?.selectedIssuer?.id,
         )
 
@@ -156,7 +157,6 @@ internal class DefaultPayByBankDelegate(
             paymentMethod = payByBankPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return PayByBankComponentState(

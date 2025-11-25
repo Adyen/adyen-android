@@ -20,6 +20,7 @@ data class PayToPaymentMethod(
     override var type: String?,
     @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var shopperAccountIdentifier: String? = null,
     var storedPaymentMethodId: String? = null,
 ) : PaymentMethodDetails() {
@@ -37,6 +38,7 @@ data class PayToPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(SHOPPER_ACCOUNT_IDENTIFIER, modelObject.shopperAccountIdentifier)
                         putOpt(STORED_PAYMENT_METHOD_ID, modelObject.storedPaymentMethodId)
                     }
@@ -49,6 +51,7 @@ data class PayToPaymentMethod(
                 return PayToPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     shopperAccountIdentifier = jsonObject.getStringOrNull(SHOPPER_ACCOUNT_IDENTIFIER),
                     storedPaymentMethodId = jsonObject.getStringOrNull(STORED_PAYMENT_METHOD_ID),
                 )

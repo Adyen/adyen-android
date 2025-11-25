@@ -142,13 +142,13 @@ internal class DefaultMBWayDelegate(
             type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
             telephoneNumber = outputData.mobilePhoneNumberFieldState.value,
+            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return MBWayComponentState(

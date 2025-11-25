@@ -15,6 +15,7 @@ internal class TestOnlineBankingPaymentMethod(
     override var issuer: String? = "issuer",
     @Deprecated("This property is deprecated.")
     override var checkoutAttemptId: String? = "checkoutAttemptId",
+    override var sdkData: String? = "sdkData",
     override var type: String? = "type"
 ) : IssuerListPaymentMethod() {
 

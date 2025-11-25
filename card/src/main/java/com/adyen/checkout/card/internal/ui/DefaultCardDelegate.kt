@@ -756,9 +756,13 @@ class DefaultCardDelegate(
         firstCardBrand: CardBrand?,
         binValue: String
     ): CardComponentState {
+        val sdkData = sdkDataProvider.createEncodedSdkData(
+            threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+        )
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkData,
         ).apply {
             encryptedCardNumber = encryptedCard.encryptedCardNumber
             encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth
@@ -825,9 +829,6 @@ class DefaultCardDelegate(
             shopperReference = componentParams.shopperReference,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(
-                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-            ),
         ).apply {
             if (isSocialSecurityNumberRequired()) {
                 socialSecurityNumber = stateOutputData.socialSecurityNumberState.value

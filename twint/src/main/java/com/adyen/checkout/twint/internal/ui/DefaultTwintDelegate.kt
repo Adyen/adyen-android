@@ -125,6 +125,7 @@ internal class DefaultTwintDelegate(
         val paymentMethod = TwintPaymentMethod(
             type = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             subtype = getSubtype(),
         )
 
@@ -133,7 +134,6 @@ internal class DefaultTwintDelegate(
             order = order,
             amount = componentParams.amount,
             storePaymentMethod = if (componentParams.showStorePaymentField) outputData.isStorePaymentSelected else null,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return TwintComponentState(

@@ -15,6 +15,7 @@ internal class TestPaymentMethod(
     override var type: String? = null,
     @Deprecated("This property is deprecated.")
     override var checkoutAttemptId: String? = null,
+    override var sdkData: String? = null,
 ) : PaymentMethodDetails() {
     override fun writeToParcel(dest: Parcel, flags: Int) {
         // noop

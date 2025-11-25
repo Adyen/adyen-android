@@ -301,6 +301,7 @@ internal class DefaultACHDirectDebitDelegate(
             val achPaymentMethod = ACHDirectDebitPaymentMethod(
                 type = ACHDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 encryptedBankAccountNumber = encryptedBankAccountNumber,
                 encryptedBankLocationId = encryptedBankLocationId,
                 ownerName = outputData.ownerName.value,
@@ -310,7 +311,6 @@ internal class DefaultACHDirectDebitDelegate(
                 storePaymentMethod = if (showStorePaymentField()) outputData.shouldStorePaymentMethod else null,
                 paymentMethod = achPaymentMethod,
                 amount = componentParams.amount,
-                sdkData = sdkDataProvider.createEncodedSdkData(),
             )
 
             if (isAddressRequired(outputData.addressUIState)) {

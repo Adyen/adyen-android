@@ -10,7 +10,7 @@ internal class PaymentComponentDataTest {
 
     @Test
     fun `when serializing, then all fields should be serialized correctly`() {
-        val paymentMethod = GenericPaymentMethod("type", "checkoutAttemptId", "subtype")
+        val paymentMethod = GenericPaymentMethod("type", "checkoutAttemptId", null, "subtype")
         val order = OrderRequest("pspReference", "orderData")
         val amount = Amount("EUR", 1L)
         val billingAddress = Address(city = "city")
@@ -32,7 +32,6 @@ internal class PaymentComponentDataTest {
             socialSecurityNumber = "socialSecurityNumber",
             installments = installments,
             supportNativeRedirect = true,
-            sdkData = "sdkData",
         )
 
         val actual = PaymentComponentData.SERIALIZER.serialize(request)
@@ -52,14 +51,13 @@ internal class PaymentComponentDataTest {
             .put("socialSecurityNumber", "socialSecurityNumber")
             .put("installments", Installments.SERIALIZER.serialize(installments))
             .put("supportNativeRedirect", true)
-            .put("sdkData", "sdkData")
 
         assertEquals(expected.toString(), actual.toString())
     }
 
     @Test
     fun `when deserializing, then all fields should be deserializing correctly`() {
-        val paymentMethod = GenericPaymentMethod("type", "checkoutAttemptId", "subtype")
+        val paymentMethod = GenericPaymentMethod("type", "checkoutAttemptId", null, "subtype")
         val order = OrderRequest("pspReference", "orderData")
         val amount = Amount("EUR", 1L)
         val billingAddress = Address(city = "city")
@@ -81,7 +79,6 @@ internal class PaymentComponentDataTest {
             .put("socialSecurityNumber", "socialSecurityNumber")
             .put("installments", Installments.SERIALIZER.serialize(installments))
             .put("supportNativeRedirect", true)
-            .put("sdkData", "sdkData")
 
         val actual = PaymentComponentData.SERIALIZER.deserialize(response)
 
@@ -100,7 +97,6 @@ internal class PaymentComponentDataTest {
             socialSecurityNumber = "socialSecurityNumber",
             installments = installments,
             supportNativeRedirect = true,
-            sdkData = "sdkData",
         )
 
         assertEquals(expected, actual)

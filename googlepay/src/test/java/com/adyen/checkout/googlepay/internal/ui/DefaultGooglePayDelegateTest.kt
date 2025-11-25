@@ -150,6 +150,7 @@ internal class DefaultGooglePayDelegateTest(
                 paymentData = paymentData,
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
+                sdkData = null,
             )
             assertEquals(expectedPaymentMethod, paymentComponentData.paymentMethod)
 

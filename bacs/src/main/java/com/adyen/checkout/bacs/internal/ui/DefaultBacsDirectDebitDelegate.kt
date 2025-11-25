@@ -197,6 +197,7 @@ internal class DefaultBacsDirectDebitDelegate(
         val bacsDirectDebitPaymentMethod = BacsDirectDebitPaymentMethod(
             type = BacsDirectDebitPaymentMethod.PAYMENT_METHOD_TYPE,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             holderName = outputData.holderNameState.value,
             bankAccountNumber = outputData.bankAccountNumberState.value,
             bankLocationId = outputData.sortCodeState.value,
@@ -207,7 +208,6 @@ internal class DefaultBacsDirectDebitDelegate(
             paymentMethod = bacsDirectDebitPaymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(),
         )
 
         return BacsDirectDebitComponentState(

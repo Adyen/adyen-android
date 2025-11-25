@@ -12,6 +12,7 @@ data class CashAppPayPaymentMethod(
     override var type: String?,
     @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var grantId: String? = null,
     var onFileGrantId: String? = null,
     var customerId: String? = null,
@@ -34,6 +35,7 @@ data class CashAppPayPaymentMethod(
                 try {
                     putOpt(TYPE, modelObject.type)
                     putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                    putOpt(SDK_DATA, modelObject.sdkData)
                     putOpt(GRANT_ID, modelObject.grantId)
                     putOpt(ON_FILE_GRANT_ID, modelObject.onFileGrantId)
                     putOpt(CUSTOMER_ID, modelObject.customerId)
@@ -47,6 +49,7 @@ data class CashAppPayPaymentMethod(
             override fun deserialize(jsonObject: JSONObject): CashAppPayPaymentMethod = CashAppPayPaymentMethod(
                 type = jsonObject.getStringOrNull(TYPE),
                 checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                sdkData = jsonObject.getStringOrNull(SDK_DATA),
                 grantId = jsonObject.getStringOrNull(GRANT_ID),
                 onFileGrantId = jsonObject.getStringOrNull(ON_FILE_GRANT_ID),
                 customerId = jsonObject.getStringOrNull(CUSTOMER_ID),

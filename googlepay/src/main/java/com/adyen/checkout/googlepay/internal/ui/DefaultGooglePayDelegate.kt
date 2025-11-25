@@ -183,14 +183,14 @@ internal class DefaultGooglePayDelegate(
             paymentData = paymentData,
             paymentMethodType = paymentMethod.type,
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(
+                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+            ),
         )
         val paymentComponentData = PaymentComponentData(
             paymentMethod = paymentMethod,
             order = order,
             amount = componentParams.amount,
-            sdkData = sdkDataProvider.createEncodedSdkData(
-                threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-            ),
         )
 
         val isReady = isAvailable
