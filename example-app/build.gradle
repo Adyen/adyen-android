@@ -50,6 +50,11 @@ android {
     }
 
     buildTypes {
+        acceptance {
+            initWith release
+            applicationIdSuffix ".acc"
+        }
+
         release {
             debuggable false
             minifyEnabled true
