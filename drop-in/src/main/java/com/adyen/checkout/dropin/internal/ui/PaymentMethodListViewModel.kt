@@ -69,10 +69,28 @@ internal class PaymentMethodListViewModel(
             else -> type.orEmpty()
         }
 
+        val title: String = when (type) {
+            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH)}"
+            PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
+            PaymentMethodTypes.PAY_BY_BANK_US,
+            PaymentMethodTypes.PAY_TO -> label.orEmpty()
+
+            PaymentMethodTypes.SCHEME -> "•••• $lastFour"
+            else -> name.orEmpty()
+        }
+
+        val subtitle = when (type) {
+            PaymentMethodTypes.PAY_BY_BANK_US,
+            PaymentMethodTypes.PAY_TO,
+            PaymentMethodTypes.SCHEME -> name
+
+            else -> null
+        }
+
         return PaymentMethodItem(
             icon = icon,
-            title = name.orEmpty(),
-            subtitle = label,
+            title = title,
+            subtitle = subtitle,
         )
     }
 
@@ -95,6 +113,7 @@ internal class PaymentMethodListViewModel(
 
     companion object {
         private const val CARD_LOGO = "card"
+        private const val LAST_FOUR_LENGTH = 4
     }
 
     class Factory(
