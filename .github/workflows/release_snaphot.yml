@@ -50,4 +50,4 @@ jobs:
           SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
         run: |
           VERSION_NAME=$(date +%Y.%m.%d-SNAPSHOT)
-          ./gradlew publishReleasePublicationToSonatypeRepository -Pversion-name=$VERSION_NAME
+          ./gradlew publishReleasePublicationToSonatypeRepository -Pversion-name=$VERSION_NAME --no-parallel
