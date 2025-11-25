@@ -26,7 +26,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
@@ -61,7 +60,7 @@ internal fun PreselectedPaymentMethodScreen(
             txVariant = viewState.logoTxVariant,
             contentDescription = null,
             modifier = Modifier
-                .size(80.dp, 52.dp)
+                .size(Dimensions.LogoSize.large)
                 .align(Alignment.CenterHorizontally),
         )
 
