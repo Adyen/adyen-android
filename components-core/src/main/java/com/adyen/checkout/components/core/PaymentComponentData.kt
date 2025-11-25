@@ -39,6 +39,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
     var dateOfBirth: String? = null,
     var socialSecurityNumber: String? = null,
     var installments: Installments? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var supportNativeRedirect: Boolean? = true,
 ) : ModelObject() {
 
@@ -87,7 +88,7 @@ data class PaymentComponentData<PaymentMethodDetailsT : PaymentMethodDetails>(
                 return PaymentComponentData(
                     paymentMethod = deserializeOpt(
                         jsonObject.optJSONObject(PAYMENT_METHOD),
-                        PaymentMethodDetails.SERIALIZER
+                        PaymentMethodDetails.SERIALIZER,
                     ),
                     order = deserializeOpt(jsonObject.optJSONObject(ORDER), OrderRequest.SERIALIZER),
                     amount = deserializeOpt(jsonObject.optJSONObject(AMOUNT), Amount.SERIALIZER),

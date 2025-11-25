@@ -17,6 +17,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.PayByBankUSPaymentMethod
@@ -39,6 +40,7 @@ internal class StoredPayByBankUSDelegate(
     private val order: OrderRequest?,
     override val componentParams: ButtonComponentParams,
     private val analyticsManager: AnalyticsManager,
+    private val sdkDataProvider: SdkDataProvider,
 ) : PayByBankUSDelegate {
 
     private val _outputDataFlow = MutableStateFlow(createOutputData())
@@ -116,6 +118,7 @@ internal class StoredPayByBankUSDelegate(
         val payByBankUsPaymentMethod = PayByBankUSPaymentMethod(
             type = getPaymentMethodType(),
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            sdkData = sdkDataProvider.createEncodedSdkData(),
             storedPaymentMethodId = storedPaymentMethod.id,
         )
 

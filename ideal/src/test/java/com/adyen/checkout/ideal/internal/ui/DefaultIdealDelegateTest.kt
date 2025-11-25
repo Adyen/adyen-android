@@ -7,6 +7,7 @@ import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.GenericComponentParamsMapper
 import com.adyen.checkout.core.Environment
@@ -25,12 +26,15 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.Locale
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(MockitoExtension::class, LoggingExtension::class)
-internal class DefaultIdealDelegateTest {
+internal class DefaultIdealDelegateTest(
+    @Mock private val sdkDataProvider: SdkDataProvider,
+) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
     private lateinit var delegate: DefaultIdealDelegate
@@ -133,6 +137,7 @@ internal class DefaultIdealDelegateTest {
             componentParams = GenericComponentParamsMapper(CommonComponentParamsMapper())
                 .mapToParams(configuration, Locale.US, null, null),
             analyticsManager = analyticsManager,
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

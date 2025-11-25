@@ -18,7 +18,9 @@ import org.json.JSONObject
 @Suppress("LongParameterList")
 class GiftCardPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var encryptedCardNumber: String?,
     var encryptedSecurityCode: String?,
     var encryptedExpiryMonth: String?,
@@ -41,6 +43,7 @@ class GiftCardPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_SECURITY_CODE, modelObject.encryptedSecurityCode)
                         putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
@@ -56,6 +59,7 @@ class GiftCardPaymentMethod(
                 return GiftCardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedSecurityCode = jsonObject.getStringOrNull(ENCRYPTED_SECURITY_CODE),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
