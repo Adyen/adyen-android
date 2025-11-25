@@ -2,6 +2,13 @@ name: Release acceptance app
 
 on:
   workflow_dispatch:
+    inputs:
+      version_name:
+        required: true
+        description: Version name
+      release_notes:
+        required: true
+        description: Release notes
 
 jobs:
   build_and_release:
@@ -25,16 +32,19 @@ jobs:
 
       - name: Build with Gradle
         env:
+          VERSION_NAME: ${{ github.event.inputs.version_name }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
-        run: ./gradlew assembleAcceptance
+        run: ./gradlew assembleAcceptance -Pversion-name=$VERSION_NAME
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6
         env:
           ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
           ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
         with:
           appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
           file: example-app/build/outputs/apk/acceptance/example-app-acceptance.apk
+          releaseNotes: ${{ env.RELEASE_NOTES }}
