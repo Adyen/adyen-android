@@ -51,15 +51,15 @@ android {
     }
 
     buildTypes {
-        acceptance {
-            initWith release
-            applicationIdSuffix ".acc"
-        }
-
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        acceptance {
+            initWith release
+            applicationIdSuffix ".acc"
         }
     }
 
