@@ -39,5 +39,7 @@ object Dimensions {
         val small = DpSize(width = 27.dp, height = 18.dp)
 
         val medium = DpSize(width = 40.dp, height = 26.dp)
+
+        val large = DpSize(width = 80.dp, height = 52.dp)
     }
 }
