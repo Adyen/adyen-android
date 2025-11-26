@@ -49,7 +49,7 @@ fun ValuePickerField(
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle()
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
     CheckoutTextFieldDecorationBox(

@@ -9,18 +9,19 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.theme.CheckoutButtonGroupStyle
 
 internal object CheckoutButtonGroupDefaults {
 
     @Composable
-    fun buttonGroupStyle(style: CheckoutButtonGroupStyle?): InternalButtonGroupStyle {
+    fun buttonGroupStyle(): InternalButtonGroupStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonGroupStyle(
-            checkedContainerColor = style?.checkedContainerColor?.toCompose() ?: colors.primary,
-            checkedTextColor = style?.checkedTextColor?.toCompose() ?: colors.textOnPrimary,
-            uncheckedContainerColor = style?.uncheckedContainerColor?.toCompose() ?: colors.container,
-            uncheckedTextColor = style?.uncheckedTextColor?.toCompose() ?: colors.text,
+            checkedContainerColor = colors.primary,
+            checkedTextColor = colors.textOnPrimary,
+            uncheckedContainerColor = colors.container,
+            uncheckedTextColor = colors.text,
+            disabledContentColor = colors.textOnDisabled,
+            disabledContainerColor = colors.disabled,
         )
     }
 }

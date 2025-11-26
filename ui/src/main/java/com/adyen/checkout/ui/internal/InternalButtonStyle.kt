@@ -17,4 +17,5 @@ internal data class InternalButtonStyle(
     val textColor: Color,
     val disabledBackgroundColor: Color,
     val disabledTextColor: Color,
+    val cornerRadius: Int,
 )

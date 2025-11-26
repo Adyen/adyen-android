@@ -9,21 +9,20 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
 
 internal object CheckoutTextFieldDefaults {
 
     @Composable
-    fun textFieldStyle(style: CheckoutTextFieldStyle): InternalTextFieldStyle {
+    fun textFieldStyle(): InternalTextFieldStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalTextFieldStyle(
-            backgroundColor = style.backgroundColor?.toCompose() ?: colors.container,
-            textColor = style.textColor?.toCompose() ?: colors.text,
-            activeColor = style.activeColor?.toCompose() ?: colors.primary,
-            errorColor = style.errorColor?.toCompose() ?: colors.destructive,
-            cornerRadius = style.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-            borderColor = style.borderColor?.toCompose() ?: colors.containerOutline,
-            borderWidth = style.borderWidth ?: 1,
+            backgroundColor = colors.container,
+            textColor = colors.text,
+            activeColor = colors.primary,
+            errorColor = colors.destructive,
+            cornerRadius = CheckoutThemeProvider.attributes.cornerRadius,
+            borderColor = colors.containerOutline,
+            borderWidth = 1,
         )
     }
 }
