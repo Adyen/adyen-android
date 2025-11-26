@@ -145,7 +145,7 @@ private fun DropDownButton(
             .clip(RoundedCornerShape(ExampleTheme.dimensions.grid_4))
             .border(
                 width = 1.dp,
-                color = Color(theme.colors.outline.value),
+                color = Color(theme.colors.separator.value),
                 shape = RoundedCornerShape(ExampleTheme.dimensions.grid_4),
             )
             .clickable(onClick = onClick)
