@@ -1,22 +1,24 @@
 android {
     signingConfigs {
         acceptance {
-            storeFile file(System.getenv("SIGNING_STORE_FILE"))
-            storePassword System.getenv("SIGNING_STORE_PASSWORD")
-            keyAlias System.getenv("SIGNING_KEY_ALIAS")
-            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+            def filePath = System.getenv("SIGNING_STORE_FILE")
+            if (filePath) {
+                storeFile file(filePath)
+                storePassword System.getenv("SIGNING_STORE_PASSWORD")
+                keyAlias System.getenv("SIGNING_KEY_ALIAS")
+                keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+            }
         }
     }
 
     buildTypes {
-
-        def merchantAccount = System.getenv('ADYEN_ANDROID_MERCHANT_ACCOUNT')
-        def merchantServerUrl = System.getenv('ADYEN_ANDROID_MERCHANT_SERVER_URL')
-        def authorizationHeaderName = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_NAME')
-        def authorizationHeaderValue = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_VALUE')
-        def clientKey = System.getenv('ADYEN_ANDROID_CLIENT_KEY')
-
         debug {
+            def merchantAccount = System.getenv('ADYEN_ANDROID_MERCHANT_ACCOUNT')
+            def merchantServerUrl = System.getenv('ADYEN_ANDROID_MERCHANT_SERVER_URL')
+            def authorizationHeaderName = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_NAME')
+            def authorizationHeaderValue = System.getenv('ADYEN_ANDROID_AUTHORIZATION_HEADER_VALUE')
+            def clientKey = System.getenv('ADYEN_ANDROID_CLIENT_KEY')
+
             buildConfigField "String", "MERCHANT_ACCOUNT", "\"$merchantAccount\""
             buildConfigField "String", "MERCHANT_SERVER_URL", "\"$merchantServerUrl\""
             buildConfigField "String", "AUTHORIZATION_HEADER_NAME", "\"$authorizationHeaderName\""
@@ -31,8 +33,8 @@ android {
         }
 
         acceptance {
-            def accMerchantServerUrl = providers.environmentVariable('ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL')
-            def accClientKey = providers.environmentVariable('ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY')
+            def accMerchantServerUrl = System.getenv('ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL')
+            def accClientKey = System.getenv('ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY')
 
             buildConfigField "String", "MERCHANT_ACCOUNT", "\"\""
             buildConfigField "String", "MERCHANT_SERVER_URL", "\"$accMerchantServerUrl\""
