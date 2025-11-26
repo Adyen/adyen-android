@@ -40,8 +40,11 @@ internal class PaymentMethodListViewModel(
 
         val paymentOptionsSection = paymentMethodsApiResponse.paymentMethods?.let { paymentMethods ->
             PaymentOptionsSection(
-                // TODO - Change title if favorites section is not null
-                title = CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS,
+                title = if (favoritesSection == null) {
+                    CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE
+                } else {
+                    CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
+                },
                 options = paymentMethods
                     // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
                     .filter { it.isSupported() }

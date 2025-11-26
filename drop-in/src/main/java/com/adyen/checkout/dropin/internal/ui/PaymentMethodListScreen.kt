@@ -192,6 +192,8 @@ private fun PaymentMethodListContentPreview() {
             ),
         )
 
+        val paymentOptionsTitle =
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES
         PaymentMethodListContent(
             navigator = DropInNavigator(),
             viewState = PaymentMethodListViewState(
@@ -200,7 +202,7 @@ private fun PaymentMethodListContentPreview() {
                     options = storedPaymentMethods,
                 ),
                 paymentOptionsSection = PaymentOptionsSection(
-                    title = CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS,
+                    title = paymentOptionsTitle,
                     options = paymentMethods,
                 ),
             ),
