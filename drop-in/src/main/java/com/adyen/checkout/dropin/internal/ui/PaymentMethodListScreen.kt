@@ -21,9 +21,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.text.Title
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

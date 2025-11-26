@@ -31,9 +31,9 @@ import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.text.SubHeadline
 
 // TODO - Create reusable ValuePicker composable
 @Suppress("LongMethod")

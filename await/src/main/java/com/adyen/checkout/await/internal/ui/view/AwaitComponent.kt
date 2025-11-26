@@ -18,9 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.ui.internal.ProgressBar
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.ProgressBar
 
 @Composable
 internal fun AwaitComponent(
