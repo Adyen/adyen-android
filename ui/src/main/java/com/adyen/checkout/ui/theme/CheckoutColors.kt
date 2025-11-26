@@ -71,7 +71,7 @@ data class CheckoutColors(
         fun dark(
             background: CheckoutColor = DefaultColorsDark.BackgroundPrimary,
             container: CheckoutColor = DefaultColorsDark.BackgroundSecondary,
-            containerOutline: CheckoutColor = DefaultColorsLight.BackgroundSecondary,
+            containerOutline: CheckoutColor = DefaultColorsDark.BackgroundSecondary,
             primary: CheckoutColor = DefaultColorsDark.LabelPrimary,
             textOnPrimary: CheckoutColor = DefaultColorsDark.BackgroundPrimary,
             highlight: CheckoutColor = DefaultColorsDark.Highlight,
