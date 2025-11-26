@@ -30,12 +30,24 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
+      - name: Decode keystore
+        id: decode_keystore
+        env:
+          SIGNING_KEY_STORE_B64: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_STORE_B64 }}
+        run: |
+          echo $SIGNING_KEY_STORE_B64 | base64 --decode > /tmp/keystore.jks
+          echo "keystore_path=/tmp/keystore.jks" >> $GITHUB_OUTPUT
+
       - name: Build with Gradle
         env:
           VERSION_NAME: ${{ github.event.inputs.version_name }}
           ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
           ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
-        run: ./gradlew assembleAcceptance -Pversion-name=$VERSION_NAME
+          SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.keystore_path }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
+        run: ./gradlew :example-app:assembleAcceptance -Pversion-name=$VERSION_NAME
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6
