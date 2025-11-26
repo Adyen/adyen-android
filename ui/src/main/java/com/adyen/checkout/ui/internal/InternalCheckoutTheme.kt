@@ -29,7 +29,7 @@ fun InternalCheckoutTheme(
         LocalColors provides InternalColors.from(theme.colors),
         LocalTextStyles provides theme.textStyles,
         LocalAttributes provides theme.attributes,
-        LocalElements provides theme.elements,
+//        LocalElements provides theme.elements,
     ) {
         content()
     }
