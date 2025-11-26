@@ -8,70 +8,71 @@
 
 package com.adyen.checkout.ui.internal
 
-import com.adyen.checkout.ui.theme.CheckoutTextStyle
+import com.adyen.checkout.ui.internal.theme.InternalTextStyle
 
-internal object DefaultTextStyles {
+internal object TextStyleDefaults {
+
     // M3/display/small
-    val Title: CheckoutTextStyle = CheckoutTextStyle(
+    fun title(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 36,
         weight = 400,
         lineHeight = 44,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/title/large - custom weight
-    val Subtitle: CheckoutTextStyle = CheckoutTextStyle(
+    fun subtitle(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 22,
         weight = 500,
         lineHeight = 28,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/large
-    val Body: CheckoutTextStyle = CheckoutTextStyle(
+    fun body(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 16,
         weight = 400,
         lineHeight = 24,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/large - custom weight
-    val BodyEmphasized: CheckoutTextStyle = CheckoutTextStyle(
+    fun bodyEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 16,
         weight = 500,
         lineHeight = 24,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/medium
-    val SubHeadline: CheckoutTextStyle = CheckoutTextStyle(
+    fun subHeadline(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 14,
         weight = 400,
         lineHeight = 20,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/medium - custom weight
-    val SubHeadlineEmphasized: CheckoutTextStyle = CheckoutTextStyle(
+    fun subHeadlineEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 14,
         weight = 500,
         lineHeight = 20,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/small
-    val Footnote: CheckoutTextStyle = CheckoutTextStyle(
+    fun footnote(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 12,
         weight = 400,
         lineHeight = 16,
-        fontResId = null,
+        fontResId = font,
     )
 
     // M3/body/small - custom weight
-    val FootnoteEmphasized: CheckoutTextStyle = CheckoutTextStyle(
+    fun footnoteEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 12,
         weight = 500,
         lineHeight = 16,
-        fontResId = null,
+        fontResId = font,
     )
 }
