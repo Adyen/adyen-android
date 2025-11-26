@@ -103,7 +103,11 @@ publishing {
     repositories {
         maven {
             name = "sonatype"
-            url = URI.create("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+            url = if (versionName.endsWith("SNAPSHOT")) {
+                URI.create("https://central.sonatype.com/repository/maven-snapshots/")
+            } else {
+                URI.create("https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/")
+            }
             credentials {
                 username = project.extra["sonatypeCentralPortalUsername"] as? String
                 password = project.extra["sonatypeCentralPortalPassword"] as? String

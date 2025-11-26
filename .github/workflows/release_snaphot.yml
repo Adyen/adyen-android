@@ -1,0 +1,53 @@
+name: Release snapshot
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Run every Sunday at 00:00
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release_snapshot:
+    runs-on:
+      group: larger-runners
+      labels: ubuntu-latest-8-cores
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Copy CI gradle.properties
+        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: true
+
+      - name: Prepare environment
+        env:
+          GPG_KEY_CONTENTS: ${{ secrets.GPG_KEY_CONTENTS }}
+          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
+        run: |
+          sudo bash -c "echo '$GPG_KEY_CONTENTS' | base64 -d > '$SIGNING_SECRET_KEY_RING_FILE'"
+
+      # Packages and publishes to Maven Central
+      - name: Publish to Maven Central
+        env:
+          SONATYPE_CENTRAL_PORTAL_USERNAME: ${{ secrets.SONATYPE_CENTRAL_PORTAL_USERNAME }}
+          SONATYPE_CENTRAL_PORTAL_PASSWORD: ${{ secrets.SONATYPE_CENTRAL_PORTAL_PASSWORD }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          SIGNING_SECRET_KEY_RING_FILE: ${{ secrets.SIGNING_SECRET_KEY_RING_FILE }}
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+        run: |
+          VERSION_NAME=$(date +%Y.%m.%d-SNAPSHOT)
+          ./gradlew publishReleasePublicationToSonatypeRepository -Pversion-name=$VERSION_NAME --no-parallel
