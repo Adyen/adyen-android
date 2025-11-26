@@ -81,10 +81,7 @@ internal fun CheckoutTextFieldDecorationBox(
         modifier = modifier,
     ) {
         label?.let {
-            SubHeadline(
-                text = label,
-                color = style.textColor,
-            )
+            SubHeadline(text = label)
         }
 
         Row(

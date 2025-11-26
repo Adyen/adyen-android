@@ -22,7 +22,7 @@ internal object CheckoutTextFieldDefaults {
             activeColor = style.activeColor?.toCompose() ?: colors.primary,
             errorColor = style.errorColor?.toCompose() ?: colors.destructive,
             cornerRadius = style.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-            borderColor = style.borderColor?.toCompose() ?: colors.container,
+            borderColor = style.borderColor?.toCompose() ?: colors.containerOutline,
             borderWidth = style.borderWidth ?: 1,
         )
     }
