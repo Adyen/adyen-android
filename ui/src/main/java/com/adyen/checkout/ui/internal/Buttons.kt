@@ -37,14 +37,12 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.primary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.primaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.primaryButtonStyle(),
     )
 }
 
@@ -84,14 +82,12 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.secondary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.secondaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.secondaryButtonStyle(),
     )
 }
 
@@ -131,14 +127,12 @@ fun TertiaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.tertiary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.tertiaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.tertiaryButtonStyle(),
     )
 }
 
@@ -178,14 +172,12 @@ fun DestructiveButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.destructive
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.destructiveButtonStyle(buttonStyle),
+        style = ButtonDefaults.destructiveButtonStyle(),
     )
 }
 
@@ -223,12 +215,11 @@ private fun CheckoutButton(
     text: String,
     modifier: Modifier,
     isLoading: Boolean,
-    cornerRadius: Int,
     style: InternalButtonStyle,
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(cornerRadius.dp),
+        shape = RoundedCornerShape(style.cornerRadius.dp),
         enabled = !isLoading,
         colors = buttonColors(
             containerColor = style.backgroundColor,

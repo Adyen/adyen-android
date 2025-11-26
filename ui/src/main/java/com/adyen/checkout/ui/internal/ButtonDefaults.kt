@@ -10,51 +10,54 @@ package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.adyen.checkout.ui.theme.CheckoutButtonStyle
 
 internal object ButtonDefaults {
 
     @Composable
-    fun primaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+    fun primaryButtonStyle(): InternalButtonStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
-            backgroundColor = style?.backgroundColor?.toCompose() ?: colors.primary,
-            textColor = style?.textColor?.toCompose() ?: colors.textOnPrimary,
-            disabledBackgroundColor = style?.disabledBackgroundColor?.toCompose() ?: colors.disabled,
-            disabledTextColor = style?.disabledTextColor?.toCompose() ?: colors.textOnDisabled,
+            backgroundColor = colors.primary,
+            textColor = colors.textOnPrimary,
+            disabledBackgroundColor = colors.disabled,
+            disabledTextColor = colors.textOnDisabled,
+            cornerRadius = CheckoutThemeProvider.attributes.cornerRadius,
         )
     }
 
     @Composable
-    fun secondaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+    fun secondaryButtonStyle(): InternalButtonStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
-            backgroundColor = style?.backgroundColor?.toCompose() ?: colors.container,
-            textColor = style?.textColor?.toCompose() ?: colors.text,
-            disabledBackgroundColor = style?.disabledBackgroundColor?.toCompose() ?: colors.disabled,
-            disabledTextColor = style?.disabledTextColor?.toCompose() ?: colors.textOnDisabled,
+            backgroundColor = colors.container,
+            textColor = colors.text,
+            disabledBackgroundColor = colors.disabled,
+            disabledTextColor = colors.textOnDisabled,
+            cornerRadius = CheckoutThemeProvider.attributes.cornerRadius,
         )
     }
 
     @Composable
-    fun tertiaryButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+    fun tertiaryButtonStyle(): InternalButtonStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
-            backgroundColor = style?.backgroundColor?.toCompose() ?: Color.Transparent,
-            textColor = style?.textColor?.toCompose() ?: colors.highlight,
-            disabledBackgroundColor = style?.disabledBackgroundColor?.toCompose() ?: colors.disabled,
-            disabledTextColor = style?.disabledTextColor?.toCompose() ?: colors.textOnDisabled,
+            backgroundColor = Color.Transparent,
+            textColor = colors.highlight,
+            disabledBackgroundColor = colors.disabled,
+            disabledTextColor = colors.textOnDisabled,
+            cornerRadius = CheckoutThemeProvider.attributes.cornerRadius,
         )
     }
 
     @Composable
-    fun destructiveButtonStyle(style: CheckoutButtonStyle?): InternalButtonStyle {
+    fun destructiveButtonStyle(): InternalButtonStyle {
         val colors = CheckoutThemeProvider.colors
         return InternalButtonStyle(
-            backgroundColor = style?.backgroundColor?.toCompose() ?: colors.destructive,
-            textColor = style?.textColor?.toCompose() ?: colors.textOnDestructive,
-            disabledBackgroundColor = style?.disabledBackgroundColor?.toCompose() ?: colors.disabled,
-            disabledTextColor = style?.disabledTextColor?.toCompose() ?: colors.textOnDisabled,
+            backgroundColor = colors.destructive,
+            textColor = colors.textOnDestructive,
+            disabledBackgroundColor = colors.disabled,
+            disabledTextColor = colors.textOnDisabled,
+            cornerRadius = CheckoutThemeProvider.attributes.cornerRadius,
         )
     }
 }

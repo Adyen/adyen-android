@@ -11,6 +11,7 @@ package com.adyen.checkout.ui.theme
 import androidx.annotation.FontRes
 import androidx.compose.runtime.Immutable
 
+// TODO - Add KDocs
 @Immutable
 data class CheckoutTextStyles(
     @FontRes val font: Int?,
