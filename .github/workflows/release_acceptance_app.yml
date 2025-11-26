@@ -48,3 +48,4 @@ jobs:
           serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
           file: example-app/build/outputs/apk/acceptance/example-app-acceptance.apk
           releaseNotes: ${{ env.RELEASE_NOTES }}
+          groups: internal
