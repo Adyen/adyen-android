@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
-import com.adyen.checkout.ui.theme.CheckoutTextStyle
+import com.adyen.checkout.ui.internal.theme.InternalTextStyle
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -116,7 +116,7 @@ fun FootnoteEmphasized(
 @Composable
 private fun CheckoutText(
     text: String,
-    style: CheckoutTextStyle,
+    style: InternalTextStyle,
     color: Color,
     modifier: Modifier = Modifier,
     maxLines: Int = Int.MAX_VALUE,
