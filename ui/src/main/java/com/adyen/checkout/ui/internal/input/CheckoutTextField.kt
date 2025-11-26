@@ -42,10 +42,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
-import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
