@@ -6,7 +6,7 @@
  * Created by oscars on 11/4/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.theme
 
 import com.adyen.checkout.ui.theme.CheckoutColor
 

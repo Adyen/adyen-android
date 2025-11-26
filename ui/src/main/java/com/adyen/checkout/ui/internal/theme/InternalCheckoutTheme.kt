@@ -3,17 +3,17 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 15/4/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.adyen.checkout.ui.internal.theme.InternalTextStyles
+import com.adyen.checkout.ui.internal.text.InternalTextStyles
 import com.adyen.checkout.ui.theme.CheckoutAttributes
 import com.adyen.checkout.ui.theme.CheckoutColors
 import com.adyen.checkout.ui.theme.CheckoutTextStyles

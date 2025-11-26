@@ -3,19 +3,21 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 16/4/2025.
+ * Created by oscars on 23/4/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.input
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 @Immutable
-internal data class InternalButtonStyle(
+internal data class InternalTextFieldStyle(
     val backgroundColor: Color,
     val textColor: Color,
-    val disabledBackgroundColor: Color,
-    val disabledTextColor: Color,
+    val activeColor: Color,
+    val errorColor: Color,
     val cornerRadius: Int,
+    val borderColor: Color,
+    val borderWidth: Int,
 )

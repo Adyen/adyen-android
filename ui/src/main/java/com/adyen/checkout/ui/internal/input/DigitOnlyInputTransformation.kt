@@ -6,7 +6,7 @@
  * Created by oscars on 28/8/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.input
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.text.KeyboardOptions

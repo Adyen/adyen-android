@@ -6,7 +6,7 @@
  * Created by ozgur on 15/8/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.image
 
 import android.graphics.Bitmap
 import androidx.annotation.RestrictTo

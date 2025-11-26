@@ -52,8 +52,8 @@ import com.adyen.checkout.example.ui.compose.ResultContent
 import com.adyen.checkout.example.ui.compose.ResultState
 import com.adyen.checkout.example.ui.compose.stringFromUIText
 import com.adyen.checkout.example.ui.theme.ExampleTheme
-import com.adyen.checkout.ui.internal.Body
-import com.adyen.checkout.ui.internal.SubHeadline
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.SubHeadline
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -192,9 +192,12 @@ private fun PaymentMethodOptionsDialog(
                             ),
                     ) {
                         @Suppress("RestrictedApi")
-                        Body(paymentMethod.name.orEmpty())
+                        (Body(paymentMethod.name.orEmpty()))
                         @Suppress("RestrictedApi")
-                        SubHeadline(paymentMethod.type.orEmpty(), color = Color(theme.colors.textSecondary.value))
+                        (SubHeadline(
+        paymentMethod.type.orEmpty(),
+        color = Color(theme.colors.textSecondary.value)
+    ))
                     }
                 }
             }

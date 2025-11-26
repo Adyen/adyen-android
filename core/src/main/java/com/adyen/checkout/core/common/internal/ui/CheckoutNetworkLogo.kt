@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import com.adyen.checkout.core.common.internal.helper.LocalEnvironment
 import com.adyen.checkout.core.common.internal.imageLoader
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.ImageLoader
-import com.adyen.checkout.ui.internal.LogoSize
-import com.adyen.checkout.ui.internal.NetworkImage
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.image.ImageLoader
+import com.adyen.checkout.ui.internal.image.LogoSize
+import com.adyen.checkout.ui.internal.image.NetworkImage
 
 /**
  * Composable that loads a logo using the Adyen environment and txVariant.
@@ -63,7 +63,7 @@ fun CheckoutNetworkLogo(
     }
 
     @Suppress("MagicNumber")
-    NetworkImage(
+    (NetworkImage(
         url = fullUrl,
         modifier = modifier
             .dropShadow(
@@ -81,7 +81,7 @@ fun CheckoutNetworkLogo(
         imageLoader = imageLoader,
         placeholder = placeholder,
         errorFallback = errorFallback,
-    )
+    ))
 }
 
 private fun Int.getDensityExtension(): String {

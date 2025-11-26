@@ -23,8 +23,8 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProperties
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 internal fun CheckoutNavEntry.toNavEntry(
     modifier: Modifier,

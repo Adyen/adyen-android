@@ -20,8 +20,8 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 internal class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
