@@ -586,6 +586,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_EXPIRY_DATE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_FAR_IN_THE_FUTURE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_EXPIRY_DATE_INVALID_TOO_OLD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_HOLDER_NAME Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field CARD_HOLDER_NAME_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_NUMBER_INVALID_UNSUPPORTED_BRAND Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
