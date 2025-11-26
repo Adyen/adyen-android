@@ -86,6 +86,13 @@ private fun CardDetailsSection(
             onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
             isAmex = viewState.isAmex,
         )
+        if (viewState.isHolderNameRequired) {
+            HolderNameField(
+                holderNameState = viewState.holderName,
+                onHolderNameChanged = changeListener::onHolderNameChanged,
+                onHolderNameFocusChanged = changeListener::onHolderNameFocusChanged,
+            )
+        }
     }
 }
 
