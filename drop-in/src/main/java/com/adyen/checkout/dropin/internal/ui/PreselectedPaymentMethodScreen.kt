@@ -25,12 +25,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavKey
-import com.adyen.checkout.ui.internal.Body
-import com.adyen.checkout.ui.internal.CheckoutThemeProvider
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.PrimaryButton
-import com.adyen.checkout.ui.internal.SecondaryButton
-import com.adyen.checkout.ui.internal.Title
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.button.PrimaryButton
+import com.adyen.checkout.ui.internal.button.SecondaryButton
+import com.adyen.checkout.ui.internal.text.Title
 
 @Composable
 internal fun PreselectedPaymentMethodScreen(

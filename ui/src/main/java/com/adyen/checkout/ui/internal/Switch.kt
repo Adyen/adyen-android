@@ -25,6 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import androidx.compose.material3.Switch as MaterialSwitch
 import androidx.compose.material3.SwitchDefaults as MaterialSwitchDefaults

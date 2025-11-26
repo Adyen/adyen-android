@@ -29,6 +29,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.text.SubHeadline
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable

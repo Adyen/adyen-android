@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.compose.runtime.Composable
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 
 internal object SwitchDefaults {
 

@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 15/4/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.text
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
@@ -22,7 +22,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.sp
-import com.adyen.checkout.ui.internal.theme.InternalTextStyle
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)

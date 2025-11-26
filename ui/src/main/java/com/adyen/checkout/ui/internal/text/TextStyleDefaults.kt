@@ -3,12 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 13/5/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
-
-import com.adyen.checkout.ui.internal.theme.InternalTextStyle
+package com.adyen.checkout.ui.internal.text
 
 internal object TextStyleDefaults {
 
