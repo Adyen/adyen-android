@@ -17,4 +17,6 @@ internal data class InternalButtonGroupStyle(
     val checkedTextColor: Color,
     val uncheckedContainerColor: Color,
     val uncheckedTextColor: Color,
+    val disabledContentColor: Color,
+    val disabledContainerColor: Color,
 )

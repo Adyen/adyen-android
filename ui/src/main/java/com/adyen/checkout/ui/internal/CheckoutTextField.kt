@@ -91,7 +91,7 @@ fun CheckoutTextField(
     hint: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle()
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val focusRequester = remember { FocusRequester() }
     BasicTextField(

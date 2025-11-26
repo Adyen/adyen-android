@@ -46,16 +46,15 @@ fun CheckoutButtonGroup(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         modifier = modifier,
     ) {
-        val style = CheckoutButtonGroupDefaults.buttonGroupStyle(CheckoutThemeProvider.elements.buttonGroup)
-        val colors = CheckoutThemeProvider.colors
-        val toggleButtonColors = remember(style, colors) {
+        val style = CheckoutButtonGroupDefaults.buttonGroupStyle()
+        val toggleButtonColors = remember(style) {
             ToggleButtonColors(
                 contentColor = style.uncheckedTextColor,
                 containerColor = style.uncheckedContainerColor,
                 checkedContentColor = style.checkedTextColor,
                 checkedContainerColor = style.checkedContainerColor,
-                disabledContentColor = colors.textOnDisabled,
-                disabledContainerColor = colors.disabled,
+                disabledContentColor = style.disabledContentColor,
+                disabledContainerColor = style.disabledContainerColor,
             )
         }
         items.forEachIndexed { index, item ->
