@@ -30,16 +30,14 @@ android {
             matchingFallbacks = ['debug']
         }
 
-        def accMerchantServerUrl = System.getenv('ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL')
-        def accClientKey = System.getenv('ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY')
-
         acceptance {
-            initWith release
+            def accMerchantServerUrl = providers.environmentVariable('ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL')
+            def accClientKey = providers.environmentVariable('ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY')
 
-            buildConfigField "String", "MERCHANT_ACCOUNT", ""
+            buildConfigField "String", "MERCHANT_ACCOUNT", "\"\""
             buildConfigField "String", "MERCHANT_SERVER_URL", "\"$accMerchantServerUrl\""
-            buildConfigField "String", "AUTHORIZATION_HEADER_NAME", ""
-            buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", ""
+            buildConfigField "String", "AUTHORIZATION_HEADER_NAME", "\"\""
+            buildConfigField "String", "AUTHORIZATION_HEADER_VALUE", "\"\""
             buildConfigField "String", "CLIENT_KEY", "\"$accClientKey\""
 
             signingConfig signingConfigs.acceptance
