@@ -20,9 +20,9 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.ui.internal.Body
-import com.adyen.checkout.ui.internal.BodyEmphasized
-import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.SelectableListItem
 
 @Composable

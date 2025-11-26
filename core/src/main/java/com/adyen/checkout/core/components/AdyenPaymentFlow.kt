@@ -19,7 +19,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.AdyenComponent
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
-import com.adyen.checkout.ui.internal.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 // TODO - Change Name?

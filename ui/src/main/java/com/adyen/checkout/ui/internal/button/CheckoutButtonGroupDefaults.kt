@@ -3,12 +3,13 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 24/7/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.button
 
 import androidx.compose.runtime.Composable
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 
 internal object CheckoutButtonGroupDefaults {
 

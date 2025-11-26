@@ -9,8 +9,8 @@
 package com.adyen.checkout.ui.theme
 
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.ui.internal.DefaultColorsDark
-import com.adyen.checkout.ui.internal.DefaultColorsLight
+import com.adyen.checkout.ui.internal.theme.DefaultColorsDark
+import com.adyen.checkout.ui.internal.theme.DefaultColorsLight
 
 // TODO - Add KDocs
 @Immutable

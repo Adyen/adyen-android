@@ -6,11 +6,10 @@
  * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal.theme
+package com.adyen.checkout.ui.internal.text
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
-import com.adyen.checkout.ui.internal.TextStyleDefaults
 import com.adyen.checkout.ui.theme.CheckoutTextStyles
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
