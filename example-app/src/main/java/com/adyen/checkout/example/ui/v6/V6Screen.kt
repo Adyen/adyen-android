@@ -125,7 +125,7 @@ private fun Component(
             checkoutCallbacks = uiState.checkoutCallbacks,
             theme = theme,
             modifier = Modifier.padding(ExampleTheme.dimensions.grid_2),
-            checkoutController = checkoutController
+            checkoutController = checkoutController,
         )
     }
 }
@@ -194,10 +194,10 @@ private fun PaymentMethodOptionsDialog(
                         @Suppress("RestrictedApi")
                         (Body(paymentMethod.name.orEmpty()))
                         @Suppress("RestrictedApi")
-                        (SubHeadline(
-        paymentMethod.type.orEmpty(),
-        color = Color(theme.colors.textSecondary.value)
-    ))
+                        SubHeadline(
+                            paymentMethod.type.orEmpty(),
+                            color = Color(theme.colors.textSecondary.value),
+                        )
                     }
                 }
             }
