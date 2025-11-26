@@ -13,7 +13,7 @@ internal object TextStyleDefaults {
     // M3/display/small
     fun title(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 36,
-        weight = 400,
+        weight = 600,
         lineHeight = 44,
         fontResId = font,
     )
@@ -21,7 +21,7 @@ internal object TextStyleDefaults {
     // M3/title/large - custom weight
     fun subtitle(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 22,
-        weight = 500,
+        weight = 600,
         lineHeight = 28,
         fontResId = font,
     )
@@ -37,7 +37,7 @@ internal object TextStyleDefaults {
     // M3/body/large - custom weight
     fun bodyEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 16,
-        weight = 500,
+        weight = 700,
         lineHeight = 24,
         fontResId = font,
     )
@@ -53,7 +53,7 @@ internal object TextStyleDefaults {
     // M3/body/medium - custom weight
     fun subHeadlineEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 14,
-        weight = 500,
+        weight = 700,
         lineHeight = 20,
         fontResId = font,
     )
@@ -69,7 +69,7 @@ internal object TextStyleDefaults {
     // M3/body/small - custom weight
     fun footnoteEmphasized(font: Int?): InternalTextStyle = InternalTextStyle(
         size = 12,
-        weight = 500,
+        weight = 700,
         lineHeight = 16,
         fontResId = font,
     )
