@@ -181,6 +181,22 @@ internal class CardComponent(
         }
     }
 
+    override fun onHolderNameChanged(newHolderName: String) {
+        stateManager.updateViewStateAndValidate {
+            copy(
+                holderName = holderName.updateText(newHolderName),
+            )
+        }
+    }
+
+    override fun onHolderNameFocusChanged(hasFocus: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                holderName = holderName.updateFocus(hasFocus),
+            )
+        }
+    }
+
     override fun onBrandSelected(cardBrand: CardBrand) {
         stateManager.updateComponentState {
             copy(

@@ -19,6 +19,8 @@ internal data class CardViewState(
     val cardNumber: TextInputState,
     val expiryDate: TextInputState,
     val securityCode: TextInputState,
+    val holderName: TextInputState,
+    val isHolderNameRequired: Boolean,
     val supportedCardBrands: List<CardBrand>,
     val isSupportedCardBrandsShown: Boolean,
     val detectedCardBrands: List<CardBrand>,

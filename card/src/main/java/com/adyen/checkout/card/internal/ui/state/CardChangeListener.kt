@@ -24,5 +24,9 @@ internal interface CardChangeListener {
 
     fun onSecurityCodeFocusChanged(hasFocus: Boolean)
 
+    fun onHolderNameChanged(newHolderName: String)
+
+    fun onHolderNameFocusChanged(hasFocus: Boolean)
+
     fun onBrandSelected(cardBrand: CardBrand)
 }

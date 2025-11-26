@@ -47,10 +47,14 @@ internal class CardViewStateValidator(
         val securityCodeError =
             validateSecurityCode(securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
 
+        val holderName = viewState.holderName
+        val holderNameError = validateHolderName(holderName, viewState.isHolderNameRequired)
+
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = expiryDate.copy(errorMessage = expiryDateError),
             securityCode = securityCode.copy(errorMessage = securityCodeError),
+            holderName = holderName.copy(errorMessage = holderNameError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
             detectedCardBrands = detectedCardBrands,
@@ -67,13 +71,15 @@ internal class CardViewStateValidator(
     override fun isValid(viewState: CardViewState): Boolean {
         return viewState.cardNumber.errorMessage == null &&
             viewState.expiryDate.errorMessage == null &&
-            viewState.securityCode.errorMessage == null
+            viewState.securityCode.errorMessage == null &&
+            viewState.holderName.errorMessage == null
     }
 
     override fun highlightAllValidationErrors(viewState: CardViewState): CardViewState {
         val hasCardNumberError = viewState.cardNumber.errorMessage != null
         val hasExpiryDateError = viewState.expiryDate.errorMessage != null
-        val hasSecurityCodeError = viewState.expiryDate.errorMessage != null
+        val hasSecurityCodeError = viewState.securityCode.errorMessage != null
+        val hasHolderNameError = viewState.holderName.errorMessage != null
 
         return viewState.copy(
             cardNumber = viewState.cardNumber.copy(
@@ -87,6 +93,10 @@ internal class CardViewStateValidator(
             securityCode = viewState.securityCode.copy(
                 showError = hasSecurityCodeError,
                 isFocused = hasSecurityCodeError && !hasCardNumberError && !hasExpiryDateError,
+            ),
+            holderName = viewState.holderName.copy(
+                showError = hasHolderNameError,
+                isFocused = hasHolderNameError && !hasCardNumberError && !hasExpiryDateError && !hasSecurityCodeError,
             ),
         )
     }
@@ -136,6 +146,18 @@ internal class CardViewStateValidator(
                 securityCode = securityCode.text,
                 detectedCardType = selectedOrFirstCardType,
                 uiState = uiState,
+            ),
+        )
+    }
+
+    private fun validateHolderName(
+        holderName: TextInputState,
+        isRequired: Boolean,
+    ): CheckoutLocalizationKey? {
+        return cardValidationMapper.mapHolderNameValidation(
+            validation = CardValidationUtils.validateHolderName(
+                holderName = holderName.text,
+                isRequired = isRequired,
             ),
         )
     }

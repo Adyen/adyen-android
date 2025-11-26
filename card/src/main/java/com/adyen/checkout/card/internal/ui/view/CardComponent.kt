@@ -103,6 +103,10 @@ private fun CardComponentPreview() {
             securityCode = TextInputState(
                 text = "737",
             ),
+            holderName = TextInputState(
+                text = "J. Smith",
+            ),
+            isHolderNameRequired = true,
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
@@ -121,6 +125,10 @@ private fun CardComponentPreview() {
             override fun onSecurityCodeChanged(newSecurityCode: String) = Unit
 
             override fun onSecurityCodeFocusChanged(hasFocus: Boolean) = Unit
+
+            override fun onHolderNameChanged(newHolderName: String) = Unit
+
+            override fun onHolderNameFocusChanged(hasFocus: Boolean) = Unit
 
             override fun onBrandSelected(cardBrand: CardBrand) = Unit
         },

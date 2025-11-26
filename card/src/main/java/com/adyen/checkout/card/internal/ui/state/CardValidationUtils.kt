@@ -108,6 +108,20 @@ internal object CardValidationUtils {
     }
 
     /**
+     * Validate Holder Name.
+     */
+    internal fun validateHolderName(
+        holderName: String,
+        isRequired: Boolean
+    ): CardHolderNameValidation {
+        return if (isRequired && holderName.isBlank()) {
+            CardHolderNameValidation.INVALID_BLANK
+        } else {
+            CardHolderNameValidation.VALID
+        }
+    }
+
+    /**
      * Validate Security Code.
      */
     internal fun validateSecurityCode(
@@ -167,4 +181,10 @@ enum class CardSecurityCodeValidation {
     VALID_HIDDEN,
     VALID_OPTIONAL_EMPTY,
     INVALID,
+}
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+enum class CardHolderNameValidation {
+    VALID,
+    INVALID_BLANK,
 }
