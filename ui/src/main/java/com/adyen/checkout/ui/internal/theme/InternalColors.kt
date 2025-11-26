@@ -38,7 +38,7 @@ data class InternalColors(
             InternalColors(
                 background = background.toCompose(),
                 container = container.toCompose(),
-                containerOutline = container.toCompose(),
+                containerOutline = containerOutline.toCompose(),
                 primary = primary.toCompose(),
                 textOnPrimary = textOnPrimary.toCompose(),
                 highlight = highlight.toCompose(),
