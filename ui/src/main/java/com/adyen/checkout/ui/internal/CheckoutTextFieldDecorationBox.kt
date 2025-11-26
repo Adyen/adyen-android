@@ -79,11 +79,7 @@ internal fun CheckoutTextFieldDecorationBox(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
         modifier = modifier,
     ) {
-        val labelColor = if (isFocused) style.activeColor else style.textColor
-        SubHeadline(
-            text = label,
-            color = labelColor,
-        )
+        SubHeadline(text = label)
         Row(
             horizontalArrangement = Arrangement.spacedBy(Dimensions.Small),
             verticalAlignment = Alignment.CenterVertically,
