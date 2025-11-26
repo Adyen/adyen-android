@@ -31,10 +31,11 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.adyen.checkout.ui.internal.theme.Dimensions
-import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
@@ -98,7 +99,11 @@ private fun CheckoutToggleButton(
         shapes = shapes,
         modifier = modifier.semantics { role = Role.RadioButton },
     ) {
-        Body(text, color = LocalContentColor.current)
+        if (checked) {
+            BodyEmphasized(text, color = LocalContentColor.current)
+        } else {
+            Body(text, color = LocalContentColor.current)
+        }
     }
 }
 
