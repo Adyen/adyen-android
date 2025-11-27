@@ -13,15 +13,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  assemble:
-    name: Assemble
-    uses: ./.github/workflows/assemble.yml
-  test:
-    name: Test
-    uses: ./.github/workflows/run_tests.yml
-    needs: assemble
-  sonar_cloud:
-    name: SonarCloud
-    uses: ./.github/workflows/sonar_cloud.yml
-    needs: test
+  build_and_test:
+    name: Build and test
+    uses: ./.github/workflows/build_and_test.yml
     secrets: inherit
