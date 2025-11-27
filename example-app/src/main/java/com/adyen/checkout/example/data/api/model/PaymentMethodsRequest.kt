@@ -14,7 +14,7 @@ import com.adyen.checkout.components.core.OrderRequest
 
 @Keep
 data class PaymentMethodsRequest(
-    val merchantAccount: String,
+    val merchantAccount: String?,
     val shopperReference: String,
     val amount: Amount?,
     val countryCode: String,
