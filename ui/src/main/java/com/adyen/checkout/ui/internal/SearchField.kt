@@ -37,8 +37,7 @@ import com.adyen.checkout.ui.theme.CheckoutTheme
 @Composable
 fun SearchField(
     modifier: Modifier = Modifier,
-    // TODO - Use string resources
-    hint: String = "Search..",
+    hint: String,
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
@@ -109,10 +108,13 @@ private fun SearchFieldPreview(
                 .background(theme.colors.background.toCompose())
                 .padding(Dimensions.Large),
         ) {
-            SearchField()
+            SearchField(
+                hint = "Search..",
+            )
 
             val focusRequester = remember { FocusRequester() }
             SearchField(
+                hint = "Search..",
                 modifier = Modifier.focusRequester(focusRequester),
             )
             LaunchedEffect(Unit) {
@@ -120,6 +122,7 @@ private fun SearchFieldPreview(
             }
 
             SearchField(
+                hint = "Search..",
                 isError = true,
                 supportingText = "Error",
             )

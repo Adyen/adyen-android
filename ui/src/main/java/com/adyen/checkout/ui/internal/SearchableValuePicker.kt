@@ -11,9 +11,7 @@ package com.adyen.checkout.ui.internal
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -26,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun SearchableValuePicker(
+    searchHint: String,
     items: List<ValuePickerItem>,
     onItemClick: (ValuePickerItem) -> Unit,
     modifier: Modifier = Modifier,
@@ -36,6 +35,7 @@ fun SearchableValuePicker(
     ) {
         var query by remember { mutableStateOf("") }
         SearchField(
+            hint = searchHint,
             onValueChange = { query = it },
         )
 
@@ -60,6 +60,7 @@ private fun SearchableValuePickerPreview() {
     }
 
     SearchableValuePicker(
+        searchHint = "Search..",
         items = items,
         onItemClick = {},
     )
