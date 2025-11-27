@@ -65,7 +65,7 @@ jobs:
           fi
 
       - name: Add comment on PR
-        uses: thollander/actions-comment-pull-request@v3
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b
         if: steps.compare_deps.outputs.has_changes == 'true'
         with:
           file-path: "${{ github.workspace }}/dependency_changes.md"
@@ -73,7 +73,7 @@ jobs:
           mode: recreate
 
       - name: Delete comment from PR
-        uses: thollander/actions-comment-pull-request@v3
+        uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b
         if: steps.compare_deps.outputs.has_changes == 'false'
         with:
           comment-tag: dependency_changes
