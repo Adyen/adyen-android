@@ -29,7 +29,7 @@ jobs:
           cache-read-only: true
 
       - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
+        uses: ts-graphviz/setup-graphviz@b1de5da23ed0a6d14e0aeee8ed52fdd87af2363c
 
       - name: Generate Dependency Graph
         run: ./gradlew dependencyGraph
