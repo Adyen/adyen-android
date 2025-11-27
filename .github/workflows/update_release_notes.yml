@@ -8,6 +8,9 @@ on:
         description: "Version Name"
         required: true
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
 
 permissions:
   contents: write

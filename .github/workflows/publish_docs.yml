@@ -2,6 +2,9 @@ name: Publish Docs
 
 on:
   workflow_call:
+    secrets:
+      GRADLE_ENCRYPTION_KEY:
+        required: true
   workflow_dispatch:
 
 permissions:
@@ -13,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      # https://github.com/marketplace/actions/checkout
       - uses: actions/checkout@v5
 
       - name: Copy CI gradle.properties
@@ -35,11 +36,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # Generate kdocs
       - name: Generate Dokka HTML documentation
         run: ./gradlew dokkaGeneratePublicationHtml
 
-      # Deploy to GitHub Pages
       - name: Deploy GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.7.3
         with:
