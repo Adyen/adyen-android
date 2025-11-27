@@ -9,6 +9,7 @@
 package com.adyen.checkout.ui.internal
 
 import androidx.annotation.RestrictTo
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,13 +30,14 @@ fun SearchableValuePicker(
     onItemClick: (ValuePickerItem) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        modifier = modifier,
+    ) {
         var query by remember { mutableStateOf("") }
         SearchField(
             onValueChange = { query = it },
         )
-
-        Spacer(Modifier.size(Dimensions.Large))
 
         val filteredItems by remember {
             derivedStateOf {

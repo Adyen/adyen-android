@@ -20,6 +20,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.OutputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -75,9 +76,10 @@ import kotlinx.coroutines.flow.collectLatest
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
 fun CheckoutTextField(
-    label: String,
+    label: String?,
     modifier: Modifier = Modifier,
     initialValue: String = "",
+    state: TextFieldState = rememberTextFieldState(initialValue),
     onValueChange: ((String) -> Unit)? = null,
     enabled: Boolean = true,
     supportingText: String? = null,
@@ -89,11 +91,11 @@ fun CheckoutTextField(
     innerIndication: Indication? = null,
     shouldFocus: Boolean = false,
     prefix: String? = null,
+    hint: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
-    val state = rememberTextFieldState(initialValue)
     val focusRequester = remember { FocusRequester() }
     BasicTextField(
         state = state,
@@ -120,6 +122,7 @@ fun CheckoutTextField(
                 interactionSource = interactionSource,
                 innerIndication = innerIndication,
                 prefix = prefix,
+                hint = if (state.text.isEmpty()) hint else null,
                 trailingIcon = trailingIcon,
                 style = style,
             )
