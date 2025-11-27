@@ -71,11 +71,3 @@ val aggregateDependencyLists = tasks.register<AggregateDependencyListsTask>("agg
 
     includeModules.set(project.providers.gradleProperty("includeModules").map { it.toBoolean() })
 }
-
-// Deprecated task
-tasks.register("dependencyList") {
-    dependsOn(aggregateDependencyLists)
-    doFirst {
-        logger.warn("This task is deprecated. Use 'aggregateDependencyLists' instead.")
-    }
-}
