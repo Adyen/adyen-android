@@ -28,33 +28,17 @@ internal fun CardViewState.toPaymentComponentState(
     checkoutAttemptId: String,
     onEncryptionError: (EncryptionException) -> Unit,
 ): CardPaymentComponentState {
-    val unencryptedCardBuilder = UnencryptedCard.Builder()
+    val publicKey = componentParams.publicKey ?: return invalidCardPaymentComponentState()
 
-    val publicKey = componentParams.publicKey
-    if (publicKey == null) {
-        return invalidCardPaymentComponentState()
-    }
+    val encryptedCard = encryptCard(
+        cardEncryptor = cardEncryptor,
+        publicKey = publicKey,
+        cardNumber = cardNumber.text,
+        expiryDate = expiryDate.text,
+        securityCode = securityCode.text,
+        onEncryptionError = onEncryptionError,
+    ) ?: return invalidCardPaymentComponentState()
 
-    val encryptedCard: EncryptedCard = try {
-        unencryptedCardBuilder.setNumber(cardNumber.text)
-        // TODO - Card. Add isCvcHidden check
-//            if (!isCvcHidden()) {
-        val cvc = securityCode.text
-        if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
-//            }
-        if (expiryDate.text.isNotBlank()) {
-            val expiryDate = ExpiryDate.from(expiryDate.text)
-            unencryptedCardBuilder.setExpiryDate(
-                expiryMonth = expiryDate.expiryMonth.toString(),
-                expiryYear = expiryDate.expiryYear.toString(),
-            )
-        }
-
-        cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
-    } catch (e: EncryptionException) {
-        onEncryptionError(e)
-        return invalidCardPaymentComponentState()
-    }
     val cardBrand = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
     val holderName = if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
         holderName.text
@@ -97,6 +81,36 @@ private fun mapComponentState(
         data = paymentComponentData,
         isValid = true,
     )
+}
+
+@Suppress("LongParameterList")
+private fun encryptCard(
+    cardEncryptor: BaseCardEncryptor,
+    publicKey: String,
+    cardNumber: String,
+    expiryDate: String,
+    securityCode: String,
+    onEncryptionError: (EncryptionException) -> Unit,
+): EncryptedCard? {
+    val unencryptedCardBuilder = UnencryptedCard.Builder()
+    return try {
+        unencryptedCardBuilder.setNumber(cardNumber)
+        // TODO - Card. Add isCvcHidden check
+        val cvc = securityCode
+        if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
+        if (expiryDate.isNotBlank()) {
+            val expiryDate = ExpiryDate.from(expiryDate)
+            unencryptedCardBuilder.setExpiryDate(
+                expiryMonth = expiryDate.expiryMonth.toString(),
+                expiryYear = expiryDate.expiryYear.toString(),
+            )
+        }
+
+        cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
+    } catch (e: EncryptionException) {
+        onEncryptionError(e)
+        null
+    }
 }
 
 private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
