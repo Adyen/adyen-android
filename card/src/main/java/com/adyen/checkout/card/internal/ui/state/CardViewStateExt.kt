@@ -26,14 +26,16 @@ internal fun CardViewState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     checkoutAttemptId: String,
-    onEncryptionError: (EncryptionException) -> Unit,
+    onEncryptionFailed: (EncryptionException) -> Unit,
+    onPublicKeyNotFound: (RuntimeException) -> Unit,
 ): CardPaymentComponentState {
-    val publicKey = componentParams.publicKey ?: return invalidCardPaymentComponentState()
+    val publicKey = componentParams.publicKey(onPublicKeyNotFound = onPublicKeyNotFound)
+        ?: return invalidCardPaymentComponentState()
 
     val encryptedCard = encryptCard(
         cardEncryptor = cardEncryptor,
         publicKey = publicKey,
-        onEncryptionError = onEncryptionError,
+        onEncryptionFailed = onEncryptionFailed,
     ) ?: return invalidCardPaymentComponentState()
 
     val cardPaymentMethod = createPaymentMethod(
@@ -52,7 +54,7 @@ internal fun CardViewState.toPaymentComponentState(
 private fun CardViewState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
-    onEncryptionError: (EncryptionException) -> Unit,
+    onEncryptionFailed: (EncryptionException) -> Unit,
 ): EncryptedCard? {
     val unencryptedCardBuilder = UnencryptedCard.Builder()
     return try {
@@ -70,7 +72,7 @@ private fun CardViewState.encryptCard(
 
         cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
-        onEncryptionError(e)
+        onEncryptionFailed(e)
         null
     }
 }
@@ -126,3 +128,10 @@ private fun CardViewState.holderName(componentParams: CardComponentParams) =
     } else {
         null
     }
+
+private fun CardComponentParams.publicKey(onPublicKeyNotFound: (RuntimeException) -> Unit): String? {
+    return publicKey ?: run {
+        onPublicKeyNotFound(RuntimeException("Public key is missing."))
+        null
+    }
+}
