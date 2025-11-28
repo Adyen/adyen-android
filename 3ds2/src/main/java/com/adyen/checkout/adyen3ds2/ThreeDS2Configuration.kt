@@ -16,33 +16,33 @@ import com.adyen.threeds2.customization.UiCustomization
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-internal class Adyen3DS2Configuration(
+internal class ThreeDS2Configuration(
     val uiCustomization: UiCustomization?,
     val threeDSRequestorAppURL: String?,
 ) : Configuration
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-class Adyen3DS2ConfigurationBuilder internal constructor() {
+class ThreeDS2ConfigurationBuilder internal constructor() {
 
     var uiCustomization: UiCustomization? = null
     var threeDSRequestorAppURL: String? = null
 
-    internal fun build() = Adyen3DS2Configuration(
+    internal fun build() = ThreeDS2Configuration(
         uiCustomization = uiCustomization,
         threeDSRequestorAppURL = threeDSRequestorAppURL,
     )
 }
 
 fun CheckoutConfiguration.adyen3ds2(
-    configuration: @CheckoutConfigurationMarker Adyen3DS2ConfigurationBuilder.() -> Unit = {}
+    configuration: @CheckoutConfigurationMarker ThreeDS2ConfigurationBuilder.() -> Unit = {}
 ): CheckoutConfiguration {
-    val config = Adyen3DS2ConfigurationBuilder()
+    val config = ThreeDS2ConfigurationBuilder()
         .apply(configuration)
         .build()
     addActionConfiguration(config)
     return this
 }
 
-internal fun CheckoutConfiguration.getAdyen3DS2Configuration(): Adyen3DS2Configuration? {
-    return getActionConfiguration(Adyen3DS2Configuration::class.java)
+internal fun CheckoutConfiguration.get3DS2Configuration(): ThreeDS2Configuration? {
+    return getActionConfiguration(ThreeDS2Configuration::class.java)
 }

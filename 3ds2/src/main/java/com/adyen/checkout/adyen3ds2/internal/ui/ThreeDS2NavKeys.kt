@@ -14,4 +14,4 @@ import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data object Adyen3DS2NavKey : NavKey
+internal data object ThreeDS2NavKey : NavKey

@@ -40,14 +40,14 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
         val httpClient = HttpClientFactory.getHttpClient(commonComponentParams.environment)
         val submitFingerprintService = SubmitFingerprintService(httpClient)
         val submitFingerprintRepository = SubmitFingerprintRepository(submitFingerprintService)
-        val adyen3DS2DetailsSerializer = ThreeDS2Serializer()
+        val threeDS2Serializer = ThreeDS2Serializer()
 
-        val adyen3DS2ComponentParams =
+        val threeDS2ComponentParams =
             ThreeDS2ComponentParamsMapper().mapToParams(checkoutConfiguration, commonComponentParams)
 
         return ThreeDS2Component(
             action = action,
-            componentParams = adyen3DS2ComponentParams,
+            componentParams = threeDS2ComponentParams,
             savedStateHandle = savedStateHandle,
             analyticsManager = analyticsManager,
             redirectHandler = redirectHandler,
@@ -55,7 +55,7 @@ internal class ThreeDS2Factory(private val application: Application) : ActionFac
             paymentDataRepository = paymentDataRepository,
             threeDS2Service = ThreeDS2Service.INSTANCE,
             coroutineDispatcher = DispatcherProvider.Default,
-            threeDS2Serializer = adyen3DS2DetailsSerializer,
+            threeDS2Serializer = threeDS2Serializer,
             application = application,
         ).apply {
             initialize(coroutineScope)

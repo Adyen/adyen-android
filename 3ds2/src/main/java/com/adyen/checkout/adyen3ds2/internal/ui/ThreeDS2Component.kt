@@ -93,10 +93,10 @@ internal class ThreeDS2Component(
     private val threeDsEventFlow: Flow<ThreeDS2Event> = threeDsEventChannel.receiveAsFlow()
 
     override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
-        Adyen3DS2NavKey to CheckoutNavEntry(Adyen3DS2NavKey, ThreeDS2MainNavigationKey) { _ -> MainScreen() },
+        ThreeDS2NavKey to CheckoutNavEntry(ThreeDS2NavKey, ThreeDS2MainNavigationKey) { _ -> MainScreen() },
     )
 
-    override val navigationStartingPoint: NavKey = Adyen3DS2NavKey
+    override val navigationStartingPoint: NavKey = ThreeDS2NavKey
 
     @Composable
     private fun MainScreen() {

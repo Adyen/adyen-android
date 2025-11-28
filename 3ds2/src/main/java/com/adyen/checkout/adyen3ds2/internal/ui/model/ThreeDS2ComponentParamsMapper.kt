@@ -9,7 +9,7 @@
 package com.adyen.checkout.adyen3ds2.internal.ui.model
 
 import androidx.annotation.VisibleForTesting
-import com.adyen.checkout.adyen3ds2.getAdyen3DS2Configuration
+import com.adyen.checkout.adyen3ds2.get3DS2Configuration
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 
@@ -19,7 +19,7 @@ internal class ThreeDS2ComponentParamsMapper {
         checkoutConfiguration: CheckoutConfiguration,
         commonComponentParams: CommonComponentParams,
     ): ThreeDS2ComponentParams {
-        val adyen3ds2Configuration = checkoutConfiguration.getAdyen3DS2Configuration()
+        val adyen3ds2Configuration = checkoutConfiguration.get3DS2Configuration()
         return ThreeDS2ComponentParams(
             commonComponentParams = commonComponentParams,
             uiCustomization = adyen3ds2Configuration?.uiCustomization,
