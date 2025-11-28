@@ -27,6 +27,7 @@
     <string name="checkout_card_security_code_hint_4_digits" translatable="false">4 digits on front of card</string>
     <string name="checkout_card_holder_name" translatable="false">Name on Card</string>
     <string name="checkout_card_holder_name_invalid" translatable="false">Holder name invalid</string>
+    <string name="checkout_card_store_payment_method" translatable="false">Save details for next time</string>
     <string name="checkout_card_dual_brand_selector_title" translatable="false">Card Brand</string>
     <string name="checkout_card_dual_brand_selector_description" translatable="false">Select the card brand you prefer to pay with. This is optional.</string>
     <string name="checkout_drop_in_other_payment_methods" translatable="false">Other payment methods</string>
