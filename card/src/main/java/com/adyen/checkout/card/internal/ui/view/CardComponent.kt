@@ -19,10 +19,14 @@ import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.ComponentScaffold
 import com.adyen.checkout.ui.internal.Dimensions
 import com.adyen.checkout.ui.internal.PayButton
+import com.adyen.checkout.ui.internal.SwitchContainer
 
 @Composable
 internal fun CardComponent(
@@ -92,6 +96,14 @@ private fun CardDetailsSection(
                 onHolderNameChanged = changeListener::onHolderNameChanged,
                 onHolderNameFocusChanged = changeListener::onHolderNameFocusChanged,
             )
+        }
+        if (viewState.isStorePaymentFieldVisible) {
+            SwitchContainer(
+                checked = viewState.storePaymentMethod,
+                onCheckedChange = changeListener::onStorePaymentMethodChanged,
+            ) {
+                Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
+            }
         }
     }
 }
