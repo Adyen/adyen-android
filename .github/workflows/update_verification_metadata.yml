@@ -35,17 +35,17 @@ jobs:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           cache-read-only: true
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Gradle update verification metadata
         # We have to run assembleDebug to make sure dynamic dependencies (aapt2) are resolved.
         run: ./gradlew --write-verification-metadata sha256 resolveDependencies assembleDebug
 
       - name: Commit
+        env:
+          USER_NAME: ${{ secrets.ADYEN_AUTOMATION_BOT_USER }}
+          USER_EMAIL: ${{ secrets.ADYEN_AUTOMATION_BOT_NO_REPLY_EMAIL }}
         run: |
-          git config user.name "${{ secrets.ADYEN_AUTOMATION_BOT_USER }}"
-          git config user.email "${{ secrets.ADYEN_AUTOMATION_BOT_NO_REPLY_EMAIL }}"
+          git config user.name "$USER_NAME"
+          git config user.email "$USER_EMAIL"
           git add .
           git diff-index --quiet HEAD || git commit -m "Update verification metadata
           

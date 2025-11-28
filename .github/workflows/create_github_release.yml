@@ -19,7 +19,7 @@ jobs:
 
       # Create a Github release with release notes.
       - name: Create Github release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION_NAME: ${{ inputs.version-name }}

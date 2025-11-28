@@ -1,7 +1,14 @@
 name: Build and test
 
 on:
-  workflow_call
+  workflow_call:
+    secrets:
+      gradle-encryption-key:
+        required: true
+      github-token:
+        required: true
+      sonar-token:
+        required: true
 
 permissions:
   contents: read
@@ -30,7 +37,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           cache-read-only: false
-          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-encryption-key: ${{ secrets.gradle-encryption-key }}
 
       - name: Run static code analysis
         run: ./gradlew detekt ktlint -Pstrip-resources=true
@@ -47,6 +54,6 @@ jobs:
       - name: Upload reports to Sonar
         continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.github-token }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.sonar-token }}
         run: ./gradlew sonar --no-parallel

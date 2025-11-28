@@ -16,7 +16,10 @@ jobs:
   build_and_test:
     name: Build and test
     uses: ./.github/workflows/build_and_test.yml
-    secrets: inherit
+    secrets:
+      gradle-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+      sonar-token: ${{ secrets.SONAR_TOKEN }}
   validate_public_api:
     name: Validate public API
     uses: ./.github/workflows/validate_public_api.yml
