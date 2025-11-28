@@ -141,7 +141,7 @@ internal class MBWayComponent(
 
         CountryCodePicker(
             viewState = viewState,
-            onCountrySelected = {
+            onItemClick = {
                 onCountryChanged(it)
                 backStack.removeLastOrNull()
             },
