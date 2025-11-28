@@ -16,5 +16,4 @@ data class CheckoutTheme(
     val colors: CheckoutColors = CheckoutColors.light(),
     val textStyles: CheckoutTextStyles = CheckoutTextStyles.default(),
     val attributes: CheckoutAttributes = CheckoutAttributes.default(),
-    val elements: CheckoutElements = CheckoutElements.default(),
 )

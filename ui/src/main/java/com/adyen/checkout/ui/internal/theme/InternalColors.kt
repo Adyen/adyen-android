@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 15/4/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
@@ -19,11 +19,11 @@ import com.adyen.checkout.ui.theme.CheckoutColors
 data class InternalColors(
     val background: Color,
     val container: Color,
+    val containerOutline: Color,
     val primary: Color,
     val textOnPrimary: Color,
     val highlight: Color,
     val destructive: Color,
-    val success: Color,
     val textOnDestructive: Color,
     val disabled: Color,
     val textOnDisabled: Color,
@@ -38,15 +38,15 @@ data class InternalColors(
             InternalColors(
                 background = background.toCompose(),
                 container = container.toCompose(),
+                containerOutline = containerOutline.toCompose(),
                 primary = primary.toCompose(),
                 textOnPrimary = textOnPrimary.toCompose(),
                 highlight = highlight.toCompose(),
                 destructive = destructive.toCompose(),
-                success = success.toCompose(),
                 textOnDestructive = textOnDestructive.toCompose(),
                 disabled = disabled.toCompose(),
                 textOnDisabled = textOnDisabled.toCompose(),
-                outline = outline.toCompose(),
+                outline = separator.toCompose(),
                 text = text.toCompose(),
                 textSecondary = textSecondary.toCompose(),
             )

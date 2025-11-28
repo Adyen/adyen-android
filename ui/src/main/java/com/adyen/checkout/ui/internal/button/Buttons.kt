@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 16/4/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.button
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
@@ -27,6 +27,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -37,14 +42,12 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.primary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.primaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.primaryButtonStyle(),
     )
 }
 
@@ -84,14 +87,12 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.secondary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.secondaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.secondaryButtonStyle(),
     )
 }
 
@@ -131,14 +132,12 @@ fun TertiaryButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.tertiary
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.tertiaryButtonStyle(buttonStyle),
+        style = ButtonDefaults.tertiaryButtonStyle(),
     )
 }
 
@@ -178,14 +177,12 @@ fun DestructiveButton(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
 ) {
-    val buttonStyle = CheckoutThemeProvider.elements.buttons.destructive
     CheckoutButton(
         onClick = onClick,
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        cornerRadius = buttonStyle?.cornerRadius ?: CheckoutThemeProvider.attributes.cornerRadius,
-        style = ButtonDefaults.destructiveButtonStyle(buttonStyle),
+        style = ButtonDefaults.destructiveButtonStyle(),
     )
 }
 
@@ -223,12 +220,11 @@ private fun CheckoutButton(
     text: String,
     modifier: Modifier,
     isLoading: Boolean,
-    cornerRadius: Int,
     style: InternalButtonStyle,
 ) {
     Button(
         onClick = onClick,
-        shape = RoundedCornerShape(cornerRadius.dp),
+        shape = RoundedCornerShape(style.cornerRadius.dp),
         enabled = !isLoading,
         colors = buttonColors(
             containerColor = style.backgroundColor,

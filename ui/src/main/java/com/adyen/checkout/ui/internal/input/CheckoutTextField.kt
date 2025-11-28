@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 23/4/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.input
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.Indication
@@ -41,9 +41,11 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.sp
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.theme.CheckoutColor
-import com.adyen.checkout.ui.theme.CheckoutElements
-import com.adyen.checkout.ui.theme.CheckoutTextFieldStyle
+import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -91,7 +93,7 @@ fun CheckoutTextField(
     prefix: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle()
     val innerTextStyle = CheckoutThemeProvider.textStyles.body
     val state = rememberTextFieldState(initialValue)
     val focusRequester = remember { FocusRequester() }
@@ -200,21 +202,12 @@ internal class TextFieldStylePreviewParameterProvider : PreviewParameterProvider
 
     private val themeProvider = ThemePreviewParameterProvider()
 
-    private val styles = sequenceOf(
-        CheckoutTextFieldStyle(),
-        // Transparent background to get an outlined look
-        CheckoutTextFieldStyle(
-            backgroundColor = CheckoutColor(0x00FFFFFF),
-        ),
-    )
-
-    override val values = styles.flatMap { style ->
-        themeProvider.values.map { theme ->
-            theme.copy(
-                elements = CheckoutElements.default(
-                    textField = style,
-                ),
-            )
-        }
+    override val values = themeProvider.values + themeProvider.values.map { theme ->
+        theme.copy(
+            colors = theme.colors.copy(
+                container = theme.colors.background,
+                containerOutline = theme.colors.separator,
+            ),
+        )
     }
 }

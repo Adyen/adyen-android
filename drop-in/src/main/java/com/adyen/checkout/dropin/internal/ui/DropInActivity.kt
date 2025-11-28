@@ -19,7 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import com.adyen.checkout.dropin.internal.DropInResultContract
-import com.adyen.checkout.ui.internal.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 class DropInActivity : ComponentActivity() {

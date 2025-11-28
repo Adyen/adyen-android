@@ -6,7 +6,7 @@
  * Created by oscars on 7/7/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.theme
 
 import androidx.annotation.RestrictTo
 import androidx.compose.ui.unit.DpSize

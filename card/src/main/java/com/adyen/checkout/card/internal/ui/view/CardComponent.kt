@@ -21,8 +21,8 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.ui.internal.ComponentScaffold
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.PayButton
+import com.adyen.checkout.ui.internal.button.PayButton
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun CardComponent(

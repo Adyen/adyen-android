@@ -6,7 +6,7 @@
  * Created by oscars on 16/4/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.helper
 
 import androidx.annotation.RestrictTo
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider

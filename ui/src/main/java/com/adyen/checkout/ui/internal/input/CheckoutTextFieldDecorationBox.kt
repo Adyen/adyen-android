@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 17/6/2025.
+ * Created by oscars on 26/11/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.input
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -35,6 +35,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.Footnote
+import com.adyen.checkout.ui.internal.text.SubHeadline
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 /**
  * A composable function that provides the decoration box for [CheckoutTextField].
@@ -79,11 +84,7 @@ internal fun CheckoutTextFieldDecorationBox(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
         modifier = modifier,
     ) {
-        val labelColor = if (isFocused) style.activeColor else style.textColor
-        SubHeadline(
-            text = label,
-            color = labelColor,
-        )
+        SubHeadline(text = label)
         Row(
             horizontalArrangement = Arrangement.spacedBy(Dimensions.Small),
             verticalAlignment = Alignment.CenterVertically,
