@@ -20,6 +20,8 @@ internal class CardViewStateFactory(
         cardNumber = TextInputState(isFocused = true),
         expiryDate = TextInputState(),
         securityCode = TextInputState(),
+        holderName = TextInputState(),
+        isHolderNameRequired = componentParams.isHolderNameRequired,
         isLoading = false,
         detectedCardBrands = listOf(),
         supportedCardBrands = componentParams.supportedCardBrands,

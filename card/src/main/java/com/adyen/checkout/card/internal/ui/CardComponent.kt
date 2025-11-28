@@ -181,6 +181,22 @@ internal class CardComponent(
         }
     }
 
+    override fun onHolderNameChanged(newHolderName: String) {
+        stateManager.updateViewStateAndValidate {
+            copy(
+                holderName = holderName.updateText(newHolderName),
+            )
+        }
+    }
+
+    override fun onHolderNameFocusChanged(hasFocus: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                holderName = holderName.updateFocus(hasFocus),
+            )
+        }
+    }
+
     override fun onBrandSelected(cardBrand: CardBrand) {
         stateManager.updateComponentState {
             copy(
@@ -228,13 +244,19 @@ internal class CardComponent(
             )
         }
         val cardBrand = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
+        val holderName = if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
+            holderName.text
+        } else {
+            null
+        }
 
-        return mapComponentState(encryptedCard, cardBrand)
+        return mapComponentState(encryptedCard, cardBrand, holderName)
     }
 
     private fun mapComponentState(
         encryptedCard: EncryptedCard,
-        cardBrand: CardBrand?
+        cardBrand: CardBrand?,
+        holderName: String?
     ): CardPaymentComponentState {
         val cardPaymentMethod = CardPaymentMethod(
             type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
@@ -244,11 +266,8 @@ internal class CardComponent(
             encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
             // TODO - Card. Add isCvcHidden check
             encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+            holderName = holderName,
             threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-            // TODO - Card. Holder name
-//            if (isHolderNameRequired()) {
-//                holderName = stateOutputData.holderNameState.value
-//            }
             brand = cardBrand?.txVariant,
         )
 

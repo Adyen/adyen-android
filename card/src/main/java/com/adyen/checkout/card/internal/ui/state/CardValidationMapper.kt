@@ -50,4 +50,13 @@ internal class CardValidationMapper {
             CardSecurityCodeValidation.INVALID -> CheckoutLocalizationKey.CARD_SECURITY_CODE_INVALID
         }
     }
+
+    fun mapHolderNameValidation(
+        validation: CardHolderNameValidation
+    ): CheckoutLocalizationKey? {
+        return when (validation) {
+            CardHolderNameValidation.VALID -> null
+            CardHolderNameValidation.INVALID_BLANK -> CheckoutLocalizationKey.CARD_HOLDER_NAME_INVALID
+        }
+    }
 }
