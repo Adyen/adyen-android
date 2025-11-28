@@ -33,73 +33,35 @@ internal fun CardViewState.toPaymentComponentState(
     val encryptedCard = encryptCard(
         cardEncryptor = cardEncryptor,
         publicKey = publicKey,
-        cardNumber = cardNumber.text,
-        expiryDate = expiryDate.text,
-        securityCode = securityCode.text,
         onEncryptionError = onEncryptionError,
     ) ?: return invalidCardPaymentComponentState()
 
-    val cardBrand = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
-    val holderName = if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
-        holderName.text
-    } else {
-        null
-    }
-
-    return mapComponentState(encryptedCard, holderName, cardBrand, componentParams, checkoutAttemptId)
-}
-
-private fun mapComponentState(
-    encryptedCard: EncryptedCard,
-    holderName: String?,
-    cardBrand: CardBrand?,
-    componentParams: CardComponentParams,
-    checkoutAttemptId: String,
-): CardPaymentComponentState {
-    val cardPaymentMethod = CardPaymentMethod(
-        type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+    val cardPaymentMethod = createPaymentMethod(
+        encryptedCard = encryptedCard,
+        holderName = holderName(componentParams),
+        cardBrand = cardBrand(),
         checkoutAttemptId = checkoutAttemptId,
-        encryptedCardNumber = encryptedCard.encryptedCardNumber,
-        encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
-        encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
-        // TODO - Card. Add isCvcHidden check
-        encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
-        holderName = holderName,
-        threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-        brand = cardBrand?.txVariant,
     )
 
-    val paymentComponentData = PaymentComponentData(
-        paymentMethod = cardPaymentMethod,
-        storePaymentMethod = null,
-        shopperReference = componentParams.shopperReference,
-        order = null,
-        amount = componentParams.amount,
-    )
+    val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
 
-    return CardPaymentComponentState(
-        data = paymentComponentData,
-        isValid = true,
-    )
+    return createPaymentComponentState(paymentComponentData)
 }
 
 @Suppress("LongParameterList")
-private fun encryptCard(
+private fun CardViewState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
-    cardNumber: String,
-    expiryDate: String,
-    securityCode: String,
     onEncryptionError: (EncryptionException) -> Unit,
 ): EncryptedCard? {
     val unencryptedCardBuilder = UnencryptedCard.Builder()
     return try {
-        unencryptedCardBuilder.setNumber(cardNumber)
+        unencryptedCardBuilder.setNumber(cardNumber.text)
         // TODO - Card. Add isCvcHidden check
-        val cvc = securityCode
+        val cvc = securityCode.text
         if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
-        if (expiryDate.isNotBlank()) {
-            val expiryDate = ExpiryDate.from(expiryDate)
+        if (expiryDate.text.isNotBlank()) {
+            val expiryDate = ExpiryDate.from(expiryDate.text)
             unencryptedCardBuilder.setExpiryDate(
                 expiryMonth = expiryDate.expiryMonth.toString(),
                 expiryYear = expiryDate.expiryYear.toString(),
@@ -113,7 +75,54 @@ private fun encryptCard(
     }
 }
 
+private fun createPaymentMethod(
+    encryptedCard: EncryptedCard,
+    holderName: String?,
+    cardBrand: CardBrand?,
+    checkoutAttemptId: String,
+) = CardPaymentMethod(
+    type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+    checkoutAttemptId = checkoutAttemptId,
+    encryptedCardNumber = encryptedCard.encryptedCardNumber,
+    encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
+    encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
+    // TODO - Card. Add isCvcHidden check
+    encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+    holderName = holderName,
+    threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+    brand = cardBrand?.txVariant,
+)
+
+private fun createPaymentComponentData(
+    cardPaymentMethod: CardPaymentMethod,
+    componentParams: CardComponentParams
+) = PaymentComponentData(
+    paymentMethod = cardPaymentMethod,
+    storePaymentMethod = null,
+    shopperReference = componentParams.shopperReference,
+    order = null,
+    amount = componentParams.amount,
+)
+
+private fun createPaymentComponentState(
+    paymentComponentData: PaymentComponentData<CardPaymentMethod>,
+): CardPaymentComponentState {
+    return CardPaymentComponentState(
+        data = paymentComponentData,
+        isValid = true,
+    )
+}
+
 private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
     data = PaymentComponentData(null, null, null),
     isValid = false,
 )
+
+private fun CardViewState.cardBrand() = dualBrandData?.selectedBrand ?: detectedCardBrands.firstOrNull()
+
+private fun CardViewState.holderName(componentParams: CardComponentParams) =
+    if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
+        holderName.text
+    } else {
+        null
+    }
