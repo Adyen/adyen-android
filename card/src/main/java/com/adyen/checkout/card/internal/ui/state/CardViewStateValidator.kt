@@ -65,7 +65,6 @@ internal class CardViewStateValidator(
     }
 
     override fun isValid(viewState: CardViewState): Boolean {
-        // TODO - Card Full Validation
         return viewState.cardNumber.errorMessage == null &&
             viewState.expiryDate.errorMessage == null &&
             viewState.securityCode.errorMessage == null
@@ -103,7 +102,6 @@ internal class CardViewStateValidator(
         val shouldFailWithUnsupportedBrand = selectedOrFirstCardType == null && isReliable
 
         val cardNumberError = cardValidationMapper.mapCardNumberValidation(
-            // TODO - Card Number Luhn Check & Brand Supported
             validation = CardValidationUtils.validateCardNumber(
                 number = cardNumber.text,
                 enableLuhnCheck = enableLuhnCheck,

@@ -56,7 +56,6 @@ abstract class Action : ModelObject() {
         @Suppress("TooGenericExceptionThrown")
         fun getChildSerializer(actionType: String): Serializer<Action> {
             val childSerializer = when (actionType) {
-                // TODO - Investigate if it is possible to move `getChildSerializer` to specific modules
                 AwaitAction.ACTION_TYPE -> AwaitAction.SERIALIZER
                 RedirectAction.ACTION_TYPE -> RedirectAction.SERIALIZER
                 else ->

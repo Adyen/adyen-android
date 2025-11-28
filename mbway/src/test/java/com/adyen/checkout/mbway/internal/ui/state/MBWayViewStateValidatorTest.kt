@@ -38,7 +38,6 @@ internal class MBWayViewStateValidatorTest {
                 isLoading = false,
             )
 
-            // TODO - Component State
             val actual = validator.validate(viewState, DefaultComponentState())
 
             assertEquals(null, actual.phoneNumber.errorMessage)
@@ -59,7 +58,6 @@ internal class MBWayViewStateValidatorTest {
                 isLoading = false,
             )
 
-            // TODO - Component State
             val actual = validator.validate(viewState, DefaultComponentState())
 
             assertEquals(CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER, actual.phoneNumber.errorMessage)

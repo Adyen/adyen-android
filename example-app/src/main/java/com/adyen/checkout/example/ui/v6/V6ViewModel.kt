@@ -109,7 +109,6 @@ internal class V6ViewModel @Inject constructor(
             amount = keyValueStorage.getAmount(),
             countryCode = keyValueStorage.getCountry(),
             merchantAccount = keyValueStorage.getMerchantAccount(),
-            // TODO - Replace with correct URL once redirects are implemented
             redirectUrl = savedStateHandle.get<String>(V6Activity.RETURN_URL_EXTRA)
                 ?: error("Return url should be set"),
             threeDSMode = keyValueStorage.getThreeDSMode(),

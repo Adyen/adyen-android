@@ -54,7 +54,6 @@ internal fun CardComponent(
             }
         }
     }
-    // TODO - Card Full UI
 }
 
 @Composable

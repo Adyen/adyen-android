@@ -51,7 +51,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
-// TODO - Card full implementation
 @Suppress("TooManyFunctions")
 internal class CardComponent(
     private val analyticsManager: AnalyticsManager,
