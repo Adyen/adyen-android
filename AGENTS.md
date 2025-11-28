@@ -14,14 +14,71 @@ This document outlines important patterns, practices, and rules to follow when w
 
 **Do not proceed with uncertain changes.** It's better to ask and get clarification than to implement incorrect solutions.
 
-### 2. Keep Implementation Plans Updated
-**When working on multi-phase tasks with a plan document (e.g., `*_IMPLEMENTATION_PLAN.md`):**
+### 2. Always Work with a Plan
+
+**CRITICAL: Create plan FIRST, implement AFTER approval:**
+- **NEVER start implementation without a plan**
+- First, create a comprehensive implementation plan document (e.g., `*_IMPLEMENTATION_PLAN.md`)
+- Present the plan to the user for review and approval
+- Only after the plan is approved, begin implementation
+- Do not execute any code changes during the planning phase
+
+**Before starting any task:**
+- Ensure there is an implementation plan document (e.g., `*_IMPLEMENTATION_PLAN.md`)
+- If no plan exists, guide the user to create one before proceeding with implementation
+- Break down the work into clear, manageable phases
+- Identify dependencies, risks, and testing strategy upfront
+
+**When working on multi-phase tasks with a plan document:**
 - Update the plan file as you complete tasks/phases
 - Mark checkboxes as completed
 - Add notes about any deviations or discoveries
 - This helps if work needs to be continued later or by someone else
 
-### 3. Always Run Checks Before Committing
+**Commit workflow - CRITICAL:**
+- **Complete one phase fully before moving to the next**
+- After completing a phase:
+  1. Run `./gradlew apiDump`
+  2. Run `./gradlew check` (or module-specific check)
+  3. Commit the phase with a descriptive message
+  4. Only then proceed to the next phase
+- Never accumulate multiple phases in a single commit
+- Each commit should represent a logical, complete unit of work
+- This ensures work can be reviewed incrementally and rolled back if needed
+
+### 3. Test-Driven Development
+
+**Write tests first, then make them green:**
+- Before implementing new functionality, write the tests that define the expected behavior
+- Follow existing test patterns in the codebase to understand our testing structure
+- Search for similar tests to understand naming conventions and structure
+
+**Test structure example:**
+```kotlin
+@Test
+fun `when holder name is empty then validation fails`() {
+    // GIVEN
+    val input = ""
+    
+    // WHEN
+    val result = validator.validate(input)
+    
+    // THEN
+    assertFalse(result.isValid)
+}
+```
+
+**Ensure test coverage before refactoring:**
+- Always ensure there is adequate test coverage before making any internal refactors
+- If tests don't exist, write them first to capture current behavior
+- This ensures refactoring doesn't introduce regressions
+
+**Pause and verify between big steps:**
+- After completing significant changes, pause to run tests
+- Ensure all tests that cover your code changes pass before proceeding
+- Don't accumulate too many changes without verification
+
+### 4. Always Run Checks Before Committing
 After completing a phase of work and before each commit, **ALWAYS run these commands in order**:
 
 ```bash
@@ -74,10 +131,11 @@ class CardConfiguration { }
 **Carefully review all changes:**
 - Review each change carefully to ensure it's necessary and correct. If in doubt, ask questions.
 
-**Be wary of breaking changes:**
+**Never make breaking changes without discussion:**
 - Breaking changes can happen through removed OR modified code
+- **Do not proceed with breaking changes until discussed and confirmed with the user**
 - Breaking changes should only be done in a major release
-- Since we are working on a major version, we are mostly making breaking changes. But it would be good to ask once when making a plan to make sure that we are ready to make breaking changes
+- Always ask during planning phase whether breaking changes are acceptable for the current work
 
 **Ensure changes are necessary:**
 - Even non-breaking changes can make the API more complex
@@ -278,13 +336,16 @@ COSDK-1234
 ## Verification Checklist
 
 Before considering work complete:
-1. All checks pass (`./gradlew check`)
-2. Code follows existing patterns in the codebase
-3. If public API changed: Reviewed for breaking changes and necessity
-4. If layout/styles changed: Styles added, proper attributes used, hierarchy maintained
-5. If strings changed: All translations present, localized context applied
-6. If new module added: Gradle configuration reviewed, external SDKs handled properly
-7. Added classes and functions have unit tests which follow our code standards.
+1. Implementation plan exists and is updated with progress
+2. Tests written first and are passing (`./gradlew test`)
+3. All checks pass (`./gradlew check`)
+4. Code follows existing patterns in the codebase
+5. If public API changed: Reviewed for breaking changes (discussed with user) and necessity
+6. If layout/styles changed: Styles added, proper attributes used, hierarchy maintained
+7. If strings changed: All translations present, localized context applied
+8. If new module added: Gradle configuration reviewed, external SDKs handled properly
+9. If refactoring: Test coverage exists for affected code
+10. Added classes and functions have unit tests following given-when-then structure
 
 ## When in Doubt
 
