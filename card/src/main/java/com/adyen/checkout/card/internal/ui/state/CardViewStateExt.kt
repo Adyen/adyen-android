@@ -45,7 +45,11 @@ internal fun CardViewState.toPaymentComponentState(
         checkoutAttemptId = checkoutAttemptId,
     )
 
-    val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
+    val paymentComponentData = createPaymentComponentData(
+        cardPaymentMethod = cardPaymentMethod,
+        storePaymentMethod = storePaymentMethod(componentParams),
+        componentParams = componentParams,
+    )
 
     return createPaymentComponentState(paymentComponentData)
 }
@@ -97,10 +101,11 @@ private fun createPaymentMethod(
 
 private fun createPaymentComponentData(
     cardPaymentMethod: CardPaymentMethod,
+    storePaymentMethod: Boolean?,
     componentParams: CardComponentParams
 ) = PaymentComponentData(
     paymentMethod = cardPaymentMethod,
-    storePaymentMethod = null,
+    storePaymentMethod = storePaymentMethod,
     shopperReference = componentParams.shopperReference,
     order = null,
     amount = componentParams.amount,
@@ -125,6 +130,13 @@ private fun CardViewState.cardBrand() = dualBrandData?.selectedBrand ?: detected
 private fun CardViewState.holderName(componentParams: CardComponentParams) =
     if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
         holderName.text
+    } else {
+        null
+    }
+
+private fun CardViewState.storePaymentMethod(componentParams: CardComponentParams) =
+    if (componentParams.isStorePaymentFieldVisible) {
+        storePaymentMethod
     } else {
         null
     }
