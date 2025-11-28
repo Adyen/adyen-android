@@ -114,6 +114,8 @@ private fun CardComponentPreview() {
                 text = "J. Smith",
             ),
             isHolderNameRequired = true,
+            storePaymentMethod = false,
+            isStorePaymentFieldVisible = true,
             supportedCardBrands = emptyList(),
             isSupportedCardBrandsShown = false,
             isLoading = false,
@@ -136,6 +138,8 @@ private fun CardComponentPreview() {
             override fun onHolderNameChanged(newHolderName: String) = Unit
 
             override fun onHolderNameFocusChanged(hasFocus: Boolean) = Unit
+
+            override fun onStorePaymentMethodChanged(checked: Boolean) = Unit
 
             override fun onBrandSelected(cardBrand: CardBrand) = Unit
         },

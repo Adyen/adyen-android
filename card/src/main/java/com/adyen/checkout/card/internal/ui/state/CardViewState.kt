@@ -21,6 +21,8 @@ internal data class CardViewState(
     val securityCode: TextInputState,
     val holderName: TextInputState,
     val isHolderNameRequired: Boolean,
+    val storePaymentMethod: Boolean,
+    val isStorePaymentFieldVisible: Boolean,
     val supportedCardBrands: List<CardBrand>,
     val isSupportedCardBrandsShown: Boolean,
     val detectedCardBrands: List<CardBrand>,
