@@ -39,6 +39,7 @@ import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -92,11 +93,9 @@ internal class CardComponent(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-            ) { e ->
-                val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
-                analyticsManager.trackEvent(event)
-                // exceptionChannel.trySend(e)
-            }
+                onEncryptionFailed = ::onEncryptionError,
+                onPublicKeyNotFound = ::onPublicKeyNotFound,
+            )
             val event = PaymentComponentEvent.Submit(paymentComponentState)
             eventChannel.trySend(event)
         } else {
@@ -242,5 +241,18 @@ internal class CardComponent(
         if (oldBin != newBin) {
             onBinValueCallback?.onBinValue(newBin)
         }
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onEncryptionError(e: EncryptionException) {
+        val event = GenericEvents.error(CardPaymentMethod.PAYMENT_METHOD_TYPE, ErrorEvent.ENCRYPTION)
+        analyticsManager.trackEvent(event)
+        // exceptionChannel.trySend(e)
+    }
+
+    @Suppress("UnusedParameter")
+    private fun onPublicKeyNotFound(e: RuntimeException) {
+        // TODO - Analytics.
+        // exceptionChannel.trySend(e)
     }
 }
