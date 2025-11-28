@@ -60,6 +60,7 @@ public final class com/adyen/checkout/core/action/data/ActionTypes {
 	public static final field INSTANCE Lcom/adyen/checkout/core/action/data/ActionTypes;
 	public static final field NATIVE_REDIRECT Ljava/lang/String;
 	public static final field REDIRECT Ljava/lang/String;
+	public static final field THREEDS2 Ljava/lang/String;
 }
 
 public final class com/adyen/checkout/core/action/data/AwaitAction : com/adyen/checkout/core/action/data/Action {
@@ -134,6 +135,50 @@ public final class com/adyen/checkout/core/action/data/RedirectAction$Creator : 
 	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
 	public final fun newArray (I)[Lcom/adyen/checkout/core/action/data/RedirectAction;
 	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/action/data/Threeds2Action : com/adyen/checkout/core/action/data/Action {
+	public static final field $stable I
+	public static final field ACTION_TYPE Ljava/lang/String;
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/adyen/checkout/core/action/data/Threeds2Action$Companion;
+	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getAuthorisationToken ()Ljava/lang/String;
+	public fun getPaymentData ()Ljava/lang/String;
+	public fun getPaymentMethodType ()Ljava/lang/String;
+	public final fun getSubtype ()Ljava/lang/String;
+	public final fun getToken ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/core/action/data/Threeds2Action$Companion {
+}
+
+public final class com/adyen/checkout/core/action/data/Threeds2Action$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/core/action/data/Threeds2Action;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/core/action/data/Threeds2Action;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/core/action/data/Threeds2Action$SubType : java/lang/Enum {
+	public static final field CHALLENGE Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
+	public static final field Companion Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType$Companion;
+	public static final field FINGERPRINT Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public static final fun parse (Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
+	public static fun valueOf (Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
+	public static fun values ()[Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
+}
+
+public final class com/adyen/checkout/core/action/data/Threeds2Action$SubType$Companion {
+	public final fun parse (Ljava/lang/String;)Lcom/adyen/checkout/core/action/data/Threeds2Action$SubType;
 }
 
 public final class com/adyen/checkout/core/analytics/internal/AnalyticsManagerFactory$Companion {
