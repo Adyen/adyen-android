@@ -1,3 +1,11 @@
+<!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 25/11/2025.
+  -->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -9,18 +17,18 @@
       android:translateY="18.441177">
     <path
         android:pathData="M0,10h20c2.21,0 4,1.79 4,4v20H4c-2.21,0 -4,-1.79 -4,-4V20h10v8h4V16H0V10z"
-        android:fillColor="#00D16A"/>
+        android:fillColor="#FFFFFF"/>
     <path
         android:pathData="M112,10v24h10V16h4v18h10V14c0,-2.21 -1.79,-4 -4,-4H112z"
-        android:fillColor="#00D16A"/>
+        android:fillColor="#FFFFFF"/>
     <path
         android:pathData="M56,44h20c2.21,0 4,-1.79 4,-4V10H70v18h-4V10H56v20c0,2.21 1.79,4 4,4h10v4H56V44z"
-        android:fillColor="#00D16A"/>
+        android:fillColor="#FFFFFF"/>
     <path
         android:pathData="M108,34H88c-2.21,0 -4,-1.79 -4,-4V10h20c2.21,0 4,1.79 4,4v10H98v-8h-4v12h14V34z"
-        android:fillColor="#00D16A"/>
+        android:fillColor="#FFFFFF"/>
     <path
         android:pathData="M52,0v34H32c-2.21,0 -4,-1.79 -4,-4V14c0,-2.21 1.79,-4 4,-4h6v18h4V0H52z"
-        android:fillColor="#00D16A"/>
+        android:fillColor="#FFFFFF"/>
   </group>
 </vector>

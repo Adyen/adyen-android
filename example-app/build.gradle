@@ -56,6 +56,14 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+
+        acceptance {
+            applicationIdSuffix ".acc"
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release']
+        }
     }
 
     buildFeatures {
