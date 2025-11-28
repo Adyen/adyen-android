@@ -16,6 +16,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.card.BinLookupData
+import com.adyen.checkout.card.card
+import com.adyen.checkout.card.onBinLookup
+import com.adyen.checkout.card.onBinValue
 import com.adyen.checkout.core.action.data.Action
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.Environment
@@ -95,10 +99,23 @@ internal class V6ViewModel @Inject constructor(
                     onSubmit = ::onSubmit,
                     onAdditionalDetails = ::onAdditionalDetails,
                     onError = ::onError,
-                ),
+                ) {
+                    card {
+                        onBinValue(::onBinValue)
+                        onBinLookup(::onBinLookup)
+                    }
+                },
                 paymentMethods = result.checkoutContext.getPaymentMethods(),
             )
         }
+    }
+
+    private fun onBinValue(binValue: String) {
+        Log.d(TAG, "Bin value received: $binValue")
+    }
+
+    private fun onBinLookup(binLookupData: List<BinLookupData>) {
+        Log.d(TAG, "Bin Lookup Data received: ${binLookupData.joinToString(",") { it.brand }}")
     }
 
     private suspend fun onSubmit(paymentComponentState: PaymentComponentState<*>): CheckoutResult {

@@ -11,6 +11,7 @@ package com.adyen.checkout.core.components.internal
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
+import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
@@ -83,6 +84,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             assertEquals(secondaryComponent, actualComponent)
@@ -108,6 +110,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
             )
             assertEquals(1, PaymentMethodProvider.getFactoriesCount())
             Assert.assertSame(component, actualComponent)
@@ -122,6 +125,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
                 componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
             )
         }
     }
@@ -145,6 +149,7 @@ internal class PaymentMethodProviderTest {
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
                 componentParamsBundle: ComponentParamsBundle,
+                checkoutCallbacks: CheckoutCallbacks,
             ) = paymentComponent
         }
 

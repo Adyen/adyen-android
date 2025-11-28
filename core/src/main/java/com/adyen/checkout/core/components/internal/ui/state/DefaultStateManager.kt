@@ -21,7 +21,9 @@ class DefaultStateManager<V : ViewState, C : ComponentState>(
     private val validator: ViewStateValidator<V, C>,
 ) : StateManager<V, C> {
 
-    private var componentState: C = componentStateFactory.createDefaultComponentState()
+    private var _componentState: C = componentStateFactory.createDefaultComponentState()
+    override val componentState: C
+        get() = _componentState
 
     override val isValid: Boolean
         get() = validator.isValid(viewState.value)
@@ -40,7 +42,7 @@ class DefaultStateManager<V : ViewState, C : ComponentState>(
     }
 
     override fun updateComponentState(update: C.() -> C) {
-        componentState = componentState.update()
+        _componentState = _componentState.update()
         val validatedState = validator.validate(viewState.value, componentState)
         _viewState.update { validatedState }
     }

@@ -18,6 +18,8 @@ interface StateManager<V : ViewState, C : ComponentState> {
 
     val viewState: StateFlow<V>
 
+    val componentState: C
+
     fun updateViewState(update: V.() -> V)
 
     fun updateViewStateAndValidate(update: V.() -> V)
