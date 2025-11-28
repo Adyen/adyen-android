@@ -19,12 +19,20 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
@@ -35,29 +43,44 @@ import com.adyen.checkout.ui.internal.Title
 @Composable
 internal fun PreselectedPaymentMethodScreen(
     backStack: SnapshotStateList<NavKey>,
+    viewModel: PreselectedPaymentMethodViewModel,
 ) {
     val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     Column(Modifier.fillMaxWidth()) {
         IconButton(
             onClick = { backPressedDispatcher?.onBackPressed() },
         ) {
-            // TODO - String resources
-            Icon(Icons.Default.Close, "Close")
+            Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
         }
 
-        // TODO - Center text
+        Spacer(Modifier.size(Dimensions.ExtraLarge))
+
+        CheckoutNetworkLogo(
+            txVariant = viewState.logoTxVariant,
+            contentDescription = null,
+            modifier = Modifier
+                .size(Dimensions.LogoSize.large)
+                .align(Alignment.CenterHorizontally),
+        )
+
+        Spacer(Modifier.size(Dimensions.ExtraLarge))
+
         Title(
-            text = "Stored payment method",
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
+            text = viewState.title,
+            modifier = Modifier
+                .padding(horizontal = Dimensions.Large)
+                .align(Alignment.CenterHorizontally),
         )
 
         Spacer(Modifier.size(Dimensions.Small))
 
-        // TODO - Center text
         Body(
-            text = "Description",
+            text = viewState.subtitle,
             color = CheckoutThemeProvider.colors.textSecondary,
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
+            modifier = Modifier
+                .padding(horizontal = Dimensions.Large)
+                .align(Alignment.CenterHorizontally),
         )
 
         Spacer(Modifier.size(Dimensions.Large))
@@ -65,7 +88,7 @@ internal fun PreselectedPaymentMethodScreen(
 
         PrimaryButton(
             onClick = {},
-            text = "Pay now",
+            text = viewState.payButtonText,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimensions.Large),
@@ -78,8 +101,7 @@ internal fun PreselectedPaymentMethodScreen(
                 backStack.removeLastOrNull()
                 backStack.add(PaymentMethodListNavKey)
             },
-            // TODO - String resources
-            text = "Other payment solutions",
+            text = resolveString(CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimensions.Large),
@@ -90,7 +112,13 @@ internal fun PreselectedPaymentMethodScreen(
 @Preview(showBackground = true)
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
+    val storedPaymentMethod = StoredPaymentMethod(
+        type = "scheme",
+        name = "Visa",
+        lastFour = "4556",
+    )
     PreselectedPaymentMethodScreen(
         backStack = remember { mutableStateListOf() },
+        viewModel = viewModel(factory = PreselectedPaymentMethodViewModel.Factory(storedPaymentMethod)),
     )
 }

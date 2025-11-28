@@ -9,6 +9,7 @@
 package com.adyen.checkout.core.common.internal.helper
 
 import android.content.Context
+import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -18,8 +19,9 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.common.localization.internal.LocalizationResolver
 import java.util.Locale
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Composable
-internal fun CheckoutCompositionLocalProvider(
+fun CheckoutCompositionLocalProvider(
     locale: Locale,
     localizationProvider: CheckoutLocalizationProvider?,
     environment: Environment,
