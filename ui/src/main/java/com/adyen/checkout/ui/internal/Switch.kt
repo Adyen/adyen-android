@@ -45,7 +45,7 @@ fun SwitchContainer(
                 color = CheckoutThemeProvider.colors.container,
                 shape = RoundedCornerShape(CheckoutThemeProvider.attributes.cornerRadius.dp),
             )
-            .padding(Dimensions.Medium),
+            .padding(horizontal = Dimensions.Medium, vertical = Dimensions.Small),
     ) {
         Box(Modifier.weight(1f)) {
             content()
