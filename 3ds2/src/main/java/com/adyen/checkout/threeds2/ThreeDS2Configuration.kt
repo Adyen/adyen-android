@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/10/2025.
+ * Created by ozgur on 1/12/2025.
  */
 
 package com.adyen.checkout.threeds2
@@ -33,7 +33,7 @@ class ThreeDS2ConfigurationBuilder internal constructor() {
     )
 }
 
-fun CheckoutConfiguration.adyen3ds2(
+fun CheckoutConfiguration.threeDS2(
     configuration: @CheckoutConfigurationMarker ThreeDS2ConfigurationBuilder.() -> Unit = {}
 ): CheckoutConfiguration {
     val config = ThreeDS2ConfigurationBuilder()

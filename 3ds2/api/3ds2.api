@@ -15,8 +15,8 @@ public final class com/adyen/checkout/threeds2/ThreeDS2Configuration$Creator : a
 }
 
 public final class com/adyen/checkout/threeds2/ThreeDS2ConfigurationKt {
-	public static final fun adyen3ds2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
-	public static synthetic fun adyen3ds2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static final fun threeDS2 (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun threeDS2$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
 public final class com/adyen/checkout/threeds2/ThreeDS2MainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
