@@ -9,7 +9,7 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      github-token:
         required: true
 
 permissions:
@@ -57,11 +57,11 @@ jobs:
         id: update_github_release_notes
         uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.github-token }}
           VERSION_NAME: ${{ inputs.version-name }}
           BODY_FILE: ${{ needs.fetch_updated_release_notes_file.outputs.updated-release-notes-filepath }}
         with:
-          token: ${{ env.GITHUB_TOKEN }}
+          token: ${{ env.github-token }}
           tag: ${{ env.VERSION_NAME }}
           allowUpdates: true
           updateOnlyUnreleased: true
