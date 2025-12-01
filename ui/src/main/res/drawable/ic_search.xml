@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2025 Adyen N.V.
+  ~
+  ~ This file is open source and available under the MIT license. See the LICENSE file for more info.
+  ~
+  ~ Created by oscars on 5/11/2025.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M11,4C7.134,4 4,7.134 4,11C4,14.866 7.134,18 11,18C12.572,18 14.024,17.482 15.192,16.606L19,20.414L20.414,19L16.606,15.192C17.482,14.024 18,12.572 18,11C18,7.134 14.866,4 11,4ZM6,11C6,8.239 8.239,6 11,6C13.761,6 16,8.239 16,11C16,13.761 13.761,16 11,16C8.239,16 6,13.761 6,11Z"
+      android:fillColor="#001222"/>
+</vector>

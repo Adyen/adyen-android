@@ -595,6 +595,7 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_SECURITY_CODE_HINT_3_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_HINT_4_DIGITS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field CARD_SECURITY_CODE_INVALID Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field GENERAL_SEARCH_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_INVALID_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_PHONE_NUMBER Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;

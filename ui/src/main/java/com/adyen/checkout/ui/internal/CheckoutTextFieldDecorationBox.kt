@@ -62,7 +62,6 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 internal fun CheckoutTextFieldDecorationBox(
-    label: String,
     innerTextField: @Composable () -> Unit,
     supportingText: String?,
     isError: Boolean,
@@ -70,7 +69,9 @@ internal fun CheckoutTextFieldDecorationBox(
     innerIndication: Indication?,
     style: InternalTextFieldStyle,
     modifier: Modifier = Modifier,
+    label: String? = null,
     prefix: String? = null,
+    hint: String? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val isFocused = interactionSource.collectIsFocusedAsState().value
@@ -79,11 +80,13 @@ internal fun CheckoutTextFieldDecorationBox(
         verticalArrangement = Arrangement.spacedBy(Dimensions.Small),
         modifier = modifier,
     ) {
-        val labelColor = if (isFocused) style.activeColor else style.textColor
-        SubHeadline(
-            text = label,
-            color = labelColor,
-        )
+        label?.let {
+            SubHeadline(
+                text = label,
+                color = style.textColor,
+            )
+        }
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(Dimensions.Small),
             verticalAlignment = Alignment.CenterVertically,
@@ -108,6 +111,9 @@ internal fun CheckoutTextFieldDecorationBox(
             CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
                 Box(Modifier.weight(1f)) {
                     innerTextField()
+                    if (!isFocused && hint != null) {
+                        Body(hint, color = CheckoutThemeProvider.colors.textSecondary)
+                    }
                 }
             }
 
@@ -138,7 +144,7 @@ private fun Modifier.styledBackground(
 ): Modifier {
     val borderColor = when {
         isError -> style.errorColor
-        isFocused -> style.textColor
+        isFocused -> style.activeColor
         else -> style.borderColor
     }
     val borderWidth = if (isFocused || isError) style.borderWidth + 1 else style.borderWidth
