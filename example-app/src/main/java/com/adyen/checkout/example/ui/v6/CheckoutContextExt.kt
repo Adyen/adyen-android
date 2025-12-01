@@ -10,6 +10,12 @@ package com.adyen.checkout.example.ui.v6
 
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+
+private val SUPPORTED_V6_PAYMENT_METHODS = listOf(
+    PaymentMethodTypes.MB_WAY,
+    PaymentMethodTypes.SCHEME,
+)
 
 @Suppress("RestrictedApi")
 internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
@@ -19,5 +25,7 @@ internal fun CheckoutContext.getPaymentMethods(): List<PaymentMethod> {
             this.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse?.paymentMethods
     }
 
-    return paymentMethods.orEmpty()
+    return paymentMethods
+        .orEmpty()
+        .filter { SUPPORTED_V6_PAYMENT_METHODS.contains(it.type) }
 }
