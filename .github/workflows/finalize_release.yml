@@ -17,7 +17,8 @@ jobs:
   update_release_notes:
     name: Update release notes
     uses: ./.github/workflows/update_release_notes.yml
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     with:
       version-name: ${{ inputs.version-name }}
 
@@ -30,7 +31,7 @@ jobs:
 
       # Publish Github release and the tag
       - name: Publish Github release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION_NAME: ${{ inputs.version-name }}
@@ -66,5 +67,6 @@ jobs:
   publish_docs_to_github_pages:
     name: Publish docs to Github pages
     uses: ./.github/workflows/publish_docs.yml
-    secrets: inherit
+    secrets:
+      GRADLE_ENCRYPTION_KEY: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
     needs: publish_draft_release
