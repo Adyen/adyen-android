@@ -11,7 +11,6 @@ package com.adyen.checkout.action.core
 import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
-import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.Action
@@ -29,6 +28,7 @@ import com.adyen.checkout.components.core.internal.ui.model.TimerData
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.qrcode.internal.ui.model.QRCodeOutputData
+import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ViewProvidingDelegate
 import kotlinx.coroutines.CoroutineScope

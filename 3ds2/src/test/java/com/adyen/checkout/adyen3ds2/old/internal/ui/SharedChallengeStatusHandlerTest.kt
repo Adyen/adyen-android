@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.adyen3ds2.old.internal.ui
 
+import com.adyen.checkout.threeds2.old.internal.ui.SharedChallengeStatusHandler
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
 import org.junit.jupiter.api.BeforeEach

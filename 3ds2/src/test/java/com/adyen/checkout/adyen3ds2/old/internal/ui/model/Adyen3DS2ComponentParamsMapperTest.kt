@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.adyen3ds2.old.internal.ui.model
 
-import com.adyen.checkout.adyen3ds2.old.adyen3DS2
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
@@ -21,6 +20,9 @@ import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.ui.model.SessionInstallmentConfiguration
 import com.adyen.checkout.components.core.internal.ui.model.SessionParams
 import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.threeds2.old.adyen3DS2
+import com.adyen.checkout.threeds2.old.internal.ui.model.Adyen3DS2ComponentParams
+import com.adyen.checkout.threeds2.old.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

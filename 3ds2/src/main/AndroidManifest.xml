@@ -15,7 +15,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="com.adyen.checkout.adyen3ds2.internal.ThreeDS2Initializer"
+                android:name="com.adyen.checkout.threeds2.internal.ThreeDS2Initializer"
                 android:value="androidx.startup" />
         </provider>
     </application>

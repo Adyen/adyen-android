@@ -13,6 +13,10 @@ import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
+import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration
+import com.adyen.checkout.threeds2.old.adyen3DS2
+import com.adyen.checkout.threeds2.old.getAdyen3DS2Configuration
+import com.adyen.checkout.threeds2.old.toCheckoutConfiguration
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

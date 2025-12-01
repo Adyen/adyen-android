@@ -12,8 +12,6 @@ import android.app.Activity
 import android.content.Intent
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
-import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2ComponentViewType
-import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.components.core.action.Threeds2Action
 import com.adyen.checkout.components.core.internal.ActionComponentEvent
 import com.adyen.checkout.components.core.internal.ActionComponentEventHandler
@@ -21,6 +19,9 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.threeds2.old.Adyen3DS2Component
+import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2ComponentViewType
+import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.runTest

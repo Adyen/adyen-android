@@ -15,12 +15,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.old.Authentication3DS2Exception
-import com.adyen.checkout.adyen3ds2.old.internal.analytics.ThreeDS2Events
-import com.adyen.checkout.adyen3ds2.old.internal.data.api.SubmitFingerprintRepository
-import com.adyen.checkout.adyen3ds2.old.internal.data.model.Adyen3DS2Serializer
-import com.adyen.checkout.adyen3ds2.old.internal.data.model.SubmitFingerprintResult
-import com.adyen.checkout.adyen3ds2.old.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.checkout.components.core.ActionComponentData
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.action.RedirectAction
@@ -38,6 +32,14 @@ import com.adyen.checkout.core.old.exception.ComponentException
 import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.test
+import com.adyen.checkout.threeds2.old.Authentication3DS2Exception
+import com.adyen.checkout.threeds2.old.internal.analytics.ThreeDS2Events
+import com.adyen.checkout.threeds2.old.internal.data.api.SubmitFingerprintRepository
+import com.adyen.checkout.threeds2.old.internal.data.model.Adyen3DS2Serializer
+import com.adyen.checkout.threeds2.old.internal.data.model.SubmitFingerprintResult
+import com.adyen.checkout.threeds2.old.internal.ui.DefaultAdyen3DS2Delegate
+import com.adyen.checkout.threeds2.old.internal.ui.SharedChallengeStatusHandler
+import com.adyen.checkout.threeds2.old.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
 import com.adyen.threeds2.ChallengeResult

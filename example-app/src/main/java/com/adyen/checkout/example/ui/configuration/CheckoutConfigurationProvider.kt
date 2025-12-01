@@ -1,7 +1,6 @@
 package com.adyen.checkout.example.ui.configuration
 
 import android.content.Context
-import com.adyen.checkout.adyen3ds2.old.adyen3DS2
 import com.adyen.checkout.bcmc.bcmc
 import com.adyen.checkout.card.old.AddressConfiguration
 import com.adyen.checkout.card.old.CardBrand
@@ -27,6 +26,7 @@ import com.adyen.checkout.giftcard.giftCard
 import com.adyen.checkout.googlepay.googlePay
 import com.adyen.checkout.instant.instantPayment
 import com.adyen.checkout.mealvoucherfr.mealVoucherFR
+import com.adyen.checkout.threeds2.old.adyen3DS2
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject

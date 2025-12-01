@@ -11,7 +11,6 @@ package com.adyen.checkout.action.core
 import android.content.Context
 import androidx.annotation.RestrictTo
 import com.adyen.checkout.action.core.internal.ActionHandlingConfigurationBuilder
-import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
@@ -22,12 +21,12 @@ import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.old.RedirectConfiguration
+import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.twint.action.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import kotlinx.parcelize.Parcelize
 import java.util.Locale
-import kotlin.collections.set
 
 /**
  * This is the base configuration for [GenericActionComponent]. You need to use the [Builder] to instantiate this
