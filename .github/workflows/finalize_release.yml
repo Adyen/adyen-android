@@ -18,7 +18,7 @@ jobs:
     name: Update release notes
     uses: ./.github/workflows/update_release_notes.yml
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      github-token: ${{ secrets.GITHUB_TOKEN }}
     with:
       version-name: ${{ inputs.version-name }}
 
