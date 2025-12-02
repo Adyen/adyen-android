@@ -82,7 +82,7 @@ private fun BrandOption(
         isSelected = brandItem.isSelected,
         leadingIcon = {
             CheckoutNetworkLogo(
-                modifier = Modifier.size(Dimensions.LogoSize.large),
+                modifier = Modifier.size(Dimensions.LogoSize.medium),
                 txVariant = brandItem.brand.txVariant,
             )
         },

@@ -51,7 +51,11 @@ internal class DefaultLocalizationSource {
             CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_DESCRIPTION ->
                 R.string.checkout_card_dual_brand_selector_description
 
+            // Drop-in
+            CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
+
             // General
+            CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close
             CheckoutLocalizationKey.GENERAL_SEARCH_HINT -> R.string.checkout_general_search_hint
 
             // MBWay
