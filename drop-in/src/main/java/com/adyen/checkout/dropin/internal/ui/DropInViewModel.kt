@@ -14,19 +14,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CheckoutContext
+import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
-import com.adyen.checkout.core.old.AdyenLogLevel
-import com.adyen.checkout.core.old.internal.util.adyenLog
 import com.adyen.checkout.dropin.internal.DropInResultContract
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.reflect.KClass
 
 internal class DropInViewModel(
-    startingInput: DropInResultContract.Input?,
+    input: DropInResultContract.Input?,
 ) : ViewModel() {
-
-    private lateinit var input: DropInResultContract.Input
 
     private lateinit var paymentMethods: PaymentMethodsApiResponse
 
@@ -34,27 +34,30 @@ internal class DropInViewModel(
 
     val backStack: SnapshotStateList<NavKey> = mutableStateListOf()
 
-    val checkoutConfiguration: CheckoutConfiguration by lazy {
-        input.checkoutContext.getCheckoutConfiguration()
-    }
-
     init {
-        initializeInput(startingInput)
-        initializePaymentMethods()
-        initializeDropInParams()
-        initializeBackStack()
-    }
-
-    private fun initializeInput(startingInput: DropInResultContract.Input?) {
-        if (startingInput == null) {
-            // TODO - Return DropInResult.Failed and close drop-in
-            return
-        } else {
-            input = startingInput
+        if (verifyInput(input)) {
+            initializePaymentMethods(input)
+            initializeDropInParams(input)
+            initializeBackStack()
         }
     }
 
-    private fun initializePaymentMethods() {
+    @OptIn(ExperimentalContracts::class)
+    private fun verifyInput(input: DropInResultContract.Input?): Boolean {
+        contract {
+            returns(true) implies (input != null)
+        }
+
+        return if (input == null) {
+            // TODO - Return DropInResult.Failed and close drop-in
+            adyenLog(AdyenLogLevel.ERROR) { "Input is null. Closing drop-in with failed result." }
+            false
+        } else {
+            true
+        }
+    }
+
+    private fun initializePaymentMethods(input: DropInResultContract.Input) {
         val paymentMethods = when (val context = input.checkoutContext) {
             is CheckoutContext.Sessions -> context.checkoutSession.sessionSetupResponse.paymentMethodsApiResponse
             is CheckoutContext.Advanced -> context.paymentMethodsApiResponse
@@ -68,10 +71,10 @@ internal class DropInViewModel(
         this.paymentMethods = paymentMethods
     }
 
-    private fun initializeDropInParams() {
+    private fun initializeDropInParams(input: DropInResultContract.Input) {
         try {
             dropInParams = DropInParamsMapper().map(
-                checkoutConfiguration = checkoutConfiguration,
+                checkoutConfiguration = input.checkoutContext.getCheckoutConfiguration(),
                 checkoutSession = (input.checkoutContext as? CheckoutContext.Sessions?)?.checkoutSession,
             )
         } catch (e: IllegalStateException) {
@@ -105,7 +108,7 @@ internal class DropInViewModel(
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return DropInViewModel(
-                startingInput = inputProvider(),
+                input = inputProvider(),
             ) as T
         }
     }

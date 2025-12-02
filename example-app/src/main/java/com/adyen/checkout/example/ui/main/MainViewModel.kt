@@ -185,6 +185,7 @@ internal class MainViewModel @Inject constructor(
             val paymentMethods = paymentsRepository.getPaymentMethods(createPaymentMethodRequest())
 
             // TODO - Get config from provider
+            @Suppress("MagicNumber")
             val checkoutConfiguration = CheckoutConfiguration(
                 environment = Environment.TEST,
                 clientKey = BuildConfig.CLIENT_KEY,
@@ -213,6 +214,7 @@ internal class MainViewModel @Inject constructor(
             showLoading(true)
 
             // TODO - Get config from provider
+            @Suppress("MagicNumber")
             val checkoutConfiguration = CheckoutConfiguration(
                 environment = Environment.TEST,
                 clientKey = BuildConfig.CLIENT_KEY,
