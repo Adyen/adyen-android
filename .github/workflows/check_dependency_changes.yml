@@ -10,6 +10,9 @@ permissions:
 jobs:
   get_base_dependency_list:
     name: Fetch dependency list in BASE
+    # This step will only run on pull_request events.
+    # PR information is only available when workflow gets triggered with pull_request event.
+    if: github.event_name == 'pull_request'
     uses: ./.github/workflows/get_dependency_list.yml
     with:
       ref: ${{ github.event.pull_request.base.sha }}
@@ -17,6 +20,9 @@ jobs:
 
   get_head_dependency_list:
     name: Fetch dependency list in HEAD
+    # This step will only run on pull_request events.
+    # PR information is only available when workflow gets triggered with pull_request event.
+    if: github.event_name == 'pull_request'
     uses: ./.github/workflows/get_dependency_list.yml
     with:
       ref: ${{ github.event.pull_request.head.sha }}
@@ -25,6 +31,9 @@ jobs:
   check_dependency_changes:
     runs-on: ubuntu-latest
     name: Check dependency changes
+    # This step will only run on pull_request events.
+    # PR information is only available when workflow gets triggered with pull_request event.
+    if: github.event_name == 'pull_request'
     needs: [ get_head_dependency_list, get_base_dependency_list ]
 
     steps:

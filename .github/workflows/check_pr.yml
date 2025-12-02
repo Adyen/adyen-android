@@ -3,13 +3,15 @@ name: Check PR
 on:
   pull_request:
     types: [ opened, synchronize, reopened ]
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   contents: write
   pull-requests: write
 
 concurrency:
-  group: ${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: true
 
 jobs:
