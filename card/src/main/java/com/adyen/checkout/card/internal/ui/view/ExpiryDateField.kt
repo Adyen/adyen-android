@@ -10,7 +10,7 @@ package com.adyen.checkout.card.internal.ui.view
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -76,7 +75,7 @@ private fun ExpiryDateIcon(
     val resourceId = when {
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
-        else -> R.drawable.ic_card_expiry_date
+        else -> cardIcons().expiryDateResId
     }
 
     AnimatedContent(targetState = resourceId, modifier = modifier) {

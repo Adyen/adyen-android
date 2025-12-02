@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
-import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -90,8 +89,8 @@ private fun SecurityCodeIcon(
     val resourceId = when {
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        isAmex == true -> R.drawable.ic_card_cvc_front
-        else -> R.drawable.ic_card_cvc_back
+        isAmex == true -> cardIcons().cvcFrontResId
+        else -> cardIcons().cvcBackResId
     }
 
     AnimatedContent(

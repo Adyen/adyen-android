@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
 import androidx.compose.material3.Icon
@@ -30,7 +29,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -141,11 +139,12 @@ private fun BrandLogo(
     txVariant: String?,
     modifier: Modifier = Modifier,
 ) {
+    val placeholderResId = cardIcons().placeholderResId
     CheckoutNetworkLogo(
         modifier = modifier.size(Dimensions.LogoSize.small),
         txVariant = txVariant.orEmpty(),
-        placeholder = R.drawable.ic_card_placeholder,
-        errorFallback = R.drawable.ic_card_placeholder,
+        placeholder = placeholderResId,
+        errorFallback = placeholderResId,
     )
 }
 
