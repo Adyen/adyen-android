@@ -18,6 +18,8 @@ concurrency:
 jobs:
   get_allowed_labels:
     runs-on: ubuntu-latest
+    # This step will only run on pull_request events.
+    # PR information is only available when workflow gets triggered with pull_request event.
     if: github.event_name == 'pull_request'
 
     outputs:
@@ -46,6 +48,8 @@ jobs:
   labels-check:
     runs-on: ubuntu-latest
     needs: get_allowed_labels
+    # This step will only run on pull_request events.
+    # PR information is only available when workflow gets triggered with pull_request event.
     if: github.event_name == 'pull_request'
 
     steps:
