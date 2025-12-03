@@ -19,6 +19,9 @@ import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundl
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlinx.coroutines.CoroutineScope
 
+/**
+ * Factory interface for creating payment method components.
+ */
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentComponent<CS>> {
 
@@ -27,8 +30,10 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
      *
      * @param paymentMethod The payment method to create a component for.
      * @param coroutineScope Coroutine Scope.
+     * @param analyticsManager Analytics manager for tracking component events.
      * @param checkoutConfiguration Checkout Configuration.
      * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
+     * @param checkoutCallbacks Callbacks for component events.
      *
      * @return A [PaymentComponent] instance.
      */
