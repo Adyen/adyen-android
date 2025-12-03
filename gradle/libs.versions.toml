@@ -222,5 +222,6 @@ checkout-jacoco = { id = "checkout.jacoco" }
 checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }
 checkout-sonar = { id = "checkout.sonar" }
+dependency-list-aggregate = { id = "checkout.dependency.list.aggregate" }
 dependency-list-generate = { id = "checkout.dependency.list.generate" }
 dependency-resolve = { id = "checkout.dependency.resolve" }
