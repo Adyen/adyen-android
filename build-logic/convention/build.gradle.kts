@@ -17,6 +17,7 @@ dependencies {
     compileOnly(libs.detekt.gradle.plugin)
     compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
+    compileOnly(libs.sonarqube.gradle.plugin)
 
 //    // Workaround to make libs available in the project
 //    // This error can be safely ignored
@@ -55,6 +56,11 @@ gradlePlugin {
         register("checkoutKtlint") {
             id = libs.plugins.checkout.ktlint.get().pluginId
             implementationClass = "KtlintConventionPlugin"
+        }
+
+        register("checkoutSonar") {
+            id = libs.plugins.checkout.sonar.get().pluginId
+            implementationClass = "SonarConventionPlugin"
         }
 
         register("generateDependencyList") {
