@@ -181,7 +181,7 @@ private fun CardNumberFieldIcon(
     AnimatedContent(targetState = isInvalid, modifier = modifier) { isInvalid ->
         if (isInvalid) {
             Icon(
-                modifier = Modifier.size(Dimensions.LogoSize.small.width),
+                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
                 contentDescription = null,
                 tint = Color.Unspecified,

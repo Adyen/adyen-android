@@ -38,6 +38,8 @@ object Dimensions {
     object LogoSize {
         val small = DpSize(width = 24.dp, height = 16.dp)
 
+        val smallSquare = DpSize(width = 24.dp, height = 24.dp)
+
         val medium = DpSize(width = 40.dp, height = 26.dp)
 
         val large = DpSize(width = 80.dp, height = 52.dp)
