@@ -24,6 +24,7 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")
             apply(plugin = "checkout.jacoco")
+            apply(plugin = "checkout.ktlint")
 
             extensions.configure<LibraryExtension> {
                 compileSdk = libs.versions.compile.sdk.get().toInt()
