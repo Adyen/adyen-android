@@ -6,9 +6,9 @@
  * Created by oscars on 3/12/2025.
  */
 
+import com.adyen.checkout.libs
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -16,15 +16,12 @@ import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.the
 import org.gradle.kotlin.dsl.withType
 
 class DetektConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         with(target) {
-            val libs = the<LibrariesForLibs>()
-
             apply(plugin = "io.gitlab.arturbosch.detekt")
 
             extensions.configure<DetektExtension> {

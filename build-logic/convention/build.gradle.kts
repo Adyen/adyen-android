@@ -18,8 +18,8 @@ dependencies {
     compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
 
-    // Workaround to make libs available in the project
-    // This error can be safely ignored
+//    // Workaround to make libs available in the project
+//    // This error can be safely ignored
     compileOnly(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
