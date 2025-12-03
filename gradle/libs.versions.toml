@@ -207,7 +207,6 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 detekt = { id = "io.gitlab.arturbosch.detekt" }
 detekt-convention = { id = "detekt-convention" }
 dokka = { id = "org.jetbrains.dokka" }
-dokka-convention = { id = "dokka-convention" }
 sonarqube = { id = "org.sonarqube" }
 jacoco = { id = "jacoco" }
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
@@ -218,4 +217,5 @@ checkout-library = { id = "checkout-library" }
 # Plugins defined by this project
 checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
+checkout-dokka = { id = "checkout.dokka" }
 dependency-list-generate = { id = "checkout.dependency.list.generate" }

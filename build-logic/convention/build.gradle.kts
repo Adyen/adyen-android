@@ -15,6 +15,7 @@ group = "com.adyen.checkout.buildlogic"
 dependencies {
     compileOnly(libs.android.gradle.plugin)
     compileOnly(libs.detekt.gradle.plugin)
+    compileOnly(libs.dokka.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
 
     // Workaround to make libs available in the project
@@ -39,6 +40,11 @@ gradlePlugin {
         register("checkoutDetekt") {
             id = libs.plugins.checkout.detekt.get().pluginId
             implementationClass = "DetektConventionPlugin"
+        }
+
+        register("checkoutDokka") {
+            id = libs.plugins.checkout.dokka.get().pluginId
+            implementationClass = "DokkaConventionPlugin"
         }
 
         register("generateDependencyList") {
