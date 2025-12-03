@@ -19,8 +19,8 @@ dependencies {
     compileOnly(libs.kotlin.gradle.plugin)
     compileOnly(libs.sonarqube.gradle.plugin)
 
-//    // Workaround to make libs available in the project
-//    // This error can be safely ignored
+    // Workaround to make libs available in the project
+    // This error can be safely ignored
     compileOnly(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
@@ -56,6 +56,11 @@ gradlePlugin {
         register("checkoutKtlint") {
             id = libs.plugins.checkout.ktlint.get().pluginId
             implementationClass = "KtlintConventionPlugin"
+        }
+
+        register("checkoutPublish") {
+            id = libs.plugins.checkout.publish.get().pluginId
+            implementationClass = "PublishConventionPlugin"
         }
 
         register("checkoutSonar") {
