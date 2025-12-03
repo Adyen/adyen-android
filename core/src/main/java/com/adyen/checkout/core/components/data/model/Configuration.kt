@@ -16,12 +16,12 @@ import org.json.JSONObject
 
 @Parcelize
 data class Configuration(
-    var merchantId: String? = null,
-    var gatewayMerchantId: String? = null,
-    var intent: String? = null,
-    var koreanAuthenticationRequired: String? = null,
-    var clientId: String? = null,
-    var scopeId: String? = null,
+    val merchantId: String? = null,
+    val gatewayMerchantId: String? = null,
+    val intent: String? = null,
+    val koreanAuthenticationRequired: String? = null,
+    val clientId: String? = null,
+    val scopeId: String? = null,
 ) : ModelObject() {
 
     companion object {

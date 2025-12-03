@@ -17,9 +17,9 @@ import org.json.JSONObject
 
 @Parcelize
 data class Issuer(
-    var id: String? = null,
-    var name: String? = null,
-    var isDisabled: Boolean = false,
+    val id: String? = null,
+    val name: String? = null,
+    val isDisabled: Boolean = false,
 ) : ModelObject() {
 
     companion object {

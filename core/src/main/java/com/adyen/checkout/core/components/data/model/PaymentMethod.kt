@@ -25,13 +25,13 @@ import org.json.JSONObject
 data class PaymentMethod(
     val type: String? = null,
     val name: String? = null,
-    var brands: List<String>? = null,
-    var brand: String? = null,
-    var fundingSource: String? = null,
-    var issuers: List<Issuer>? = null,
-    var configuration: Configuration? = null,
-    var details: List<InputDetail>? = null,
-    var apps: List<AppData>? = null,
+    val brands: List<String>? = null,
+    val brand: String? = null,
+    val fundingSource: String? = null,
+    val issuers: List<Issuer>? = null,
+    val configuration: Configuration? = null,
+    val details: List<InputDetail>? = null,
+    val apps: List<AppData>? = null,
 ) : ModelObject() {
 
     companion object {

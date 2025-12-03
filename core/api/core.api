@@ -1130,12 +1130,6 @@ public final class com/adyen/checkout/core/components/data/model/Configuration :
 	public final fun getMerchantId ()Ljava/lang/String;
 	public final fun getScopeId ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setClientId (Ljava/lang/String;)V
-	public final fun setGatewayMerchantId (Ljava/lang/String;)V
-	public final fun setIntent (Ljava/lang/String;)V
-	public final fun setKoreanAuthenticationRequired (Ljava/lang/String;)V
-	public final fun setMerchantId (Ljava/lang/String;)V
-	public final fun setScopeId (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1165,7 +1159,6 @@ public final class com/adyen/checkout/core/components/data/model/InputDetail : c
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getItems ()Ljava/util/List;
 	public fun hashCode ()I
-	public final fun setItems (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1199,9 +1192,6 @@ public final class com/adyen/checkout/core/components/data/model/Issuer : com/ad
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public final fun isDisabled ()Z
-	public final fun setDisabled (Z)V
-	public final fun setId (Ljava/lang/String;)V
-	public final fun setName (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1233,8 +1223,6 @@ public final class com/adyen/checkout/core/components/data/model/Item : com/adye
 	public final fun getId ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setId (Ljava/lang/String;)V
-	public final fun setName (Ljava/lang/String;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
@@ -1280,13 +1268,6 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethod :
 	public final fun getName ()Ljava/lang/String;
 	public final fun getType ()Ljava/lang/String;
 	public fun hashCode ()I
-	public final fun setApps (Ljava/util/List;)V
-	public final fun setBrand (Ljava/lang/String;)V
-	public final fun setBrands (Ljava/util/List;)V
-	public final fun setConfiguration (Lcom/adyen/checkout/core/components/data/model/Configuration;)V
-	public final fun setDetails (Ljava/util/List;)V
-	public final fun setFundingSource (Ljava/lang/String;)V
-	public final fun setIssuers (Ljava/util/List;)V
 	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }

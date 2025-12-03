@@ -17,7 +17,7 @@ import org.json.JSONObject
 
 @Parcelize
 data class InputDetail(
-    var items: List<Item>? = null,
+    val items: List<Item>? = null,
 ) : ModelObject() {
 
     companion object {
