@@ -223,3 +223,4 @@ checkout-ktlint = { id = "checkout.ktlint" }
 checkout-publish = { id = "checkout.publish" }
 checkout-sonar = { id = "checkout.sonar" }
 dependency-list-generate = { id = "checkout.dependency.list.generate" }
+dependency-resolve = { id = "checkout.dependency.resolve" }
