@@ -1,8 +1,3 @@
-import com.adyen.checkout.GenerateDependencyListTask
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.register
-
 /*
  * Copyright (c) 2025 Adyen N.V.
  *
@@ -10,6 +5,11 @@ import org.gradle.kotlin.dsl.register
  *
  * Created by oscars on 3/12/2025.
  */
+
+import com.adyen.checkout.GenerateDependencyListTask
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.register
 
 class GenerateDependencyListPlugin : Plugin<Project> {
 
