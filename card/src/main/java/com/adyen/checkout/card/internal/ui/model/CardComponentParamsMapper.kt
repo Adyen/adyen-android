@@ -11,11 +11,11 @@ package com.adyen.checkout.card.internal.ui.model
 import com.adyen.checkout.card.CardConfiguration
 import com.adyen.checkout.card.KCPAuthVisibility
 import com.adyen.checkout.card.SocialSecurityNumberVisibility
-import com.adyen.checkout.components.core.PaymentMethod
 import com.adyen.checkout.core.common.AdyenLogLevel
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.adyenLog
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import kotlin.collections.isNullOrEmpty

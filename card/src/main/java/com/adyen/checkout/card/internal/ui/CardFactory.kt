@@ -43,8 +43,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
             cardConfiguration = checkoutConfiguration.getCardConfiguration(),
-            // TODO - Card. Payment Method.
-            paymentMethod = null,
+            paymentMethod = paymentMethod,
         )
 
         val stateManager = DefaultStateManager(
