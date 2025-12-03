@@ -13,12 +13,27 @@ plugins {
 group = "com.adyen.checkout.buildlogic"
 
 dependencies {
-
+    compileOnly(libs.android.gradle.plugin)
+    compileOnly(libs.kotlin.gradle.plugin)
 }
 
 tasks {
     validatePlugins {
         enableStricterValidation = true
         failOnWarning = true
+    }
+}
+
+gradlePlugin {
+    plugins {
+        register("checkoutAndroidLibrary") {
+            id = libs.plugins.checkout.android.library.get().pluginId
+            implementationClass = "CheckoutAndroidLibraryPlugin"
+        }
+
+        register("generateDependencyList") {
+            id = libs.plugins.dependency.list.generate.get().pluginId
+            implementationClass = "GenerateDependencyListPlugin"
+        }
     }
 }
