@@ -37,8 +37,8 @@ public final class com/adyen/checkout/action/core/GenericActionConfiguration$Bui
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
-	public fun add3ds2ActionConfiguration (Lcom/adyen/checkout/adyen3ds2/old/Adyen3DS2Configuration;)Lcom/adyen/checkout/action/core/GenericActionConfiguration$Builder;
-	public synthetic fun add3ds2ActionConfiguration (Lcom/adyen/checkout/adyen3ds2/old/Adyen3DS2Configuration;)Ljava/lang/Object;
+	public fun add3ds2ActionConfiguration (Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;)Lcom/adyen/checkout/action/core/GenericActionConfiguration$Builder;
+	public synthetic fun add3ds2ActionConfiguration (Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;)Ljava/lang/Object;
 	public fun addAwaitActionConfiguration (Lcom/adyen/checkout/await/old/AwaitConfiguration;)Lcom/adyen/checkout/action/core/GenericActionConfiguration$Builder;
 	public synthetic fun addAwaitActionConfiguration (Lcom/adyen/checkout/await/old/AwaitConfiguration;)Ljava/lang/Object;
 	public fun addQRCodeActionConfiguration (Lcom/adyen/checkout/qrcode/QRCodeConfiguration;)Lcom/adyen/checkout/action/core/GenericActionConfiguration$Builder;
@@ -73,8 +73,8 @@ public abstract class com/adyen/checkout/action/core/internal/ActionHandlingPaym
 	public fun <init> (Landroid/content/Context;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
 	public fun <init> (Ljava/util/Locale;Lcom/adyen/checkout/core/old/Environment;Ljava/lang/String;)V
-	public final fun add3ds2ActionConfiguration (Lcom/adyen/checkout/adyen3ds2/old/Adyen3DS2Configuration;)Lcom/adyen/checkout/components/core/internal/BaseConfigurationBuilder;
-	public synthetic fun add3ds2ActionConfiguration (Lcom/adyen/checkout/adyen3ds2/old/Adyen3DS2Configuration;)Ljava/lang/Object;
+	public final fun add3ds2ActionConfiguration (Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;)Lcom/adyen/checkout/components/core/internal/BaseConfigurationBuilder;
+	public synthetic fun add3ds2ActionConfiguration (Lcom/adyen/checkout/threeds2/old/Adyen3DS2Configuration;)Ljava/lang/Object;
 	public final fun addAwaitActionConfiguration (Lcom/adyen/checkout/await/old/AwaitConfiguration;)Lcom/adyen/checkout/components/core/internal/BaseConfigurationBuilder;
 	public synthetic fun addAwaitActionConfiguration (Lcom/adyen/checkout/await/old/AwaitConfiguration;)Ljava/lang/Object;
 	public final fun addQRCodeActionConfiguration (Lcom/adyen/checkout/qrcode/QRCodeConfiguration;)Lcom/adyen/checkout/components/core/internal/BaseConfigurationBuilder;

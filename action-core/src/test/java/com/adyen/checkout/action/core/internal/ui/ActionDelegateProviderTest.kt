@@ -3,7 +3,6 @@ package com.adyen.checkout.action.core.internal.ui
 import android.app.Application
 import android.os.Parcel
 import androidx.lifecycle.SavedStateHandle
-import com.adyen.checkout.adyen3ds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.await.old.internal.ui.AwaitDelegate
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.PaymentMethodTypes
@@ -25,6 +24,7 @@ import com.adyen.checkout.core.old.exception.CheckoutException
 import com.adyen.checkout.core.old.internal.util.LocaleProvider
 import com.adyen.checkout.qrcode.internal.ui.QRCodeDelegate
 import com.adyen.checkout.redirect.old.internal.ui.RedirectDelegate
+import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.twint.action.internal.ui.TwintActionDelegate
 import com.adyen.checkout.voucher.internal.ui.VoucherDelegate
 import com.adyen.checkout.wechatpay.internal.ui.WeChatDelegate

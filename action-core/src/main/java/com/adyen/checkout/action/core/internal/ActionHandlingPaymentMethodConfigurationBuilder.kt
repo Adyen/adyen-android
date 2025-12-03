@@ -10,13 +10,13 @@ package com.adyen.checkout.action.core.internal
 
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration
-import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.await.old.AwaitConfiguration
 import com.adyen.checkout.components.core.internal.BaseConfigurationBuilder
 import com.adyen.checkout.components.core.internal.Configuration
 import com.adyen.checkout.core.old.Environment
 import com.adyen.checkout.qrcode.QRCodeConfiguration
 import com.adyen.checkout.redirect.old.RedirectConfiguration
+import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.twint.action.TwintActionConfiguration
 import com.adyen.checkout.voucher.VoucherConfiguration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration

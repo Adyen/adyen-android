@@ -8,7 +8,6 @@
 
 package com.adyen.checkout.dropin.old
 
-import com.adyen.checkout.adyen3ds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.card.old.CardConfiguration
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
@@ -20,6 +19,7 @@ import com.adyen.checkout.googlepay.GooglePayComponent
 import com.adyen.checkout.googlepay.GooglePayConfiguration
 import com.adyen.checkout.ideal.IdealConfiguration
 import com.adyen.checkout.redirect.old.RedirectConfiguration
+import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration
 import com.adyen.checkout.wechatpay.WeChatPayActionConfiguration
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
