@@ -73,6 +73,11 @@ gradlePlugin {
             implementationClass = "GenerateDependencyListPlugin"
         }
 
+        register("aggregateDependencyLists") {
+            id = libs.plugins.dependency.list.aggregate.get().pluginId
+            implementationClass = "AggregateDependencyListsPlugin"
+        }
+
         register("resolveDependencies") {
             id = libs.plugins.dependency.resolve.get().pluginId
             implementationClass = "ResolveDependenciesPlugin"
