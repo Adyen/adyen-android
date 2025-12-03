@@ -75,7 +75,7 @@ private fun ExpiryDateIcon(
     val resourceId = when {
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
-        else -> cardIcons().expiryDateResId
+        else -> rememberCardIcons().expiryDateResId
     }
 
     AnimatedContent(targetState = resourceId, modifier = modifier) {

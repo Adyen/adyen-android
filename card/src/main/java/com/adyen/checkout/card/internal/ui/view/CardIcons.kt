@@ -8,18 +8,16 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
-import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.adyen.checkout.card.R
 import com.adyen.checkout.ui.internal.theme.isDarkMode
 
-@SuppressLint("ComposableNaming")
 @Composable
-internal fun cardIcons(): CardIcons {
-    return if (isDarkMode()) {
-        CardIcons.Dark
-    } else {
-        CardIcons.Light
+internal fun rememberCardIcons(): CardIcons {
+    val isDark = isDarkMode()
+    return remember(isDark) {
+        if (isDark) CardIcons.Dark else CardIcons.Light
     }
 }
 
