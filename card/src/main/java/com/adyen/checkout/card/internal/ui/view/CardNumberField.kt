@@ -139,7 +139,7 @@ private fun BrandLogo(
     txVariant: String?,
     modifier: Modifier = Modifier,
 ) {
-    val placeholderResId = cardIcons().placeholderResId
+    val placeholderResId = rememberCardIcons().placeholderResId
     CheckoutNetworkLogo(
         modifier = modifier.size(Dimensions.LogoSize.small),
         txVariant = txVariant.orEmpty(),

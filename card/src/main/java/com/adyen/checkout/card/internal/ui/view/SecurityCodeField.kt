@@ -89,8 +89,8 @@ private fun SecurityCodeIcon(
     val resourceId = when {
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        isAmex == true -> cardIcons().cvcFrontResId
-        else -> cardIcons().cvcBackResId
+        isAmex == true -> rememberCardIcons().cvcFrontResId
+        else -> rememberCardIcons().cvcBackResId
     }
 
     AnimatedContent(
