@@ -218,4 +218,5 @@ checkout-library = { id = "checkout-library" }
 checkout-android-library = { id = "checkout.android.library" }
 checkout-detekt = { id = "checkout.detekt" }
 checkout-dokka = { id = "checkout.dokka" }
+checkout-jacoco = { id = "checkout.jacoco" }
 dependency-list-generate = { id = "checkout.dependency.list.generate" }
