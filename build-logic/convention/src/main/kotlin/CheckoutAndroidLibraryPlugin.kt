@@ -23,6 +23,7 @@ class CheckoutAndroidLibraryPlugin : Plugin<Project> {
             apply(plugin = "checkout.dependency.list.generate")
             apply(plugin = "checkout.detekt")
             apply(plugin = "checkout.dokka")
+            apply(plugin = "checkout.jacoco")
 
             extensions.configure<LibraryExtension> {
                 compileSdk = libs.versions.compile.sdk.get().toInt()

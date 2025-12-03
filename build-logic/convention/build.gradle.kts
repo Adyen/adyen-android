@@ -47,6 +47,11 @@ gradlePlugin {
             implementationClass = "DokkaConventionPlugin"
         }
 
+        register("checkoutJacoco") {
+            id = libs.plugins.checkout.jacoco.get().pluginId
+            implementationClass = "JacocoConventionPlugin"
+        }
+
         register("generateDependencyList") {
             id = libs.plugins.dependency.list.generate.get().pluginId
             implementationClass = "GenerateDependencyListPlugin"
