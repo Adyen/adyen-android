@@ -13,6 +13,7 @@ import com.adyen.checkout.core.analytics.internal.TestAnalyticsManager
 import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -79,7 +80,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                txVariant = "txVariant",
+                paymentMethod = PaymentMethod(type = "txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -105,7 +106,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", factory)
 
             val actualComponent = PaymentMethodProvider.get(
-                txVariant = "txVariant",
+                paymentMethod = PaymentMethod(type = "txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -120,7 +121,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
-                txVariant = "unregistered_txVariant",
+                paymentMethod = PaymentMethod(type = "unregistered_txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -145,6 +146,7 @@ internal class PaymentMethodProviderTest {
         object :
             PaymentMethodFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
             override fun create(
+                paymentMethod: PaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,

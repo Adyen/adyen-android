@@ -19,11 +19,12 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
     applicationContext: Context,
-    txVariant: String,
+    paymentMethod: PaymentMethod,
     checkoutContext: CheckoutContext,
     checkoutCallbacks: CheckoutCallbacks,
     savedStateHandle: SavedStateHandle,
@@ -33,7 +34,7 @@ internal class AdyenComponent(
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
             applicationContext = applicationContext,
-            txVariant = txVariant,
+            paymentMethod = paymentMethod,
             checkoutContext = checkoutContext,
             checkoutCallbacks = checkoutCallbacks,
             coroutineScope = viewModelScope,

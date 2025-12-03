@@ -120,7 +120,7 @@ private fun Component(
         }
 
         AdyenPaymentFlow(
-            txVariant = selectedPaymentMethod.type ?: error("Payment method has no type"),
+            paymentMethod = selectedPaymentMethod,
             checkoutContext = uiState.checkoutContext,
             checkoutCallbacks = uiState.checkoutCallbacks,
             theme = theme,
