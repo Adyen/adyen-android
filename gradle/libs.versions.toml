@@ -215,3 +215,6 @@ resolve-dependencies = { id = "resolve-dependencies" }
 generate-dependency-list = { id = "generate-dependency-list" }
 aggregate-dependency-lists = { id = "aggregate-dependency-lists" }
 checkout-library = { id = "checkout-library" }
+
+# Plugins defined by this project
+checkout-android-library = { id = "checkout.android.library" }
