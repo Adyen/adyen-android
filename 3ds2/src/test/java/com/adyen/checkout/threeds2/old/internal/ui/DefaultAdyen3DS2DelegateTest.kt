@@ -3,12 +3,12 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/10/2025.
+ * Created by ozgur on 3/12/2025.
  */
 
 @file:OptIn(ExperimentalEncodingApi::class)
 
-package com.adyen.checkout.adyen3ds2.old.internal.ui
+package com.adyen.checkout.threeds2.old.internal.ui
 
 import android.app.Activity
 import android.app.Application
@@ -37,8 +37,6 @@ import com.adyen.checkout.threeds2.old.internal.analytics.ThreeDS2Events
 import com.adyen.checkout.threeds2.old.internal.data.api.SubmitFingerprintRepository
 import com.adyen.checkout.threeds2.old.internal.data.model.Adyen3DS2Serializer
 import com.adyen.checkout.threeds2.old.internal.data.model.SubmitFingerprintResult
-import com.adyen.checkout.threeds2.old.internal.ui.DefaultAdyen3DS2Delegate
-import com.adyen.checkout.threeds2.old.internal.ui.SharedChallengeStatusHandler
 import com.adyen.checkout.threeds2.old.internal.ui.model.Adyen3DS2ComponentParamsMapper
 import com.adyen.checkout.ui.core.old.internal.TestRedirectHandler
 import com.adyen.threeds2.AuthenticationRequestParameters
@@ -623,7 +621,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.adyen3ds2.old.internal.ui.DefaultAdyen3DS2DelegateTest#fingerprintResult")
+        @MethodSource("com.adyen.checkout.threeds2.old.internal.ui.DefaultAdyen3DS2DelegateTest#fingerprintResult")
         fun `when fingerprint result is returned, then event is tracked`(
             fingerprintResult: SubmitFingerprintResult,
             analyticsResult: ThreeDS2Events.Result
@@ -662,7 +660,7 @@ internal class DefaultAdyen3DS2DelegateTest(
         }
 
         @ParameterizedTest
-        @MethodSource("com.adyen.checkout.adyen3ds2.old.internal.ui.DefaultAdyen3DS2DelegateTest#challengeResult")
+        @MethodSource("com.adyen.checkout.threeds2.old.internal.ui.DefaultAdyen3DS2DelegateTest#challengeResult")
         fun `when challenge result is returned, then event is tracked`(
             challengeResult: ChallengeResult,
             analyticsResult: ThreeDS2Events.Result

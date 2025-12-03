@@ -3,20 +3,16 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/10/2025.
+ * Created by ozgur on 3/12/2025.
  */
 
-package com.adyen.checkout.adyen3ds2.old
+package com.adyen.checkout.threeds2.old
 
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.AnalyticsConfiguration
 import com.adyen.checkout.components.core.AnalyticsLevel
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.core.old.Environment
-import com.adyen.checkout.threeds2.old.Adyen3DS2Configuration
-import com.adyen.checkout.threeds2.old.adyen3DS2
-import com.adyen.checkout.threeds2.old.getAdyen3DS2Configuration
-import com.adyen.checkout.threeds2.old.toCheckoutConfiguration
 import com.adyen.threeds2.customization.UiCustomization
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

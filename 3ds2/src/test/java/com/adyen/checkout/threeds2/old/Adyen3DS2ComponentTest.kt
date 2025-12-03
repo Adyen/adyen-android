@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/10/2025.
+ * Created by ozgur on 3/12/2025.
  */
 
-package com.adyen.checkout.adyen3ds2.old
+package com.adyen.checkout.threeds2.old
 
 import android.app.Activity
 import android.content.Intent
@@ -19,7 +19,6 @@ import com.adyen.checkout.test.LoggingExtension
 import com.adyen.checkout.test.TestDispatcherExtension
 import com.adyen.checkout.test.extensions.invokeOnCleared
 import com.adyen.checkout.test.extensions.test
-import com.adyen.checkout.threeds2.old.Adyen3DS2Component
 import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2ComponentViewType
 import com.adyen.checkout.threeds2.old.internal.ui.Adyen3DS2Delegate
 import com.adyen.checkout.ui.core.old.internal.ui.TestComponentViewType

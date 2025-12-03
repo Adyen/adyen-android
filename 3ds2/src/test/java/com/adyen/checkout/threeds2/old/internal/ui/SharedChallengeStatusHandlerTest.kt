@@ -3,12 +3,11 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 30/10/2025.
+ * Created by ozgur on 3/12/2025.
  */
 
-package com.adyen.checkout.adyen3ds2.old.internal.ui
+package com.adyen.checkout.threeds2.old.internal.ui
 
-import com.adyen.checkout.threeds2.old.internal.ui.SharedChallengeStatusHandler
 import com.adyen.threeds2.ChallengeResult
 import com.adyen.threeds2.ChallengeStatusHandler
 import org.junit.jupiter.api.BeforeEach
