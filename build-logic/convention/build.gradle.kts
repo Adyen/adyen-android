@@ -14,7 +14,12 @@ group = "com.adyen.checkout.buildlogic"
 
 dependencies {
     compileOnly(libs.android.gradle.plugin)
+    compileOnly(libs.detekt.gradle.plugin)
     compileOnly(libs.kotlin.gradle.plugin)
+
+    // Workaround to make libs available in the project
+    // This error can be safely ignored
+    compileOnly(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
 
 tasks {
@@ -29,6 +34,11 @@ gradlePlugin {
         register("checkoutAndroidLibrary") {
             id = libs.plugins.checkout.android.library.get().pluginId
             implementationClass = "CheckoutAndroidLibraryPlugin"
+        }
+
+        register("checkoutDetekt") {
+            id = libs.plugins.checkout.detekt.get().pluginId
+            implementationClass = "DetektConventionPlugin"
         }
 
         register("generateDependencyList") {
