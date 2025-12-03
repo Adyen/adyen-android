@@ -52,6 +52,11 @@ gradlePlugin {
             implementationClass = "JacocoConventionPlugin"
         }
 
+        register("checkoutKtlint") {
+            id = libs.plugins.checkout.ktlint.get().pluginId
+            implementationClass = "KtlintConventionPlugin"
+        }
+
         register("generateDependencyList") {
             id = libs.plugins.dependency.list.generate.get().pluginId
             implementationClass = "GenerateDependencyListPlugin"
