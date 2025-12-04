@@ -6,6 +6,6 @@
  * Created by ran on 6/2/2019.
  */
 
-apply from: "${rootDir}/config/gradle/jacoco.gradle"
+apply from: "${rootDir}/config/gradle/kover.gradle"
 apply from: "${rootDir}/config/gradle/ktlint.gradle"
 apply from: "${rootDir}/config/gradle/detekt.gradle"

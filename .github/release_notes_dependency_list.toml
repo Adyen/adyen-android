@@ -70,6 +70,7 @@
 "org.bitbucket.b_c:jose4j" = ""
 "org.jetbrains.dokka" = ""
 "org.jetbrains.kotlinx.binary-compatibility-validator" = ""
+"org.jetbrains.kotlinx.kover" = ""
 "org.jetbrains.kotlinx:kotlinx-coroutines-test" = ""
 "org.json:json" = ""
 "org.junit.jupiter:junit-jupiter-api" = ""
