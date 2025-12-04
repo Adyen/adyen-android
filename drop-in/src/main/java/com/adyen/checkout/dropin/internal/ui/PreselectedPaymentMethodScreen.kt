@@ -27,12 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.ui.internal.Body
 import com.adyen.checkout.ui.internal.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.Dimensions
@@ -45,8 +43,16 @@ internal fun PreselectedPaymentMethodScreen(
     backStack: SnapshotStateList<NavKey>,
     viewModel: PreselectedPaymentMethodViewModel,
 ) {
-    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    PreselectedPaymentMethodContent(backStack, viewState)
+}
+
+@Composable
+private fun PreselectedPaymentMethodContent(
+    backStack: SnapshotStateList<NavKey>,
+    viewState: PreselectedPaymentMethodViewState,
+) {
+    val backPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Column(Modifier.fillMaxWidth()) {
         IconButton(
             onClick = { backPressedDispatcher?.onBackPressed() },
@@ -112,13 +118,15 @@ internal fun PreselectedPaymentMethodScreen(
 @Preview(showBackground = true)
 @Composable
 private fun PreselectedPaymentMethodScreenPreview() {
-    val storedPaymentMethod = StoredPaymentMethod(
-        type = "scheme",
-        name = "Visa",
-        lastFour = "4556",
+    val title = "Visa •••• 1234"
+    val viewState = PreselectedPaymentMethodViewState(
+        logoTxVariant = "visa",
+        title = title,
+        subtitle = "Use your Visa card to pay $9.99",
+        payButtonText = "Use $title",
     )
-    PreselectedPaymentMethodScreen(
+    PreselectedPaymentMethodContent(
         backStack = remember { mutableStateListOf() },
-        viewModel = viewModel(factory = PreselectedPaymentMethodViewModel.Factory(storedPaymentMethod)),
+        viewState = viewState,
     )
 }
