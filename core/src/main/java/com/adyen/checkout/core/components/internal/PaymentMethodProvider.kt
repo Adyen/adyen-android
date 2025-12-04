@@ -13,6 +13,7 @@ import androidx.annotation.VisibleForTesting
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -35,24 +36,29 @@ object PaymentMethodProvider {
     /**
      * Create a [PaymentComponent] via a [PaymentMethodFactory].
      *
-     * @param txVariant The payment method type to be handled.
+     * @param paymentMethod The payment method to create a component for.
      * @param coroutineScope The [CoroutineScope] to be used by the component.
      * @param checkoutConfiguration The global checkout configuration.
      * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
      *
-     * @return [PaymentComponent] for given txVariant.
+     * @return [PaymentComponent] for given payment method.
      */
     @Suppress("LongParameterList")
     fun get(
-        txVariant: String,
+        paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): PaymentComponent<BasePaymentComponentState> {
+        val txVariant = requireNotNull(paymentMethod.type) {
+            "PaymentMethod type cannot be null. Received: $paymentMethod"
+        }
+
         @Suppress("UNCHECKED_CAST")
         return factories[txVariant]?.create(
+            paymentMethod = paymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,

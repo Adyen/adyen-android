@@ -12,6 +12,7 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -24,13 +25,16 @@ interface PaymentMethodFactory<CS : BasePaymentComponentState, T : PaymentCompon
     /**
      * Creates a [PaymentComponent].
      *
+     * @param paymentMethod The payment method to create a component for.
      * @param coroutineScope Coroutine Scope.
      * @param checkoutConfiguration Checkout Configuration.
      * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
      *
      * @return A [PaymentComponent] instance.
      */
+    @Suppress("LongParameterList")
     fun create(
+        paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
