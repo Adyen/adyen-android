@@ -18,6 +18,7 @@ import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import kotlinx.coroutines.CoroutineScope
 
@@ -49,6 +50,53 @@ internal class AdvancedPaymentFacilitatorFactory(
 
         val paymentComponent = PaymentMethodProvider.get(
             paymentMethod = paymentMethod,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
+        )
+
+        val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
+            componentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks(),
+        )
+
+        val actionProvider = ActionProvider(
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            savedStateHandle = savedStateHandle,
+            commonComponentParams = componentParamsBundle.commonComponentParams,
+        )
+
+        return PaymentFacilitator(
+            paymentComponent = paymentComponent,
+            coroutineScope = coroutineScope,
+            componentEventHandler = componentEventHandler,
+            actionProvider = actionProvider,
+            checkoutController = checkoutController,
+            commonComponentParams = componentParamsBundle.commonComponentParams,
+        )
+    }
+
+    override fun create(storedPaymentMethod: StoredPaymentMethod, coroutineScope: CoroutineScope): PaymentFacilitator {
+        val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
+            checkoutConfiguration = checkoutConfiguration,
+            deviceLocale = applicationContext.getLocale(),
+            dropInOverrideParams = null,
+            componentSessionParams = null,
+            publicKey = publicKey,
+        )
+
+        val analyticsManager = AnalyticsManagerFactory().provide(
+            componentParams = componentParamsBundle.commonComponentParams,
+            applicationContext = applicationContext,
+            // TODO - Analytics. Provide payment method type to source
+            source = AnalyticsSource.PaymentComponent("AwaitAction"),
+            sessionId = null,
+        )
+
+        val paymentComponent = PaymentMethodProvider.get(
+            storedPaymentMethod = storedPaymentMethod,
             coroutineScope = coroutineScope,
             analyticsManager = analyticsManager,
             checkoutConfiguration = checkoutConfiguration,
