@@ -8,6 +8,7 @@
 
 package com.adyen.checkout.card.internal.ui.view
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,13 +19,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.maxLength
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -106,7 +110,7 @@ private fun CardNumberInputField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = cardNumberState.isFocused,
         trailingIcon = {
-            DetectedBrandsList(detectedCardBrands)
+            CardNumberFieldIcon(state = cardNumberState, detectedBrands = detectedCardBrands)
         },
     )
 }
@@ -135,11 +139,12 @@ private fun BrandLogo(
     txVariant: String?,
     modifier: Modifier = Modifier,
 ) {
+    val placeholderResId = rememberCardIcons().placeholderResId
     CheckoutNetworkLogo(
         modifier = modifier.size(Dimensions.LogoSize.small),
         txVariant = txVariant.orEmpty(),
-        placeholder = R.drawable.ic_card_placeholder,
-        errorFallback = R.drawable.ic_card_placeholder,
+        placeholder = placeholderResId,
+        errorFallback = placeholderResId,
     )
 }
 
@@ -161,6 +166,28 @@ private fun CardBrandsList(
             for (cardBrand in cardBrands) {
                 BrandLogo(cardBrand.txVariant)
             }
+        }
+    }
+}
+
+@Composable
+private fun CardNumberFieldIcon(
+    state: TextInputState,
+    detectedBrands: List<CardBrand>,
+    modifier: Modifier = Modifier,
+) {
+    val isInvalid = state.errorMessage != null && state.showError
+
+    AnimatedContent(targetState = isInvalid, modifier = modifier) { isInvalid ->
+        if (isInvalid) {
+            Icon(
+                modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
+                imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
+                contentDescription = null,
+                tint = Color.Unspecified,
+            )
+        } else {
+            DetectedBrandsList(detectedBrands)
         }
     }
 }
