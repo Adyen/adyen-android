@@ -11,6 +11,7 @@ package com.adyen.checkout.core.sessions.internal
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
+import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
@@ -25,7 +26,9 @@ import com.adyen.checkout.core.components.internal.PaymentFacilitator
 import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
 import com.adyen.checkout.core.components.internal.toSessionsComponentCallbacks
+import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
+import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.core.sessions.CheckoutSession
 import com.adyen.checkout.core.sessions.internal.data.api.SessionRepository
 import com.adyen.checkout.core.sessions.internal.data.api.SessionService
@@ -47,76 +50,37 @@ internal class SessionsPaymentFacilitatorFactory(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
     ): PaymentFacilitator {
-        val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
-            savedStateHandle = savedStateHandle,
-            checkoutSession = checkoutSession,
-        )
-
-        val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
-            checkoutConfiguration = checkoutConfiguration,
-            deviceLocale = applicationContext.getLocale(),
-            dropInOverrideParams = null,
-            componentSessionParams = SessionParamsFactory.create(checkoutSession),
-            publicKey = publicKey,
-        )
-
-        val analyticsManager = AnalyticsManagerFactory().provide(
-            componentParams = componentParamsBundle.commonComponentParams,
-            applicationContext = applicationContext,
-            // TODO - Analytics. Provide payment method type to source
-            source = AnalyticsSource.PaymentComponent("AwaitAction"),
-            sessionId = checkoutSession.sessionSetupResponse.id,
-        )
-
-        val paymentComponent = PaymentMethodProvider.get(
-            paymentMethod = paymentMethod,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
-            checkoutCallbacks = checkoutCallbacks,
-        )
-
-        val sessionInteractor = SessionInteractor(
-            sessionRepository = SessionRepository(
-                sessionService = SessionService(
-                    httpClient = HttpClientFactory.getHttpClient(checkoutConfiguration.environment),
-                ),
-                clientKey = checkoutConfiguration.clientKey,
-            ),
-            sessionSavedStateHandleContainer = sessionSavedStateHandleContainer,
-            analyticsManager = analyticsManager,
-            sessionModel = sessionSavedStateHandleContainer.getSessionModel(),
-            isFlowTakenOver = sessionSavedStateHandleContainer.isFlowTakenOver ?: false,
-        )
-
-        // TODO - Based on txVariant, needs to be abstracted away
-        val componentEventHandler =
-            SessionsComponentEventHandler<BasePaymentComponentState>(
-                sessionInteractor = sessionInteractor,
-                componentCallbacks = checkoutCallbacks.toSessionsComponentCallbacks(),
+        return createPaymentFacilitator(coroutineScope) { analyticsManager, componentParamsBundle ->
+            PaymentMethodProvider.get(
+                paymentMethod = paymentMethod,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutConfiguration = checkoutConfiguration,
+                componentParamsBundle = componentParamsBundle,
+                checkoutCallbacks = checkoutCallbacks,
             )
-
-        val actionProvider = ActionProvider(
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            savedStateHandle = savedStateHandle,
-            commonComponentParams = componentParamsBundle.commonComponentParams,
-        )
-
-        return PaymentFacilitator(
-            paymentComponent = paymentComponent,
-            coroutineScope = coroutineScope,
-            componentEventHandler = componentEventHandler,
-            actionProvider = actionProvider,
-            checkoutController = checkoutController,
-            commonComponentParams = componentParamsBundle.commonComponentParams,
-        )
+        }
     }
 
     override fun create(
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
+    ): PaymentFacilitator {
+        return createPaymentFacilitator(coroutineScope) { analyticsManager, componentParamsBundle ->
+            PaymentMethodProvider.get(
+                storedPaymentMethod = storedPaymentMethod,
+                coroutineScope = coroutineScope,
+                analyticsManager = analyticsManager,
+                checkoutConfiguration = checkoutConfiguration,
+                componentParamsBundle = componentParamsBundle,
+                checkoutCallbacks = checkoutCallbacks,
+            )
+        }
+    }
+
+    private fun createPaymentFacilitator(
+        coroutineScope: CoroutineScope,
+        componentProvider: (AnalyticsManager, ComponentParamsBundle) -> PaymentComponent<BasePaymentComponentState>,
     ): PaymentFacilitator {
         val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
             savedStateHandle = savedStateHandle,
@@ -139,14 +103,7 @@ internal class SessionsPaymentFacilitatorFactory(
             sessionId = checkoutSession.sessionSetupResponse.id,
         )
 
-        val paymentComponent = PaymentMethodProvider.get(
-            storedPaymentMethod = storedPaymentMethod,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
-            checkoutCallbacks = checkoutCallbacks,
-        )
+        val paymentComponent = componentProvider(analyticsManager, componentParamsBundle)
 
         val sessionInteractor = SessionInteractor(
             sessionRepository = SessionRepository(
