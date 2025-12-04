@@ -14,7 +14,7 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
-import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
+import com.adyen.checkout.core.components.internal.helper.createPaymentFacilitator
 import kotlinx.coroutines.CoroutineScope
 
 internal class StoredPaymentFacilitatorProvider(
@@ -29,34 +29,14 @@ internal class StoredPaymentFacilitatorProvider(
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
     ): PaymentFacilitator {
-        val paymentFacilitatorFactory = when (checkoutContext) {
-            is CheckoutContext.Advanced -> {
-                AdvancedPaymentFacilitatorFactory(
-                    applicationContext = applicationContext,
-                    checkoutConfiguration = checkoutContext.checkoutConfiguration,
-                    checkoutCallbacks = checkoutCallbacks,
-                    savedStateHandle = savedStateHandle,
-                    checkoutController = checkoutController,
-                    publicKey = checkoutContext.publicKey,
-                )
-            }
-
-            is CheckoutContext.Sessions -> {
-                SessionsPaymentFacilitatorFactory(
-                    applicationContext = applicationContext,
-                    checkoutSession = checkoutContext.checkoutSession,
-                    checkoutConfiguration = checkoutContext.checkoutConfiguration,
-                    checkoutCallbacks = checkoutCallbacks,
-                    savedStateHandle = savedStateHandle,
-                    checkoutController = checkoutController,
-                    publicKey = checkoutContext.publicKey,
-                )
-            }
+        return createPaymentFacilitator(
+            applicationContext = applicationContext,
+            savedStateHandle = savedStateHandle,
+            checkoutContext = checkoutContext,
+            checkoutCallbacks = checkoutCallbacks,
+            checkoutController = checkoutController,
+        ) { factory ->
+            factory.create(storedPaymentMethod = storedPaymentMethod, coroutineScope = coroutineScope)
         }
-
-        return paymentFacilitatorFactory.create(
-            storedPaymentMethod = storedPaymentMethod,
-            coroutineScope = coroutineScope,
-        )
     }
 }
