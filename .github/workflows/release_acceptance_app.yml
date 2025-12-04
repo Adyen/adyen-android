@@ -1,0 +1,64 @@
+name: Release acceptance app
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        required: true
+        description: Version name
+      release_notes:
+        required: true
+        description: Release notes
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          cache-read-only: true
+
+      - name: Decode keystore
+        id: decode_keystore
+        env:
+          SIGNING_KEY_STORE_B64: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_STORE_B64 }}
+        run: |
+          echo $SIGNING_KEY_STORE_B64 | base64 --decode > /tmp/keystore.jks
+          echo "keystore_path=/tmp/keystore.jks" >> $GITHUB_OUTPUT
+
+      - name: Build with Gradle
+        env:
+          VERSION_NAME: ${{ github.event.inputs.version_name }}
+          ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_MERCHANT_SERVER_URL }}
+          ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_CLIENT_KEY }}
+          SIGNING_STORE_FILE: ${{ steps.decode_keystore.outputs.keystore_path }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
+          SIGNING_KEY_ALIAS: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.ADYEN_ANDROID_ACCEPTANCE_SIGNING_PASSWORD }}
+        run: ./gradlew :example-app:assembleAcceptance -Pversion-name=$VERSION_NAME
+
+      - name: Upload to Firebase App Distribution
+        # The version SHA refers to v1.7.1
+        uses: wzieba/Firebase-Distribution-Github-Action@bd494989dd4bec0343f78adee87fe66e48279ad6
+        env:
+          ADYEN_ANDROID_FIREBASE_APP_ID: ${{ secrets.ADYEN_ANDROID_FIREBASE_APP_ID }}
+          ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE: ${{ secrets.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+        with:
+          appId: ${{ env.ADYEN_ANDROID_FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ env.ADYEN_ANDROID_FIREBASE_SERVICE_ACCOUNT_FILE }}
+          file: example-app/build/outputs/apk/acceptance/example-app-acceptance.apk
+          releaseNotes: ${{ env.RELEASE_NOTES }}
+          groups: internal

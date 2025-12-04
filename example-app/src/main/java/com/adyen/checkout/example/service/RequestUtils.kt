@@ -41,7 +41,7 @@ fun getPaymentMethodRequest(
     order: OrderRequest? = null,
 ): PaymentMethodsRequest {
     return PaymentMethodsRequest(
-        merchantAccount = merchantAccount,
+        merchantAccount = merchantAccount.takeIf { it.isNotEmpty() },
         shopperReference = shopperReference,
         amount = if (order == null) amount else null,
         countryCode = countryCode,
@@ -72,7 +72,7 @@ fun getSessionRequest(
     recurringProcessingModel: String? = RecurringProcessingModel.SUBSCRIPTION.recurringModel,
 ): SessionRequest {
     return SessionRequest(
-        merchantAccount = merchantAccount,
+        merchantAccount = merchantAccount.takeIf { it.isNotEmpty() },
         shopperReference = shopperReference,
         amount = amount,
         countryCode = countryCode,
