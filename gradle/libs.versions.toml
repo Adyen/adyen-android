@@ -18,6 +18,7 @@ compose-compiler = "1.5.15"
 # Code quality
 detekt = "1.23.8"
 jacoco = "0.8.12"
+kover = "0.9.3"
 ktlint = "1.5.0"
 sonarqube = "5.1.0.4882"
 binary-compatibility-validator = "0.16.3"
@@ -176,6 +177,7 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
 kotlin = { id = "kotlin" }
 kotlin-android = { id = "kotlin-android" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-parcelize = { id = "kotlin-parcelize" }
