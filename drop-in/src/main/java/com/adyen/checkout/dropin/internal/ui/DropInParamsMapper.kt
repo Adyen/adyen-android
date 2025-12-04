@@ -10,22 +10,22 @@ package com.adyen.checkout.dropin.internal.ui
 
 import androidx.appcompat.app.AppCompatDelegate
 import com.adyen.checkout.core.components.CheckoutConfiguration
-import com.adyen.checkout.core.sessions.CheckoutSession
+import com.adyen.checkout.core.sessions.internal.model.SessionParams
 import java.util.Locale
 
 internal class DropInParamsMapper {
 
     fun map(
         checkoutConfiguration: CheckoutConfiguration,
-        checkoutSession: CheckoutSession?,
+        sessionParams: SessionParams?,
     ): DropInParams {
         return DropInParams(
             shopperLocale = checkoutConfiguration.shopperLocale
-                ?: checkoutSession?.sessionSetupResponse?.shopperLocale?.let { Locale.forLanguageTag(it) }
+                ?: sessionParams?.shopperLocale
                 ?: AppCompatDelegate.getApplicationLocales()[0]
                 ?: Locale.getDefault(),
-            environment = checkoutSession?.environment ?: checkoutConfiguration.environment,
-            amount = checkoutSession?.sessionSetupResponse?.amount
+            environment = sessionParams?.environment ?: checkoutConfiguration.environment,
+            amount = sessionParams?.amount
                 ?: checkoutConfiguration.amount
                 ?: error("Amount cannot not be null"),
         )

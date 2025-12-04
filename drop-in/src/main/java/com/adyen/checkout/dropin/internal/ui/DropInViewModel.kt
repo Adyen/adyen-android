@@ -19,6 +19,7 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.internal.helper.adyenLog
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
+import com.adyen.checkout.core.sessions.internal.model.SessionParamsFactory
 import com.adyen.checkout.dropin.internal.DropInResultContract
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -73,9 +74,12 @@ internal class DropInViewModel(
 
     private fun initializeDropInParams(input: DropInResultContract.Input) {
         try {
+            val sessionParams = (input.checkoutContext as? CheckoutContext.Sessions?)?.checkoutSession?.let {
+                SessionParamsFactory.create(it)
+            }
             dropInParams = DropInParamsMapper().map(
                 checkoutConfiguration = input.checkoutContext.getCheckoutConfiguration(),
-                checkoutSession = (input.checkoutContext as? CheckoutContext.Sessions?)?.checkoutSession,
+                sessionParams = sessionParams,
             )
         } catch (e: IllegalStateException) {
             adyenLog(AdyenLogLevel.ERROR, e) { "Failed to create DropInParams" }
