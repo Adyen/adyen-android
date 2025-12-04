@@ -31,6 +31,13 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
+import com.adyen.checkout.ui.internal.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.input.CheckoutTextFieldDefaults
+import com.adyen.checkout.ui.internal.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.Dimensions
+import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
+import com.adyen.checkout.ui.internal.theme.toCompose
 import com.adyen.checkout.ui.theme.CheckoutTheme
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
@@ -45,7 +52,7 @@ fun SearchField(
     shouldFocus: Boolean = false,
 ) {
     val state = rememberTextFieldState()
-    val style = CheckoutTextFieldDefaults.textFieldStyle(CheckoutThemeProvider.elements.textField)
+    val style = CheckoutTextFieldDefaults.textFieldStyle()
     CheckoutTextField(
         state = state,
         onValueChange = onValueChange,
