@@ -1,11 +1,89 @@
 // cannot reference the plugins declared in the version catalogs here because it requires the use of the `plugins` block instead of the `apply plugin` command
 // the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
 apply plugin: 'jacoco'
+apply plugin: 'org.jetbrains.kotlinx.kover'
 
 if (project.hasProperty('android')) {
     android.buildTypes {
         debug {
             testCoverageEnabled = true
+        }
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    // Android
+                    "*.BuildConfig",
+
+                    // Data binding
+                    "*.databinding.*",
+
+                    // Activities, fragments, views, etc.
+                    "*.*Activity",
+                    "*.*Activity\$*",
+                    "*.*Fragment",
+                    "*.*Fragment\$*",
+                    "*.*View",
+                    "*.*View\$*",
+                    "*.*ViewHolder",
+                    "*.*ViewHolder\$*",
+
+                    // Compose
+                    "*.ComposableSingletons",
+                    "*.ComposableSingletons\$*",
+
+                    // Parcelize
+                    "*.*\$Creator",
+
+                    // Custom views not following *View naming
+                    "*.AddressFormInput",
+                    "*.AdyenSwipeToRevealLayout",
+                    "*.AdyenTextInputEditText",
+                    "*.CardNumberInput",
+                    "*.DefaultPayButton",
+                    "*.ExpiryDateInput",
+                    "*.GiftCardNumberInput",
+                    "*.IbanInput",
+                    "*.PayButton",
+                    "*.SecurityCodeInput",
+                    "*.SocialSecurityNumberInput",
+
+                    // Project specific files that can't be tested
+                    "*.*ComponentProvider",
+                    "*.*DropInService",
+                    "*.*ViewProvider",
+                    "*.AdyenLogKt",
+                    "*.CheckCompileOnlyKt",
+                    "*.ContextExtensionsKt",
+                    "*.DropIn",
+                    "*.DropInKt",
+                    "*.FragmentExtensionsKt",
+                    "*.FragmentProviderKt",
+                    "*.ImageLoadingExtensionsKt",
+                    "*.ImageSaver",
+                    "*.InstallmentFilter",
+                    "*.LazyArgumentsKt",
+                    "*.LifecycleExtensionsKt",
+                    "*.LogcatLogger",
+                    "*.PdfOpener",
+                    "*.ResultExtKt",
+                    "*.RunCompileOnlyKt",
+                    "*.ViewExtensionsKt",
+                    "*.ViewModelExtKt",
+
+                    // Example-app and test-core
+                    'com.adyen.checkout.example.*',
+                    'com.adyen.checkout.test.*'
+                )
+
+                annotatedBy(
+                    "androidx.compose.runtime.Composable",
+                )
+            }
         }
     }
 }
@@ -33,7 +111,7 @@ project.afterEvaluate {
 
                 reports {
                     xml.required = true
-                    html.required = false
+                    html.required = true
                     csv.required = false
                 }
 
