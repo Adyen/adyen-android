@@ -8,14 +8,13 @@
 
 package com.adyen.checkout.ui.internal.element
 
-import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.InternalColors
 
 internal object SwitchDefaults {
 
-    @Composable
-    fun switchStyle(): InternalSwitchStyle {
-        val colors = CheckoutThemeProvider.colors
+    fun switchStyle(
+        colors: InternalColors,
+    ): InternalSwitchStyle {
         return InternalSwitchStyle(
             checkedHandleColor = colors.background,
             checkedTrackColor = colors.primary,

@@ -26,6 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.theme.toCompose
@@ -53,7 +54,7 @@ fun ValuePickerField(
     supportingText: String? = null,
     isError: Boolean = false,
 ) {
-    val style = CheckoutTextFieldDefaults.textFieldStyle()
+    val style = CheckoutThemeProvider.elements.textField
     val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
     CheckoutTextFieldDecorationBox(

@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.ui.internal.element.button
 
+import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
-internal data class InternalButtonStyle(
+data class InternalButtonStyle(
     val backgroundColor: Color,
     val textColor: Color,
     val disabledBackgroundColor: Color,

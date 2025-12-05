@@ -12,7 +12,9 @@ import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.adyen.checkout.ui.internal.element.InternalElements
 import com.adyen.checkout.ui.internal.text.InternalTextStyles
 import com.adyen.checkout.ui.theme.CheckoutAttributes
 import com.adyen.checkout.ui.theme.CheckoutColors
@@ -25,10 +27,15 @@ fun InternalCheckoutTheme(
     theme: CheckoutTheme = CheckoutTheme(),
     content: @Composable () -> Unit,
 ) {
+    val colors = remember(theme.colors) { InternalColors.from(theme.colors) }
+    val textStyles = remember(theme.textStyles) { InternalTextStyles.from(theme.textStyles) }
+    val attributes = remember(theme.attributes) { theme.attributes }
+    val elements = remember(colors, attributes) { InternalElements.from(colors, attributes) }
     CompositionLocalProvider(
-        LocalColors provides InternalColors.from(theme.colors),
-        LocalTextStyles provides InternalTextStyles.from(theme.textStyles),
-        LocalAttributes provides theme.attributes,
+        LocalColors provides colors,
+        LocalTextStyles provides textStyles,
+        LocalAttributes provides attributes,
+        LocalElements provides elements,
     ) {
         content()
     }
@@ -51,8 +58,19 @@ object CheckoutThemeProvider {
         @Composable
         @ReadOnlyComposable
         get() = LocalAttributes.current
+
+    val elements: InternalElements
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalElements.current
 }
 
+// These providers have default values, so previews can display without needing to be wrapper in our theme.
 private val LocalColors = staticCompositionLocalOf { InternalColors.from(CheckoutColors.light()) }
 private val LocalTextStyles = staticCompositionLocalOf { InternalTextStyles.from(CheckoutTextStyles.default()) }
 private val LocalAttributes = staticCompositionLocalOf { CheckoutAttributes.default() }
+private val LocalElements = staticCompositionLocalOf {
+    val colors = InternalColors.from(CheckoutColors.light())
+    val attributes = CheckoutAttributes.default()
+    InternalElements.from(colors, attributes)
+}

@@ -8,11 +8,13 @@
 
 package com.adyen.checkout.ui.internal.element
 
+import androidx.annotation.RestrictTo
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
-internal data class InternalSwitchStyle(
+data class InternalSwitchStyle(
     val checkedHandleColor: Color,
     val checkedTrackColor: Color,
     val uncheckedHandleColor: Color,
