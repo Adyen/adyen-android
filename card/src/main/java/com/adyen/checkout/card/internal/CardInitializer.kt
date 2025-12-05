@@ -13,6 +13,7 @@ import androidx.annotation.Keep
 import androidx.startup.Initializer
 import com.adyen.checkout.card.internal.ui.CardComponent
 import com.adyen.checkout.card.internal.ui.CardFactory
+import com.adyen.checkout.card.internal.ui.StoredCardComponent
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.PaymentMethodProvider
@@ -30,7 +31,7 @@ internal class CardInitializer : Initializer<Unit> {
         )
         PaymentMethodProvider.register(
             PaymentMethodTypes.SCHEME,
-            CardFactory() as StoredPaymentMethodFactory<CardPaymentComponentState, CardComponent>,
+            CardFactory() as StoredPaymentMethodFactory<CardPaymentComponentState, StoredCardComponent>,
         )
     }
 
