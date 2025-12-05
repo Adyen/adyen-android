@@ -32,9 +32,9 @@ import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.ui.internal.CheckoutTextField
-import com.adyen.checkout.ui.internal.DigitOnlyInputTransformation
-import com.adyen.checkout.ui.internal.Dimensions
+import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun CardNumberField(

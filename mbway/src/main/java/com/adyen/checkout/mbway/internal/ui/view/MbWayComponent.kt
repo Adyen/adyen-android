@@ -23,12 +23,12 @@ import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.ui.internal.CheckoutTextField
-import com.adyen.checkout.ui.internal.ComponentScaffold
-import com.adyen.checkout.ui.internal.DigitOnlyInputTransformation
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.PayButton
-import com.adyen.checkout.ui.internal.ValuePickerField
+import com.adyen.checkout.ui.internal.element.ComponentScaffold
+import com.adyen.checkout.ui.internal.element.button.PayButton
+import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.element.input.ValuePickerField
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun MbWayComponent(

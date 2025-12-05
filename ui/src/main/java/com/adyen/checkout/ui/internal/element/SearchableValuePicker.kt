@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2025 Adyen N.V.
+ *
+ * This file is open source and available under the MIT license. See the LICENSE file for more info.
+ *
+ * Created by oscars on 5/12/2025.
+ */
+
+package com.adyen.checkout.ui.internal.element
+
+import androidx.annotation.RestrictTo
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.ui.internal.theme.Dimensions
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+@Composable
+fun SearchableValuePicker(
+    searchHint: String,
+    items: List<ValuePickerItem>,
+    onItemClick: (ValuePickerItem) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
+        modifier = modifier,
+    ) {
+        var query by remember { mutableStateOf("") }
+        SearchField(
+            hint = searchHint,
+            onValueChange = { query = it },
+        )
+
+        val filteredItems by remember {
+            derivedStateOf {
+                items.filter {
+                    it.title.contains(query, ignoreCase = true) ||
+                        it.subtitle.contains(query, ignoreCase = true)
+                }
+            }
+        }
+        ValuePicker(filteredItems, onItemClick, Modifier.fillMaxSize())
+    }
+}
+
+@Suppress("MagicNumber")
+@Preview(showBackground = true)
+@Composable
+private fun SearchableValuePickerPreview() {
+    val items = List(5) {
+        ValuePickerItem(id = "$it", title = "$it - Title", subtitle = "Subtitle", isSelected = it == 0)
+    }
+
+    SearchableValuePicker(
+        searchHint = "Search..",
+        items = items,
+        onItemClick = {},
+    )
+}

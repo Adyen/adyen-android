@@ -17,8 +17,8 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
-import com.adyen.checkout.ui.internal.SearchableValuePicker
-import com.adyen.checkout.ui.internal.ValuePickerItem
+import com.adyen.checkout.ui.internal.element.SearchableValuePicker
+import com.adyen.checkout.ui.internal.element.ValuePickerItem
 
 @Composable
 internal fun CountryCodePicker(

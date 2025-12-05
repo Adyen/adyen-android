@@ -1,3 +1,3 @@
--keep public enum com.adyen.checkout.ui.internal.LogoSize {
+-keep public enum com.adyen.checkout.ui.internal.image.LogoSize {
     *;
 }
