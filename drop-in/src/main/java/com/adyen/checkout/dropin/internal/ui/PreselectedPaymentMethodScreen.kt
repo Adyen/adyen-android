@@ -31,8 +31,8 @@ import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.ui.internal.button.PrimaryButton
-import com.adyen.checkout.ui.internal.button.SecondaryButton
+import com.adyen.checkout.ui.internal.element.button.PrimaryButton
+import com.adyen.checkout.ui.internal.element.button.SecondaryButton
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider

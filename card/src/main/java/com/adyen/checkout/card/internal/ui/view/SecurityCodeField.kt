@@ -18,8 +18,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.ui.internal.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 
 @Composable
 internal fun SecurityCodeField(

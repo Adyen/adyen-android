@@ -6,65 +6,65 @@ public final class com/adyen/checkout/test/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ComponentScaffoldKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$ComponentScaffoldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$ComponentScaffoldKt;
 	public fun <init> ()V
-	public final fun getLambda$-1683401441$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$524297645$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$ListItemKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ListItemKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$ListItemKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$ListItemKt;
 	public fun <init> ()V
-	public final fun getLambda$-1176629951$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-1580111814$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-356629249$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$1089507326$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$2022861663$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1862540112$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1886469908$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1350618897$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$344524977$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$84242163$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$ProgressBarKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$ProgressBarKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$ProgressBarKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$ProgressBarKt;
 	public fun <init> ()V
-	public final fun getLambda$418839474$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-116283200$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$SelectableListItemKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$SelectableListItemKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$SelectableListItemKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$SelectableListItemKt;
 	public fun <init> ()V
-	public final fun getLambda$-279191965$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-938001430$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1773443100$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1871688085$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$StepperKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$StepperKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$StepperKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$StepperKt;
 	public fun <init> ()V
-	public final fun getLambda$-433858889$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$796381148$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1161646358$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1989388997$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/ComposableSingletons$SwitchKt;
+public final class com/adyen/checkout/ui/internal/element/ComposableSingletons$SwitchKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/ComposableSingletons$SwitchKt;
 	public fun <init> ()V
-	public final fun getLambda$1200709705$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-536556677$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/button/ComposableSingletons$ButtonsKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/button/ComposableSingletons$ButtonsKt;
+public final class com/adyen/checkout/ui/internal/element/button/ComposableSingletons$ButtonsKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/button/ComposableSingletons$ButtonsKt;
 	public fun <init> ()V
-	public final fun getLambda$-525551719$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-533273825$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-553493721$ui_release ()Lkotlin/jvm/functions/Function2;
-	public final fun getLambda$-707409497$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1717950517$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1986302639$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1095715801$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1133665625$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/adyen/checkout/ui/internal/button/PayButtonKt {
+public final class com/adyen/checkout/ui/internal/element/button/PayButtonKt {
 	public static final fun PayButton (Lkotlin/jvm/functions/Function0;ZLandroidx/compose/runtime/Composer;II)V
 }
 
-public final class com/adyen/checkout/ui/internal/input/ComposableSingletons$CheckoutTextFieldKt {
-	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/input/ComposableSingletons$CheckoutTextFieldKt;
+public final class com/adyen/checkout/ui/internal/element/input/ComposableSingletons$CheckoutTextFieldKt {
+	public static final field INSTANCE Lcom/adyen/checkout/ui/internal/element/input/ComposableSingletons$CheckoutTextFieldKt;
 	public fun <init> ()V
-	public final fun getLambda$1137960888$ui_release ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$32076998$ui_release ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/adyen/checkout/ui/internal/text/ComposableSingletons$TextKt {
