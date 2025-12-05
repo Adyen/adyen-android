@@ -9,14 +9,14 @@
 package com.adyen.checkout.ui.internal.element.button
 
 import androidx.compose.ui.graphics.Color
+import com.adyen.checkout.ui.internal.theme.InternalAttributes
 import com.adyen.checkout.ui.internal.theme.InternalColors
-import com.adyen.checkout.ui.theme.CheckoutAttributes
 
 internal object ButtonDefaults {
 
     fun primaryButtonStyle(
         colors: InternalColors,
-        attributes: CheckoutAttributes,
+        attributes: InternalAttributes,
     ): InternalButtonStyle {
         return InternalButtonStyle(
             backgroundColor = colors.primary,
@@ -29,7 +29,7 @@ internal object ButtonDefaults {
 
     fun secondaryButtonStyle(
         colors: InternalColors,
-        attributes: CheckoutAttributes,
+        attributes: InternalAttributes,
     ): InternalButtonStyle {
         return InternalButtonStyle(
             backgroundColor = colors.container,
@@ -42,7 +42,7 @@ internal object ButtonDefaults {
 
     fun tertiaryButtonStyle(
         colors: InternalColors,
-        attributes: CheckoutAttributes,
+        attributes: InternalAttributes,
     ): InternalButtonStyle {
         return InternalButtonStyle(
             backgroundColor = Color.Transparent,
@@ -55,7 +55,7 @@ internal object ButtonDefaults {
 
     fun destructiveButtonStyle(
         colors: InternalColors,
-        attributes: CheckoutAttributes,
+        attributes: InternalAttributes,
     ): InternalButtonStyle {
         return InternalButtonStyle(
             backgroundColor = colors.destructive,
