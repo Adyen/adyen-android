@@ -25,12 +25,16 @@ import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
+import com.adyen.checkout.core.components.internal.StoredPaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import com.adyen.checkout.cse.internal.CardEncryptorFactory
 import kotlinx.coroutines.CoroutineScope
 
-internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, CardComponent> {
+internal class CardFactory :
+    PaymentMethodFactory<CardPaymentComponentState, CardComponent>,
+    StoredPaymentMethodFactory<CardPaymentComponentState, CardComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
@@ -39,6 +43,43 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
+    ): CardComponent {
+        return createInternal(
+            paymentMethod = paymentMethod,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
+        )
+    }
+
+    override fun create(
+        storedPaymentMethod: StoredPaymentMethod,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
+    ): CardComponent {
+        return createInternal(
+            paymentMethod = null,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
+        )
+    }
+
+    @Suppress("LongParameterList")
+    private fun createInternal(
+        paymentMethod: PaymentMethod?,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
