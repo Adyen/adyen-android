@@ -6,7 +6,7 @@
  * Created by oscars on 23/4/2025.
  */
 
-package com.adyen.checkout.ui.internal.input
+package com.adyen.checkout.ui.internal.element.input
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color

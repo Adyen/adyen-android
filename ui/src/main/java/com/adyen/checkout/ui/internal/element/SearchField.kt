@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 4/11/2025.
+ * Created by oscars on 5/12/2025.
  */
 
-package com.adyen.checkout.ui.internal
+package com.adyen.checkout.ui.internal.element
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
@@ -31,9 +31,9 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.test.R
-import com.adyen.checkout.ui.internal.input.CheckoutTextField
-import com.adyen.checkout.ui.internal.input.CheckoutTextFieldDefaults
-import com.adyen.checkout.ui.internal.input.TextFieldStylePreviewParameterProvider
+import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
+import com.adyen.checkout.ui.internal.element.input.CheckoutTextFieldDefaults
+import com.adyen.checkout.ui.internal.element.input.TextFieldStylePreviewParameterProvider
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme

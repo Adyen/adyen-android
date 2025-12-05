@@ -3,10 +3,10 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 26/11/2025.
+ * Created by oscars on 5/12/2025.
  */
 
-package com.adyen.checkout.ui.internal.input
+package com.adyen.checkout.ui.internal.element.input
 
 import androidx.annotation.RestrictTo
 import androidx.compose.foundation.background
