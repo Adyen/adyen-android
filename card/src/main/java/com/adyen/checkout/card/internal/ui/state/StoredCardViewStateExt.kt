@@ -18,7 +18,7 @@ import com.adyen.checkout.cse.UnencryptedCard
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
-@Suppress("ReturnCount")
+@Suppress("ReturnCount", "LongParameterList")
 internal fun StoredCardViewState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,

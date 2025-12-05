@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.adyen.checkout.card.internal.ui.state.StoredCardChangeListener
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
+import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -23,7 +24,6 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 internal fun StoredCardComponent(
     viewState: StoredCardViewState,
     changeListener: StoredCardChangeListener,
-    isAmex: Boolean,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -41,7 +41,7 @@ internal fun StoredCardComponent(
                 securityCodeState = viewState.securityCode,
                 onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
                 onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
-                isAmex = isAmex,
+                isAmex = viewState.isAmex,
             )
         }
     }
