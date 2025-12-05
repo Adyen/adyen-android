@@ -69,7 +69,7 @@ private fun Switch(
     onCheckedChange: ((Boolean) -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
-    val style = SwitchDefaults.switchStyle()
+    val style = CheckoutThemeProvider.elements.switch
     MaterialSwitch(
         checked = checked,
         onCheckedChange = onCheckedChange,

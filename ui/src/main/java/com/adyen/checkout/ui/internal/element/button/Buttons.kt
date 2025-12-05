@@ -47,7 +47,7 @@ fun PrimaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        style = ButtonDefaults.primaryButtonStyle(),
+        style = CheckoutThemeProvider.elements.buttons.primary,
     )
 }
 
@@ -92,7 +92,7 @@ fun SecondaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        style = ButtonDefaults.secondaryButtonStyle(),
+        style = CheckoutThemeProvider.elements.buttons.secondary,
     )
 }
 
@@ -137,7 +137,7 @@ fun TertiaryButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        style = ButtonDefaults.tertiaryButtonStyle(),
+        style = CheckoutThemeProvider.elements.buttons.tertiary,
     )
 }
 
@@ -182,7 +182,7 @@ fun DestructiveButton(
         text = text,
         modifier = modifier,
         isLoading = isLoading,
-        style = ButtonDefaults.destructiveButtonStyle(),
+        style = CheckoutThemeProvider.elements.buttons.destructive,
     )
 }
 

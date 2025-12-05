@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.adyen.checkout.ui.internal.helper.ThemePreviewParameterProvider
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 import com.adyen.checkout.ui.internal.theme.toCompose
@@ -52,7 +53,7 @@ fun CheckoutButtonGroup(
         horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
         modifier = modifier,
     ) {
-        val style = CheckoutButtonGroupDefaults.buttonGroupStyle()
+        val style = CheckoutThemeProvider.elements.buttonGroup
         val toggleButtonColors = remember(style) {
             ToggleButtonColors(
                 contentColor = style.uncheckedTextColor,

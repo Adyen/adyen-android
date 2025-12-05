@@ -8,14 +8,13 @@
 
 package com.adyen.checkout.ui.internal.element.button
 
-import androidx.compose.runtime.Composable
-import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
+import com.adyen.checkout.ui.internal.theme.InternalColors
 
 internal object CheckoutButtonGroupDefaults {
 
-    @Composable
-    fun buttonGroupStyle(): InternalButtonGroupStyle {
-        val colors = CheckoutThemeProvider.colors
+    fun buttonGroupStyle(
+        colors: InternalColors,
+    ): InternalButtonGroupStyle {
         return InternalButtonGroupStyle(
             checkedContainerColor = colors.primary,
             checkedTextColor = colors.textOnPrimary,
