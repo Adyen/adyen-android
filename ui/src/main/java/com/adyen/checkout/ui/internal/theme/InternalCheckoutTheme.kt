@@ -29,7 +29,7 @@ fun InternalCheckoutTheme(
 ) {
     val colors = remember(theme.colors) { InternalColors.from(theme.colors) }
     val textStyles = remember(theme.textStyles) { InternalTextStyles.from(theme.textStyles) }
-    val attributes = remember(theme.attributes) { theme.attributes }
+    val attributes = remember(theme.attributes) { InternalAttributes.from(CheckoutAttributes.default()) }
     val elements = remember(colors, attributes) { InternalElements.from(colors, attributes) }
     CompositionLocalProvider(
         LocalColors provides colors,
@@ -54,7 +54,7 @@ object CheckoutThemeProvider {
         @ReadOnlyComposable
         get() = LocalTextStyles.current
 
-    val attributes: CheckoutAttributes
+    val attributes: InternalAttributes
         @Composable
         @ReadOnlyComposable
         get() = LocalAttributes.current
@@ -65,12 +65,12 @@ object CheckoutThemeProvider {
         get() = LocalElements.current
 }
 
-// These providers have default values, so previews can display without needing to be wrapper in our theme.
+// These providers have default values, so previews can display without needing to be wrapped in our theme.
 private val LocalColors = staticCompositionLocalOf { InternalColors.from(CheckoutColors.light()) }
 private val LocalTextStyles = staticCompositionLocalOf { InternalTextStyles.from(CheckoutTextStyles.default()) }
-private val LocalAttributes = staticCompositionLocalOf { CheckoutAttributes.default() }
+private val LocalAttributes = staticCompositionLocalOf { InternalAttributes.from(CheckoutAttributes.default()) }
 private val LocalElements = staticCompositionLocalOf {
     val colors = InternalColors.from(CheckoutColors.light())
-    val attributes = CheckoutAttributes.default()
+    val attributes = InternalAttributes.from(CheckoutAttributes.default())
     InternalElements.from(colors, attributes)
 }

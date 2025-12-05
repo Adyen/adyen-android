@@ -8,14 +8,14 @@
 
 package com.adyen.checkout.ui.internal.element.input
 
+import com.adyen.checkout.ui.internal.theme.InternalAttributes
 import com.adyen.checkout.ui.internal.theme.InternalColors
-import com.adyen.checkout.ui.theme.CheckoutAttributes
 
 internal object CheckoutTextFieldDefaults {
 
     fun textFieldStyle(
         colors: InternalColors,
-        attributes: CheckoutAttributes,
+        attributes: InternalAttributes,
     ): InternalTextFieldStyle {
         return InternalTextFieldStyle(
             backgroundColor = colors.container,

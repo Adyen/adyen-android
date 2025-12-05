@@ -16,8 +16,8 @@ import com.adyen.checkout.ui.internal.element.button.InternalButtonGroupStyle
 import com.adyen.checkout.ui.internal.element.button.InternalButtonStyle
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextFieldDefaults
 import com.adyen.checkout.ui.internal.element.input.InternalTextFieldStyle
+import com.adyen.checkout.ui.internal.theme.InternalAttributes
 import com.adyen.checkout.ui.internal.theme.InternalColors
-import com.adyen.checkout.ui.theme.CheckoutAttributes
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 @Immutable
@@ -32,7 +32,7 @@ data class InternalElements(
 
         fun from(
             colors: InternalColors,
-            attributes: CheckoutAttributes,
+            attributes: InternalAttributes,
         ): InternalElements {
             return InternalElements(
                 buttons = InternalButtons(
