@@ -24,13 +24,13 @@ import com.adyen.checkout.card.internal.ui.state.StoredCardComponentState
 import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.card.internal.ui.view.StoredCardComponent
-import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry

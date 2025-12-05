@@ -19,6 +19,9 @@ import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
 import com.adyen.checkout.card.internal.ui.state.CardValidationMapper
 import com.adyen.checkout.card.internal.ui.state.CardViewStateFactory
 import com.adyen.checkout.card.internal.ui.state.CardViewStateValidator
+import com.adyen.checkout.card.internal.ui.state.StoredCardComponentStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateFactory
+import com.adyen.checkout.card.internal.ui.state.StoredCardViewStateValidator
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.api.HttpClientFactory
 import com.adyen.checkout.core.components.CheckoutCallbacks
@@ -34,7 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 
 internal class CardFactory :
     PaymentMethodFactory<CardPaymentComponentState, CardComponent>,
-    StoredPaymentMethodFactory<CardPaymentComponentState, CardComponent> {
+    StoredPaymentMethodFactory<CardPaymentComponentState, StoredCardComponent> {
 
     override fun create(
         paymentMethod: PaymentMethod,
@@ -43,43 +46,6 @@ internal class CardFactory :
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
-    ): CardComponent {
-        return createInternal(
-            paymentMethod = paymentMethod,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
-            checkoutCallbacks = checkoutCallbacks,
-        )
-    }
-
-    override fun create(
-        storedPaymentMethod: StoredPaymentMethod,
-        coroutineScope: CoroutineScope,
-        analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks,
-    ): CardComponent {
-        return createInternal(
-            paymentMethod = null,
-            coroutineScope = coroutineScope,
-            analyticsManager = analyticsManager,
-            checkoutConfiguration = checkoutConfiguration,
-            componentParamsBundle = componentParamsBundle,
-            checkoutCallbacks = checkoutCallbacks,
-        )
-    }
-
-    @Suppress("LongParameterList")
-    private fun createInternal(
-        paymentMethod: PaymentMethod?,
-        coroutineScope: CoroutineScope,
-        analyticsManager: AnalyticsManager,
-        checkoutConfiguration: CheckoutConfiguration,
-        componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks
     ): CardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
@@ -114,5 +80,38 @@ internal class CardFactory :
             setOnBinValueCallback(checkoutCallbacks.getCallback(OnBinValueCallback::class))
             setOnBinLookupCallback(checkoutCallbacks.getCallback(OnBinLookupCallback::class))
         }
+    }
+
+    override fun create(
+        storedPaymentMethod: StoredPaymentMethod,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
+    ): StoredCardComponent {
+        val cardComponentParams = CardComponentParamsMapper().mapToParams(
+            componentParamsBundle = componentParamsBundle,
+            cardConfiguration = checkoutConfiguration.getCardConfiguration(),
+            paymentMethod = null,
+        )
+
+        val stateManager = DefaultStateManager(
+            viewStateFactory = StoredCardViewStateFactory(),
+            componentStateFactory = StoredCardComponentStateFactory(),
+            validator = StoredCardViewStateValidator(
+                cardValidationMapper = CardValidationMapper(),
+            ),
+        )
+
+        val cardEncryptor = CardEncryptorFactory.provide()
+
+        return StoredCardComponent(
+            storedPaymentMethod = storedPaymentMethod,
+            analyticsManager = analyticsManager,
+            stateManager = stateManager,
+            componentParams = cardComponentParams,
+            cardEncryptor = cardEncryptor,
+        )
     }
 }
