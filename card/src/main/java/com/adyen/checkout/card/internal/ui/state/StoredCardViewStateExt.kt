@@ -3,17 +3,15 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ozgur on 20/11/2025.
+ * Created by ozgur on 5/12/2025.
  */
 
 package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.core.common.CardBrand
-import com.adyen.checkout.core.common.helper.runCompileOnly
-import com.adyen.checkout.core.common.ui.model.ExpiryDate
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.old.internal.util.runCompileOnly
 import com.adyen.checkout.cse.EncryptedCard
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.UnencryptedCard
@@ -21,10 +19,11 @@ import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import com.adyen.threeds2.ThreeDS2Service
 
 @Suppress("ReturnCount")
-internal fun CardComponentState.toPaymentComponentState(
+internal fun StoredCardViewState.toPaymentComponentState(
     componentParams: CardComponentParams,
     cardEncryptor: BaseCardEncryptor,
     checkoutAttemptId: String,
+    storedPaymentMethodId: String?,
     onEncryptionFailed: (EncryptionException) -> Unit,
     onPublicKeyNotFound: (RuntimeException) -> Unit,
 ): CardPaymentComponentState {
@@ -38,41 +37,27 @@ internal fun CardComponentState.toPaymentComponentState(
     ) ?: return invalidCardPaymentComponentState()
 
     val cardPaymentMethod = createPaymentMethod(
+        storedCardId = storedPaymentMethodId,
         encryptedCard = encryptedCard,
-        holderName = holderName(componentParams),
-        cardBrand = cardBrand(),
         checkoutAttemptId = checkoutAttemptId,
     )
 
-    val paymentComponentData = createPaymentComponentData(
-        cardPaymentMethod = cardPaymentMethod,
-        storePaymentMethod = storePaymentMethod(componentParams),
-        componentParams = componentParams,
-    )
+    val paymentComponentData = createPaymentComponentData(cardPaymentMethod, componentParams)
 
     return createPaymentComponentState(paymentComponentData)
 }
 
 @Suppress("LongParameterList")
-private fun CardComponentState.encryptCard(
+private fun StoredCardViewState.encryptCard(
     cardEncryptor: BaseCardEncryptor,
     publicKey: String,
     onEncryptionFailed: (EncryptionException) -> Unit,
 ): EncryptedCard? {
     val unencryptedCardBuilder = UnencryptedCard.Builder()
     return try {
-        unencryptedCardBuilder.setNumber(cardNumber.text)
         // TODO - Card. Add isCvcHidden check
         val cvc = securityCode.text
         if (cvc.isNotEmpty()) unencryptedCardBuilder.setCvc(cvc)
-        if (expiryDate.text.isNotBlank()) {
-            val expiryDate = ExpiryDate.from(expiryDate.text)
-            unencryptedCardBuilder.setExpiryDate(
-                expiryMonth = expiryDate.expiryMonth.toString(),
-                expiryYear = expiryDate.expiryYear.toString(),
-            )
-        }
-
         cardEncryptor.encryptFields(unencryptedCardBuilder.build(), publicKey)
     } catch (e: EncryptionException) {
         onEncryptionFailed(e)
@@ -80,31 +65,17 @@ private fun CardComponentState.encryptCard(
     }
 }
 
-private fun createPaymentMethod(
-    encryptedCard: EncryptedCard,
-    holderName: String?,
-    cardBrand: CardBrand?,
-    checkoutAttemptId: String,
-) = CardPaymentMethod(
-    type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
-    checkoutAttemptId = checkoutAttemptId,
-    encryptedCardNumber = encryptedCard.encryptedCardNumber,
-    encryptedExpiryMonth = encryptedCard.encryptedExpiryMonth,
-    encryptedExpiryYear = encryptedCard.encryptedExpiryYear,
-    // TODO - Card. Add isCvcHidden check
-    encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
-    holderName = holderName,
-    threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
-    brand = cardBrand?.txVariant,
+private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
+    data = PaymentComponentData(null, null, null),
+    isValid = false,
 )
 
 private fun createPaymentComponentData(
     cardPaymentMethod: CardPaymentMethod,
-    storePaymentMethod: Boolean?,
-    componentParams: CardComponentParams,
+    componentParams: CardComponentParams
 ) = PaymentComponentData(
     paymentMethod = cardPaymentMethod,
-    storePaymentMethod = storePaymentMethod,
+    storePaymentMethod = null,
     shopperReference = componentParams.shopperReference,
     order = null,
     amount = componentParams.amount,
@@ -119,37 +90,25 @@ private fun createPaymentComponentState(
     )
 }
 
-private fun invalidCardPaymentComponentState() = CardPaymentComponentState(
-    data = PaymentComponentData(null, null, null),
-    isValid = false,
-)
-
-private fun CardComponentState.cardBrand(): CardBrand? {
-    val supportedDetectedCardTypes = detectedCardTypes.filter { it.isSupported && it.isReliable }
-    return if (supportedDetectedCardTypes.size > 1) {
-        selectedCardBrand ?: supportedDetectedCardTypes.firstOrNull()?.cardBrand
-    } else {
-        supportedDetectedCardTypes.firstOrNull()?.cardBrand
-    }
-}
-
-private fun CardComponentState.holderName(componentParams: CardComponentParams) =
-    if (componentParams.isHolderNameRequired && holderName.text.isNotBlank()) {
-        holderName.text
-    } else {
-        null
-    }
-
-private fun CardComponentState.storePaymentMethod(componentParams: CardComponentParams) =
-    if (componentParams.isStorePaymentFieldVisible) {
-        storePaymentMethod
-    } else {
-        null
-    }
-
 private fun CardComponentParams.publicKey(onPublicKeyNotFound: (RuntimeException) -> Unit): String? {
     return publicKey ?: run {
         onPublicKeyNotFound(RuntimeException("Public key is missing."))
         null
     }
+}
+
+private fun createPaymentMethod(
+    storedCardId: String?,
+    encryptedCard: EncryptedCard,
+    checkoutAttemptId: String,
+) = CardPaymentMethod(
+    type = CardPaymentMethod.PAYMENT_METHOD_TYPE,
+    checkoutAttemptId = checkoutAttemptId,
+    storedPaymentMethodId = storedPaymentMethodId(storedCardId),
+    encryptedSecurityCode = encryptedCard.encryptedSecurityCode,
+    threeDS2SdkVersion = runCompileOnly { ThreeDS2Service.INSTANCE.sdkVersion },
+)
+
+private fun storedPaymentMethodId(storedPaymentMethodId: String?): String {
+    return storedPaymentMethodId ?: "ID_NOT_FOUND"
 }
