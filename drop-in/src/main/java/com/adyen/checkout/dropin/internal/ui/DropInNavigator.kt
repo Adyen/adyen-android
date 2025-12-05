@@ -27,14 +27,15 @@ internal class DropInNavigator {
     }
 
     fun clearAndNavigateTo(key: NavKey) {
-        _backStack.removeIf { it != EmptyNavKey }
+        _backStack.clear()
+        _backStack.add(EmptyNavKey)
         _backStack.add(key)
     }
 
     fun back() {
         _backStack.removeLastOrNull()
 
-        if (_backStack.size == 1 && _backStack.first() == EmptyNavKey) {
+        if (_backStack.singleOrNull() == EmptyNavKey) {
             _finishFlow.tryEmit(true)
         }
     }
