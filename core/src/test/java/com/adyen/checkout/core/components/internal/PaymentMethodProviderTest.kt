@@ -14,6 +14,7 @@ import com.adyen.checkout.core.common.Environment
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.TestPaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
@@ -38,6 +39,10 @@ internal class PaymentMethodProviderTest {
 
     private val component = TestPaymentComponent()
     private val factory = generateFactory(
+        paymentComponent = component,
+    )
+
+    private val storedFactory = generateStoredFactory(
         paymentComponent = component,
     )
 
@@ -69,6 +74,28 @@ internal class PaymentMethodProviderTest {
     }
 
     @Test
+    fun `when register for stored is called concurrently from multiple threads, then provider should not lose any data`() {
+        val threadCount = 10
+        val registrationsPerThread = 100
+        val totalRegistrations = threadCount * registrationsPerThread
+        val executor = Executors.newFixedThreadPool(threadCount)
+
+        // Submit all registration tasks to the thread pool
+        for (i in 0 until totalRegistrations) {
+            executor.submit {
+                PaymentMethodProvider.register("test_method_$i", storedFactory)
+            }
+        }
+
+        // Wait for all tasks to complete
+        executor.shutdown()
+        // Giving it a generous timeout to finish all tasks
+        val completed = executor.awaitTermination(5, TimeUnit.SECONDS)
+        assertTrue("Executor tasks did not complete in time.", completed)
+        assertEquals(totalRegistrations, PaymentMethodProvider.getStoredFactoriesCount())
+    }
+
+    @Test
     fun `when register is called with an existing txVariant, then the factory is overwritten`() =
         runTest {
             val secondaryComponent = TestPaymentComponent()
@@ -93,11 +120,43 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
+    fun `when register for stored is called with an existing txVariant, then the factory is overwritten`() =
+        runTest {
+            val secondaryComponent = TestPaymentComponent()
+            val secondaryFactory = generateStoredFactory(
+                paymentComponent = secondaryComponent,
+            )
+
+            PaymentMethodProvider.register("txVariant", storedFactory)
+            PaymentMethodProvider.register("txVariant", secondaryFactory)
+
+            val actualComponent = PaymentMethodProvider.get(
+                storedPaymentMethod = StoredPaymentMethod(type = "txVariant"),
+                coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
+                checkoutConfiguration = generateCheckoutConfiguration(),
+                componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
+            )
+            assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
+            assertEquals(secondaryComponent, actualComponent)
+            assertNotSame(component, actualComponent)
+        }
+
+    @Test
     fun `when register is called for different txVariants, then all factories are stored`() {
         PaymentMethodProvider.register("txVariant_one", factory)
         PaymentMethodProvider.register("txVariant_two", factory)
 
         assertEquals(2, PaymentMethodProvider.getFactoriesCount())
+    }
+
+    @Test
+    fun `when register for stored is called for different txVariants, then all factories are stored`() {
+        PaymentMethodProvider.register("txVariant_one", storedFactory)
+        PaymentMethodProvider.register("txVariant_two", storedFactory)
+
+        assertEquals(2, PaymentMethodProvider.getStoredFactoriesCount())
     }
 
     @Test
@@ -118,6 +177,23 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
+    fun `when get is called for a registered stored factory, then the correct component is returned`() =
+        runTest {
+            PaymentMethodProvider.register("txVariant", storedFactory)
+
+            val actualComponent = PaymentMethodProvider.get(
+                storedPaymentMethod = StoredPaymentMethod(type = "txVariant"),
+                coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
+                checkoutConfiguration = generateCheckoutConfiguration(),
+                componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
+            )
+            assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
+            Assert.assertSame(component, actualComponent)
+        }
+
+    @Test
     fun `when get is called for an unregistered factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
@@ -132,14 +208,31 @@ internal class PaymentMethodProviderTest {
     }
 
     @Test
+    fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
+        assertThrows<IllegalStateException> {
+            PaymentMethodProvider.get(
+                storedPaymentMethod = StoredPaymentMethod(type = "unregistered_txVariant"),
+                coroutineScope = this,
+                analyticsManager = TestAnalyticsManager(),
+                checkoutConfiguration = generateCheckoutConfiguration(),
+                componentParamsBundle = generateComponentParamsBundle(),
+                checkoutCallbacks = CheckoutCallbacks(),
+            )
+        }
+    }
+
+    @Test
     fun `when clear is called, then all factories are removed`() {
         PaymentMethodProvider.register("txVariant_one", factory)
         PaymentMethodProvider.register("txVariant_two", factory)
+        PaymentMethodProvider.register("txVariant_three", storedFactory)
         assertEquals(2, PaymentMethodProvider.getFactoriesCount())
+        assertEquals(1, PaymentMethodProvider.getStoredFactoriesCount())
 
         PaymentMethodProvider.clear()
 
         assertEquals(0, PaymentMethodProvider.getFactoriesCount())
+        assertEquals(0, PaymentMethodProvider.getStoredFactoriesCount())
     }
 
     private fun generateFactory(paymentComponent: PaymentComponent<BasePaymentComponentState>) =
@@ -147,6 +240,19 @@ internal class PaymentMethodProviderTest {
             PaymentMethodFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
             override fun create(
                 paymentMethod: PaymentMethod,
+                coroutineScope: CoroutineScope,
+                analyticsManager: AnalyticsManager,
+                checkoutConfiguration: CheckoutConfiguration,
+                componentParamsBundle: ComponentParamsBundle,
+                checkoutCallbacks: CheckoutCallbacks,
+            ) = paymentComponent
+        }
+
+    private fun generateStoredFactory(paymentComponent: PaymentComponent<BasePaymentComponentState>) =
+        object :
+            StoredPaymentMethodFactory<BasePaymentComponentState, PaymentComponent<BasePaymentComponentState>> {
+            override fun create(
+                storedPaymentMethod: StoredPaymentMethod,
                 coroutineScope: CoroutineScope,
                 analyticsManager: AnalyticsManager,
                 checkoutConfiguration: CheckoutConfiguration,
