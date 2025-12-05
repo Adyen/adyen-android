@@ -8,10 +8,16 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.core.common.CardBrand
+import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class StoredCardViewState(
     val securityCode: TextInputComponentState,
+    val brand: CardBrand?,
     val isLoading: Boolean,
 ) : ViewState
+
+internal val StoredCardViewState.isAmex: Boolean
+    get() = brand?.txVariant == CardType.AMERICAN_EXPRESS.txVariant
