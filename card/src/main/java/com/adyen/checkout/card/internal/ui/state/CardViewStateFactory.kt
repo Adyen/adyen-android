@@ -22,6 +22,8 @@ internal class CardViewStateFactory(
         securityCode = TextInputState(),
         holderName = TextInputState(),
         isHolderNameRequired = componentParams.isHolderNameRequired,
+        storePaymentMethod = false,
+        isStorePaymentFieldVisible = componentParams.isStorePaymentFieldVisible,
         isLoading = false,
         detectedCardBrands = listOf(),
         supportedCardBrands = componentParams.supportedCardBrands,
