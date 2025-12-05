@@ -8,41 +8,57 @@
 
 package com.adyen.checkout.card.internal.ui
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
+import com.adyen.checkout.card.StoredCardNavigationKey
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.state.CardComponentState
 import com.adyen.checkout.card.internal.ui.state.CardPaymentComponentState
-import com.adyen.checkout.card.internal.ui.state.CardViewState
+import com.adyen.checkout.card.internal.ui.state.StoredCardChangeListener
+import com.adyen.checkout.card.internal.ui.state.StoredCardViewState
 import com.adyen.checkout.card.internal.ui.state.toPaymentComponentState
+import com.adyen.checkout.card.internal.ui.view.StoredCardComponent
+import com.adyen.checkout.components.core.StoredPaymentMethod
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.ErrorEvent
 import com.adyen.checkout.core.analytics.internal.GenericEvents
+import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
 import com.adyen.checkout.core.components.internal.ui.state.StateManager
 import com.adyen.checkout.core.components.paymentmethod.CardPaymentMethod
+import com.adyen.checkout.core.old.CardBrand
 import com.adyen.checkout.cse.EncryptionException
 import com.adyen.checkout.cse.internal.BaseCardEncryptor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class StoredCardComponent(
+    private val storedPaymentMethod: StoredPaymentMethod,
     private val analyticsManager: AnalyticsManager,
-    private val stateManager: StateManager<CardViewState, CardComponentState>,
+    private val stateManager: StateManager<StoredCardViewState, CardComponentState>,
     private val cardEncryptor: BaseCardEncryptor,
     private val componentParams: CardComponentParams,
-): PaymentComponent<CardPaymentComponentState> {
+): PaymentComponent<CardPaymentComponentState>, StoredCardChangeListener {
 
     private val eventChannel = bufferedChannel<PaymentComponentEvent<CardPaymentComponentState>>()
     override val eventFlow: Flow<PaymentComponentEvent<CardPaymentComponentState>> =
         eventChannel.receiveAsFlow()
 
-    override val navigation: Map<NavKey, CheckoutNavEntry>
-        get() = TODO("Not yet implemented")
-    override val navigationStartingPoint: NavKey
-        get() = TODO("Not yet implemented")
+    private val cardType = CardBrand(txVariant = storedPaymentMethod.brand.orEmpty())
+    private val isAmex = cardType.txVariant == CardType.AMERICAN_EXPRESS.txVariant
+
+    override val navigation: Map<NavKey, CheckoutNavEntry> = mapOf(
+        StoredCardNavKey to CheckoutNavEntry(StoredCardNavKey, StoredCardNavigationKey) { backStack ->
+            MainScreen(backStack)
+        }
+    )
+    override val navigationStartingPoint: NavKey = StoredCardNavKey
 
     override fun submit() {
         if (stateManager.isValid) {
@@ -50,6 +66,7 @@ internal class StoredCardComponent(
                 componentParams = componentParams,
                 cardEncryptor = cardEncryptor,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                storedPaymentMethodId = storedPaymentMethod.id,
                 onEncryptionFailed = ::onEncryptionError,
                 onPublicKeyNotFound = ::onPublicKeyNotFound,
             )
@@ -75,5 +92,32 @@ internal class StoredCardComponent(
     private fun onPublicKeyNotFound(e: RuntimeException) {
         // TODO - Analytics.
         // exceptionChannel.trySend(e)
+    }
+
+    @Composable
+    private fun MainScreen(@Suppress("UNUSED_PARAMETER") backStack: NavBackStack<NavKey>) {
+        val viewState by stateManager.viewState.collectAsStateWithLifecycle()
+        StoredCardComponent(
+            viewState = viewState,
+            changeListener = this,
+            onSubmitClick = ::submit,
+            isAmex = isAmex,
+        )
+    }
+
+    override fun onSecurityCodeChanged(newSecurityCode: String) {
+        stateManager.updateViewStateAndValidate {
+            copy(
+                securityCode = securityCode.updateText(newSecurityCode),
+            )
+        }
+    }
+
+    override fun onSecurityCodeFocusChanged(hasFocus: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                securityCode = securityCode.updateFocus(hasFocus),
+            )
+        }
     }
 }
