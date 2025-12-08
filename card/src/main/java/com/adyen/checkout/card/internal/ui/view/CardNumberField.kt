@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -38,6 +39,8 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
+import com.adyen.checkout.ui.internal.helper.getThemedIcon
+import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
@@ -139,7 +142,12 @@ private fun BrandLogo(
     txVariant: String?,
     modifier: Modifier = Modifier,
 ) {
-    val placeholderResId = rememberCardIcons().placeholderResId
+    val placeholderResId = getThemedIcon(
+        backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
+        lightDrawableId = R.drawable.ic_card_placeholder_light,
+        darkDrawableId = R.drawable.ic_card_placeholder_dark,
+    )
+
     CheckoutNetworkLogo(
         modifier = modifier.size(Dimensions.LogoSize.small),
         txVariant = txVariant.orEmpty(),

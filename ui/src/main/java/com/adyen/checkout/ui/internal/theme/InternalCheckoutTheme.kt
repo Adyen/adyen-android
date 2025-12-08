@@ -14,7 +14,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.luminance
 import com.adyen.checkout.ui.internal.element.InternalElements
 import com.adyen.checkout.ui.internal.text.InternalTextStyles
 import com.adyen.checkout.ui.theme.CheckoutAttributes
@@ -75,8 +74,3 @@ private val LocalElements = staticCompositionLocalOf {
     val attributes = InternalAttributes.from(CheckoutAttributes.default())
     InternalElements.from(colors, attributes)
 }
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-@Composable
-fun isDarkMode() = CheckoutThemeProvider.colors.background.luminance() < LUMINANCE_THRESHOLD
-private const val LUMINANCE_THRESHOLD = 0.5f
