@@ -22,11 +22,11 @@ import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.ui.internal.Body
-import com.adyen.checkout.ui.internal.ComponentScaffold
-import com.adyen.checkout.ui.internal.Dimensions
-import com.adyen.checkout.ui.internal.PayButton
-import com.adyen.checkout.ui.internal.SwitchContainer
+import com.adyen.checkout.ui.internal.element.ComponentScaffold
+import com.adyen.checkout.ui.internal.element.SwitchContainer
+import com.adyen.checkout.ui.internal.element.button.PayButton
+import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun CardComponent(
