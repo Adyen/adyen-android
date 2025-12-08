@@ -2,14 +2,6 @@
 // the `plugins` block cannot be used in gradle files such as this one, which are imported into other gradle files with the `apply from` command
 apply plugin: 'org.jetbrains.kotlinx.kover'
 
-if (project.hasProperty('android')) {
-    android.buildTypes {
-        debug {
-            testCoverageEnabled = true
-        }
-    }
-}
-
 kover {
     reports {
         filters {
