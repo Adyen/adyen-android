@@ -12,7 +12,6 @@ plugins {
     alias libs.plugins.detekt
     alias libs.plugins.dokka
     alias libs.plugins.sonarqube
-    alias libs.plugins.jacoco
     alias libs.plugins.binary.compatibility.validator
 }
 
