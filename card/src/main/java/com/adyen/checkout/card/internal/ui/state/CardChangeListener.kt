@@ -28,5 +28,7 @@ internal interface CardChangeListener {
 
     fun onHolderNameFocusChanged(hasFocus: Boolean)
 
+    fun onStorePaymentMethodChanged(checked: Boolean)
+
     fun onBrandSelected(cardBrand: CardBrand)
 }

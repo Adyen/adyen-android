@@ -45,6 +45,7 @@ internal class DefaultLocalizationSource {
 
             CheckoutLocalizationKey.CARD_HOLDER_NAME -> R.string.checkout_card_holder_name
             CheckoutLocalizationKey.CARD_HOLDER_NAME_INVALID -> R.string.checkout_card_holder_name_invalid
+            CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD -> R.string.checkout_card_store_payment_method
             CheckoutLocalizationKey.CARD_DUAL_BRAND_SELECTOR_TITLE ->
                 R.string.checkout_card_dual_brand_selector_title
 

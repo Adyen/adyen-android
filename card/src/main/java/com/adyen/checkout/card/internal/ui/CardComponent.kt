@@ -197,6 +197,14 @@ internal class CardComponent(
         }
     }
 
+    override fun onStorePaymentMethodChanged(checked: Boolean) {
+        stateManager.updateViewState {
+            copy(
+                storePaymentMethod = checked,
+            )
+        }
+    }
+
     override fun onBrandSelected(cardBrand: CardBrand) {
         stateManager.updateComponentState {
             copy(
