@@ -16,5 +16,4 @@ interface ComponentStateValidator<C : ComponentState> {
     fun validate(state: C): C
 
     fun isValid(state: C): Boolean
-
 }

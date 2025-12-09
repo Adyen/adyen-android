@@ -15,8 +15,4 @@ data class CountryModel(
     val isoCode: String,
     val countryName: String,
     val callingCode: String,
-) {
-    fun toShortString(): String {
-        return "$isoCode $callingCode"
-    }
-}
+)

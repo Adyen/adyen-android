@@ -13,13 +13,13 @@ import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.components.internal.ui.state.ViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class CardViewState(
-    val cardNumber: TextInputState,
-    val expiryDate: TextInputState,
-    val securityCode: TextInputState,
-    val holderName: TextInputState,
+    val cardNumber: TextInputComponentState,
+    val expiryDate: TextInputComponentState,
+    val securityCode: TextInputComponentState,
+    val holderName: TextInputComponentState,
     val isHolderNameRequired: Boolean,
     val storePaymentMethod: Boolean,
     val isStorePaymentFieldVisible: Boolean,

@@ -15,7 +15,7 @@ import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardViewStateValidator(
     private val cardValidationMapper: CardValidationMapper,
@@ -102,7 +102,7 @@ internal class CardViewStateValidator(
     }
 
     private fun validateCardNumber(
-        cardNumber: TextInputState,
+        cardNumber: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
         isReliable: Boolean,
     ): CheckoutLocalizationKey? {
@@ -123,7 +123,7 @@ internal class CardViewStateValidator(
     }
 
     private fun validateExpiryDate(
-        expiryDate: TextInputState,
+        expiryDate: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
     ): CheckoutLocalizationKey? {
         val expiryDateError = cardValidationMapper.mapExpiryDateValidation(
@@ -137,7 +137,7 @@ internal class CardViewStateValidator(
     }
 
     private fun validateSecurityCode(
-        securityCode: TextInputState,
+        securityCode: TextInputComponentState,
         selectedOrFirstCardType: DetectedCardType?,
         uiState: InputFieldUIState,
     ): CheckoutLocalizationKey? {
@@ -151,7 +151,7 @@ internal class CardViewStateValidator(
     }
 
     private fun validateHolderName(
-        holderName: TextInputState,
+        holderName: TextInputComponentState,
         isRequired: Boolean,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapHolderNameValidation(

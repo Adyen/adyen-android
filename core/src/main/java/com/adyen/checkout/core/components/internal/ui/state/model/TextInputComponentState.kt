@@ -12,22 +12,21 @@ import androidx.annotation.RestrictTo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-data class TextInputState(
+data class TextInputComponentState(
     val text: String = "",
+    val description: CheckoutLocalizationKey? = null,
     val errorMessage: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,
-    val isInteractedWith: Boolean = false,
     val showError: Boolean = false,
 ) {
 
     val isValid: Boolean
-        get() = isInteractedWith && errorMessage == null
+        get() = errorMessage == null
 
-    fun updateText(text: String) = copy(text = text, isInteractedWith = true, showError = false)
+    fun updateText(text: String) = copy(text = text, showError = false)
 
     fun updateFocus(hasFocus: Boolean) = copy(
         isFocused = hasFocus,
-        showError = !hasFocus && isInteractedWith,
-        isInteractedWith = true,
+        showError = if (!hasFocus) true else showError,
     )
 }

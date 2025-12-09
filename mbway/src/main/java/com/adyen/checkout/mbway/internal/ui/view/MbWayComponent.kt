@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
@@ -59,13 +59,7 @@ internal fun MbWayComponent(
             )
 
             // PhoneNumber
-            val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
-            val supportingTextPhoneNumber = if (showPhoneNumberError) {
-                viewState.phoneNumber.errorMessage?.let { resolveString(it) }
-            } else {
-                null
-            }
-
+            val supportingTextPhoneNumber = viewState.phoneNumber.supportingText?.let { resolveString(it) }
             CheckoutTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,7 +68,7 @@ internal fun MbWayComponent(
                     },
                 label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
                 initialValue = viewState.phoneNumber.text,
-                isError = showPhoneNumberError,
+                isError = viewState.phoneNumber.isError,
                 supportingText = supportingTextPhoneNumber,
                 prefix = country.callingCode,
                 onValueChange = { value ->
@@ -100,7 +94,7 @@ private fun MbWayComponentPreview() {
             countries = countries,
             isLoading = false,
             countryCode = countries.first(),
-            phoneNumber = TextInputState(),
+            phoneNumber = TextInputViewState(),
         ),
         onIntent = {},
         onSubmitClick = {},

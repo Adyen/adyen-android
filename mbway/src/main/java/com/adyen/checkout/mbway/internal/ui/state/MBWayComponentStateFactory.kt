@@ -12,7 +12,7 @@ import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class MBWayComponentStateFactory(
     private val componentParams: ComponentParams,
@@ -21,7 +21,7 @@ internal class MBWayComponentStateFactory(
     override fun createInitialState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
         countryCode = getInitiallySelectedCountry(componentParams),
-        phoneNumber = TextInputState(isFocused = true),
+        phoneNumber = TextInputComponentState(isFocused = true),
         isLoading = false,
     )
 

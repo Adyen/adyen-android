@@ -21,7 +21,7 @@ import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.SwitchContainer
 import com.adyen.checkout.ui.internal.element.button.PayButton
@@ -113,16 +113,16 @@ private fun CardDetailsSection(
 private fun CardComponentPreview() {
     CardComponent(
         viewState = CardViewState(
-            cardNumber = TextInputState(
+            cardNumber = TextInputComponentState(
                 "5555444433331111",
             ),
-            expiryDate = TextInputState(
+            expiryDate = TextInputComponentState(
                 text = "12/34",
             ),
-            securityCode = TextInputState(
+            securityCode = TextInputComponentState(
                 text = "737",
             ),
-            holderName = TextInputState(
+            holderName = TextInputComponentState(
                 text = "J. Smith",
             ),
             isHolderNameRequired = true,
