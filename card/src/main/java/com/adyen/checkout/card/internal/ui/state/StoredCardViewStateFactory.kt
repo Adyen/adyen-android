@@ -19,4 +19,3 @@ internal class StoredCardViewStateFactory : ViewStateFactory<StoredCardViewState
         brand = null,
     )
 }
-

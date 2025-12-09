@@ -115,6 +115,14 @@ public final class com/adyen/checkout/card/SocialSecurityNumberVisibility : java
 	public static fun values ()[Lcom/adyen/checkout/card/SocialSecurityNumberVisibility;
 }
 
+public final class com/adyen/checkout/card/StoredCardNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/card/StoredCardNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/card/internal/data/model/BinLookupRequest$Creator : android/os/Parcelable$Creator {
 	public fun <init> ()V
 	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/card/internal/data/model/BinLookupRequest;
