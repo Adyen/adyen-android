@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 10/7/2025.
+ * Created by oscars on 9/12/2025.
  */
 
 package com.adyen.checkout.mbway.internal.ui.state
@@ -11,14 +11,14 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
-internal class MBWayViewStateFactory(
+// TODO: Create interface
+internal class MBWayComponentStateFactory(
     private val componentParams: ComponentParams,
-) : ViewStateFactory<MBWayViewState> {
+) {
 
-    override fun createDefaultViewState() = MBWayViewState(
+    fun createInitialState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
         countryCode = getInitiallySelectedCountry(componentParams),
         phoneNumber = TextInputState(isFocused = true),

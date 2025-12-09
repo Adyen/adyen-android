@@ -21,7 +21,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
+import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
@@ -33,7 +33,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun MbWayComponent(
     viewState: MBWayViewState,
-    changeListener: MBWayChangeListener,
+    onIntent: (MBWayIntent) -> Unit,
     onSubmitClick: () -> Unit,
     onCountryCodePickerClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -70,7 +70,7 @@ internal fun MbWayComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
-                        changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
+                        onIntent(MBWayIntent.UpdatePhoneNumberFocus(focusState.hasFocus))
                     },
                 label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
                 initialValue = viewState.phoneNumber.text,
@@ -78,7 +78,7 @@ internal fun MbWayComponent(
                 supportingText = supportingTextPhoneNumber,
                 prefix = country.callingCode,
                 onValueChange = { value ->
-                    changeListener.onPhoneNumberChanged(value)
+                    onIntent(MBWayIntent.UpdatePhoneNumber(value))
                 },
                 inputTransformation = DigitOnlyInputTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -102,11 +102,7 @@ private fun MbWayComponentPreview() {
             countryCode = countries.first(),
             phoneNumber = TextInputState(),
         ),
-        changeListener = object : MBWayChangeListener {
-            override fun onCountryChanged(newCountryCode: CountryModel) = Unit
-            override fun onPhoneNumberChanged(newPhoneNumber: String) = Unit
-            override fun onPhoneNumberFocusChanged(hasFocus: Boolean) = Unit
-        },
+        onIntent = {},
         onSubmitClick = {},
         onCountryCodePickerClick = {},
     )

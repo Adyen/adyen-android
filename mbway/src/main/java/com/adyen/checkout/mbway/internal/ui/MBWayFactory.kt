@@ -14,11 +14,10 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
-import com.adyen.checkout.core.components.internal.ui.state.DefaultComponentStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.DefaultStateManager
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateFactory
-import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateValidator
+import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 
 internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, MBWayComponent> {
@@ -31,16 +30,13 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): MBWayComponent {
-        val stateManager = DefaultStateManager(
-            viewStateFactory = MBWayViewStateFactory(componentParamsBundle.commonComponentParams),
-            componentStateFactory = DefaultComponentStateFactory(),
-            validator = MBWayViewStateValidator(),
-        )
-
         return MBWayComponent(
             componentParams = componentParamsBundle.commonComponentParams,
             analyticsManager = analyticsManager,
-            stateManager = stateManager,
+            componentStateReducer = MBWayComponentStateReducer(),
+            componentStateValidator = MBWayComponentStateValidator(),
+            viewStateProducer = MBWayViewStateProducer(),
+            coroutineScope = coroutineScope,
         )
     }
 }
