@@ -84,11 +84,11 @@ internal class CardFactory :
 
     override fun create(
         storedPaymentMethod: StoredPaymentMethod,
-        coroutineScope: CoroutineScope,
+        @Suppress("UNUSED_PARAMETER") coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
         checkoutConfiguration: CheckoutConfiguration,
         componentParamsBundle: ComponentParamsBundle,
-        checkoutCallbacks: CheckoutCallbacks,
+        @Suppress("UNUSED_PARAMETER") checkoutCallbacks: CheckoutCallbacks,
     ): StoredCardComponent {
         val cardComponentParams = CardComponentParamsMapper().mapToParams(
             componentParamsBundle = componentParamsBundle,
