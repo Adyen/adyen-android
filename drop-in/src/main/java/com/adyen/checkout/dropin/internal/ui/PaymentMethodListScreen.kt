@@ -86,15 +86,17 @@ private fun PaymentMethodListContent(
                 modifier = Modifier.padding(horizontal = Dimensions.Large),
             )
 
-            Spacer(Modifier.size(Dimensions.Large))
+            Spacer(Modifier.size(Dimensions.ExtraLarge))
 
             viewState.favoritesSection?.let {
                 FavoritesSection(it)
 
-                Spacer(Modifier.size(Dimensions.Small))
+                Spacer(Modifier.size(Dimensions.Large))
             }
 
-            viewState.paymentOptionsSection?.let { PaymentOptionsSection(it) }
+            viewState.paymentOptionsSection?.let {
+                PaymentOptionsSection(it)
+            }
         }
     }
 }
@@ -109,20 +111,18 @@ private fun FavoritesSection(
             modifier = Modifier.padding(horizontal = Dimensions.Large),
         )
 
-        Spacer(Modifier.size(Dimensions.Small))
-
         favoritesSection.options.forEach { item ->
             ListItem(
                 leadingIcon = {
                     CheckoutNetworkLogo(
                         txVariant = item.icon,
-                        modifier = Modifier.size(Dimensions.LogoSize.large),
+                        modifier = Modifier.size(Dimensions.LogoSize.medium),
                     )
                 },
                 title = item.title,
                 subtitle = item.subtitle,
                 onClick = {},
-                modifier = Modifier.padding(Dimensions.ExtraSmall),
+                modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
             )
         }
     }
@@ -138,7 +138,6 @@ private fun PaymentOptionsSection(
             modifier = Modifier.padding(horizontal = Dimensions.Large),
         )
 
-        Spacer(Modifier.size(Dimensions.Small))
 
         paymentOptionsSection.options.forEach { item ->
             ListItem(
@@ -150,7 +149,7 @@ private fun PaymentOptionsSection(
                 },
                 title = item.title,
                 onClick = {},
-                modifier = Modifier.padding(Dimensions.ExtraSmall),
+                modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
             )
         }
     }
