@@ -10,10 +10,11 @@ package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.components.core.internal.util.ValidationUtils
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
 
-internal class MBWayComponentStateValidator {
+internal class MBWayComponentStateValidator : ComponentStateValidator<MBWayComponentState> {
 
-    fun validate(state: MBWayComponentState): MBWayComponentState {
+    override fun validate(state: MBWayComponentState): MBWayComponentState {
         // TODO - Should we strip the leading zeros? Depends on validation
         val telephoneNumber = state.countryCode.callingCode + state.phoneNumber.text
         val phoneNumberError = if (!ValidationUtils.isPhoneNumberValid(telephoneNumber)) {
@@ -26,7 +27,7 @@ internal class MBWayComponentStateValidator {
         )
     }
 
-    fun isValid(state: MBWayComponentState): Boolean {
+    override fun isValid(state: MBWayComponentState): Boolean {
         return state.phoneNumber.errorMessage == null
     }
 }

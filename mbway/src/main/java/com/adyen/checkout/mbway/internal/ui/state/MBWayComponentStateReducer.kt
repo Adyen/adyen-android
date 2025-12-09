@@ -8,10 +8,11 @@
 
 package com.adyen.checkout.mbway.internal.ui.state
 
-// TODO - use interface
-internal class MBWayComponentStateReducer {
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
 
-    fun reduce(state: MBWayComponentState, intent: MBWayIntent): MBWayComponentState {
+internal class MBWayComponentStateReducer : ComponentStateReducer<MBWayComponentState, MBWayIntent> {
+
+    override fun reduce(state: MBWayComponentState, intent: MBWayIntent): MBWayComponentState {
         return when (intent) {
             is MBWayIntent.UpdateCountry -> state.copy(countryCode = intent.country)
             is MBWayIntent.UpdateLoading -> state.copy(isLoading = intent.isLoading)

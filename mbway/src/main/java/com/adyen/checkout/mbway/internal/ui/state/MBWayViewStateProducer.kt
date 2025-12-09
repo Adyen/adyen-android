@@ -8,14 +8,16 @@
 
 package com.adyen.checkout.mbway.internal.ui.state
 
-internal class MBWayViewStateProducer {
+import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 
-    fun produce(componentState: MBWayComponentState): MBWayViewState {
+internal class MBWayViewStateProducer : ViewStateProducer<MBWayComponentState, MBWayViewState> {
+
+    override fun produce(state: MBWayComponentState): MBWayViewState {
         return MBWayViewState(
-            countries = componentState.countries,
-            countryCode = componentState.countryCode,
-            phoneNumber = componentState.phoneNumber,
-            isLoading = componentState.isLoading,
+            countries = state.countries,
+            countryCode = state.countryCode,
+            phoneNumber = state.phoneNumber,
+            isLoading = state.isLoading,
         )
     }
 }

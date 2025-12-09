@@ -22,6 +22,7 @@ import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
+import com.adyen.checkout.core.components.internal.viewState
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
@@ -37,17 +38,14 @@ import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
-    private val componentStateReducer: MBWayComponentStateReducer,
     private val componentStateValidator: MBWayComponentStateValidator,
-    private val viewStateProducer: MBWayViewStateProducer,
+    componentStateReducer: MBWayComponentStateReducer,
+    viewStateProducer: MBWayViewStateProducer,
     coroutineScope: CoroutineScope,
 ) : PaymentComponent<MBWayPaymentComponentState> {
 
@@ -69,14 +67,12 @@ internal class MBWayComponent(
 
     private val componentState = ComponentStateFlow(
         initialState = MBWayComponentStateFactory(componentParams = componentParams).createInitialState(),
-        reduce = componentStateReducer::reduce,
-        validate = componentStateValidator::validate,
+        reducer = componentStateReducer,
+        validator = componentStateValidator,
         coroutineScope = coroutineScope,
     )
 
-    private val viewState = componentState
-        .map(viewStateProducer::produce)
-        .stateIn(coroutineScope, SharingStarted.Lazily, viewStateProducer.produce(componentState.value))
+    private val viewState = componentState.viewState(viewStateProducer, coroutineScope)
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {

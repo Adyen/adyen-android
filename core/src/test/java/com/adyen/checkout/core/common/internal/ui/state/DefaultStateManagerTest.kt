@@ -84,7 +84,7 @@ internal class DefaultStateManagerTest(
 
     private fun initStateManager(initialState: TestViewState) {
         whenever(viewStateFactory.createDefaultViewState()) doReturn initialState
-        whenever(componentStateFactory.createDefaultComponentState()) doReturn TestComponentState()
+        whenever(componentStateFactory.createInitialState()) doReturn TestComponentState()
         stateManager = DefaultStateManager(
             viewStateFactory = viewStateFactory,
             componentStateFactory = componentStateFactory,

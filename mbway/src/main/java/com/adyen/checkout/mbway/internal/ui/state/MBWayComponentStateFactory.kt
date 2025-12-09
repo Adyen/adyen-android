@@ -11,14 +11,14 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
-// TODO: Create interface
 internal class MBWayComponentStateFactory(
     private val componentParams: ComponentParams,
-) {
+) : ComponentStateFactory<MBWayComponentState> {
 
-    fun createInitialState() = MBWayComponentState(
+    override fun createInitialState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
         countryCode = getInitiallySelectedCountry(componentParams),
         phoneNumber = TextInputState(isFocused = true),
