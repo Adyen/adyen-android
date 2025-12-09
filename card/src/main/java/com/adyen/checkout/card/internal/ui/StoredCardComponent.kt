@@ -148,6 +148,6 @@ internal class StoredCardComponent(
     }
 
     companion object {
-        private val NO_CVC_BRANDS: Set<CardBrand> = hashSetOf(CardBrand(txVariant = CardType.BCMC.txVariant))
+        private val NO_CVC_BRANDS: Set<CardBrand> = setOf(CardBrand(txVariant = CardType.BCMC.txVariant))
     }
 }
