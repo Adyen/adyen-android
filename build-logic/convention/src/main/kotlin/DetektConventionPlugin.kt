@@ -37,7 +37,7 @@ class DetektConventionPlugin : Plugin<Project> {
                 reports {
                     xml {
                         required = true
-                        outputLocation = file("${layout.buildDirectory.get().asFile}/reports/detekt/detekt-results.xml")
+                        outputLocation = layout.buildDirectory.file("reports/detekt/detekt-results.xml")
                     }
                     html.required = false
                 }
