@@ -7,6 +7,7 @@
  */
 
 import com.adyen.checkout.AggregateDependencyListsTask
+import com.adyen.checkout.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.register
@@ -17,7 +18,7 @@ class AggregateDependencyListsPlugin : Plugin<Project> {
         with(target) {
             // Example call from command line: ./gradlew aggregateDependencyLists -PoutputFileName=deps.txt -PincludeModules=true
             tasks.register<AggregateDependencyListsTask>("aggregateDependencyLists") {
-                val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin("generate-dependency-list") }
+                val filteredSubProjects = subprojects.filter { it.plugins.hasPlugin(libs.plugins.dependency.list.generate.get().pluginId) }
 
                 filteredSubProjects.forEach {
                     dependsOn(it.tasks.named("generateDependencyList"))
