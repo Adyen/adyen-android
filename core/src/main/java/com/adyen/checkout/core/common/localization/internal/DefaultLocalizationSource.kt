@@ -54,6 +54,8 @@ internal class DefaultLocalizationSource {
 
             // Drop-in
             CheckoutLocalizationKey.DROP_IN_OTHER_PAYMENT_METHODS -> R.string.checkout_drop_in_other_payment_methods
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION -> R.string.checkout_drop_in_payment_method_list_description
+            CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS -> R.string.checkout_drop_in_payment_options
 
             // General
             CheckoutLocalizationKey.GENERAL_CLOSE -> R.string.checkout_general_close

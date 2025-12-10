@@ -90,9 +90,8 @@ private fun PaymentMethodListContent(
         ) {
             Spacer(Modifier.size(Dimensions.ExtraSmall))
 
-            // TODO - Extract to string resources
             Body(
-                text = "Select your preferred payment option and complete your payment",
+                text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
                 color = CheckoutThemeProvider.colors.textSecondary,
                 modifier = Modifier.padding(horizontal = Dimensions.Large),
             )
@@ -110,7 +109,7 @@ private fun PaymentOptionsSection(
 ) {
     Column {
         SubHeadlineEmphasized(
-            text = paymentOptionsSection.title,
+            text = resolveString(paymentOptionsSection.title),
             modifier = Modifier.padding(horizontal = Dimensions.Large),
         )
 
@@ -159,7 +158,7 @@ private fun PaymentMethodListContentPreview() {
             viewState = PaymentMethodListViewState(
                 amount = "$140.38",
                 paymentOptionsSection = PaymentOptionsSection(
-                    title = "Payment options",
+                    title = CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS,
                     options = paymentMethods,
                 ),
             ),
