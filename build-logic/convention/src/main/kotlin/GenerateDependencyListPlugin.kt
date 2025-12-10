@@ -9,6 +9,7 @@
 import com.adyen.checkout.GenerateDependencyListTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.kotlin.dsl.register
 
 class GenerateDependencyListPlugin : Plugin<Project> {
@@ -23,9 +24,11 @@ class GenerateDependencyListPlugin : Plugin<Project> {
                 val outputDir = project.layout.buildDirectory.dir("outputs/dependency_list").get()
                 outputFile.set(outputDir.file("${project.name}.txt"))
 
-                resolutionResult.set(
+                resolvedDependencies.set(
                     configurations.named("releaseRuntimeClasspath").map { config ->
-                        config.incoming.resolutionResult
+                        config.incoming.resolutionResult.allDependencies
+                            .filterIsInstance<ResolvedDependencyResult>()
+                            .map { it.selected.id.displayName }
                     },
                 )
             }
