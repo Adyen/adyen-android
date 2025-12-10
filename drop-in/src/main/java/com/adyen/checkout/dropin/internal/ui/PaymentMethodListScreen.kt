@@ -121,7 +121,7 @@ private fun PaymentOptionsSection(
                 leadingIcon = {
                     CheckoutNetworkLogo(
                         txVariant = item.icon,
-                        modifier = Modifier.size(Dimensions.LogoSize.large),
+                        modifier = Modifier.size(Dimensions.LogoSize.medium),
                     )
                 },
                 title = item.title,
