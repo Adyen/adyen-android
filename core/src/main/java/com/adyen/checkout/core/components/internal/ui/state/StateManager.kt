@@ -28,9 +28,3 @@ interface StateManager<V : ViewState, C : ComponentState> {
 
     fun highlightAllValidationErrors()
 }
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ViewState
-
-@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ComponentState
