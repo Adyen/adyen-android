@@ -9,10 +9,8 @@
 package com.adyen.checkout
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.result.ResolutionResult
-import org.gradle.api.artifacts.result.ResolvedDependencyResult
 import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.provider.Property
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
@@ -24,7 +22,7 @@ internal abstract class GenerateDependencyListTask @Inject constructor() : Defau
     abstract val outputFile: RegularFileProperty
 
     @get:Input
-    abstract val resolutionResult: Property<ResolutionResult>
+    abstract val resolvedDependencies: ListProperty<String>
 
     @TaskAction
     fun generateList() {
@@ -32,10 +30,7 @@ internal abstract class GenerateDependencyListTask @Inject constructor() : Defau
         file.parentFile.mkdirs()
 
         file.writer().use { fileWriter ->
-            resolutionResult.get()
-                .allDependencies
-                .filterIsInstance<ResolvedDependencyResult>()
-                .map { it.selected.id.displayName }
+            resolvedDependencies.get()
                 .distinct()
                 .sorted()
                 .forEach { fileWriter.appendLine(it) }
