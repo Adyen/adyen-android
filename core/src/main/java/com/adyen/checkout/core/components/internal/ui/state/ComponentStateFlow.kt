@@ -72,7 +72,9 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
     }
 }
 
-private const val SUBSCRIBE_TIMEOUT_MS = 500L
+// Default timeout suggested by the Android team
+// https://medium.com/androiddevelopers/things-to-know-about-flows-sharein-and-statein-operators-20e6ccb2bc74
+private const val SUBSCRIBE_TIMEOUT_MS = 5_000L
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 fun <C : ComponentState, V : ViewState> ComponentStateFlow<C, *>.viewState(
