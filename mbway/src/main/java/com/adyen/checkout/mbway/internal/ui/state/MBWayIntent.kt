@@ -9,8 +9,9 @@
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateIntent
 
-internal sealed interface MBWayIntent {
+internal sealed interface MBWayIntent : ComponentStateIntent {
 
     data class UpdateCountry(val country: CountryModel) : MBWayIntent
 

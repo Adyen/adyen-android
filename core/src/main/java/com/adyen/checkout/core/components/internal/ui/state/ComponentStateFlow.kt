@@ -23,12 +23,12 @@ import kotlinx.coroutines.flow.stateIn
 @Suppress("UnnecessaryOptInAnnotation")
 @OptIn(ExperimentalForInheritanceCoroutinesApi::class)
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-interface ComponentStateFlow<C : ComponentState, I : Any> : StateFlow<C> {
+interface ComponentStateFlow<C : ComponentState, I : ComponentStateIntent> : StateFlow<C> {
     fun handleIntent(intent: I)
 }
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-fun <C : ComponentState, I : Any> ComponentStateFlow(
+fun <C : ComponentState, I : ComponentStateIntent> ComponentStateFlow(
     initialState: C,
     reducer: ComponentStateReducer<C, I>,
     validator: ComponentStateValidator<C>,
@@ -40,7 +40,7 @@ fun <C : ComponentState, I : Any> ComponentStateFlow(
     coroutineScope = coroutineScope,
 )
 
-private class ComponentStateFlowImplementation<C : ComponentState, I : Any>(
+private class ComponentStateFlowImplementation<C : ComponentState, I : ComponentStateIntent>(
     initialState: C,
     reducer: ComponentStateReducer<C, I>,
     validator: ComponentStateValidator<C>,
