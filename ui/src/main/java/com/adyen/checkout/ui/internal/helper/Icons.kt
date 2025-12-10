@@ -22,8 +22,8 @@ fun getThemedIcon(
     lightDrawableId: Int,
     darkDrawableId: Int,
 ): Int {
-    val isDark = backgroundColor.isDark()
     return remember(backgroundColor) {
+        val isDark = backgroundColor.isDark()
         if (isDark) darkDrawableId else lightDrawableId
     }
 }
