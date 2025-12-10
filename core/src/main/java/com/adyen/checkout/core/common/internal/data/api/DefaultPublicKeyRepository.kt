@@ -23,28 +23,6 @@ internal class DefaultPublicKeyRepository(
     ): Result<String> = runSuspendCatching {
         adyenLog(AdyenLogLevel.DEBUG) { "fetching publicKey from API" }
 
-        retryOnFailure(CONNECTION_RETRIES) {
-            publicKeyService.getPublicKey(clientKey).publicKey
-        }
-    }
-
-    @Suppress("SameParameterValue")
-    private inline fun <T> retryOnFailure(times: Int, block: () -> T): T {
-        lateinit var throwable: Throwable
-
-        repeat(times) {
-            @Suppress("TooGenericExceptionCaught")
-            try {
-                return block()
-            } catch (e: Throwable) {
-                throwable = e
-            }
-        }
-
-        throw throwable
-    }
-
-    companion object {
-        private const val CONNECTION_RETRIES = 3
+        publicKeyService.getPublicKey(clientKey).publicKey
     }
 }
