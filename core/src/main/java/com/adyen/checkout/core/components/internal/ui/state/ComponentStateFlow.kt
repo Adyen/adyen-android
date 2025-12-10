@@ -6,14 +6,9 @@
  * Created by oscars on 9/12/2025.
  */
 
-package com.adyen.checkout.core.components.internal
+package com.adyen.checkout.core.components.internal.ui.state
 
 import androidx.annotation.RestrictTo
-import com.adyen.checkout.core.components.internal.ui.state.ComponentState
-import com.adyen.checkout.core.components.internal.ui.state.ComponentStateReducer
-import com.adyen.checkout.core.components.internal.ui.state.ComponentStateValidator
-import com.adyen.checkout.core.components.internal.ui.state.ViewState
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalForInheritanceCoroutinesApi
 import kotlinx.coroutines.channels.Channel

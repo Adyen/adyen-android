@@ -13,6 +13,8 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 
 @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
 data class TextInputViewState(
+    // Because of how our CheckoutTextField composable works, this field is only used as initial value, but will update
+    // with the latest value of the input field.
     val text: String = "",
     val supportingText: CheckoutLocalizationKey? = null,
     val isFocused: Boolean = false,

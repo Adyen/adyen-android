@@ -17,12 +17,12 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
 import com.adyen.checkout.core.components.data.PaymentComponentData
 import com.adyen.checkout.core.components.data.model.Amount
-import com.adyen.checkout.core.components.internal.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntry
-import com.adyen.checkout.core.components.internal.viewState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
+import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
 import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
