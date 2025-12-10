@@ -11,6 +11,7 @@ package com.adyen.checkout.dropin.internal.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.data.model.PaymentMethodsApiResponse
 import com.adyen.checkout.core.components.data.model.format
@@ -30,7 +31,7 @@ internal class PaymentMethodListViewModel(
     private fun createInitialViewState(): PaymentMethodListViewState {
         val paymentOptionsSection = paymentMethodsApiResponse.paymentMethods?.let { paymentMethods ->
             PaymentOptionsSection(
-                title = "Other options",
+                title = CheckoutLocalizationKey.DROP_IN_PAYMENT_OPTIONS,
                 options = paymentMethods
                     // TODO - Check availability for Google Pay and WeChat. If unavailable filter them also out
                     .filter { !PaymentMethodTypes.UNSUPPORTED_PAYMENT_METHODS.contains(it.type) }
