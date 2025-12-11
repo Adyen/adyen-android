@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.internal.ui.helper.shouldDisplay
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
@@ -81,14 +80,14 @@ private fun CardDetailsSection(
             onCardNumberChanged = changeListener::onCardNumberChanged,
             onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
         )
-        if (viewState.expiryDateInputState.shouldDisplay()) {
+        if (viewState.expiryDate.requirementPolicy.shouldDisplay()) {
             ExpiryDateField(
                 expiryDateState = viewState.expiryDate,
                 onExpiryDateChanged = changeListener::onExpiryDateChanged,
                 onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
             )
         }
-        if (viewState.securityCodeInputState.shouldDisplay()) {
+        if (viewState.securityCode.requirementPolicy.shouldDisplay()) {
             SecurityCodeField(
                 securityCodeState = viewState.securityCode,
                 onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
@@ -139,8 +138,6 @@ private fun CardComponentPreview() {
             isLoading = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
-            securityCodeInputState = InputFieldUIState.REQUIRED,
-            expiryDateInputState = InputFieldUIState.REQUIRED,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit

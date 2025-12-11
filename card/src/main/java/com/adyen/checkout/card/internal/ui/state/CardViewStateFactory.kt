@@ -8,9 +8,8 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.ui.helper.toInputFieldUIState
+import com.adyen.checkout.card.internal.ui.helper.requirementPolicy
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
@@ -21,7 +20,9 @@ internal class CardViewStateFactory(
     override fun createDefaultViewState() = CardViewState(
         cardNumber = TextInputState(isFocused = true),
         expiryDate = TextInputState(),
-        securityCode = TextInputState(),
+        securityCode = TextInputState(
+            requirementPolicy = componentParams.cvcVisibility.requirementPolicy(),
+        ),
         holderName = TextInputState(),
         isHolderNameRequired = componentParams.isHolderNameRequired,
         storePaymentMethod = false,
@@ -31,7 +32,5 @@ internal class CardViewStateFactory(
         supportedCardBrands = componentParams.supportedCardBrands,
         isSupportedCardBrandsShown = true,
         dualBrandData = null,
-        securityCodeInputState = componentParams.cvcVisibility.toInputFieldUIState(),
-        expiryDateInputState = InputFieldUIState.REQUIRED,
     )
 }

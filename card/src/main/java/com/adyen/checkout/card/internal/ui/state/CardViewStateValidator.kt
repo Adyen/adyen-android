@@ -8,16 +8,16 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
-import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
-import com.adyen.checkout.card.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.internal.ui.helper.expiryDateRequirementPolicy
+import com.adyen.checkout.card.internal.ui.helper.securityCodeRequirementPolicy
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
 @Suppress("TooManyFunctions")
@@ -39,7 +39,6 @@ internal class CardViewStateValidator(
         val cardNumberError = validateCardNumber(cardNumber, firstSupportedDetectedCardType, isReliable)
 
         val expiryDate = viewState.expiryDate
-        val expiryDateUIState = makeExpiryDateUiState(firstSupportedDetectedCardType)
         val expiryDateError = validateExpiryDate(expiryDate, firstSupportedDetectedCardType)
 
         val dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
@@ -50,9 +49,10 @@ internal class CardViewStateValidator(
 
         // TODO - Card. Security Code UI State.
         val securityCode = viewState.securityCode
-        val securityCodeUiState = makeSecurityCodeUiState(firstSupportedDetectedCardType)
+        val securityCodeRequirementPolicy =
+            firstSupportedDetectedCardType.securityCodeRequirementPolicy(componentParams)
         val securityCodeError =
-            validateSecurityCode(securityCode, firstSupportedDetectedCardType, securityCodeUiState)
+            validateSecurityCode(securityCode, firstSupportedDetectedCardType, securityCodeRequirementPolicy)
 
         val holderName = viewState.holderName
         val holderNameError = validateHolderName(holderName, viewState.isHolderNameRequired)
@@ -61,19 +61,17 @@ internal class CardViewStateValidator(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = expiryDate.copy(
                 errorMessage = expiryDateError,
-                title = expiryDateUIState.expiryDateTitle(),
+                requirementPolicy = firstSupportedDetectedCardType.expiryDateRequirementPolicy(),
             ),
             securityCode = securityCode.copy(
                 errorMessage = securityCodeError,
-                title = securityCodeUiState.securityCodeTitle(),
+                requirementPolicy = securityCodeRequirementPolicy,
             ),
             holderName = holderName.copy(errorMessage = holderNameError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
             detectedCardBrands = detectedCardBrands,
             dualBrandData = dualBrandData,
-            securityCodeInputState = securityCodeUiState,
-            expiryDateInputState = expiryDateUIState,
         )
     }
 
@@ -154,7 +152,7 @@ internal class CardViewStateValidator(
     private fun validateSecurityCode(
         securityCode: TextInputState,
         selectedOrFirstCardType: DetectedCardType?,
-        uiState: InputFieldUIState,
+        uiState: RequirementPolicy,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
@@ -175,59 +173,5 @@ internal class CardViewStateValidator(
                 isRequired = isRequired,
             ),
         )
-    }
-
-    private fun makeSecurityCodeUiState(detectedCardType: DetectedCardType?): InputFieldUIState {
-        return if (detectedCardType?.isReliable == true) {
-            when (componentParams.cvcVisibility) {
-                CVCVisibility.ALWAYS_SHOW -> {
-                    when (detectedCardType.cvcPolicy) {
-                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                        Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
-                        else -> InputFieldUIState.REQUIRED
-                    }
-                }
-
-                CVCVisibility.HIDE_FIRST -> {
-                    when (detectedCardType.cvcPolicy) {
-                        Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
-                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-                        else -> InputFieldUIState.HIDDEN
-                    }
-                }
-
-                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
-            }
-        } else {
-            when (componentParams.cvcVisibility) {
-                CVCVisibility.ALWAYS_SHOW -> InputFieldUIState.REQUIRED
-                CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
-                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
-            }
-        }
-    }
-
-    private fun makeExpiryDateUiState(detectedCardType: DetectedCardType?): InputFieldUIState {
-        return when (detectedCardType?.expiryDatePolicy) {
-            Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
-            Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
-            else -> InputFieldUIState.REQUIRED
-        }
-    }
-
-    private fun InputFieldUIState.securityCodeTitle(): CheckoutLocalizationKey? {
-        return when (this) {
-            InputFieldUIState.REQUIRED -> CheckoutLocalizationKey.CARD_SECURITY_CODE
-            InputFieldUIState.OPTIONAL -> CheckoutLocalizationKey.CARD_SECURITY_CODE_OPTIONAL
-            InputFieldUIState.HIDDEN -> null
-        }
-    }
-
-    private fun InputFieldUIState.expiryDateTitle(): CheckoutLocalizationKey? {
-        return when (this) {
-            InputFieldUIState.REQUIRED -> CheckoutLocalizationKey.CARD_EXPIRY_DATE
-            InputFieldUIState.OPTIONAL -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_OPTIONAL
-            InputFieldUIState.HIDDEN -> null
-        }
     }
 }
