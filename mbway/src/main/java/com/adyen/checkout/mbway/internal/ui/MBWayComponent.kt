@@ -15,8 +15,6 @@ import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.common.internal.helper.bufferedChannel
-import com.adyen.checkout.core.components.data.PaymentComponentData
-import com.adyen.checkout.core.components.data.model.Amount
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
@@ -24,7 +22,6 @@ import com.adyen.checkout.core.components.internal.ui.navigation.CheckoutNavEntr
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFlow
 import com.adyen.checkout.core.components.internal.ui.state.viewState
 import com.adyen.checkout.core.components.navigation.CheckoutDisplayStrategy
-import com.adyen.checkout.core.components.paymentmethod.MBWayPaymentMethod
 import com.adyen.checkout.mbway.MBWayCountryCodePickerNavigationKey
 import com.adyen.checkout.mbway.MBWayMainNavigationKey
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
@@ -32,8 +29,8 @@ import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewStateProducer
+import com.adyen.checkout.mbway.internal.ui.state.toPaymentComponentState
 import com.adyen.checkout.mbway.internal.ui.view.CountryCodePicker
 import com.adyen.checkout.mbway.internal.ui.view.MbWayComponent
 import kotlinx.coroutines.CoroutineScope
@@ -76,7 +73,7 @@ internal class MBWayComponent(
 
     override fun submit() {
         if (componentStateValidator.isValid(componentState.value)) {
-            val paymentComponentState = viewState.value.toPaymentComponentState(
+            val paymentComponentState = componentState.value.toPaymentComponentState(
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
                 amount = componentParams.amount,
             )
@@ -86,32 +83,6 @@ internal class MBWayComponent(
         } else {
             onIntent(MBWayIntent.HighlightValidationErrors)
         }
-    }
-
-    // TODO - After card, decide if we should extract this function
-    private fun MBWayViewState.toPaymentComponentState(
-        checkoutAttemptId: String,
-        amount: Amount?,
-    ): MBWayPaymentComponentState {
-        val sanitizedPhoneNumber = phoneNumber.text.trimStart('0')
-        val telephoneNumber = "${countryCode.callingCode}$sanitizedPhoneNumber"
-
-        val paymentMethod = MBWayPaymentMethod(
-            type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,
-            checkoutAttemptId = checkoutAttemptId,
-            telephoneNumber = telephoneNumber,
-        )
-
-        val paymentComponentData = PaymentComponentData(
-            paymentMethod = paymentMethod,
-            order = null,
-            amount = amount,
-        )
-
-        return MBWayPaymentComponentState(
-            data = paymentComponentData,
-            isValid = true,
-        )
     }
 
     override fun setLoading(isLoading: Boolean) {
