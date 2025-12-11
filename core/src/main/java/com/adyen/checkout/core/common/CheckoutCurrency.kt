@@ -159,11 +159,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
     ZMW(2);
 
     companion object {
-        private val CURRENCIES_HASHMAP: Map<String, CheckoutCurrency> = buildMap {
-            for (checkoutCurrency in CheckoutCurrency.entries) {
-                put(checkoutCurrency.name, checkoutCurrency)
-            }
-        }
+        private val CURRENCIES_HASHMAP: Map<String, CheckoutCurrency> = entries.associateBy { it.name }
 
         /**
          * Check if the currency code is supported by Adyen.
@@ -173,7 +169,7 @@ enum class CheckoutCurrency(val fractionDigits: Int) {
          */
         @JvmStatic
         fun isSupported(currency: String?): Boolean {
-            return !currency.isNullOrEmpty() && CURRENCIES_HASHMAP.containsKey(currency)
+            return find(currency.orEmpty()) != null
         }
 
         /**
