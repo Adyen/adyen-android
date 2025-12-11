@@ -37,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 
+@Suppress("LongParameterList")
 internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
