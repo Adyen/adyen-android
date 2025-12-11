@@ -16,3 +16,5 @@ internal fun CVCVisibility.toInputFieldUIState() = when (this) {
     CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
     CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
 }
+
+internal fun InputFieldUIState.shouldDisplay() = this != InputFieldUIState.HIDDEN

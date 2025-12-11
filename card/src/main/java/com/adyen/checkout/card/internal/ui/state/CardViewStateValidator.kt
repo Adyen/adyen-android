@@ -58,7 +58,10 @@ internal class CardViewStateValidator(
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
             expiryDate = expiryDate.copy(errorMessage = expiryDateError),
-            securityCode = securityCode.copy(errorMessage = securityCodeError),
+            securityCode = securityCode.copy(
+                errorMessage = securityCodeError,
+                title = securityCodeUiState.securityCodeTitle(),
+            ),
             holderName = holderName.copy(errorMessage = holderNameError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
@@ -195,6 +198,14 @@ internal class CardViewStateValidator(
                 CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
                 CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
             }
+        }
+    }
+
+    private fun InputFieldUIState.securityCodeTitle(): CheckoutLocalizationKey? {
+        return when (this) {
+            InputFieldUIState.REQUIRED -> CheckoutLocalizationKey.CARD_SECURITY_CODE
+            InputFieldUIState.OPTIONAL -> CheckoutLocalizationKey.CARD_SECURITY_CODE_OPTIONAL
+            InputFieldUIState.HIDDEN -> null
         }
     }
 }

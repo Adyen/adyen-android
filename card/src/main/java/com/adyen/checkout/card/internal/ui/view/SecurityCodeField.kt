@@ -60,7 +60,7 @@ internal fun SecurityCodeField(
             .onFocusChanged { focusState ->
                 onSecurityCodeFocusChanged(focusState.isFocused)
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        label = securityCodeState.title?.let { resolveString(it) },
         initialValue = securityCodeState.text,
         isError = showSecurityCodeError,
         supportingText = supportingTextSecurityCode,

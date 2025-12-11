@@ -18,6 +18,7 @@ data class TextInputState(
     val isFocused: Boolean = false,
     val isInteractedWith: Boolean = false,
     val showError: Boolean = false,
+    val title: CheckoutLocalizationKey? = null,
 ) {
 
     val isValid: Boolean
