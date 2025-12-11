@@ -30,6 +30,7 @@ internal data class CardViewState(
     val isLoading: Boolean,
     val dualBrandData: DualBrandData?,
     val securityCodeInputState: InputFieldUIState,
+    val expiryDateInputState: InputFieldUIState,
 ) : ViewState
 
 internal val CardViewState.isAmex: Boolean?

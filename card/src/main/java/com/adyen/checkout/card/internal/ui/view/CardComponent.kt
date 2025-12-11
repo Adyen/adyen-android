@@ -138,6 +138,7 @@ private fun CardComponentPreview() {
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
             securityCodeInputState = InputFieldUIState.REQUIRED,
+            expiryDateInputState = InputFieldUIState.REQUIRED,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit

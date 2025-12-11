@@ -20,6 +20,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
+@Suppress("TooManyFunctions")
 internal class CardViewStateValidator(
     private val componentParams: CardComponentParams,
     private val cardValidationMapper: CardValidationMapper,
@@ -38,6 +39,7 @@ internal class CardViewStateValidator(
         val cardNumberError = validateCardNumber(cardNumber, firstSupportedDetectedCardType, isReliable)
 
         val expiryDate = viewState.expiryDate
+        val expiryDateUIState = makeExpiryDateUiState(firstSupportedDetectedCardType)
         val expiryDateError = validateExpiryDate(expiryDate, firstSupportedDetectedCardType)
 
         val dualBrandData = dualBrandedCardHandler.processDetectedCardTypes(
@@ -68,6 +70,7 @@ internal class CardViewStateValidator(
             detectedCardBrands = detectedCardBrands,
             dualBrandData = dualBrandData,
             securityCodeInputState = securityCodeUiState,
+            expiryDateInputState = expiryDateUIState,
         )
     }
 
@@ -198,6 +201,14 @@ internal class CardViewStateValidator(
                 CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
                 CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
             }
+        }
+    }
+
+    private fun makeExpiryDateUiState(detectedCardType: DetectedCardType?): InputFieldUIState {
+        return when (detectedCardType?.expiryDatePolicy) {
+            Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
+            Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+            else -> InputFieldUIState.REQUIRED
         }
     }
 
