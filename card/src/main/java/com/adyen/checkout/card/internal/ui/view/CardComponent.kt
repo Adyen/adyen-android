@@ -81,11 +81,13 @@ private fun CardDetailsSection(
             onCardNumberChanged = changeListener::onCardNumberChanged,
             onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
         )
-        ExpiryDateField(
-            expiryDateState = viewState.expiryDate,
-            onExpiryDateChanged = changeListener::onExpiryDateChanged,
-            onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
-        )
+        if (viewState.expiryDateInputState.shouldDisplay()) {
+            ExpiryDateField(
+                expiryDateState = viewState.expiryDate,
+                onExpiryDateChanged = changeListener::onExpiryDateChanged,
+                onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
+            )
+        }
         if (viewState.securityCodeInputState.shouldDisplay()) {
             SecurityCodeField(
                 securityCodeState = viewState.securityCode,
