@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.card.internal.ui.state.CardChangeListener
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
@@ -133,6 +134,7 @@ private fun CardComponentPreview() {
             isLoading = false,
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
+            securityCodeInputState = InputFieldUIState.REQUIRED,
         ),
         changeListener = object : CardChangeListener {
             override fun onCardNumberChanged(newCardNumber: String) = Unit

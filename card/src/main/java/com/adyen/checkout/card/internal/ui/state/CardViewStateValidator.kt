@@ -8,8 +8,11 @@
 
 package com.adyen.checkout.card.internal.ui.state
 
+import com.adyen.checkout.card.internal.data.model.Brand
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
+import com.adyen.checkout.card.internal.ui.model.CVCVisibility
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.CardBrand
@@ -18,6 +21,7 @@ import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
 internal class CardViewStateValidator(
+    private val componentParams: CardComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val dualBrandedCardHandler: DualBrandedCardHandler,
 ) : ViewStateValidator<CardViewState, CardComponentState> {
@@ -44,8 +48,9 @@ internal class CardViewStateValidator(
 
         // TODO - Card. Security Code UI State.
         val securityCode = viewState.securityCode
+        val securityCodeUiState = makeSecurityCodeUiState(firstSupportedDetectedCardType)
         val securityCodeError =
-            validateSecurityCode(securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
+            validateSecurityCode(securityCode, firstSupportedDetectedCardType, securityCodeUiState)
 
         val holderName = viewState.holderName
         val holderNameError = validateHolderName(holderName, viewState.isHolderNameRequired)
@@ -59,6 +64,7 @@ internal class CardViewStateValidator(
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
             detectedCardBrands = detectedCardBrands,
             dualBrandData = dualBrandData,
+            securityCodeInputState = securityCodeUiState,
         )
     }
 
@@ -160,5 +166,35 @@ internal class CardViewStateValidator(
                 isRequired = isRequired,
             ),
         )
+    }
+
+    private fun makeSecurityCodeUiState(detectedCardType: DetectedCardType?): InputFieldUIState {
+        return if (detectedCardType?.isReliable == true) {
+            when (componentParams.cvcVisibility) {
+                CVCVisibility.ALWAYS_SHOW -> {
+                    when (detectedCardType.cvcPolicy) {
+                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+                        Brand.FieldPolicy.HIDDEN -> InputFieldUIState.HIDDEN
+                        else -> InputFieldUIState.REQUIRED
+                    }
+                }
+
+                CVCVisibility.HIDE_FIRST -> {
+                    when (detectedCardType.cvcPolicy) {
+                        Brand.FieldPolicy.REQUIRED -> InputFieldUIState.REQUIRED
+                        Brand.FieldPolicy.OPTIONAL -> InputFieldUIState.OPTIONAL
+                        else -> InputFieldUIState.HIDDEN
+                    }
+                }
+
+                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
+            }
+        } else {
+            when (componentParams.cvcVisibility) {
+                CVCVisibility.ALWAYS_SHOW -> InputFieldUIState.REQUIRED
+                CVCVisibility.HIDE_FIRST -> InputFieldUIState.HIDDEN
+                CVCVisibility.ALWAYS_HIDE -> InputFieldUIState.HIDDEN
+            }
+        }
     }
 }
