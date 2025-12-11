@@ -14,6 +14,7 @@ import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
 import com.adyen.checkout.core.components.internal.PaymentMethodFactory
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
+import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateFactory
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateReducer
 import com.adyen.checkout.mbway.internal.ui.state.MBWayComponentStateValidator
 import com.adyen.checkout.mbway.internal.ui.state.MBWayPaymentComponentState
@@ -30,9 +31,11 @@ internal class MBWayFactory : PaymentMethodFactory<MBWayPaymentComponentState, M
         componentParamsBundle: ComponentParamsBundle,
         checkoutCallbacks: CheckoutCallbacks,
     ): MBWayComponent {
+        val componentParams = componentParamsBundle.commonComponentParams
         return MBWayComponent(
-            componentParams = componentParamsBundle.commonComponentParams,
+            componentParams = componentParams,
             analyticsManager = analyticsManager,
+            componentStateFactory = MBWayComponentStateFactory(componentParams),
             componentStateReducer = MBWayComponentStateReducer(),
             componentStateValidator = MBWayComponentStateValidator(),
             viewStateProducer = MBWayViewStateProducer(),

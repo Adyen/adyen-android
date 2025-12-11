@@ -47,7 +47,7 @@ private class ComponentStateFlowImplementation<C : ComponentState, I : Component
     coroutineScope: CoroutineScope,
 ) : ComponentStateFlow<C, I> {
 
-    private val intents = Channel<I>(Channel.Factory.BUFFERED)
+    private val intents = Channel<I>(Channel.BUFFERED)
 
     private val stateFlow: StateFlow<C> = intents
         .receiveAsFlow()

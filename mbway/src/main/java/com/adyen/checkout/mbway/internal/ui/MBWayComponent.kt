@@ -41,6 +41,7 @@ internal class MBWayComponent(
     private val componentParams: ComponentParams,
     private val analyticsManager: AnalyticsManager,
     private val componentStateValidator: MBWayComponentStateValidator,
+    componentStateFactory: MBWayComponentStateFactory,
     componentStateReducer: MBWayComponentStateReducer,
     viewStateProducer: MBWayViewStateProducer,
     coroutineScope: CoroutineScope,
@@ -63,7 +64,7 @@ internal class MBWayComponent(
         eventChannel.receiveAsFlow()
 
     private val componentState = ComponentStateFlow(
-        initialState = MBWayComponentStateFactory(componentParams = componentParams).createInitialState(),
+        initialState = componentStateFactory.createInitialState(),
         reducer = componentStateReducer,
         validator = componentStateValidator,
         coroutineScope = coroutineScope,
