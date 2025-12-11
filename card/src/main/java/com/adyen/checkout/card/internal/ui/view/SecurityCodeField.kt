@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.helper.label
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
@@ -60,7 +61,9 @@ internal fun SecurityCodeField(
             .onFocusChanged { focusState ->
                 onSecurityCodeFocusChanged(focusState.isFocused)
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        label = resolveString(
+            key = securityCodeState.requirementPolicy.label(fallback = CheckoutLocalizationKey.CARD_SECURITY_CODE),
+        ),
         initialValue = securityCodeState.text,
         isError = showSecurityCodeError,
         supportingText = supportingTextSecurityCode,
@@ -88,7 +91,7 @@ private fun SecurityCodeIcon(
     isAmex: Boolean?,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.isInteractedWith && state.errorMessage == null
+    val isValid = state.isInteractedWith && state.errorMessage == null && state.text.isNotEmpty()
     val isInvalid = state.errorMessage != null && state.showError
     val resourceId = when {
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning

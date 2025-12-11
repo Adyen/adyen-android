@@ -10,14 +10,19 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
+import com.adyen.checkout.card.internal.ui.helper.expiryDateRequirementPolicy
+import com.adyen.checkout.card.internal.ui.helper.securityCodeRequirementPolicy
+import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
-import com.adyen.checkout.card.internal.ui.model.InputFieldUIState
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateValidator
+import com.adyen.checkout.core.components.internal.ui.state.model.RequirementPolicy
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
 
+@Suppress("TooManyFunctions")
 internal class CardViewStateValidator(
+    private val componentParams: CardComponentParams,
     private val cardValidationMapper: CardValidationMapper,
     private val dualBrandedCardHandler: DualBrandedCardHandler,
 ) : ViewStateValidator<CardViewState, CardComponentState> {
@@ -44,16 +49,24 @@ internal class CardViewStateValidator(
 
         // TODO - Card. Security Code UI State.
         val securityCode = viewState.securityCode
+        val securityCodeRequirementPolicy =
+            firstSupportedDetectedCardType.securityCodeRequirementPolicy(componentParams)
         val securityCodeError =
-            validateSecurityCode(securityCode, firstSupportedDetectedCardType, InputFieldUIState.REQUIRED)
+            validateSecurityCode(securityCode, firstSupportedDetectedCardType, securityCodeRequirementPolicy)
 
         val holderName = viewState.holderName
         val holderNameError = validateHolderName(holderName, viewState.isHolderNameRequired)
 
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
-            expiryDate = expiryDate.copy(errorMessage = expiryDateError),
-            securityCode = securityCode.copy(errorMessage = securityCodeError),
+            expiryDate = expiryDate.copy(
+                errorMessage = expiryDateError,
+                requirementPolicy = firstSupportedDetectedCardType.expiryDateRequirementPolicy(),
+            ),
+            securityCode = securityCode.copy(
+                errorMessage = securityCodeError,
+                requirementPolicy = securityCodeRequirementPolicy,
+            ),
             holderName = holderName.copy(errorMessage = holderNameError),
             // TODO - State: Create an updater logic which would update the viewState when component state is updated
             isSupportedCardBrandsShown = supportedDetectedCardTypes.isEmpty(),
@@ -139,7 +152,7 @@ internal class CardViewStateValidator(
     private fun validateSecurityCode(
         securityCode: TextInputState,
         selectedOrFirstCardType: DetectedCardType?,
-        uiState: InputFieldUIState,
+        uiState: RequirementPolicy,
     ): CheckoutLocalizationKey? {
         return cardValidationMapper.mapSecurityCodeValidation(
             validation = CardValidationUtils.validateSecurityCode(
