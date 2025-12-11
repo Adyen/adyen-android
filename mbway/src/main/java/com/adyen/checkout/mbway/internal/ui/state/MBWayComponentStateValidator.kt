@@ -16,7 +16,7 @@ internal class MBWayComponentStateValidator : ComponentStateValidator<MBWayCompo
 
     override fun validate(state: MBWayComponentState): MBWayComponentState {
         // TODO - Should we strip the leading zeros? Depends on validation
-        val telephoneNumber = state.countryCode.callingCode + state.phoneNumber.text
+        val telephoneNumber = state.selectedCountryCode.callingCode + state.phoneNumber.text
         val phoneNumberError = if (!ValidationUtils.isPhoneNumberValid(telephoneNumber)) {
             CheckoutLocalizationKey.MBWAY_INVALID_PHONE_NUMBER
         } else {

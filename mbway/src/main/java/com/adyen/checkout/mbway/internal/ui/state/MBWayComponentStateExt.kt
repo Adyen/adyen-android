@@ -17,7 +17,7 @@ internal fun MBWayComponentState.toPaymentComponentState(
     amount: Amount?,
 ): MBWayPaymentComponentState {
     val sanitizedPhoneNumber = phoneNumber.text.trimStart('0')
-    val telephoneNumber = "${countryCode.callingCode}$sanitizedPhoneNumber"
+    val telephoneNumber = "${selectedCountryCode.callingCode}$sanitizedPhoneNumber"
 
     val paymentMethod = MBWayPaymentMethod(
         type = MBWayPaymentMethod.PAYMENT_METHOD_TYPE,

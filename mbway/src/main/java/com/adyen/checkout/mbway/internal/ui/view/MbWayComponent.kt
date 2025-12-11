@@ -49,7 +49,7 @@ internal fun MbWayComponent(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
         ) {
             // CountryCode
-            val country = viewState.countryCode
+            val country = viewState.selectedCountryCode
             ValuePickerField(
                 value = "${country.callingCode} • ${country.countryName}",
                 label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
@@ -93,7 +93,7 @@ private fun MbWayComponentPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCode = countries.first(),
+            selectedCountryCode = countries.first(),
             phoneNumber = TextInputViewState(),
         ),
         onIntent = {},

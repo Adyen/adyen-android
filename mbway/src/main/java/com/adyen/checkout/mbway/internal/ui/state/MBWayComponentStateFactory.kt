@@ -20,7 +20,7 @@ internal class MBWayComponentStateFactory(
 
     override fun createInitialState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
-        countryCode = getInitiallySelectedCountry(componentParams),
+        selectedCountryCode = getInitiallySelectedCountry(componentParams),
         phoneNumber = TextInputComponentState(isFocused = true),
         isLoading = false,
     )

@@ -16,7 +16,7 @@ internal class MBWayViewStateProducer : ViewStateProducer<MBWayComponentState, M
     override fun produce(state: MBWayComponentState): MBWayViewState {
         return MBWayViewState(
             countries = state.countries,
-            countryCode = state.countryCode,
+            selectedCountryCode = state.selectedCountryCode,
             phoneNumber = state.phoneNumber.toViewState(),
             isLoading = state.isLoading,
         )

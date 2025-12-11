@@ -32,7 +32,7 @@ internal fun CountryCodePicker(
                 id = it.isoCode,
                 title = it.callingCode,
                 subtitle = "${it.isoCode} • ${it.countryName}",
-                isSelected = it == viewState.countryCode,
+                isSelected = it == viewState.selectedCountryCode,
             )
         }
     }
@@ -40,7 +40,7 @@ internal fun CountryCodePicker(
         searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
         items = countries,
         onItemClick = { item ->
-            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.countryCode
+            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountryCode
             onItemClick(country)
         },
         modifier = modifier,
@@ -58,7 +58,7 @@ private fun CountryCodePickerPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCode = countries.first(),
+            selectedCountryCode = countries.first(),
             phoneNumber = TextInputViewState(),
         ),
         onItemClick = {},
