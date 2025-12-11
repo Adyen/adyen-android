@@ -88,7 +88,7 @@ private fun SecurityCodeIcon(
     isAmex: Boolean?,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.isInteractedWith && state.errorMessage == null
+    val isValid = state.isInteractedWith && state.errorMessage == null && state.text.isNotEmpty()
     val isInvalid = state.errorMessage != null && state.showError
     val resourceId = when {
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
