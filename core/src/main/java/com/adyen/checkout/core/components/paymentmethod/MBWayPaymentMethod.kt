@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 @Parcelize
-class MBWayPaymentMethod(
+data class MBWayPaymentMethod(
     override val type: String?,
     override val checkoutAttemptId: String?,
     val telephoneNumber: String?,

@@ -30,15 +30,12 @@ internal class MBWayComponentStateFactory(
 
     private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
         val countries = getSupportedCountries(componentParams)
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL }
-            ?: countries.firstOrNull()
-            ?: throw IllegalArgumentException("Countries list can not be null")
+        return countries.first { it.isoCode == ISO_CODE_PORTUGAL }
     }
 
     companion object {
         private const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
-
-        val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
+        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }
