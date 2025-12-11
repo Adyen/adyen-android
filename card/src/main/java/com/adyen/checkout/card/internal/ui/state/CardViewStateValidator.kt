@@ -59,7 +59,10 @@ internal class CardViewStateValidator(
 
         return viewState.copy(
             cardNumber = cardNumber.copy(errorMessage = cardNumberError),
-            expiryDate = expiryDate.copy(errorMessage = expiryDateError),
+            expiryDate = expiryDate.copy(
+                errorMessage = expiryDateError,
+                title = expiryDateUIState.expiryDateTitle(),
+            ),
             securityCode = securityCode.copy(
                 errorMessage = securityCodeError,
                 title = securityCodeUiState.securityCodeTitle(),
@@ -216,6 +219,14 @@ internal class CardViewStateValidator(
         return when (this) {
             InputFieldUIState.REQUIRED -> CheckoutLocalizationKey.CARD_SECURITY_CODE
             InputFieldUIState.OPTIONAL -> CheckoutLocalizationKey.CARD_SECURITY_CODE_OPTIONAL
+            InputFieldUIState.HIDDEN -> null
+        }
+    }
+
+    private fun InputFieldUIState.expiryDateTitle(): CheckoutLocalizationKey? {
+        return when (this) {
+            InputFieldUIState.REQUIRED -> CheckoutLocalizationKey.CARD_EXPIRY_DATE
+            InputFieldUIState.OPTIONAL -> CheckoutLocalizationKey.CARD_EXPIRY_DATE_OPTIONAL
             InputFieldUIState.HIDDEN -> null
         }
     }

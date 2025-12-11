@@ -27,6 +27,7 @@ internal class DefaultLocalizationSource {
                 R.string.checkout_card_number_invalid_unsupported_brand
 
             CheckoutLocalizationKey.CARD_EXPIRY_DATE -> R.string.checkout_card_expiry_date
+            CheckoutLocalizationKey.CARD_EXPIRY_DATE_OPTIONAL -> R.string.checkout_card_expiry_date_optional
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID -> R.string.checkout_card_expiry_date_invalid
             CheckoutLocalizationKey.CARD_EXPIRY_DATE_INVALID_TOO_OLD ->
                 R.string.checkout_card_expiry_date_invalid_too_old

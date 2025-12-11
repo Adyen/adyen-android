@@ -52,7 +52,7 @@ internal fun ExpiryDateField(
             .onFocusChanged { focusState ->
                 onExpiryDateFocusChanged(focusState.isFocused)
             },
-        label = resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE),
+        label = expiryDateState.title?.let { resolveString(it) },
         initialValue = expiryDateState.text,
         isError = showExpiryDateError,
         supportingText = supportingTextExpiryDate,

@@ -17,6 +17,7 @@
     <string name="checkout_card_number_invalid" translatable="false">Invalid card number</string>
     <string name="checkout_card_number_invalid_unsupported_brand" translatable="false">The entered card brand isn\'t supported</string>
     <string name="checkout_card_expiry_date" translatable="false">Expiry Date</string>
+    <string name="checkout_card_expiry_date_optional" translatable="false">Expiry Date (Optional)</string>
     <string name="checkout_card_expiry_date_invalid" translatable="false">Invalid Expiry Date</string>
     <string name="checkout_card_expiry_date_invalid_too_old" translatable="false">Card too old</string>
     <string name="checkout_card_expiry_date_invalid_too_far_in_the_future" translatable="false">Expiry date too far in the future</string>
