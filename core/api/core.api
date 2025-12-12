@@ -1535,9 +1535,17 @@ public final class com/adyen/checkout/core/components/paymentmethod/MBWayPayment
 	public static final field PAYMENT_METHOD_TYPE Ljava/lang/String;
 	public static final field SERIALIZER Lcom/adyen/checkout/core/common/internal/model/ModelObject$Serializer;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/adyen/checkout/core/components/paymentmethod/MBWayPaymentMethod;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/paymentmethod/MBWayPaymentMethod;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/paymentmethod/MBWayPaymentMethod;
+	public fun equals (Ljava/lang/Object;)Z
 	public fun getCheckoutAttemptId ()Ljava/lang/String;
 	public final fun getTelephoneNumber ()Ljava/lang/String;
 	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
 	public final fun writeToParcel (Landroid/os/Parcel;I)V
 }
 

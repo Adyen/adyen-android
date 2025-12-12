@@ -25,7 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -33,7 +33,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun ExpiryDateField(
-    expiryDateState: TextInputState,
+    expiryDateState: TextInputComponentState,
     onExpiryDateChanged: (String) -> Unit,
     onExpiryDateFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -71,10 +71,10 @@ internal fun ExpiryDateField(
 
 @Composable
 private fun ExpiryDateIcon(
-    state: TextInputState,
+    state: TextInputComponentState,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.isInteractedWith && state.errorMessage == null
+    val isValid = state.errorMessage == null
     val isInvalid = state.errorMessage != null && state.showError
 
     val resourceId = when {

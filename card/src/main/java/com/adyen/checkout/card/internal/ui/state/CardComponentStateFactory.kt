@@ -11,7 +11,7 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
 
 internal class CardComponentStateFactory : ComponentStateFactory<CardComponentState> {
-    override fun createDefaultComponentState(): CardComponentState {
+    override fun createInitialState(): CardComponentState {
         return CardComponentState(
             detectedCardTypes = emptyList(),
             selectedCardBrand = null,

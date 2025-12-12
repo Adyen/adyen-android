@@ -3,7 +3,7 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 10/7/2025.
+ * Created by oscars on 9/12/2025.
  */
 
 package com.adyen.checkout.mbway.internal.ui.state
@@ -11,17 +11,17 @@ package com.adyen.checkout.mbway.internal.ui.state
 import com.adyen.checkout.core.common.internal.helper.CountryUtils
 import com.adyen.checkout.core.components.internal.ui.model.ComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateFactory
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
-internal class MBWayViewStateFactory(
+internal class MBWayComponentStateFactory(
     private val componentParams: ComponentParams,
-) : ViewStateFactory<MBWayViewState> {
+) : ComponentStateFactory<MBWayComponentState> {
 
-    override fun createDefaultViewState() = MBWayViewState(
+    override fun createInitialState() = MBWayComponentState(
         countries = getSupportedCountries(componentParams),
-        countryCode = getInitiallySelectedCountry(componentParams),
-        phoneNumber = TextInputState(isFocused = true),
+        selectedCountryCode = getInitiallySelectedCountry(componentParams),
+        phoneNumber = TextInputComponentState(isFocused = true),
         isLoading = false,
     )
 
@@ -30,15 +30,12 @@ internal class MBWayViewStateFactory(
 
     private fun getInitiallySelectedCountry(componentParams: ComponentParams): CountryModel {
         val countries = getSupportedCountries(componentParams)
-        return countries.firstOrNull { it.isoCode == ISO_CODE_PORTUGAL }
-            ?: countries.firstOrNull()
-            ?: throw IllegalArgumentException("Countries list can not be null")
+        return countries.first { it.isoCode == ISO_CODE_PORTUGAL }
     }
 
     companion object {
         private const val ISO_CODE_PORTUGAL = "PT"
         private const val ISO_CODE_SPAIN = "ES"
-
-        val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
+        private val SUPPORTED_COUNTRIES = listOf(ISO_CODE_PORTUGAL, ISO_CODE_SPAIN)
     }
 }

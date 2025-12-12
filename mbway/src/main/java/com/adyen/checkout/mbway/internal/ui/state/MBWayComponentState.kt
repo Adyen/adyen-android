@@ -3,18 +3,18 @@
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by oscars on 10/7/2025.
+ * Created by oscars on 9/12/2025.
  */
 
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.ViewState
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
-internal data class MBWayViewState(
+internal data class MBWayComponentState(
     val countries: List<CountryModel>,
     val selectedCountryCode: CountryModel,
-    val phoneNumber: TextInputViewState,
+    val phoneNumber: TextInputComponentState,
     val isLoading: Boolean,
-) : ViewState
+) : ComponentState

@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.SearchableValuePicker
 import com.adyen.checkout.ui.internal.element.ValuePickerItem
@@ -32,7 +32,7 @@ internal fun CountryCodePicker(
                 id = it.isoCode,
                 title = it.callingCode,
                 subtitle = "${it.isoCode} • ${it.countryName}",
-                isSelected = it == viewState.countryCode,
+                isSelected = it == viewState.selectedCountryCode,
             )
         }
     }
@@ -40,7 +40,7 @@ internal fun CountryCodePicker(
         searchHint = resolveString(CheckoutLocalizationKey.GENERAL_SEARCH_HINT),
         items = countries,
         onItemClick = { item ->
-            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.countryCode
+            val country = viewState.countries.find { it.isoCode == item.id } ?: viewState.selectedCountryCode
             onItemClick(country)
         },
         modifier = modifier,
@@ -58,8 +58,8 @@ private fun CountryCodePickerPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCode = countries.first(),
-            phoneNumber = TextInputState(),
+            selectedCountryCode = countries.first(),
+            phoneNumber = TextInputViewState(),
         ),
         onItemClick = {},
     )

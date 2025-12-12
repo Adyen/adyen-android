@@ -10,17 +10,17 @@ package com.adyen.checkout.card.internal.ui.state
 
 import com.adyen.checkout.card.internal.ui.model.CardComponentParams
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateFactory
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal class CardViewStateFactory(
     private val componentParams: CardComponentParams
 ) : ViewStateFactory<CardViewState> {
 
     override fun createDefaultViewState() = CardViewState(
-        cardNumber = TextInputState(isFocused = true),
-        expiryDate = TextInputState(),
-        securityCode = TextInputState(),
-        holderName = TextInputState(),
+        cardNumber = TextInputComponentState(isFocused = true),
+        expiryDate = TextInputComponentState(),
+        securityCode = TextInputComponentState(),
+        holderName = TextInputComponentState(),
         isHolderNameRequired = componentParams.isHolderNameRequired,
         storePaymentMethod = false,
         isStorePaymentFieldVisible = componentParams.isStorePaymentFieldVisible,

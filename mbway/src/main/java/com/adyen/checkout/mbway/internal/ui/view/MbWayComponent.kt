@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
-import com.adyen.checkout.mbway.internal.ui.state.MBWayChangeListener
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
+import com.adyen.checkout.mbway.internal.ui.state.MBWayIntent
 import com.adyen.checkout.mbway.internal.ui.state.MBWayViewState
 import com.adyen.checkout.ui.internal.element.ComponentScaffold
 import com.adyen.checkout.ui.internal.element.button.PayButton
@@ -33,7 +33,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun MbWayComponent(
     viewState: MBWayViewState,
-    changeListener: MBWayChangeListener,
+    onIntent: (MBWayIntent) -> Unit,
     onSubmitClick: () -> Unit,
     onCountryCodePickerClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -49,7 +49,7 @@ internal fun MbWayComponent(
             verticalArrangement = Arrangement.spacedBy(Dimensions.Large),
         ) {
             // CountryCode
-            val country = viewState.countryCode
+            val country = viewState.selectedCountryCode
             ValuePickerField(
                 value = "${country.callingCode} • ${country.countryName}",
                 label = resolveString(CheckoutLocalizationKey.MBWAY_COUNTRY_CODE),
@@ -59,26 +59,20 @@ internal fun MbWayComponent(
             )
 
             // PhoneNumber
-            val showPhoneNumberError = viewState.phoneNumber.errorMessage != null && viewState.phoneNumber.showError
-            val supportingTextPhoneNumber = if (showPhoneNumberError) {
-                viewState.phoneNumber.errorMessage?.let { resolveString(it) }
-            } else {
-                null
-            }
-
+            val supportingTextPhoneNumber = viewState.phoneNumber.supportingText?.let { resolveString(it) }
             CheckoutTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { focusState ->
-                        changeListener.onPhoneNumberFocusChanged(focusState.hasFocus)
+                        onIntent(MBWayIntent.UpdatePhoneNumberFocus(focusState.hasFocus))
                     },
                 label = resolveString(CheckoutLocalizationKey.MBWAY_PHONE_NUMBER),
                 initialValue = viewState.phoneNumber.text,
-                isError = showPhoneNumberError,
+                isError = viewState.phoneNumber.isError,
                 supportingText = supportingTextPhoneNumber,
                 prefix = country.callingCode,
                 onValueChange = { value ->
-                    changeListener.onPhoneNumberChanged(value)
+                    onIntent(MBWayIntent.UpdatePhoneNumber(value))
                 },
                 inputTransformation = DigitOnlyInputTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -99,14 +93,10 @@ private fun MbWayComponentPreview() {
         viewState = MBWayViewState(
             countries = countries,
             isLoading = false,
-            countryCode = countries.first(),
-            phoneNumber = TextInputState(),
+            selectedCountryCode = countries.first(),
+            phoneNumber = TextInputViewState(),
         ),
-        changeListener = object : MBWayChangeListener {
-            override fun onCountryChanged(newCountryCode: CountryModel) = Unit
-            override fun onPhoneNumberChanged(newPhoneNumber: String) = Unit
-            override fun onPhoneNumberFocusChanged(hasFocus: Boolean) = Unit
-        },
+        onIntent = {},
         onSubmitClick = {},
         onCountryCodePickerClick = {},
     )

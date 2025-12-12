@@ -21,7 +21,7 @@ class DefaultStateManager<V : ViewState, C : ComponentState>(
     private val validator: ViewStateValidator<V, C>,
 ) : StateManager<V, C> {
 
-    private var _componentState: C = componentStateFactory.createDefaultComponentState()
+    private var _componentState: C = componentStateFactory.createInitialState()
     override val componentState: C
         get() = _componentState
 

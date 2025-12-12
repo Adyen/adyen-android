@@ -1,16 +1,8 @@
-/*
- * Copyright (c) 2025 Adyen N.V.
- *
- * This file is open source and available under the MIT license. See the LICENSE file for more info.
- *
- * Created by oscars on 8/7/2025.
- */
-
 package com.adyen.checkout.mbway.internal.ui.state
 
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
 import com.adyen.checkout.core.components.internal.ui.model.CountryModel
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,35 +14,35 @@ import org.mockito.kotlin.whenever
 import java.util.Locale
 
 @ExtendWith(MockitoExtension::class)
-internal class MBWayViewStateFactoryTest(
+internal class MBWayComponentStateFactoryTest(
     @Mock private val componentParams: CommonComponentParams,
 ) {
 
-    private lateinit var factory: MBWayViewStateFactory
+    private lateinit var factory: MBWayComponentStateFactory
 
     @BeforeEach
-    fun setup() {
-        factory = MBWayViewStateFactory(componentParams)
+    fun beforeEach() {
+        factory = MBWayComponentStateFactory(componentParams)
     }
 
     @Test
-    fun `when createDefaultComponentState is called, then conform with expected state`() {
+    fun `when creating initial state, then conform with expected state`() {
         val countryPT = CountryModel(isoCode = "PT", countryName = "Portugal", callingCode = "+351")
         val countryES = CountryModel(isoCode = "ES", countryName = "Spain", callingCode = "+34")
         val supportedCountries = listOf(countryPT, countryES)
-        val locale = Locale("en", "US")
+        val locale = Locale.forLanguageTag("en-US")
         whenever(componentParams.shopperLocale) doReturn locale
 
-        val actual = factory.createDefaultViewState()
+        val actual = factory.createInitialState()
 
-        val expected = MBWayViewState(
+        val expected = MBWayComponentState(
             countries = supportedCountries,
-            countryCode = countryPT,
-            phoneNumber = TextInputState(
+            selectedCountryCode = countryPT,
+            phoneNumber = TextInputComponentState(
                 text = "",
+                description = null,
                 errorMessage = null,
                 isFocused = true,
-                isInteractedWith = false,
                 showError = false,
             ),
             isLoading = false,
