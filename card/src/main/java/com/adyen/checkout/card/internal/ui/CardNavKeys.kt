@@ -15,3 +15,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data object CardNavKey : NavKey
+
+@Serializable
+internal data object StoredCardNavKey : NavKey

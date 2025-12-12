@@ -19,7 +19,7 @@ import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
 internal class CardInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        PaymentMethodProvider.register(PaymentMethodTypes.SCHEME, CardFactory())
+        PaymentMethodProvider.register(txVariant = PaymentMethodTypes.SCHEME, factory = CardFactory())
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
