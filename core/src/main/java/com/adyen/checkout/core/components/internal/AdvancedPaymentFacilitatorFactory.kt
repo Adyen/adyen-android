@@ -17,7 +17,7 @@ import com.adyen.checkout.core.common.internal.helper.getLocale
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
 import kotlinx.coroutines.CoroutineScope
 
@@ -30,7 +30,7 @@ internal class AdvancedPaymentFacilitatorFactory(
     private val publicKey: String?,
 ) : PaymentFacilitatorFactory {
 
-    override fun create(paymentMethod: PaymentMethod, coroutineScope: CoroutineScope): PaymentFacilitator {
+    override fun create(paymentMethod: PaymentMethodResponse, coroutineScope: CoroutineScope): PaymentFacilitator {
         val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = applicationContext.getLocale(),

@@ -19,27 +19,27 @@ import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
-    applicationContext: Context,
-    paymentMethod: PaymentMethod,
+    paymentMethod: PaymentMethodResponse,
     checkoutContext: CheckoutContext,
     checkoutCallbacks: CheckoutCallbacks,
-    savedStateHandle: SavedStateHandle,
     checkoutController: CheckoutController,
+    applicationContext: Context,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val paymentFacilitator: PaymentFacilitator =
         PaymentFacilitatorProvider().provide(
-            applicationContext = applicationContext,
             paymentMethod = paymentMethod,
             checkoutContext = checkoutContext,
             checkoutCallbacks = checkoutCallbacks,
+            checkoutController = checkoutController,
+            applicationContext = applicationContext,
             coroutineScope = viewModelScope,
             savedStateHandle = savedStateHandle,
-            checkoutController = checkoutController,
         )
 
     @Composable

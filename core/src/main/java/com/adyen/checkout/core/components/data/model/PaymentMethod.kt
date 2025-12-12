@@ -32,7 +32,7 @@ data class PaymentMethod(
     val configuration: Configuration? = null,
     val details: List<InputDetail>? = null,
     val apps: List<AppData>? = null,
-) : ModelObject() {
+) : ModelObject(), PaymentMethodResponse {
 
     companion object {
         private const val TYPE = "type"

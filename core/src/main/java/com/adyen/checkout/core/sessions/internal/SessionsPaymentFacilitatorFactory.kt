@@ -18,7 +18,7 @@ import com.adyen.checkout.core.common.internal.helper.getLocale
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.internal.BasePaymentComponentState
 import com.adyen.checkout.core.components.internal.PaymentFacilitator
 import com.adyen.checkout.core.components.internal.PaymentFacilitatorFactory
@@ -43,7 +43,7 @@ internal class SessionsPaymentFacilitatorFactory(
 ) : PaymentFacilitatorFactory {
 
     override fun create(
-        paymentMethod: PaymentMethod,
+        paymentMethod: PaymentMethodResponse,
         coroutineScope: CoroutineScope,
     ): PaymentFacilitator {
         val sessionSavedStateHandleContainer = SessionSavedStateHandleContainer(
