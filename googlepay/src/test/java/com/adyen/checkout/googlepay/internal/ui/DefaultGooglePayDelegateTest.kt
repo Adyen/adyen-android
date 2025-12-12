@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.ErrorEvent
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
 import com.adyen.checkout.components.core.internal.analytics.TestAnalyticsManager
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.core.Environment
 import com.adyen.checkout.core.exception.CheckoutException
@@ -74,6 +75,7 @@ internal class DefaultGooglePayDelegateTest(
     @Mock private val submitHandler: SubmitHandler<GooglePayComponentState>,
     @Mock private val paymentsClient: PaymentsClient,
     @Mock private val googlePayAvailabilityCheck: GooglePayAvailabilityCheck,
+    @Mock private val sdkDataProvider: SdkDataProvider,
 ) {
 
     private lateinit var analyticsManager: TestAnalyticsManager
@@ -148,6 +150,7 @@ internal class DefaultGooglePayDelegateTest(
                 paymentData = paymentData,
                 paymentMethodType = TEST_PAYMENT_METHOD_TYPE,
                 checkoutAttemptId = TestAnalyticsManager.CHECKOUT_ATTEMPT_ID_NOT_FETCHED,
+                sdkData = null,
             )
             assertEquals(expectedPaymentMethod, paymentComponentData.paymentMethod)
 
@@ -392,6 +395,7 @@ internal class DefaultGooglePayDelegateTest(
             analyticsManager = analyticsManager,
             paymentsClient = paymentsClient,
             googlePayAvailabilityCheck = googlePayAvailabilityCheck,
+            sdkDataProvider = sdkDataProvider,
         )
     }
 

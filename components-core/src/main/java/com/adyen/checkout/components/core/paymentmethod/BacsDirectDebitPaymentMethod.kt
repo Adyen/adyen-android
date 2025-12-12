@@ -17,7 +17,9 @@ import org.json.JSONObject
 @Parcelize
 data class BacsDirectDebitPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var holderName: String?,
     var bankAccountNumber: String?,
     var bankLocationId: String?,
@@ -38,6 +40,7 @@ data class BacsDirectDebitPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(HOLDER_NAME, modelObject.holderName)
                         putOpt(BANK_ACCOUNT_NUMBER, modelObject.bankAccountNumber)
                         putOpt(BANK_LOCATION_ID, modelObject.bankLocationId)
@@ -51,6 +54,7 @@ data class BacsDirectDebitPaymentMethod(
                 return BacsDirectDebitPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     holderName = jsonObject.getStringOrNull(HOLDER_NAME),
                     bankAccountNumber = jsonObject.getStringOrNull(BANK_ACCOUNT_NUMBER),
                     bankLocationId = jsonObject.getStringOrNull(BANK_LOCATION_ID)

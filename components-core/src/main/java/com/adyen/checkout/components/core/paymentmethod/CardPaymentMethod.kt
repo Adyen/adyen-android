@@ -17,7 +17,9 @@ import org.json.JSONObject
 @Parcelize
 data class CardPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var encryptedCardNumber: String? = null,
     var encryptedExpiryMonth: String? = null,
     var encryptedExpiryYear: String? = null,
@@ -27,6 +29,7 @@ data class CardPaymentMethod(
     var storedPaymentMethodId: String? = null,
     var taxNumber: String? = null,
     var brand: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var threeDS2SdkVersion: String? = null,
     var fundingSource: String? = null,
 ) : PaymentMethodDetails() {
@@ -52,6 +55,7 @@ data class CardPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
                         putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
@@ -73,6 +77,7 @@ data class CardPaymentMethod(
                 return CardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
                     encryptedExpiryYear = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_YEAR),
@@ -83,7 +88,7 @@ data class CardPaymentMethod(
                     taxNumber = jsonObject.getStringOrNull(TAX_NUMBER),
                     brand = jsonObject.getStringOrNull(BRAND),
                     threeDS2SdkVersion = jsonObject.getStringOrNull(THREEDS2_SDK_VERSION),
-                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE)
+                    fundingSource = jsonObject.getStringOrNull(FUNDING_SOURCE),
                 )
             }
         }

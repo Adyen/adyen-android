@@ -25,6 +25,7 @@ import com.adyen.checkout.components.core.internal.analytics.AnalyticsSource
 import com.adyen.checkout.components.core.internal.data.api.DefaultPublicKeyRepository
 import com.adyen.checkout.components.core.internal.data.api.PublicKeyService
 import com.adyen.checkout.components.core.internal.provider.PaymentComponentProvider
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.CommonComponentParamsMapper
 import com.adyen.checkout.components.core.internal.ui.model.DropInOverrideParams
 import com.adyen.checkout.components.core.internal.util.get
@@ -118,6 +119,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = DefaultGiftCardValidator(),
                 protocol = DefaultGiftCardProtocol(),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =
@@ -211,6 +213,7 @@ constructor(
                 submitHandler = SubmitHandler(savedStateHandle),
                 validator = DefaultGiftCardValidator(),
                 protocol = DefaultGiftCardProtocol(),
+                sdkDataProvider = SdkDataProvider(analyticsManager),
             )
 
             val genericActionDelegate =

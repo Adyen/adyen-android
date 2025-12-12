@@ -24,6 +24,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.AddressInputModel
 import com.adyen.checkout.components.core.paymentmethod.GenericPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
@@ -60,6 +61,7 @@ internal class DefaultBoletoDelegate(
     private val order: OrderRequest?,
     override val componentParams: BoletoComponentParams,
     private val addressRepository: AddressRepository,
+    private val sdkDataProvider: SdkDataProvider,
 ) : BoletoDelegate {
     private val inputData = BoletoInputData()
 
@@ -237,6 +239,7 @@ internal class DefaultBoletoDelegate(
             paymentMethod = GenericPaymentMethod(
                 type = paymentMethod.type,
                 checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+                sdkData = sdkDataProvider.createEncodedSdkData(),
                 subtype = null,
             ),
             order = order,

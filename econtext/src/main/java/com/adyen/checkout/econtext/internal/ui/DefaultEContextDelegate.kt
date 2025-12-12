@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.ui.model.FieldState
 import com.adyen.checkout.components.core.internal.ui.model.Validation
@@ -58,7 +59,8 @@ internal class DefaultEContextDelegate<
         data: PaymentComponentData<EContextPaymentMethodT>,
         isInputValid: Boolean,
         isReady: Boolean
-    ) -> EContextComponentStateT
+    ) -> EContextComponentStateT,
+    private val sdkDataProvider: SdkDataProvider,
 ) : EContextDelegate<EContextPaymentMethodT, EContextComponentStateT> {
 
     private val inputData: EContextInputData = EContextInputData()
@@ -123,6 +125,7 @@ internal class DefaultEContextDelegate<
         val eContextPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             firstName = outputData.firstNameState.value
             lastName = outputData.lastNameState.value
             telephoneNumber = outputData.phoneNumberState.value

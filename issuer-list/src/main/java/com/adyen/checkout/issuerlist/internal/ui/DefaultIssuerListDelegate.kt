@@ -19,6 +19,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
 import com.adyen.checkout.core.AdyenLogLevel
 import com.adyen.checkout.core.internal.util.adyenLog
@@ -53,7 +54,8 @@ internal class DefaultIssuerListDelegate<
         data: PaymentComponentData<IssuerListPaymentMethodT>,
         isInputValid: Boolean,
         isReady: Boolean
-    ) -> ComponentStateT
+    ) -> ComponentStateT,
+    private val sdkDataProvider: SdkDataProvider,
 ) : IssuerListDelegate<IssuerListPaymentMethodT, ComponentStateT> {
 
     private val inputData: IssuerListInputData = IssuerListInputData()
@@ -161,6 +163,7 @@ internal class DefaultIssuerListDelegate<
         val issuerListPaymentMethod = typedPaymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             issuer = outputData.selectedIssuer?.id.orEmpty()
         }
 

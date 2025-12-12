@@ -16,9 +16,12 @@ import org.json.JSONObject
 @Parcelize
 data class GooglePayPaymentMethod(
     override var type: String?,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     override var checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     var googlePayToken: String? = null,
     var googlePayCardNetwork: String? = null,
+    @Deprecated("This property is deprecated. Use the SERIALIZER to send the payment data to your backend.")
     var threeDS2SdkVersion: String? = null,
 ) : PaymentMethodDetails() {
 
@@ -34,6 +37,7 @@ data class GooglePayPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(GOOGLE_PAY_TOKEN, modelObject.googlePayToken)
                         putOpt(GOOGLE_PAY_CARD_NETWORK, modelObject.googlePayCardNetwork)
                         putOpt(THREEDS2_SDK_VERSION, modelObject.threeDS2SdkVersion)
@@ -47,6 +51,7 @@ data class GooglePayPaymentMethod(
                 return GooglePayPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     googlePayToken = jsonObject.getStringOrNull(GOOGLE_PAY_TOKEN),
                     googlePayCardNetwork = jsonObject.getStringOrNull(GOOGLE_PAY_CARD_NETWORK),
                     threeDS2SdkVersion = jsonObject.getStringOrNull(THREEDS2_SDK_VERSION),

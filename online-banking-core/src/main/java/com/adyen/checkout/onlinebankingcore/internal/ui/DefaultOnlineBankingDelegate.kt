@@ -20,6 +20,7 @@ import com.adyen.checkout.components.core.internal.PaymentComponentEvent
 import com.adyen.checkout.components.core.internal.PaymentObserverRepository
 import com.adyen.checkout.components.core.internal.analytics.AnalyticsManager
 import com.adyen.checkout.components.core.internal.analytics.GenericEvents
+import com.adyen.checkout.components.core.internal.provider.SdkDataProvider
 import com.adyen.checkout.components.core.internal.ui.model.ButtonComponentParams
 import com.adyen.checkout.components.core.internal.util.bufferedChannel
 import com.adyen.checkout.components.core.paymentmethod.IssuerListPaymentMethod
@@ -63,6 +64,7 @@ internal class DefaultOnlineBankingDelegate<
         isInputValid: Boolean,
         isReady: Boolean
     ) -> ComponentStateT,
+    private val sdkDataProvider: SdkDataProvider,
 ) : OnlineBankingDelegate<IssuerListPaymentMethodT, ComponentStateT> {
 
     private val inputData: OnlineBankingInputData = OnlineBankingInputData()
@@ -157,6 +159,7 @@ internal class DefaultOnlineBankingDelegate<
         val issuerListPaymentMethod = paymentMethodFactory().apply {
             type = getPaymentMethodType()
             checkoutAttemptId = analyticsManager.getCheckoutAttemptId()
+            sdkData = sdkDataProvider.createEncodedSdkData()
             issuer = outputData.selectedIssuer?.id
         }
 
