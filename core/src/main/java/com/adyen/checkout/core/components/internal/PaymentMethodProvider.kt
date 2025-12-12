@@ -14,6 +14,7 @@ import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
 import com.adyen.checkout.core.components.internal.ui.PaymentComponent
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParams
@@ -57,6 +58,44 @@ object PaymentMethodProvider {
      */
     @Suppress("LongParameterList")
     fun get(
+        paymentMethod: PaymentMethodResponse,
+        coroutineScope: CoroutineScope,
+        analyticsManager: AnalyticsManager,
+        checkoutConfiguration: CheckoutConfiguration,
+        componentParamsBundle: ComponentParamsBundle,
+        checkoutCallbacks: CheckoutCallbacks,
+    ): PaymentComponent<BasePaymentComponentState> {
+        return when (paymentMethod) {
+            is PaymentMethod -> {
+                getPaymentComponent(
+                    paymentMethod = paymentMethod,
+                    coroutineScope = coroutineScope,
+                    analyticsManager = analyticsManager,
+                    checkoutConfiguration = checkoutConfiguration,
+                    componentParamsBundle = componentParamsBundle,
+                    checkoutCallbacks = checkoutCallbacks,
+                )
+            }
+
+            is StoredPaymentMethod -> {
+                getStoredPaymentComponent(
+                    storedPaymentMethod = paymentMethod,
+                    coroutineScope = coroutineScope,
+                    analyticsManager = analyticsManager,
+                    checkoutConfiguration = checkoutConfiguration,
+                    componentParamsBundle = componentParamsBundle,
+                    checkoutCallbacks = checkoutCallbacks,
+                )
+            }
+
+            else -> {
+                error("")
+            }
+        }
+    }
+
+    @Suppress("LongParameterList")
+    private fun getPaymentComponent(
         paymentMethod: PaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,
@@ -82,20 +121,8 @@ object PaymentMethodProvider {
         }
     }
 
-    /**
-     * Creates a [PaymentComponent] for a stored payment method via its registered factory.
-     *
-     * @param storedPaymentMethod The stored payment method to create a component for.
-     * @param coroutineScope The [CoroutineScope] to be used by the component.
-     * @param analyticsManager Analytics manager for tracking component events.
-     * @param checkoutConfiguration The global checkout configuration.
-     * @param componentParamsBundle The object which contains [CommonComponentParams] and [SessionParams].
-     * @param checkoutCallbacks Callbacks for component events.
-     *
-     * @return [PaymentComponent] for the given stored payment method.
-     */
     @Suppress("LongParameterList")
-    fun get(
+    private fun getStoredPaymentComponent(
         storedPaymentMethod: StoredPaymentMethod,
         coroutineScope: CoroutineScope,
         analyticsManager: AnalyticsManager,

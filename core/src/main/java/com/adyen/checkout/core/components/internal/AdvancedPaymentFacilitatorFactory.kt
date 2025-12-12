@@ -11,18 +11,14 @@ package com.adyen.checkout.core.components.internal
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.action.internal.ActionProvider
-import com.adyen.checkout.core.analytics.internal.AnalyticsManager
 import com.adyen.checkout.core.analytics.internal.AnalyticsManagerFactory
 import com.adyen.checkout.core.analytics.internal.AnalyticsSource
 import com.adyen.checkout.core.common.internal.helper.getLocale
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutConfiguration
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
-import com.adyen.checkout.core.components.data.model.StoredPaymentMethod
-import com.adyen.checkout.core.components.internal.ui.PaymentComponent
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.internal.ui.model.CommonComponentParamsMapper
-import com.adyen.checkout.core.components.internal.ui.model.ComponentParamsBundle
 import kotlinx.coroutines.CoroutineScope
 
 internal class AdvancedPaymentFacilitatorFactory(
@@ -34,36 +30,7 @@ internal class AdvancedPaymentFacilitatorFactory(
     private val publicKey: String?,
 ) : PaymentFacilitatorFactory {
 
-    override fun create(paymentMethod: PaymentMethod, coroutineScope: CoroutineScope): PaymentFacilitator {
-        return createPaymentFacilitator(coroutineScope) { analyticsManager, componentParamsBundle ->
-            PaymentMethodProvider.get(
-                paymentMethod = paymentMethod,
-                coroutineScope = coroutineScope,
-                analyticsManager = analyticsManager,
-                checkoutConfiguration = checkoutConfiguration,
-                componentParamsBundle = componentParamsBundle,
-                checkoutCallbacks = checkoutCallbacks,
-            )
-        }
-    }
-
-    override fun create(storedPaymentMethod: StoredPaymentMethod, coroutineScope: CoroutineScope): PaymentFacilitator {
-        return createPaymentFacilitator(coroutineScope) { analyticsManager, componentParamsBundle ->
-            PaymentMethodProvider.get(
-                storedPaymentMethod = storedPaymentMethod,
-                coroutineScope = coroutineScope,
-                analyticsManager = analyticsManager,
-                checkoutConfiguration = checkoutConfiguration,
-                componentParamsBundle = componentParamsBundle,
-                checkoutCallbacks = checkoutCallbacks,
-            )
-        }
-    }
-
-    private fun createPaymentFacilitator(
-        coroutineScope: CoroutineScope,
-        componentProvider: (AnalyticsManager, ComponentParamsBundle) -> PaymentComponent<BasePaymentComponentState>,
-    ): PaymentFacilitator {
+    override fun create(paymentMethod: PaymentMethodResponse, coroutineScope: CoroutineScope): PaymentFacilitator {
         val componentParamsBundle = CommonComponentParamsMapper().mapToParams(
             checkoutConfiguration = checkoutConfiguration,
             deviceLocale = applicationContext.getLocale(),
@@ -80,7 +47,14 @@ internal class AdvancedPaymentFacilitatorFactory(
             sessionId = null,
         )
 
-        val paymentComponent = componentProvider(analyticsManager, componentParamsBundle)
+        val paymentComponent = PaymentMethodProvider.get(
+            paymentMethod = paymentMethod,
+            coroutineScope = coroutineScope,
+            analyticsManager = analyticsManager,
+            checkoutConfiguration = checkoutConfiguration,
+            componentParamsBundle = componentParamsBundle,
+            checkoutCallbacks = checkoutCallbacks,
+        )
 
         val componentEventHandler = AdvancedComponentEventHandler<BasePaymentComponentState>(
             componentCallbacks = checkoutCallbacks.toAdvancedComponentCallbacks(),

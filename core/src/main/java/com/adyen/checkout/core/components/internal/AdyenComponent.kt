@@ -15,17 +15,28 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationProvider
+import com.adyen.checkout.core.components.CheckoutCallbacks
+import com.adyen.checkout.core.components.CheckoutController
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.components.navigation.CheckoutNavigationProvider
 
 internal class AdyenComponent(
+    paymentMethod: PaymentMethodResponse,
+    checkoutContext: CheckoutContext,
+    checkoutCallbacks: CheckoutCallbacks,
+    checkoutController: CheckoutController,
     applicationContext: Context,
     savedStateHandle: SavedStateHandle,
-    paymentFacilitatorProvider: PaymentFacilitatorProvider,
 ) : ViewModel() {
 
     private val paymentFacilitator: PaymentFacilitator =
-        paymentFacilitatorProvider.provide(
+        PaymentFacilitatorProvider().provide(
+            paymentMethod = paymentMethod,
+            checkoutContext = checkoutContext,
+            checkoutCallbacks = checkoutCallbacks,
+            checkoutController = checkoutController,
             applicationContext = applicationContext,
             coroutineScope = viewModelScope,
             savedStateHandle = savedStateHandle,

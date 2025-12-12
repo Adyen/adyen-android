@@ -120,7 +120,7 @@ internal class PaymentMethodProviderTest {
         }
 
     @Test
-    fun `when register for stored is called with an existing txVariant, then the factory is overwritten`() =
+    fun `when register is called with an existing stored txVariant, then the factory is overwritten`() =
         runTest {
             val secondaryComponent = TestPaymentComponent()
             val secondaryFactory = generateStoredFactory(
@@ -131,7 +131,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", secondaryFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                storedPaymentMethod = StoredPaymentMethod(type = "txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -182,7 +182,7 @@ internal class PaymentMethodProviderTest {
             PaymentMethodProvider.register("txVariant", storedFactory)
 
             val actualComponent = PaymentMethodProvider.get(
-                storedPaymentMethod = StoredPaymentMethod(type = "txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
@@ -211,7 +211,7 @@ internal class PaymentMethodProviderTest {
     fun `when get is called for an unregistered stored factory, then an error is thrown`() = runTest {
         assertThrows<IllegalStateException> {
             PaymentMethodProvider.get(
-                storedPaymentMethod = StoredPaymentMethod(type = "unregistered_txVariant"),
+                paymentMethod = StoredPaymentMethod(type = "unregistered_txVariant"),
                 coroutineScope = this,
                 analyticsManager = TestAnalyticsManager(),
                 checkoutConfiguration = generateCheckoutConfiguration(),
