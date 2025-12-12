@@ -14,8 +14,8 @@ plugins {
     alias libs.plugins.sonarqube
     alias libs.plugins.jacoco
     alias libs.plugins.binary.compatibility.validator
-    alias libs.plugins.resolve.dependencies
-    alias libs.plugins.aggregate.dependency.lists
+    alias libs.plugins.dependency.list.aggregate
+    alias libs.plugins.dependency.resolve
 }
 
 apply from: "config/gradle/apiValidator.gradle"
