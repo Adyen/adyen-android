@@ -17,10 +17,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MediumFlexibleTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -38,7 +36,6 @@ import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
-import com.adyen.checkout.ui.internal.text.Title
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
 import java.util.Locale
@@ -52,7 +49,7 @@ internal fun PaymentMethodListScreen(
     PaymentMethodListContent(navigator, viewState)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
@@ -62,15 +59,8 @@ private fun PaymentMethodListContent(
     Scaffold(
         containerColor = CheckoutThemeProvider.colors.background,
         topBar = {
-            MediumFlexibleTopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CheckoutThemeProvider.colors.background,
-                    scrolledContainerColor = CheckoutThemeProvider.colors.background,
-                    navigationIconContentColor = CheckoutThemeProvider.colors.text,
-                ),
-                title = {
-                    Title(viewState.amount)
-                },
+            DropInTopAppBar(
+                title = viewState.amount,
                 navigationIcon = {
                     IconButton(
                         onClick = { navigator.back() },
