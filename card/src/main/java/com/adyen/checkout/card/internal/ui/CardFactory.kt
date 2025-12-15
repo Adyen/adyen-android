@@ -50,7 +50,7 @@ internal class CardFactory : PaymentMethodFactory<CardPaymentComponentState, Car
             viewStateFactory = CardViewStateFactory(
                 componentParams = cardComponentParams,
             ),
-            componentStateFactory = CardComponentStateFactory(),
+            componentStateFactory = CardComponentStateFactory(cardComponentParams),
             validator = CardViewStateValidator(
                 cardValidationMapper = CardValidationMapper(),
                 dualBrandedCardHandler = DualBrandedCardHandler(),

@@ -11,8 +11,23 @@ package com.adyen.checkout.card.internal.ui.state
 import com.adyen.checkout.card.internal.data.model.DetectedCardType
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
 
 internal data class CardComponentState(
+    // UI input fields
+    val cardNumber: TextInputComponentState,
+    val expiryDate: TextInputComponentState,
+    val securityCode: TextInputComponentState,
+    val holderName: TextInputComponentState,
+
+    // UI configuration
+    val isHolderNameRequired: Boolean,
+    val storePaymentMethod: Boolean,
+    val isStorePaymentFieldVisible: Boolean,
+    val supportedCardBrands: List<CardBrand>,
+    val isLoading: Boolean,
+
+    // Component state
     val detectedCardTypes: List<DetectedCardType>,
     val selectedCardBrand: CardBrand?,
 ) : ComponentState
