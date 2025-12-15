@@ -34,7 +34,7 @@ data class StoredPaymentMethod(
     val bankAccountNumber: String? = null,
     val cashtag: String? = null,
     val label: String? = null,
-) : ModelObject() {
+) : ModelObject(), PaymentMethodResponse {
 
     val isEcommerce: Boolean
         get() = supportedShopperInteractions.orEmpty().contains(ECOMMERCE)

@@ -13,7 +13,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.adyen.checkout.core.common.CheckoutContext
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutController
-import com.adyen.checkout.core.components.data.model.PaymentMethod
+import com.adyen.checkout.core.components.data.model.PaymentMethodResponse
 import com.adyen.checkout.core.sessions.internal.SessionsPaymentFacilitatorFactory
 import kotlinx.coroutines.CoroutineScope
 
@@ -21,13 +21,13 @@ internal class PaymentFacilitatorProvider {
 
     @Suppress("LongParameterList")
     fun provide(
-        applicationContext: Context,
-        paymentMethod: PaymentMethod,
+        paymentMethod: PaymentMethodResponse,
         checkoutContext: CheckoutContext,
         checkoutCallbacks: CheckoutCallbacks,
+        checkoutController: CheckoutController,
+        applicationContext: Context,
         coroutineScope: CoroutineScope,
         savedStateHandle: SavedStateHandle,
-        checkoutController: CheckoutController,
     ): PaymentFacilitator {
         val paymentFacilitatorFactory = when (checkoutContext) {
             is CheckoutContext.Advanced -> {
@@ -53,7 +53,6 @@ internal class PaymentFacilitatorProvider {
                 )
             }
         }
-
-        return paymentFacilitatorFactory.create(paymentMethod = paymentMethod, coroutineScope = coroutineScope)
+        return paymentFacilitatorFactory.create(paymentMethod, coroutineScope)
     }
 }

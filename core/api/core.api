@@ -631,7 +631,7 @@ public final class com/adyen/checkout/core/common/ui/model/ExpiryDate$Companion 
 }
 
 public final class com/adyen/checkout/core/components/AdyenPaymentFlowKt {
-	public static final fun AdyenPaymentFlow (Lcom/adyen/checkout/core/components/data/model/PaymentMethod;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Lcom/adyen/checkout/core/components/navigation/CheckoutNavigationProvider;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AdyenPaymentFlow (Lcom/adyen/checkout/core/components/data/model/PaymentMethodResponse;Lcom/adyen/checkout/core/common/CheckoutContext;Lcom/adyen/checkout/core/components/CheckoutCallbacks;Landroidx/compose/ui/Modifier;Lcom/adyen/checkout/ui/theme/CheckoutTheme;Lcom/adyen/checkout/core/components/CheckoutController;Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationProvider;Lcom/adyen/checkout/core/components/navigation/CheckoutNavigationProvider;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/adyen/checkout/core/components/AnalyticsConfiguration : android/os/Parcelable {
@@ -1239,7 +1239,7 @@ public final class com/adyen/checkout/core/components/data/model/Item$Creator : 
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/core/components/data/model/PaymentMethod : com/adyen/checkout/core/common/internal/model/ModelObject {
+public final class com/adyen/checkout/core/components/data/model/PaymentMethod : com/adyen/checkout/core/common/internal/model/ModelObject, com/adyen/checkout/core/components/data/model/PaymentMethodResponse {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/PaymentMethod$Companion;
@@ -1284,6 +1284,9 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethod$C
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public abstract interface class com/adyen/checkout/core/components/data/model/PaymentMethodResponse {
+}
+
 public final class com/adyen/checkout/core/components/data/model/PaymentMethodsApiResponse : com/adyen/checkout/core/common/internal/model/ModelObject {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
@@ -1315,7 +1318,7 @@ public final class com/adyen/checkout/core/components/data/model/PaymentMethodsA
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
-public final class com/adyen/checkout/core/components/data/model/StoredPaymentMethod : com/adyen/checkout/core/common/internal/model/ModelObject {
+public final class com/adyen/checkout/core/components/data/model/StoredPaymentMethod : com/adyen/checkout/core/common/internal/model/ModelObject, com/adyen/checkout/core/components/data/model/PaymentMethodResponse {
 	public static final field $stable I
 	public static final field CREATOR Landroid/os/Parcelable$Creator;
 	public static final field Companion Lcom/adyen/checkout/core/components/data/model/StoredPaymentMethod$Companion;
