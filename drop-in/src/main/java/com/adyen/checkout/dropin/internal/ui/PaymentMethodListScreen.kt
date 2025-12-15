@@ -8,11 +8,16 @@
 
 package com.adyen.checkout.dropin.internal.ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -22,10 +27,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.adyen.checkout.core.common.Environment
@@ -35,6 +44,7 @@ import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.element.ListItem
 import com.adyen.checkout.ui.internal.text.Body
+import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
 import com.adyen.checkout.ui.internal.theme.Dimensions
@@ -86,12 +96,12 @@ private fun PaymentMethodListContent(
                 modifier = Modifier.padding(horizontal = Dimensions.Large),
             )
 
-            Spacer(Modifier.size(Dimensions.ExtraLarge))
+            Spacer(Modifier.size(Dimensions.Medium))
 
             viewState.favoritesSection?.let {
                 FavoritesSection(it)
 
-                Spacer(Modifier.size(Dimensions.Large))
+                Spacer(Modifier.size(Dimensions.Small))
             }
 
             viewState.paymentOptionsSection?.let {
@@ -106,9 +116,11 @@ private fun FavoritesSection(
     favoritesSection: FavoritesSection,
 ) {
     Column {
-        SubHeadlineEmphasized(
-            text = "Favorites",
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
+        SectionHeader(
+            title = "Favorites",
+            actionText = "Manage",
+            // TODO - navigate to favorite management screen
+            onActionClick = {},
         )
 
         PaymentMethodItemList(
@@ -123,16 +135,60 @@ private fun PaymentOptionsSection(
     paymentOptionsSection: PaymentOptionsSection,
 ) {
     Column {
-        SubHeadlineEmphasized(
-            text = resolveString(paymentOptionsSection.title),
-            modifier = Modifier.padding(horizontal = Dimensions.Large),
-        )
+        SectionHeader(title = resolveString(paymentOptionsSection.title))
 
         PaymentMethodItemList(
             paymentMethodItems = paymentOptionsSection.options,
             onItemClick = {},
         )
     }
+}
+
+@Composable
+private fun SectionHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+    actionText: String? = null,
+    onActionClick: (() -> Unit)? = null,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        SubHeadlineEmphasized(
+            text = title,
+            modifier = Modifier.padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+        )
+
+        actionText?.let {
+            TextButton(
+                text = actionText,
+                onClick = { onActionClick?.invoke() },
+            )
+        }
+    }
+}
+
+@Composable
+private fun TextButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BodyEmphasized(
+        text = text,
+        color = CheckoutThemeProvider.colors.highlight,
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable(
+                interactionSource = null,
+                indication = ripple(),
+                role = Role.Button,
+                onClick = onClick,
+            )
+            .padding(horizontal = Dimensions.Large, vertical = Dimensions.Medium),
+    )
 }
 
 @Composable
