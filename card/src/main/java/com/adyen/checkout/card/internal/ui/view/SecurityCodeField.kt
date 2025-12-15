@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -35,9 +36,8 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun SecurityCodeField(
     securityCodeState: TextInputComponentState,
-    onSecurityCodeChanged: (String) -> Unit,
-    onSecurityCodeFocusChanged: (Boolean) -> Unit,
     isAmex: Boolean?,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val showSecurityCodeError =
@@ -58,14 +58,14 @@ internal fun SecurityCodeField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onSecurityCodeFocusChanged(focusState.isFocused)
+                onIntent(CardIntent.UpdateSecurityCodeFocus(focusState.isFocused))
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
         initialValue = securityCodeState.text,
         isError = showSecurityCodeError,
         supportingText = supportingTextSecurityCode,
         onValueChange = { value ->
-            onSecurityCodeChanged(value)
+            onIntent(CardIntent.UpdateSecurityCode(value))
         },
         inputTransformation = DigitOnlyInputTransformation().maxLength(
             if (isAmex == false) {

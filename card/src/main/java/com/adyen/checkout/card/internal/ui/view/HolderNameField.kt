@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
+import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
@@ -23,8 +24,7 @@ import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 @Composable
 internal fun HolderNameField(
     holderNameState: TextInputComponentState,
-    onHolderNameChanged: (String) -> Unit,
-    onHolderNameFocusChanged: (Boolean) -> Unit,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val showHolderNameError = holderNameState.errorMessage != null && holderNameState.showError
@@ -38,14 +38,14 @@ internal fun HolderNameField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onHolderNameFocusChanged(focusState.isFocused)
+                onIntent(CardIntent.UpdateHolderNameFocus(focusState.isFocused))
             },
         label = resolveString(CheckoutLocalizationKey.CARD_HOLDER_NAME),
         initialValue = holderNameState.text,
         isError = showHolderNameError,
         supportingText = supportingTextHolderName,
         onValueChange = { value ->
-            onHolderNameChanged(value)
+            onIntent(CardIntent.UpdateHolderName(value))
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,

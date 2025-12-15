@@ -30,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
 import com.adyen.checkout.core.common.helper.CardNumberValidator
@@ -50,8 +51,7 @@ internal fun CardNumberField(
     isSupportedCardBrandsShown: Boolean,
     detectedCardBrands: List<CardBrand>,
     isAmex: Boolean?,
-    onCardNumberChanged: (String) -> Unit,
-    onCardNumberFocusChanged: (Boolean) -> Unit,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -61,8 +61,7 @@ internal fun CardNumberField(
             cardNumberState = cardNumberState,
             isAmex = isAmex,
             detectedCardBrands = detectedCardBrands,
-            onCardNumberChanged = onCardNumberChanged,
-            onCardNumberFocusChanged = onCardNumberFocusChanged,
+            onIntent = onIntent,
         )
 
         CardBrandsList(
@@ -77,8 +76,7 @@ private fun CardNumberInputField(
     cardNumberState: TextInputComponentState,
     isAmex: Boolean?,
     detectedCardBrands: List<CardBrand>,
-    onCardNumberChanged: (String) -> Unit,
-    onCardNumberFocusChanged: (Boolean) -> Unit,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val showCardNumberError =
@@ -97,14 +95,14 @@ private fun CardNumberInputField(
         modifier = modifier
             .fillMaxWidth()
             .onFocusChanged { focusState ->
-                onCardNumberFocusChanged(focusState.isFocused)
+                onIntent(CardIntent.UpdateCardNumberFocus(focusState.isFocused))
             },
         label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
         initialValue = cardNumberState.text,
         isError = showCardNumberError,
         supportingText = supportingTextCardNumber,
         onValueChange = { value ->
-            onCardNumberChanged(value)
+            onIntent(CardIntent.UpdateCardNumber(value))
         },
         inputTransformation = DigitOnlyInputTransformation().maxLength(
             maxLength = CardNumberValidator.MAXIMUM_CARD_NUMBER_LENGTH,
@@ -215,7 +213,6 @@ private fun CardNumberFieldPreview() {
         isSupportedCardBrandsShown = true,
         detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
         isAmex = false,
-        onCardNumberChanged = {},
-        onCardNumberFocusChanged = {},
+        onIntent = {},
     )
 }

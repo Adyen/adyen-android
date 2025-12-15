@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.adyen.checkout.card.internal.ui.state.CardChangeListener
+import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.card.internal.ui.state.CardViewState
 import com.adyen.checkout.card.internal.ui.state.isAmex
 import com.adyen.checkout.core.common.CardBrand
@@ -31,7 +31,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 @Composable
 internal fun CardComponent(
     viewState: CardViewState,
-    changeListener: CardChangeListener,
+    onIntent: (CardIntent) -> Unit,
     onSubmitClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -47,13 +47,13 @@ internal fun CardComponent(
         ) {
             CardDetailsSection(
                 viewState = viewState,
-                changeListener = changeListener,
+                onIntent = onIntent,
             )
 
             viewState.dualBrandData?.let { dualBrandData ->
                 DualBrandSelector(
                     dualBrandData = dualBrandData,
-                    onBrandSelected = changeListener::onBrandSelected,
+                    onBrandSelected = { onIntent(CardIntent.SelectBrand(it)) },
                 )
             }
         }
@@ -63,7 +63,7 @@ internal fun CardComponent(
 @Composable
 private fun CardDetailsSection(
     viewState: CardViewState,
-    changeListener: CardChangeListener,
+    onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -76,31 +76,27 @@ private fun CardDetailsSection(
             isSupportedCardBrandsShown = viewState.isSupportedCardBrandsShown,
             detectedCardBrands = viewState.detectedCardBrands,
             isAmex = viewState.isAmex,
-            onCardNumberChanged = changeListener::onCardNumberChanged,
-            onCardNumberFocusChanged = changeListener::onCardNumberFocusChanged,
+            onIntent = onIntent,
         )
         ExpiryDateField(
             expiryDateState = viewState.expiryDate,
-            onExpiryDateChanged = changeListener::onExpiryDateChanged,
-            onExpiryDateFocusChanged = changeListener::onExpiryDateFocusChanged,
+            onIntent = onIntent,
         )
         SecurityCodeField(
             securityCodeState = viewState.securityCode,
-            onSecurityCodeChanged = changeListener::onSecurityCodeChanged,
-            onSecurityCodeFocusChanged = changeListener::onSecurityCodeFocusChanged,
             isAmex = viewState.isAmex,
+            onIntent = onIntent,
         )
         if (viewState.isHolderNameRequired) {
             HolderNameField(
                 holderNameState = viewState.holderName,
-                onHolderNameChanged = changeListener::onHolderNameChanged,
-                onHolderNameFocusChanged = changeListener::onHolderNameFocusChanged,
+                onIntent = onIntent,
             )
         }
         if (viewState.isStorePaymentFieldVisible) {
             SwitchContainer(
                 checked = viewState.storePaymentMethod,
-                onCheckedChange = changeListener::onStorePaymentMethodChanged,
+                onCheckedChange = { onIntent(CardIntent.UpdateStorePaymentMethod(it)) },
             ) {
                 Body(resolveString(CheckoutLocalizationKey.CARD_STORE_PAYMENT_METHOD))
             }
@@ -134,27 +130,7 @@ private fun CardComponentPreview() {
             detectedCardBrands = listOf(CardBrand(CardType.MASTERCARD.txVariant)),
             dualBrandData = null,
         ),
-        changeListener = object : CardChangeListener {
-            override fun onCardNumberChanged(newCardNumber: String) = Unit
-
-            override fun onCardNumberFocusChanged(hasFocus: Boolean) = Unit
-
-            override fun onExpiryDateChanged(newExpiryDate: String) = Unit
-
-            override fun onExpiryDateFocusChanged(hasFocus: Boolean) = Unit
-
-            override fun onSecurityCodeChanged(newSecurityCode: String) = Unit
-
-            override fun onSecurityCodeFocusChanged(hasFocus: Boolean) = Unit
-
-            override fun onHolderNameChanged(newHolderName: String) = Unit
-
-            override fun onHolderNameFocusChanged(hasFocus: Boolean) = Unit
-
-            override fun onStorePaymentMethodChanged(checked: Boolean) = Unit
-
-            override fun onBrandSelected(cardBrand: CardBrand) = Unit
-        },
+        onIntent = {},
         onSubmitClick = {},
     )
 }
