@@ -37,7 +37,7 @@ import com.adyen.checkout.core.common.helper.CardNumberValidator
 import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
@@ -46,7 +46,7 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun CardNumberField(
-    cardNumberState: TextInputComponentState,
+    cardNumberState: TextInputViewState,
     supportedCardBrands: List<CardBrand>,
     isSupportedCardBrandsShown: Boolean,
     detectedCardBrands: List<CardBrand>,
@@ -73,19 +73,13 @@ internal fun CardNumberField(
 
 @Composable
 private fun CardNumberInputField(
-    cardNumberState: TextInputComponentState,
+    cardNumberState: TextInputViewState,
     isAmex: Boolean?,
     detectedCardBrands: List<CardBrand>,
     onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val showCardNumberError =
-        cardNumberState.errorMessage != null && cardNumberState.showError
-    val supportingTextCardNumber = if (showCardNumberError) {
-        cardNumberState.errorMessage?.let { resolveString(it) }
-    } else {
-        null
-    }
+    val supportingTextCardNumber = cardNumberState.supportingText?.let { resolveString(it) }
 
     val outputTransformation = remember(isAmex) {
         CardNumberOutputTransformation(isAmex = isAmex ?: false)
@@ -99,7 +93,7 @@ private fun CardNumberInputField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_NUMBER),
         initialValue = cardNumberState.text,
-        isError = showCardNumberError,
+        isError = cardNumberState.isError,
         supportingText = supportingTextCardNumber,
         onValueChange = { value ->
             onIntent(CardIntent.UpdateCardNumber(value))
@@ -178,13 +172,11 @@ private fun CardBrandsList(
 
 @Composable
 private fun CardNumberFieldIcon(
-    state: TextInputComponentState,
+    state: TextInputViewState,
     detectedBrands: List<CardBrand>,
     modifier: Modifier = Modifier,
 ) {
-    val isInvalid = state.errorMessage != null && state.showError
-
-    AnimatedContent(targetState = isInvalid, modifier = modifier) { isInvalid ->
+    AnimatedContent(targetState = state.isError, modifier = modifier) { isInvalid ->
         if (isInvalid) {
             Icon(
                 modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
@@ -202,8 +194,8 @@ private fun CardNumberFieldIcon(
 @Composable
 private fun CardNumberFieldPreview() {
     CardNumberField(
-        cardNumberState = TextInputComponentState(
-            "5555444433331111",
+        cardNumberState = TextInputViewState(
+            text = "5555444433331111",
         ),
         supportedCardBrands = listOf(
             CardBrand(CardType.MASTERCARD.txVariant),

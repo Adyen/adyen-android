@@ -26,7 +26,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -34,17 +34,12 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun ExpiryDateField(
-    expiryDateState: TextInputComponentState,
+    expiryDateState: TextInputViewState,
     onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val showExpiryDateError =
-        expiryDateState.errorMessage != null && expiryDateState.showError
-    val supportingTextExpiryDate = if (showExpiryDateError) {
-        expiryDateState.errorMessage?.let { resolveString(it) }
-    } else {
-        resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
-    }
+    val supportingTextExpiryDate = expiryDateState.supportingText?.let { resolveString(it) }
+        ?: resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE_HINT)
 
     CheckoutTextField(
         modifier = modifier
@@ -54,7 +49,7 @@ internal fun ExpiryDateField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_EXPIRY_DATE),
         initialValue = expiryDateState.text,
-        isError = showExpiryDateError,
+        isError = expiryDateState.isError,
         supportingText = supportingTextExpiryDate,
         onValueChange = { value ->
             onIntent(CardIntent.UpdateExpiryDate(value))
@@ -71,11 +66,11 @@ internal fun ExpiryDateField(
 
 @Composable
 private fun ExpiryDateIcon(
-    state: TextInputComponentState,
+    state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.errorMessage == null
-    val isInvalid = state.errorMessage != null && state.showError
+    val isValid = !state.isError && state.supportingText == null
+    val isInvalid = state.isError
 
     val resourceId = when {
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark

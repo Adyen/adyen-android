@@ -12,6 +12,7 @@ import com.adyen.checkout.card.internal.ui.DualBrandedCardHandler
 import com.adyen.checkout.card.internal.ui.model.DualBrandData
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
 
 internal class CardViewStateProducer(
     private val dualBrandedCardHandler: DualBrandedCardHandler,
@@ -28,10 +29,10 @@ internal class CardViewStateProducer(
         val detectedCardBrands = getDetectedCardBrands(dualBrandData, firstSupportedDetectedCardType?.cardBrand)
 
         return CardViewState(
-            cardNumber = state.cardNumber,
-            expiryDate = state.expiryDate,
-            securityCode = state.securityCode,
-            holderName = state.holderName,
+            cardNumber = state.cardNumber.toViewState(),
+            expiryDate = state.expiryDate.toViewState(),
+            securityCode = state.securityCode.toViewState(),
+            holderName = state.holderName.toViewState(),
             isHolderNameRequired = state.isHolderNameRequired,
             storePaymentMethod = state.storePaymentMethod,
             isStorePaymentFieldVisible = state.isStorePaymentFieldVisible,

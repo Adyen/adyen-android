@@ -26,7 +26,7 @@ import com.adyen.checkout.card.R
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
-import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputViewState
 import com.adyen.checkout.ui.internal.element.input.CheckoutTextField
 import com.adyen.checkout.ui.internal.element.input.DigitOnlyInputTransformation
 import com.adyen.checkout.ui.internal.helper.getThemedIcon
@@ -35,24 +35,19 @@ import com.adyen.checkout.ui.internal.theme.Dimensions
 
 @Composable
 internal fun SecurityCodeField(
-    securityCodeState: TextInputComponentState,
+    securityCodeState: TextInputViewState,
     isAmex: Boolean?,
     onIntent: (CardIntent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val showSecurityCodeError =
-        securityCodeState.errorMessage != null && securityCodeState.showError
-    val supportingTextSecurityCode = if (showSecurityCodeError) {
-        securityCodeState.errorMessage?.let { resolveString(it) }
-    } else {
-        resolveString(
+    val supportingTextSecurityCode = securityCodeState.supportingText?.let { resolveString(it) }
+        ?: resolveString(
             if (isAmex == null || !isAmex) {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_3_DIGITS
             } else {
                 CheckoutLocalizationKey.CARD_SECURITY_CODE_HINT_4_DIGITS
             },
         )
-    }
 
     CheckoutTextField(
         modifier = modifier
@@ -62,7 +57,7 @@ internal fun SecurityCodeField(
             },
         label = resolveString(CheckoutLocalizationKey.CARD_SECURITY_CODE),
         initialValue = securityCodeState.text,
-        isError = showSecurityCodeError,
+        isError = securityCodeState.isError,
         supportingText = supportingTextSecurityCode,
         onValueChange = { value ->
             onIntent(CardIntent.UpdateSecurityCode(value))
@@ -84,12 +79,12 @@ internal fun SecurityCodeField(
 
 @Composable
 private fun SecurityCodeIcon(
-    state: TextInputComponentState,
+    state: TextInputViewState,
     isAmex: Boolean?,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = state.errorMessage == null
-    val isInvalid = state.errorMessage != null && state.showError
+    val isValid = !state.isError && state.supportingText == null
+    val isInvalid = state.isError
     val resourceId = when {
         isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
         isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
