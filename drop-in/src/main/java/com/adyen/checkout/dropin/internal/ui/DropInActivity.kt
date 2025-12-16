@@ -95,7 +95,11 @@ class DropInActivity : ComponentActivity() {
                                 )
                             }
 
-                            entry<ManageFavoritesNavKey> {}
+                            entry<ManageFavoritesNavKey> {
+                                ManageFavoritesScreen(
+                                    navigator = viewModel.navigator,
+                                )
+                            }
 
                             entry<PaymentMethodNavKey> {}
                         },
