@@ -49,17 +49,23 @@ class SdkDataProvider(
         }
     }
 
-    private fun createSdkData(threeDS2SdkVersion: String? = null) = SdkData(
-        schemaVersion = SCHEMA_VERSION,
-        analytics = Analytics(
-            checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
-        ),
-        authentication = Authentication(
-            threeDS2SdkVersion = threeDS2SdkVersion,
-        ),
-        createdAt = Date().time,
-        supportNativeRedirect = true,
-    )
+    private fun createSdkData(threeDS2SdkVersion: String? = null): SdkData {
+        val authentication = threeDS2SdkVersion?.let {
+            Authentication(
+                threeDS2SdkVersion = it,
+            )
+        }
+
+        return SdkData(
+            schemaVersion = SCHEMA_VERSION,
+            analytics = Analytics(
+                checkoutAttemptId = analyticsManager.getCheckoutAttemptId(),
+            ),
+            authentication = authentication,
+            createdAt = Date().time,
+            supportNativeRedirect = true,
+        )
+    }
 
     companion object {
         private const val SCHEMA_VERSION = 1
