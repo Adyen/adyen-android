@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.model.ExpiryDateTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -69,18 +70,19 @@ private fun ExpiryDateIcon(
     state: TextInputViewState,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = !state.isError && state.supportingText == null
-    val isInvalid = state.isError
+    val trailingIcon = state.trailingIcon as? ExpiryDateTrailingIcon
 
-    val resourceId = when {
-        isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
+    val resourceId = when (trailingIcon) {
+        ExpiryDateTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
+        ExpiryDateTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
         else -> getThemedIcon(
             backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
             lightDrawableId = R.drawable.ic_card_expiry_date_light,
             darkDrawableId = R.drawable.ic_card_expiry_date_dark,
         )
     }
+
+    val isInvalid = trailingIcon == ExpiryDateTrailingIcon.Warning
 
     AnimatedContent(
         targetState = resourceId,

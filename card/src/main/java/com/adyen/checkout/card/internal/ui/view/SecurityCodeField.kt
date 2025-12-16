@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.model.SecurityCodeTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
@@ -72,7 +73,7 @@ internal fun SecurityCodeField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         shouldFocus = securityCodeState.isFocused,
         trailingIcon = {
-            SecurityCodeIcon(state = securityCodeState, isAmex = isAmex)
+            SecurityCodeIcon(state = securityCodeState)
         },
     )
 }
@@ -80,15 +81,13 @@ internal fun SecurityCodeField(
 @Composable
 private fun SecurityCodeIcon(
     state: TextInputViewState,
-    isAmex: Boolean?,
     modifier: Modifier = Modifier,
 ) {
-    val isValid = !state.isError && state.supportingText == null
-    val isInvalid = state.isError
-    val resourceId = when {
-        isInvalid -> com.adyen.checkout.test.R.drawable.ic_warning
-        isValid -> com.adyen.checkout.test.R.drawable.ic_checkmark
-        isAmex == true -> getThemedIcon(
+    val isInvalid = state.trailingIcon == SecurityCodeTrailingIcon.Warning
+    val resourceId = when (state.trailingIcon as? SecurityCodeTrailingIcon) {
+        SecurityCodeTrailingIcon.Warning -> com.adyen.checkout.test.R.drawable.ic_warning
+        SecurityCodeTrailingIcon.Checkmark -> com.adyen.checkout.test.R.drawable.ic_checkmark
+        SecurityCodeTrailingIcon.PlaceholderAmex -> getThemedIcon(
             backgroundColor = CheckoutThemeProvider.elements.textField.backgroundColor,
             lightDrawableId = R.drawable.ic_card_cvc_front_light,
             darkDrawableId = R.drawable.ic_card_cvc_front_dark,

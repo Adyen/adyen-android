@@ -27,6 +27,6 @@ data class TextInputComponentState(
 
     fun updateFocus(hasFocus: Boolean) = copy(
         isFocused = hasFocus,
-        showError = if (!hasFocus) true else showError,
+        showError = if (!hasFocus) true else false,
     )
 }

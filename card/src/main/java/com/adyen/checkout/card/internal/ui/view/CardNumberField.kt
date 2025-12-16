@@ -30,6 +30,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.adyen.checkout.card.R
+import com.adyen.checkout.card.internal.ui.model.CardNumberTrailingIcon
 import com.adyen.checkout.card.internal.ui.state.CardIntent
 import com.adyen.checkout.core.common.CardBrand
 import com.adyen.checkout.core.common.CardType
@@ -176,16 +177,16 @@ private fun CardNumberFieldIcon(
     detectedBrands: List<CardBrand>,
     modifier: Modifier = Modifier,
 ) {
-    AnimatedContent(targetState = state.isError, modifier = modifier) { isInvalid ->
-        if (isInvalid) {
-            Icon(
+    val state = state.trailingIcon as? CardNumberTrailingIcon
+    AnimatedContent(targetState = state, modifier = modifier) { state ->
+        when (state) {
+            CardNumberTrailingIcon.Warning -> Icon(
                 modifier = Modifier.size(Dimensions.LogoSize.smallSquare),
                 imageVector = ImageVector.vectorResource(com.adyen.checkout.test.R.drawable.ic_warning),
                 contentDescription = null,
                 tint = Color.Unspecified,
             )
-        } else {
-            DetectedBrandsList(detectedBrands)
+            else -> DetectedBrandsList(detectedBrands)
         }
     }
 }
