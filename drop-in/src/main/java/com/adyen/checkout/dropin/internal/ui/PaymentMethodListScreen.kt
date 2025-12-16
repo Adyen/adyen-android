@@ -99,7 +99,10 @@ private fun PaymentMethodListContent(
             Spacer(Modifier.size(Dimensions.Medium))
 
             viewState.favoritesSection?.let {
-                FavoritesSection(it)
+                FavoritesSection(
+                    favoritesSection = it,
+                    onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
+                )
 
                 Spacer(Modifier.size(Dimensions.Small))
             }
@@ -114,13 +117,13 @@ private fun PaymentMethodListContent(
 @Composable
 private fun FavoritesSection(
     favoritesSection: FavoritesSection,
+    onActionClick: (() -> Unit),
 ) {
     Column {
         SectionHeader(
             title = "Favorites",
             actionText = "Manage",
-            // TODO - navigate to favorite management screen
-            onActionClick = {},
+            onActionClick = onActionClick,
         )
 
         PaymentMethodItemList(
