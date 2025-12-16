@@ -438,6 +438,12 @@ public abstract class com/adyen/checkout/core/common/exception/CheckoutError : j
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
 
+public final class com/adyen/checkout/core/common/exception/ComponentError : com/adyen/checkout/core/common/exception/InternalError {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
 public final class com/adyen/checkout/core/common/exception/HttpException : java/lang/RuntimeException {
 	public static final field $stable I
 	public fun <init> (ILjava/lang/String;Lcom/adyen/checkout/core/common/internal/model/ErrorResponseBody;)V
@@ -797,12 +803,12 @@ public final class com/adyen/checkout/core/components/CheckoutResult$Action : co
 
 public final class com/adyen/checkout/core/components/CheckoutResult$Error : com/adyen/checkout/core/components/CheckoutResult {
 	public static final field $stable I
-	public fun <init> (Lcom/adyen/checkout/core/components/ComponentError;)V
-	public final fun component1 ()Lcom/adyen/checkout/core/components/ComponentError;
-	public final fun copy (Lcom/adyen/checkout/core/components/ComponentError;)Lcom/adyen/checkout/core/components/CheckoutResult$Error;
-	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutResult$Error;Lcom/adyen/checkout/core/components/ComponentError;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutResult$Error;
+	public fun <init> (Lcom/adyen/checkout/core/common/exception/CheckoutError;)V
+	public final fun component1 ()Lcom/adyen/checkout/core/common/exception/CheckoutError;
+	public final fun copy (Lcom/adyen/checkout/core/common/exception/CheckoutError;)Lcom/adyen/checkout/core/components/CheckoutResult$Error;
+	public static synthetic fun copy$default (Lcom/adyen/checkout/core/components/CheckoutResult$Error;Lcom/adyen/checkout/core/common/exception/CheckoutError;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutResult$Error;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getComponentError ()Lcom/adyen/checkout/core/components/ComponentError;
+	public final fun getError ()Lcom/adyen/checkout/core/common/exception/CheckoutError;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -821,19 +827,12 @@ public final class com/adyen/checkout/core/components/CheckoutResult$Finished : 
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class com/adyen/checkout/core/components/ComponentError {
-	public static final field $stable I
-	public fun <init> (Ljava/lang/RuntimeException;)V
-	public final fun getErrorMessage ()Ljava/lang/String;
-	public final fun getException ()Ljava/lang/RuntimeException;
-}
-
 public abstract interface class com/adyen/checkout/core/components/OnAdditionalDetailsCallback : com/adyen/checkout/core/components/CheckoutCallback {
 	public abstract fun onAdditionalDetails (Lcom/adyen/checkout/core/action/data/ActionComponentData;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnErrorCallback : com/adyen/checkout/core/components/CheckoutCallback {
-	public abstract fun onError (Lcom/adyen/checkout/core/components/ComponentError;)V
+	public abstract fun onError (Lcom/adyen/checkout/core/common/exception/CheckoutError;)V
 }
 
 public abstract interface class com/adyen/checkout/core/components/OnFinishedCallback : com/adyen/checkout/core/components/CheckoutCallback {

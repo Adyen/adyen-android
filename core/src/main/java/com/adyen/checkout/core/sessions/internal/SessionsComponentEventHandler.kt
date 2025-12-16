@@ -10,13 +10,12 @@ package com.adyen.checkout.core.sessions.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.action.internal.ActionComponentEvent
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.internal.ComponentEventHandler
 import com.adyen.checkout.core.components.internal.PaymentComponentEvent
 import com.adyen.checkout.core.components.internal.SessionsComponentCallbacks
 import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
-import java.lang.RuntimeException
 
 internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private val sessionInteractor: SessionInteractor,
@@ -39,11 +38,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private suspend fun makePaymentsCall(paymentComponentState: PaymentComponentState<*>): CheckoutResult {
         return when (val sessionResult = sessionInteractor.submitPayment(paymentComponentState)) {
             is SessionCallResult.Payments.Action -> CheckoutResult.Action(sessionResult.action)
-            // TODO - Implement Error case
+            // TODO - Implement proper error type based on throwable
             is SessionCallResult.Payments.Error -> CheckoutResult.Error(
                 ComponentError(
-                    // TODO - Error propagation
-                    RuntimeException(sessionResult.throwable),
+                    message = sessionResult.throwable.message.orEmpty(),
+                    cause = sessionResult.throwable,
                 )
             )
             // TODO - Implement Finished case
@@ -70,11 +69,11 @@ internal class SessionsComponentEventHandler<T : PaymentComponentState<*>>(
     private suspend fun makeDetailsCall(actionComponentData: ActionComponentData): CheckoutResult {
         return when (val sessionResult = sessionInteractor.submitDetails(actionComponentData)) {
             is SessionCallResult.Details.Action -> CheckoutResult.Action(sessionResult.action)
-            // TODO - Propagate error details to CheckoutResult.Error once its data class is updated.
+            // TODO - Implement proper error type based on throwable
             is SessionCallResult.Details.Error -> CheckoutResult.Error(
                 ComponentError(
-                    // TODO - Error propagation
-                    RuntimeException(sessionResult.throwable),
+                    message = sessionResult.throwable.message.orEmpty(),
+                    cause = sessionResult.throwable,
                 )
             )
             // TODO - Propagate session result to CheckoutResult.Finished once its data class is updated.

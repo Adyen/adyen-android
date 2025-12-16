@@ -10,10 +10,10 @@ package com.adyen.checkout.core.components.internal
 
 import com.adyen.checkout.core.action.data.ActionComponentData
 import com.adyen.checkout.core.common.PaymentResult
+import com.adyen.checkout.core.common.exception.ComponentError
 import com.adyen.checkout.core.components.BeforeSubmitCallback
 import com.adyen.checkout.core.components.CheckoutCallbacks
 import com.adyen.checkout.core.components.CheckoutResult
-import com.adyen.checkout.core.components.ComponentError
 import com.adyen.checkout.core.components.OnAdditionalDetailsCallback
 import com.adyen.checkout.core.components.OnErrorCallback
 import com.adyen.checkout.core.components.OnFinishedCallback
@@ -135,7 +135,7 @@ class SessionsComponentCallbacksTest(
     companion object {
         private val TEST_PAYMENT_COMPONENT_STATE = TestPaymentComponentState()
         private val TEST_ACTION_COMPONENT_DATA = ActionComponentData()
-        private val TEST_COMPONENT_ERROR = ComponentError(RuntimeException())
+        private val TEST_COMPONENT_ERROR = ComponentError(message = "Test error")
         private val TEST_PAYMENT_RESULT = PaymentResult(
             resultCode = "authorised",
             sessionId = null,
