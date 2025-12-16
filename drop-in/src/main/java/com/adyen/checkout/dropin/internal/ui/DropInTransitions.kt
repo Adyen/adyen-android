@@ -9,13 +9,34 @@
 package com.adyen.checkout.dropin.internal.ui
 
 import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Stable
 import androidx.navigation3.ui.NavDisplay
 
 internal object DropInTransitions {
+
+    @Stable
+    fun slideInAndOutHorizontally(): Map<String, Any> {
+        return NavDisplay.transitionSpec { addSlideInAndOutHorizontally() } +
+            NavDisplay.popTransitionSpec { popSlideInAndOutHorizontally() } +
+            NavDisplay.predictivePopTransitionSpec { popSlideInAndOutHorizontally() }
+    }
+
+    @Stable
+    private fun addSlideInAndOutHorizontally(): ContentTransform {
+        return slideInHorizontally(initialOffsetX = { it }) togetherWith
+            slideOutHorizontally(targetOffsetX = { -it })
+    }
+
+    @Stable
+    private fun popSlideInAndOutHorizontally(): ContentTransform {
+        return slideInHorizontally(initialOffsetX = { -it }) togetherWith
+            slideOutHorizontally(targetOffsetX = { it })
+    }
 
     @Stable
     fun slideInAndOutVertically(): Map<String, Any> {

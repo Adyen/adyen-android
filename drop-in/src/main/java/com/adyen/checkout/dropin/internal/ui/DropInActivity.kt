@@ -95,7 +95,9 @@ class DropInActivity : ComponentActivity() {
                                 )
                             }
 
-                            entry<ManageFavoritesNavKey> {
+                            entry<ManageFavoritesNavKey>(
+                                metadata = DropInTransitions.slideInAndOutHorizontally(),
+                            ) {
                                 ManageFavoritesScreen(
                                     navigator = viewModel.navigator,
                                 )
