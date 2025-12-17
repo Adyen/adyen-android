@@ -39,7 +39,7 @@ import com.adyen.checkout.ui.internal.theme.InternalCheckoutTheme
 internal fun DropInScaffold(
     navigationIcon: @Composable () -> Unit,
     title: String,
-    description: String,
+    description: String? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
@@ -62,11 +62,13 @@ internal fun DropInScaffold(
         ) {
             Spacer(Modifier.size(Dimensions.ExtraSmall))
 
-            Body(
-                text = description,
-                color = CheckoutThemeProvider.colors.textSecondary,
-                modifier = Modifier.padding(horizontal = Dimensions.Large),
-            )
+            description?.let {
+                Body(
+                    text = description,
+                    color = CheckoutThemeProvider.colors.textSecondary,
+                    modifier = Modifier.padding(horizontal = Dimensions.Large),
+                )
+            }
 
             content()
         }
@@ -87,6 +89,24 @@ private fun DropInScaffoldPreview() {
             },
             title = "Title",
             description = LoremIpsum(words = 15).values.first(),
+            content = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DropInScaffoldNoDescriptionPreview() {
+    InternalCheckoutTheme {
+        DropInScaffold(
+            navigationIcon = {
+                IconButton(
+                    onClick = {},
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                }
+            },
+            title = "Title",
             content = {},
         )
     }

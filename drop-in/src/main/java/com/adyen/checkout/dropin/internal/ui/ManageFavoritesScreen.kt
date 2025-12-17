@@ -30,7 +30,6 @@ internal fun ManageFavoritesScreen(
             }
         },
         title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
-        description = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_DESCRIPTION),
     ) {
         // TODO - populate content
     }
