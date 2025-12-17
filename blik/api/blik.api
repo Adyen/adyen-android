@@ -23,6 +23,14 @@ public final class com/adyen/checkout/blik/BlikConfigurationKt {
 	public static synthetic fun blik$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
 }
 
+public final class com/adyen/checkout/blik/BlikMainNavigationKey : com/adyen/checkout/core/components/navigation/CheckoutNavigationKey {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/adyen/checkout/blik/BlikMainNavigationKey;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class com/adyen/checkout/blik/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
