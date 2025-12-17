@@ -8,7 +8,9 @@
 
 plugins {
     alias libs.plugins.checkout.android.library
+    alias libs.plugins.kotlin.compose
     alias libs.plugins.kotlin.parcelize
+    alias libs.plugins.kotlin.serialization
 }
 
 checkoutPublishing {
@@ -27,11 +29,13 @@ android {
 
 dependencies {
     // Checkout
+    api project(':core')
     api project(':action-core')
     api project(':ui-core')
     api project(':sessions-core')
 
     // Dependencies
+    implementation libs.androidx.startup
     implementation libs.material
 
     //Tests
