@@ -8,5 +8,15 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
-class BlikViewStateProducer {
+import com.adyen.checkout.core.components.internal.ui.state.ViewStateProducer
+import com.adyen.checkout.core.components.internal.ui.state.model.toViewState
+
+internal class BlikViewStateProducer : ViewStateProducer<BlikComponentState, BlikViewState> {
+
+    override fun produce(state: BlikComponentState): BlikViewState {
+        return BlikViewState(
+            blikCode = state.blikCode.toViewState(),
+            isLoading = state.isLoading,
+        )
+    }
 }
