@@ -25,12 +25,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 internal class SdkDataProviderTest {
 
     private lateinit var analyticsManager: TestAnalyticsManager
-    private lateinit var sdkDataProvider: SdkDataProvider
+    private lateinit var sdkDataProvider: DefaultSdkDataProvider
 
     @BeforeEach
     fun setup() {
         analyticsManager = TestAnalyticsManager()
-        sdkDataProvider = SdkDataProvider(analyticsManager)
+        sdkDataProvider = DefaultSdkDataProvider(analyticsManager)
     }
 
     @Test
