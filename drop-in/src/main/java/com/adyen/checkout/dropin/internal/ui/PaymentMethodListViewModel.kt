@@ -73,12 +73,12 @@ internal class PaymentMethodListViewModel(
         }
 
         val title: String = when (type) {
-            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH)}"
+            PaymentMethodTypes.ACH -> "•••• ${bankAccountNumber?.takeLast(LAST_FOUR_LENGTH).orEmpty()}"
             PaymentMethodTypes.CASH_APP_PAY -> cashtag.orEmpty()
             PaymentMethodTypes.PAY_BY_BANK_US,
             PaymentMethodTypes.PAY_TO -> label.orEmpty()
 
-            PaymentMethodTypes.SCHEME -> "•••• $lastFour"
+            PaymentMethodTypes.SCHEME -> "•••• ${lastFour.orEmpty()}"
             else -> name.orEmpty()
         }
 
