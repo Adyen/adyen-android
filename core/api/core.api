@@ -1410,6 +1410,9 @@ public final class com/adyen/checkout/core/components/internal/data/model/Status
 	public synthetic fun newArray (I)[Ljava/lang/Object;
 }
 
+public final class com/adyen/checkout/core/components/internal/data/provider/DefaultSdkDataProvider$Companion {
+}
+
 public final class com/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy : java/lang/Enum {
 	public static final field FULL_SCREEN_DIALOG Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;
 	public static final field INLINE Lcom/adyen/checkout/core/components/navigation/CheckoutDisplayStrategy;
