@@ -44,11 +44,6 @@ public final class com/adyen/checkout/blik/internal/BlikInitializer {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/blik/internal/ui/BlikComponent {
-	public static final field $stable I
-	public fun <init> ()V
-}
-
 public final class com/adyen/checkout/blik/internal/ui/BlikFactory {
 	public static final field $stable I
 	public fun <init> ()V
@@ -57,10 +52,6 @@ public final class com/adyen/checkout/blik/internal/ui/BlikFactory {
 public final class com/adyen/checkout/blik/internal/ui/BlikInitializer {
 	public static final field $stable I
 	public fun <init> ()V
-}
-
-public final class com/adyen/checkout/blik/internal/ui/view/BlikComponentKt {
-	public static final fun BlikComponent (Landroidx/compose/runtime/Composer;I)V
 }
 
 public final class com/adyen/checkout/blik/old/BlikComponent : androidx/lifecycle/ViewModel, com/adyen/checkout/action/core/internal/ActionHandlingComponent, com/adyen/checkout/components/core/internal/ButtonComponent, com/adyen/checkout/components/core/internal/PaymentComponent, com/adyen/checkout/ui/core/old/internal/ui/ViewableComponent {
