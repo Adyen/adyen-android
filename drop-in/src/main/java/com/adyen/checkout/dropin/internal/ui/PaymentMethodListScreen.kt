@@ -111,20 +111,10 @@ private fun FavoritesSection(
             modifier = Modifier.padding(horizontal = Dimensions.Large),
         )
 
-        favoritesSection.options.forEach { item ->
-            ListItem(
-                leadingIcon = {
-                    CheckoutNetworkLogo(
-                        txVariant = item.icon,
-                        modifier = Modifier.size(Dimensions.LogoSize.medium),
-                    )
-                },
-                title = item.title,
-                subtitle = item.subtitle,
-                onClick = {},
-                modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
-            )
-        }
+        PaymentMethodItemList(
+            paymentMethodItems = favoritesSection.options,
+            onItemClick = {},
+        )
     }
 }
 
@@ -138,8 +128,20 @@ private fun PaymentOptionsSection(
             modifier = Modifier.padding(horizontal = Dimensions.Large),
         )
 
+        PaymentMethodItemList(
+            paymentMethodItems = paymentOptionsSection.options,
+            onItemClick = {},
+        )
+    }
+}
 
-        paymentOptionsSection.options.forEach { item ->
+@Composable
+private fun PaymentMethodItemList(
+    paymentMethodItems: List<PaymentMethodItem>,
+    onItemClick: (PaymentMethodItem) -> Unit,
+) {
+    Column {
+        paymentMethodItems.forEach { item ->
             ListItem(
                 leadingIcon = {
                     CheckoutNetworkLogo(
@@ -148,7 +150,8 @@ private fun PaymentOptionsSection(
                     )
                 },
                 title = item.title,
-                onClick = {},
+                subtitle = item.subtitle,
+                onClick = { onItemClick(item) },
                 modifier = Modifier.padding(horizontal = Dimensions.ExtraSmall),
             )
         }
