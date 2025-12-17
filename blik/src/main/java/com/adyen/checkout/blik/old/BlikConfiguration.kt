@@ -5,7 +5,7 @@
  *
  * Created by josephj on 4/12/2020.
  */
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.old
 
 import android.content.Context
 import com.adyen.checkout.action.core.GenericActionConfiguration

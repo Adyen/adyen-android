@@ -18,9 +18,9 @@ import com.adyen.checkout.bacs.internal.provider.BacsDirectDebitComponentProvide
 import com.adyen.checkout.bcmc.BcmcComponent
 import com.adyen.checkout.bcmc.BcmcComponentState
 import com.adyen.checkout.bcmc.internal.provider.BcmcComponentProvider
-import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.blik.BlikComponentState
-import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
+import com.adyen.checkout.blik.old.BlikComponent
+import com.adyen.checkout.blik.old.BlikComponentState
+import com.adyen.checkout.blik.old.internal.provider.BlikComponentProvider
 import com.adyen.checkout.boleto.BoletoComponent
 import com.adyen.checkout.boleto.BoletoComponentState
 import com.adyen.checkout.boleto.internal.provider.BoletoComponentProvider
