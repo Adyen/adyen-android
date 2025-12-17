@@ -9,7 +9,14 @@
 package com.adyen.checkout.blik.internal.ui.view
 
 import androidx.compose.runtime.Composable
+import com.adyen.checkout.blik.internal.ui.state.BlikIntent
+import com.adyen.checkout.blik.internal.ui.state.BlikViewState
 
 @Composable
-fun BlikComponent() {
+internal fun BlikComponent(
+    viewState: BlikViewState,
+    onSubmitClick: () -> Unit,
+    onIntent: (BlikIntent) -> Unit,
+) {
+    // TODO: Implement UI
 }
