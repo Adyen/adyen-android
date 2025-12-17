@@ -14,22 +14,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
+import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 
 @Composable
 internal fun ManageFavoritesScreen(
     navigator: DropInNavigator,
 ) {
-    // TODO - string resources
     DropInScaffold(
         navigationIcon = {
             IconButton(
                 onClick = { navigator.back() },
             ) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, resolveString(CheckoutLocalizationKey.GENERAL_BACK))
             }
         },
-        title = "Manage your favorite payment options",
-        description = "Manage payment methods that enhance your speed of checking out",
+        title = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_TITLE),
+        description = resolveString(CheckoutLocalizationKey.DROP_IN_MANAGE_FAVORITES_DESCRIPTION),
     ) {
         // TODO - populate content
     }

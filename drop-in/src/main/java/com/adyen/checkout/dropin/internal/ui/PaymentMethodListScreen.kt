@@ -92,8 +92,8 @@ private fun FavoritesSection(
 ) {
     Column {
         SectionHeader(
-            title = "Favorites",
-            actionText = "Manage",
+            title = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_TITLE),
+            actionText = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_FAVORITES_SECTION_ACTION),
             onActionClick = onActionClick,
         )
 
