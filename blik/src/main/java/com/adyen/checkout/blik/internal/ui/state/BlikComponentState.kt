@@ -8,5 +8,10 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
-class BlikComponentState {
-}
+import com.adyen.checkout.core.components.internal.ui.state.ComponentState
+import com.adyen.checkout.core.components.internal.ui.state.model.TextInputComponentState
+
+internal data class BlikComponentState(
+    val blikCode: TextInputComponentState,
+    val isLoading: Boolean,
+) : ComponentState
