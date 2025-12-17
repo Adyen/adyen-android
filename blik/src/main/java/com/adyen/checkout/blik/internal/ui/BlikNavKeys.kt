@@ -8,5 +8,8 @@
 
 package com.adyen.checkout.blik.internal.ui
 
-class BlikNavKeys {
-}
+import androidx.navigation3.runtime.NavKey
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data object BlikNavKey : NavKey
