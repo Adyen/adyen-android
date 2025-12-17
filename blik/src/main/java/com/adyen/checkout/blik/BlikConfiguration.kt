@@ -8,3 +8,30 @@
 
 package com.adyen.checkout.blik
 
+import com.adyen.checkout.core.common.internal.helper.CheckoutConfigurationMarker
+import com.adyen.checkout.core.components.CheckoutConfiguration
+import com.adyen.checkout.core.components.internal.Configuration
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+class BlikConfiguration : Configuration
+
+class BlikConfigurationBuilder internal constructor() {
+
+    internal fun build() = BlikConfiguration()
+}
+
+fun CheckoutConfiguration.blik(
+    configuration: @CheckoutConfigurationMarker BlikConfigurationBuilder.() -> Unit = {},
+): CheckoutConfiguration {
+    val config = BlikConfigurationBuilder()
+        .apply(configuration)
+        .build()
+    addConfiguration(PaymentMethodTypes.BLIK, config)
+    return this
+}
+
+internal fun CheckoutConfiguration.getBlikConfiguration(): BlikConfiguration? {
+    return getConfiguration(PaymentMethodTypes.BLIK)
+}

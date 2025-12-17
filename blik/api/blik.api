@@ -1,3 +1,28 @@
+public final class com/adyen/checkout/blik/BlikConfiguration : com/adyen/checkout/core/components/internal/Configuration {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> ()V
+	public final fun describeContents ()I
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/adyen/checkout/blik/BlikConfiguration$Creator : android/os/Parcelable$Creator {
+	public fun <init> ()V
+	public final fun createFromParcel (Landroid/os/Parcel;)Lcom/adyen/checkout/blik/BlikConfiguration;
+	public synthetic fun createFromParcel (Landroid/os/Parcel;)Ljava/lang/Object;
+	public final fun newArray (I)[Lcom/adyen/checkout/blik/BlikConfiguration;
+	public synthetic fun newArray (I)[Ljava/lang/Object;
+}
+
+public final class com/adyen/checkout/blik/BlikConfigurationBuilder {
+	public static final field $stable I
+}
+
+public final class com/adyen/checkout/blik/BlikConfigurationKt {
+	public static final fun blik (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+	public static synthetic fun blik$default (Lcom/adyen/checkout/core/components/CheckoutConfiguration;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/adyen/checkout/core/components/CheckoutConfiguration;
+}
+
 public final class com/adyen/checkout/blik/BuildConfig {
 	public static final field BUILD_TYPE Ljava/lang/String;
 	public static final field CHECKOUT_VERSION Ljava/lang/String;
