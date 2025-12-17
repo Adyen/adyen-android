@@ -8,5 +8,19 @@
 
 package com.adyen.checkout.blik.internal
 
-class BlikInitializer {
+import android.content.Context
+import androidx.annotation.Keep
+import androidx.startup.Initializer
+import com.adyen.checkout.blik.internal.ui.BlikFactory
+import com.adyen.checkout.core.components.internal.PaymentMethodProvider
+import com.adyen.checkout.core.components.paymentmethod.PaymentMethodTypes
+
+@Keep
+internal class BlikInitializer : Initializer<Unit> {
+
+    override fun create(context: Context) {
+        PaymentMethodProvider.register(PaymentMethodTypes.BLIK, BlikFactory())
+    }
+
+    override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 }
