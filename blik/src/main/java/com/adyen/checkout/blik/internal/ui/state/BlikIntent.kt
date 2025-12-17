@@ -8,5 +8,15 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
-interface BlikIntent {
+import com.adyen.checkout.core.components.internal.ui.state.ComponentStateIntent
+
+internal sealed interface BlikIntent : ComponentStateIntent {
+
+    data class UpdateBlikCode(val code: String) : BlikIntent
+
+    data class UpdateBlikCodeFocus(val hasFocus: Boolean) : BlikIntent
+
+    data class UpdateLoading(val isLoading: Boolean) : BlikIntent
+
+    data object HighlightValidationErrors : BlikIntent
 }

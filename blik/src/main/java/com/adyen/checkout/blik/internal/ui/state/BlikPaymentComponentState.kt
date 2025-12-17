@@ -8,5 +8,15 @@
 
 package com.adyen.checkout.blik.internal.ui.state
 
-class BlikPaymentComponentState {
-}
+import com.adyen.checkout.blik.internal.ui.BlikComponent
+import com.adyen.checkout.core.components.data.PaymentComponentData
+import com.adyen.checkout.core.components.paymentmethod.BlikPaymentMethod
+import com.adyen.checkout.core.components.paymentmethod.PaymentComponentState
+
+/**
+ * Represents the state of [BlikComponent].
+ */
+internal data class BlikPaymentComponentState(
+    override val data: PaymentComponentData<BlikPaymentMethod>,
+    override val isValid: Boolean,
+) : PaymentComponentState<BlikPaymentMethod>
