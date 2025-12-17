@@ -16,24 +16,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,7 +36,6 @@ import com.adyen.checkout.core.common.internal.ui.CheckoutNetworkLogo
 import com.adyen.checkout.core.common.localization.CheckoutLocalizationKey
 import com.adyen.checkout.core.common.localization.internal.helper.resolveString
 import com.adyen.checkout.ui.internal.element.ListItem
-import com.adyen.checkout.ui.internal.text.Body
 import com.adyen.checkout.ui.internal.text.BodyEmphasized
 import com.adyen.checkout.ui.internal.text.SubHeadlineEmphasized
 import com.adyen.checkout.ui.internal.theme.CheckoutThemeProvider
@@ -59,57 +51,36 @@ internal fun PaymentMethodListScreen(
     PaymentMethodListContent(navigator, viewState)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PaymentMethodListContent(
     navigator: DropInNavigator,
     viewState: PaymentMethodListViewState,
 ) {
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
-    Scaffold(
-        containerColor = CheckoutThemeProvider.colors.background,
-        topBar = {
-            DropInTopAppBar(
-                title = viewState.amount,
-                navigationIcon = {
-                    IconButton(
-                        onClick = { navigator.back() },
-                    ) {
-                        Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
+    DropInScaffold(
+        navigationIcon = {
+            IconButton(
+                onClick = { navigator.back() },
+            ) {
+                Icon(Icons.Default.Close, resolveString(CheckoutLocalizationKey.GENERAL_CLOSE))
+            }
         },
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            Spacer(Modifier.size(Dimensions.ExtraSmall))
+        title = viewState.amount,
+        description = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
+    ) {
 
-            Body(
-                text = resolveString(CheckoutLocalizationKey.DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION),
-                color = CheckoutThemeProvider.colors.textSecondary,
-                modifier = Modifier.padding(horizontal = Dimensions.Large),
+        Spacer(Modifier.size(Dimensions.Medium))
+
+        viewState.favoritesSection?.let {
+            FavoritesSection(
+                favoritesSection = it,
+                onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
             )
 
-            Spacer(Modifier.size(Dimensions.Medium))
+            Spacer(Modifier.size(Dimensions.Small))
+        }
 
-            viewState.favoritesSection?.let {
-                FavoritesSection(
-                    favoritesSection = it,
-                    onActionClick = { navigator.navigateTo(ManageFavoritesNavKey) },
-                )
-
-                Spacer(Modifier.size(Dimensions.Small))
-            }
-
-            viewState.paymentOptionsSection?.let {
-                PaymentOptionsSection(it)
-            }
+        viewState.paymentOptionsSection?.let {
+            PaymentOptionsSection(it)
         }
     }
 }
