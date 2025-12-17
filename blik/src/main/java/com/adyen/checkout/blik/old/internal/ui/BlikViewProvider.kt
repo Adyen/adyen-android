@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 29/9/2022.
+ * Created by ozgur on 17/12/2025.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.blik.old.internal.ui
 
 import android.content.Context
-import com.adyen.checkout.blik.internal.ui.view.BlikView
+import com.adyen.checkout.blik.old.internal.ui.view.BlikView
 import com.adyen.checkout.ui.core.old.internal.ui.AmountButtonComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ButtonComponentViewType
 import com.adyen.checkout.ui.core.old.internal.ui.ComponentView

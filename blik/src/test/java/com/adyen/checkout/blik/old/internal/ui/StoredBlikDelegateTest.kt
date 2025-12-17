@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2024 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by ararat on 18/3/2024.
+ * Created by ozgur on 17/12/2025.
  */
 
-package com.adyen.checkout.blik.internal.ui
+package com.adyen.checkout.blik.old.internal.ui
 
 import app.cash.turbine.test
-import com.adyen.checkout.blik.BlikComponentState
-import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.blik.blik
-import com.adyen.checkout.blik.getBlikConfiguration
+import com.adyen.checkout.blik.old.BlikComponentState
+import com.adyen.checkout.blik.old.BlikConfiguration
+import com.adyen.checkout.blik.old.blik
+import com.adyen.checkout.blik.old.getBlikConfiguration
+import com.adyen.checkout.blik.old.internal.ui.StoredBlikDelegate
 import com.adyen.checkout.components.core.Amount
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.OrderRequest

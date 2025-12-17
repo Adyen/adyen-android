@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2020 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by josephj on 4/12/2020.
+ * Created by ozgur on 17/12/2025.
  */
-package com.adyen.checkout.blik
+package com.adyen.checkout.blik.old
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
@@ -13,8 +13,8 @@ import androidx.lifecycle.viewModelScope
 import com.adyen.checkout.action.core.internal.ActionHandlingComponent
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.ui.GenericActionDelegate
-import com.adyen.checkout.blik.internal.provider.BlikComponentProvider
-import com.adyen.checkout.blik.internal.ui.BlikDelegate
+import com.adyen.checkout.blik.old.internal.provider.BlikComponentProvider
+import com.adyen.checkout.blik.old.internal.ui.BlikDelegate
 import com.adyen.checkout.components.core.PaymentMethodTypes
 import com.adyen.checkout.components.core.internal.ButtonComponent
 import com.adyen.checkout.components.core.internal.ComponentEventHandler

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2022 Adyen N.V.
+ * Copyright (c) 2025 Adyen N.V.
  *
  * This file is open source and available under the MIT license. See the LICENSE file for more info.
  *
- * Created by caiof on 12/4/2022.
+ * Created by ozgur on 17/12/2025.
  */
 
-package com.adyen.checkout.blik.internal.provider
+package com.adyen.checkout.blik.old.internal.provider
 
 import android.app.Application
 import androidx.annotation.RestrictTo
@@ -16,13 +16,13 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.savedstate.SavedStateRegistryOwner
 import com.adyen.checkout.action.core.internal.DefaultActionHandlingComponent
 import com.adyen.checkout.action.core.internal.provider.GenericActionComponentProvider
-import com.adyen.checkout.blik.BlikComponent
-import com.adyen.checkout.blik.BlikComponentState
-import com.adyen.checkout.blik.BlikConfiguration
-import com.adyen.checkout.blik.getBlikConfiguration
-import com.adyen.checkout.blik.internal.ui.DefaultBlikDelegate
-import com.adyen.checkout.blik.internal.ui.StoredBlikDelegate
-import com.adyen.checkout.blik.toCheckoutConfiguration
+import com.adyen.checkout.blik.old.BlikComponent
+import com.adyen.checkout.blik.old.BlikComponentState
+import com.adyen.checkout.blik.old.BlikConfiguration
+import com.adyen.checkout.blik.old.getBlikConfiguration
+import com.adyen.checkout.blik.old.internal.ui.DefaultBlikDelegate
+import com.adyen.checkout.blik.old.internal.ui.StoredBlikDelegate
+import com.adyen.checkout.blik.old.toCheckoutConfiguration
 import com.adyen.checkout.components.core.CheckoutConfiguration
 import com.adyen.checkout.components.core.ComponentCallback
 import com.adyen.checkout.components.core.Order

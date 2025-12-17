@@ -15,7 +15,7 @@ import com.adyen.checkout.action.core.GenericActionConfiguration
 import com.adyen.checkout.action.core.internal.ActionHandlingPaymentMethodConfigurationBuilder
 import com.adyen.checkout.bacs.BacsDirectDebitConfiguration
 import com.adyen.checkout.bcmc.BcmcConfiguration
-import com.adyen.checkout.blik.BlikConfiguration
+import com.adyen.checkout.blik.old.BlikConfiguration
 import com.adyen.checkout.boleto.BoletoConfiguration
 import com.adyen.checkout.card.old.CardConfiguration
 import com.adyen.checkout.cashapppay.CashAppPayConfiguration
