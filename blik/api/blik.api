@@ -39,11 +39,6 @@ public final class com/adyen/checkout/blik/BuildConfig {
 	public fun <init> ()V
 }
 
-public final class com/adyen/checkout/blik/internal/BlikInitializer {
-	public static final field $stable I
-	public fun <init> ()V
-}
-
 public final class com/adyen/checkout/blik/internal/ui/BlikInitializer {
 	public static final field $stable I
 	public fun <init> ()V
