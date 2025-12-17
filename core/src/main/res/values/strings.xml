@@ -45,5 +45,7 @@
     <string name="checkout_general_close" translatable="false">Close</string>
     <string name="checkout_general_optional" translatable="false">(Optional)</string>
     <string name="checkout_general_search_hint" translatable="false">Search..</string>
+    <string name="checkout_blik_code" translatable="false">6-digit code</string>
     <string name="checkout_blik_code_not_valid" translatable="false">Enter 6 numbers</string>
+    <string name="checkout_blik_helper_text" translatable="false">Get the code from your banking app.</string>
 </resources>
