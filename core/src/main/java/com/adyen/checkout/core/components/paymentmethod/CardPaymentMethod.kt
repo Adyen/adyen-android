@@ -17,6 +17,7 @@ import org.json.JSONObject
 data class CardPaymentMethod(
     override val type: String?,
     override val checkoutAttemptId: String?,
+    override var sdkData: String? = null,
     val encryptedCardNumber: String? = null,
     val encryptedExpiryMonth: String? = null,
     val encryptedExpiryYear: String? = null,
@@ -51,6 +52,7 @@ data class CardPaymentMethod(
                     JSONObject().apply {
                         putOpt(TYPE, modelObject.type)
                         putOpt(CHECKOUT_ATTEMPT_ID, modelObject.checkoutAttemptId)
+                        putOpt(SDK_DATA, modelObject.sdkData)
                         putOpt(ENCRYPTED_CARD_NUMBER, modelObject.encryptedCardNumber)
                         putOpt(ENCRYPTED_EXPIRY_MONTH, modelObject.encryptedExpiryMonth)
                         putOpt(ENCRYPTED_EXPIRY_YEAR, modelObject.encryptedExpiryYear)
@@ -72,6 +74,7 @@ data class CardPaymentMethod(
                 return CardPaymentMethod(
                     type = jsonObject.getStringOrNull(TYPE),
                     checkoutAttemptId = jsonObject.getStringOrNull(CHECKOUT_ATTEMPT_ID),
+                    sdkData = jsonObject.getStringOrNull(SDK_DATA),
                     encryptedCardNumber = jsonObject.getStringOrNull(ENCRYPTED_CARD_NUMBER),
                     encryptedExpiryMonth = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_MONTH),
                     encryptedExpiryYear = jsonObject.getStringOrNull(ENCRYPTED_EXPIRY_YEAR),
