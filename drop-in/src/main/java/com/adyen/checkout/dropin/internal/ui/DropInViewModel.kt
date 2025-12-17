@@ -26,7 +26,7 @@ internal class DropInViewModel(
     input: DropInResultContract.Input?,
 ) : ViewModel() {
 
-    private lateinit var paymentMethods: PaymentMethodsApiResponse
+    lateinit var paymentMethods: PaymentMethodsApiResponse
 
     lateinit var dropInParams: DropInParams
 

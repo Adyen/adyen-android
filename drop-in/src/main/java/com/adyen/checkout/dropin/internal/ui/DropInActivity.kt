@@ -84,7 +84,15 @@ class DropInActivity : ComponentActivity() {
                             entry<PaymentMethodListNavKey>(
                                 metadata = DropInTransitions.slideInAndOutVertically(),
                             ) {
-                                PaymentMethodListScreen()
+                                PaymentMethodListScreen(
+                                    viewModel.navigator,
+                                    viewModel(
+                                        factory = PaymentMethodListViewModel.Factory(
+                                            dropInParams = viewModel.dropInParams,
+                                            paymentMethodsApiResponse = viewModel.paymentMethods,
+                                        ),
+                                    ),
+                                )
                             }
 
                             entry<ManageFavoritesNavKey> {}
