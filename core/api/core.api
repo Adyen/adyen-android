@@ -754,7 +754,8 @@ public final class com/adyen/checkout/core/common/localization/CheckoutLocalizat
 	public static final field CARD_STORE_PAYMENT_METHOD Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_OTHER_PAYMENT_METHODS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field DROP_IN_PAYMENT_METHOD_LIST_DESCRIPTION Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
-	public static final field DROP_IN_PAYMENT_OPTIONS Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
+	public static final field DROP_IN_PAYMENT_METHOD_LIST_PAYMENT_OPTIONS_SECTION_TITLE_WITH_FAVORITES Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_CLOSE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field GENERAL_SEARCH_HINT Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
 	public static final field MBWAY_COUNTRY_CODE Lcom/adyen/checkout/core/common/localization/CheckoutLocalizationKey;
